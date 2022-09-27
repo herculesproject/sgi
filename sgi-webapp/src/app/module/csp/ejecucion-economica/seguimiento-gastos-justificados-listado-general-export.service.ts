@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IGastoRequerimientoJustificacion } from '@core/models/csp/gasto-requerimiento-justificacion';
+import { IProyecto } from '@core/models/csp/proyecto';
+import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
+import { IProyectoPresupuestoTotales } from '@core/models/csp/proyecto-presupuesto-totales';
 import { IProyectoSeguimientoJustificacion } from '@core/models/csp/proyecto-seguimiento-justificacion';
-import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { IColumna } from '@core/models/sge/columna';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
@@ -22,9 +25,15 @@ import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { forkJoin, from, Observable, of } from 'rxjs';
-import { catchError, concatMap, map, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { IGastoJustificadoReportData, IGastoRequerimiento, IGastosJustificadosReportOptions, IRequerimientoJustificacionAlegacion } from './seguimiento-gastos-justificados-listado-export.service';
+import { forkJoin, from, Observable, of, zip } from 'rxjs';
+import { catchError, concatMap, map, switchMap, tap } from 'rxjs/operators';
+import {
+  IGastoJustificadoReportData,
+  IGastoRequerimiento,
+  IGastosJustificadosReportOptions,
+  IProyectoEntidadesFinanciadorasReportData,
+  IProyectoResponsablesReportData
+} from './seguimiento-gastos-justificados-listado-export.service';
 
 const CODIGO_PROYECTO_SGE_KEY = marker('csp.ejecucion-economica.seguimiento-justificacion.resumen.export.codigo-proyecto-sge');
 const ID_PROYECTO_SGI_KEY = marker('csp.ejecucion-economica.seguimiento-justificacion.resumen.export.id-proyecto-sgi');
@@ -95,13 +104,6 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
           gastoData.detalle = detalle;
           return gastoData;
         }),
-        switchMap(data => this.getProyectoSgi(data)),
-        switchMap(data => this.getResponsablesGasto(data)),
-        switchMap(data => this.getTituloConvocatoria(data)),
-        switchMap(data => this.getEntidadesFinanciadoras(data)),
-        switchMap(data => this.getImporteConcedido(data)),
-        switchMap(data => this.getUltimaFechaJustificacion(data)),
-        switchMap(data => this.getProyectoSeguimientoJustificacion(data)),
         switchMap(data => this.getRequerimientosJustificacion(data)),
       ).pipe(
         catchError(err => {
@@ -111,215 +113,412 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
       );
   }
 
-  private getTituloConvocatoria(data: IGastoJustificadoReportData): Observable<IGastoJustificadoReportData> {
-    if (!!!data.proyectoSgi?.convocatoriaId) {
-      return of(data);
+  /**
+   * Rellena los datos de los gastos relacionados con los proyectos sgi relacionado
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con los datos relacionados con los proyecto sgi rellenos
+   */
+  public fillDataList(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    if (!!!gastosData || gastosData.length === 0) {
+      return of(gastosData);
     }
-    return this.convocatoriaService.findById(data.proyectoSgi.convocatoriaId).pipe(
-      map(convocatoria => {
-        data.tituloConvocatoria = convocatoria.titulo;
-        return data;
-      }), catchError(err => {
-        this.logger.error(err);
-        return of(void (0));
+
+    return of(gastosData).pipe(
+      switchMap(data => this.fillProyectoSgiId(data)),
+      switchMap(data => this.fillProyectoSgi(data)),
+      switchMap(data => this.fillResponsablesGasto(data)),
+      switchMap(data => this.fillTituloConvocatoria(data)),
+      switchMap(data => this.fillEntidadesFinanciadoras(data)),
+      switchMap(data => this.fillUltimaFechaJustificacion(data)),
+      switchMap(data => this.fillProyectoSeguimientoJustificacion(data)),
+      switchMap(data => this.fillImporteConcedido(data)),
+      map(() => {
+        return gastosData;
       })
     );
   }
-  private getProyectoSgi(data: IGastoJustificadoReportData): Observable<IGastoJustificadoReportData> {
-    if (!!!data.justificacionId) {
-      return of(data);
-    }
-    return this.proyectoPeriodoJustificacionService.findByIdentificadorJustificacion(data.justificacionId)
-      .pipe(
-        map(proyectoPeriodoJustificacion => {
-          return proyectoPeriodoJustificacion?.proyecto?.id || null;
-        }), switchMap(proyectoId => {
-          if (!!!proyectoId) {
-            return of(data);
-          }
-          return this.proyectoService.findById(proyectoId).pipe(
-            map(proyecto => {
-              data.proyectoSgi = proyecto;
-              return data;
-            })
-          );
-        })
-      );
-  }
 
-  private getResponsablesGasto(data: IGastoJustificadoReportData): Observable<IGastoJustificadoReportData> {
-    if (!!!data.proyectoSgi) {
-      return of(data);
-    }
-    return this.proyectoService.findAllProyectoEquipo(data.proyectoSgi?.id).pipe(
-      map(miembrosResponse => {
-        data.responsables = [];
-        return miembrosResponse;
-      }), switchMap(miembrosResponse => {
-        if (miembrosResponse.total === 0) {
-          return of(data);
-        }
-        const responsablesVigentes = miembrosResponse.items.filter(responsable => {
-          if (responsable.rolProyecto.rolPrincipal && !!!responsable.fechaFin && !!!responsable.fechaInicio) {
-            return true;
-          } else if (responsable.fechaInicio < DateTime.now() || !responsable.rolProyecto.rolPrincipal) {
-            return false;
-          } else if (!!!responsable.fechaFin || responsable.fechaFin <= DateTime.now()) {
-            return true;
-          }
-          return false;
+  /**
+   * Rellena el id del proyecto sgi de los gastos
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con el proyecto sgi id relleno
+   */
+  private fillProyectoSgiId(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    const justificacionIds = new Set<string>(gastosData.map(gastoData => gastoData.justificacionId));
+
+    const proyectosPeriodosJustificacion: Observable<IProyectoPeriodoJustificacion>[] = [];
+    justificacionIds.forEach(justificacionId => {
+      proyectosPeriodosJustificacion.push(
+        this.proyectoPeriodoJustificacionService.findByIdentificadorJustificacion(justificacionId)
+      );
+    });
+
+    return zip(...proyectosPeriodosJustificacion).pipe(
+      map(data => {
+        return gastosData.map(gasto => {
+          const proyectoPeriodoJustificacion = data.find(p => p.identificadorJustificacion === gasto.justificacionId);
+          gasto.proyectoSgi = proyectoPeriodoJustificacion?.proyecto?.id
+            ? { id: proyectoPeriodoJustificacion?.proyecto?.id } as IProyecto
+            : null;
+          return gasto;
         });
-        const responsablesIds = new Set<string>(responsablesVigentes.map(responsable => responsable.persona?.id));
-        if (responsablesIds.size === 0) {
-          return of(data);
-        }
-        //Se comprueba si este gasto tiene más responsables que los anteriores para saber cuantas columnas hay que pintar
-        //se pintan las del mayor número de responsables
-        this.maxResponsables = this.maxResponsables < responsablesIds.size ? responsablesIds.size : this.maxResponsables;
-
-        return this.personaService.findAllByIdIn([...responsablesIds]).pipe(
-          map(personas => {
-            personas.items.forEach(persona => {
-              data.responsables.push({
-                nombre: persona.nombre,
-                apellidos: persona.apellidos,
-                email: persona.emails.find(email => email.principal)?.email
-              });
-            });
-            return data;
-          }), catchError(err => {
-            this.logger.error(err);
-            return of(void (0));
-          })
-        );
       })
     );
   }
 
-  private getEntidadesFinanciadoras(data: IGastoJustificadoReportData): Observable<IGastoJustificadoReportData> {
-    if (!!!data.proyectoSgi?.id) {
-      return of(data);
-    }
-    return this.proyectoService.findEntidadesFinanciadoras(data.proyectoSgi.id).pipe(
-      map(entidadesResponse => {
-        data.entidadesFinanciadoras = [];
-        return entidadesResponse;
-      }), switchMap(entidades => {
-        if (entidades.total === 0) {
-          return of(data);
-        }
-
-        const entidadesIds = new Set<string>(entidades.items.map(entidadFinanciadora => entidadFinanciadora.empresa?.id));
-        if (entidadesIds.size === 0) {
-          return of(data);
-        }
-        //Se comprueba si este gasto tiene más entidades financiadoras que los anteriores para saber cuantas columnas hay que pintar
-        //se pintan las del mayor número de entidades
-        this.maxEntidades = this.maxEntidades < entidadesIds.size ? entidadesIds.size : this.maxEntidades;
-
-        return this.empresaService.findAllByIdIn([...entidadesIds]).pipe(
-          map(empresasResp => {
-            empresasResp.items.forEach(empresa => {
-              data.entidadesFinanciadoras.push({
-                nombre: empresa.nombre,
-                numIdentificacion: empresa.numeroIdentificacion
-              });
-            });
-            return data;
-
-          })
-        );
-      })
+  /**
+   * Rellena los datos del proyecto sgi de los gastos
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con los datos del proyecto sgi rellenos
+   */
+  private fillProyectoSgi(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    const proyectosIds = new Set<number>(
+      gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
     );
-  }
 
-  private getImporteConcedido(data: IGastoJustificadoReportData): Observable<IGastoJustificadoReportData> {
-    if (!!!data.proyectoSgi) {
-      return of(data);
-    }
-    if (!!data.proyectoSgi.importePresupuesto || !!data.proyectoSgi.importePresupuestoCostesIndirectos ||
-      !!data.proyectoSgi.importeConcedido || !!data.proyectoSgi.importeConcedidoCostesIndirectos ||
-      !!data.proyectoSgi.importePresupuestoSocios || !!data.proyectoSgi.importeConcedidoSocios ||
-      !!data.proyectoSgi.totalImporteConcedido || !!data.proyectoSgi.totalImportePresupuesto) {
-
-      data.importeConcedido = data.proyectoSgi.importeConcedido + data.proyectoSgi.importeConcedidoCostesIndirectos;
-      data.importeConcedidoCD = data.proyectoSgi.importeConcedido;
-      data.importeConcedidoCI = data.proyectoSgi.importeConcedido;
-
-      return of(data);
-    } else {
-      return this.proyectoService.findAllProyectoAnualidadesGasto(data.proyectoSgi.id).pipe(
-        map(anualidadesResponse => {
-          data.importeConcedidoCD = 0;
-          data.importeConcedidoCI = 0;
-          data.importeConcedido = anualidadesResponse.items.reduce((total, anualidadGasto) => total + anualidadGasto.importeConcedido, 0);
-          return anualidadesResponse;
-        }), switchMap(anualidadesResponse => {
-          if (anualidadesResponse.total === 0) {
-            return of(data);
-          }
-          return from(anualidadesResponse.items).pipe(
-            mergeMap(anualidad => {
-              return this.conceptoGastoService.findById(anualidad.conceptoGasto?.id).pipe(
-                map(conceptoGasto => {
-                  if (!!!conceptoGasto) {
-                    return data;
-                  }
-                  if (!conceptoGasto.costesIndirectos) {
-                    data.importeConcedidoCD += anualidad.importeConcedido;
-                  }
-                  if (conceptoGasto.costesIndirectos) {
-                    data.importeConcedidoCI += anualidad.importeConcedido;
-                  }
-                  return data;
-                })
-              )
-            }), catchError(err => {
-              this.logger.error(err);
-              return of(void (0));
-            })
-          );
-        })
+    const proyectos: Observable<IProyecto>[] = [];
+    proyectosIds.forEach(proyectoId => {
+      proyectos.push(
+        this.proyectoService.findById(proyectoId)
       );
-    }
+    });
 
+    return zip(...proyectos).pipe(
+      map(data => {
+        return gastosData.map(gasto => {
+          const proyecto = data.find(p => p.id === gasto.proyectoSgi.id);
+          gasto.proyectoSgi = proyecto;
+          return gasto;
+        });
+      })
+    );
   }
 
-  private getUltimaFechaJustificacion(data: IGastoJustificadoReportData): Observable<IGastoJustificadoReportData> {
-    if (!!!data.proyectoSgi?.id) {
-      return of(data);
+  /**
+   * Rellena el titulo de la convocatoria del proyecto de los gastos
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con lel titulo de la convocatoria del proyecto de los gastos relleno
+   */
+  private fillTituloConvocatoria(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    const convocatoriasIds = new Set<number>(
+      gastosData.filter(g => g.proyectoSgi?.convocatoriaId).map(gastoData => gastoData.proyectoSgi.convocatoriaId)
+    );
+
+    const convocatorias: Observable<IConvocatoria>[] = [];
+    convocatoriasIds.forEach(convocatoriaId => {
+      convocatorias.push(
+        this.convocatoriaService.findById(convocatoriaId)
+      );
+    });
+
+    return zip(...convocatorias).pipe(
+      map(data => {
+        return gastosData.map(gasto => {
+          const convocatoria = data.find(p => p.id === gasto.proyectoSgi.convocatoriaId);
+          gasto.tituloConvocatoria = convocatoria.titulo;
+          return gasto;
+        });
+      })
+    );
+  }
+
+  /**
+   * Rellena los responsable del proyecto de los gastos
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con los responsables del proyecto de los gastos relleno
+   */
+  private fillResponsablesGasto(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    const proyectosIds = new Set<number>(
+      gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
+    );
+
+    const responsables: Observable<IProyectoResponsablesReportData>[] = [];
+    proyectosIds.forEach(proyectoId => {
+      responsables.push(
+        this.proyectoService.findAllProyectoEquipo(proyectoId).pipe(
+          switchMap(miembrosResponse => {
+            if (miembrosResponse.total === 0) {
+              return of(
+                {
+                  proyectoSgiId: proyectoId
+                } as IProyectoResponsablesReportData
+              );
+            }
+
+            const responsablesVigentes = miembrosResponse.items.filter(responsable => {
+              if (responsable.rolProyecto.rolPrincipal && !!!responsable.fechaFin && !!!responsable.fechaInicio) {
+                return true;
+              } else if (responsable.fechaInicio < DateTime.now() || !responsable.rolProyecto.rolPrincipal) {
+                return false;
+              } else if (!!!responsable.fechaFin || responsable.fechaFin <= DateTime.now()) {
+                return true;
+              }
+              return false;
+            });
+
+            const responsablesIds = new Set<string>(responsablesVigentes.map(responsable => responsable.persona?.id));
+            if (responsablesIds.size === 0) {
+              return of(
+                {
+                  proyectoSgiId: proyectoId
+                } as IProyectoResponsablesReportData
+              );
+            }
+
+            // Se comprueba si este gasto tiene más responsables que los anteriores para saber cuantas columnas hay que pintar
+            // se pintan las del mayor número de responsables
+            this.maxResponsables = this.maxResponsables < responsablesIds.size ? responsablesIds.size : this.maxResponsables;
+
+            return this.personaService.findAllByIdIn([...responsablesIds]).pipe(
+              map(personas => {
+                const responsablesProyecto: IProyectoResponsablesReportData = {
+                  proyectoSgiId: proyectoId,
+                  responsables: personas.items.map(persona => {
+                    return {
+                      nombre: persona.nombre,
+                      apellidos: persona.apellidos,
+                      email: persona.emails.find(email => email.principal)?.email
+                    };
+                  })
+                };
+                return responsablesProyecto;
+              }),
+              catchError(err => {
+                this.logger.error(err);
+                return of(
+                  {
+                    proyectoSgiId: proyectoId
+                  } as IProyectoResponsablesReportData
+                );
+              })
+            );
+          })
+        )
+      );
+    });
+
+    return zip(...responsables).pipe(
+      map(data => {
+        return gastosData.map(gasto => {
+          const r = data.find(p => p.proyectoSgiId === gasto.proyectoSgi.id);
+          gasto.responsables = r.responsables;
+          return gasto;
+        });
+      })
+    );
+  }
+
+  /**
+   * Rellena los datos de las entidades financiadoras del proyecto sgi de los gastos
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con los datos de las entidades financiadoras del proyecto sgi rellenos
+   */
+  private fillEntidadesFinanciadoras(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    const proyectosIds = new Set<number>(
+      gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
+    );
+
+    const entidadesFinanciadoras: Observable<IProyectoEntidadesFinanciadorasReportData>[] = [];
+    proyectosIds.forEach(proyectoId => {
+      entidadesFinanciadoras.push(
+        this.proyectoService.findEntidadesFinanciadoras(proyectoId).pipe(
+          switchMap(entidades => {
+            if (entidades.total === 0) {
+              return of(
+                {
+                  proyectoSgiId: proyectoId
+                } as IProyectoEntidadesFinanciadorasReportData
+              );
+            }
+
+            const entidadesIds = new Set<string>(entidades.items.map(entidadFinanciadora => entidadFinanciadora.empresa?.id));
+            if (entidadesIds.size === 0) {
+              return of(
+                {
+                  proyectoSgiId: proyectoId
+                } as IProyectoEntidadesFinanciadorasReportData
+              );
+            }
+
+            // Se comprueba si este gasto tiene más entidades financiadoras que los anteriores para saber cuantas columnas hay que pintar
+            // se pintan las del mayor número de entidades
+            this.maxEntidades = this.maxEntidades < entidadesIds.size ? entidadesIds.size : this.maxEntidades;
+
+            return this.empresaService.findAllByIdIn([...entidadesIds]).pipe(
+              map(empresasResp => {
+                const entidadesFinanciadorasProyecto: IProyectoEntidadesFinanciadorasReportData = {
+                  proyectoSgiId: proyectoId,
+                  entidadesFinanciadoras: empresasResp.items.map(empresa => {
+                    return {
+                      nombre: empresa.nombre,
+                      numIdentificacion: empresa.numeroIdentificacion
+                    };
+                  })
+                };
+                return entidadesFinanciadorasProyecto;
+              }),
+              catchError(err => {
+                this.logger.error(err);
+                return of(
+                  {
+                    proyectoSgiId: proyectoId
+                  } as IProyectoEntidadesFinanciadorasReportData
+                );
+              })
+            );
+          })
+        )
+      );
+    });
+
+    return zip(...entidadesFinanciadoras).pipe(
+      map(data => {
+        return gastosData.map(gasto => {
+          const entidadesFinanciadorasProyecto = data.find(p => p.proyectoSgiId === gasto.proyectoSgi.id);
+          gasto.entidadesFinanciadoras = entidadesFinanciadorasProyecto.entidadesFinanciadoras;
+          return gasto;
+        });
+      })
+    );
+  }
+
+  /**
+   * Rellena los datos del importe concedido del proyecto sgi de los gastos
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con los datos del importe concedido del proyecto sgi rellenos
+   */
+  private fillImporteConcedido(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    const proyectosIds = new Set<number>(
+      gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
+    );
+
+    const proyectosPresupuestos: Observable<{ proyectoId: number, presupuesto: IProyectoPresupuestoTotales }>[] = [];
+    proyectosIds.forEach(proyectoId => {
+      proyectosPresupuestos.push(
+        this.proyectoService.getProyectoPresupuestoTotales(proyectoId).pipe(
+          map(presupuesto => {
+            return {
+              proyectoId,
+              presupuesto
+            };
+          })
+        )
+      );
+    });
+
+    return zip(...proyectosPresupuestos).pipe(
+      map(data => {
+        return gastosData.map(gasto => {
+          const proyectoPresupuesto = data.find(p => p.proyectoId === gasto.proyectoSgi.id);
+          gasto.importeConcedido = proyectoPresupuesto.presupuesto.importeTotalConcedido;
+          gasto.importeConcedidoCD = proyectoPresupuesto.presupuesto.importeTotalConcedidoUniversidadCostesIndirectos;
+          gasto.importeConcedidoCI = proyectoPresupuesto.presupuesto.importeTotalConcedidoUniversidadSinCosteIndirecto;
+          return gasto;
+        });
+      })
+    );
+  }
+
+  /**
+   * Rellena la fecha de presentacion del ultimo periodo de justificacion de los gastos
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con la fecha de presentacion del ultimo periodo de justificacion rellenos
+   */
+  private fillUltimaFechaJustificacion(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    const proyectosIds = new Set<number>(
+      gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
+    );
+
+    if (proyectosIds.size === 0) {
+      return of(gastosData);
     }
+
     const options: SgiRestFindOptions = {
       sort: new RSQLSgiRestSort('fechaPresentacionJustificacion', SgiRestSortDirection.DESC),
     };
-    return this.proyectoService.findAllPeriodoJustificacion(data.proyectoSgi.id, options).pipe(
-      map(periodos => {
-        if (periodos.total === 0) {
-          return data;
-        }
-        data.fechaUltimaJustificacion = periodos.items[0].fechaPresentacionJustificacion;
-        return data;
+
+    const proyectosPeriodosJustificacion: Observable<IProyectoPeriodoJustificacion>[] = [];
+    proyectosIds.forEach(proyectoId => {
+      proyectosPeriodosJustificacion.push(
+        this.proyectoService.findAllPeriodoJustificacion(proyectoId, options).pipe(
+          map(periodos => {
+            if (periodos.total === 0) {
+              return null;
+            }
+
+            return periodos.items[0];
+          })
+        )
+      );
+    });
+
+    return zip(...proyectosPeriodosJustificacion).pipe(
+      map(data => {
+        return gastosData.map(gasto => {
+          const proyectoPeriodoJustificacion = data.find(p => p.id === gasto.proyectoSgi.id);
+          gasto.fechaUltimaJustificacion = proyectoPeriodoJustificacion?.fechaPresentacionJustificacion;
+          return gasto;
+        });
       })
     );
   }
 
-  private getProyectoSeguimientoJustificacion(data: IGastoJustificadoReportData): Observable<IGastoJustificadoReportData> {
-    if (!!!data.proyectoId || !!!data.proyectoSgi?.id) {
-      return of(data);
-    }
-    const options: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('proyectoProyectoSge.proyectoId', SgiRestFilterOperator.EQUALS, data.proyectoSgi.id.toString())
-    };
+  /**
+   * Rellena el proyecto seguimiento de justificacion de los gastos
+   *
+   * @param gastosData lista de gasto
+   * @returns la lista de gasto con el proyecto seguimiento de justificacion rellenos
+   */
+  private fillProyectoSeguimientoJustificacion(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
+    const ids = new Map<string, { proyectoId: string, proyectoSgiId: number }>();
+    gastosData.filter(g => g.proyectoSgi?.id).forEach(gastoData => {
+      ids.set(
+        `${gastoData.proyectoId}-${gastoData.proyectoSgi.id}`,
+        {
+          proyectoId: gastoData.proyectoId,
+          proyectoSgiId: gastoData.proyectoSgi.id
+        });
+    });
 
-    return this.proyectoSeguimientoEjecucionEconomicaService.findSeguimientosJustificacion(data.proyectoId, options).pipe(
-      map(proyectoSeguimientoJustificacionResponse => {
-        if (proyectoSeguimientoJustificacionResponse.total === 0) {
-          return data;
-        }
-        data.proyectoSeguimientoJustificacion = proyectoSeguimientoJustificacionResponse.items[0];
-      }), catchError(ex => {
-        this.logger.error(ex);
-        return of(void (0));
+    if (ids.size === 0) {
+      return of(gastosData);
+    }
+
+    const proyectosSeguimientoJustificacion: Observable<IProyectoSeguimientoJustificacion>[] = [];
+    ids.forEach(({ proyectoId, proyectoSgiId }) => {
+
+      const options: SgiRestFindOptions = {
+        filter: new RSQLSgiRestFilter('proyectoProyectoSge.proyectoId', SgiRestFilterOperator.EQUALS, proyectoSgiId.toString())
+      };
+
+      proyectosSeguimientoJustificacion.push(
+        this.proyectoSeguimientoEjecucionEconomicaService.findSeguimientosJustificacion(proyectoId, options).pipe(
+          map(proyectoSeguimientoJustificacionResponse => {
+            if (proyectoSeguimientoJustificacionResponse.total === 0) {
+              return null;
+            }
+
+            return proyectoSeguimientoJustificacionResponse.items[0];
+          })
+        )
+      );
+    });
+
+    return zip(...proyectosSeguimientoJustificacion).pipe(
+      map(data => {
+        return gastosData.map(gasto => {
+          const proyectoSeguimientoJustificacion = data.find(p => p.id === gasto.proyectoSgi.id);
+          gasto.proyectoSeguimientoJustificacion = proyectoSeguimientoJustificacion;
+          return gasto;
+        });
       })
     );
   }
@@ -342,7 +541,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
           return of(data);
         }
         this.maxRequerimientos = response.total > this.maxRequerimientos ? response.total : this.maxRequerimientos;
-        return this.getRequisitosAndAlegaciones(response, data)
+        return this.getRequisitosAndAlegaciones(response, data);
       }),
       catchError(ex => {
         this.logger.error(ex);
@@ -388,6 +587,23 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
         format: '#'
       }
     ];
+
+    this.columns = [];
+
+    gastos
+      .map(gasto => gasto.detalle.campos)
+      .forEach(campos => {
+        campos.forEach((campo, index) => {
+          if (!this.columns.some(column => campo.nombre === column.nombre)) {
+            this.columns.push({
+              id: index.toString(),
+              nombre: campo.nombre,
+              acumulable: false
+            });
+          }
+        });
+      });
+
     this.columns.forEach((column: IColumna) => {
       columns.push({
         title: column.nombre,
@@ -474,6 +690,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
       name: 'fechaUltimaJustificacion',
       type: ColumnType.DATE
     });
+
     this.getProyectoSeguimientoJustificacionColumns(columns);
     this.getRequerimientosJustificadosColumns(columns);
 
@@ -660,7 +877,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
           format: '#'
         }
       );
-      //Importes Aceptados Proyecto
+      // Importes Aceptados Proyecto
       columns.push(
         {
           title: 'Requerimiento ' + i + ': Importe aceptado proyecto',
@@ -682,7 +899,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
           type: ColumnType.NUMBER
         }
       );
-      //Importes Rechazados Proyecto
+      // Importes Rechazados Proyecto
       columns.push(
         {
           title: 'Requerimiento ' + i + ': Importe rechazado proyecto',
@@ -704,7 +921,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
           type: ColumnType.NUMBER
         }
       );
-      //Importe Reintegrar Proyecto
+      // Importe Reintegrar Proyecto
       columns.push(
         {
           title: 'Requerimiento ' + i + ': Importe reintegrar proyecto',
@@ -769,7 +986,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
           type: ColumnType.DATE
         }
       );
-      //Importes Alegados
+      // Importes Alegados
       columns.push(
         {
           title: 'Requerimiento ' + i + ': importe alegado',
@@ -791,7 +1008,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
           type: ColumnType.NUMBER
         }
       );
-      //Importes Reintegrados
+      // Importes Reintegrados
       columns.push(
         {
           title: 'Requerimiento ' + i + ': importe reintegrado',
@@ -840,43 +1057,45 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
 
   public fillRows(
     resultados: IGastoJustificadoReportData[],
-    index: number, reportConfig: IReportConfig<IGastosJustificadosReportOptions>
+    index: number,
+    reportConfig: IReportConfig<IGastosJustificadosReportOptions>
   ): any[] {
     const gasto = resultados[index];
 
-    if (!!!gasto) {
-      return;
-    }
     const elementsRow: any[] = [];
     try {
       elementsRow.push(gasto.justificacionId || '');
 
-      //Campos variables
+      // Campos variables
       this.columns.forEach(column => {
         const detail = !!gasto.detalle?.campos ? gasto.detalle.campos.find(campo => campo.nombre === column.nombre) : null;
 
         elementsRow.push(detail ? detail.valor : '');
       });
 
-      elementsRow.push(gasto.proyectoId || '');
-      elementsRow.push(gasto.proyectoSgi?.id || '');
-      elementsRow.push(gasto.proyectoSgi?.codigoExterno || '');
-      elementsRow.push(gasto.proyectoSgi?.titulo || '');
-      elementsRow.push(LuxonUtils.toBackend(gasto.proyectoSgi?.fechaInicio));
-      elementsRow.push(LuxonUtils.toBackend(gasto.proyectoSgi?.fechaFin));
-      elementsRow.push(LuxonUtils.toBackend(gasto.proyectoSgi?.fechaFinDefinitiva));
+      elementsRow.push(gasto?.proyectoId ?? '');
+      elementsRow.push(gasto?.proyectoSgi?.id ?? '');
+      elementsRow.push(gasto?.proyectoSgi?.codigoExterno ?? '');
+      elementsRow.push(gasto?.proyectoSgi?.titulo ?? '');
+      elementsRow.push(LuxonUtils.toBackend(gasto?.proyectoSgi?.fechaInicio));
+      elementsRow.push(LuxonUtils.toBackend(gasto?.proyectoSgi?.fechaFin));
+      elementsRow.push(LuxonUtils.toBackend(gasto?.proyectoSgi?.fechaFinDefinitiva));
 
-      //Responsables, hay que rellenar todas las columnas hayan o no datos.
-      this.fillResponsablesRows(gasto.responsables, elementsRow);
-      elementsRow.push(gasto?.tituloConvocatoria || '');
-      this.fillEntidadesFinanciadorasRows(gasto.entidadesFinanciadoras, elementsRow);
-      //Importes
-      elementsRow.push(gasto.importeConcedido);
-      elementsRow.push(gasto.importeConcedidoCD);
-      elementsRow.push(gasto.importeConcedidoCI);
-      elementsRow.push(LuxonUtils.toBackend(gasto.fechaUltimaJustificacion));
-      this.fillProyectoSeguimientoJustificacionRows(gasto.proyectoSeguimientoJustificacion, elementsRow);
-      this.fillGastoRequerimientosRows(gasto.requerimientos, elementsRow);
+      // Responsables, hay que rellenar todas las columnas hayan o no datos.
+      this.fillResponsablesRows(gasto?.responsables ?? [], elementsRow);
+
+      elementsRow.push(gasto?.tituloConvocatoria ?? '');
+
+      this.fillEntidadesFinanciadorasRows(gasto?.entidadesFinanciadoras ?? [], elementsRow);
+
+      // Importes
+      elementsRow.push(gasto?.importeConcedido ?? '');
+      elementsRow.push(gasto?.importeConcedidoCD ?? '');
+      elementsRow.push(gasto?.importeConcedidoCI ?? '');
+      elementsRow.push(LuxonUtils.toBackend(gasto?.fechaUltimaJustificacion));
+
+      this.fillProyectoSeguimientoJustificacionRows(gasto?.proyectoSeguimientoJustificacion, elementsRow);
+      this.fillGastoRequerimientosRows(gasto?.requerimientos ?? [], elementsRow);
     } catch (ex) {
       this.logger.error(ex);
     }

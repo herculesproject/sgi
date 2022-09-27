@@ -62,7 +62,7 @@ export class RequerimientoJustificacionListadoExportModalComponent extends BaseE
 
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
-      outputType: new FormControl(this.outputType, Validators.required),
+      outputType: new FormControl(OutputReport.XLSX, Validators.required),
       reportTitle: new FormControl(this.reportTitle, Validators.required),
     });
   }

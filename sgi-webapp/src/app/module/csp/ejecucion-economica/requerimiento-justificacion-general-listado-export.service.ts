@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
+import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp/proyecto-seguimiento-ejecucion-economica/proyecto-seguimiento-ejecucion-economica.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
-import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { concat, from, Observable, of } from 'rxjs';
 import { concatMap, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { IRequerimientoJustificacionInforme, IRequerimientoJustificacionReportData, IRequerimientoJustificacionReportOptions } from './requerimiento-justificacion-listado-export.service';
-import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
-import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 
 const REQUERIMIENTO_JUSTIFICACION_CODIGO_PROYECTO_SGE_KEY = marker('csp.ejecucion-economica.seguimiento-justificacion.resumen.codigo-sge');
 const REQUERIMIENTO_JUSTIFICACION_CODIGO_PROYECTO_SGI_KEY = marker('csp.ejecucion-economica.seguimiento-justificacion.requerimiento.gastos.proyecto-sgi-id');
@@ -138,7 +137,6 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
     private readonly proyectoProyectoSgeService: ProyectoProyectoSgeService,
     private readonly proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
     private readonly proyectoService: ProyectoService,
-    private readonly personaService: PersonaService,
     private readonly convocatoriaService: ConvocatoriaService,
     private readonly empresaService: EmpresaService,
     private readonly requerimientoJustificacionService: RequerimientoJustificacionService
@@ -664,7 +662,7 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
     rows.push(LuxonUtils.toBackend(requerimiento?.proyecto?.fechaFinDefinitiva) ?? '');
 
     for (let i = 0; i < maxNumResponsables; i++) {
-      if (requerimiento.responsables[i]) {
+      if (requerimiento.responsables && requerimiento.responsables[i]) {
         rows.push(requerimiento.responsables[i].nombre ?? '');
         rows.push(requerimiento.responsables[i].apellidos ?? '');
         requerimiento.responsables[i].emails.filter(e => e.principal).map(e => rows.push(e.email ?? ''));
@@ -678,7 +676,7 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
     }
 
     for (let i = 0; i < maxNumEntidadesFinanciadoras; i++) {
-      if (requerimiento.entidadesFinanciadoras[i]) {
+      if (requerimiento.entidadesFinanciadoras && requerimiento.entidadesFinanciadoras[i]) {
         rows.push(requerimiento.entidadesFinanciadoras[i].empresa?.nombre ?? '');
         rows.push(requerimiento.entidadesFinanciadoras[i].empresa?.numeroIdentificacion ?? '');
       } else {
@@ -692,7 +690,7 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
     rows.push(requerimiento.proyecto?.importeConcedidoCostesIndirectos ?? 0);
 
     for (let i = 0; i < maxNumRequerimientosJustificacion; i++) {
-      if (requerimiento.requerimientosJustificacion[i]) {
+      if (requerimiento.requerimientosJustificacion && requerimiento.requerimientosJustificacion[i]) {
         rows.push(requerimiento.requerimientosJustificacion[i].numRequerimiento ?? '');
         rows.push(requerimiento.requerimientosJustificacion[i].tipoRequerimiento?.nombre ?? '');
         rows.push(requerimiento.requerimientosJustificacion[i].proyectoPeriodoJustificacion?.numPeriodo ?? '');

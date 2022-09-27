@@ -10,16 +10,14 @@ import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-just
 import { ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
-import { IPersona } from '@core/models/sgp/persona';
-import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp/proyecto-seguimiento-ejecucion-economica/proyecto-seguimiento-ejecucion-economica.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RelacionEjecucionEconomicaService } from '@core/services/csp/relacion-ejecucion-economica/relacion-ejecucion-economica.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { concat, EMPTY, from, Observable, of, Subscription, zip } from 'rxjs';
+import { concat, EMPTY, from, Observable, of, zip } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IProyectoPeriodoJustificacionWithTituloProyecto, IProyectoPeriodoSeguimientoWithTituloProyecto } from './ejecucion-economica-formulario/seguimiento-justificacion-resumen/seguimiento-justificacion-resumen.fragment';
 import { IRelacionEjecucionEconomicaWithResponsables } from './ejecucion-economica.action.service';
@@ -35,7 +33,7 @@ export interface IRequerimientoJustificacionInforme extends IRequerimientoJustif
 
 export interface IRequerimientoJustificacionReportData extends IRelacionEjecucionEconomicaWithResponsables {
   proyecto: IProyecto;
-  proyectoProyectoSge: IProyectoProyectoSge,
+  proyectoProyectoSge: IProyectoProyectoSge;
   proyectosSGI: IProyectoSeguimientoEjecucionEconomica[];
   seguimientosJustificacion: IProyectoSeguimientoJustificacion[];
   periodosJustificacion: IProyectoPeriodoJustificacionWithTituloProyecto[];
@@ -46,8 +44,8 @@ export interface IRequerimientoJustificacionReportData extends IRelacionEjecucio
 }
 
 @Injectable()
-export class RequerimientoJustificacionListadoExportService extends AbstractTableExportService<IRequerimientoJustificacionReportData,
-  IReportOptions> {
+export class RequerimientoJustificacionListadoExportService
+  extends AbstractTableExportService<IRequerimientoJustificacionReportData, IReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -60,11 +58,13 @@ export class RequerimientoJustificacionListadoExportService extends AbstractTabl
     super(reportService);
   }
 
-  protected getRows(solicitudes: IRequerimientoJustificacionReportData[], reportConfig: IReportConfig<IRequerimientoJustificacionReportOptions>):
-    Observable<ISgiRowReport[]> {
+  protected getRows(
+    solicitudes: IRequerimientoJustificacionReportData[],
+    reportConfig: IReportConfig<IRequerimientoJustificacionReportOptions>
+  ): Observable<ISgiRowReport[]> {
     const requestsRow: Observable<ISgiRowReport>[] = [];
 
-    solicitudes.forEach((solicitud, index) => {
+    solicitudes.forEach((_, index) => {
       requestsRow.push(this.getRowsInner(solicitudes, index, reportConfig));
     });
     return zip(...requestsRow);
@@ -168,8 +168,10 @@ export class RequerimientoJustificacionListadoExportService extends AbstractTabl
       .pipe(tap({ error: (err) => this.logger.error(err) }));
   }
 
-  protected getColumns(resultados: IRequerimientoJustificacionReportData[], reportConfig: IReportConfig<IRequerimientoJustificacionReportOptions>):
-    Observable<ISgiColumnReport[]> {
+  protected getColumns(
+    resultados: IRequerimientoJustificacionReportData[],
+    reportConfig: IReportConfig<IRequerimientoJustificacionReportOptions>
+  ): Observable<ISgiColumnReport[]> {
     const columns: ISgiColumnReport[] = [];
 
     columns.push(... this.requerimientoJustificacionListadoExportService.fillColumns(resultados, reportConfig));
