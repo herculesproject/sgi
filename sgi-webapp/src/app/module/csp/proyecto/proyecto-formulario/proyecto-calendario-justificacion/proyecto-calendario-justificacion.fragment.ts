@@ -211,11 +211,7 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
                 a.convocatoriaPeriodoJustificacion.mesInicial))) ? -1 : 0));
 
     this.periodoJustificaciones$?.value.forEach(c => {
-      if (c?.proyectoPeriodoJustificacion) {
-        c.numPeriodo = numPeriodo++;
-      } else {
-        c.numPeriodo = numPeriodo++;
-      }
+      c.numPeriodo = numPeriodo++;
     });
 
     this.periodoJustificaciones$?.next(this.periodoJustificaciones$?.value);

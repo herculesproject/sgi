@@ -680,7 +680,7 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
       if (requerimiento.responsables && requerimiento.responsables[i]) {
         rows.push(requerimiento.responsables[i].nombre ?? '');
         rows.push(requerimiento.responsables[i].apellidos ?? '');
-        requerimiento.responsables[i].emails.filter(e => e.principal).map(e => rows.push(e.email ?? ''));
+        requerimiento.responsables[i].emails.filter(e => e.principal).forEach(e => rows.push(e.email ?? ''));
       } else {
         rows.push('');
         rows.push('');

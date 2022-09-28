@@ -190,7 +190,7 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
       return of(void 0);
     }
 
-    toCreateProyectosFacuracion.map(newItem => newItem.value.proyectoId = this.getKey() as number);
+    toCreateProyectosFacuracion.forEach(newItem => newItem.value.proyectoId = this.getKey() as number);
 
     return from(toCreateProyectosFacuracion).pipe(
       mergeMap((toCreate: StatusWrapper<IProyectoFacturacionData>) => {

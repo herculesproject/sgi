@@ -187,7 +187,7 @@ export class ConvocatoriaAreaTematicaModalComponent extends DialogFormComponent<
           const current = this.areaTematicaTree$.value;
           current.push(result);
           this.publishNodes(current);
-          this.data.areasTematicas.map(element => {
+          this.data.areasTematicas.forEach(element => {
             const node = this.nodeMap.get(element.id);
             if (node) {
               node.checked = true;
@@ -198,7 +198,7 @@ export class ConvocatoriaAreaTematicaModalComponent extends DialogFormComponent<
             }
           });
           if (this.checkedNodes) {
-            this.checkedNodes.map(node => this.expandNodes(node));
+            this.checkedNodes.forEach(node => this.expandNodes(node));
             if (this.checkedNodes.map(node => !this.selectedAreasTematicas?.includes(node.areaTematica.value))) {
               this.selectedAreasTematicas = this.checkedNodes.map(node => node.areaTematica.value);
             }
