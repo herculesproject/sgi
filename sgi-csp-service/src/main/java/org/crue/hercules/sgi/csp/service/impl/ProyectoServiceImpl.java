@@ -35,6 +35,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto.Estado;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga.Tipo;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -792,7 +793,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     Optional<ProyectoProrroga> prorroga = proyectoProrrogaRepository
         .findFirstByProyectoIdOrderByFechaConcesionDesc(proyecto.getId());
 
-    if (prorroga.isPresent() && proyecto.getFechaFinDefinitiva() != null) {
+    if (prorroga.isPresent() && !Tipo.IMPORTE.equals(prorroga.get().getTipo())
+        && proyecto.getFechaFinDefinitiva() != null) {
       Assert.isTrue(
           proyecto.getFechaFinDefinitiva().isAfter(prorroga.get().getFechaFin())
               || proyecto.getFechaFinDefinitiva().equals(prorroga.get().getFechaFin()),
