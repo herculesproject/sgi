@@ -14,6 +14,7 @@ import { IReportConfig, IReportOptions } from '@core/services/rep/abstract-table
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
+import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
 import { concat, from, Observable, of } from 'rxjs';
 import { concatMap, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
@@ -139,7 +140,8 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
     private readonly proyectoService: ProyectoService,
     private readonly convocatoriaService: ConvocatoriaService,
     private readonly empresaService: EmpresaService,
-    private readonly requerimientoJustificacionService: RequerimientoJustificacionService
+    private readonly requerimientoJustificacionService: RequerimientoJustificacionService,
+    private luxonDatePipe: LuxonDatePipe,
   ) {
     super(translate);
   }
@@ -154,6 +156,8 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
     Observable<IRequerimientoJustificacionReportData> {
     return this.proyectoSeguimientoEjecucionEconomicaService.findRequerimientosJustificacion(requerimientoJustificacionData.proyectoSge.id).pipe(
       map(({ items }) => items.map(item => {
+        // De existir el requerimientoPrevio debe estar dentro del array
+        item.requerimientoPrevio = this.findRequerimientoPrevio(item, items);
         return item;
       })),
       mergeMap(requerimientosJustificacion =>
@@ -169,6 +173,17 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
         )
       )
     )
+  }
+
+  private findRequerimientoPrevio(
+    requerimientoJustificacion: IRequerimientoJustificacion,
+    requerimientosJustificacionToFind: IRequerimientoJustificacion[]): IRequerimientoJustificacion | undefined {
+    if (requerimientoJustificacion.requerimientoPrevio?.id) {
+      return requerimientosJustificacionToFind.find(requerimientoJustificacionToFind =>
+        requerimientoJustificacionToFind.id === requerimientoJustificacion.requerimientoPrevio.id);
+    } else {
+      return requerimientoJustificacion.requerimientoPrevio;
+    }
   }
 
   private fillAlegacion(requerimientoJustificacion: IRequerimientoJustificacionInforme):
@@ -370,14 +385,14 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
         type: ColumnType.STRING,
       };
       columns.push(columnEmailResponsable);
-
-      const columnTituloConvocatoria: ISgiColumnReport = {
-        name: REQUERIMIENTO_JUSTIFICACION_TITULO_CONVOCATORIA_FIELD + idResponsables,
-        title: titleResponsable + idResponsables + this.getValuePrefix('') + this.translate.instant(REQUERIMIENTO_JUSTIFICACION_TITULO_CONVOCATORIA_KEY),
-        type: ColumnType.STRING,
-      };
-      columns.push(columnTituloConvocatoria);
     }
+
+    const columnTituloConvocatoria: ISgiColumnReport = {
+      name: REQUERIMIENTO_JUSTIFICACION_TITULO_CONVOCATORIA_FIELD,
+      title: this.translate.instant(REQUERIMIENTO_JUSTIFICACION_TITULO_CONVOCATORIA_KEY),
+      type: ColumnType.STRING,
+    };
+    columns.push(columnTituloConvocatoria);
 
     const maxNumEntidadesFinanciadoras = !isRequerimientosNull ? Math.max(...requerimientos.map(r => r.entidadesFinanciadoras ? r.entidadesFinanciadoras?.length : 0)) : 0;
 
@@ -451,21 +466,21 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
       const columnReqPrevio: ISgiColumnReport = {
         name: REQUERIMIENTO_JUSTIFICACION_REQ_PREVIO_FIELD + idRequerimientosJustificacion,
         title: titleRequerimientos + idRequerimientosJustificacion + this.getValuePrefix('') + this.translate.instant(REQUERIMIENTO_JUSTIFICACION_REQ_PREVIO_KEY),
-        type: ColumnType.NUMBER,
+        type: ColumnType.STRING,
       };
       columns.push(columnReqPrevio);
 
       const columnFechaNotificacion: ISgiColumnReport = {
         name: REQUERIMIENTO_JUSTIFICACION_FECHA_NOTIFICACION_FIELD + idRequerimientosJustificacion,
         title: titleRequerimientos + idRequerimientosJustificacion + this.getValuePrefix('') + this.translate.instant(REQUERIMIENTO_JUSTIFICACION_FECHA_NOTIFICACION_KEY),
-        type: ColumnType.DATE,
+        type: ColumnType.STRING,
       };
       columns.push(columnFechaNotificacion);
 
       const columnFechaFinAlegacion: ISgiColumnReport = {
         name: REQUERIMIENTO_JUSTIFICACION_FECHA_FIN_ALEGACION_FIELD + idRequerimientosJustificacion,
         title: titleRequerimientos + idRequerimientosJustificacion + this.getValuePrefix('') + this.translate.instant(REQUERIMIENTO_JUSTIFICACION_FECHA_FIN_ALEGACION_KEY),
-        type: ColumnType.DATE,
+        type: ColumnType.STRING,
       };
       columns.push(columnFechaFinAlegacion);
 
@@ -666,14 +681,13 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
         rows.push(requerimiento.responsables[i].nombre ?? '');
         rows.push(requerimiento.responsables[i].apellidos ?? '');
         requerimiento.responsables[i].emails.filter(e => e.principal).map(e => rows.push(e.email ?? ''));
-        rows.push(requerimiento.tituloConvocatoria ?? '');
       } else {
-        rows.push('');
         rows.push('');
         rows.push('');
         rows.push('');
       }
     }
+    rows.push(requerimiento.tituloConvocatoria ?? '');
 
     for (let i = 0; i < maxNumEntidadesFinanciadoras; i++) {
       if (requerimiento.entidadesFinanciadoras && requerimiento.entidadesFinanciadoras[i]) {
@@ -685,18 +699,24 @@ export class RequerimientoJustificacionGeneralListadoExportService extends
       }
     }
 
-    rows.push(requerimiento.proyecto?.totalImporteConcedido ?? 0);
-    rows.push(requerimiento.proyecto?.importeConcedido ?? 0);
-    rows.push(requerimiento.proyecto?.importeConcedidoCostesIndirectos ?? 0);
+    if (requerimiento.proyecto?.importeConcedido || requerimiento.proyecto?.importeConcedidoCostesIndirectos || requerimiento.proyecto?.importePresupuestoSocios ||
+      requerimiento.proyecto?.importeConcedidoSocios || requerimiento.proyecto?.totalImportePresupuesto) {
+      rows.push((requerimiento.proyecto?.importeConcedido ?? 0) + (requerimiento.proyecto?.importeConcedidoCostesIndirectos ?? 0));
+    } else {
+      rows.push(requerimiento.proyecto?.totalImporteConcedido ?? '');
+    }
+    rows.push(requerimiento.proyecto?.importeConcedido ?? '');
+    rows.push(requerimiento.proyecto?.importeConcedidoCostesIndirectos ?? '');
 
     for (let i = 0; i < maxNumRequerimientosJustificacion; i++) {
       if (requerimiento.requerimientosJustificacion && requerimiento.requerimientosJustificacion[i]) {
         rows.push(requerimiento.requerimientosJustificacion[i].numRequerimiento ?? '');
         rows.push(requerimiento.requerimientosJustificacion[i].tipoRequerimiento?.nombre ?? '');
         rows.push(requerimiento.requerimientosJustificacion[i].proyectoPeriodoJustificacion?.numPeriodo ?? '');
-        rows.push(requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.numRequerimiento ?? '');
-        rows.push(requerimiento.requerimientosJustificacion[i].fechaNotificacion ? LuxonUtils.toBackend(requerimiento.requerimientosJustificacion[i].fechaNotificacion) : '');
-        rows.push(requerimiento.requerimientosJustificacion[i].fechaFinAlegacion ? LuxonUtils.toBackend(requerimiento.requerimientosJustificacion[i].fechaFinAlegacion) : '');
+        rows.push(requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.numRequerimiento ? (requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.numRequerimiento + ' - ' +
+          requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.tipoRequerimiento?.nombre ?? '') : '');
+        rows.push(requerimiento.requerimientosJustificacion[i].fechaNotificacion ? this.luxonDatePipe.transform(LuxonUtils.toBackend(requerimiento.requerimientosJustificacion[i].fechaNotificacion, true), 'shortDate') : '');
+        rows.push(requerimiento.requerimientosJustificacion[i].fechaFinAlegacion ? this.luxonDatePipe.transform(LuxonUtils.toBackend(requerimiento.requerimientosJustificacion[i].fechaFinAlegacion, true), 'short') : '');
         rows.push(requerimiento.requerimientosJustificacion[i].importeAceptado ?? '');
         rows.push(requerimiento.requerimientosJustificacion[i].importeAceptadoCd ?? '');
         rows.push(requerimiento.requerimientosJustificacion[i].importeAceptadoCi ?? '');
