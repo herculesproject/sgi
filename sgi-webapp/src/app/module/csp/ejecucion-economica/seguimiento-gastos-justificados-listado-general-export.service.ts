@@ -8,7 +8,6 @@ import { IProyectoPresupuestoTotales } from '@core/models/csp/proyecto-presupues
 import { IProyectoSeguimientoJustificacion } from '@core/models/csp/proyecto-seguimiento-justificacion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { IColumna } from '@core/models/sge/columna';
-import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { GastoRequerimientoJustificacionService } from '@core/services/csp/gasto-requerimiento-justificacion/gasto-requerimiento-justificacion.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
@@ -78,18 +77,12 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     private readonly seguimientoJustificacionService: SeguimientoJustificacionService,
     private readonly proyectoService: ProyectoService,
     private readonly convocatoriaService: ConvocatoriaService,
-    private readonly conceptoGastoService: ConceptoGastoService,
     private readonly proyectoSeguimientoEjecucionEconomicaService: ProyectoSeguimientoEjecucionEconomicaService,
     private readonly gastoRequerimientoJustificacionService: GastoRequerimientoJustificacionService,
     private readonly requerimientoJustificacionService: RequerimientoJustificacionService
 
   ) {
     super(translate);
-    this.seguimientoJustificacionService.getColumnas()
-      .pipe(
-        map(columnas => this.columns = columnas)
-      )
-      .subscribe();
   }
 
   public getData(gastoData: IGastoJustificadoReportData): Observable<IGastoJustificadoReportData> {
@@ -121,7 +114,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
    */
   public fillDataList(gastosData: IGastoJustificadoReportData[]): Observable<IGastoJustificadoReportData[]> {
     if (!!!gastosData || gastosData.length === 0) {
-      return of(gastosData);
+      return of([]);
     }
 
     return of(gastosData).pipe(
@@ -156,14 +149,33 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     });
 
     return zip(...proyectosPeriodosJustificacion).pipe(
-      map(data => {
-        return gastosData.map(gasto => {
-          const proyectoPeriodoJustificacion = data.find(p => p.identificadorJustificacion === gasto.justificacionId);
-          gasto.proyectoSgi = proyectoPeriodoJustificacion?.proyecto?.id
-            ? { id: proyectoPeriodoJustificacion?.proyecto?.id } as IProyecto
-            : null;
-          return gasto;
-        });
+      switchMap(data => {
+        const proyectoSgeIds = new Set<string>(gastosData.map(gastoData => gastoData.proyectoId));
+        if (data.includes(null) && proyectoSgeIds.size === 1) {
+          return this.proyectoSeguimientoEjecucionEconomicaService.findProyectosSeguimientoEjecucionEconomica(Array.from(proyectoSgeIds)[0])
+            .pipe(
+              map(proyectosSeguimientoEjecucionEconomica => proyectosSeguimientoEjecucionEconomica.items),
+              map(proyectosSeguimientoEjecucionEconomica => {
+                return gastosData.map(gasto => {
+                  const proyectoSeguimiento = proyectosSeguimientoEjecucionEconomica.find(p => p.proyectoSgeRef === gasto.proyectoId);
+                  gasto.proyectoSgi = proyectoSeguimiento?.proyectoId
+                    ? { id: proyectoSeguimiento?.proyectoId } as IProyecto
+                    : null;
+                  return gasto;
+                });
+              })
+            );
+        }
+
+        return of(
+          gastosData.map(gasto => {
+            const proyectoPeriodoJustificacion = data.find(p => p?.identificadorJustificacion === gasto.justificacionId);
+            gasto.proyectoSgi = proyectoPeriodoJustificacion?.proyecto?.id
+              ? { id: proyectoPeriodoJustificacion?.proyecto?.id } as IProyecto
+              : null;
+            return gasto;
+          })
+        );
       })
     );
   }
@@ -179,6 +191,10 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
       gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
     );
 
+    if (proyectosIds.size === 0) {
+      return of(gastosData);
+    }
+
     const proyectos: Observable<IProyecto>[] = [];
     proyectosIds.forEach(proyectoId => {
       proyectos.push(
@@ -189,7 +205,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     return zip(...proyectos).pipe(
       map(data => {
         return gastosData.map(gasto => {
-          const proyecto = data.find(p => p.id === gasto.proyectoSgi.id);
+          const proyecto = data.find(d => d?.id === gasto.proyectoSgi.id);
           gasto.proyectoSgi = proyecto;
           return gasto;
         });
@@ -208,6 +224,10 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
       gastosData.filter(g => g.proyectoSgi?.convocatoriaId).map(gastoData => gastoData.proyectoSgi.convocatoriaId)
     );
 
+    if (convocatoriasIds.size === 0) {
+      return of(gastosData);
+    }
+
     const convocatorias: Observable<IConvocatoria>[] = [];
     convocatoriasIds.forEach(convocatoriaId => {
       convocatorias.push(
@@ -218,7 +238,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     return zip(...convocatorias).pipe(
       map(data => {
         return gastosData.map(gasto => {
-          const convocatoria = data.find(p => p.id === gasto.proyectoSgi.convocatoriaId);
+          const convocatoria = data.find(d => d?.id === gasto.proyectoSgi.convocatoriaId);
           gasto.tituloConvocatoria = convocatoria.titulo;
           return gasto;
         });
@@ -236,6 +256,10 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     const proyectosIds = new Set<number>(
       gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
     );
+
+    if (proyectosIds.size === 0) {
+      return of(gastosData);
+    }
 
     const responsables: Observable<IProyectoResponsablesReportData>[] = [];
     proyectosIds.forEach(proyectoId => {
@@ -305,7 +329,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     return zip(...responsables).pipe(
       map(data => {
         return gastosData.map(gasto => {
-          const r = data.find(p => p.proyectoSgiId === gasto.proyectoSgi.id);
+          const r = data.find(d => d?.proyectoSgiId === gasto.proyectoSgi.id);
           gasto.responsables = r.responsables;
           return gasto;
         });
@@ -323,6 +347,10 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     const proyectosIds = new Set<number>(
       gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
     );
+
+    if (proyectosIds.size === 0) {
+      return of(gastosData);
+    }
 
     const entidadesFinanciadoras: Observable<IProyectoEntidadesFinanciadorasReportData>[] = [];
     proyectosIds.forEach(proyectoId => {
@@ -380,7 +408,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     return zip(...entidadesFinanciadoras).pipe(
       map(data => {
         return gastosData.map(gasto => {
-          const entidadesFinanciadorasProyecto = data.find(p => p.proyectoSgiId === gasto.proyectoSgi.id);
+          const entidadesFinanciadorasProyecto = data.find(d => d?.proyectoSgiId === gasto.proyectoSgi.id);
           gasto.entidadesFinanciadoras = entidadesFinanciadorasProyecto.entidadesFinanciadoras;
           return gasto;
         });
@@ -399,6 +427,10 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
       gastosData.filter(g => g.proyectoSgi?.id).map(gastoData => gastoData.proyectoSgi.id)
     );
 
+    if (proyectosIds.size === 0) {
+      return of(gastosData);
+    }
+
     const proyectosPresupuestos: Observable<{ proyectoId: number, presupuesto: IProyectoPresupuestoTotales }>[] = [];
     proyectosIds.forEach(proyectoId => {
       proyectosPresupuestos.push(
@@ -416,7 +448,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     return zip(...proyectosPresupuestos).pipe(
       map(data => {
         return gastosData.map(gasto => {
-          const proyectoPresupuesto = data.find(p => p.proyectoId === gasto.proyectoSgi.id);
+          const proyectoPresupuesto = data.find(d => d?.proyectoId === gasto.proyectoSgi.id);
           gasto.importeConcedido = proyectoPresupuesto.presupuesto.importeTotalConcedido;
           gasto.importeConcedidoCD = proyectoPresupuesto.presupuesto.importeTotalConcedidoUniversidadCostesIndirectos;
           gasto.importeConcedidoCI = proyectoPresupuesto.presupuesto.importeTotalConcedidoUniversidadSinCosteIndirecto;
@@ -463,7 +495,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     return zip(...proyectosPeriodosJustificacion).pipe(
       map(data => {
         return gastosData.map(gasto => {
-          const proyectoPeriodoJustificacion = data.find(p => p.id === gasto.proyectoSgi.id);
+          const proyectoPeriodoJustificacion = data.find(d => d?.id === gasto.proyectoSgi.id);
           gasto.fechaUltimaJustificacion = proyectoPeriodoJustificacion?.fechaPresentacionJustificacion;
           return gasto;
         });
@@ -515,7 +547,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     return zip(...proyectosSeguimientoJustificacion).pipe(
       map(data => {
         return gastosData.map(gasto => {
-          const proyectoSeguimientoJustificacion = data.find(p => p.id === gasto.proyectoSgi.id);
+          const proyectoSeguimientoJustificacion = data.find(d => d?.id === gasto.proyectoSgi.id);
           gasto.proyectoSeguimientoJustificacion = proyectoSeguimientoJustificacion;
           return gasto;
         });

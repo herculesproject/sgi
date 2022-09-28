@@ -18,7 +18,6 @@ import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { concat, Observable, of, zip } from 'rxjs';
 import { catchError, map, switchMap, takeLast, tap } from 'rxjs/operators';
-import { IColumnDefinition } from './ejecucion-economica-formulario/desglose-economico.fragment';
 import { SeguimientoGastosJustificadosResumenListadoGeneralExportService } from './seguimiento-gastos-justificados-listado-general-export.service';
 
 export interface IRequerimientoJustificacionAlegacion extends IRequerimientoJustificacion {
@@ -78,8 +77,6 @@ export class SeguimientoGastosJustificadosResumenListadoExportService
     this._proyectoSgeRef = value;
   }
 
-  private columnas: IColumnDefinition[];
-
   constructor(
     protected readonly logger: NGXLogger,
     protected reportService: ReportService,
@@ -94,8 +91,11 @@ export class SeguimientoGastosJustificadosResumenListadoExportService
     gastos: IGastoJustificadoReportData[],
     reportConfig: IReportConfig<IGastosJustificadosReportOptions>
   ): Observable<ISgiRowReport[]> {
-    const requestsRow: Observable<ISgiRowReport>[] = [];
+    if (!!!gastos || gastos.length === 0) {
+      return this.getRowsInner([], 0, reportConfig).pipe(map(gasto => [gasto]));
+    }
 
+    const requestsRow: Observable<ISgiRowReport>[] = [];
     gastos.forEach((_, index) => {
       requestsRow.push(this.getRowsInner(gastos, index, reportConfig));
     });
@@ -133,6 +133,10 @@ export class SeguimientoGastosJustificadosResumenListadoExportService
       }),
       switchMap(data => this.seguimientoGastosJustificadosResumenListadoGeneralExportService.fillDataList(data)),
       switchMap((gastosJustificadosReportData) => {
+        if (gastosJustificadosReportData.length === 0) {
+          return of(gastosJustificadosReportData);
+        }
+
         const requestsGastos: Observable<IGastoJustificadoReportData>[] = [];
 
         gastosJustificadosReportData.forEach(gastoJustificado => {
