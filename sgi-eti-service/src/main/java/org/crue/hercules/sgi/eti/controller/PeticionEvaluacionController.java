@@ -166,9 +166,7 @@ public class PeticionEvaluacionController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-INV-BR')")
   public void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
-    PeticionEvaluacion peticionEvaluacion = this.one(id);
-    peticionEvaluacion.setActivo(Boolean.FALSE);
-    service.update(peticionEvaluacion);
+    service.delete(id);
     log.debug("delete(Long id) - end");
   }
 
