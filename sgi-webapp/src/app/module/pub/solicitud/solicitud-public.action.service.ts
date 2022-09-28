@@ -157,9 +157,6 @@ export class SolicitudPublicActionService extends ActionService {
     if (route.snapshot.data[SOLICITUD_PUBLIC_DATA_KEY]) {
       this.data = route.snapshot.data[SOLICITUD_PUBLIC_DATA_KEY];
       this.enableEdit();
-      if (this.data.solicitud.convocatoriaId) {
-        this.addConvocatoriaLink(this.data.solicitud.convocatoriaId);
-      }
     }
 
     const idConvocatoria = history.state[CONVOCATORIA_PUBLIC_ID_KEY];
@@ -277,14 +274,6 @@ export class SolicitudPublicActionService extends ActionService {
       );
     }
 
-  }
-
-  private addConvocatoriaLink(idConvocatoria: number): void {
-    this.addActionLink({
-      title: MSG_CONVOCATORIAS,
-      titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
-      routerLink: ['../..', PUB_ROUTE_NAMES.CONVOCATORIAS, idConvocatoria.toString()]
-    });
   }
 
   /**

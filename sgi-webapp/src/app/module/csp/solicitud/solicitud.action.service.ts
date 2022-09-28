@@ -279,7 +279,7 @@ export class SolicitudActionService extends ActionService {
       this.data = route.snapshot.data[SOLICITUD_DATA_KEY];
       this.enableEdit();
       this.datosProyectoComplete$.next(this.data.hasSolicitudProyecto);
-      if (this.data.solicitud.convocatoriaId) {
+      if (this.data.solicitud.convocatoriaId && !this.isInvestigador) {
         this.addConvocatoriaLink(this.data.solicitud.convocatoriaId);
       }
     }
