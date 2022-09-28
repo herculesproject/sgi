@@ -12,7 +12,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.SolicitanteExterno;
 import org.crue.hercules.sgi.csp.model.SolicitanteExterno_;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -82,8 +81,8 @@ public class CustomSolicitudExternaRepositoryImpl implements CustomSolicitudExte
     Subquery<Long> querySolicitanteExterno = cq.subquery(Long.class);
     Root<SolicitanteExterno> querySolicitanteExternoRoot = querySolicitanteExterno.from(SolicitanteExterno.class);
     querySolicitanteExterno.select(querySolicitanteExternoRoot.get(SolicitanteExterno_.solicitudId))
-        .where(cb.equal(querySolicitanteExternoRoot.get(SolicitanteExterno_.numeroDocumento),
-            numeroDocumentoSolicitante));
+        .where(cb.like(cb.lower(querySolicitanteExternoRoot.get(SolicitanteExterno_.numeroDocumento)),
+            numeroDocumentoSolicitante.toLowerCase()));
 
     cq.select(root.get(SolicitudExterna_.id))
         .where(cb.and(
