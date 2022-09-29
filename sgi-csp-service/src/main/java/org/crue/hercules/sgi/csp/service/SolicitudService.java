@@ -1048,13 +1048,15 @@ public class SolicitudService {
   public boolean modificableEstadoAndDocumentosByUsuarioExterno(String solicitudPublicId) {
     Solicitud solicitud = solicitudAuthorityHelper.getSolicitudByPublicId(solicitudPublicId);
 
-    return Arrays.asList(
+    boolean estadoModificable = Arrays.asList(
         Estado.BORRADOR,
         Estado.SUBSANACION,
         Estado.EXCLUIDA_PROVISIONAL,
         Estado.EXCLUIDA_DEFINITIVA,
         Estado.DENEGADA_PROVISIONAL,
         Estado.DENEGADA).contains(solicitud.getEstado().getEstado());
+
+    return estadoModificable && solicitud.getCreadorRef() == null && solicitud.getActivo().equals(Boolean.TRUE);
   }
 
   /**
