@@ -48,6 +48,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
           form.controls.fasePresentacionSolicitudes.setValidators(Validators.required);
         }
         else {
+          form.controls.fasePresentacionSolicitudes.reset();
           form.controls.fasePresentacionSolicitudes.setValidators([]);
         }
         form.controls.fasePresentacionSolicitudes.updateValueAndValidity();
