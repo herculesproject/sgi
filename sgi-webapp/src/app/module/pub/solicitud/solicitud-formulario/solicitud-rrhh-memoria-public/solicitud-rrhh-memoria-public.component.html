@@ -11,6 +11,9 @@
         <mat-error *ngIf="formGroup.controls.tituloTrabajo.errors?.required">
           {{'error.required.entity' | translate:msgParamTituloTrabajoEntity}}
         </mat-error>
+        <mat-error *ngIf="formGroup.controls.tituloTrabajo.errors?.maxlength">
+          {{ 'error.maxlength.entity' | translate:msgParamTituloTrabajoEntity }}
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -24,6 +27,9 @@
         <mat-error *ngIf="formGroup.controls.resumen.errors?.required">
           {{'error.required.entity' | translate:msgParamResumenEntity}}
         </mat-error>
+        <mat-error *ngIf="formGroup.controls.resumen.errors?.maxlength">
+          {{ 'error.maxlength.entity' | translate:msgParamResumenEntity }}
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -34,6 +40,9 @@
         <textarea matInput formControlName="observaciones" type="text" id="comentariosEstado"
           placeholder="{{'csp.solicitud.solicitud-rrhh.observaciones' | translate}}" cdkTextareaAutosize
           #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+        <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
+          {{ 'error.maxlength.entity' | translate:msgParamObservacionesEntity }}
+        </mat-error>
       </mat-form-field>
     </div>
 

@@ -595,7 +595,7 @@ export class ProyectoEquipoFragment extends Fragment {
     if (requisitosConvocatoria.requisitosIp?.numMaximoIP) {
       const numIps = miembrosEquipoPrincipales.length;
 
-      if (numIps < requisitosConvocatoria.requisitosIp?.numMaximoIP) {
+      if (numIps > requisitosConvocatoria.requisitosIp?.numMaximoIP) {
         return of(ValidacionRequisitosEquipoIp.NUM_MAX_IP);
       }
     }

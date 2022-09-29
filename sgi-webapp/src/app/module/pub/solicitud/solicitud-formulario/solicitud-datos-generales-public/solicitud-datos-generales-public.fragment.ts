@@ -188,7 +188,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
       codigoExterno: solicitud?.codigoExterno,
       observaciones: solicitud?.observaciones ?? '',
       comentariosEstado: solicitud?.estado?.comentario,
-      universidadText: solicitud.solicitudRrhh.universidadDatos,
+      universidadText: solicitud.solicitudRrhh.universidad?.nombre ?? solicitud.solicitudRrhh.universidadDatos,
       areaAnep: solicitud.solicitudRrhh.areaAnep,
       solicitanteExterno: {
         nombre: solicitud.solicitanteExterno.nombre ?? null,
@@ -211,7 +211,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
 
     this.convocatoria$.next(solicitud?.convocatoria);
 
-    if (!this.readonly && solicitud?.estado?.estado === Estado.BORRADOR) {
+    if (!this.readonly && [Estado.BORRADOR, Estado.RECHAZADA].includes(solicitud?.estado?.estado)) {
       this.getFormGroup().controls.codigoExterno.enable();
       this.getFormGroup().controls.observaciones.enable();
     }

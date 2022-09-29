@@ -10,6 +10,7 @@ import { SolicitudRrhhMemoriaPublicFragment } from './solicitud-rrhh-memoria-pub
 
 const SOLICITUD_RRHH_TITULO_TRABAJO_KEY = marker('csp.solicitud.solicitud-rrhh.titulo-trabajo');
 const SOLICITUD_RRHH_RESUMEN_KEY = marker('csp.solicitud.solicitud-rrhh.resumen');
+const SOLICITUD_RRHH_OBSERVACIONES_KEY = marker('csp.solicitud.solicitud-rrhh.observaciones');
 
 @Component({
   selector: 'sgi-solicitud-rrhh-memoria-public',
@@ -21,6 +22,7 @@ export class SolicitudRrhhMemoriaPublicComponent extends FormFragmentComponent<I
 
   msgParamTituloTrabajoEntity = {};
   msgParamResumenEntity = {};
+  msgParamObservacionesEntity = {};
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -55,6 +57,12 @@ export class SolicitudRrhhMemoriaPublicComponent extends FormFragmentComponent<I
       SOLICITUD_RRHH_RESUMEN_KEY
     ).subscribe((value) =>
       this.msgParamResumenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
+    );
+
+    this.translate.get(
+      SOLICITUD_RRHH_OBSERVACIONES_KEY
+    ).subscribe((value) =>
+      this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.PLURAL }
     );
 
   }
