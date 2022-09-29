@@ -1,3 +1,4 @@
+import { T } from '@angular/cdk/keycodes';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -529,15 +530,38 @@ export class SolicitudActionService extends ActionService {
             if (value) {
               this.equipoProyecto.initialize();
               this.documentos.initialize();
+              this.subscriptions.push(this.datosGenerales.getFormGroup().controls.solicitante.valueChanges.subscribe(
+                (solicitante) => {
+                  if (this.equipoProyecto.proyectoEquipos$.value.length === 0 ||
+                    this.equipoProyecto.proyectoEquipos$.value.filter(equipo =>
+                      equipo.value.solicitudProyectoEquipo.persona?.id === solicitante?.id
+                      && equipo.value.solicitudProyectoEquipo.rolProyecto?.rolPrincipal).length > 0) {
+                    this.equipoProyecto.setErrors(false);
+                  } else {
+                    this.equipoProyecto.setErrors(true);
+                  }
+                }
+              ));
             }
           }
         ));
 
         this.subscriptions.push(
           this.equipoProyecto.proyectoEquipos$.subscribe(
-            proyectoEquipo => this._isSolicitanteInSolicitudEquipo = proyectoEquipo.some(miembroEquipo =>
-              miembroEquipo.value.solicitudProyectoEquipo.persona.id === this.solicitud.solicitante.id))
-        );
+            (proyectoEquipo) => {
+              this._isSolicitanteInSolicitudEquipo = proyectoEquipo.some(miembroEquipo =>
+                miembroEquipo.value.solicitudProyectoEquipo.persona.id === this.solicitud.solicitante.id);
+
+              if (proyectoEquipo.length === 0 ||
+                proyectoEquipo.filter(equipo =>
+                  equipo.value.solicitudProyectoEquipo.persona?.id === this.solicitante?.id
+                  && equipo.value.solicitudProyectoEquipo.rolProyecto?.rolPrincipal).length > 0) {
+                this.equipoProyecto.setErrors(false);
+              } else {
+                this.equipoProyecto.setErrors(true);
+              }
+            }
+          ));
 
       } else if (this.isFormularioSolicitudRrhh()) {
         this.solicitanteRrhh.initialize();
