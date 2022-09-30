@@ -543,6 +543,9 @@ export class ProyectoActionService extends ActionService {
 
         this.subscribeToMiembrosProyectoEquipoChangeList();
 
+        //Escucha cambios en la tabla de relaciones del componente relaciones y los emite al componente fichaGeneral
+        this.subscribeToRelacionesChangeList();
+
       }
     }
 
@@ -558,6 +561,18 @@ export class ProyectoActionService extends ActionService {
       this.subscriptions.push(
         this.proyectoEquipo.equipos$.subscribe(personas =>
           this.relaciones.miembrosEquipoProyecto = personas.map(personaListado => personaListado.value.proyectoEquipo.persona))
+      );
+    }
+  }
+
+  private subscribeToRelacionesChangeList(): void {
+    if (this.relaciones) {
+      this.subscriptions.push(
+        this.relaciones.getRelacionesProyectoTableData$()
+          .pipe(
+            map(relaciones => this.fichaGeneral.proyectoRelaciones$.next(relaciones.map(relacion => relacion.value)))
+          )
+          .subscribe()
       );
     }
   }
