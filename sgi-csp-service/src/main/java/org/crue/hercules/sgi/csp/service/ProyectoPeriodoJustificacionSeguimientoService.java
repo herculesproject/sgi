@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.csp.dto.SeguimientoJustificacionAnualidad;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionSeguimientoNotFoundException;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacionSeguimiento;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionSeguimientoRepository;
@@ -164,5 +165,24 @@ public class ProyectoPeriodoJustificacionSeguimientoService {
         }).orElseThrow(
             () -> new ProyectoPeriodoJustificacionSeguimientoNotFoundException(
                 proyectoPeriodoJustificacionSeguimiento.getId()));
+  }
+
+  /**
+   * Elimina las entidades {@link ProyectoPeriodoJustificacionSeguimiento} con el
+   * proyectoPeriodoJustificacionId indicado.
+   *
+   * @param proyectoPeriodoJustificacionId Identificador de la entidad
+   *                                       {@link ProyectoPeriodoJustificacion}.
+   * @return el número de registros eliminados.
+   */
+  @Transactional
+  public int deleteByProyectoPeriodoJustificacionId(Long proyectoPeriodoJustificacionId) {
+    log.debug("deleteByProyectoPeriodoJustificacionId(Long proyectoPeriodoJustificacionId) - start");
+    AssertHelper.idNotNull(proyectoPeriodoJustificacionId, ProyectoPeriodoJustificacionSeguimiento.class);
+
+    int rowsDeleted = repository.deleteInBulkByProyectoPeriodoJustificacionId(proyectoPeriodoJustificacionId);
+
+    log.debug("deleteByProyectoPeriodoJustificacionId(Long proyectoPeriodoJustificacionId) - end");
+    return rowsDeleted;
   }
 }

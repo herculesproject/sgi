@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -79,4 +80,27 @@ public class CustomProyectoPeriodoJustificacionSeguimientoRepositoryImpl impleme
     return result;
   }
 
+  @Override
+  public int deleteInBulkByProyectoPeriodoJustificacionId(long proyectoPeriodoJustificacionId) {
+    log.debug("deleteInBulkByProyectoPeriodoJustificacionId(long proyectoPeriodoJustificacionId) - start");
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaDelete<ProyectoPeriodoJustificacionSeguimiento> query = cb
+        .createCriteriaDelete(ProyectoPeriodoJustificacionSeguimiento.class);
+
+    // Define FROM ProyectoPeriodoJustificacionSeguimiento clause
+    Root<ProyectoPeriodoJustificacionSeguimiento> root = query.from(ProyectoPeriodoJustificacionSeguimiento.class);
+
+    // Set WHERE restrictions
+    query.where(cb.equal(root.get(
+        ProyectoPeriodoJustificacionSeguimiento_.proyectoPeriodoJustificacionId),
+        proyectoPeriodoJustificacionId));
+
+    // Execute query
+    int returnValue = entityManager.createQuery(query).executeUpdate();
+
+    log.debug("deleteInBulkByProyectoPeriodoJustificacionId(long proyectoPeriodoJustificacionId) - end");
+    return returnValue;
+  }
 }
