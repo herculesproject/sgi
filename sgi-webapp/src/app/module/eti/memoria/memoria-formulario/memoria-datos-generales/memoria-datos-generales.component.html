@@ -19,7 +19,8 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'label.eti.comite' | translate}}</mat-label>
-        <sgi-select-comite #selectComite formControlName="comite" required></sgi-select-comite>
+        <sgi-select-comite #selectComite [displayWith]="displayerComite" formControlName="comite" required>
+        </sgi-select-comite>
         <mat-error *ngIf="formGroup.controls.comite.errors?.required">
           {{'error.required.entity' | translate:msgParamComiteEntity}}
         </mat-error>

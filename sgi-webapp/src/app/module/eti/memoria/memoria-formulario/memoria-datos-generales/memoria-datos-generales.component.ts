@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { ITipoMemoria } from '@core/models/eti/tipo-memoria';
 import { IPersona } from '@core/models/sgp/persona';
@@ -160,5 +161,9 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
 
   displayerMemoria(memoria: IMemoria): string {
     return memoria?.numReferencia;
+  }
+
+  displayerComite(comite: IComite): string {
+    return comite?.nombreInvestigacion;
   }
 }
