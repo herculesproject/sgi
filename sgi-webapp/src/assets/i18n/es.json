@@ -956,6 +956,7 @@
   "csp.proyecto-periodo-justificacion.fecha-fin-presentacion": "Fecha Fin Presentación",
   "csp.proyecto-periodo-justificacion.fecha-inicio": "Fecha Inicio Periodo",
   "csp.proyecto-periodo-justificacion.fecha-inicio-presentacion": "Fecha Inicio Presentación",
+  "csp.proyecto-periodo-justificacion.no-deleteable-info": "No se puede eliminar el periodo de justificación ya que tiene requerimientos asociados en el apartado seguimiento de justificación. Debe eliminar previamente los requerimientos",
   "csp.proyecto-periodo-justificacion.numero-periodo": "Núm. Periodo",
   "csp.proyecto-periodo-justificacion.observaciones": "Observaciones",
   "csp.proyecto-periodo-justificacion.periodo": "Periodo",
