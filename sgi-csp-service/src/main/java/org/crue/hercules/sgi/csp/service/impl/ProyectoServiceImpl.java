@@ -35,7 +35,6 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto.Estado;
-import org.crue.hercules.sgi.csp.model.ProyectoProrroga.Tipo;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -54,6 +53,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoProrroga.Tipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -794,7 +794,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         .findFirstByProyectoIdOrderByFechaConcesionDesc(proyecto.getId());
 
     if (prorroga.isPresent() && !Tipo.IMPORTE.equals(prorroga.get().getTipo())
-        && proyecto.getFechaFinDefinitiva() != null) {
+        && proyecto.getFechaFinDefinitiva() != null && prorroga.get().getFechaFin() != null) {
       Assert.isTrue(
           proyecto.getFechaFinDefinitiva().isAfter(prorroga.get().getFechaFin())
               || proyecto.getFechaFinDefinitiva().equals(prorroga.get().getFechaFin()),
