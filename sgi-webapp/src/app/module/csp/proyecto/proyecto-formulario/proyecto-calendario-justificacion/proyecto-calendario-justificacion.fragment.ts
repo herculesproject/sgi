@@ -137,7 +137,8 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
     wrapped.setCreated();
 
     const periodoJustificacionListado: IPeriodoJustificacionListado = {
-      proyectoPeriodoJustificacion: wrapped
+      proyectoPeriodoJustificacion: wrapped,
+      isProyectoPeriodoJustificacionDeleteable: true
     } as IPeriodoJustificacionListado;
 
     const current = this.periodoJustificaciones$.value;
