@@ -1760,13 +1760,10 @@ public class ProyectoServiceImpl implements ProyectoService {
    */
   @Override
   public boolean modificable(Long proyectoId) {
-    List<String> unidadesGestion = SgiSecurityContextHolder.getUOsForAuthority(ProyectoHelper.CSP_PRO_E);
-
-    if (!CollectionUtils.isEmpty(unidadesGestion)) {
-      return repository.existsByIdAndUnidadGestionRefInAndActivoIsTrue(proyectoId, unidadesGestion);
-    } else {
-      return true;
-    }
+    log.debug("modificable(Long proyectoId) - start");
+    boolean isModificable = proyectoHelper.hasUserAuthorityModifyProyecto(proyectoId);
+    log.debug("modificable(Long proyectoId) - start");
+    return isModificable;
   }
 
   /**
