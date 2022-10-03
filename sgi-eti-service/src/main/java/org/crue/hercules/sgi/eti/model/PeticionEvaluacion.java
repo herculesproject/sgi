@@ -93,7 +93,7 @@ public class PeticionEvaluacion extends BaseEntity {
   private String codigo;
 
   /** Título */
-  @Column(name = "titulo", length = 250)
+  @Column(name = "titulo", length = 500)
   private String titulo;
 
   /** Tipo Actividad */
