@@ -163,7 +163,12 @@
     <!-- Valor social -->
     <mat-form-field>
       <mat-label>{{'eti.peticion-evaluacion.valor-social' | translate}}</mat-label>
-      <sgi-select-enum formControlName="valorSocial" [enumMap]="TIPO_VALOR_SOCIAL_MAP" required></sgi-select-enum>
+      <mat-select #valorSocial formControlName="valorSocial"
+        matTooltip="{{TIPO_VALOR_SOCIAL_MAP.get(valorSocial.value) | translate}}">
+        <mat-option *ngFor="let item of TIPO_VALOR_SOCIAL_MAP | keyvalue"
+          matTooltip="{{TIPO_VALOR_SOCIAL_MAP.get(item?.key) | translate}}" [value]="item?.key">
+          {{TIPO_VALOR_SOCIAL_MAP.get(item?.key) | translate}}</mat-option>
+      </mat-select>
       <mat-error *ngIf="formGroup.controls.valorSocial.errors?.required">
         {{'error.required.entity' | translate:msgParamValorSocialEntity}}
       </mat-error>
