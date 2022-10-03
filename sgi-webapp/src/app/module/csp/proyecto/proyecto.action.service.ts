@@ -438,6 +438,9 @@ export class ProyectoActionService extends ActionService {
         this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(value => {
           if (value) {
             this.proyectoContexto.ocultarTable = !Boolean(this.fichaGeneral.getValue()?.convocatoriaId);
+            if (this.fichaGeneral.getValue()?.permitePaquetesTrabajo && !this.paqueteTrabajo.isInitialized()) {
+              this.paqueteTrabajo.initialize();
+            }
           }
         }));
         this.subscriptions.push(this.fichaGeneral.colaborativo$.subscribe((value) => {
@@ -541,11 +544,18 @@ export class ProyectoActionService extends ActionService {
             }
           }));
 
+        this.subscriptions.push(
+          this.paqueteTrabajo.hasPaquetesTrabajo$()
+            .subscribe(hasPaquetesTrabajo =>
+              hasPaquetesTrabajo ?
+                this.fichaGeneral.disablePermitePaquetesTrabajoFormControl() : this.fichaGeneral.enablePermitePaquetesTrabajoFormControl()
+            )
+        );
+
         this.subscribeToMiembrosProyectoEquipoChangeList();
 
         //Escucha cambios en la tabla de relaciones del componente relaciones y los emite al componente fichaGeneral
         this.subscribeToRelacionesChangeList();
-
       }
     }
 

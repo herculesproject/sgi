@@ -847,4 +847,13 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return relacion.entidadOrigen.id === this.getKey() ? relacion.entidadDestino.id : relacion.entidadOrigen.id;
   }
 
+  disablePermitePaquetesTrabajoFormControl(): void {
+    this.getFormGroup()?.controls.permitePaquetesTrabajo.disable({ emitEvent: false });
+  }
+
+  enablePermitePaquetesTrabajoFormControl(): void {
+    if (!this.readonly) {
+      this.getFormGroup()?.controls.permitePaquetesTrabajo.enable({ emitEvent: false });
+    }
+  }
 }
