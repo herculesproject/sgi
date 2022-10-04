@@ -22,15 +22,19 @@
       </div>
     </ng-container>
     <!-- Título-->
-    <mat-form-field class="input-form">
+    <mat-form-field class="input-form m-bottom-10">
       <mat-label>{{'eti.peticion-evaluacion.titulo' | translate}}</mat-label>
-      <input matInput formControlName="titulo" type="text" required maxlength="100">
+      <textarea #titulo matInput formControlName="titulo" required></textarea>
+      <mat-hint>{{titulo.value?.length}} / 500</mat-hint>
       <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
         {{'error.required.entity' | translate:msgParamTituloEntity}}
       </mat-error>
+      <mat-error *ngIf="formGroup.controls.titulo.errors?.maxlength">
+        {{ 'error.maxlength.entity' | translate:msgParamTituloEntity }}
+      </mat-error>
     </mat-form-field>
     <!-- Tipo de actividad-->
-    <mat-form-field class="input-form">
+    <mat-form-field>
       <mat-label>{{'eti.peticion-evaluacion.tipo-actividad' | translate}}</mat-label>
       <sgi-select-entity formControlName="tipoActividad" [options]="tipoActividades$ | async" required>
       </sgi-select-entity>
@@ -145,12 +149,15 @@
       </div>
     </div>
     <!-- Resumen-->
-    <mat-form-field>
+    <mat-form-field class="m-bottom-10">
       <mat-label>{{'eti.peticion-evaluacion.resumen' | translate}}</mat-label>
-      <textarea #resumen matInput formControlName="resumen" type="text" maxlength="4000" required></textarea>
-      <mat-hint>{{resumen.value.length}} / 4000</mat-hint>
+      <textarea #resumen matInput formControlName="resumen" required></textarea>
+      <mat-hint>{{resumen.value?.length}} / 4000</mat-hint>
       <mat-error *ngIf="formGroup.controls.resumen.errors?.required">
         {{'error.required.entity' | translate:msgParamResumenEntity}}
+      </mat-error>
+      <mat-error *ngIf="formGroup.controls.resumen.errors?.maxlength">
+        {{ 'error.maxlength.entity' | translate:msgParamResumenEntity }}
       </mat-error>
     </mat-form-field>
     <!-- Valor social -->
@@ -163,20 +170,24 @@
     </mat-form-field>
     <!-- Otro valor social -->
     <ng-container *ngIf="peticionEvaluacionFragment.mostrarCampoEspecificarValorSocial$.getValue()">
-      <mat-form-field>
+      <mat-form-field class="m-bottom-10">
         <mat-label>{{'eti.peticion-evaluacion.otro-valor-social' | translate}}</mat-label>
-        <textarea #resumen matInput formControlName="otroValorSocial" type="text" maxlength="2000" required></textarea>
-        <mat-hint>{{resumen.value.length}} / 2000</mat-hint>
+        <textarea #otroValorSocial matInput formControlName="otroValorSocial" required></textarea>
+        <mat-hint>{{otroValorSocial.value?.length}} / 2000</mat-hint>
         <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.required">
           {{'error.required.entity' | translate:msgParamOtroValorSocialEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamOtroValorSocialEntity}}
         </mat-error>
       </mat-form-field>
     </ng-container>
     <!-- Objetivos científicos -->
-    <mat-form-field>
+    <mat-form-field class="m-bottom-10">
       <mat-label>{{'eti.peticion-evaluacion.objetivo-cientifico' | translate:msgParamObjetivoCientificoEntity}}
       </mat-label>
-      <textarea matInput formControlName="objetivosCientificos" type="text" required></textarea>
+      <textarea matInput #objetivosCientificos formControlName="objetivosCientificos" required></textarea>
+      <mat-hint>{{objetivosCientificos.value?.length}} / 2000</mat-hint>
       <mat-error *ngIf="formGroup.controls.objetivosCientificos.errors?.required">
         {{'error.required.entity' | translate:msgParamObjetivoCientificoEntity}}
       </mat-error>
@@ -185,9 +196,10 @@
       </mat-error>
     </mat-form-field>
     <!-- Diseño metodológico -->
-    <mat-form-field>
+    <mat-form-field class="m-bottom-10">
       <mat-label>{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}</mat-label>
-      <textarea matInput formControlName="disenioMetodologico" type="text" required></textarea>
+      <textarea matInput #disenioMetodologico formControlName="disenioMetodologico" required></textarea>
+      <mat-hint>{{disenioMetodologico.value?.length}} / 2000</mat-hint>
       <mat-error *ngIf="formGroup.controls.disenioMetodologico.errors?.required">
         {{'error.required.entity' | translate:msgParamDisenioMetodologicoEntity}}
       </mat-error>

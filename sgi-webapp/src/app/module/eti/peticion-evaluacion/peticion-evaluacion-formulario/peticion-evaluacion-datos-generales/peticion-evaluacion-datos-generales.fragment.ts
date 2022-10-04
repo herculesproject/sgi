@@ -45,7 +45,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     const form = this.fb.group({
       codigo: [{ value: '', disabled: true }, Validators.required],
       solicitudConvocatoriaRef: [{ value: '', disabled: true }],
-      titulo: [{ value: '', disabled: this.readonly }, Validators.required],
+      titulo: [{ value: '', disabled: this.readonly }, [Validators.required, Validators.maxLength(500)]],
       tipoActividad: [{ value: null, disabled: this.readonly }, Validators.required],
       tipoInvestigacionTutelada: [{ value: null, disabled: this.readonly }],
       existeFinanciacion: [{ value: null, disabled: this.readonly }, Validators.required],
@@ -54,7 +54,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       estadoFinanciacion: [{ value: null, disabled: this.readonly }],
       fechaInicio: [{ value: null, disabled: this.readonly }, Validators.required],
       fechaFin: [{ value: null, disabled: this.readonly }, Validators.required],
-      resumen: [{ value: '', disabled: this.readonly }, Validators.required],
+      resumen: [{ value: '', disabled: this.readonly }, [Validators.required, Validators.maxLength(4000)]],
       valorSocial: [{ value: null, disabled: this.readonly }, Validators.required],
       otroValorSocial: [{ value: '', disabled: this.readonly }],
       objetivosCientificos: [{ value: '', disabled: this.readonly }, [Validators.required, Validators.maxLength(2000)]],
