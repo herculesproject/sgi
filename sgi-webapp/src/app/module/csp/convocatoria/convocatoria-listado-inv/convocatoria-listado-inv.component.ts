@@ -266,7 +266,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
       .and('entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.id)
       .and('entidadesFinanciadoras.fuenteFinanciacion.id', SgiRestFilterOperator.EQUALS,
         controls.fuenteFinanciacion.value?.id?.toString())
-      .and('areasTematicas.areaTematica.id', SgiRestFilterOperator.EQUALS, controls.areaTematica.value?.id?.toString());
+      .and('areasTematicas.areaTematica.padre.id', SgiRestFilterOperator.EQUALS, controls.areaTematica.value?.id?.toString());
     if (controls.aplicarFiltro.value) {
       filter.and('requisitoSexoIp', SgiRestFilterOperator.EQUALS, this.datosPersona?.persona?.sexo?.id ?? ' ')
         .and('requisitoEdadMaximaIp', SgiRestFilterOperator.GREATHER_OR_EQUAL,
