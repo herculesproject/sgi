@@ -204,6 +204,7 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
+          this.recalcularNumPeriodos();
         }
       })
     );
