@@ -33,7 +33,7 @@
         <mat-label>{{'csp.proyecto.codigos-sge' | translate}}</mat-label>
         <mat-select matNativeControl formControlName="codigosSge" multiple>
           <mat-option *ngFor="let proyecto of this.proyectosSge" [value]="proyecto">
-            {{proyecto.value.proyectoSge.id}}
+            {{proyecto.value.proyectoSge?.id}}
           </mat-option>
         </mat-select>
       </mat-form-field>
