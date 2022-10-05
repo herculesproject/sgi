@@ -40,6 +40,7 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { DialogService } from '@core/services/dialog.service';
 import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
 import { FormlyService } from '@core/services/eti/formly/formly.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
@@ -273,6 +274,7 @@ export class SolicitudActionService extends ActionService {
     categoriasProfesionalesService: CategoriaProfesionalService,
     solicitudRrhhRequisitoCategoriaService: SolicitudRrhhRequisitoCategoriaService,
     solicitudRrhhRequisitoNivelAcademicoService: SolicitudRrhhRequisitoNivelAcademicoService,
+    documentoService: DocumentoService
   ) {
     super();
 
@@ -308,8 +310,18 @@ export class SolicitudActionService extends ActionService {
       this.loadConvocatoria(idConvocatoria);
     }
 
-    this.documentos = new SolicitudDocumentosFragment(logger, this.data?.solicitud?.id, this.data?.solicitud?.convocatoriaId,
-      configuracionSolicitudService, solicitudService, solicitudDocumentoService, this.readonly, this.estadoAndDocumentosReadonly);
+    this.documentos = new SolicitudDocumentosFragment(
+      logger,
+      this.data?.solicitud?.id,
+      this.data?.solicitud?.convocatoriaId,
+      configuracionSolicitudService,
+      solicitudService,
+      solicitudDocumentoService,
+      documentoService,
+      this.readonly,
+      this.estadoAndDocumentosReadonly
+    );
+
     this.areaConocimiento = new SolicitudProyectoAreaConocimientoFragment(this.data?.solicitud?.id,
       solicitudProyectoAreaConocimiento, solicitudService, areaConocimientoService, this.readonly);
     this.hitos = new SolicitudHitosFragment(this.data?.solicitud?.id, solicitudHitoService, solicitudService, this.readonly);
@@ -379,6 +391,7 @@ export class SolicitudActionService extends ActionService {
       categoriasProfesionalesService,
       datosAcademicosService,
       vinculacionService,
+      documentoService,
       this.readonly
     );
 

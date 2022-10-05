@@ -353,7 +353,13 @@ export class ProyectoActionService extends ActionService {
         this.proyectoContexto = new ProyectoContextoFragment(id, logger, contextoProyectoService, convocatoriaService,
           this.data?.proyecto?.convocatoriaId, this.readonly, this.data?.isVisor);
         this.seguimientoCientifico = new ProyectoPeriodoSeguimientosFragment(
-          id, this.data.proyecto, proyectoService, proyectoPeriodoSeguimientoService, convocatoriaService, documentoService);
+          id,
+          this.data.proyecto,
+          proyectoService,
+          proyectoPeriodoSeguimientoService,
+          convocatoriaService,
+          documentoService
+        );
         this.proyectoEquipo = new ProyectoEquipoFragment(
           logger,
           id,
@@ -378,9 +384,20 @@ export class ProyectoActionService extends ActionService {
         this.prorrogas = new ProyectoProrrogasFragment(id, proyectoService, proyectoProrrogaService, documentoService);
         this.historicoEstados = new ProyectoHistoricoEstadosFragment(id, proyectoService);
         this.documentos = new ProyectoDocumentosFragment(
-          id, convocatoriaService, solicitudService, proyectoService, proyectoPeriodoSeguimientoService, proyectoSocioService,
-          proyectoSocioPeriodoJustificacionService, proyectoProrrogaService, proyectoDocumentoService, empresaService, translate,
-          this.data?.isVisor);
+          id,
+          convocatoriaService,
+          solicitudService,
+          proyectoService,
+          proyectoPeriodoSeguimientoService,
+          proyectoSocioService,
+          proyectoSocioPeriodoJustificacionService,
+          proyectoProrrogaService,
+          proyectoDocumentoService,
+          empresaService,
+          documentoService,
+          translate,
+          this.data?.isVisor
+        );
         this.clasificaciones = new ProyectoClasificacionesFragment(id, proyectoClasificacionService, proyectoService,
           clasificacionService, this.readonly, this.data?.isVisor);
         this.proyectosSge = new ProyectoProyectosSgeFragment(id, proyectoProyectoSgeService, proyectoService,

@@ -291,8 +291,9 @@ export class SolicitudDocumentosPublicComponent extends FragmentComponent implem
         );
       }
       else if (this.viewMode === VIEW_MODE.EDIT) {
+        const currentDocumentoRef = this.viewingNode.documento.value.documentoRef;
         this.uploader.uploadSelection().subscribe(
-          () => this.updateNode(this.getDetailNode())
+          () => this.updateNode(this.getDetailNode(), currentDocumentoRef)
         );
       }
     }
@@ -321,8 +322,8 @@ export class SolicitudDocumentosPublicComponent extends FragmentComponent implem
     this.loadDetails(undefined);
   }
 
-  private updateNode(node: NodeDocumentoSolicitud): void {
-    this.formPart.updateNode(node);
+  private updateNode(node: NodeDocumentoSolicitud, currentDocumentoRef: string): void {
+    this.formPart.updateNode(node, currentDocumentoRef);
     this.expandParents(node);
     this.switchToView();
   }

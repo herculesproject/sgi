@@ -27,6 +27,7 @@ import { DocumentoRequeridoSolicitudService } from '@core/services/csp/documento
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { CategoriaProfesionalService } from '@core/services/sgp/categoria-profesional.service';
@@ -164,7 +165,8 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     nivelAcademicoService: NivelAcademicosService,
     categoriaProfesionaService: CategoriaProfesionalService,
     dialogService: DialogService,
-    palabraClaveService: PalabraClaveService
+    palabraClaveService: PalabraClaveService,
+    documentoService: DocumentoService
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(CONVOCATORIA_ROUTE_PARAMS.ID));
@@ -189,8 +191,15 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       this.id, convocatoriaService, convocatoriaFaseService, this.readonly, this.canEdit);
     this.hitos = new ConvocatoriaHitosFragment(this.id, convocatoriaService,
       convocatoriaHitoService, this.readonly, this.canEdit);
-    this.documentos = new ConvocatoriaDocumentosFragment(logger, this.id, convocatoriaService,
-      convocatoriaDocumentoService, this.readonly, this.canEdit);
+    this.documentos = new ConvocatoriaDocumentosFragment(
+      logger,
+      this.id,
+      convocatoriaService,
+      convocatoriaDocumentoService,
+      documentoService,
+      this.readonly,
+      this.canEdit
+    );
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(this.id,
       convocatoriaService, convocatoriaSeguimientoCientificoService, this.canEdit);
     this.entidadesFinanciadoras = new ConvocatoriaEntidadesFinanciadorasFragment(
