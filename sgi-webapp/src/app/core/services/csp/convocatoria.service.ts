@@ -539,4 +539,17 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
     );
   }
 
+  /**
+   * Actualiza(Create/Update/Delete) todos los enlaces asociados a una Convocatoria.
+   *
+   * @param convocatoriaId Id de la Convocatoria.
+   * @param convocatoriaEnlaces enlaces de la convocatoria a actualizar.
+   * @returns enlaces de la Convocatoria resultantes.
+   */
+  updateEnlaces(convocatoriaId: number, convocatoriaEnlaces: IConvocatoriaEnlace[]): Observable<IConvocatoriaEnlace[]> {
+    return this.http.patch<IConvocatoriaEnlace[]>(
+      `${this.endpointUrl}/${convocatoriaId}/convocatoriaenlaces`,
+      convocatoriaEnlaces
+    );
+  }
 }

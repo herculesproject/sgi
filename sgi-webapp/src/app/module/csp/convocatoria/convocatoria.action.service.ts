@@ -11,7 +11,6 @@ import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
-import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
 import { ConvocatoriaEntidadConvocanteService } from '@core/services/csp/convocatoria-entidad-convocante.service';
 import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convocatoria-entidad-financiadora.service';
 import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
@@ -144,7 +143,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     route: ActivatedRoute,
     private convocatoriaService: ConvocatoriaService,
     proyectoService: ProyectoService,
-    convocatoriaEnlaceService: ConvocatoriaEnlaceService,
     empresaService: EmpresaService,
     convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService,
     convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
@@ -204,8 +202,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
       convocatoriaService, convocatoriaSeguimientoCientificoService, this.canEdit);
     this.entidadesFinanciadoras = new ConvocatoriaEntidadesFinanciadorasFragment(
       this.id, convocatoriaService, convocatoriaEntidadFinanciadoraService, this.readonly, this.canEdit);
-    this.enlaces = new ConvocatoriaEnlaceFragment(this.id, convocatoriaService,
-      convocatoriaEnlaceService, this.readonly, this.canEdit);
+    this.enlaces = new ConvocatoriaEnlaceFragment(this.id, convocatoriaService, this.readonly, this.canEdit);
     this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, this.id,
       convocatoriaRequisitoIPService, nivelAcademicoService, categoriaProfesionaService, this.canEdit);
     this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, this.id,
