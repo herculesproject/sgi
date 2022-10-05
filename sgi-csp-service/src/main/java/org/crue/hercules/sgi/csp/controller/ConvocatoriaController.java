@@ -811,6 +811,27 @@ public class ConvocatoriaController {
   }
 
   /**
+   * Crea y actualiza las entidades {@link ConvocatoriaEnlace}
+   * relacionadas con el Id de la entidad {@link Convocatoria} recibido. Elimina
+   * las que esten presentes en BBDD pero no en la lista recibida.
+   *
+   * @param convocatoriaId      id de la entidad {@link Convocatoria}.
+   * @param convocatoriaEnlaces lista de entidades {@link ConvocatoriaEnlace} a
+   *                            actualizar/crear.
+   * @return lista de entidades {@link ConvocatoriaEnlace}.
+   */
+  @PatchMapping(PATH_ENLACES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
+  public ResponseEntity<List<ConvocatoriaEnlace>> updateEnlaces(@PathVariable Long id,
+      @RequestBody List<ConvocatoriaEnlace> convocatoriaEnlaces) {
+    log.debug("updateEnlaces(Long id, List<ConvocatoriaEnlace> convocatoriaEnlaces) - start");
+    List<ConvocatoriaEnlace> list = convocatoriaEnlaceService.update(id, convocatoriaEnlaces);
+
+    log.debug("updateEnlaces(Long id, List<ConvocatoriaEnlace> convocatoriaEnlaces) - end");
+    return new ResponseEntity<>(list, HttpStatus.CREATED);
+  }
+
+  /**
    *
    * CONVOCATORIA ENTIDAD CONVOCANTE
    *
