@@ -4,10 +4,13 @@ import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
+import org.crue.hercules.sgi.rep.dto.eti.EvaluadorDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacionRetrospectiva;
+import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -20,12 +23,14 @@ import org.springframework.validation.annotation.Validated;
 public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluacionBaseReportService {
 
   private final EvaluacionService evaluacionService;
+  private final SgiApiSgpService personaService;
 
   public InformeEvaluacionRetrospectivaReportService(SgiConfigProperties sgiConfigProperties,
       SgiApiSgpService personaService, EvaluacionService evaluacionService) {
 
     super(sgiConfigProperties, personaService, evaluacionService);
     this.evaluacionService = evaluacionService;
+    this.personaService = personaService;
   }
 
   protected DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion) {
@@ -47,7 +52,17 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     elementsRow.add(evaluacion.getMemoria().getCodOrganoCompetente());
 
     columnsData.add("nombreSecretario");
-    elementsRow.add(evaluacion.getMemoria().getComite().getNombreSecretario());
+    try {
+      EvaluadorDto secretario = evaluacionService.findSecretarioEvaluacion(evaluacion.getId());
+      if (ObjectUtils.isNotEmpty(secretario)) {
+        PersonaDto persona = personaService.findById(secretario.getPersonaRef());
+        elementsRow.add(persona.getNombre() + " " + persona.getApellidos());
+      } else {
+        elementsRow.add(" - ");
+      }
+    } catch (Exception e) {
+      elementsRow.add(getErrorMessageToReport(e));
+    }
 
     columnsData.add("nombrePresidente");
     try {
