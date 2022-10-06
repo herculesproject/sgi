@@ -815,7 +815,7 @@ public class ConvocatoriaController {
    * relacionadas con el Id de la entidad {@link Convocatoria} recibido. Elimina
    * las que esten presentes en BBDD pero no en la lista recibida.
    *
-   * @param convocatoriaId      id de la entidad {@link Convocatoria}.
+   * @param id                  id de la entidad {@link Convocatoria}.
    * @param convocatoriaEnlaces lista de entidades {@link ConvocatoriaEnlace} a
    *                            actualizar/crear.
    * @return lista de entidades {@link ConvocatoriaEnlace}.
