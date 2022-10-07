@@ -101,7 +101,7 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
     this.translate.get(
       PLAN_INVESTIGACION_PROGRAMA_DESCRIPCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       PLAN_INVESTIGACION_PROGRAMA_NOMBRE_KEY,
