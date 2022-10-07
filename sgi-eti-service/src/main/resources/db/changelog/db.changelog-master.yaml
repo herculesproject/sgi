@@ -53,4 +53,6 @@ databaseChangeLog:
   - include:
       file: classpath*:db/changelog/changes/0000000000009-update-initial-database.xml
   - include:
+      file: classpath*:db/changelog/changes/0000000000009-update-initial-master-data.xml
+  - include:
       file: classpath*:db/changelog/changes/0000000000009-update-data.xml
