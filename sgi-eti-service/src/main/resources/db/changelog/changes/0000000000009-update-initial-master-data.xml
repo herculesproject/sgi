@@ -14,5 +14,16 @@
         <param name="orden" valueNumeric="1" />
       </whereParams>
     </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/0000000000009/m30_apartado_3_5_4.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id" valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))" />
+        <param name="nombre" value="Organismo modificado genéticamente" />
+        <param name="padre_id" valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Datos referentes a los agentes biológicos, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas')" />
+        <param name="orden" valueNumeric="4" />
+      </whereParams>
+    </update>
   </changeSet>
 </databaseChangeLog>
