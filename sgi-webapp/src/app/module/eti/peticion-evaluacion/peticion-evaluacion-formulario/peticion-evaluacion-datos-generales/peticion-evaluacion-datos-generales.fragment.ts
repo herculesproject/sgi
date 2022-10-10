@@ -17,7 +17,6 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   public readonly: boolean;
   public isTipoInvestigacionTutelada$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  public mostrarCamposFinanciacion$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public mostrarCampoEspecificarValorSocial$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public solicitantePeticionEvaluacion$ = new Subject<IPersona>();
 
@@ -63,7 +62,6 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     });
 
     this.subscriptions.push(form.controls.existeFinanciacion.valueChanges.subscribe((value: boolean) => {
-      this.showFieldsFinanciacion(value);
       this.addFinanciacionValidations(value);
     }));
 
@@ -99,7 +97,6 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   }
 
   protected buildPatch(value: IPeticionEvaluacion): { [key: string]: any; } {
-    this.showFieldsFinanciacion(value.existeFinanciacion);
     this.addFinanciacionValidations(value.existeFinanciacion);
     this.addValorSocialValidations(value.otroValorSocial);
     this.addTieneFondosPropiosValidations(value.solicitudConvocatoriaRef);
@@ -188,10 +185,6 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     }
   }
 
-  private showFieldsFinanciacion(value: boolean): void {
-    this.mostrarCamposFinanciacion$.next(value);
-  }
-
   private addFinanciacionValidations(value: boolean) {
     const form = this.getFormGroup().controls;
     if (!this.readonly) {
@@ -206,7 +199,10 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       } else {
         form.financiacion.clearValidators();
         form.estadoFinanciacion.clearValidators();
-        form.importeFinanciacion.clearValidators();
+        form.importeFinanciacion.setValidators([
+          Validators.min(1),
+          Validators.max(2_147_483_647)
+        ]);
       }
       form.financiacion.updateValueAndValidity();
       form.estadoFinanciacion.updateValueAndValidity();

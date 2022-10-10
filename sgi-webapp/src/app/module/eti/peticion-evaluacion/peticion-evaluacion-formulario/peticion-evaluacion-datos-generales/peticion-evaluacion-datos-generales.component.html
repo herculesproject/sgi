@@ -63,51 +63,49 @@
         {{'error.required.entity' | translate:msgParamExisteFinanciacionEntity}}
       </mat-error>
     </mat-form-field>
-    <ng-container *ngIf="peticionEvaluacionFragment.mostrarCamposFinanciacion$ | async">
-      <!-- Órgano financiador-->
-      <mat-form-field>
-        <mat-label>{{'eti.peticion-evaluacion.organo-financiador' | translate}}</mat-label>
-        <input #nombre matInput formControlName="financiacion" type="text"
-          [required]="FormGroupUtil.hasValidator(this.formGroup,'financiacion','required')" maxlength="100">
-        <mat-error *ngIf="formGroup.controls.financiacion.errors?.required">
-          {{'error.required.entity' | translate:msgParamFinanciacionEntity}}
-        </mat-error>
-      </mat-form-field>
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-        [fxLayoutGap]="fxLayoutProperties.gap">
-        <div>
-          <!-- Estado financiación -->
-          <mat-form-field>
-            <mat-label>{{'eti.peticion-evaluacion.estado-financiacion' | translate}}</mat-label>
-            <sgi-select-enum formControlName="estadoFinanciacion" [enumMap]="ESTADO_FINANCIACION_MAP"
-              [required]="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required')"></sgi-select-enum>
-            <mat-error
-              *ngIf="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required') && formGroup.controls.estadoFinanciacion.errors?.required">
-              {{'error.required.entity' | translate:msgParamEstadoFinanciacionEntity}}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div>
-          <!-- Importe financiación-->
-          <mat-form-field>
-            <mat-label>{{'eti.peticion-evaluacion.importe-financiacion' | translate}}</mat-label>
-            <input matInput formControlName="importeFinanciacion" type="number"
-              [required]="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required')" min="0">
-            <mat-error
-              *ngIf="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required') && formGroup.controls.importeFinanciacion.errors?.required">
-              {{'error.required.entity' | translate:msgParamImporteFinanciacionEntity}}
-            </mat-error>
-            <mat-error *ngIf="formGroup.controls.importeFinanciacion.errors?.min">
-              {{'error.min.digit' | translate}}
-            </mat-error>
-            <mat-error *ngIf="formGroup.controls.importeFinanciacion.errors?.max">
-              {{'error.max.digit' | translate}}
-            </mat-error>
-          </mat-form-field>
-        </div>
+    <!-- Órgano financiador-->
+    <mat-form-field>
+      <mat-label>{{'eti.peticion-evaluacion.organo-financiador' | translate}}</mat-label>
+      <input #nombre matInput formControlName="financiacion" type="text"
+        [required]="FormGroupUtil.hasValidator(this.formGroup,'financiacion','required')" maxlength="100">
+      <mat-error *ngIf="formGroup.controls.financiacion.errors?.required">
+        {{'error.required.entity' | translate:msgParamFinanciacionEntity}}
+      </mat-error>
+    </mat-form-field>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+      [fxLayoutGap]="fxLayoutProperties.gap">
+      <div>
+        <!-- Estado financiación -->
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.estado-financiacion' | translate}}</mat-label>
+          <sgi-select-enum formControlName="estadoFinanciacion" [enumMap]="ESTADO_FINANCIACION_MAP"
+            [required]="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required')"></sgi-select-enum>
+          <mat-error
+            *ngIf="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required') && formGroup.controls.estadoFinanciacion.errors?.required">
+            {{'error.required.entity' | translate:msgParamEstadoFinanciacionEntity}}
+          </mat-error>
+        </mat-form-field>
       </div>
-    </ng-container>
+      <div>
+        <!-- Importe financiación-->
+        <mat-form-field>
+          <mat-label>{{'eti.peticion-evaluacion.importe-financiacion' | translate}}</mat-label>
+          <input matInput formControlName="importeFinanciacion" type="number"
+            [required]="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required')" min="0">
+          <mat-error
+            *ngIf="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required') && formGroup.controls.importeFinanciacion.errors?.required">
+            {{'error.required.entity' | translate:msgParamImporteFinanciacionEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importeFinanciacion.errors?.min">
+            {{'error.min.digit' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.importeFinanciacion.errors?.max">
+            {{'error.max.digit' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
     <!--Tiene fondos propios -->
     <mat-form-field *ngIf="formGroup.controls.solicitudConvocatoriaRef.value">
       <mat-label>{{'eti.peticion-evaluacion.tiene-fondos-propios' | translate}}</mat-label>
