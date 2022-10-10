@@ -21,8 +21,10 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionNotDelet
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionOverlappedFechasException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalException;
+import org.crue.hercules.sgi.csp.model.EstadoProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.repository.EstadoProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoJustificacionSpecifications;
@@ -50,14 +52,18 @@ public class ProyectoPeriodoJustificacionService {
   private final ProyectoRepository proyectoRepository;
   private final RequerimientoJustificacionService requerimientoJustificacionService;
 
+  private final EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository;
+
   public ProyectoPeriodoJustificacionService(Validator validator,
       ProyectoPeriodoJustificacionRepository proyectoPeriodoJustificacionRepository,
       ProyectoRepository proyectoRepository,
-      RequerimientoJustificacionService requerimientoJustificacionService) {
+      RequerimientoJustificacionService requerimientoJustificacionService,
+      EstadoProyectoPeriodoJustificacionRepository estadoProyectoPeriodoJustificacionRepository) {
     this.validator = validator;
     this.repository = proyectoPeriodoJustificacionRepository;
     this.proyectoRepository = proyectoRepository;
     this.requerimientoJustificacionService = requerimientoJustificacionService;
+    this.estadoProyectoPeriodoJustificacionRepository = estadoProyectoPeriodoJustificacionRepository;
   }
 
   @Transactional
@@ -149,9 +155,36 @@ public class ProyectoPeriodoJustificacionService {
       });
       returnValue.add(repository.save(periodoJustificacion));
     }
+
+    List<ProyectoPeriodoJustificacion> proyectoPeriodoJustificacionesSinEstadoBD = proyectoPeriodoJustificacionsBD
+        .stream().filter(
+            periodoJustificacion -> Objects.isNull(periodoJustificacion.getEstado()) || (Objects
+                .nonNull(periodoJustificacion
+                    .getEstado())
+                && Objects.isNull(periodoJustificacion.getEstado().getId())))
+        .collect(Collectors.toList());
+    // se crea el estado pendiente en los periodos de justificación nuevos que no
+    // tienen estado, o antiguos que se hayan cargado con estado a null
+    if (!proyectoPeriodoJustificacionesSinEstadoBD.isEmpty()) {
+      proyectoPeriodoJustificacionesSinEstadoBD.stream().forEach(periodoJustificacion -> {
+        periodoJustificacion
+            .setEstado(this.createEstadoProyectoPeriodoJustificacionPendiente(periodoJustificacion.getId()));
+        repository.save(periodoJustificacion);
+      });
+    }
+
     log.debug(
         "update(Long proyectoPeriodoJustificacionId, List<ProyectoPeriodoJustificacion> proyectoPeriodoJustificaciones) - end");
     return returnValue;
+  }
+
+  private EstadoProyectoPeriodoJustificacion createEstadoProyectoPeriodoJustificacionPendiente(
+      Long idPeriodoJustificacion) {
+    return this.estadoProyectoPeriodoJustificacionRepository.save(EstadoProyectoPeriodoJustificacion.builder()
+        .estado(EstadoProyectoPeriodoJustificacion.TipoEstadoPeriodoJustificacion.PENDIENTE)
+        .fechaEstado(Instant.now())
+        .proyectoPeriodoJustificacionId(idPeriodoJustificacion)
+        .build());
   }
 
   /**

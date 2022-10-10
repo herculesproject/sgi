@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.controller.ProyectoPeriodoJustificacionControll
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionIdentificadorJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionInput.EstadoProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -363,6 +364,12 @@ class ProyectoPeriodoJustificacionIT extends BaseIT {
         .observaciones("testing ProyectoPeriodoJusitificacion")
         .proyectoId(1L)
         .tipoJustificacion(TipoJustificacion.PERIODICO)
+        .estado(EstadoProyectoPeriodoJustificacion.builder()
+            .id(id)
+            .estado(EstadoProyectoPeriodoJustificacion.TipoEstadoPeriodoJustificacion.PENDIENTE)
+            .fechaEstado(Instant.now())
+            .proyectoPeriodoJustificacionId(id)
+            .build())
         .build();
   }
 
