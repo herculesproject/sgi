@@ -7,6 +7,7 @@ import { VALIDACION_REQUISITOS_EQUIPO_IP_MAP } from '@core/enums/validaciones-re
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
+import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto, TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
@@ -266,7 +267,7 @@ export class SolicitudActionService extends ActionService {
     datosPersonalesService: DatosPersonalesService,
     palabraClaveService: PalabraClaveService,
     solicitudGrupoService: SolicitudGrupoService,
-    proyectoService: ProyectoService,
+    private readonly proyectoService: ProyectoService,
     solicitudRrhhService: SolicitudRrhhService,
     solicitanteExternoService: SolicitanteExternoService,
     datosContactoService: DatosContactoService,
@@ -840,20 +841,30 @@ export class SolicitudActionService extends ActionService {
     }
 
     const proyectoId = this.data.proyectosIds.length > 1 ? null : this.data.proyectosIds[0];
-    const routerLink: string[] = proyectoId ?
+    const routerLink: string[] = !!proyectoId ?
       ['../..', CSP_ROUTE_NAMES.PROYECTO, proyectoId.toString(), PROYECTO_ROUTE_NAMES.FICHA_GENERAL] :
       ['../..', CSP_ROUTE_NAMES.PROYECTO];
-
     const queryParams = !proyectoId ? { [SOLICITUD_ACTION_LINK_KEY]: this.data.solicitud.id } : {};
-
     const actionLinkOptions = {
       title: MSG_PROYECTOS,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
       routerLink,
       queryParams
     };
-
-    this.addActionLink(actionLinkOptions);
+    if (proyectoId !== null) {
+      this.subscriptions.push(
+        this.proyectoService.findById(proyectoId).pipe(
+          tap(proyecto => {
+            if (!!!proyecto.activo) {
+              return;
+            }
+            this.addActionLink(actionLinkOptions);
+          })
+        ).subscribe());
+    } else {
+      actionLinkOptions.titleParams = MSG_PARAMS.CARDINALIRY.PLURAL;
+      this.addActionLink(actionLinkOptions);
+    }
   }
 
   private isFormularioSolicitudProyecto(): boolean {
