@@ -26,4 +26,12 @@
       </whereParams>
     </update>
   </changeSet>
+
+  <changeSet context="!test" author="master" id="0000000000009-cargo_comite">
+    <insert tableName="cargo_comite">
+      <column name="id" valueNumeric="3" />
+      <column name="nombre" value="SECRETARIO" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
