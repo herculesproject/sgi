@@ -121,6 +121,9 @@ public class InformeActaReportService extends SgiReportService {
     Long numeroEvaluacionesRevisiones = actaService.countEvaluacionesRevisionSinMinima(acta.getId());
     elementsRow.add(null != numeroEvaluacionesRevisiones ? numeroEvaluacionesRevisiones : 0);
 
+    columnsData.add("ordenDelDia");
+    elementsRow.add(acta.getConvocatoriaReunion().getOrdenDia());
+
     rowsData.add(elementsRow);
 
     DefaultTableModel tableModel = new DefaultTableModel();
