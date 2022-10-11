@@ -86,7 +86,7 @@ public class ProyectoPeriodoJustificacionService {
         .collect(Collectors.toList());
 
     if (!proyectoPeriodoJustificacionsEliminar.isEmpty()) {
-      repository.deleteAll(proyectoPeriodoJustificacionsEliminar);
+      this.deleteAll(proyectoPeriodoJustificacionsEliminar);
     }
 
     // Ordena los proyecto Periodo Justificacion por fecha de inicio
@@ -153,24 +153,17 @@ public class ProyectoPeriodoJustificacionService {
           throw new ProyectoPeriodoJustificacionOverlappedFechasException();
         }
       });
-      returnValue.add(repository.save(periodoJustificacion));
-    }
 
-    List<ProyectoPeriodoJustificacion> proyectoPeriodoJustificacionesSinEstadoBD = proyectoPeriodoJustificacionsBD
-        .stream().filter(
-            periodoJustificacion -> Objects.isNull(periodoJustificacion.getEstado()) || (Objects
-                .nonNull(periodoJustificacion
-                    .getEstado())
-                && Objects.isNull(periodoJustificacion.getEstado().getId())))
-        .collect(Collectors.toList());
-    // se crea el estado pendiente en los periodos de justificación nuevos que no
-    // tienen estado, o antiguos que se hayan cargado con estado a null
-    if (!proyectoPeriodoJustificacionesSinEstadoBD.isEmpty()) {
-      proyectoPeriodoJustificacionesSinEstadoBD.stream().forEach(periodoJustificacion -> {
+      if (Objects.isNull(periodoJustificacion.getId())) {
+        // creación
+        ProyectoPeriodoJustificacion proyectoPeriodoJustificacionCreado = repository.save(periodoJustificacion);
         periodoJustificacion
-            .setEstado(this.createEstadoProyectoPeriodoJustificacionPendiente(periodoJustificacion.getId()));
-        repository.save(periodoJustificacion);
-      });
+            .setEstado(this.createEstadoProyectoPeriodoJustificacionPendiente(
+                proyectoPeriodoJustificacionCreado.getId()));
+        returnValue.add(proyectoPeriodoJustificacionCreado);
+      } else {
+        returnValue.add(repository.save(periodoJustificacion));
+      }
     }
 
     log.debug(
@@ -185,6 +178,13 @@ public class ProyectoPeriodoJustificacionService {
         .fechaEstado(Instant.now())
         .proyectoPeriodoJustificacionId(idPeriodoJustificacion)
         .build());
+  }
+
+  @Transactional
+  public void deleteAll(List<ProyectoPeriodoJustificacion> proyectoPeriodoJustificacionesEliminar) {
+    for (ProyectoPeriodoJustificacion periodoJustificacionEliminar : proyectoPeriodoJustificacionesEliminar) {
+      this.delete(periodoJustificacionEliminar.getId());
+    }
   }
 
   /**
@@ -206,7 +206,14 @@ public class ProyectoPeriodoJustificacionService {
       throw new ProyectoPeriodoJustificacionNotDeleteableException();
     }
 
+    ProyectoPeriodoJustificacion proyectoPeriodoJustificacion = this.findById(id);
+    proyectoPeriodoJustificacion.setEstado(null);
+
+    repository.save(proyectoPeriodoJustificacion);
+
+    this.estadoProyectoPeriodoJustificacionRepository.deleteAllByProyectoPeriodoJustificacionId(id);
     repository.deleteById(id);
+
     log.debug("delete(Long id) - end");
 
   }
