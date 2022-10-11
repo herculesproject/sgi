@@ -25,7 +25,7 @@
     <mat-form-field class="input-form m-bottom-10">
       <mat-label>{{'eti.peticion-evaluacion.titulo' | translate}}</mat-label>
       <textarea #titulo matInput formControlName="titulo" required></textarea>
-      <mat-hint>{{titulo.value?.length}} / 500</mat-hint>
+      <mat-hint>{{titulo.value?.length}} / 1000</mat-hint>
       <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
         {{'error.required.entity' | translate:msgParamTituloEntity}}
       </mat-error>
@@ -190,7 +190,7 @@
       <mat-label>{{'eti.peticion-evaluacion.objetivo-cientifico' | translate:msgParamObjetivoCientificoEntity}}
       </mat-label>
       <textarea matInput #objetivosCientificos formControlName="objetivosCientificos" required></textarea>
-      <mat-hint>{{objetivosCientificos.value?.length}} / 2000</mat-hint>
+      <mat-hint>{{objetivosCientificos.value?.length}} / 4000</mat-hint>
       <mat-error *ngIf="formGroup.controls.objetivosCientificos.errors?.required">
         {{'error.required.entity' | translate:msgParamObjetivoCientificoEntity}}
       </mat-error>
@@ -202,7 +202,7 @@
     <mat-form-field class="m-bottom-10">
       <mat-label>{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}</mat-label>
       <textarea matInput #disenioMetodologico formControlName="disenioMetodologico" required></textarea>
-      <mat-hint>{{disenioMetodologico.value?.length}} / 2000</mat-hint>
+      <mat-hint>{{disenioMetodologico.value?.length}} / 4000</mat-hint>
       <mat-error *ngIf="formGroup.controls.disenioMetodologico.errors?.required">
         {{'error.required.entity' | translate:msgParamDisenioMetodologicoEntity}}
       </mat-error>
