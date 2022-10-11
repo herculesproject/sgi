@@ -13,8 +13,9 @@ import { DialogService } from '@core/services/dialog.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+import { of, Subscription } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { getPersonaEmailListConcatenated } from 'src/app/esb/sgp/shared/pipes/persona-email.pipe';
 import { GrupoActionService } from '../../grupo.action.service';
 import { GrupoEquipoModalComponent, GrupoEquipoModalData } from '../../modals/grupo-equipo-modal/grupo-equipo-modal.component';
@@ -56,7 +57,8 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     public actionService: GrupoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly logger: NGXLogger
   ) {
     super(actionService.FRAGMENT.EQUIPO_INVESTIGACION, actionService);
     this.formPart = this.fragment as GrupoEquipoInvestigacionFragment;
@@ -179,21 +181,37 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
    * Eliminar grupo equipo
    */
   deleteEquipo(wrapper: StatusWrapper<IGrupoEquipoListado>) {
-    this.grupoEquipoService.existsLineaInvestigadorInFechasGrupoEquipo(wrapper.value.id).subscribe(res => {
-      if (res) {
-        this.subscriptions.push(this.dialogService.showConfirmation(this.textoNoDelete).subscribe());
-      } else {
-        this.subscriptions.push(
-          this.dialogService.showConfirmation(this.textoDelete).subscribe(
-            (aceptado) => {
-              if (aceptado) {
-                this.formPart.deleteGrupoEquipoInvestigacion(wrapper);
-              }
-            }
-          )
-        );
-      }
-    });
+    if (!!!wrapper.value.id) {
+      this.deleteRow(wrapper);
+      return;
+    }
+
+    this.grupoEquipoService.existsLineaInvestigadorInFechasGrupoEquipo(wrapper.value.id)
+      .pipe(
+        catchError(er => {
+          this.logger.error(er);
+          return of(void (0));
+        })
+      )
+      .subscribe(res => {
+        if (res) {
+          this.subscriptions.push(this.dialogService.showConfirmation(this.textoNoDelete).subscribe());
+        } else {
+          this.deleteRow(wrapper);
+        }
+      });
   }
 
+
+  private deleteRow(wrapper: StatusWrapper<IGrupoEquipoListado>) {
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(this.textoDelete).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            this.formPart.deleteGrupoEquipoInvestigacion(wrapper);
+          }
+        }
+      )
+    );
+  }
 }
