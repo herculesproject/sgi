@@ -55,6 +55,12 @@ public class InformeActaReportService extends SgiReportService {
     Vector<Vector<Object>> rowsData = new Vector<>();
     Vector<Object> elementsRow = new Vector<>();
 
+    columnsData.add("fecha");
+    String i18nDe = ApplicationContextSupport.getMessage("common.de");
+    String pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
+    Instant fecha = acta.getConvocatoriaReunion().getFechaEvaluacion();
+    elementsRow.add(formatInstantToString(fecha, pattern));
+
     columnsData.add("numeroActa");
     Integer numeroActa = acta.getNumero();
     elementsRow.add(numeroActa);
@@ -64,10 +70,9 @@ public class InformeActaReportService extends SgiReportService {
     elementsRow.add(comite);
 
     columnsData.add("fechaConvocatoria");
-    String i18nDe = ApplicationContextSupport.getMessage("common.de");
-    String pattern = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
+    String patternFechaConv = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     Instant fechaEvaluacion = acta.getConvocatoriaReunion().getFechaEvaluacion();
-    elementsRow.add(formatInstantToString(fechaEvaluacion, pattern));
+    elementsRow.add(formatInstantToString(fechaEvaluacion, patternFechaConv));
 
     columnsData.add("lugar");
     elementsRow.add(acta.getConvocatoriaReunion().getLugar());
