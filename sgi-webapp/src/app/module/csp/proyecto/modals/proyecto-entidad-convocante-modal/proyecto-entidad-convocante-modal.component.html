@@ -6,11 +6,13 @@
       <mat-form-field fxFlex>
         <mat-label>{{ 'csp.proyecto-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR }}</mat-label>
         <sgi-select-empresa formControlName="entidad"
-          placeholder="{{ 'csp.proyecto-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR }}"
-          [selectedEmpresas]="data.selectedEmpresas" required>
+          placeholder="{{ 'csp.proyecto-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR }}" required>
         </sgi-select-empresa>
         <mat-error *ngIf="formGroup.controls.entidad.errors?.required">
           {{ 'error.required.entity' | translate:msgParamEntity }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.entidad.errors?.duplicated">
+          {{ 'error.csp.proyecto-entidad-convocatante.duplicated' | translate }}
         </mat-error>
       </mat-form-field>
     </div>

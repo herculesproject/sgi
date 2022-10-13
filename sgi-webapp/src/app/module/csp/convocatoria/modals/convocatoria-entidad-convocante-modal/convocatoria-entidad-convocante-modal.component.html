@@ -5,11 +5,13 @@
       <mat-form-field class="input-form">
         <mat-label>{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
         <sgi-select-empresa formControlName="empresa"
-          placeholder="{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}"
-          [selectedEmpresas]="data.selectedEmpresas" required>
+          placeholder="{{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}" required>
         </sgi-select-empresa>
         <mat-error *ngIf="formGroup.controls.empresa.errors?.required">
           {{ 'error.required.entity' | translate:msgParamEntity }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.empresa.errors?.duplicated">
+          {{ 'error.csp.convocatoria-entidad-convocatante.duplicated' | translate }}
         </mat-error>
       </mat-form-field>
     </div>

@@ -229,7 +229,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
         }
 
         if (!entidadConvocanteModalidad.modalidad) {
-          this.formPart.addSolicitudModalidad(entidadConvocanteModalidadModal.modalidad);
+          this.formPart.addSolicitudModalidad(entidadConvocanteModalidadModal.modalidad, entidadConvocanteModalidadModal.programa?.id);
         } else if (!entidadConvocanteModalidadModal.modalidad) {
           this.formPart.deleteSolicitudModalidad(entidadConvocanteModalidad.modalidad);
         } else if (!entidadConvocanteModalidad.modalidad.created) {

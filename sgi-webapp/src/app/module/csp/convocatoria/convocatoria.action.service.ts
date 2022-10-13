@@ -11,7 +11,6 @@ import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
-import { ConvocatoriaEntidadConvocanteService } from '@core/services/csp/convocatoria-entidad-convocante.service';
 import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convocatoria-entidad-financiadora.service';
 import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
 import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase/convocatoria-fase.service';
@@ -153,7 +152,6 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     convocatoriaHitoService: ConvocatoriaHitoService,
     convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService,
     convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService,
-    convocatoriaEntidadConvocanteService: ConvocatoriaEntidadConvocanteService,
     convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
     convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
     convocatoriaDocumentoService: ConvocatoriaDocumentoService,
@@ -183,7 +181,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
       this.id, convocatoriaService, convocatoriaPeriodoJustificacionService, this.canEdit);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
-      logger, this.id, convocatoriaService, convocatoriaEntidadConvocanteService,
+      logger, this.id, convocatoriaService,
       empresaService, this.readonly, this.canEdit);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(
       this.id, convocatoriaService, convocatoriaFaseService, this.readonly, this.canEdit);

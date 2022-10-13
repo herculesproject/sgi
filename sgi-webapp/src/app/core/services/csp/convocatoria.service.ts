@@ -552,4 +552,24 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
       convocatoriaEnlaces
     );
   }
+
+  /**
+   * Actualiza(Create/Update/Delete) todos las entidades convocantes asociados a una Convocatoria.
+   *
+   * @param convocatoriaId Id de la Convocatoria.
+   * @param entidadesConvocantes entidades convocantes de la convocatoria a actualizar.
+   * @returns entidades convocantes de la Convocatoria resultantes.
+   */
+  updateEntidadesConvocantes(
+    convocatoriaId: number,
+    entidadesConvocantes: IConvocatoriaEntidadConvocante[]
+  ): Observable<IConvocatoriaEntidadConvocante[]> {
+    return this.http.patch<IConvocatoriaEntidadConvocanteBackend[]>(
+      `${this.endpointUrl}/${convocatoriaId}/convocatoriaentidadconvocantes`,
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER.fromTargetArray(entidadesConvocantes)
+    ).pipe(
+      map((response => CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER.toTargetArray(response)))
+    );
+  }
+
 }
