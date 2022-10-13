@@ -5,7 +5,9 @@ import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluadorDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
@@ -13,6 +15,7 @@ import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacionRetrospectiva;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -51,6 +54,9 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     columnsData.add("codigoOrgano");
     elementsRow.add(evaluacion.getMemoria().getCodOrganoCompetente());
 
+    columnsData.add("nombreInvestigacion");
+    elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
+
     columnsData.add("nombreSecretario");
     try {
       EvaluadorDto secretario = evaluacionService.findSecretarioEvaluacion(evaluacion.getId());
@@ -70,6 +76,15 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
       addRowDataInvestigador(idPresidente, elementsRow);
     } catch (Exception e) {
       elementsRow.add(getErrorMessageToReport(e));
+    }
+
+    columnsData.add("del");
+    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
+      String i18nDela = ApplicationContextSupport.getMessage("common.dela");
+      elementsRow.add(i18nDela);
+    } else {
+      String i18nDel = ApplicationContextSupport.getMessage("common.del");
+      elementsRow.add(i18nDel);
     }
 
     rowsData.add(elementsRow);
