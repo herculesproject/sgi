@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
+import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -557,6 +558,48 @@ class ConvocatoriaIT extends BaseIT {
         .isEqualTo("entidad-" + String.format("%03d", 1));
   }
 
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
+    // @formatter:off
+    "classpath:scripts/modelo_ejecucion.sql",
+    "classpath:scripts/tipo_finalidad.sql",
+    "classpath:scripts/tipo_regimen_concurrencia.sql",
+    "classpath:scripts/tipo_ambito_geografico.sql",
+    "classpath:scripts/convocatoria.sql",
+    "classpath:scripts/programa.sql",
+    "classpath:scripts/convocatoria_entidad_convocante.sql"
+    // @formatter:on
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  void updateEntidadesConvocantes_ReturnsConvocatoriaEntidadConvocanteList() throws Exception {
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaEntidadConvocante> toUpdateList = Arrays.asList(
+        generarMockConvocatoriaEntidadConvocante(1L, 4L),
+        generarMockConvocatoriaEntidadConvocante(null, 6L));
+
+    final ResponseEntity<List<ConvocatoriaEntidadConvocante>> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_CONVOCANTE,
+        HttpMethod.PATCH,
+        buildGenericRequest(null,
+            toUpdateList, "CSP-CON-E"),
+        new ParameterizedTypeReference<List<ConvocatoriaEntidadConvocante>>() {
+        }, convocatoriaId);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    List<ConvocatoriaEntidadConvocante> convocatoriaEntidadesConvocantesUpdated = response.getBody();
+
+    Assertions.assertThat(convocatoriaEntidadesConvocantesUpdated).hasSize(toUpdateList.size());
+
+    Assertions.assertThat(convocatoriaEntidadesConvocantesUpdated.get(0).getPrograma().getId())
+        .as("get(0).getPrograma().getId()")
+        .isEqualTo(toUpdateList.get(0).getPrograma().getId());
+    Assertions.assertThat(convocatoriaEntidadesConvocantesUpdated.get(1).getPrograma().getId())
+        .as("get(1).getPrograma().getId()")
+        .isEqualTo(toUpdateList.get(1).getPrograma().getId());
+  }
+
   /**
    * 
    * CONVOCATORIA ENTIDAD FINANCIADORA
@@ -801,7 +844,7 @@ class ConvocatoriaIT extends BaseIT {
         new ParameterizedTypeReference<List<ConvocatoriaEnlace>>() {
         }, convocatoriaId);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     List<ConvocatoriaEnlace> convocatoriaEnlacesUpdated = response.getBody();
 
@@ -1828,4 +1871,18 @@ class ConvocatoriaIT extends BaseIT {
     return convocatoria;
 
   }
+
+  private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id, Long programaId) {
+    Programa programa = new Programa();
+    programa.setId(programaId);
+
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = new ConvocatoriaEntidadConvocante();
+    convocatoriaEntidadConvocante.setId(id);
+    convocatoriaEntidadConvocante.setConvocatoriaId(id == null ? 1 : id);
+    convocatoriaEntidadConvocante.setEntidadRef("entidad-" + (id == null ? 1 : id));
+    convocatoriaEntidadConvocante.setPrograma(programa);
+
+    return convocatoriaEntidadConvocante;
+  }
+
 }

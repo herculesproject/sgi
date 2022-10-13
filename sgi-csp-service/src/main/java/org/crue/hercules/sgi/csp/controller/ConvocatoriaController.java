@@ -828,7 +828,7 @@ public class ConvocatoriaController {
     List<ConvocatoriaEnlace> list = convocatoriaEnlaceService.update(id, convocatoriaEnlaces);
 
     log.debug("updateEnlaces(Long id, List<ConvocatoriaEnlace> convocatoriaEnlaces) - end");
-    return new ResponseEntity<>(list, HttpStatus.CREATED);
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   /**
@@ -863,6 +863,31 @@ public class ConvocatoriaController {
 
     log.debug("findAllConvocatoriaEntidadConvocantes(Long id, String query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Actualiza el listado de {@link ConvocatoriaEntidadConvocante} de la
+   * {@link Proyecto} con el listado entidadesConvocantes
+   * creando, editando o eliminando los elementos segun proceda.
+   *
+   * @param id                   Id de la {@link Convocatoria}.
+   * @param entidadesConvocantes lista con los nuevos
+   *                             {@link ConvocatoriaEntidadConvocante} a guardar.
+   * @return la lista de entidades {@link ConvocatoriaEntidadConvocante}
+   *         persistida.
+   */
+  @PatchMapping(PATH_ENTIDADES_CONVOCANTES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E')")
+  public ResponseEntity<List<ConvocatoriaEntidadConvocante>> updateEntidadesConvocantesConvocatoria(
+      @PathVariable Long id,
+      @RequestBody List<ConvocatoriaEntidadConvocante> entidadesConvocantes) {
+    log.debug(
+        "updateEntidadesConvocantesConvocatoria(Long id, List<ConvocatoriaEntidadConvocante> entidadesConvocantes) - start");
+    List<ConvocatoriaEntidadConvocante> list = convocatoriaEntidadConvocanteService
+        .updateEntidadesConvocantesConvocatoria(id, entidadesConvocantes);
+    log.debug(
+        "updateEntidadesConvocantesConvocatoria(Long id, List<ConvocatoriaEntidadConvocante> entidadesConvocantes) - end");
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   /**

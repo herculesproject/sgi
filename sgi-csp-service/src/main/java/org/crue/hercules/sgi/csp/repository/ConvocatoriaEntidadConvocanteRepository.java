@@ -18,14 +18,16 @@ public interface ConvocatoriaEntidadConvocanteRepository extends JpaRepository<C
     JpaSpecificationExecutor<ConvocatoriaEntidadConvocante> {
 
   /**
-   * Busca un {@link ConvocatoriaEntidadConvocante} por su {@link Convocatoria} y
-   * entidadRef.
+   * Busca un {@link ConvocatoriaEntidadConvocante} por su {@link Convocatoria},
+   * entidadRef y {@link Programa}.
    * 
    * @param convocatoriaId Id de la {@link Convocatoria}
    * @param entidadRef     Id de la Entidad
+   * @param programaId     Id del {@link Programa} de la {@link Convocatoria}
    * @return una {@link ConvocatoriaEntidadConvocante}
    */
-  Optional<ConvocatoriaEntidadConvocante> findByConvocatoriaIdAndEntidadRef(Long convocatoriaId, String entidadRef);
+  Optional<ConvocatoriaEntidadConvocante> findByConvocatoriaIdAndEntidadRefAndProgramaId(
+      Long convocatoriaId, String entidadRef, Long programaId);
 
   /**
    * Recupera aquellas {@link ConvocatoriaEntidadConvocante} de la
