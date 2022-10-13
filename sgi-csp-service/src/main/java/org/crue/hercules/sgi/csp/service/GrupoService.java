@@ -269,6 +269,24 @@ public class GrupoService {
   }
 
   /**
+   * Obtiene una entidad {@link Grupo} por id sin hacer la comprobacion de
+   * visibilidad.
+   * 
+   * @param id Identificador de la entidad {@link Grupo}.
+   * @return la entidad {@link Grupo}.
+   */
+  public Grupo findGrupoResumenById(Long id) {
+    log.debug("findGrupoResumenById(Long id) - start");
+
+    AssertHelper.idNotNull(id, Grupo.class);
+
+    final Grupo returnValue = repository.findById(id).orElseThrow(() -> new GrupoNotFoundException(id));
+
+    log.debug("findGrupoResumenById(Long id) - end");
+    return returnValue;
+  }
+
+  /**
    * Comprueba la existencia del {@link Grupo} por id.
    *
    * @param id el id de la entidad {@link Grupo}.
