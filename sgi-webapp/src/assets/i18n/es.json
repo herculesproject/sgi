@@ -1368,7 +1368,7 @@
   "csp.solicitud.cambio-estado.nuevo": "Nuevo Estado",
   "csp.solicitud.codigo": "Código interno",
   "csp.solicitud.codigo-externo": "Código de registro en entidad convocante",
-  "csp.solicitud.codigo-registro": "Código de registro",
+  "csp.solicitud.codigo-registro": "Código de registro interno",
   "csp.solicitud.convocatoria": "Convocatoria",
   "csp.solicitud.convocatoria-externa": "Identificación Convocatoria",
   "csp.solicitud.convocatoria-sgi": "Convocatoria SGI",
