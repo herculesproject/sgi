@@ -6,7 +6,7 @@
     <sql>
       UPDATE ${schemaPrefix}solicitud_modalidad sm SET programa_convocatoria_id=(
         SELECT
-          cec.programa_id
+          max(cec.programa_id)
         FROM ${schemaPrefix}convocatoria_entidad_convocante cec 
         WHERE 
           cec.convocatoria_id=(
@@ -16,8 +16,28 @@
             WHERE s.id = sm.solicitud_id
           )
           AND  sm.entidad_ref=cec.entidad_ref
-        FETCH FIRST 1 ROW only
       )
+    </sql>
+  </changeSet>
+  <changeSet context="!test" author="master" id="0000000000011-proyecto_entidad_convocante">
+    <sql>
+      UPDATE ${schemaPrefix}proyecto_entidad_convocante pec SET programa_id=(
+        SELECT
+          sm.programa_id
+        FROM ${schemaPrefix}solicitud_modalidad sm 
+        WHERE 
+          sm.solicitud_id=(
+            SELECT
+              p.solicitud_id
+            FROM ${schemaPrefix}proyecto p
+            WHERE p.id = pec.proyecto_id
+          )
+          AND sm.entidad_ref=pec.entidad_ref
+          AND sm.programa_convocatoria_id=pec.programa_convocatoria_id
+      ) 
+      WHERE 
+        pec.programa_id IS NULL
+        AND pec.programa_convocatoria_id IS NOT NULL
     </sql>
   </changeSet>
 
