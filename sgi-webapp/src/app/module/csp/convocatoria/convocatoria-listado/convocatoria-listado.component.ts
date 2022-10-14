@@ -14,6 +14,7 @@ import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
+import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
@@ -94,6 +95,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     protected snackBarService: SnackBarService,
     private convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
+    private readonly configuracionSolicitudService: ConfiguracionSolicitudService,
     private dialogService: DialogService,
     public authService: SgiAuthService,
     private readonly translate: TranslateService,
@@ -328,11 +330,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                 return of(convocatoriaListado);
               }),
               switchMap(() => {
-                return this.convocatoriaService.findAllConvocatoriaFases(convocatoriaListado.convocatoria.id).pipe(
-                  map(convocatoriaFase => {
-                    if (convocatoriaFase.items.length > 0) {
-                      convocatoriaListado.fase = convocatoriaFase.items[0];
-                    }
+                return this.configuracionSolicitudService.findByConvocatoriaId(convocatoriaListado.convocatoria.id).pipe(
+                  map(configuracionSolicitud => {
+                    convocatoriaListado.fase = configuracionSolicitud?.fasePresentacionSolicitudes;
                     return convocatoriaListado;
                   })
                 );
