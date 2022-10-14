@@ -269,7 +269,7 @@
     </div>
 
     <!-- Tabla entidades convocantes de la convocatoria -->
-    <ng-container>
+    <ng-container *ngIf="dataSourceEntidadesConvocantes.data.length > 0">
       <div fxFlex fxLayout="column" fxLayoutGap="10px" class="margin-bottom">
         <h3 fxFlex="100%">{{'list.entity' | translate:msgParamEntidadConvocanteEntity}}</h3>
         <div class="mat-elevation-z4" fxFlex="100%">
