@@ -81,7 +81,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
   }
 
   protected initColumns() {
-    this.columnas = ['memoria.comite.comite', 'tipoEvaluacion', 'convocatoriaReunion.fechaEvaluacion',
+    this.columnas = ['memoria.comite.comite', 'tipoEvaluacion', 'memoria.tipoMemoria.nombre', 'convocatoriaReunion.fechaEvaluacion',
       'memoria.numReferencia', 'solicitante', 'version', 'acciones'];
   }
 
