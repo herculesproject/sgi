@@ -93,7 +93,7 @@ export class SolicitudDocumentosPublicComponent extends FragmentComponent implem
 
   constructor(
     private readonly logger: NGXLogger,
-    public actionService: SolicitudPublicActionService,
+    public readonly actionService: SolicitudPublicActionService,
     private documentoService: DocumentoPublicService,
     private configuracionSolicitudService: ConfiguracionSolicitudPublicService,
     private snackBar: SnackBarService,

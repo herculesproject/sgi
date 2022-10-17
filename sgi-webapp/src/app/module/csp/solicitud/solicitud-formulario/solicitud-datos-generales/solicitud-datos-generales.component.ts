@@ -88,7 +88,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   }
 
   constructor(
-    protected actionService: SolicitudActionService,
+    public readonly actionService: SolicitudActionService,
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {

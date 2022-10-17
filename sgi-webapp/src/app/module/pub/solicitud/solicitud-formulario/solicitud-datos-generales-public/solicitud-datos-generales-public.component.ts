@@ -90,7 +90,7 @@ export class SolicitudDatosGeneralesPublicComponent extends FormFragmentComponen
   }
 
   constructor(
-    protected actionService: SolicitudPublicActionService,
+    public readonly actionService: SolicitudPublicActionService,
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
@@ -269,5 +269,4 @@ export class SolicitudDatosGeneralesPublicComponent extends FormFragmentComponen
     }
     ));
   }
-
 }

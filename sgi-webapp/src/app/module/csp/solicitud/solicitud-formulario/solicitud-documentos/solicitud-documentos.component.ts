@@ -92,7 +92,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
 
   constructor(
     private readonly logger: NGXLogger,
-    public actionService: SolicitudActionService,
+    public readonly actionService: SolicitudActionService,
     private documentoService: DocumentoService,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private snackBar: SnackBarService,

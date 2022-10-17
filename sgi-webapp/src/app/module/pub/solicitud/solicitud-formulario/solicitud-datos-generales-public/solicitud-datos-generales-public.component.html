@@ -356,4 +356,8 @@
 
   </form>
 
+  <sgi-info-message *ngIf="formPart.isEdit() && actionService.showSolicitudRRHHToValidateInfoMessage()"
+    message="{{'info.csp.solicitud.datos-generales.solicitud-rrhh-validar' | translate}}">
+  </sgi-info-message>
+
 </sgi-fragment>

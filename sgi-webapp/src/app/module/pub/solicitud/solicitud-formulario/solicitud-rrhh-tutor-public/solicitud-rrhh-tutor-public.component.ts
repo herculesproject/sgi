@@ -54,7 +54,7 @@ export class SolicitudRrhhTutorPublicComponent extends FormFragmentComponent<ISo
   }
 
   constructor(
-    protected actionService: SolicitudPublicActionService,
+    public readonly actionService: SolicitudPublicActionService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.TUTOR, actionService);

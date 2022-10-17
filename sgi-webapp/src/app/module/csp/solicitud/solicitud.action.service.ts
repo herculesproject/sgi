@@ -883,4 +883,8 @@ export class SolicitudActionService extends ActionService {
     return this.authService.hasAnyAuthority(['CSP-SOL-INV-BR', 'CSP-SOL-INV-C', 'CSP-SOL-INV-ER']);
   }
 
+  showSolicitudRRHHToValidateInfoMessage(): boolean {
+    const solicitud = this.datosGenerales.getValue();
+    return solicitud.formularioSolicitud === FormularioSolicitud.RRHH && solicitud.estado.estado === Estado.BORRADOR;
+  }
 }

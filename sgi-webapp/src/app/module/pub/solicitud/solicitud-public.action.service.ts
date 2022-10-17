@@ -328,5 +328,8 @@ export class SolicitudPublicActionService extends ActionService {
     );
   }
 
-
+  showSolicitudRRHHToValidateInfoMessage(): boolean {
+    const solicitud = this.datosGenerales.getValue();
+    return solicitud.formularioSolicitud === FormularioSolicitud.RRHH && solicitud.estado.estado === Estado.BORRADOR;
+  }
 }
