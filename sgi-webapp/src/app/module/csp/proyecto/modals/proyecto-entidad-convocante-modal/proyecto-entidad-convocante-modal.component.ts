@@ -165,7 +165,8 @@ export class ProyectoEntidadConvocanteModalComponent extends DialogFormComponent
     this.updateProgramas([]);
     this.nodeMap.clear();
 
-    if (this.data.proyectoEntidadConvocante.programaConvocatoria) {
+    if (this.data.proyectoEntidadConvocante.programaConvocatoria
+      && this.data.proyectoEntidadConvocante.programaConvocatoria?.padre?.id) {
       const node = new NodePrograma(this.data.proyectoEntidadConvocante.programaConvocatoria);
       this.nodeMap.set(node.programa.id, node);
       const subscription = this.getChilds(node).pipe(map(() => node)).pipe(
@@ -180,7 +181,7 @@ export class ProyectoEntidadConvocanteModalComponent extends DialogFormComponent
       });
       this.subscriptions.push(subscription);
     } else {
-      const id = this.formGroup.get('plan').value?.id;
+      const id = this.data.proyectoEntidadConvocante.programaConvocatoria?.padre?.id ?? this.formGroup.get('plan').value?.id;
       if (id && !isNaN(id)) {
         this.checkedNode = undefined;
         const subscription = this.programaService.findAllHijosPrograma(id).pipe(

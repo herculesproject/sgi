@@ -331,9 +331,12 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
    *
    * @param solicitudModalidad ISolicitudModalidad
    */
-  public addSolicitudModalidad(solicitudModalidad: ISolicitudModalidad): void {
+  public addSolicitudModalidad(solicitudModalidad: ISolicitudModalidad, entidadConvocanteProgramaId: number): void {
     const current = this.entidadesConvocantesModalidad$.value;
-    const index = current.findIndex(value => value.entidadConvocante.entidad.id === solicitudModalidad.entidad.id);
+    const index = current.findIndex(value =>
+      value.entidadConvocante.entidad.id === solicitudModalidad.entidad.id
+      && value.entidadConvocante.programa.id === entidadConvocanteProgramaId
+    );
     if (index >= 0) {
       const wrapper = new StatusWrapper(solicitudModalidad);
       current[index].modalidad = wrapper;
@@ -386,6 +389,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
       .filter((entidadConvocanteModalidad) => !!entidadConvocanteModalidad.modalidad && entidadConvocanteModalidad.modalidad.created)
       .map(entidadConvocanteModalidad => {
         entidadConvocanteModalidad.modalidad.value.solicitudId = solicitudId;
+        entidadConvocanteModalidad.modalidad.value.programaConvocatoriaId = entidadConvocanteModalidad.entidadConvocante.programa.id;
         return entidadConvocanteModalidad.modalidad;
       });
 
@@ -522,7 +526,8 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
           switchMap(solicitudModalidades => {
             entidadesConvocantesModalidad.forEach(element => {
               const solicitudModalidad = solicitudModalidades
-                .find(modalidad => modalidad.entidad.id === element.entidadConvocante.entidad.id);
+                .find(modalidad => modalidad.entidad.id === element.entidadConvocante.entidad.id
+                  && modalidad.programaConvocatoriaId === element.entidadConvocante.programa.id);
               if (solicitudModalidad) {
                 element.modalidad = new StatusWrapper(solicitudModalidad);
               }
