@@ -26,9 +26,11 @@
 
   <changeSet author="user (generated)" id="0000000000011-6">
     <modifyDataType tableName="solicitud_rrhh" columnName="titulo_trabajo" newDataType="VARCHAR(1000)" />
-  </changeSet>
-  <changeSet author="user (generated)" id="0000000000011-7">
     <modifyDataType tableName="solicitud_rrhh" columnName="resumen" newDataType="VARCHAR(4000)" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0000000000011-7">
+    <modifyDataType tableName="programa" columnName="nombre" newDataType="VARCHAR(200)" />
+    <modifyDataType tableName="programa" columnName="descripcion" newDataType="VARCHAR(4000)" />
+  </changeSet>
 </databaseChangeLog>
