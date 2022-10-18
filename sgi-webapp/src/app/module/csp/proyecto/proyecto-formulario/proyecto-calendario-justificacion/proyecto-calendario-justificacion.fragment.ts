@@ -110,7 +110,8 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
                   if (periodoJustificacionConvocatoria.length > 0) {
                     periodosJustificacionListado.push(...periodoJustificacionConvocatoria.map(convocatoriaPeriodojustificacion => {
                       const periodoJustificacionListado = {
-                        convocatoriaPeriodoJustificacion: convocatoriaPeriodojustificacion
+                        convocatoriaPeriodoJustificacion: convocatoriaPeriodojustificacion,
+                        isProyectoPeriodoJustificacionDeleteable: true
                       } as IPeriodoJustificacionListado;
                       return periodoJustificacionListado;
                     }));
