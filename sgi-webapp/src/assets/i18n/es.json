@@ -1659,6 +1659,7 @@
   "error.csp.proyecto-periodo-seguimiento-cientifico.fecha-fin.before": "La fecha de fin debe ser anterior a la fecha de fin del proyecto",
   "error.csp.proyecto-periodo-seguimiento-cientifico.fecha-inicio.after": "La fecha de inicio debe ser posterior a la fecha de inicio del proyecto",
   "error.csp.proyecto-periodo-seguimiento-cientifico.tipoSeguimiento.duplicate": "Ya existe un periodo final",
+  "error.csp.proyecto-presupuesto.anualidad.pattern": "Debe ser un año válido",
   "error.csp.proyecto-responsable-economico.fecha.invalid": "La fecha no está dentro del rango valido de participación en el proyecto",
   "error.csp.proyecto-seguimiento-cientifico.fecha-concesion.after": "Debe ser posterior a la fecha de concesión de la última prórroga",
   "error.csp.proyecto-socio.periodo-justificacion.fecha-fin.max": "La fecha de fin no puede ser superior a la fecha de fin del proyecto",

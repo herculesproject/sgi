@@ -9,10 +9,16 @@
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto-presupuesto.anualidad' |
             translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-          <input matInput formControlName="anualidad" type="number"
+          <input matInput formControlName="anualidad" type="number" [required]="!this.formPart.isAnualidadGenerica"
             placeholder="{{'csp.proyecto-presupuesto.anualidad' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}">
           <mat-error *ngIf="formGroup.controls.anualidad.errors?.duplicate">
             {{'error.duplicate.anualidad' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.anualidad.errors?.pattern">
+            {{'error.csp.proyecto-presupuesto.anualidad.pattern' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.anualidad.errors?.required">
+            {{ 'error.required.entity' | translate:msgParamAnualidadEntity}}
           </mat-error>
         </mat-form-field>
       </div>

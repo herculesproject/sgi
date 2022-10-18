@@ -4,6 +4,7 @@ import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { FormFragment } from '@core/services/action-service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { NumberValidator } from '@core/validators/number-validator';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -57,7 +58,7 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
     );
 
     if (!this.isAnualidadGenerica) {
-      form.controls.anualidad.setValidators(Validators.required);
+      form.controls.anualidad.setValidators([Validators.required, Validators.pattern('^[1-9][0-9]{3}'), NumberValidator.isInteger()]);
     }
 
     this.subscriptions.push(
