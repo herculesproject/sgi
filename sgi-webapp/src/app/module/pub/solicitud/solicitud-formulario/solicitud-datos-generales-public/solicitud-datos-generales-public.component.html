@@ -301,7 +301,8 @@
                 {{'csp.solicitud-entidad-convocante.programa' | translate}}
               </th>
               <td mat-cell *matCellDef="let entidadConvocanteModalidad">
-                {{ entidadConvocanteModalidad.entidadConvocante.programa?.nombre }}
+                {{ entidadConvocanteModalidad.entidadConvocante.programa?.padre?.id ?
+                entidadConvocanteModalidad.entidadConvocante.programa?.nombre : ''}}
               </td>
             </ng-container>
 
