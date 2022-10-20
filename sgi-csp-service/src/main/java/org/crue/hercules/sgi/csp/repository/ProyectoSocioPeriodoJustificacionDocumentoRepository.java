@@ -49,4 +49,15 @@ public interface ProyectoSocioPeriodoJustificacionDocumentoRepository
    * @return true si existe y false en caso contrario.
    */
   boolean existsByProyectoSocioPeriodoJustificacionProyectoSocioProyectoId(Long proyectoId);
+
+  /**
+   * Comprueba si existen datos vinculados a {@link ProyectoPeriodoJustificacion}
+   * de
+   * {@link ProyectoSocioPeriodoJustificacionDocumento}
+   *
+   * @param proyectoPeriodoJustificacionId Id del
+   *                                       {@link ProyectoPeriodoJustificacion}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsByProyectoSocioPeriodoJustificacionId(Long proyectoPeriodoJustificacionId);
 }
