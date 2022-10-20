@@ -33,4 +33,9 @@
     <modifyDataType tableName="programa" columnName="nombre" newDataType="VARCHAR(200)" />
     <modifyDataType tableName="programa" columnName="descripcion" newDataType="VARCHAR(4000)" />
   </changeSet>
+
+  <!-- Se cambia la longitud de las columnas observaciones de la tabla solicitud_rrhh -->
+  <changeSet author="user (generated)" id="0000000000011-8">
+    <modifyDataType tableName="solicitud_rrhh" columnName="observaciones" newDataType="VARCHAR(4000)" />
+  </changeSet>
 </databaseChangeLog>
