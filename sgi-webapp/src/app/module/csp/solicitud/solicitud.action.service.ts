@@ -541,7 +541,7 @@ export class SolicitudActionService extends ActionService {
 
         this.subscriptions.push(this.datosGenerales.initialized$.subscribe(
           (value) => {
-            if (value) {
+            if (value && !!this.datosGenerales.getFormGroup().controls.solicitante) {
               this.equipoProyecto.initialize();
               this.documentos.initialize();
               this.subscriptions.push(this.datosGenerales.getFormGroup().controls.solicitante.valueChanges.subscribe(

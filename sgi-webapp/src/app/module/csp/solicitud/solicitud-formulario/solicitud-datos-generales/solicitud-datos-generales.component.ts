@@ -125,14 +125,11 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     this.subscriptions.push(this.formPart.entidadesConvocantesModalidad$.subscribe(elements => {
       this.dataSourceEntidadesConvocantes.data = elements;
 
-      // Bind on new data where convocatoria is selected
-      if (this.formGroup.controls.convocatoria.value) {
-        setTimeout(() => {
-          this.dataSourceEntidadesConvocantes.paginator = this.paginator;
-          this.sort?.sort(({ id: 'entidadConvocante', start: 'asc' }) as MatSortable);
-          this.dataSourceEntidadesConvocantes.sort = this.sort;
-        }, 0);
-      }
+      setTimeout(() => {
+        this.dataSourceEntidadesConvocantes.paginator = this.paginator;
+        this.sort?.sort(({ id: 'entidadConvocante', start: 'asc' }) as MatSortable);
+        this.dataSourceEntidadesConvocantes.sort = this.sort;
+      }, 0);
     }));
   }
 
