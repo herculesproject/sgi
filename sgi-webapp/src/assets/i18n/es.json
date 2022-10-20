@@ -2313,6 +2313,7 @@
   "msg.csp.proyecto-socios.relations.delete": "Existe información de detalle vinculada a este socio, ¿desea continuar?",
   "msg.csp.proyecto.cambio-estado.error": "No se ha podido realizar el cambio de estado",
   "msg.csp.proyecto.modelo-ejecucion.vinculaciones": "No se puede modificar el campo porque tiene dependencias en fases, hitos o documentos. Si desea modificar el valor del campo tendrá que ir primero a eliminar dichos registros",
+  "msg.csp.proyecto.paquetes-trabajo.existentes": "Para poder modificar este valor debe eliminar los datos del apartado Paquetes de trabajo",
   "msg.csp.proyecto.responsable-economico.sin-vigencia": "No se puede añadir un responsable económico cuando el existente no tiene una fecha de inicio establecida",
   "msg.csp.proyecto.value-convocatoria": "El valor no coincide con el de la convocatoria. En la convocatoria tiene el valor {valueConvocatoria}",
   "msg.csp.reactivate": "Va a modificar el elemento, pasando a estar activo. ¿Desea continuar?",
