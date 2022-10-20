@@ -2310,6 +2310,7 @@
   "msg.csp.proyecto-prorroga.importe.delete": "¿Desea eliminar la prórroga del proyecto? Recuerde que debe revisar el presupuesto del proyecto en caso de que se vea afectado por la eliminación de esta prórroga",
   "msg.csp.proyecto-prorroga.tiempo-importe.delete": "¿Desea eliminar la prórroga del proyecto? Recuerde que debe revisar la fecha de fin del proyecto así como el presupuesto en caso de que se vean afectados por la eliminación de esta prórroga",
   "msg.csp.proyecto-prorroga.tiempo.delete": "¿Desea eliminar la prórroga del proyecto? Recuerde que debe revisar la fecha de fin del proyecto en caso de que se vea afectada por la eliminación de esta prórroga",
+  "msg.csp.proyecto-socio-periodo-justificacion.documentos.delete": "Existen documentos asociados a este periodo de justificación que también serán eliminados, ¿desea continuar?",
   "msg.csp.proyecto-socios.relations.delete": "Existe información de detalle vinculada a este socio, ¿desea continuar?",
   "msg.csp.proyecto.cambio-estado.error": "No se ha podido realizar el cambio de estado",
   "msg.csp.proyecto.modelo-ejecucion.vinculaciones": "No se puede modificar el campo porque tiene dependencias en fases, hitos o documentos. Si desea modificar el valor del campo tendrá que ir primero a eliminar dichos registros",
