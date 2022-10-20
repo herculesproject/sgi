@@ -194,6 +194,7 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
+        this.checkDisabledControls(this.proyectoAnualidades$.value.length);
       })
     );
   }
@@ -265,5 +266,26 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
     this.subscriptions.push(this.solicitudService.existsSolictudProyectoPresupuesto(solicitudId).pipe().subscribe(value => {
       this.showPresupuestoSolicitud$.next(value);
     }));
+  }
+
+  public checkDisabledControls(numAnualidades: number, anualidadesNewValue?: boolean) {
+
+    let currentAnualidadesValue = anualidadesNewValue || this.getFormGroup().controls?.anualidades.value;
+
+    if (!!!currentAnualidadesValue || (!!currentAnualidadesValue && currentAnualidadesValue !== this.proyecto.anualidades)) {
+      this.disableAddAnualidad$.next(true);
+    } else if (numAnualidades > 0) {
+      if (!!!currentAnualidadesValue || (!!currentAnualidadesValue && currentAnualidadesValue !== this.proyecto.anualidades)) {
+        this.disableAddAnualidad$.next(true);
+      }
+      if (!this.getFormGroup().controls.anualidades.disabled) {
+        this.getFormGroup().controls.anualidades.disable();
+      }
+    } else {
+      this.disableAddAnualidad$.next(false);
+      if (this.getFormGroup().controls.anualidades.disabled && !this.isVisor) {
+        this.getFormGroup().controls.anualidades.enable();
+      }
+    }
   }
 }

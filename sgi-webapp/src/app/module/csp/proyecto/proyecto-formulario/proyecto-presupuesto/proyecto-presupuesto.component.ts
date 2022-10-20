@@ -116,7 +116,7 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
     this.subscriptions.push(this.formPart.proyectoAnualidades$.subscribe(
       data => {
         this.anualidades.data = data;
-        this.checkDisabledControls(data.length);
+        this.formPart.checkDisabledControls(data.length);
 
         if (this.formGroup.controls.anualidades.value !== null) {
           this.formPart.columnAnualidades$.next(this.formGroup.controls.anualidades.value);
@@ -131,7 +131,7 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
 
     this.subscriptions.push(this.formGroup.controls.anualidades.valueChanges.subscribe(
       (value) => {
-        this.checkDisabledControls(this.anualidades.data.length);
+        this.formPart.checkDisabledControls(this.anualidades.data.length, value);
 
         this.formPart.columnAnualidades$.next(value);
         if (value) {
@@ -233,24 +233,6 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
 
       }));
 
-  }
-
-  private checkDisabledControls(numAnualidades: number) {
-    if (this.formGroup.controls.anualidades.value === null) {
-      this.formPart.disableAddAnualidad$.next(true);
-    } else if (numAnualidades > 0) {
-      if (!this.formGroup.controls.anualidades.value) {
-        this.formPart.disableAddAnualidad$.next(true);
-      }
-      if (!this.formGroup.controls.anualidades.disabled) {
-        this.formGroup.controls.anualidades.disable();
-      }
-    } else {
-      this.formPart.disableAddAnualidad$.next(false);
-      if (this.formGroup.controls.anualidades.disabled && !this.formPart.isVisor) {
-        this.formGroup.controls.anualidades.enable();
-      }
-    }
   }
 
   public sendSGE(data: StatusWrapper<IProyectoAnualidadResumen>) {
