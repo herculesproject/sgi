@@ -96,6 +96,9 @@
             <mat-error *ngIf="formGroup.hasError('required','solicitanteExterno.email')">
               {{ 'error.required.entity' | translate:msgParamEmailEntity }}
             </mat-error>
+            <mat-error *ngIf="formGroup.hasError('email','solicitanteExterno.email')">
+              {{ 'error.email.incorrect.format' | translate:msgParamEmailEntity }}
+            </mat-error>
           </mat-form-field>
         </div>
 

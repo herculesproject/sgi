@@ -1692,6 +1692,7 @@
   "error.delete.entity": "Error al eliminar {gender,select,male{el} female{la} other{el/la}} {entity}",
   "error.desasociar.entity": "Error al eliminar la asociación de{gender,select,male{l} female{ la} other{el/la}} {entity}",
   "error.duplicate.anualidad": "La anualidad ya existe para el presupuesto",
+  "error.email.incorrect.format": "La dirección del correo electrónico introducida no tiene el formato correcto",
   "error.eti.acta.finalizar": "Se ha producido un error al finalizar el acta",
   "error.eti.convocatoria-reunion.fecha-limite": "Fecha límite",
   "error.eti.convocatoria-reunion.fecha-limite.after": "No puede ser anterior a fecha límite",
