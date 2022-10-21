@@ -94,7 +94,7 @@ export class InvencionListadoExportModalComponent extends BaseExportModalCompone
         findOptions: this.modalData.findOptions,
         showSolicitudesDeProteccion: this.formGroup.controls.showSolicitudesDeProteccion.value,
         showEquipoInventor: this.formGroup.controls.showEquipoInventor.value,
-        columnMinWidth: 120
+        columnMinWidth: 180
       }
     };
     return reportModalData;
