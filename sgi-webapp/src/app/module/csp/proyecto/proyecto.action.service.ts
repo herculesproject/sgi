@@ -666,6 +666,11 @@ export class ProyectoActionService extends ActionService {
           switchMap(() => this.proyectosSge.saveOrUpdate().pipe(tap(() => this.proyectosSge.refreshInitialState(true))))
         );
       }
+      if (this.entidadesFinanciadoras?.hasChanges()) {
+        cascade = cascade.pipe(
+          switchMap(() => this.entidadesFinanciadoras.saveOrUpdate().pipe(tap(() => this.entidadesFinanciadoras.refreshInitialState(true))))
+        );
+      }
     } else {
       if (this.fichaGeneral?.hasChanges()) {
         cascade = cascade.pipe(
