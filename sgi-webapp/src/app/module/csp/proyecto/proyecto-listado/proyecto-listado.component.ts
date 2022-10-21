@@ -263,7 +263,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       switchMap((value) => {
         return this.translate.get(
           MSG_SUCCESS_REACTIVE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoSuccessReactivar = value);
@@ -275,7 +275,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       switchMap((value) => {
         return this.translate.get(
           MSG_ERROR_REACTIVE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoErrorReactivar = value);
@@ -453,7 +453,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         }
       })).subscribe(
         () => {
-          this.snackBarService.showSuccess(this.textoSuccessDesactivar);
+          this.snackBarService.showSuccess(this.textoSuccessReactivar);
           this.loadTable();
         },
         (error) => {
@@ -463,7 +463,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
             this.snackBarService.showError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.snackBarService.showError(this.textoErrorReactivar);
           }
         }
       );
