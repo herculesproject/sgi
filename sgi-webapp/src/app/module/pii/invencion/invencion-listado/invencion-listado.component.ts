@@ -155,7 +155,7 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
   }
 
   protected initColumns(): void {
-    this.columnas = ['id', 'fechaComunicacion', 'titulo', 'tipoProteccion.nombre', 'activo', 'acciones'];
+    this.columnas = ['id', 'fechaComunicacion', 'titulo', 'tipoProteccion.nombre', 'acciones'];
   }
 
   protected loadTable(reset?: boolean): void {
