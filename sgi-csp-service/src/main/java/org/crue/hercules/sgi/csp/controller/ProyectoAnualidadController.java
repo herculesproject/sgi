@@ -240,7 +240,7 @@ public class ProyectoAnualidadController {
    * @return {@link ProyectoAnualidad} actualizado.
    */
   @PatchMapping("/{id}/notificarsge")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-EJEC-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-EJEC-E')")
   public ProyectoAnualidad notificarSge(@PathVariable Long id) {
     log.debug("notificarSge(Long id) - start");
     ProyectoAnualidad returnValue = service.notificarSge(id);
