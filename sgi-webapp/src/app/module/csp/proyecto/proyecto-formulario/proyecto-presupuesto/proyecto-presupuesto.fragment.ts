@@ -268,9 +268,9 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
     }));
   }
 
-  public checkDisabledControls(numAnualidades: number, anualidadesNewValue?: boolean) {
+  public checkDisabledControls(numAnualidades: number, anualidadesNewValue?: boolean): void {
 
-    let currentAnualidadesValue = anualidadesNewValue || this.getFormGroup().controls?.anualidades.value;
+    const currentAnualidadesValue = anualidadesNewValue || this.getFormGroup().controls?.anualidades.value;
 
     if (!!!currentAnualidadesValue || (!!currentAnualidadesValue && currentAnualidadesValue !== this.proyecto.anualidades)) {
       this.disableAddAnualidad$.next(true);

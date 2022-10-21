@@ -32,20 +32,18 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
     const form = new FormGroup(
       {
         anualidad: new FormControl({
-          value: '',
-          disabled: this.isEdit()
+          value: ''
         }),
         fechaInicio: new FormControl({
           value: this.isAnualidadGenerica ? this.proyecto.fechaInicio : null,
-          disabled: this.isEdit() || this.isAnualidadGenerica
+          disabled: this.isAnualidadGenerica
         }),
         fechaFin: new FormControl({
           value: this.isAnualidadGenerica ? this.proyecto.fechaFin : null,
-          disabled: this.isEdit() || this.isAnualidadGenerica
+          disabled: this.isAnualidadGenerica
         }),
         presupuestar: new FormControl({
-          value: null,
-          disabled: this.isEdit()
+          value: null
         }, [
           Validators.required
         ]),
