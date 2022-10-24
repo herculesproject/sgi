@@ -7,7 +7,7 @@ import { DateValidator } from '@core/validators/date-validator';
 import { NumberValidator } from '@core/validators/number-validator';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProyectoAnualidad> {
   proyectoAnualidad: IProyectoAnualidad;
@@ -31,9 +31,7 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup(
       {
-        anualidad: new FormControl({
-          value: ''
-        }),
+        anualidad: new FormControl(''),
         fechaInicio: new FormControl({
           value: this.isAnualidadGenerica ? this.proyecto.fechaInicio : null,
           disabled: this.isAnualidadGenerica
@@ -42,11 +40,7 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
           value: this.isAnualidadGenerica ? this.proyecto.fechaFin : null,
           disabled: this.isAnualidadGenerica
         }),
-        presupuestar: new FormControl({
-          value: null
-        }, [
-          Validators.required
-        ]),
+        presupuestar: new FormControl(null, Validators.required),
       },
       {
         validators: [
@@ -89,7 +83,9 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
   }
 
   protected initializer(key: number): Observable<IProyectoAnualidad> {
-    return this.service.findById(key);
+    return this.service.findById(key).pipe(
+      tap(proyectoAnualidad => this.proyectoAnualidad = proyectoAnualidad)
+    );
   }
 
   getValue(): IProyectoAnualidad {
