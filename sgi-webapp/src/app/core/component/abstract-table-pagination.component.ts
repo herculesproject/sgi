@@ -105,7 +105,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
         // On error reset pagination values
         this.paginator?.firstPage();
         this.totalElementos = 0;
-        this.showMensajeErrorLoadTable();
+        this.snackBarService.showError(error);
         return of([]);
       })
     );
