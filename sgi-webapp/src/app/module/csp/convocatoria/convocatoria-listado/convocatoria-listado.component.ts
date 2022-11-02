@@ -29,7 +29,6 @@ import { catchError, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
 import { ConvocatoriaListadoExportModalComponent, IConvocatoriaListadoModalData } from '../modals/convocatoria-listado-export-modal/convocatoria-listado-export-modal.component';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
-const MSG_ERROR_LOAD = marker('error.load');
 const MSG_REACTIVE = marker('msg.csp.reactivate');
 const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
 const MSG_SUCCESS_CLONED = marker('msg.cloned.entity.success');
@@ -103,7 +102,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     private matDialog: MatDialog,
     private activatedRoute: ActivatedRoute
   ) {
-    super(snackBarService, MSG_ERROR_LOAD);
+    super();
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -437,13 +436,12 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     return palabrasClaveFilter;
   }
 
-  onClearFilters() {
-    super.onClearFilters();
+  resetFilters() {
+    super.resetFilters();
     this.formGroup.controls.activo.setValue(true);
     this.formGroup.controls.abiertoPlazoPresentacionSolicitud.setValue(false);
     this.formGroup.controls.fechaPublicacionDesde.setValue(null);
     this.formGroup.controls.fechaPublicacionHasta.setValue(null);
-    this.onSearch();
   }
 
   /**

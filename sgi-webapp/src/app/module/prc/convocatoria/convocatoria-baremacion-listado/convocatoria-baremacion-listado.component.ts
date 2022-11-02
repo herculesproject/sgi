@@ -19,7 +19,6 @@ import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { isConvocatoriaBaremacionEditable } from '../convocatoria-baremacion.resolver';
 
-const MSG_ERROR = marker('error.load');
 const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_REACTIVE = marker('msg.reactivate.entity');
 const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
@@ -68,7 +67,7 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
-    super(snackBarService, MSG_ERROR);
+    super();
   }
 
   ngOnInit(): void {
@@ -110,11 +109,9 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
     return filter;
   }
 
-  onClearFilters() {
-    super.onClearFilters();
+  protected resetFilters(): void {
+    super.resetFilters();
     this.formGroup.controls.activo.setValue('true');
-
-    this.onSearch();
   }
 
   deactivate(convocatoriaBaremacion: IConvocatoriaBaremacion): void {

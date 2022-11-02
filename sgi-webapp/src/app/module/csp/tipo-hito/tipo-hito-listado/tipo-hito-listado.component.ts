@@ -19,7 +19,6 @@ import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TipoHitoModalComponent } from '../tipo-hito-modal/tipo-hito-modal.component';
 
-const MSG_ERROR = marker('error.load');
 const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
 const MSG_UPDATE_SUCCESS = marker('msg.update.entity.success');
 const MSG_DEACTIVATE = marker('msg.deactivate.entity');
@@ -61,7 +60,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
     private readonly translate: TranslateService,
     private authService: SgiAuthService
   ) {
-    super(snackBarService, MSG_ERROR);
+    super();
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -191,8 +190,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<ITipoHito>> {
-    const observable$ = this.tipoHitoService.findTodos(this.getFindOptions(reset));
-    return observable$;
+    return this.tipoHitoService.findTodos(this.getFindOptions(reset));
   }
 
   protected initColumns(): void {
@@ -217,10 +215,9 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
     return filter;
   }
 
-  onClearFilters() {
+  protected resetFilters(): void {
     this.formGroup.controls.activo.setValue('true');
     this.formGroup.controls.nombre.setValue('');
-    this.onSearch();
   }
 
   /**

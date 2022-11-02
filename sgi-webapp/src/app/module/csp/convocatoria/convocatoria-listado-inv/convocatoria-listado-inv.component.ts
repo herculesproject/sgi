@@ -21,7 +21,6 @@ import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.serv
 import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -32,8 +31,6 @@ import { map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { INV_ROUTE_NAMES } from 'src/app/module/inv/inv-route-names';
 import { CONVOCATORIA_ID_KEY } from '../../solicitud/solicitud-crear/solicitud-crear.guard';
 
-
-const MSG_ERROR = marker('error.load');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
 
 interface DatosPersona {
@@ -77,7 +74,6 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
   }
 
   constructor(
-    protected snackBarService: SnackBarService,
     private convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
     private personaService: PersonaService,
@@ -87,7 +83,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     private translate: TranslateService,
     private authService: SgiAuthService
   ) {
-    super(snackBarService, MSG_ERROR);
+    super();
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -304,10 +300,9 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     return palabrasClaveFilter;
   }
 
-  onClearFilters() {
+  protected resetFilters(): void {
     this.formGroup.reset();
     this.formGroup.controls.abiertoPlazoPresentacionSolicitud.setValue(true);
-    this.onSearch();
   }
 
   /**

@@ -22,7 +22,6 @@ import { map, switchMap } from 'rxjs/operators';
 import { ConvocatoriaReunionListadoExportModalComponent, IConvocatoriaReunionListadoModalData } from '../modals/convocatoria-reunion-listado-export-modal/convocatoria-reunion-listado-export-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
-const MSG_ERROR = marker('error.load');
 const MSG_CONFIRMATION_DELETE = marker('msg.delete.entity');
 const MSG_SUCCESS_DELETE = marker('msg.delete.entity.success');
 const CONVOCATORIA_REUNION_KEY = marker('eti.convocatoria-reunion');
@@ -70,8 +69,7 @@ export class ConvocatoriaReunionListadoComponent
     private readonly translate: TranslateService,
     private matDialog: MatDialog
   ) {
-
-    super(snackBarService, MSG_ERROR);
+    super();
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(25%-10px)';
@@ -89,7 +87,7 @@ export class ConvocatoriaReunionListadoComponent
 
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IConvocatoriaReunion>> {
-    const observable$ = this.convocatoriaReunionService.findAll(this.getFindOptions(reset)).pipe(
+    return this.convocatoriaReunionService.findAll(this.getFindOptions(reset)).pipe(
       map(response => {
         const convocatorias = response.items;
         convocatorias.forEach(convocatoriaReunion => {
@@ -103,7 +101,6 @@ export class ConvocatoriaReunionListadoComponent
         return response as SgiRestListResult<IConvocatoriaReunion>;
       })
     );
-    return observable$;
   }
   protected initColumns(): void {
     this.displayedColumns = ['comite', 'fechaEvaluacion', 'codigo', 'horaInicio', 'horaInicioSegunda', 'lugar', 'tipoConvocatoriaReunion', 'fechaEnvio', 'acciones'];
@@ -119,8 +116,8 @@ export class ConvocatoriaReunionListadoComponent
     return filter;
   }
 
-  onClearFilters(): void {
-    super.onClearFilters();
+  protected resetFilters(): void {
+    super.resetFilters();
     this.formGroup.controls.fechaEvaluacionDesde.setValue(null);
     this.formGroup.controls.fechaEvaluacionHasta.setValue(null);
   }

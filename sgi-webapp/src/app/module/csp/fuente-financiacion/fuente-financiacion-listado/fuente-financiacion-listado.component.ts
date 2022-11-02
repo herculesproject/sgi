@@ -20,7 +20,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { FuenteFinanciacionModalComponent } from '../fuente-financiacion-modal/fuente-financiacion-modal.component';
 
 const MSG_ERROR = marker('error.load');
@@ -74,7 +74,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(snackBarService, MSG_ERROR);
+    super();
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -262,12 +262,11 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     return filter;
   }
 
-  onClearFilters() {
+  protected resetFilters(): void {
     this.formGroup.controls.activo.setValue('true');
     this.formGroup.controls.nombre.setValue('');
     this.formGroup.controls.ambitoGeografico.setValue('');
     this.formGroup.controls.origen.setValue('');
-    this.onSearch();
   }
 
   private loadAmbitosGeograficos() {

@@ -27,7 +27,6 @@ import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
-const MSG_ERROR_LOAD = marker('error.load');
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_ERROR_DELETE = marker('error.delete.entity');
 const MSG_SUCCESS_DELETE = marker('msg.delete.entity.success');
@@ -83,7 +82,7 @@ export class AutorizacionListadoInvComponent extends AbstractTablePaginationComp
     public authService: SgiAuthService,
     private readonly translate: TranslateService,
   ) {
-    super(snackBarService, MSG_ERROR_LOAD);
+    super();
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -275,13 +274,12 @@ export class AutorizacionListadoInvComponent extends AbstractTablePaginationComp
       .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.id);
   }
 
-  onClearFilters() {
-    super.onClearFilters();
+  protected resetFilters(): void {
+    super.resetFilters();
     this.formGroup.controls.fechaSolicitudInicio.setValue(null);
     this.formGroup.controls.fechaSolicitudFin.setValue(null);
     this.formGroup.controls.estado.setValue(null);
     this.formGroup.controls.solicitante.setValue(null);
-    this.onSearch();
   }
 
   public deleteAutorizacion(autorizacionId: number): void {

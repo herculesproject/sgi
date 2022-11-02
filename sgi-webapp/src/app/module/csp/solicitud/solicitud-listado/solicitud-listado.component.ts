@@ -121,7 +121,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     private authService: SgiAuthService,
     route: ActivatedRoute,
   ) {
-    super(snackBarService, MSG_ERROR);
+    super();
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -151,7 +151,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         }),
         catchError((err) => {
           this.logger.error(err);
-          this.snackBarService.showError(this.msgError);
+          this.processError(err);
           return of({} as IConvocatoria);
         })
       ).subscribe();
@@ -529,8 +529,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.cleanBusquedaAvanzado();
   }
 
-  onClearFilters(): void {
-    super.onClearFilters();
+  protected resetFilters(): void {
+    super.resetFilters();
     this.cleanBusquedaAvanzado();
   }
 
@@ -560,10 +560,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         }
       )
     );
-  }
-
-  getPlanInvestigacion(programa?: IPrograma): string | undefined {
-    return typeof programa === 'string' ? programa : programa?.nombre;
   }
 
   crearProyectoModal(solicitudData: ISolicitudListadoData): void {

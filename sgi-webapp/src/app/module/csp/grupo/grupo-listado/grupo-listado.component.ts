@@ -27,7 +27,6 @@ import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 import { GrupoListadoExportModalComponent, IGrupoListadoModalData } from '../modals/grupo-listado-export-modal/grupo-listado-export-modal.component';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
-const MSG_ERROR_LOAD = marker('error.load');
 const MSG_ERROR_DELETE = marker('error.delete.entity');
 const MSG_DEACTIVATE = marker('msg.deactivate.entity');
 const MSG_SUCCESS_DEACTIVATE = marker('msg.csp.deactivate.success');
@@ -83,7 +82,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
     private lineaInvestigacionService: LineaInvestigacionService,
     private matDialog: MatDialog,
   ) {
-    super(snackBarService, MSG_ERROR_LOAD);
+    super();
   }
 
   ngOnInit(): void {
@@ -215,10 +214,9 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
     this.suscripciones.push(subcription);
   }
 
-  onClearFilters() {
-    super.onClearFilters();
+  protected resetFilters(): void {
+    super.resetFilters();
     this.buildFormGroup();
-    this.onSearch();
   }
 
   private buildFormGroup() {

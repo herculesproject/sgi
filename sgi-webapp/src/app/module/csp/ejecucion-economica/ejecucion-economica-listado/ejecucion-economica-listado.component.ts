@@ -65,7 +65,7 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     private grupoService: GrupoService,
     private readonly matDialog: MatDialog
   ) {
-    super(snackBarService, MSG_ERROR);
+    super();
   }
 
   ngOnInit(): void {
@@ -176,9 +176,8 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     this.busquedaAvanzada = !this.busquedaAvanzada;
   }
 
-  onClearFilters(): void {
+  protected resetFilters(): void {
     this.initFormGroup(true);
-    this.onSearch();
   }
 
   ngOnDestroy(): void {

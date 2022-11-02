@@ -72,7 +72,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     private readonly translate: TranslateService,
     private matDialog: MatDialog
   ) {
-    super(snackBarService, MSG_ERROR);
+    super();
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -136,8 +136,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IEvaluador>> {
-    const observable$ = this.evaluadoresService.findAll(this.getFindOptions(reset));
-    return observable$;
+    return this.evaluadoresService.findAll(this.getFindOptions(reset));
   }
 
   protected initColumns(): void {
@@ -184,7 +183,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         // On error reset pagination values
         this.paginator.firstPage();
         this.totalElementos = 0;
-        this.snackBarService.showError(MSG_ERROR);
+        this.processError(error);
         return of([]);
       })
     );

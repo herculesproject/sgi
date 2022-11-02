@@ -16,7 +16,6 @@ import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TipoProcedimientoModalComponent } from '../tipo-procedimiento-modal/tipo-procedimiento-modal.component';
 
-const MSG_ERROR = marker('error.load');
 const MSG_CREATE = marker('btn.add.entity');
 const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
 const MSG_UPDATE_SUCCESS = marker('msg.update.entity.success');
@@ -58,7 +57,7 @@ export class TipoProcedimientoListadoComponent extends AbstractTablePaginationCo
     private dialogService: DialogService,
     private translate: TranslateService
   ) {
-    super(snackBarService, MSG_ERROR);
+    super();
   }
 
   private setupI18N(): void {
@@ -179,8 +178,7 @@ export class TipoProcedimientoListadoComponent extends AbstractTablePaginationCo
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<ITipoProcedimiento>> {
-    const observable$ = this.tipoProcedimientoService.findTodos(this.getFindOptions(reset));
-    return observable$;
+    return this.tipoProcedimientoService.findTodos(this.getFindOptions(reset));
   }
   protected initColumns(): void {
     this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];

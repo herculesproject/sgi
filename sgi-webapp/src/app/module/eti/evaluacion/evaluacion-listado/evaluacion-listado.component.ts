@@ -21,7 +21,6 @@ import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-pers
 import { TipoComentario } from '../evaluacion-listado-export.service';
 import { EvaluacionListadoExportModalComponent, IEvaluacionListadoModalData } from '../modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
 
-const MSG_ERROR = marker('error.load');
 const EVALUACION_KEY = marker('eti.evaluacion');
 const MSG_SUCCESS_ENVIADO = marker('msg.envio-comunicado.entity.success');
 const MSG_ERROR_ENVIADO = marker('msg.envio-comunicado.entity.error');
@@ -60,8 +59,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     private readonly translate: TranslateService,
     private matDialog: MatDialog
   ) {
-
-    super(snackBarService, MSG_ERROR);
+    super();
 
     this.totalElementos = 0;
 
@@ -121,8 +119,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IEvaluacion>> {
-    const observable$ = this.evaluacionesService.findAllByMemoriaAndRetrospectivaEnEvaluacion(this.getFindOptions(reset));
-    return observable$;
+    return this.evaluacionesService.findAllByMemoriaAndRetrospectivaEnEvaluacion(this.getFindOptions(reset));
   }
 
   protected initColumns(): void {
@@ -171,8 +168,8 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   /**
    * Clean filters an reload the table
    */
-  onClearFilters(): void {
-    super.onClearFilters();
+  protected resetFilters(): void {
+    super.resetFilters();
     this.formGroup.controls.fechaEvaluacionInicio.setValue(null);
     this.formGroup.controls.fechaEvaluacionFin.setValue(null);
   }
@@ -190,10 +187,10 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   }
 
   /**
- * Notificar de cambios en la memoria realizados
- * @param evaluacionId id de la evaluación modificada que se quiere notificar.
- * @param event evento lanzado.
- */
+   * Notificar de cambios en la memoria realizados
+   * @param evaluacionId id de la evaluación modificada que se quiere notificar.
+   * @param event evento lanzado.
+   */
   notificarCambiosMemoria(evaluacionId: number, $event: Event): void {
     this.evaluacionesService.enviarComunicado(evaluacionId).subscribe(
       (response) => {

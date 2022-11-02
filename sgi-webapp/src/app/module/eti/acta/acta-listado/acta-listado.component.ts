@@ -8,7 +8,7 @@ import { AbstractTablePaginationComponent } from '@core/component/abstract-table
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IActaWithNumEvaluaciones } from '@core/models/eti/acta-with-num-evaluaciones';
-import { ESTADO_ACTA_MAP, TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
+import { ESTADO_ACTA_MAP } from '@core/models/eti/tipo-estado-acta';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -26,7 +26,6 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { ActaListadoExportModalComponent, IActaListadoModalData } from '../modals/acta-listado-export-modal/acta-listado-export-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
-const MSG_ERROR = marker('error.load');
 const MSG_FINALIZAR_ERROR = marker('error.eti.acta.finalizar');
 const MSG_FINALIZAR_SUCCESS = marker('msg.eti.acta.finalizar.success');
 const ACTA_KEY = marker('eti.acta');
@@ -71,8 +70,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     private readonly matDialog: MatDialog,
     private readonly cnfService: ConfigService
   ) {
-
-    super(snackBarService, MSG_ERROR);
+    super();
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -153,8 +151,8 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     return filter;
   }
 
-  onClearFilters(): void {
-    super.onClearFilters();
+  protected resetFilters(): void {
+    super.resetFilters();
     this.formGroup.controls.fechaEvaluacionInicio.setValue(null);
     this.formGroup.controls.fechaEvaluacionFin.setValue(null);
   }
