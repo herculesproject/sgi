@@ -209,6 +209,7 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       }),
       catchError((error) => {
         this.logger.error(error);
+        this.processError(error);
         return of(notificacion);
       })
     );
@@ -225,6 +226,7 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       }),
       catchError((error) => {
         this.logger.error(error);
+        this.processError(error);
         return of(notificacion);
       })
 
@@ -244,6 +246,7 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       }),
       catchError((error) => {
         this.logger.error(error);
+        this.processError(error);
         return of(notificacion);
       })
     );
@@ -323,10 +326,10 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesasociarProyecto);
+            this.processError(new SgiError(this.textoErrorDesasociarProyecto));
           }
         }
       );
@@ -347,10 +350,10 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesasociarAutorizacion);
+            this.processError(new SgiError(this.textoErrorDesasociarAutorizacion));
           }
         }
       );

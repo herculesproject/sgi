@@ -260,10 +260,10 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.processError(new SgiError(this.textoErrorDesactivar));
           }
         }
       );
@@ -292,10 +292,10 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
           this.logger.error(error);
           tipoHito.activo = false;
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoSuccessReactivar);
+            this.processError(new SgiError(this.textoSuccessReactivar));
           }
         }
       );

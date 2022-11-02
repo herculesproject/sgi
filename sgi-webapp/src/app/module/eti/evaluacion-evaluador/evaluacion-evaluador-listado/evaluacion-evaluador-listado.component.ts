@@ -107,6 +107,9 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
           this.personaService.findById(personaId).subscribe(
             (persona: IPersona) => {
               evaluacion.memoria.peticionEvaluacion.solicitante = persona;
+            },
+            (error) => {
+              this.processError(error);
             }
           )
         );

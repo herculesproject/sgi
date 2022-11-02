@@ -150,7 +150,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR);
+          this.processError(error);
         }
       );
     this.suscripciones.push(personaServiceOneSubscription);

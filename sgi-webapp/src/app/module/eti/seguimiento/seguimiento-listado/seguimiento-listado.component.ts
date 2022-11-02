@@ -96,7 +96,10 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
       if (personaRef) {
         this.suscripciones.push(
           this.personaService.findById(personaRef).subscribe(
-            (persona: IPersona) => evaluacion.memoria.peticionEvaluacion.solicitante = persona
+            (persona: IPersona) => evaluacion.memoria.peticionEvaluacion.solicitante = persona,
+            (error) => {
+              this.processError(error);
+            }
           )
         );
       }

@@ -118,7 +118,10 @@ export class ValidacionTutorListadoInvComponent extends AbstractTablePaginationC
             });
             return response;
           }),
-          catchError(() => of(response))
+          catchError((error) => {
+            this.processError(error);
+            return of(response);
+          })
         );
 
       }),

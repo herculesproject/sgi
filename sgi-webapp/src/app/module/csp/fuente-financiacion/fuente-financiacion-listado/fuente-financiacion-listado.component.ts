@@ -23,7 +23,6 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { FuenteFinanciacionModalComponent } from '../fuente-financiacion-modal/fuente-financiacion-modal.component';
 
-const MSG_ERROR = marker('error.load');
 const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
 const MSG_SAVE_ERROR = marker('error.save.entity');
 const MSG_UPDATE_ERROR = marker('error.update.entity');
@@ -230,8 +229,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IFuenteFinanciacion>> {
-    const observable$ = this.fuenteFinanciacionService.findTodos(this.getFindOptions(reset));
-    return observable$;
+    return this.fuenteFinanciacionService.findTodos(this.getFindOptions(reset));
   }
 
   protected initColumns(): void {
@@ -273,10 +271,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     this.suscripciones.push(
       this.ambitoGeograficoService.findAll().subscribe(
         (res: SgiRestListResult<ITipoAmbitoGeografico>) => this.ambitosGeograficos$.next(res.items),
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR);
-        }
+        (error) => this.logger.error(error)
       )
     );
   }
@@ -287,7 +282,6 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
         (res: SgiRestListResult<ITipoOrigenFuenteFinanciacion>) => this.origenes$.next(res.items),
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR);
         }
       )
     );
@@ -332,10 +326,10 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.processError(new SgiError(this.textoErrorDesactivar));
           }
         }
       );
@@ -362,10 +356,10 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorReactivar);
+            this.processError(new SgiError(this.textoErrorReactivar));
           }
         }
       );

@@ -36,7 +36,6 @@ import { SolicitudGrupoModalComponent } from '../modals/solicitud-grupo-modal/so
 import { ISolicitudListadoDataExportModalData, SolicitudListadoExportModalComponent } from '../modals/solicitud-listado-export-modal/solicitud-listado-export-modal.component';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
-const MSG_ERROR = marker('error.load');
 const MSG_DEACTIVATE = marker('msg.deactivate.entity');
 const MSG_SUCCESS_DEACTIVATE = marker('msg.csp.deactivate.success');
 const MSG_ERROR_DEACTIVATE = marker('error.csp.deactivate.entity');
@@ -346,7 +345,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
             });
             return response;
           }),
-          catchError(() => of(response))
+          catchError((error) => {
+            this.processError(error);
+            return of(response);
+          })
         );
 
       }),
@@ -483,10 +485,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       (error) => {
         this.logger.error(error);
         if (error instanceof SgiError) {
-          this.snackBarService.showError(error);
+          this.processError(error);
         }
         else {
-          this.snackBarService.showError(this.textoErrorReactivar);
+          this.processError(new SgiError(this.textoErrorReactivar));
         }
       }
     );
@@ -514,10 +516,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       (error) => {
         this.logger.error(error);
         if (error instanceof SgiError) {
-          this.snackBarService.showError(error);
+          this.processError(error);
         }
         else {
-          this.snackBarService.showError(this.textoErrorDesactivar);
+          this.processError(new SgiError(this.textoErrorDesactivar));
         }
       }
     );
@@ -554,10 +556,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         (res) => {
           this.planInvestigaciones$.next(res.items);
         },
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR);
-        }
+        (error) => this.logger.error(error)
       )
     );
   }

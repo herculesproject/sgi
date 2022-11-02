@@ -26,8 +26,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http/';
 import { DateTime } from 'luxon';
-import { forkJoin, from, Observable, of } from 'rxjs';
-import { map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, forkJoin, from, Observable, of } from 'rxjs';
+import { catchError, map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { INV_ROUTE_NAMES } from 'src/app/module/inv/inv-route-names';
 import { CONVOCATORIA_ID_KEY } from '../../solicitud/solicitud-crear/solicitud-crear.guard';
 
@@ -174,6 +174,10 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
                           convocatoriaListado.entidadFinanciadoraEmpresa = empresa;
                           return convocatoriaListado;
                         }),
+                        catchError((error) => {
+                          this.processError(error);
+                          return EMPTY;
+                        })
                       );
                     }
                     return of(convocatoriaListado);
@@ -203,6 +207,10 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
                               convocatoriaListado.entidadConvocanteEmpresa = empresa;
                               return convocatoriaListado;
                             }),
+                            catchError((error) => {
+                              this.processError(error);
+                              return EMPTY;
+                            })
                           );
                         }
                         return of(convocatoriaListado);

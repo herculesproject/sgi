@@ -13,7 +13,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
 import { DialogService } from '@core/services/dialog.service';
-import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -23,7 +23,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, forkJoin, from, Observable, of, Subscription } from 'rxjs';
+import { EMPTY, from, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
@@ -36,7 +36,6 @@ const AUTORIZACION_KEY = marker('csp.autorizacion');
 const AUTORIZACION_SOLICITUD_KEY = marker('csp.autorizacion-solicitud');
 const NOTIFICACION_KEY = marker('csp.notificacion-cvn');
 const PROYECTO_KEY = marker('csp.proyecto');
-const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 
 export interface IAutorizacionListado {
   autorizacion: IAutorizacionWithFirstEstado;
@@ -238,6 +237,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
                 }),
                 catchError((error) => {
                   this.logger.error(error);
+                  this.processError(error);
                   return EMPTY;
                 }));
             } else {
@@ -256,7 +256,6 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
                   return autorizacionListado;
                 }));
             } else {
-              autorizacionListado.entidadPaticipacionNombre = autorizacionListado?.autorizacion?.datosEntidad;
               return of(autorizacionListado);
             }
           }),
@@ -269,10 +268,10 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
                 }),
                 catchError((error) => {
                   this.logger.error(error);
+                  this.processError(error);
                   return EMPTY;
                 }));
             } else {
-              autorizacionListado.entidadPaticipacionNombre = autorizacionListado?.autorizacion?.datosEntidad;
               return of(autorizacionListado);
             }
           }),
@@ -329,29 +328,14 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDelete);
+            this.processError(new SgiError(this.textoErrorDelete));
           }
         }
       );
     this.suscripciones.push(subcription);
-  }
-
-  downloadFile(value: IAutorizacionListado): void {
-    this.subscriptions.push(
-      forkJoin({
-        documento: this.documentoService.getInfoFichero(value.certificadoVisible.documento.documentoRef),
-        fichero: this.documentoService.downloadFichero(value.certificadoVisible.documento.documentoRef),
-      }).subscribe(
-        ({ documento, fichero }) => {
-          triggerDownloadToUser(fichero, documento.nombre);
-        },
-        () => {
-          this.snackBarService.showError(MSG_DOWNLOAD_ERROR);
-        }
-      ));
   }
 
 }

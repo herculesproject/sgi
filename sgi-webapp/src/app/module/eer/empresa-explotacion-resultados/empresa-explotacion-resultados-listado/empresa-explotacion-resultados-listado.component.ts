@@ -16,7 +16,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { EER_ROUTE_NAMES } from '../../eer-route-names';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
@@ -98,6 +98,11 @@ export class EmpresaExplotacionResultadosListadoComponent
               });
 
               return responseEmpresas;
+            }),
+            catchError((error) => {
+              this.logger.error(error);
+              this.processError(error);
+              return of(responseEmpresas);
             })
           );
         } else {
@@ -146,9 +151,9 @@ export class EmpresaExplotacionResultadosListadoComponent
       (error) => {
         this.logger.error(error);
         if (error instanceof SgiError) {
-          this.snackBarService.showError(error);
+          this.processError(error);
         } else {
-          this.snackBarService.showError(this.textoErrorDesactivar);
+          this.processError(new SgiError(this.textoErrorDesactivar));
         }
       }
     );

@@ -49,8 +49,7 @@ export class GrupoListadoInvComponent extends AbstractTablePaginationComponent<I
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IGrupoListado>> {
-    const gruposInvestigacion$ = this.grupoService.findAll(this.getFindOptions(reset));
-    return gruposInvestigacion$.pipe(
+    return this.grupoService.findAll(this.getFindOptions(reset)).pipe(
       map(result => {
         return {
           page: result.page,
@@ -117,6 +116,7 @@ export class GrupoListadoInvComponent extends AbstractTablePaginationComponent<I
       }),
       catchError((error) => {
         this.logger.error(error);
+        this.processError(error);
         return EMPTY;
       })
     );

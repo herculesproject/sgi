@@ -258,10 +258,10 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.processError(new SgiError(this.textoErrorDesactivar));
           }
         }
       );
@@ -290,10 +290,10 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
           this.logger.error(error);
           tipoEnlace.activo = false;
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorReactivar);
+            this.processError(new SgiError(this.textoErrorReactivar));
           }
         }
       );

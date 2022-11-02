@@ -130,7 +130,12 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
               peticionEvaluacion.solicitante.id === persona.id);
             peticionEvaluacion.solicitante = datosPersona;
           });
-        });
+        },
+          (error) => {
+            this.logger.error(error);
+            this.processError(error);
+          }
+        );
         this.suscripciones.push(personaSubscription);
         let peticionesListado: SgiRestListResult<IPeticionEvaluacion>;
         return of(peticionesListado = {

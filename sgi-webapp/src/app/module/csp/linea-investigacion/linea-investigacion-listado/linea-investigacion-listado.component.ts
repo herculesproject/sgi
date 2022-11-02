@@ -188,8 +188,7 @@ export class LineaInvestigacionListadoComponent extends AbstractTablePaginationC
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<ILineaInvestigacion>> {
-    const observable$ = this.lineaInvestigacionService.findTodos(this.getFindOptions(reset));
-    return observable$;
+    return this.lineaInvestigacionService.findTodos(this.getFindOptions(reset));
   }
 
   protected initColumns(): void {
@@ -259,10 +258,10 @@ export class LineaInvestigacionListadoComponent extends AbstractTablePaginationC
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.processError(new SgiError(this.textoErrorDesactivar));
           }
         }
       );
@@ -291,10 +290,10 @@ export class LineaInvestigacionListadoComponent extends AbstractTablePaginationC
           this.logger.error(error);
           lineaInvestigacion.activo = false;
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorReactivar);
+            this.processError(new SgiError(this.textoErrorReactivar));
           }
         }
       );

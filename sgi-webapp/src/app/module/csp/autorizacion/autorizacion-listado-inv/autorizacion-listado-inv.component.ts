@@ -34,7 +34,6 @@ const AUTORIZACION_KEY = marker('csp.autorizacion');
 const AUTORIZACION_SOLICITUD_KEY = marker('csp.autorizacion-solicitud');
 const NOTIFICACION_KEY = marker('csp.notificacion-cvn');
 const PROYECTO_KEY = marker('csp.proyecto');
-const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 
 export interface IAutorizacionListado {
   autorizacion: IAutorizacionWithFirstEstado;
@@ -223,6 +222,7 @@ export class AutorizacionListadoInvComponent extends AbstractTablePaginationComp
                 }),
                 catchError((error) => {
                   this.logger.error(error);
+                  this.processError(error);
                   return EMPTY;
                 }));
             } else {
@@ -298,10 +298,10 @@ export class AutorizacionListadoInvComponent extends AbstractTablePaginationComp
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDelete);
+            this.processError(new SgiError(this.textoErrorDelete));
           }
         }
       );
@@ -317,8 +317,9 @@ export class AutorizacionListadoInvComponent extends AbstractTablePaginationComp
         ({ documento, fichero }) => {
           triggerDownloadToUser(fichero, documento.nombre);
         },
-        () => {
-          this.snackBarService.showError(MSG_DOWNLOAD_ERROR);
+        (error) => {
+          this.logger.error(error);
+          this.processError(error);
         }
       ));
   }

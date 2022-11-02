@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -228,7 +229,9 @@ export class ConvocatoriaReunionListadoComponent
               })
             ).subscribe(() => {
               this.snackBarService.showSuccess(this.textoDeleteSuccess);
-            });
+            },
+              this.processError
+            );
         }
         aceptado = false;
       });
@@ -246,11 +249,16 @@ export class ConvocatoriaReunionListadoComponent
           this.snackBarService.showSuccess(this.textoEnviadoSuccess);
           this.loadTable();
         } else {
-          this.snackBarService.showError(this.textoEnviadoError);
+          this.processError(new SgiError(this.textoEnviadoError));
         }
       },
       (error) => {
-        this.snackBarService.showError(this.textoEnviadoError);
+        if (error instanceof SgiError) {
+          this.processError(error);
+        }
+        else {
+          this.processError(new SgiError(this.textoEnviadoError));
+        }
       }
     );
   }

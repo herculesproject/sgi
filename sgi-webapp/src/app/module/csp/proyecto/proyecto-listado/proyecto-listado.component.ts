@@ -425,10 +425,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.processError(new SgiError(this.textoErrorDesactivar));
           }
         }
       );
@@ -457,10 +457,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
           this.logger.error(error);
           proyecto.activo = false;
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorReactivar);
+            this.processError(new SgiError(this.textoErrorReactivar));
           }
         }
       );
@@ -481,10 +481,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.suscripciones.push(
       this.programaService.findAllPlan().subscribe(
         (res) => this.planInvestigacion$.next(res.items),
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR);
-        }
+        (error) => this.logger.error(error)
       )
     );
   }
@@ -496,10 +493,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.suscripciones.push(
       this.tipoAmbitoGeograficoService.findAll().subscribe(
         (res) => this.ambitoGeografico$.next(res.items),
-        (error) => {
-          this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR);
-        }
+        (error) => this.logger.error(error)
       )
     );
   }
@@ -522,10 +516,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
           );
         });
       },
-      (error) => {
-        this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR);
-      }
+      (error) => this.logger.error(error)
     ));
 
     const queryOptionsResponsable: SgiRestFindOptions = {};

@@ -218,11 +218,12 @@ export class AreaTematicaListadoComponent extends AbstractTablePaginationCompone
         },
         (error) => {
           this.logger.error(error);
+          this.processError(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.processError(new SgiError(this.textoErrorDesactivar));
           }
         }
       );
@@ -251,10 +252,10 @@ export class AreaTematicaListadoComponent extends AbstractTablePaginationCompone
           this.logger.error(error);
           areaTematica.activo = false;
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorReactivar);
+            this.processError(new SgiError(this.textoErrorReactivar));
           }
         }
       );

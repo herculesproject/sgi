@@ -130,10 +130,10 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.processError(new SgiError(this.textoErrorDesactivar));
           }
         }
       );
@@ -156,10 +156,10 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorReactivar);
+            this.processError(new SgiError(this.textoErrorReactivar));
           }
         }
       );
@@ -332,10 +332,10 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
         }, (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textErrorCloning);
+            this.processError(new SgiError(this.textErrorCloning));
           }
         }));
   }
@@ -365,10 +365,10 @@ export class ConvocatoriaBaremacionListadoComponent extends AbstractTablePaginat
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorBaremationCall);
+            this.processError(new SgiError(this.textoErrorBaremationCall));
           }
         }
       );

@@ -324,10 +324,13 @@ export class NotificacionPresupuestoSgeListadoComponent extends AbstractTablePag
             );
           })
         )
-        .subscribe(() => {
-          this.loadTable(true);
-          this.snackBarService.showSuccess(MSG_NOTIFICADO_SUCCESS);
-        })
+        .subscribe(
+          () => {
+            this.loadTable(true);
+            this.snackBarService.showSuccess(MSG_NOTIFICADO_SUCCESS);
+          },
+          this.processError
+        )
     );
   }
 

@@ -210,9 +210,9 @@ export class ViaProteccionListadoComponent extends AbstractTablePaginationCompon
         }, (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           } else {
-            this.snackBarService.showError(this.textErrorDesactivar);
+            this.processError(new SgiError(this.textErrorDesactivar));
           }
         }
         );
@@ -234,9 +234,9 @@ export class ViaProteccionListadoComponent extends AbstractTablePaginationCompon
       }, (error) => {
         this.logger.error(error);
         if (error instanceof SgiError) {
-          this.snackBarService.showError(error);
+          this.processError(error);
         } else {
-          this.snackBarService.showError(this.textErrorReactivar);
+          this.processError(new SgiError(this.textErrorReactivar));
         }
       }
       );

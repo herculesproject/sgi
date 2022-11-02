@@ -228,7 +228,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         },
         (error) => {
           this.logger.error(error);
-          this.snackBarService.showError(MSG_ERROR);
+          this.processError(error);
         }
       );
     this.suscripciones.push(personaServiceOneSubscription);
@@ -264,7 +264,9 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
               })
             ).subscribe(() => {
               this.snackBarService.showSuccess(this.textoDeleteSuccess);
-            });
+            },
+              this.processError
+            );
           this.suscripciones.push(evaluadorServiceDeleteSubscription);
         }
         aceptado = false;

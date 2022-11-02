@@ -10,8 +10,8 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { ConvocatoriaPublicService } from '@core/services/csp/convocatoria-public.service';
 import { EmpresaPublicService } from '@core/services/sgemp/empresa-public.service';
 import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http/';
-import { from, Observable, of } from 'rxjs';
-import { map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
+import { EMPTY, from, Observable, of } from 'rxjs';
+import { catchError, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
 import { PUB_ROUTE_NAMES } from '../../pub-route-names';
 import { CONVOCATORIA_PUBLIC_ID_KEY } from '../../solicitud/solicitud-crear/solicitud-public-crear.guard';
 
@@ -104,6 +104,10 @@ export class ConvocatoriaPublicListadoComponent
                     map(empresa => {
                       convocatoriaListado.entidadFinanciadoraEmpresa = empresa;
                       return convocatoriaListado;
+                    }),
+                    catchError((error) => {
+                      this.processError(error);
+                      return EMPTY;
                     })
                   );
                 }
@@ -133,6 +137,10 @@ export class ConvocatoriaPublicListadoComponent
                         map(empresa => {
                           convocatoriaListado.entidadConvocanteEmpresa = empresa;
                           return convocatoriaListado;
+                        }),
+                        catchError((error) => {
+                          this.processError(error);
+                          return EMPTY;
                         })
                       );
                     }

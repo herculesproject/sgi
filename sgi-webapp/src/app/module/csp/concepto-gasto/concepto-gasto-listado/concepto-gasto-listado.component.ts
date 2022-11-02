@@ -213,8 +213,7 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<any>> {
-    const observable$ = this.conceptoGastoService.findTodos(this.getFindOptions(reset));
-    return observable$;
+    return this.conceptoGastoService.findTodos(this.getFindOptions(reset));
   }
 
   protected loadTable(reset?: boolean): void {
@@ -258,10 +257,10 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
         (error) => {
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorDesactivar);
+            this.processError(new SgiError(this.textoErrorDesactivar));
           }
         }
       );
@@ -285,10 +284,10 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
           conceptoGasto.activo = false;
           this.logger.error(error);
           if (error instanceof SgiError) {
-            this.snackBarService.showError(error);
+            this.processError(error);
           }
           else {
-            this.snackBarService.showError(this.textoErrorReactivar);
+            this.processError(new SgiError(this.textoErrorReactivar));
           }
         }
       );
