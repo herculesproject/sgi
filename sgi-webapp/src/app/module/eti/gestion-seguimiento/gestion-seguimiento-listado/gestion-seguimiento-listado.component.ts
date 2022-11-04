@@ -132,7 +132,6 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
           return of([]);
         }
       }),
-    ),
       catchError((error) => {
         this.logger.error(error);
         // On error reset pagination values
@@ -140,7 +139,8 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
         this.totalElementos = 0;
         this.processError(error);
         return of([]);
-      });
+      })
+    );
   }
 
   /**
