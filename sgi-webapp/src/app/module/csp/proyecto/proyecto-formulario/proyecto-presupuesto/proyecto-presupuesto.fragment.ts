@@ -272,12 +272,14 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
 
     const currentAnualidadesValue = anualidadesNewValue || this.getFormGroup().controls?.anualidades.value;
 
-    if (!!!currentAnualidadesValue || (!!currentAnualidadesValue && currentAnualidadesValue !== this.proyecto.anualidades)) {
+    if (currentAnualidadesValue == null
+      || currentAnualidadesValue !== this.proyecto?.anualidades
+      || this.proyectoAnualidadesEliminadas.length > 0
+    ) {
       this.disableAddAnualidad$.next(true);
     } else if (numAnualidades > 0) {
-      if (!!!currentAnualidadesValue || (!!currentAnualidadesValue && currentAnualidadesValue !== this.proyecto.anualidades)) {
-        this.disableAddAnualidad$.next(true);
-      }
+      this.disableAddAnualidad$.next(!!!currentAnualidadesValue);
+
       if (!this.getFormGroup().controls.anualidades.disabled) {
         this.getFormGroup().controls.anualidades.disable();
       }
@@ -288,4 +290,5 @@ export class ProyectoPresupuestoFragment extends FormFragment<IProyecto>  {
       }
     }
   }
+
 }
