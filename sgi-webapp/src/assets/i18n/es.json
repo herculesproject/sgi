@@ -1587,6 +1587,7 @@
   "eer.root.title": "Inicio",
   "eer.tipo-empresa.EBT": "EBT",
   "eer.tipo-empresa.EINCNT": "EINCNT",
+  "error.after.fecha-baja": "La fecha de baja debe ser posterior a la fecha de alta",
   "error.after.fecha-fin": "La fecha de fin debe ser posterior a la fecha de inicio",
   "error.after.fecha-fin-definitiva": "La fecha de fin definitiva debe ser posterior o igual a la fecha de inicio",
   "error.after.fecha-fin-definitiva-proyecto": "La fecha de fin de la prórroga debe ser posterior a la fecha de fin definitiva del proyecto",
