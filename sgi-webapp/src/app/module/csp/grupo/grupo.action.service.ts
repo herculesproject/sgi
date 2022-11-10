@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IGrupo } from '@core/models/csp/grupo';
 import { Module } from '@core/module';
 import { ActionService } from '@core/services/action-service';
+import { ConfiguracionService } from '@core/services/csp/configuracion.service';
 import { GrupoEnlaceService } from '@core/services/csp/grupo-enlace/grupo-enlace.service';
 import { GrupoEquipoInstrumentalService } from '@core/services/csp/grupo-equipo-instrumental/grupo-equipo-instrumental.service';
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
@@ -84,7 +85,8 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     grupoEnlaceService: GrupoEnlaceService,
     grupoPersonaAutorizadaService: GrupoPersonaAutorizadaService,
     grupoLineaInvestigacionService: GrupoLineaInvestigacionService,
-    lineaInvestigacionService: LineaInvestigacionService
+    lineaInvestigacionService: LineaInvestigacionService,
+    configuracionService: ConfiguracionService
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(GRUPO_ROUTE_PARAMS.ID));
@@ -110,7 +112,8 @@ export class GrupoActionService extends ActionService implements OnDestroy {
       grupoEquipoService,
       personaService,
       vinculacionService,
-      this.data?.readonly
+      this.data?.readonly,
+      configuracionService
     );
 
     this.responsablesEconomicos = new GrupoResponsableEconomicoFragment(
@@ -159,6 +162,10 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     this.addFragment(this.FRAGMENT.LINEA_INVESTIGACION, this.lineasInvestigacion);
 
     this.datosGenerales.initialize();
+
+    if (this.isEdit()) {
+      this.equiposInvestigacion.initialize();
+    }
   }
 
   private isModuleINV(): boolean {

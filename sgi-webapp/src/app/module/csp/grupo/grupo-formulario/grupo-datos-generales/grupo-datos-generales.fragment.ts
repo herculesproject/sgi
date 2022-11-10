@@ -262,8 +262,8 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       fechaInicio: grupo.fechaInicio,
       fechaFin: null,
       rol,
-      dedicacion: Dedicacion.COMPLETA,
-      participacion: 100
+      dedicacion: null,
+      participacion: null
     };
   }
 

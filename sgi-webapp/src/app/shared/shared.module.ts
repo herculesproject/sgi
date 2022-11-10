@@ -45,6 +45,7 @@ import { SelectEntityComponent } from './select-entity/select-entity.component';
 import { SelectEnumComponent } from './select-enum/select-enum.component';
 import { SelectComponent } from './select/select.component';
 import { InfoMessageComponent } from './info-message/info-message.component';
+import { ErrorMessageComponent } from './error-message/error-message.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { InfoMessageComponent } from './info-message/info-message.component';
     FormAutocompleteOffDirective,
     ActionEmptyFooterComponent,
     SelectEmailRecipientsComponent,
-    InfoMessageComponent
+    InfoMessageComponent,
+    ErrorMessageComponent
   ],
   imports: [
     CommonModule,
@@ -136,7 +138,8 @@ import { InfoMessageComponent } from './info-message/info-message.component';
     SelectEmailRecipientsComponent,
     DialogContentComponent,
     DialogHeaderComponent,
-    InfoMessageComponent
+    InfoMessageComponent,
+    ErrorMessageComponent
   ]
 })
 export class SharedModule { }

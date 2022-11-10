@@ -8,9 +8,7 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { DEDICACION_MAP, IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { GrupoEquipoService } from '@core/services/csp/grupo-equipo/grupo-equipo.service';
-import { GrupoLineaInvestigadorService } from '@core/services/csp/grupo-linea-investigador/grupo-linea-investigador.service';
 import { DialogService } from '@core/services/dialog.service';
-import { LuxonUtils } from '@core/utils/luxon-utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -139,13 +137,16 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     // Necesario para sincronizar los cambios de orden de registros dependiendo de la ordenación y paginación
     this.dataSource.sortData(this.dataSource.filteredData, this.dataSource.sort);
     const row = (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
-
+    const entidad = wrapper?.value ?? {} as IGrupoEquipo;
+    entidad.grupo = this.actionService.grupo;
     const data: GrupoEquipoModalData = {
       titleEntity: this.modalTitleEntity,
-      entidad: wrapper?.value ?? {} as IGrupoEquipo,
+      entidad,
       selectedEntidades: this.dataSource.data.map(element => element.value),
       fechaInicioMin: this.actionService.grupo.fechaInicio,
-      fechaFinMax: this.actionService.grupo.fechaFin ?? LuxonUtils.fromBackend('2500-01-01T23:59:59Z')
+      fechaFinMax: this.actionService.grupo.fechaFin,
+      dedicacionMinimaGrupo: this.formPart.configuracion.dedicacionMinimaGrupo ?? 0,
+      grupo: this.actionService.grupo
     };
 
     if (wrapper) {

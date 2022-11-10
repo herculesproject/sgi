@@ -18,7 +18,7 @@
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Solicitud -->
-        <mat-form-field *ngIf="formGroup.controls.solicitud.value">
+        <mat-form-field *ngIf="formGroup.controls.solicitud?.value">
           <mat-label>{{'csp.grupo.solicitud' | translate}}</mat-label>
           <input matInput type="text" placeholder="{{'csp.grupo.solicitud' | translate}}" formControlName="solicitud"
             [readonly]="true">
