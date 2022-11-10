@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionNotDeleteableException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionOverlappedFechasException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoJustificacionProjectRangeException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalException;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -99,8 +100,15 @@ public class ProyectoPeriodoJustificacionService {
     AtomicInteger numPeriodo = new AtomicInteger(0);
 
     // Validaciones
+    Proyecto proyecto = proyectoRepository.findById(proyectoId)
+        .orElseThrow(() -> new ProyectoNotFoundException(proyectoId));
+    Instant fechaInicioProyecto = proyecto.getFechaInicio();
+    Instant fechaFinProyecto = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
+        : proyecto.getFechaFin();
+
     List<ProyectoPeriodoJustificacion> returnValue = new ArrayList<>();
     int index = 0;
+    ProyectoPeriodoJustificacion periodoJustificacionAnterior = null;
     for (ProyectoPeriodoJustificacion periodoJustificacion : proyectoPeriodoJustificaciones) {
 
       Optional<ProyectoPeriodoJustificacion> periodoJustificacionBD = proyectoPeriodoJustificacionsBD.stream().filter(
@@ -118,23 +126,27 @@ public class ProyectoPeriodoJustificacionService {
             .setFechaPresentacionJustificacion(periodoJustificacionBD.get().getFechaPresentacionJustificacion());
       }
 
-      // Obtiene los rangos no permitidos
-      List<Instant[]> rangos = new ArrayList<>();
-      proyectoPeriodoJustificaciones.stream().filter(periodo -> periodo != periodoJustificacion).forEach(periodo -> {
-        Instant[] rango = { periodo.getFechaInicio(), periodo.getFechaFin() };
-        rangos.add(rango);
-      });
-
       // actualizando
       if (periodoJustificacion.getId() != null && proyectoPeriodoJustificacionsBD.stream()
           .noneMatch(periodo -> Objects.equals(periodo.getId(), periodoJustificacion.getId()))) {
         throw new ProyectoPeriodoJustificacionNotFoundException(periodoJustificacion.getId());
       }
 
+      if (fechaInicioProyecto.isAfter(periodoJustificacion.getFechaInicio())
+          || fechaFinProyecto.isBefore(periodoJustificacion.getFechaFin())) {
+        throw new ProyectoPeriodoJustificacionProjectRangeException(fechaInicioProyecto, fechaFinProyecto);
+      }
+
+      if (periodoJustificacionAnterior != null
+          && !(periodoJustificacionAnterior.getFechaFin() != null
+              && periodoJustificacionAnterior.getFechaFin().isBefore(periodoJustificacion.getFechaInicio()))) {
+        throw new ProyectoPeriodoJustificacionOverlappedFechasException();
+      }
+
       // Solo puede haber un tipo de justificacion 'final' y ha de ser el último"
-      if ((periodoFinal != null && (!Objects.equals(periodoFinal.getId(), periodoJustificacion.getId())))
-          && periodoJustificacion.getTipoJustificacion().equals(TipoJustificacion.FINAL)
-          || (index > proyectoPeriodoJustificaciones.size() - 1)) {
+      if (periodoFinal != null
+          && !Objects.equals(periodoFinal.getId(), periodoJustificacion.getId())
+          && index >= (proyectoPeriodoJustificaciones.size() - 1)) {
         throw new TipoFinalException();
       }
 
@@ -144,15 +156,6 @@ public class ProyectoPeriodoJustificacionService {
       if (!result.isEmpty()) {
         throw new ConstraintViolationException(result);
       }
-      // solapamiento de fechas
-      rangos.stream().forEach(rango -> {
-        if (!((periodoJustificacion.getFechaInicio().isBefore(rango[0])
-            && periodoJustificacion.getFechaFin().isBefore(rango[1]))
-            || (periodoJustificacion.getFechaInicio().isAfter(rango[0])
-                && periodoJustificacion.getFechaFin().isAfter(rango[1])))) {
-          throw new ProyectoPeriodoJustificacionOverlappedFechasException();
-        }
-      });
 
       if (Objects.isNull(periodoJustificacion.getId())) {
         // creación
@@ -164,6 +167,9 @@ public class ProyectoPeriodoJustificacionService {
       } else {
         returnValue.add(repository.save(periodoJustificacion));
       }
+
+      periodoJustificacionAnterior = periodoJustificacion;
+      index++;
     }
 
     log.debug(
