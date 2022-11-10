@@ -293,7 +293,9 @@
       <!-- Plan Investigacion Column -->
       <ng-container matColumnDef="planInvestigacion">
         <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.plan-investigacion' | translate}} </th>
-        <td mat-cell *matCellDef="let element">{{element.entidadConvocante.programa?.nombre}}</td>
+        <td mat-cell *matCellDef="let element">
+          {{element.entidadConvocante.programa | planPrograma}}
+        </td>
       </ng-container>
 
       <!-- Entidad Financiadora Column -->
