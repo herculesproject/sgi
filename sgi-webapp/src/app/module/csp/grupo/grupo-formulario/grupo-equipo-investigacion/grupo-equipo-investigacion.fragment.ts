@@ -117,8 +117,8 @@ export class GrupoEquipoInvestigacionFragment extends Fragment {
     if (index >= 0) {
       wrapper.setEdited();
       this.getVinculacionPersona(this.equipos$.value[index].value).subscribe();
-      const current = this.equipos$.value;
       current[index] = wrapper;
+      this.equipos$.next(current);
       this.checkErrors(current);
       this.setChanges(true);
     }

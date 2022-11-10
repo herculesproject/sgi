@@ -18,6 +18,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
+import { map } from 'rxjs/operators';
 import { GRUPO_DATA_KEY } from './grupo-data.resolver';
 import { GrupoDatosGeneralesFragment } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.fragment';
 import { GrupoEnlaceFragment } from './grupo-formulario/grupo-enlace/grupo-enlace.fragment';
@@ -166,6 +167,13 @@ export class GrupoActionService extends ActionService implements OnDestroy {
     if (this.isEdit()) {
       this.equiposInvestigacion.initialize();
     }
+
+    this.subscriptions.push(
+      this.equiposInvestigacion.equipos$
+        .pipe(
+          map(equipoInvestigacionWrapped => equipoInvestigacionWrapped.map(({ value }) => value))
+        ).subscribe(equipoInvestigacion => this.datosGenerales.equipoInvestigacion$.next(equipoInvestigacion))
+    );
   }
 
   private isModuleINV(): boolean {
