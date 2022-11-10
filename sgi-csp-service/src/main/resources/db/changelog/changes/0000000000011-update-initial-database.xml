@@ -1,5 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                                                                                                                                                                                                                                                             http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                                                                                                                                                                                                                                                             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
   <changeSet author="user (generated)" id="0000000000011-1">
     <addColumn tableName="estado_proyecto_periodo_justificacion">
@@ -38,4 +40,20 @@
   <changeSet author="user (generated)" id="0000000000011-8">
     <modifyDataType tableName="solicitud_rrhh" columnName="observaciones" newDataType="VARCHAR(4000)" />
   </changeSet>
+
+  <changeSet author="user (generated)" id="0000000000011-9">
+    <addColumn tableName="configuracion">
+      <column name="dedicacion_minima_grupo" type="decimal(19, 2)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000011-10">
+    <addUniqueConstraint columnNames="dedicacion_minima_grupo" constraintName="UC_CONFIGURACIONDEDICACION_MINIMA_GRUPO_COL" tableName="configuracion" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000011-11">
+    <dropNotNullConstraint columnDataType="varchar(255)" columnName="dedicacion" tableName="grupo_equipo" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000011-12">
+    <dropNotNullConstraint columnDataType="decimal(19,2)" columnName="participacion" tableName="grupo_equipo" />
+  </changeSet>
+
 </databaseChangeLog>
