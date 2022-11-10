@@ -447,6 +447,8 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {
         rsqlFilter.and(this.createPalabrasClaveFilter(palabrasClave));
       }
+    } else {
+      rsqlFilter.and('activo', SgiRestFilterOperator.EQUALS, 'true');
     }
 
     return rsqlFilter;
