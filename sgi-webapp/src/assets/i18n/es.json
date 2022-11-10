@@ -1641,6 +1641,8 @@
   "error.csp.modelo-ejecucion-tipo-hito.requiredChecked": "Es obligatorio marcar al menos una de las opciones: convocatorias, solicitudes o proyectos",
   "error.csp.periodos-justificacion.primer-periodo": "El primer periodo ha de comenzar en el mes 1",
   "error.csp.persona-equipo.duplicate": "La persona ya está registrada",
+  "error.csp.proyecto-calendario-facturacion.fecha-fin.before": "La fecha de fin debe ser anterior a la fecha de fin del proyecto",
+  "error.csp.proyecto-calendario-facturacion.fecha-inicio.after": "La fecha de inicio debe ser posterior a la fecha de inicio del proyecto",
   "error.csp.proyecto-concepto-gasto.fecha-fin.max": "La fecha de fin no puede ser superior a la fecha de fin del Proyecto",
   "error.csp.proyecto-concepto-gasto.fecha-fin.min": "La fecha de fin no puede ser inferior a la fecha de inicio del Proyecto",
   "error.csp.proyecto-concepto-gasto.fecha-inicio.max": "La fecha de inicio no puede ser superior a la fecha de fin del Proyecto",

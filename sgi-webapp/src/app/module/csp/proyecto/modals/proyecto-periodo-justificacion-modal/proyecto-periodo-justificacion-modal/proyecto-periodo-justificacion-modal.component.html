@@ -51,6 +51,12 @@
           <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.overlapped">
             {{ 'error.periodo.justificacion.overlapping.range.fecha-inicio' | translate }}
           </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.minDate">
+            {{'error.csp.proyecto-calendario-facturacion.fecha-inicio.after' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.maxDate">
+            {{'error.start.period' | translate}}
+          </mat-error>
         </mat-form-field>
 
         <!-- Fecha fin -->
@@ -68,6 +74,9 @@
           </mat-error>
           <mat-error *ngIf="formGroup.controls.fechaFin.errors?.overlapped">
             {{ 'error.periodo.justificacion.overlapping.range.fecha-fin' | translate }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.fechaFin.errors?.maxDate">
+            {{'error.csp.proyecto-calendario-facturacion.fecha-fin.before' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
