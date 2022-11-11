@@ -315,6 +315,7 @@ export class ProyectoPeriodoJustificacionModalComponent
       this.formGroup.get('fechaFinPresentacionConvocatoria').value);
     this.formGroup.get('observaciones').setValue(this.formGroup.get('observacionesConvocatoria').value);
     this.formGroup.get('tipoJustificacion').setValue(this.formGroup.get('tipoJustificacionConvocatoria').value);
+    this.formGroup.markAllAsTouched();
   }
 
   /**
