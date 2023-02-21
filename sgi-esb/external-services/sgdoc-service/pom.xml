@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -9,7 +11,7 @@
   </parent>
   <groupId>org.crue.hercules.sgi</groupId>
   <artifactId>sgi-sgdoc-service</artifactId>
-  <version>0.0.14-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>sgi-sgdoc-service</name>
   <description>Servicios del Sistema de Gestión de Documentos</description>
   <dependencies>
@@ -162,19 +164,22 @@
     <!-- Spring Boot doesn't have this property... so, this is needed -->
     <maven-surefire-report-plugin.version>3.0.0-M4</maven-surefire-report-plugin.version>
 
-    <!-- Overriding Spring Boot's version so that this version matches Maven Surefire Report Plugin version -->
+    <!-- Overriding Spring Boot's version so that this version matches Maven Surefire Report Plugin
+    version -->
     <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
 
     <!-- Do not deploy to maven repo -->
     <maven.deploy.skip>true</maven.deploy.skip>
 
-    <!--Properties by profile -->
+    <!--Properties
+    by profile -->
     <spring.profiles.active>dev</spring.profiles.active>
     <skip.integration.tests>true</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
     <skip.startlocalpostgres>true</skip.startlocalpostgres>
 
-    <!-- Define "argLine" as a Maven property rather than as part of the configuration of maven-surefire-plugin -->
+    <!-- Define "argLine" as a Maven property rather than as part of the configuration of
+    maven-surefire-plugin -->
     <argLine>-XX:MaxPermSize=1024m</argLine>
   </properties>
 
@@ -227,7 +232,8 @@
   </profiles>
 
   <build>
-    <!--Enable resource filtering -->
+    <!--Enable
+    resource filtering -->
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -395,7 +401,8 @@
         <configuration>
           <!--
           Create 2 artifacts: one as dependency and another as executable fat JAR
-          See https://docs.spring.io/spring-boot/docs/current/reference/html/howto-build.html#howto-create-an-additional-executable-jar
+          See
+          https://docs.spring.io/spring-boot/docs/current/reference/html/howto-build.html#howto-create-an-additional-executable-jar
           -->
           <classifier>exec</classifier>
         </configuration>
@@ -426,7 +433,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <!-- The skip.unit.tests property is used to decide whether these tests should be run or not -->
+          <!-- The skip.unit.tests property is used to decide whether these tests should be run or
+          not -->
           <skipTests>${skip.unit.tests}</skipTests>
           <systemPropertyVariables>
             <!-- Redirect JBoss logging to SLF4J -->
@@ -445,7 +453,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
-          <!-- The skip.integration.tests property is used to decide if this plugin should fire or not -->
+          <!-- The skip.integration.tests property is used to decide if this plugin should fire or
+          not -->
           <skipTests>${skip.integration.tests}</skipTests>
           <systemPropertyVariables>
             <!-- Set spring active profile -->
@@ -769,7 +778,8 @@
       </plugin>
 
       <!--
-      Maven Surefire Reports Plugin - Parses generated test results from both unit tests and integration tests.
+      Maven Surefire Reports Plugin - Parses generated test results from both unit tests and integration
+      tests.
       http://maven.apache.org/surefire/maven-surefire-report-plugin/
       -->
       <plugin>
@@ -843,7 +853,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
         <configuration>
-          <!--suppress MavenModelInspection -->
+          <!--suppress
+          MavenModelInspection -->
           <targetJdk>${jdk.version}</targetJdk>
           <excludes>
             <exclude>**/generated/**</exclude>
