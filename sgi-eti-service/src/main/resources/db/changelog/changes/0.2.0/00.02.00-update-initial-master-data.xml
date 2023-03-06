@@ -1,0 +1,76 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+
+  <changeSet context="!test" author="master" id="00.02.00-bloque">
+    <update tableName="bloque">
+      <column name="formulario_id" valueNumeric="null" />
+      <column name="nombre"
+        value="SEGUIMIENTO FINAL" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="formulario_id"
+          valueComputed="(select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual')" />
+      </whereParams>
+    </update>
+    <update tableName="bloque">
+      <column name="formulario_id" valueNumeric="4" />
+      <column name="nombre"
+        value="SEGUIMIENTO ANUAL" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="formulario_id"
+          valueComputed="(select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Final')" />
+      </whereParams>
+    </update>
+    <update tableName="bloque">
+      <column name="formulario_id" valueNumeric="5" />
+      <where>:name=:value AND formulario_id is null</where>
+      <whereParams>
+        <param name="nombre" value="SEGUIMIENTO FINAL" />
+      </whereParams>
+    </update>
+
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="00.02.00-apartado">
+    <update
+      tableName="apartado">
+      <column name="esquema"
+        valueClobFile="clob/seguimiento_anual_apartado_4.json" />
+        <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+        <whereParams>
+        <param
+          name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '1' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual'))" />
+          <param
+          name="nombre" value="Aspectos éticos específicos" />
+          <param
+          name="orden" valueNumeric="4" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/seguimiento_anual_apartado_5.json" />
+      <column
+        name="nombre" value="Aclaraciones al comité" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '1' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual'))" />
+        <param
+          name="nombre" value="Aclaraciones" />
+        <param name="orden" valueNumeric="5" />
+      </whereParams>
+    </update>
+
+  </changeSet>
+
+</databaseChangeLog>
