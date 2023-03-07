@@ -46,6 +46,7 @@ import { SelectEnumComponent } from './select-enum/select-enum.component';
 import { SelectComponent } from './select/select.component';
 import { InfoMessageComponent } from './info-message/info-message.component';
 import { ErrorMessageComponent } from './error-message/error-message.component';
+import { SgiTooltipDirective } from './directives/sgi-tooltip.directive';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { ErrorMessageComponent } from './error-message/error-message.component';
     ActionEmptyFooterComponent,
     SelectEmailRecipientsComponent,
     InfoMessageComponent,
-    ErrorMessageComponent
+    ErrorMessageComponent,
+    SgiTooltipDirective
   ],
   imports: [
     CommonModule,
@@ -139,7 +141,8 @@ import { ErrorMessageComponent } from './error-message/error-message.component';
     DialogContentComponent,
     DialogHeaderComponent,
     InfoMessageComponent,
-    ErrorMessageComponent
+    ErrorMessageComponent,
+    SgiTooltipDirective
   ]
 })
 export class SharedModule { }

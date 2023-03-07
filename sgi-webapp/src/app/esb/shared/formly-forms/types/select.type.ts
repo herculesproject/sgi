@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { FieldType } from '@ngx-formly/material/form-field';
 import { Observable, of } from 'rxjs';
@@ -30,7 +30,7 @@ import { map } from 'rxjs/operators';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectAttributesTypeComponent extends FieldType implements OnInit {
+export class SelectTypeComponent extends FieldType {
 
   defaultOptions = {
     templateOptions: {
@@ -52,32 +52,8 @@ export class SelectAttributesTypeComponent extends FieldType implements OnInit {
     }
   }
 
-  ngOnInit() {
-    if (this.to.propertyMappedToFormState) {
-      this.formState[this.to.propertyMappedToFormState] = '';
-
-      // Si hemos añadido los datos iniciales al formState tenemos que añadir tambień la conversión de este campo
-      if (this.to.modelEditName && this.formState[this.to.modelEditName]) {
-        const editModel = this.formState[this.to.modelEditName];
-        this.patchSelectAttributeId(editModel[this.field.key as string], editModel);
-      }
-    }
-  }
-
   change($event: MatSelectChange) {
-    this.patchSelectAttributeId(this.field.formControl.value, this.formState);
-
     this.to.change?.(this.field, $event);
-  }
-
-  private patchSelectAttributeId(fieldId: string, formStateObj: any) {
-    if (this.to.dataSelect && this.to.propertyMappedToFormState
-      && this.to.dataSelectPropertyValue && this.to.dataSelectPropertyToFormState) {
-      const dataSelectFilter = this.to.dataSelect.filter(item => item[this.to.dataSelectPropertyValue] === fieldId);
-      if (dataSelectFilter && dataSelectFilter.length > 0 && dataSelectFilter[0]) {
-        formStateObj[this.to.propertyMappedToFormState] = dataSelectFilter[0][this.to.dataSelectPropertyToFormState];
-      }
-    }
   }
 
   _getAriaLabelledby() {
