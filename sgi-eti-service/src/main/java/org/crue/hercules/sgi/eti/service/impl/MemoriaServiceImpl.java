@@ -674,7 +674,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     // eliminamos el estado a cambiar en el histórico
     estadoMemoriaRepository.deleteById(estadoMemoriaActual.get().getId());
 
-    if (Objects.nonNull(memoria.getRetrospectiva()) || cambiarEstadoRetrospectiva.booleanValue()) {
+    if (Objects.nonNull(memoria.getRetrospectiva()) && cambiarEstadoRetrospectiva.booleanValue()) {
       // El estado anterior de la retrospectiva es el estado con id anterior al que
       // tiene actualmente
       Optional<EstadoRetrospectiva> estadoRetrospectiva = estadoRetrospectivaRepository
