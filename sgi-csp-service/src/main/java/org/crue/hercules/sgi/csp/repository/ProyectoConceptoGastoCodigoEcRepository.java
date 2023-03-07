@@ -19,6 +19,15 @@ public interface ProyectoConceptoGastoCodigoEcRepository extends JpaRepository<P
   List<ProyectoConceptoGastoCodigoEc> findAllByProyectoConceptoGastoId(Long idProyectoConceptoGasto);
 
   /**
+   * Se obtienen los códigos económicos de todos los {@link ProyectoConceptoGasto}
+   * de un {@link Proyecto}
+   * 
+   * @param proyectoId identificador {@link Proyecto}
+   * @return listado {@link ProyectoConceptoGastoCodigoEc}
+   */
+  List<ProyectoConceptoGastoCodigoEc> findAllByProyectoConceptoGastoProyectoId(Long proyectoId);
+
+  /**
    * Comprueba la existencia del {@link ProyectoConceptoGastoCodigoEc} por id de
    * {@link ProyectoConceptoGasto}
    *
