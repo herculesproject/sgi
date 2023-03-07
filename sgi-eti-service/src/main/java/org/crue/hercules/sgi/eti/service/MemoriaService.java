@@ -101,8 +101,10 @@ public interface MemoriaService {
    *
    * @param id el id de la entidad {@link Memoria}.
    * @return la entidad {@link Memoria}.
+   * @throws MemoriaNotFoundException Si no existe ningún {@link Memoria} con ese
+   *                                  id.
    */
-  Memoria findById(Long id);
+  Memoria findById(Long id) throws MemoriaNotFoundException;
 
   /**
    * Elimina el {@link Memoria} por id.
