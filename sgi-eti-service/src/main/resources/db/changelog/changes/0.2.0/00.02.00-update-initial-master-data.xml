@@ -8,7 +8,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
   <property name="schemaPrefix" value="" />
 
-
   <changeSet context="!test" author="master" id="00.02.00-bloque">
     <update tableName="bloque">
       <column name="formulario_id" valueNumeric="null" />
@@ -41,6 +40,7 @@
   </changeSet>
 
   <changeSet context="!test" author="master" id="00.02.00-apartado">
+    <!-- Formulario seguimiento anual -->
     <update
       tableName="apartado">
       <column name="esquema"
@@ -71,6 +71,18 @@
       </whereParams>
     </update>
 
+    <!-- Formulario M10 -->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_3_6.json" />
+    <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+    <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+      <param
+          name="nombre" value="Datos de carácter personal" />
+      <param name="orden" valueNumeric="6" />
+      </whereParams>
+    </update>
   </changeSet>
 
 </databaseChangeLog>
