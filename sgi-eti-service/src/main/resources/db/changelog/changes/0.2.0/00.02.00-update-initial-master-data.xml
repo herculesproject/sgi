@@ -131,6 +131,20 @@
       </whereParams>
     </update>
 
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_4_2_3.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Severidad global" />
+        <param name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Refinamiento' and orden = '2' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="3" />
+      </whereParams>
+    </update>
 
     <!-- FORMULARIO M30 -->
     <update tableName="apartado">
