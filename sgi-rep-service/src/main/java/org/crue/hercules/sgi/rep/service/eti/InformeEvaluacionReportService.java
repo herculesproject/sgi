@@ -99,7 +99,7 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
     columnsDataTitulo.add("fechaDictamen");
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
     String pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
-    elementsRow.add(formatInstantToString(evaluacion.getFechaDictamen(), pattern));
+    elementsRow.add(formatInstantToString(evaluacion.getConvocatoriaReunion().getFechaEvaluacion(), pattern));
 
     columnsDataTitulo.add("numeroActa");
     elementsRow.add(evaluacion.getConvocatoriaReunion().getNumeroActa());

@@ -70,7 +70,7 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
     }
 
     columnsData.add("fechaDictamen");
-    elementsRow.add(formatInstantToString(evaluacion.getFechaDictamen(), pattern));
+    elementsRow.add(formatInstantToString(evaluacion.getConvocatoriaReunion().getFechaEvaluacion(), pattern));
 
     columnsData.add("numeroActa");
     elementsRow

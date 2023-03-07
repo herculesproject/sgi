@@ -56,7 +56,7 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionBaseR
     columnsData.add("fechaDictamen");
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
     String pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
-    elementsRow.add(formatInstantToString(evaluacion.getFechaDictamen(), pattern));
+    elementsRow.add(formatInstantToString(evaluacion.getConvocatoriaReunion().getFechaEvaluacion(), pattern));
 
     columnsData.add("numeroActa");
     String i18nActa = ApplicationContextSupport.getMessage("acta");
