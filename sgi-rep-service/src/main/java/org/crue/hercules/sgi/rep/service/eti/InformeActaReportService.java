@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import java.util.Optional;
+
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -25,7 +27,9 @@ import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaEvaluadaDto;
+import org.crue.hercules.sgi.rep.dto.eti.MemoriaDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -93,6 +97,16 @@ public class InformeActaReportService extends SgiReportService {
     String comite = acta.getConvocatoriaReunion().getComite().getComite();
     elementsRow.add(comite);
 
+    columnsData.add("nombreInvestigacion");
+    elementsRow.add(acta.getConvocatoriaReunion().getComite().getNombreInvestigacion());
+
+    columnsData.add("preposicionComite");
+    if (acta.getConvocatoriaReunion().getComite().getGenero().equals(Genero.M)) {
+      elementsRow.add(ApplicationContextSupport.getMessage("common.del"));
+    } else {
+      elementsRow.add(ApplicationContextSupport.getMessage("common.dela"));
+    }
+
     columnsData.add("fechaConvocatoria");
     String patternFechaConv = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     Instant fechaEvaluacion = acta.getConvocatoriaReunion().getFechaEvaluacion();
@@ -152,6 +166,29 @@ public class InformeActaReportService extends SgiReportService {
 
     columnsData.add("ordenDelDia");
     elementsRow.add(acta.getConvocatoriaReunion().getOrdenDia());
+
+    List<MemoriaEvaluadaDto> memorias = actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(acta.getId());
+
+    Optional<MemoriaEvaluadaDto> memoriaEvaluada = memorias
+        .stream().filter(memoria -> !memoria.getDictamen().equals(DICTAMEN_FAVORABLE)
+            && (memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_MEMORIA)
+                || memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_SEG_ANUAL)
+                || memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_SEG_FINAL)))
+        .findFirst();
+
+    if (memoriaEvaluada.isPresent()) {
+      columnsData.add("referenciaMemoria");
+      elementsRow.add(memoriaEvaluada.get().getNumReferencia());
+
+      columnsData.add("tituloProyecto");
+      elementsRow.add(memoriaEvaluada.get().getTitulo());
+
+      columnsData.add("responsableMemoria");
+      elementsRow.add(memoriaEvaluada.get().getPersonaRef());
+
+      columnsData.add("dictamen");
+      elementsRow.add(memoriaEvaluada.get().getDictamen());
+    }
 
     rowsData.add(elementsRow);
 
@@ -230,6 +267,9 @@ public class InformeActaReportService extends SgiReportService {
         Band bandComentarios = (Band) report.getItemBand().getElement(4);
         SubReport subReportComentarios = (SubReport) bandComentarios.getElement(0);
         subReportComentarios.setDataFactory(dataFactorySubReportComentarios);
+      } else {
+        Band bandComentarios = (Band) report.getItemBand().getElement(4);
+        report.getItemBand().removeElement(bandComentarios);
       }
 
       sgiReport.setContent(generateReportOutput(sgiReport.getOutputType(), report));
@@ -308,7 +348,16 @@ public class InformeActaReportService extends SgiReportService {
           .forEach(memoria -> {
             ActaComentariosMemoriaReportOutput comentariosMemoriaReportOutput = new ActaComentariosMemoriaReportOutput();
             comentariosMemoriaReportOutput.setNumReferenciaMemoria(memoria.getNumReferencia());
+            comentariosMemoriaReportOutput.setTituloProyecto(memoria.getTitulo());
+            comentariosMemoriaReportOutput.setDictamen(memoria.getDictamen());
             comentariosMemoriaReportOutput.setBloques(new ArrayList<>());
+
+            try {
+              PersonaDto persona = personaService.findById(memoria.getPersonaRef());
+              comentariosMemoriaReportOutput.setResponsable(persona.getNombre() + " " + persona.getApellidos());
+            } catch (Exception e) {
+              comentariosMemoriaReportOutput.setResponsable(getErrorMessageToReport(e));
+            }
 
             List<ComentarioDto> comentarios = evaluacionService.findByEvaluacionIdGestor(memoria.getEvaluacionId());
 
