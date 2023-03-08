@@ -74,7 +74,7 @@ public class ProyectoConceptoGastoCodigoEcSpecifications {
    * @param proyectoConceptoGastoId identificador de la
    *                                {@link ProyectoConceptoGasto}
    * @return specification para obtener los
-   *         {@link CProyectoConceptoGastoCodigoEc} por {@link ConceptoGasto}
+   *         {@link ProyectoConceptoGastoCodigoEc} por {@link ConceptoGasto}
    */
   public static Specification<ProyectoConceptoGastoCodigoEc> byConceptoGasto(
       Long proyectoConceptoGastoId) {

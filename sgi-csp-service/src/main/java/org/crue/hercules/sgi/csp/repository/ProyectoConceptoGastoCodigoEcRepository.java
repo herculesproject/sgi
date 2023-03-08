@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.repository;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
