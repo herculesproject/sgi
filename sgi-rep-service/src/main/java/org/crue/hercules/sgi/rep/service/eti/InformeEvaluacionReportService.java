@@ -17,10 +17,11 @@ import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
-import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.EmailDto;
+import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
   private static final Long TIPO_COMENTARIO_GESTOR = 1L;
   private static final Long DICTAMEN_PENDIENTE_CORRECCIONES = 3L;
   private static final Long DICTAMEN_NO_PROCEDE_EVALUAR = 4L;
+  public static final Long DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA = 2L;
 
   @Autowired
   public InformeEvaluacionReportService(SgiConfigProperties sgiConfigProperties, SgiApiSgpService personaService,
@@ -104,17 +106,37 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
     columnsDataTitulo.add("numeroActa");
     elementsRow.add(evaluacion.getConvocatoriaReunion().getNumeroActa());
 
+    columnsDataTitulo.add("idComite");
+    elementsRow.add(evaluacion.getMemoria().getComite().getId());
+
     columnsDataTitulo.add("comite");
     elementsRow.add(evaluacion.getMemoria().getComite().getComite());
 
     columnsDataTitulo.add("nombreInvestigacion");
     elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
 
+    columnsDataTitulo.add("preposicionComite");
+    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.M)) {
+      elementsRow.add(ApplicationContextSupport.getMessage("common.del"));
+    } else {
+      elementsRow.add(ApplicationContextSupport.getMessage("common.dela"));
+    }
+
+    columnsDataTitulo.add("comisionComite");
+    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.M)) {
+      elementsRow.add(ApplicationContextSupport.getMessage("comite.comision.masculino"));
+    } else {
+      elementsRow.add(ApplicationContextSupport.getMessage("comite.comision.femenino"));
+    }
+
     columnsDataTitulo.add("idDictamenPendienteCorrecciones");
     elementsRow.add(DICTAMEN_PENDIENTE_CORRECCIONES);
 
     columnsDataTitulo.add("idDictamenNoProcedeEvaluar");
     elementsRow.add(DICTAMEN_NO_PROCEDE_EVALUAR);
+
+    columnsDataTitulo.add("idDictamenPendienteRevisionMinima");
+    elementsRow.add(DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA);
 
     columnsDataTitulo.add("idDictamen");
     elementsRow.add(evaluacion.getDictamen().getId());
@@ -129,6 +151,10 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
     Integer mesesArchivadaPendienteCorrecciones = configuracionService.findConfiguracion()
         .getMesesArchivadaPendienteCorrecciones();
     elementsRow.add(mesesArchivadaPendienteCorrecciones);
+
+    columnsDataTitulo.add("diasArchivadaPendienteCorrecciones");
+    Integer diasArchivadaPendienteCorrecciones = configuracionService.findConfiguracion().getDiasArchivadaInactivo();
+    elementsRow.add(diasArchivadaPendienteCorrecciones);
 
     columnsDataTitulo.add("numeroComentarios");
     Integer numComentariosGestor = evaluacionService.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
