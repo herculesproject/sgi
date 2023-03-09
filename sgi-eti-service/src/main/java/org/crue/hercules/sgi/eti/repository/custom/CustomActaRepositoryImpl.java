@@ -14,6 +14,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.springframework.data.domain.Sort;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
@@ -307,7 +308,8 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
         root.get(Evaluacion_.id),
         joinMemoria.get(Memoria_.numReferencia), joinPeticionEvaluacion.get(PeticionEvaluacion_.personaRef),
         root.get(Evaluacion_.dictamen).get(Dictamen_.nombre), root.get(Evaluacion_.version),
-        root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.nombre));
+        root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.nombre),
+        joinPeticionEvaluacion.get(PeticionEvaluacion_.titulo));
 
     // Where
     cq.where(
@@ -315,6 +317,9 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
             rootActa.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
         cb.equal(rootActa.get(Acta_.id), idActa), cb.isNotNull(root.get(Evaluacion_.dictamen)),
         cb.equal(root.get(Evaluacion_.esRevMinima), false));
+
+    List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.ASC, Memoria_.NUM_REFERENCIA), joinMemoria, cb);
+    cq.orderBy(orders);
 
     TypedQuery<MemoriaEvaluada> typedQuery = entityManager.createQuery(cq);
 
