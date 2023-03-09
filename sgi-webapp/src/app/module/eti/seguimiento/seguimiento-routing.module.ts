@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
@@ -13,15 +12,12 @@ import { SeguimientoListadoComponent } from './seguimiento-listado/seguimiento-l
 import { SEGUIMIENTO_ROUTE_NAMES } from './seguimiento-route-names';
 import { SeguimientoResolver } from './seguimiento.resolver';
 
-const SEGUIMIENTO_EVALUADOR_KEY = marker('menu.eti.seguimiento-evaluador');
-
 const routes: SgiAuthRoutes = [
   {
     path: '',
     component: SeguimientoListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: SEGUIMIENTO_EVALUADOR_KEY,
       titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-INV-VR']
     }
@@ -35,7 +31,6 @@ const routes: SgiAuthRoutes = [
       evaluacion: SeguimientoResolver
     },
     data: {
-      title: SEGUIMIENTO_EVALUADOR_KEY,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR']
     },

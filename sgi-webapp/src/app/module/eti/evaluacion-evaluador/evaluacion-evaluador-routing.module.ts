@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
@@ -13,15 +12,12 @@ import { EvaluacionEvaluadorListadoComponent } from './evaluacion-evaluador-list
 import { EVALUACION_EVALUADOR_ROUTE_NAMES } from './evaluacion-evaluador-route-names';
 import { EvaluacionEvaluadorResolver } from './evaluacion-evaluador.resolver';
 
-const MSG_EVALUACION_TITLE = marker('menu.eti.evaluacion-evaluador');
-
 const routes: SgiAuthRoutes = [
   {
     path: '',
     component: EvaluacionEvaluadorListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_EVALUACION_TITLE,
       titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-INV-VR']
     }
@@ -35,7 +31,6 @@ const routes: SgiAuthRoutes = [
       evaluacion: EvaluacionEvaluadorResolver
     },
     data: {
-      title: MSG_EVALUACION_TITLE,
       titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR']
     },
