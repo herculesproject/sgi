@@ -72,6 +72,8 @@ class InformeEvaluadorReportServiceTest extends BaseReportEtiServiceTest {
     BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
     BDDMockito.given(
         evaluacionService.findByEvaluacionIdEvaluador(idEvaluacion)).willReturn((generarMockComentarios()));
+    BDDMockito.given(bloqueService.getBloqueComentariosGenerales())
+        .willReturn(generarMockBloque(idEvaluacion, 0L));
 
     ReportInformeEvaluador report = new ReportInformeEvaluador();
     report.setOutputType(OutputType.PDF);

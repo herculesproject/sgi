@@ -11,9 +11,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
@@ -37,6 +34,9 @@ import org.pentaho.reporting.engine.classic.core.TableDataFactory;
 import org.pentaho.reporting.engine.classic.core.function.FormulaExpression;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -91,7 +91,13 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     bloquesReportOutput.setBloques(new ArrayList<>());
 
     try {
-      List<BloqueDto> bloques = bloqueService.findByFormularioId(input.getIdFormulario());
+      List<BloqueDto> bloques = new ArrayList<>();
+      if (input.getIdFormulario() > 0) {
+        bloques.addAll(bloqueService.findByFormularioId(input.getIdFormulario()));
+      }
+      if (!CollectionUtils.isEmpty(input.getComentarios())) {
+        bloques.add(bloqueService.getBloqueComentariosGenerales());
+      }
 
       final int tamBloques = bloquesReportOutput.getBloques().size();
 
@@ -115,10 +121,16 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
 
   private void parseBloque(BloquesReportInput input, BloquesReportOutput bloquesReportOutput, BloqueDto bloque,
       int tamBloques) {
+
+    String nombre = bloque.getNombre();
+    if (bloque.getFormulario() != null) {
+      nombre = bloque.getOrden() + ". " + bloque.getNombre();
+    }
+
     // @formatter:off
     BloqueOutput bloqueOutput = BloqueOutput.builder()
       .id(bloque.getId())
-      .nombre(bloque.getOrden() + ". " + bloque.getNombre())
+      .nombre(nombre)
       .orden(tamBloques + bloque.getOrden())
       .apartados(new ArrayList<>())
       .build();

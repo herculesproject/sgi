@@ -8,10 +8,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Vector;
-
-import java.util.Optional;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -28,8 +27,8 @@ import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
+import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaEvaluadaDto;
-import org.crue.hercules.sgi.rep.dto.eti.MemoriaDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -368,7 +367,17 @@ public class InformeActaReportService extends SgiReportService {
               comentarios
                   .forEach(c -> baseActaComentariosReportService.getApartadoService().findTreeApartadosById(apartados,
                       c.getApartado()));
-              Long idFormulario = comentarios.get(0).getApartado().getBloque().getFormulario().getId();
+
+              Long idFormulario = 0L;
+
+              Optional<FormularioDto> formulario = comentarios.stream()
+                  .map(c -> c.getApartado().getBloque().getFormulario())
+                  .filter(f -> f != null)
+                  .findFirst();
+
+              if (formulario.isPresent()) {
+                idFormulario = formulario.get().getId();
+              }
 
           // @formatter:off
               BloquesReportInput etiBloquesReportInput = BloquesReportInput.builder()

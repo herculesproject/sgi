@@ -74,6 +74,8 @@ class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
     BDDMockito.given(configuracionService.findConfiguracion()).willReturn((generarMockConfiguracion()));
     BDDMockito.given(
         evaluacionService.findByEvaluacionIdGestor(idEvaluacion)).willReturn((generarMockComentarios()));
+    BDDMockito.given(bloqueService.getBloqueComentariosGenerales())
+        .willReturn(generarMockBloque(idEvaluacion, 0L));
 
     ReportInformeEvaluacion report = new ReportInformeEvaluacion();
     report.setOutputType(OutputType.PDF);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Vector;
 
@@ -18,6 +19,7 @@ import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
+import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -143,7 +145,17 @@ public class InformeEvaluadorReportService extends BaseEvaluadorEvaluacionReport
       if (null != comentarios && !comentarios.isEmpty()) {
         final Set<Long> apartados = new HashSet<>();
         comentarios.forEach(c -> getApartadoService().findTreeApartadosById(apartados, c.getApartado()));
-        Long idFormulario = comentarios.get(0).getApartado().getBloque().getFormulario().getId();
+
+        Long idFormulario = 0L;
+
+        Optional<FormularioDto> formulario = comentarios.stream()
+            .map(c -> c.getApartado().getBloque().getFormulario())
+            .filter(f -> f != null)
+            .findFirst();
+
+        if (formulario.isPresent()) {
+          idFormulario = formulario.get().getId();
+        }
 
         // @formatter:off
         BloquesReportInput bloquesReportInput = BloquesReportInput.builder()
