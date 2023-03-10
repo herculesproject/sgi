@@ -17,7 +17,7 @@
     <div fxLayout="row">
       <mat-form-field>
         <mat-label>{{'eti.comentario.bloque' | translate}}</mat-label>
-        <sgi-select-entity formControlName="bloque" [options]="apartado$ | async" required>
+        <sgi-select-entity formControlName="bloque" [options]="bloques$ | async" required>
         </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.bloque.errors?.required">
           {{'error.required.entity' | translate:msgParamBloqueEntity}}

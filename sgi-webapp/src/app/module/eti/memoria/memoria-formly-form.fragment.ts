@@ -58,6 +58,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   protected memoria: IMemoria;
   protected tareas: ITarea[];
   private comentarios: Map<number, IComentario>;
+  private _comentariosGenerales: IComentario[] = [];
 
   public blocks$: BehaviorSubject<IBlock[]> = new BehaviorSubject<IBlock[]>([]);
   public selectedIndex$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
@@ -72,6 +73,10 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   private lastCompletedBlock: number;
 
   private formularioTipo: FORMULARIO;
+
+  get comentariosGenerales(): IComentario[] {
+    return this._comentariosGenerales;
+  }
 
   isReadonly(): boolean {
     return this.readonly;
@@ -448,9 +453,14 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         }
         return this.evaluacionService.getComentariosGestor(value.id).pipe(map(response => response.items));
       }),
+      tap((comentarios) => {
+        this._comentariosGenerales = comentarios.filter(c => !!!c.apartado.bloque.formulario?.id);
+      }),
       map((comentarios) => {
         const apartadoComentario = new Map<number, IComentario>();
-        comentarios.forEach((comentario) => apartadoComentario.set(comentario.apartado.id, comentario));
+        comentarios
+          .filter(c => !!c.apartado.bloque.formulario?.id)
+          .forEach((comentario) => apartadoComentario.set(comentario.apartado.id, comentario));
         return apartadoComentario;
       })
     );
