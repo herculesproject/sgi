@@ -37,9 +37,34 @@
       </whereParams>
     </update>
 
+    <insert tableName="bloque">
+      <column name="id" valueSequenceNext="bloque_seq" />
+      <column name="nombre" value="COMENTARIOS GENERALES" />
+      <column name="formulario_id" value="null" />
+      <column name="orden" valueNumeric="0" />
+    </insert>
+
   </changeSet>
 
   <changeSet context="!test" author="master" id="00.02.00-apartado">
+    <!-- Comentarios generales -->
+    <insert tableName="apartado">
+      <column name="id" valueSequenceNext="apartado_seq" />
+      <column name="bloque_id"
+        valueComputed="(select id from ${schemaPrefix}bloque where orden = '0' and formulario_id is null and nombre='COMENTARIOS GENERALES')" />
+      <column name="nombre" value="Comentarios generales" />
+      <column name="padre_id" value="null" />
+      <column name="orden" valueNumeric="1" />
+      <column name="esquema" value="{}" />
+    </insert>
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/apartado_comentarios_generales.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueComputed="(select max(id) from ${schemaPrefix}apartado)" />
+      </whereParams>
+    </update>
+
     <!-- Formulario seguimiento anual -->
     <update
       tableName="apartado">
