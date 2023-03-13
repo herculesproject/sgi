@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.rep.dto.eti.EvaluadorDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportService;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.TableDataFactory;
@@ -35,10 +36,11 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
   private final EvaluacionService evaluacionService;
   private final SgiApiSgpService personaService;
 
-  protected InformeEvaluacionBaseReportService(SgiConfigProperties sgiConfigProperties, SgiApiSgpService personaService,
+  protected InformeEvaluacionBaseReportService(SgiConfigProperties sgiConfigProperties,
+      SgiApiConfService sgiApiConfService, SgiApiSgpService personaService,
       EvaluacionService evaluacionService) {
 
-    super(sgiConfigProperties);
+    super(sgiConfigProperties, sgiApiConfService);
     this.personaService = personaService;
     this.evaluacionService = evaluacionService;
   }

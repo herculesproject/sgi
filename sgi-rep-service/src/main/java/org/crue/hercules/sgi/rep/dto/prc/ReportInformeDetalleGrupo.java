@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.rep.dto.eti;
+package org.crue.hercules.sgi.rep.dto.prc;
 
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
 
@@ -7,7 +7,7 @@ import org.crue.hercules.sgi.rep.dto.SgiReportDto;
  */
 public class ReportInformeDetalleGrupo extends SgiReportDto {
   public ReportInformeDetalleGrupo() {
-    this.setPath("report/prc/informeDetalleGrupo.prpt");
+    this.setPath("rep-prc-detalle-grupo-prpt");
     this.setName("informeDetalleGrupo");
   }
 }

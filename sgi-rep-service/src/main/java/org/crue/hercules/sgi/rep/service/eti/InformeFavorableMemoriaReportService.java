@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableMemoria;
 import org.crue.hercules.sgi.rep.dto.eti.TareaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.pentaho.reporting.engine.classic.core.Band;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -32,10 +33,11 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionBaseR
   private final EvaluacionService evaluacionService;
   private final PeticionEvaluacionService peticionEvaluacionService;
 
-  public InformeFavorableMemoriaReportService(SgiConfigProperties sgiConfigProperties, SgiApiSgpService personaService,
+  public InformeFavorableMemoriaReportService(SgiConfigProperties sgiConfigProperties,
+      SgiApiConfService sgiApiConfService, SgiApiSgpService personaService,
       EvaluacionService evaluacionService, PeticionEvaluacionService peticionEvaluacionService) {
 
-    super(sgiConfigProperties, personaService, evaluacionService);
+    super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService);
     this.evaluacionService = evaluacionService;
 
     this.peticionEvaluacionService = peticionEvaluacionService;
@@ -67,6 +69,10 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionBaseR
     elementsRow.add(codigoActa);
 
     fillCommonFieldsEvaluacion(evaluacion, columnsData, elementsRow);
+
+    columnsData.add("resourcesBaseURL");
+    elementsRow.add(getRepResourcesBaseURL());
+
     rowsData.add(elementsRow);
 
     DefaultTableModel tableModel = new DefaultTableModel();

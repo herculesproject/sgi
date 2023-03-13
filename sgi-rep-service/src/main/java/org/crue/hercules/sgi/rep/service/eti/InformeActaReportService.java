@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportService;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.pentaho.reporting.engine.classic.core.Band;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -64,11 +65,12 @@ public class InformeActaReportService extends SgiReportService {
   private final BaseActaComentariosReportService baseActaComentariosReportService;
 
   public InformeActaReportService(SgiConfigProperties sgiConfigProperties, SgiApiSgpService personaService,
+      SgiApiConfService sgiApiConfService,
       ConvocatoriaReunionService convocatoriaReunionService, ActaService actaService,
       EvaluacionService evaluacionService,
       BaseActaComentariosReportService baseActaComentariosReportService) {
 
-    super(sgiConfigProperties);
+    super(sgiConfigProperties, sgiApiConfService);
     this.personaService = personaService;
     this.convocatoriaReunionService = convocatoriaReunionService;
     this.actaService = actaService;
@@ -188,6 +190,9 @@ public class InformeActaReportService extends SgiReportService {
       columnsData.add("dictamen");
       elementsRow.add(memoriaEvaluada.get().getDictamen());
     }
+
+    columnsData.add("resourcesBaseURL");
+    elementsRow.add(getRepResourcesBaseURL());
 
     rowsData.add(elementsRow);
 

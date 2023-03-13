@@ -13,9 +13,9 @@ import org.crue.hercules.sgi.rep.dto.eti.EvaluadorDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacionRetrospectiva;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -29,9 +29,10 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
   private final SgiApiSgpService personaService;
 
   public InformeEvaluacionRetrospectivaReportService(SgiConfigProperties sgiConfigProperties,
+      SgiApiConfService sgiApiConfService,
       SgiApiSgpService personaService, EvaluacionService evaluacionService) {
 
-    super(sgiConfigProperties, personaService, evaluacionService);
+    super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService);
     this.evaluacionService = evaluacionService;
     this.personaService = personaService;
   }
@@ -86,6 +87,9 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
       String i18nDel = ApplicationContextSupport.getMessage("common.del");
       elementsRow.add(i18nDel);
     }
+
+    columnsData.add("resourcesBaseURL");
+    elementsRow.add(getRepResourcesBaseURL());
 
     rowsData.add(elementsRow);
 

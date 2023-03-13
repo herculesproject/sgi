@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
 import org.crue.hercules.sgi.rep.dto.sgp.EmailDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,12 +52,13 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
   public static final Long DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA = 2L;
 
   @Autowired
-  public InformeEvaluacionReportService(SgiConfigProperties sgiConfigProperties, SgiApiSgpService personaService,
+  public InformeEvaluacionReportService(SgiConfigProperties sgiConfigProperties,
+      SgiApiConfService sgiApiConfService, SgiApiSgpService personaService,
       BloqueService bloqueService, ApartadoService apartadoService, SgiFormlyService sgiFormlyService,
       RespuestaService respuestaService, EvaluacionService evaluacionService,
       ConfiguracionService configuracionService) {
 
-    super(sgiConfigProperties, bloqueService, apartadoService, sgiFormlyService, respuestaService);
+    super(sgiConfigProperties, sgiApiConfService, bloqueService, apartadoService, sgiFormlyService, respuestaService);
     this.personaService = personaService;
     this.evaluacionService = evaluacionService;
     this.configuracionService = configuracionService;

@@ -34,6 +34,7 @@ import org.crue.hercules.sgi.rep.dto.eti.TipoInvestigacionTuteladaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.EmailDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.SubReport;
@@ -69,11 +70,12 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
   private static final String RESPONSE_NO = "No";
 
   @Autowired
-  public MXXReportService(SgiConfigProperties sgiConfigProperties, MemoriaService memoriaService,
+  public MXXReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService,
+      MemoriaService memoriaService,
       PeticionEvaluacionService peticionEvaluacionService, SgiApiSgpService personaService, BloqueService bloqueService,
       ApartadoService apartadoService, SgiFormlyService sgiFormlyService, RespuestaService respuestaService) {
 
-    super(sgiConfigProperties, bloqueService, apartadoService, sgiFormlyService, respuestaService);
+    super(sgiConfigProperties, sgiApiConfService, bloqueService, apartadoService, sgiFormlyService, respuestaService);
     this.memoriaService = memoriaService;
     this.peticionEvaluacionService = peticionEvaluacionService;
     this.personaService = personaService;

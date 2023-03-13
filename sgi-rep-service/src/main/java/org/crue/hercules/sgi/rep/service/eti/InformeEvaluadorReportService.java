@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -44,11 +45,12 @@ public class InformeEvaluadorReportService extends BaseEvaluadorEvaluacionReport
 
   private static final Long TIPO_COMENTARIO_EVALUADOR = 2L;
 
-  public InformeEvaluadorReportService(SgiConfigProperties sgiConfigProperties, SgiApiSgpService personaService,
+  public InformeEvaluadorReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService,
+      SgiApiSgpService personaService,
       BloqueService bloqueService, ApartadoService apartadoService, SgiFormlyService sgiFormlyService,
       RespuestaService respuestaService, EvaluacionService evaluacionService) {
 
-    super(sgiConfigProperties, bloqueService, apartadoService, sgiFormlyService, respuestaService);
+    super(sgiConfigProperties, sgiApiConfService, bloqueService, apartadoService, sgiFormlyService, respuestaService);
     this.personaService = personaService;
     this.evaluacionService = evaluacionService;
   }

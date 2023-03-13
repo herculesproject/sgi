@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.rep.dto.eti.ElementOutput;
 import org.crue.hercules.sgi.rep.dto.eti.RespuestaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiDynamicReportService;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.SubReport;
 import org.pentaho.reporting.engine.classic.core.TableDataFactory;
@@ -61,12 +62,13 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     "apartado_nieto_padre_id", "apartado_nieto_id", "apartado_nieto_nombre", "apartado_nieto_orden",
     "apartado_bisnieto_padre_id", "apartado_bisnieto_id", "apartado_bisnieto_nombre", "apartado_bisnieto_orden",
     "apartado_tataranieto_padre_id", "apartado_tataranieto_id", "apartado_tataranieto_nombre", "apartado_tataranieto_orden",
-    COMPONENT_ID, COMPONENT_TYPE, "content", "content_orden" };
+    COMPONENT_ID, COMPONENT_TYPE, "content", "content_orden", "resourcesBaseURL" };
   // @formatter:on
 
-  protected BaseApartadosRespuestasReportService(SgiConfigProperties sgiConfigProperties, BloqueService bloqueService,
+  protected BaseApartadosRespuestasReportService(SgiConfigProperties sgiConfigProperties,
+      SgiApiConfService sgiApiConfService, BloqueService bloqueService,
       ApartadoService apartadoService, SgiFormlyService sgiFormlyService, RespuestaService respuestaService) {
-    super(sgiConfigProperties);
+    super(sgiConfigProperties, sgiApiConfService);
     this.bloqueService = bloqueService;
     this.apartadoService = apartadoService;
     this.sgiFormlyService = sgiFormlyService;
@@ -227,14 +229,18 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
 
     tableModelGeneral.setColumnIdentifiers(COLUMNS_TABLE_MODEL);
 
-    List<ApartadoOutput> apartados = new ArrayList<>();
-    for (BloqueOutput bloque : bloquesReportOutput.getBloques()) {
-      for (ApartadoOutput apartado : bloque.getApartados()) {
-        apartados.clear();
-        apartados.add(apartado);
-        generateElementTableModelApartado(hmTableModel, tableModelGeneral, bloque, apartados);
+    if (bloquesReportOutput.getBloques().isEmpty()) {
+      tableModelGeneral.addRow(generateEmptyRow());
+    } else {
+      List<ApartadoOutput> apartados = new ArrayList<>();
+      for (BloqueOutput bloque : bloquesReportOutput.getBloques()) {
+        for (ApartadoOutput apartado : bloque.getApartados()) {
+          apartados.clear();
+          apartados.add(apartado);
+          generateElementTableModelApartado(hmTableModel, tableModelGeneral, bloque, apartados);
 
-        parseApartadoHijoElementTableModel(hmTableModel, tableModelGeneral, bloque, apartados);
+          parseApartadoHijoElementTableModel(hmTableModel, tableModelGeneral, bloque, apartados);
+        }
       }
     }
 
@@ -290,7 +296,21 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
       apartadoNieto.getId(), apartadoNieto.getId(), apartadoNieto.getTitulo(), apartadoNieto.getOrden(),
       apartadoBisnieto.getId(), apartadoBisnieto.getId(), apartadoBisnieto.getTitulo(), apartadoBisnieto.getOrden(), 
       apartadoTataraNieto.getId(), apartadoTataraNieto.getId(), apartadoTataraNieto.getTitulo(),apartadoTataraNieto.getOrden(), 
-      elemento.getNombre(), elemento.getTipo(), elemento.getContent(), rowIndex
+      elemento.getNombre(), elemento.getTipo(), elemento.getContent(), rowIndex, getRepResourcesBaseURL()
+    };
+    // @formatter:on  
+  }
+
+  protected Object[] generateEmptyRow() {
+    // @formatter:off
+    return new Object[] { 
+      null, null, null, 
+      null, null, null, 
+      null, null, null, null,
+      null, null, null, null,
+      null, null, null, null, 
+      null, null, null, null, 
+      null, null, null, null, getRepResourcesBaseURL()
     };
     // @formatter:on  
   }
