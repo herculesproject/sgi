@@ -1,12 +1,17 @@
 package org.crue.hercules.sgi.cnf.model;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.cnf.model.Config.OnCreate;
 import org.crue.hercules.sgi.framework.validation.UniqueFieldValue;
+import org.hibernate.annotations.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,43 +20,47 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * This entity represent a configuration value.
+ * This entity represent a resource.
  */
 @Entity
-@Table(name = "config")
+@Table(name = "resources")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @UniqueFieldValue(groups = { OnCreate.class }, entityClass = Config.class, fieldName = Config_.NAME)
-public class Config extends BaseEntity {
+public class Resource extends BaseEntity {
   /** Name field max lenght */
   public static final int NAME_MAX_LENGTH = 50;
   /** Description field max lenght */
   public static final int DESCRIPTION_MAX_LENGTH = 250;
 
-  /** Config name */
+  /** Resource name */
   @Id
   @Column(name = "name", length = NAME_MAX_LENGTH, nullable = false)
   private String name;
 
-  /** Config description */
+  /** Resource description */
   @Column(name = "description", length = DESCRIPTION_MAX_LENGTH, nullable = true)
   private String description;
 
-  /** Config value */
-  @Column(name = "value", nullable = true, columnDefinition = "clob")
-  private String value;
+  /** Resource value */
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  @Type(type = "org.hibernate.type.BinaryType")
+  @Column(name = "value", nullable = true, columnDefinition = "blob")
+  private byte[] value;
 
-  /** Config default value */
-  @Column(name = "default_value", nullable = true, columnDefinition = "clob")
-  private String defaultValue;
+  /** Resource default value */
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  @Type(type = "org.hibernate.type.BinaryType")
+  @Column(name = "default_value", nullable = true, columnDefinition = "blob")
+  private byte[] defaultValue;
 
-  /**
-   * Validations on entity creation interface marker.
-   */
-  public interface OnCreate {
-  }
+  @Column(name = "public_access", nullable = false)
+  @NotNull
+  private boolean publicAccess;
 
 }
