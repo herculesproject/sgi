@@ -19,6 +19,8 @@ import { DialogContentComponent } from './dialog-content/dialog-content.componen
 import { DialogFooterComponent } from './dialog-footer/dialog-footer.component';
 import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
 import { FormAutocompleteOffDirective } from './directives/form-autocomplete-off.directive';
+import { SgiTooltipDirective } from './directives/sgi-tooltip.directive';
+import { ErrorMessageComponent } from './error-message/error-message.component';
 import { ExportDialogComponent } from './export-dialog/export-dialog.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
 import { SgiFileUploadComponent } from './file-upload/file-upload.component';
@@ -29,6 +31,8 @@ import { FragmentComponent } from './fragment/fragment.component';
 import { IconChangesComponent } from './icon-changes/icon-changes.component';
 import { IconErrorsComponent } from './icon-errors/icon-errors.component';
 import { IconProblemsComponent } from './icon-problems/icon-problems.component';
+import { InfoMessageComponent } from './info-message/info-message.component';
+import { InputEmailsComponent } from './input-emails/input-emails.component';
 import { LuxonDatePipe } from './luxon-date-pipe';
 import { MenuContentComponent, MenuContentFooter } from './menu-content/menu-content.component';
 import { MenuGroupComponent } from './menu-group/menu-group.component';
@@ -44,9 +48,6 @@ import { SelectEmailRecipientsComponent } from './select-email-recipients/select
 import { SelectEntityComponent } from './select-entity/select-entity.component';
 import { SelectEnumComponent } from './select-enum/select-enum.component';
 import { SelectComponent } from './select/select.component';
-import { InfoMessageComponent } from './info-message/info-message.component';
-import { ErrorMessageComponent } from './error-message/error-message.component';
-import { SgiTooltipDirective } from './directives/sgi-tooltip.directive';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { SgiTooltipDirective } from './directives/sgi-tooltip.directive';
     SelectEmailRecipientsComponent,
     InfoMessageComponent,
     ErrorMessageComponent,
-    SgiTooltipDirective
+    SgiTooltipDirective,
+    InputEmailsComponent
   ],
   imports: [
     CommonModule,
@@ -142,7 +144,8 @@ import { SgiTooltipDirective } from './directives/sgi-tooltip.directive';
     DialogHeaderComponent,
     InfoMessageComponent,
     ErrorMessageComponent,
-    SgiTooltipDirective
+    SgiTooltipDirective,
+    InputEmailsComponent
   ]
 })
 export class SharedModule { }
