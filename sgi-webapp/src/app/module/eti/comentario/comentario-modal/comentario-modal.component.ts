@@ -338,4 +338,8 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
     return evaluacion.memoria?.numReferencia;
   }
 
+  displayerBloque(bloque: IBloque): string {
+    return bloque.orden + ' ' + bloque.nombre;
+  }
+
 }
