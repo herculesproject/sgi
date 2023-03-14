@@ -1768,7 +1768,7 @@
   "error.eti.evaluacion.evaluar.comentarios": "Es necesario añadir al menos un comentario para guardar la evaluación",
   "error.eti.evaluador.conflicto-interes.duplicate": "La persona del conflicto ya existe",
   "error.eti.memoria.enviar-secretaria": "Error al enviar la memoria a secretaría",
-  "error.eti.memoria.enviar-secretaria.documentos-adjuntos": "No se ha adjuntado toda la documentación obligatoria, desea de todas formas enviar a secretaría",
+  "error.eti.memoria.enviar-secretaria.documentos-adjuntos": "No se ha adjuntado toda la documentación obligatoria ¿desea enviar aun así la memoria a secretaría?",
   "error.eti.memoria.enviar-secretaria.retrospectiva": "Error al enviar la retrospectiva a secretaría",
   "error.eti.memoria.estado-anterior": "No se puede reestablecer el estado anterior de la memoria",
   "error.eti.peticion-evaluacion.equipo-investigador.duplicate": "La persona ya se ha añadido al equipo investigador",
