@@ -26,6 +26,7 @@
               "type": "textarea",
               "templateOptions": {
                 "label": "Nombre",
+                "order": 10,
                 "placeholder": "Nombre",
                 "required": true,
                 "autosize": true,
@@ -38,6 +39,7 @@
               "type": "textarea",
               "templateOptions": {
                 "label": "Huésped",
+                "order": 20,
                 "placeholder": "Huésped",
                 "required": true,
                 "autosize": true,
@@ -50,6 +52,7 @@
               "type": "textarea",
               "templateOptions": {
                 "label": "Vector utilizado",
+                "order": 30,
                 "placeholder": "Vector utilizado",
                 "required": true,
                 "autosize": true,
@@ -62,6 +65,7 @@
               "type": "textarea",
               "templateOptions": {
                 "label": "Inserto y especie de procedencia del inserto",
+                "order": 40,
                 "placeholder": "Inserto y especie de procedencia del inserto",
                 "required": true,
                 "autosize": true,
@@ -74,6 +78,7 @@
               "type": "textarea",
               "templateOptions": {
                 "label": "Proteína que codifica",
+                "order": 50,
                 "placeholder": "Proteína que codifica",
                 "required": true,
                 "autosize": true,
@@ -86,7 +91,7 @@
               "type": "select",
               "templateOptions": {
                 "label": "Grupo de riesgo",
-                "order": 20,
+                "order": 60,
                 "options": [
                   {
                     "value": "1",
@@ -112,6 +117,7 @@
               "type": "textarea",
               "templateOptions": {
                 "label": "Volumen máximo de muestra que se maneja en cada vez o número de animales",
+                "order": 70,
                 "placeholder": "Volumen máximo de muestra que se maneja en cada vez o número de animales",
                 "required": true,
                 "autosize": true,
