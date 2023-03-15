@@ -707,7 +707,7 @@ public class MemoriaServiceImpl implements MemoriaService {
             || memoria.getEstadoActual().getId() == 7L || memoria.getEstadoActual().getId() == 8L
             || memoria.getEstadoActual().getId() == 11L || memoria.getEstadoActual().getId() == 16L
             || memoria.getEstadoActual().getId() == 21L,
-        "La memoria no está en un estado correcto para pasar al estado 'En secretaría'");
+        "No se puede realizar la acción porque la memoria ya ha sido enviada a secretaría");
 
     Assert.isTrue(memoria.getPeticionEvaluacion().getPersonaRef().equals(personaRef),
         "El usuario no es el propietario de la petición evaluación.");
