@@ -511,4 +511,23 @@
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
+
+  <changeSet context="!test" author="master" id="00.02.00-cargo-comite">
+    <update tableName="cargo_comite">
+      <column name="nombre" value="PRESIDENTE/A" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="1" />
+      </whereParams>
+    </update>
+
+    <update tableName="cargo_comite">
+      <column name="nombre" value="SECRETARIO/A" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="3" />
+      </whereParams>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>
