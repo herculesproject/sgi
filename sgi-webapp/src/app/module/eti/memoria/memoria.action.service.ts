@@ -246,6 +246,9 @@ export class MemoriaActionService extends ActionService {
     return this.memoria.retrospectiva;
   }
 
+  public isLoadDocumentoRatificacion(): boolean {
+    return this.documentacion.isLoadDocumentoRatificacion;
+  }
 
   saveOrUpdate(action?: any): Observable<void> {
     const neeeMemoryUpdate = this.getComite()?.id === COMITE.CEEA

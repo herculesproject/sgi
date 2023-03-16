@@ -19,6 +19,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   public showMemoriaOriginal = false;
   public personasResponsable$: BehaviorSubject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
   public mostrarCodOrgano = false;
+  public showInfoRatificacion = false;
 
   public idPeticionEvaluacion: number;
 
@@ -128,6 +129,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
 
   public onTipoMemoriaChange(tipoMemoria: ITipoMemoria) {
     this.showMemoriaOriginal = tipoMemoria?.id === TIPO_MEMORIA.MODIFICACION;
+    this.showInfoRatificacion = tipoMemoria?.id === TIPO_MEMORIA.RATIFICACION;
     if (this.showMemoriaOriginal) {
       this.getFormGroup().controls.memoriaOriginal.setValidators(Validators.required);
     }
