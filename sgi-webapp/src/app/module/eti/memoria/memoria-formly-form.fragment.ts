@@ -50,6 +50,7 @@ interface IFormlyData {
 interface IApartadoWithRespuestaAndComentario extends IApartado {
   respuesta: IRespuesta;
   comentario: IComentario;
+  respuestaAnterior: IRespuesta;
 }
 
 export abstract class MemoriaFormlyFormFragment extends Fragment {
@@ -273,7 +274,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         return of(void 0);
       }),
       switchMap(() => {
-        if (formLoadComplete && !hasLastBloqueSavedRespuestas) {
+        if (formLoadComplete && (!hasLastBloqueSavedRespuestas || this.isFormularioMemoriaModificacion(this.memoria))) {
           return this.formularioService.completado(this.memoria.id, this.formularioTipo);
         }
 
@@ -491,7 +492,18 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
               map((respuesta) => {
                 apartado.respuesta = respuesta ? respuesta : { valor: {} } as IRespuesta;
                 return apartado;
-              })
+              }),
+              switchMap((aptdo) => {
+                if (this.memoria.memoriaOriginal) {
+                  return this.respuestaService.findByMemoriaIdAndApartadoId(this.memoria.memoriaOriginal.id, apartado.id).pipe(
+                    map((respuesta) => {
+                      aptdo.respuestaAnterior = respuesta ? respuesta : { valor: {} } as IRespuesta;
+                      return aptdo;
+                    }));
+                } else {
+                  return of(aptdo);
+                }
+              }),
             ));
           });
           return zip(...respuestasApartados);
@@ -638,6 +650,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         firstFieldConfig.templateOptions = {};
       }
       firstFieldConfig.templateOptions.comentario = question.apartado.comentario;
+      firstFieldConfig.templateOptions.modified = Boolean(question.apartado.respuestaAnterior) ? this.isRespuestaApartadoModified(question.apartado.respuesta, question.apartado.respuestaAnterior) : false;
       firstFieldConfig.group = new Group();
 
       this.evalExpressionLock(firstFieldConfig, model, formState);
@@ -820,6 +833,14 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
    */
   private hasBloqueSavedRespuestas(block: IBlock, respuestas: IRespuesta[]): boolean {
     return !!block.loaded$.value && respuestas.length > 0 && respuestas.some(respuesta => !!respuesta.id);
+  }
+
+  private isFormularioMemoriaModificacion(memoria: IMemoria): boolean {
+    return Boolean(memoria.memoriaOriginal);
+  }
+
+  private isRespuestaApartadoModified(respuesta: IRespuesta, respuestaAnterior: IRespuesta): boolean {
+    return JSON.stringify(respuesta?.valor) !== JSON.stringify(respuestaAnterior?.valor);
   }
 
 }
