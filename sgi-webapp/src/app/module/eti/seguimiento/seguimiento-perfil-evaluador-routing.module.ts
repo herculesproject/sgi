@@ -13,6 +13,7 @@ import { SeguimientoListadoComponent } from './seguimiento-listado/seguimiento-l
 import { SEGUIMIENTO_ROUTE_NAMES } from './seguimiento-route-names';
 import { SeguimientoResolver } from './seguimiento.resolver';
 
+const MSG_PERFIL_EVALUADOR_SEGUIMIENTOS_TITLE = marker('menu.eti.perfil-evaluador-seguimientos');
 const MSG_SEGUIMIENTO_TITLE = marker('menu.eti.seguimiento');
 
 const routes: SgiAuthRoutes = [
@@ -21,8 +22,7 @@ const routes: SgiAuthRoutes = [
     component: SeguimientoListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_SEGUIMIENTO_TITLE,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      title: MSG_PERFIL_EVALUADOR_SEGUIMIENTOS_TITLE,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-INV-VR']
     }
   },
@@ -68,5 +68,5 @@ const routes: SgiAuthRoutes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SeguimientoRoutingModule {
+export class SeguimientoPerfilEvaluadorRoutingModule {
 }

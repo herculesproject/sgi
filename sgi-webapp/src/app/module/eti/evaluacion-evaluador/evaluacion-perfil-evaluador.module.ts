@@ -12,22 +12,18 @@ import { EvaluacionEvaluacionesAnterioresListadoExportService } from '../evaluac
 import { EvaluacionGeneralListadoExportService } from '../evaluacion/evaluacion-general-listado-export.service';
 import { EvaluacionListadoExportService } from '../evaluacion/evaluacion-listado-export.service';
 import { EtiSharedModule } from '../shared/eti-shared.module';
-import { EvaluacionEvaluadorEvaluarComponent } from './evaluacion-evaluador-evaluar/evaluacion-evaluador-evaluar.component';
-import { EvaluacionEvaluadorListadoComponent } from './evaluacion-evaluador-listado/evaluacion-evaluador-listado.component';
-import { EvaluacionEvaluadorRoutingModule } from './evaluacion-evaluador-routing.module';
 import { EvaluacionEvaluadorResolver } from './evaluacion-evaluador.resolver';
+import { EvaluacionPerfilEvaluadorRoutingModule } from './evaluacion-perfil-evaluador-routing.module';
 
 @NgModule({
   declarations: [
-    EvaluacionEvaluadorEvaluarComponent,
-    EvaluacionEvaluadorListadoComponent
   ],
   imports: [
     SharedModule,
     CommonModule,
     TranslateModule,
     MaterialDesignModule,
-    EvaluacionEvaluadorRoutingModule,
+    EvaluacionPerfilEvaluadorRoutingModule,
     EvaluacionFormularioModule,
     SgiAuthModule,
     FormsModule,
@@ -44,4 +40,4 @@ import { EvaluacionEvaluadorResolver } from './evaluacion-evaluador.resolver';
   ]
 
 })
-export class EvaluacionEvaluadorModule { }
+export class EvaluacionPerfilEvaluadorModule { }

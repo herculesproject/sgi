@@ -13,6 +13,7 @@ import { EvaluacionEvaluadorListadoComponent } from './evaluacion-evaluador-list
 import { EVALUACION_EVALUADOR_ROUTE_NAMES } from './evaluacion-evaluador-route-names';
 import { EvaluacionEvaluadorResolver } from './evaluacion-evaluador.resolver';
 
+const MSG_PERFIL_EVALUADOR_EVALUACIONES_TITLE = marker('menu.eti.perfil-evaluador-evaluaciones');
 const MSG_EVALUACION_TITLE = marker('menu.eti.evaluacion');
 
 const routes: SgiAuthRoutes = [
@@ -21,8 +22,7 @@ const routes: SgiAuthRoutes = [
     component: EvaluacionEvaluadorListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_EVALUACION_TITLE,
-      titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+      title: MSG_PERFIL_EVALUADOR_EVALUACIONES_TITLE,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-INV-VR']
     }
   },
@@ -68,5 +68,5 @@ const routes: SgiAuthRoutes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class EvaluacionEvaluadorRoutingModule {
+export class EvaluacionPerfilEvaluadorRoutingModule {
 }

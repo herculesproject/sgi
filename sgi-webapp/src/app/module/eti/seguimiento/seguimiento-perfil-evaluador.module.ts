@@ -9,28 +9,20 @@ import { DocumentacionMemoriaModule } from '../documentacion-memoria/documentaci
 import { EvaluacionModule } from '../evaluacion/evaluacion.module';
 import { SeguimientoFormularioModule } from '../seguimiento-formulario/seguimiento-formulario.module';
 import { EtiSharedModule } from '../shared/eti-shared.module';
-import { SeguimientoListadoExportModalComponent } from './modals/seguimiento-listado-export-modal/seguimiento-listado-export-modal.component';
 import { SeguimientoEvaluacionesAnterioresListadoExportService } from './seguimiento-evaluaciones-anteriores-listado-export.service';
-import { SeguimientoEvaluarComponent } from './seguimiento-evaluar/seguimiento-evaluar.component';
 import { SeguimientoGeneralListadoExportService } from './seguimiento-general-listado-export.service';
 import { SeguimientoListadoExportService } from './seguimiento-listado-export.service';
-import { SeguimientoListadoComponent } from './seguimiento-listado/seguimiento-listado.component';
 import { SeguimientoPerfilEvaluadorRoutingModule } from './seguimiento-perfil-evaluador-routing.module';
-import { SeguimientoRoutingModule } from './seguimiento-routing.module';
 import { SeguimientoResolver } from './seguimiento.resolver';
 
 @NgModule({
   declarations: [
-    SeguimientoListadoComponent,
-    SeguimientoEvaluarComponent,
-    SeguimientoListadoExportModalComponent
   ],
   imports: [
     SharedModule,
     CommonModule,
     TranslateModule,
     MaterialDesignModule,
-    SeguimientoRoutingModule,
     SeguimientoPerfilEvaluadorRoutingModule,
     SeguimientoFormularioModule,
     SgiAuthModule,
@@ -47,4 +39,4 @@ import { SeguimientoResolver } from './seguimiento.resolver';
     SeguimientoEvaluacionesAnterioresListadoExportService
   ]
 })
-export class SeguimientoModule { }
+export class SeguimientoPerfilEvaluadorModule { }
