@@ -69,6 +69,9 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
   private static final String RESPONSE_SI = "Sí";
   private static final String RESPONSE_NO = "No";
 
+  public static final Long TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL = 11L;
+  public static final Long TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL = 16L;
+
   @Autowired
   public MXXReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService,
       MemoriaService memoriaService,
@@ -173,6 +176,27 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
       elementsRow.add(memoria.getComite().getFormulario().getNombre());
       columnsDataTitulo.add("comite");
       elementsRow.add(memoria.getComite().getComite());
+      columnsDataTitulo.add("retrospectiva");
+      if (ObjectUtils.isNotEmpty(memoria.getEstadoActual())) {
+        elementsRow.add(!memoria.getEstadoActual().getId().equals(TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL)
+            && !memoria.getEstadoActual().getId().equals(TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL)
+            && ObjectUtils.isNotEmpty(memoria.getRetrospectiva())
+            && memoria.getRetrospectiva().getEstadoRetrospectiva().getId() > 1);
+      } else {
+        elementsRow.add(false);
+      }
+      columnsDataTitulo.add("seguimientoAnual");
+      if (ObjectUtils.isNotEmpty(memoria.getEstadoActual())) {
+        elementsRow.add(memoria.getEstadoActual().getId().equals(TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL));
+      } else {
+        elementsRow.add(false);
+      }
+      columnsDataTitulo.add("seguimientoFinal");
+      if (ObjectUtils.isNotEmpty(memoria.getEstadoActual())) {
+        elementsRow.add(memoria.getEstadoActual().getId().equals(TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL));
+      } else {
+        elementsRow.add(false);
+      }
 
       rowsDataTitulo.add(elementsRow);
 
@@ -483,7 +507,7 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
       rowElementsTableCrud.add(elementOutputTableCrud);
 
       elementOutputTableCrud = ElementOutput.builder()
-        .nombre("NoRefCEID")
+        .nombre("Referencia memoria")
         .content(memoriaPeticionEvaluacion.getNumReferencia())
         .build();
       rowElementsTableCrud.add(elementOutputTableCrud);
