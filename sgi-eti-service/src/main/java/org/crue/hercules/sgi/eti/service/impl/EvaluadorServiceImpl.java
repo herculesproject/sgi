@@ -328,4 +328,22 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     return secretario;
   }
 
+  /**
+   * Comprueba si la persona es evaluador en algun {@link Comite}
+   * 
+   * @param personaRef identificador de la persona
+   * @return si es evaluador o no
+   */
+  public boolean isEvaluador(String personaRef) {
+    log.debug("isEvaluador({}) - start", personaRef);
+    Specification<Evaluador> specActivos = EvaluadorSpecifications.activos();
+    Specification<Evaluador> specByPersonaRef = EvaluadorSpecifications.byPersonaRef(personaRef);
+    Specification<Evaluador> specs = Specification.where(specActivos).and(specByPersonaRef);
+
+    boolean isEvaluador = evaluadorRepository.count(specs) > 0;
+
+    log.debug("isEvaluador({}) - end", personaRef);
+    return isEvaluador;
+  }
+
 }

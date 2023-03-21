@@ -82,4 +82,12 @@ public interface EvaluadorService {
    */
   Evaluador findSecretarioInFechaAndComite(Instant fecha, String comite);
 
+  /**
+   * Comprueba si la persona es evaluador en algun {@link Comite}
+   * 
+   * @param personaRef identificador de la persona
+   * @return si es evaluador o no
+   */
+  boolean isEvaluador(String personaRef);
+
 }

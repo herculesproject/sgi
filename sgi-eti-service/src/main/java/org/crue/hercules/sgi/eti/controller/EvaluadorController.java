@@ -289,4 +289,23 @@ public class EvaluadorController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Comprueba si el usuario es Evaluador en algun comite
+   * 
+   * @param authorization authorization
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/is-evaluador", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V','ETI-EVC-VR', 'ETI-EVC-INV-VR', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
+  public ResponseEntity<Void> isEvaluador(Authentication authorization) {
+    log.debug("isEvaluador(Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    if (evaluadorService.isEvaluador(personaRef)) {
+      log.debug("isEvaluador(Authentication authorization) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isEvaluador(Authentication authorization) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }
