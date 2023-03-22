@@ -12,6 +12,7 @@ import javax.swing.table.TableModel;
 import javax.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto;
@@ -57,7 +58,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
   // @formatter:off
   protected static final String[] COLUMNS_TABLE_MODEL = new String[] { 
     "bloque_id", "bloque_nombre", "bloque_orden", 
-    "apartado_id", "apartado_nombre", "apartado_orden", 
+    "apartado_id", "apartado_nombre", "apartado_orden", "apartado_modificado",
     "apartado_hijo_padre_id", "apartado_hijo_id", "apartado_hijo_nombre", "apartado_hijo_orden",
     "apartado_nieto_padre_id", "apartado_nieto_id", "apartado_nieto_nombre", "apartado_nieto_orden",
     "apartado_bisnieto_padre_id", "apartado_bisnieto_id", "apartado_bisnieto_nombre", "apartado_bisnieto_orden",
@@ -187,14 +188,18 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     ApartadoOutput apartadoOutput = null;
 
     List<ComentarioDto> comentarios = new ArrayList<>();
-
     if (CollectionUtils.isNotEmpty(input.getComentarios())) {
       comentarios = input.getComentarios().stream()
           .filter(c -> c.getApartado().getId().compareTo(apartado.getId()) == 0).collect(Collectors.toList());
     }
 
-    RespuestaDto respuestaDto = null;
+    RespuestaDto respuestaAnteriorDto = null;
+    if (ObjectUtils.isNotEmpty(input.getIdMemoriaOriginal())) {
+      respuestaAnteriorDto = respuestaService.findByMemoriaIdAndApartadoId(input.getIdMemoriaOriginal(),
+          apartado.getId());
+    }
 
+    RespuestaDto respuestaDto = null;
     if (null != input.getMostrarRespuestas() && input.getMostrarRespuestas()) {
       respuestaDto = respuestaService.findByMemoriaIdAndApartadoId(input.getIdMemoria(), apartado.getId());
     }
@@ -208,12 +213,22 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
       .respuesta(respuestaDto)
       .comentarios(comentarios)
       .mostrarContenidoApartado(input.getMostrarContenidoApartado())
+      .modificado(this.isRespuestaModificada(respuestaDto, respuestaAnteriorDto))
       .build();
     // @formatter:on
 
     sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput);
 
     return apartadoOutput;
+  }
+
+  private Boolean isRespuestaModificada(RespuestaDto respuestaDto, RespuestaDto respuestaAnteriorDto) {
+    Boolean respuestaModificada = Boolean.FALSE;
+    if (ObjectUtils.isNotEmpty(respuestaDto) && ObjectUtils.isNotEmpty(respuestaAnteriorDto) && !respuestaDto.getValor()
+        .equals(respuestaAnteriorDto.getValor())) {
+      respuestaModificada = Boolean.TRUE;
+    }
+    return respuestaModificada;
   }
 
   /**
@@ -291,7 +306,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     // @formatter:off
     return new Object[] { 
       bloque.getId(), bloque.getNombre(), bloque.getOrden(), 
-      apartado.getId(), apartado.getTitulo(), apartado.getOrden(), 
+      apartado.getId(), apartado.getTitulo(), apartado.getOrden(),  apartado.getModificado(),
       apartado.getId(), apartadoHijo.getId(), apartadoHijo.getTitulo(), apartadoHijo.getOrden(),
       apartadoNieto.getId(), apartadoNieto.getId(), apartadoNieto.getTitulo(), apartadoNieto.getOrden(),
       apartadoBisnieto.getId(), apartadoBisnieto.getId(), apartadoBisnieto.getTitulo(), apartadoBisnieto.getOrden(), 

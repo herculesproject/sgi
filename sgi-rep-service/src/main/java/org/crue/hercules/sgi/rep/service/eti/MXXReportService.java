@@ -309,6 +309,7 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
         .idFormulario(idFormulario)
         .mostrarRespuestas(true)
         .mostrarContenidoApartado(true)
+        .idMemoriaOriginal(ObjectUtils.isNotEmpty(memoria.getMemoriaOriginal()) ? memoria.getMemoriaOriginal().getId() : null)
         .build();
       // @formatter:on
 
