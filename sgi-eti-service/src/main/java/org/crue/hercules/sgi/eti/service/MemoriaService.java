@@ -188,7 +188,8 @@ public interface MemoriaService {
    * @param pageable             Datos de la paginación.
    * @return lista paginada de memorias
    */
-  Page<Memoria> findByComiteAndPeticionEvaluacion(Long idComite, Long idPeticionEvaluacion, Pageable pageable);
+  Page<Memoria> findAllMemoriasPeticionEvaluacionModificables(Long idComite, Long idPeticionEvaluacion,
+      Pageable pageable);
 
   /**
    * 
