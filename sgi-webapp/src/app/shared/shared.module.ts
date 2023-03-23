@@ -19,6 +19,7 @@ import { DialogContentComponent } from './dialog-content/dialog-content.componen
 import { DialogFooterComponent } from './dialog-footer/dialog-footer.component';
 import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
 import { FormAutocompleteOffDirective } from './directives/form-autocomplete-off.directive';
+import { NotFoundErrorDirective } from './directives/not-found-error.directive';
 import { SgiTooltipDirective } from './directives/sgi-tooltip.directive';
 import { ErrorMessageComponent } from './error-message/error-message.component';
 import { ExportDialogComponent } from './export-dialog/export-dialog.component';
@@ -40,6 +41,7 @@ import { MenuItemExternalComponent } from './menu-item-external/menu-item-extern
 import { MenuItemComponent } from './menu-item/menu-item.component';
 import { MenuSubItemExternalComponent } from './menu-subitem-external/menu-subitem-external.component';
 import { MenuSubItemComponent } from './menu-subitem/menu-subitem.component';
+import { NotFoundErrorComponent } from './not-found-error/not-found-error.component';
 import { PalabraClaveComponent } from './palabra-clave/palabra-clave.component';
 import { ProblemPanelComponent } from './problem-panel/problem-panel.component';
 import { RootComponent } from './root/root.component';
@@ -94,7 +96,9 @@ import { SelectComponent } from './select/select.component';
     InfoMessageComponent,
     ErrorMessageComponent,
     SgiTooltipDirective,
-    InputEmailsComponent
+    InputEmailsComponent,
+    NotFoundErrorComponent,
+    NotFoundErrorDirective
   ],
   imports: [
     CommonModule,
@@ -145,7 +149,9 @@ import { SelectComponent } from './select/select.component';
     InfoMessageComponent,
     ErrorMessageComponent,
     SgiTooltipDirective,
-    InputEmailsComponent
+    InputEmailsComponent,
+    NotFoundErrorComponent,
+    NotFoundErrorDirective
   ]
 })
 export class SharedModule { }
