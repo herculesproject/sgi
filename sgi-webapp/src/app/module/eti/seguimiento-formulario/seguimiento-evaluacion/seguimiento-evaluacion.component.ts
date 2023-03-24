@@ -110,8 +110,8 @@ export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemor
   }
 
   enableBtnVisualizarInforme(): boolean {
-    const hasDictamenAndNotEdited = this.formPart.evaluacion?.dictamen?.id
-      && this.formGroup.controls.dictamen.value.id === this.formPart.evaluacion.dictamen.id;
+    const hasDictamenAndNotEdited = !!this.formPart.evaluacion?.dictamen?.id
+      && (this.formGroup.controls.dictamen.value?.id === this.formPart.evaluacion.dictamen.id);
 
     if (!hasDictamenAndNotEdited) {
       return false;
