@@ -657,7 +657,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
       if (
         this.readonly
-        || (!this.readonly && this.comentarios.size && !question.apartado.comentario)
+        || (!this.readonly && (this.comentarios.size || this.comentariosGenerales.length) && !question.apartado.comentario)
         || (firstFieldConfig.templateOptions.locked)
       ) {
         firstFieldConfig.templateOptions.locked = true;
