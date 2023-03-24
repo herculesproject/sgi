@@ -274,7 +274,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         return of(void 0);
       }),
       switchMap(() => {
-        if (formLoadComplete && (!hasLastBloqueSavedRespuestas || this.isFormularioMemoriaModificacion(this.memoria))) {
+        if ((formLoadComplete && !hasLastBloqueSavedRespuestas) || this.isFormularioMemoriaModificacion(this.memoria)) {
           return this.formularioService.completado(this.memoria.id, this.formularioTipo);
         }
 
