@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>En esta actividad ¿se realizan tareas de uso confinado de OMG?</p>"
+        "template": "<p>En esta actividad ¿se realizan tareas de uso confinado de organismos modificados genéticamente?</p>"
       },
       {
         "key": "tareasUsoConfinadoRadio",
@@ -36,7 +36,7 @@
         "template": "Adjuntar la hoja de información del transgénico de la casa comercial."
       },
       {
-        "template": "Tipo de OMG que se utiliza",
+        "template": "Tipo de organismos modificados genéticamente que se utiliza",
         "hideExpression": "!model.tareasUsoConfinadoRadio || model.tareasUsoConfinadoRadio === 'no'"
       },
       {

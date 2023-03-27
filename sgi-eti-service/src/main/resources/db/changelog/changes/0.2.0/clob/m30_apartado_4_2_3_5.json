@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Con respecto a la gestión de residuos biológicos, OMGs, químicos y radiactivos, ¿conoce, aplica y tiene a su disposición el <a href='https://www.um.es/web/acti/contenido/servicios/radioproteccion-residuos/normas' target='_blank'>'Manual de Gestión de Residuos Peligrosos, Biológicos y Radiactivos de la Universidad'</a>?</p>"
+        "template": "<p>Con respecto a la gestión de residuos biológicos, organismos modificados genéticamente, químicos y radiactivos, ¿conoce, aplica y tiene a su disposición el <a href='https://www.um.es/web/acti/contenido/servicios/radioproteccion-residuos/normas' target='_blank'>'Manual de Gestión de Residuos Peligrosos, Biológicos y Radiactivos de la Universidad'</a>?</p>"
       },
       {
         "key": "manualGestionResiduos",

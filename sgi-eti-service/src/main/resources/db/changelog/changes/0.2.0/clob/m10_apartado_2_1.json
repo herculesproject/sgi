@@ -5,17 +5,14 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "2.1 Personal que llevará a cabo las tareas con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "2.1 Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos"
     },
     "fieldGroup": [
-      {
-        "template": "<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas.<br><br>Especificar por cada persona:<br><ul><li>Datos identificativos (nombre, E-mail, vinculación con la Universidad).</li><li>Formación específica en riesgos biológicos.</li><li>Organismo acreditador (especificar universidad u organismo).</li><li>Año.</li></ul></p>"
-      },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el apartado <b>Asignación de tareas</b> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias."
+        "template": "<p>A continuación se muestran los datos de todas las personas integrantes del equipo de investigador, incluido el/la solicitante. Añadir en este apartado cualquier otra persona que colabore en el proyecto como reclutadores, encuestadores, etc.. En el caso de proyecto tutelado añadir al tutor o director del mismo.<br><br>Especificar por persona:<br><br><ul><li>Datos identificativos (nombre, E-mail, vinculación y nivel académico)</li><li>Tareas concretas que realizará de acuerdo a lo descrito en el apartado 3.2 Diseño metodológico (añadir cuantas tareas sean necesarias)</li><li>Formación y experiencia previa en cada tarea en particular (realización de encuestas, reclutamiento, toma de muestras, tratamiento de datos, trabajo en laboratorio, dirección de tesis, etc).</li></ul></p><p>Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el apartado <b>Asignación de tareas</b> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.</p>"
       },
       {
         "type": "table-crud",
@@ -79,27 +76,9 @@
               "key": "experiencia",
               "type": "input",
               "templateOptions": {
-                "label": "Formación en riesgo biológico",
+                "label": "Experiencia",
                 "order": 60,
                 "expressionModelValue": "formState.tareas[$1].formacion"
-              }
-            },
-            {
-              "key": "organismo",
-              "type": "input",
-              "templateOptions": {
-                "label": "Organismo acreditador",
-                "order": 70,
-                "expressionModelValue": "formState.tareas[$1].organismo"
-              }
-            },
-            {
-              "key": "anio",
-              "type": "input",
-              "templateOptions": {
-                "label": "Año",
-                "order": 80,
-                "expressionModelValue": "formState.tareas[$1].anio"
               }
             }
           ]
