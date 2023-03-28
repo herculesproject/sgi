@@ -58,6 +58,9 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     columnsData.add("nombreInvestigacion");
     elementsRow.add(evaluacion.getMemoria().getComite().getNombreInvestigacion());
 
+    columnsData.add("comite");
+    elementsRow.add(evaluacion.getMemoria().getComite().getComite());
+
     columnsData.add("nombreSecretario");
     try {
       EvaluadorDto secretario = evaluacionService.findSecretarioEvaluacion(evaluacion.getId());

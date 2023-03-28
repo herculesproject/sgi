@@ -71,6 +71,8 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
 
   public static final Long TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL = 11L;
   public static final Long TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL = 16L;
+  public static final Long TIPO_MEMORIA_MODIFICACION = 2L;
+  public static final Long TIPO_MEMORIA_RATIFICACION = 3L;
 
   @Autowired
   public MXXReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService,
@@ -194,6 +196,20 @@ public class MXXReportService extends BaseApartadosRespuestasReportService {
       columnsDataTitulo.add("seguimientoFinal");
       if (ObjectUtils.isNotEmpty(memoria.getEstadoActual())) {
         elementsRow.add(memoria.getEstadoActual().getId().equals(TIPO_ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL));
+      } else {
+        elementsRow.add(false);
+      }
+
+      columnsDataTitulo.add("tipoMemoriaModificacion");
+      if (ObjectUtils.isNotEmpty(memoria.getTipoMemoria())) {
+        elementsRow.add(memoria.getTipoMemoria().getId().equals(TIPO_MEMORIA_MODIFICACION));
+      } else {
+        elementsRow.add(false);
+      }
+
+      columnsDataTitulo.add("tipoMemoriaRatificacion");
+      if (ObjectUtils.isNotEmpty(memoria.getTipoMemoria())) {
+        elementsRow.add(memoria.getTipoMemoria().getId().equals(TIPO_MEMORIA_RATIFICACION));
       } else {
         elementsRow.add(false);
       }

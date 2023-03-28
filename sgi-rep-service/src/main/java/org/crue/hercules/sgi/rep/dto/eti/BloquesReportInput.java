@@ -46,4 +46,6 @@ public class BloquesReportInput implements Serializable {
   private Long idFormulario;
 
   private Long idMemoriaOriginal;
+
+  private Integer numeroComentariosGestor;
 }

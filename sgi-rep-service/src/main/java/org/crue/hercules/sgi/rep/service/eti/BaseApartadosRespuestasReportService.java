@@ -30,6 +30,7 @@ import org.crue.hercules.sgi.rep.dto.eti.RespuestaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiDynamicReportService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
+import org.pentaho.reporting.engine.classic.core.Band;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.SubReport;
 import org.pentaho.reporting.engine.classic.core.TableDataFactory;
@@ -50,6 +51,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class BaseApartadosRespuestasReportService extends SgiDynamicReportService {
 
+  private static final Long DICTAMEN_NO_PROCEDE_EVALUAR = 4L;
+
   private final BloqueService bloqueService;
   private final ApartadoService apartadoService;
   private final SgiFormlyService sgiFormlyService;
@@ -57,6 +60,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
 
   // @formatter:off
   protected static final String[] COLUMNS_TABLE_MODEL = new String[] { 
+    "numero_comentarios", "comentario_no_procede_evaluar",
     "bloque_id", "bloque_nombre", "bloque_orden", 
     "apartado_id", "apartado_nombre", "apartado_orden", "apartado_modificado",
     "apartado_hijo_padre_id", "apartado_hijo_id", "apartado_hijo_nombre", "apartado_hijo_orden",
@@ -214,6 +218,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
       .comentarios(comentarios)
       .mostrarContenidoApartado(input.getMostrarContenidoApartado())
       .modificado(this.isRespuestaModificada(respuestaDto, respuestaAnteriorDto))
+      .numeroComentariosGestor(input.getNumeroComentariosGestor())
       .build();
     // @formatter:on
 
@@ -245,7 +250,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     tableModelGeneral.setColumnIdentifiers(COLUMNS_TABLE_MODEL);
 
     if (bloquesReportOutput.getBloques().isEmpty()) {
-      tableModelGeneral.addRow(generateEmptyRow());
+      tableModelGeneral.addRow(generateEmptyRow(bloquesReportOutput));
     } else {
       List<ApartadoOutput> apartados = new ArrayList<>();
       for (BloqueOutput bloque : bloquesReportOutput.getBloques()) {
@@ -305,6 +310,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
 
     // @formatter:off
     return new Object[] { 
+      apartado.getNumeroComentariosGestor(), null,
       bloque.getId(), bloque.getNombre(), bloque.getOrden(), 
       apartado.getId(), apartado.getTitulo(), apartado.getOrden(),  apartado.getModificado(),
       apartado.getId(), apartadoHijo.getId(), apartadoHijo.getTitulo(), apartadoHijo.getOrden(),
@@ -316,11 +322,12 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     // @formatter:on  
   }
 
-  protected Object[] generateEmptyRow() {
+  protected Object[] generateEmptyRow(BloquesReportOutput bloquesReportOutput) {
     // @formatter:off
     return new Object[] { 
+      bloquesReportOutput.getEvaluacion().getDictamen().getId().equals(DICTAMEN_NO_PROCEDE_EVALUAR) && ObjectUtils.isNotEmpty(bloquesReportOutput.getEvaluacion().getComentario()) ? 1 : null,bloquesReportOutput.getEvaluacion().getDictamen().getId().equals(DICTAMEN_NO_PROCEDE_EVALUAR) && ObjectUtils.isNotEmpty(bloquesReportOutput.getEvaluacion().getComentario()) ? bloquesReportOutput.getEvaluacion().getComentario() : null,
       null, null, null, 
-      null, null, null, 
+      null, null, null, null,
       null, null, null, null,
       null, null, null, null,
       null, null, null, null, 
@@ -447,6 +454,9 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
     subReportTableCrud.setDataFactory(dataFactorySubReportTableCrud);
 
     subReportTableCrud.setQuery(queryKey);
+    if (elementKey.contains("memoriasProyecto")) {
+      subReportTableCrud.getReportFooter().setPagebreakBeforePrint(true);
+    }
     report.getItemBand().addSubReport(subReportTableCrud);
   }
 

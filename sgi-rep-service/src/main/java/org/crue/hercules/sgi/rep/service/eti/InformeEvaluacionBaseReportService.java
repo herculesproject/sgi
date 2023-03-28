@@ -89,17 +89,25 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
     columnsData.add("tituloProyecto");
     elementsRow.add(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
 
+    columnsData.add("referenciaProyecto");
+    elementsRow.add(evaluacion.getMemoria().getPeticionEvaluacion().getCodigo());
+
     columnsData.add("comite");
     elementsRow.add(evaluacion.getMemoria().getComite().getComite());
 
     columnsData.add("nombreSecretario");
+    columnsData.add("articuloInvestigador");
     try {
       EvaluadorDto secretario = evaluacionService.findSecretarioEvaluacion(evaluacion.getId());
       if (ObjectUtils.isNotEmpty(secretario)) {
         PersonaDto persona = personaService.findById(secretario.getPersonaRef());
+        String investigadorMasculino = ApplicationContextSupport.getMessage("investigador.masculino");
+        String investigadorFemenino = ApplicationContextSupport.getMessage("investigador.femenino");
         elementsRow.add(persona.getNombre() + " " + persona.getApellidos());
+        elementsRow.add(persona.getSexo().getNombre().equals("V") ? investigadorMasculino : investigadorFemenino);
       } else {
         elementsRow.add(" - ");
+        elementsRow.add(ApplicationContextSupport.getMessage("investigador.masculinoFemenino"));
       }
     } catch (Exception e) {
       elementsRow.add(getErrorMessageToReport(e));

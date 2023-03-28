@@ -39,4 +39,8 @@ public class ApartadoOutput {
 
   @JsonIgnore
   private Boolean modificado;
+
+  @JsonIgnore
+  private Integer numeroComentariosGestor;
+
 }
