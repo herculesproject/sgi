@@ -414,10 +414,11 @@ public class EvaluadorServiceTest extends BaseServiceTest {
     }
 
     BDDMockito.given(evaluadorRepository.findAllByComiteSinconflictoInteresesMemoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong())).willReturn(evaluadores);
+        ArgumentMatchers.anyLong(), ArgumentMatchers.any(Instant.class))).willReturn(evaluadores);
 
     // when: find unlimited
-    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria);
+    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria,
+        Instant.now());
 
     // then: Get a page with one hundred Evaluadores
     Assertions.assertThat(result.size()).isEqualTo(10);
@@ -434,10 +435,11 @@ public class EvaluadorServiceTest extends BaseServiceTest {
     }
 
     BDDMockito.given(evaluadorRepository.findAllByComiteSinconflictoInteresesMemoria(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong())).willReturn(evaluadores);
+        ArgumentMatchers.anyLong(), ArgumentMatchers.any(Instant.class))).willReturn(evaluadores);
 
     // when: Get page=3 with pagesize=10
-    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria);
+    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria,
+        Instant.now());
 
     // then: A List with ten Evaluadores are returned containing
     Assertions.assertThat(result.size()).isEqualTo(10);

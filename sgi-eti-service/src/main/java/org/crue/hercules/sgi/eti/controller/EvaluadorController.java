@@ -1,9 +1,11 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.time.Instant;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -86,12 +88,13 @@ public class EvaluadorController {
    * 
    * @param query filtro de búsqueda.
    */
-  @GetMapping("comite/{idComite}/sinconflictointereses/{idMemoria}")
+  @GetMapping("comite/{idComite}/sinconflictointereses/{idMemoria}/fecha/{fechaEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E')")
   ResponseEntity<List<Evaluador>> findAllByComiteSinconflictoInteresesMemoria(@PathVariable Long idComite,
-      @PathVariable Long idMemoria) {
+      @PathVariable Long idMemoria, @PathVariable Instant fechaEvaluacion) {
     log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) - start");
-    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria);
+    List<Evaluador> result = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria,
+        fechaEvaluacion);
 
     if (result.isEmpty()) {
       log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) ) - end");
