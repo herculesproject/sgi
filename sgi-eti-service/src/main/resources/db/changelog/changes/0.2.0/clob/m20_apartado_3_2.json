@@ -34,7 +34,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "Para añadir nueva memoria ir a <b>'Memorias del proyecto'</b>."
+        "template": "Para añadir una nueva memoria debe de acceder al apartado <b>Memorias</b> de la <b>Solicitud de evaluación</b>"
       }
     ]
   }
