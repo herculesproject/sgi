@@ -10,8 +10,10 @@ import { IEvaluadorBackend } from '@core/models/eti/backend/evaluador-backend';
 import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluador } from '@core/models/eti/evaluador';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -63,10 +65,10 @@ export class EvaluadorService extends SgiMutableRestService<number, IEvaluadorBa
    * @param idMemoria id memoria.
    * @return las memorias asignables a la convocatoria.
    */
-  findAllMemoriasAsignablesConvocatoria(idComite: number, idMemoria: number)
+  findAllMemoriasAsignablesConvocatoria(idComite: number, idMemoria: number, fechaEvaluacion: DateTime)
     : Observable<SgiRestListResult<IEvaluador>> {
     return this.find<IEvaluadorBackend, IEvaluador>(
-      `${this.endpointUrl}/comite/${idComite}/sinconflictointereses/${idMemoria}`,
+      `${this.endpointUrl}/comite/${idComite}/sinconflictointereses/${idMemoria}/fecha/${LuxonUtils.toBackend(fechaEvaluacion)}`,
       null,
       EVALUADOR_CONVERTER
     );
