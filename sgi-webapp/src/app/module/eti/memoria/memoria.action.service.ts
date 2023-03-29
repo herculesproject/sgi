@@ -101,7 +101,7 @@ export class MemoriaActionService extends ActionService {
     this.isInvestigador = route.snapshot.data.module === Module.INV;
 
     this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaService,
-      peticionEvaluacionService);
+      peticionEvaluacionService, this.isInvestigador);
     this.formularios = new MemoriaFormularioFragment(
       logger,
       this.readonly,

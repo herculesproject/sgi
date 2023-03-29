@@ -23,14 +23,17 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   public showInfoRatificacion = false;
 
   public idPeticionEvaluacion: number;
+  private isInvestigador: boolean;
 
   constructor(
     private fb: FormBuilder, readonly: boolean, key: number, private service: MemoriaService,
     private personaService: PersonaService,
-    private readonly peticionEvaluacionService: PeticionEvaluacionService) {
+    private readonly peticionEvaluacionService: PeticionEvaluacionService,
+    private readonly moduloInv: boolean) {
     super(key);
     this.memoria = {} as IMemoria;
     this.readonly = readonly;
+    this.isInvestigador = moduloInv;
   }
 
   public loadResponsable(idPeticionEvaluacion: number): void {
@@ -130,7 +133,11 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
 
   public onTipoMemoriaChange(tipoMemoria: ITipoMemoria) {
     this.showMemoriaOriginal = tipoMemoria?.id === TIPO_MEMORIA.MODIFICACION;
-    this.checkShowInfoRatificacion(tipoMemoria);
+    if (this.isInvestigador) {
+      this.checkShowInfoRatificacion(tipoMemoria);
+    } else {
+      this.showInfoRatificacion = false;
+    }
 
     if (this.showMemoriaOriginal) {
       this.getFormGroup().controls.memoriaOriginal.setValidators(Validators.required);
