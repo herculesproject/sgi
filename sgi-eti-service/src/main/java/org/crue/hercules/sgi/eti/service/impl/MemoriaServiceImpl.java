@@ -776,7 +776,8 @@ public class MemoriaServiceImpl implements MemoriaService {
    */
   private void crearEvaluacion(Memoria memoria, Long tipoEvaluacion) {
     log.debug("crearEvaluacion(memoria, tipoEvaluacion)- start");
-    Evaluacion evaluacion = evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoria.getId())
+    Evaluacion evaluacion = evaluacionRepository
+        .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), tipoEvaluacion)
         .orElseThrow(() -> new EvaluacionNotFoundException(memoria.getId()));
 
     Evaluacion evaluacionNueva = new Evaluacion();
