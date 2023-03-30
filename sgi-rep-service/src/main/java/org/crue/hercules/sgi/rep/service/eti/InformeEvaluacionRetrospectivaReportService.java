@@ -83,12 +83,17 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     }
 
     columnsData.add("del");
+    columnsData.add("el");
     if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
       String i18nDela = ApplicationContextSupport.getMessage("common.dela");
       elementsRow.add(i18nDela);
+      String i18nLa = ApplicationContextSupport.getMessage("common.la");
+      elementsRow.add(i18nLa);
     } else {
       String i18nDel = ApplicationContextSupport.getMessage("common.del");
       elementsRow.add(i18nDel);
+      String i18nEl = ApplicationContextSupport.getMessage("common.el");
+      elementsRow.add(i18nEl);
     }
 
     columnsData.add("resourcesBaseURL");
