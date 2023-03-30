@@ -72,6 +72,7 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
   protected void addColumnAndRowDataInvestigador(String personaRef, List<Object> columnsData,
       List<Object> elementsRow) {
     columnsData.add("nombreInvestigador");
+    columnsData.add("articuloInvestigador");
     addRowDataInvestigador(personaRef, elementsRow);
   }
 
@@ -79,8 +80,12 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
     try {
       PersonaDto persona = personaService.findById(personaRef);
       elementsRow.add(persona.getNombre() + " " + persona.getApellidos());
+      String investigadorMasculino = ApplicationContextSupport.getMessage("investigador.masculino");
+      String investigadorFemenino = ApplicationContextSupport.getMessage("investigador.femenino");
+      elementsRow.add(persona.getSexo().getId().equals("V") ? investigadorMasculino : investigadorFemenino);
     } catch (Exception e) {
       elementsRow.add(getErrorMessageToReport(e));
+      elementsRow.add(ApplicationContextSupport.getMessage("investigador.masculinoFemenino"));
     }
   }
 
@@ -96,18 +101,13 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportServic
     elementsRow.add(evaluacion.getMemoria().getComite().getComite());
 
     columnsData.add("nombreSecretario");
-    columnsData.add("articuloInvestigador");
     try {
       EvaluadorDto secretario = evaluacionService.findSecretarioEvaluacion(evaluacion.getId());
       if (ObjectUtils.isNotEmpty(secretario)) {
         PersonaDto persona = personaService.findById(secretario.getPersonaRef());
-        String investigadorMasculino = ApplicationContextSupport.getMessage("investigador.masculino");
-        String investigadorFemenino = ApplicationContextSupport.getMessage("investigador.femenino");
         elementsRow.add(persona.getNombre() + " " + persona.getApellidos());
-        elementsRow.add(persona.getSexo().getNombre().equals("V") ? investigadorMasculino : investigadorFemenino);
       } else {
         elementsRow.add(" - ");
-        elementsRow.add(ApplicationContextSupport.getMessage("investigador.masculinoFemenino"));
       }
     } catch (Exception e) {
       elementsRow.add(getErrorMessageToReport(e));
