@@ -961,7 +961,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
       Predicate pComiteActivo = cb.equal(joinEComite.get(Comite_.activo), true);
       Predicate pEvaluadorActivo = cb.equal(root.get(Evaluador_.activo), true);
       Predicate pCargoComiteActivo = cb.equal(joinCargoComite.get(CargoComite_.activo), true);
-      Predicate pCargoComitePresidente = cb.equal(cb.lower(joinCargoComite.get(CargoComite_.nombre)),
+      Predicate pCargoComitePresidente = cb.equal(joinCargoComite.get(CargoComite_.id),
           EvaluadorSpecifications.PRESIDENTE);
 
       Predicate pFechaBajaIsNull = cb.isNull(root.get(Evaluador_.fechaBaja));

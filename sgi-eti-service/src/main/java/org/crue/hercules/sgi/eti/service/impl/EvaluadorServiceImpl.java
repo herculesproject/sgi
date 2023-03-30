@@ -31,8 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class EvaluadorServiceImpl implements EvaluadorService {
-  private static final String PRESIDENTE = "presidente";
-  private static final String SECRETARIO = "secretario";
+  private static final Long PRESIDENTE = 1L;
+  private static final Long SECRETARIO = 3L;
   private final EvaluadorRepository evaluadorRepository;
 
   public EvaluadorServiceImpl(EvaluadorRepository evaluadorRepository) {
@@ -53,11 +53,11 @@ public class EvaluadorServiceImpl implements EvaluadorService {
 
     // Si el evaluador a crear es presidente se ha de mirar que no coincida el
     // presidente en el rango de fechas de los presidentes existentes
-    if (evaluador.getCargoComite().getNombre().equalsIgnoreCase(PRESIDENTE) || evaluador.getCargoComite().getNombre()
-        .equalsIgnoreCase(SECRETARIO)) {
+    if (evaluador.getCargoComite().getId().equals(PRESIDENTE) || evaluador.getCargoComite().getId()
+        .equals(SECRETARIO)) {
       Assert.isTrue(
           isPresidenteOrSecretarioInFechasOk(evaluador),
-          evaluador.getCargoComite().getNombre().equalsIgnoreCase(PRESIDENTE)
+          evaluador.getCargoComite().getId().equals(PRESIDENTE)
               ? "Existen presidentes entre las fechas seleccionadas"
               : "Existen secretarios entre las fechas seleccionadas");
     } else {
@@ -79,7 +79,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
   public Boolean isPresidenteOrSecretarioInFechasOk(Evaluador evaluador) {
     Specification<Evaluador> specActivos = EvaluadorSpecifications.activos();
     Specification<Evaluador> specPresidentesOrSecretarios = null;
-    if (evaluador.getCargoComite().getNombre().equalsIgnoreCase(PRESIDENTE)) {
+    if (evaluador.getCargoComite().getId().equals(PRESIDENTE)) {
       specPresidentesOrSecretarios = EvaluadorSpecifications.presidentes();
     } else {
       specPresidentesOrSecretarios = EvaluadorSpecifications.secretarios();
@@ -241,13 +241,13 @@ public class EvaluadorServiceImpl implements EvaluadorService {
 
     // Si el evaluador a crear es presidente se ha de mirar que no coincida el
     // presidente en el rango de fechas de los presidentes existentes
-    if (evaluadorActualizar.getCargoComite().getNombre().equalsIgnoreCase(PRESIDENTE)
-        || evaluadorActualizar.getCargoComite().getNombre()
-            .equalsIgnoreCase(SECRETARIO)) {
+    if (evaluadorActualizar.getCargoComite().getId().equals(PRESIDENTE)
+        || evaluadorActualizar.getCargoComite().getId()
+            .equals(SECRETARIO)) {
       Assert.isTrue(
           isPresidenteOrSecretarioInFechasOk(
               evaluadorActualizar),
-          evaluadorActualizar.getCargoComite().getNombre().equalsIgnoreCase(PRESIDENTE)
+          evaluadorActualizar.getCargoComite().getId().equals(PRESIDENTE)
               ? "Existen presidentes entre las fechas seleccionadas"
               : "Existen secretarios entre las fechas seleccionadas");
     } else {

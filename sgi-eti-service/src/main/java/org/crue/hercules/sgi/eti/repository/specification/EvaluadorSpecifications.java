@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EvaluadorSpecifications {
 
-  public static final String PRESIDENTE = "presidente";
-  public static final String SECRETARIO = "secretario";
+  public static final Long PRESIDENTE = 1L;
+  public static final Long SECRETARIO = 3L;
 
   public static Specification<Evaluador> activos() {
     return (root, query, cb) -> cb.equal(root.get(Evaluador_.activo), Boolean.TRUE);
@@ -26,7 +26,7 @@ public class EvaluadorSpecifications {
   }
 
   public static Specification<Evaluador> presidentes() {
-    return (root, query, cb) -> cb.equal(cb.lower(root.get(Evaluador_.cargoComite).get(CargoComite_.nombre)),
+    return (root, query, cb) -> cb.equal(root.get(Evaluador_.cargoComite).get(CargoComite_.id),
         PRESIDENTE);
   }
 
@@ -57,7 +57,7 @@ public class EvaluadorSpecifications {
   }
 
   public static Specification<Evaluador> secretarios() {
-    return (root, query, cb) -> cb.equal(cb.lower(root.get(Evaluador_.cargoComite).get(CargoComite_.nombre)),
+    return (root, query, cb) -> cb.equal(root.get(Evaluador_.cargoComite).get(CargoComite_.id),
         SECRETARIO);
   }
 
