@@ -144,7 +144,8 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     if (this.formPart.evaluacion?.tipoEvaluacion?.id === TIPO_EVALUACION.MEMORIA) {
       const tipoMemoriaWithInforme = [
         TIPO_MEMORIA.NUEVA,
-        TIPO_MEMORIA.RATIFICACION
+        TIPO_MEMORIA.RATIFICACION,
+        TIPO_MEMORIA.MODIFICACION,
       ].includes(this.formPart.evaluacion?.memoria?.tipoMemoria?.id);
       const tipoDictamenConInforme = [
         DICTAMEN.FAVORABLE,
