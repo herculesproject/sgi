@@ -53,6 +53,7 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
   public static final Long DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA = 2L;
   public static final Long TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL = 13L;
   public static final Long TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL = 19L;
+  public static final Long TIPO_EVALUACION_RETROSPECTIVA = 1L;
 
   @Autowired
   public InformeEvaluacionReportService(SgiConfigProperties sgiConfigProperties,
@@ -129,7 +130,8 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
           && !evaluacion.getMemoria().getEstadoActual().getId()
               .equals(TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL)
           && ObjectUtils.isNotEmpty(evaluacion.getMemoria().getRetrospectiva())
-          && evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId() > 1);
+          && evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId() > 1
+          && evaluacion.getTipoEvaluacion().getId().equals(TIPO_EVALUACION_RETROSPECTIVA));
     } else {
       elementsRow.add(false);
     }

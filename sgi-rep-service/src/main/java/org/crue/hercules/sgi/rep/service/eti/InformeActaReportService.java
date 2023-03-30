@@ -255,7 +255,7 @@ public class InformeActaReportService extends SgiReportService {
       DefaultTableModel tableModelMemoriasEvaluadas = getTableModelMemoriasEvaluadas(acta);
       TableDataFactory dataFactorySubReportMemoriasEvaluadas = new TableDataFactory();
       dataFactorySubReportMemoriasEvaluadas.addTable(queryMemoriasEvaluadas, tableModelMemoriasEvaluadas);
-      Band bandMemoriasEvaluadas = (Band) report.getItemBand().getElement(3);
+      Band bandMemoriasEvaluadas = (Band) report.getItemBand().getElement(5);
       SubReport subreportMemoriasEvaluadas = (SubReport) bandMemoriasEvaluadas.getElement(0);
       subreportMemoriasEvaluadas.setDataFactory(dataFactorySubReportMemoriasEvaluadas);
 
@@ -268,11 +268,14 @@ public class InformeActaReportService extends SgiReportService {
         TableModel tableModelComentarios = entry.getValue();
         TableDataFactory dataFactorySubReportComentarios = new TableDataFactory();
         dataFactorySubReportComentarios.addTable(queryComentarios, tableModelComentarios);
-        Band bandComentarios = (Band) report.getItemBand().getElement(4);
+        Band bandComentarios = (Band) report.getItemBand().getElement(6);
         SubReport subReportComentarios = (SubReport) bandComentarios.getElement(0);
         subReportComentarios.setDataFactory(dataFactorySubReportComentarios);
+        if (actaComentariosReportOutput.getComentariosMemoria().isEmpty()) {
+          report.getItemBand().removeElement(bandComentarios);
+        }
       } else {
-        Band bandComentarios = (Band) report.getItemBand().getElement(4);
+        Band bandComentarios = (Band) report.getItemBand().getElement(6);
         report.getItemBand().removeElement(bandComentarios);
       }
 
