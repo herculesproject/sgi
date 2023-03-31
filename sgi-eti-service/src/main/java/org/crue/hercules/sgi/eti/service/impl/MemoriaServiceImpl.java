@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
@@ -57,6 +58,7 @@ import org.crue.hercules.sgi.eti.service.ComunicadosService;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
@@ -143,6 +145,8 @@ public class MemoriaServiceImpl implements MemoriaService {
   /** Comunicado service */
   private final ComunicadosService comunicadosService;
 
+  private final RetrospectivaService retrospectivaService;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   public MemoriaServiceImpl(SgiConfigProperties sgiConfigProperties, MemoriaRepository memoriaRepository,
@@ -152,7 +156,8 @@ public class MemoriaServiceImpl implements MemoriaService {
       ComiteRepository comiteRepository, DocumentacionMemoriaRepository documentacionMemoriaRepository,
       RespuestaRepository respuestaRepository, TareaRepository tareaRepository,
       ConfiguracionService configuracionService, SgiApiRepService reportService, SgdocService sgdocService,
-      BloqueRepository bloqueRepository, ApartadoRepository apartadoRepository, ComunicadosService comunicadosService) {
+      BloqueRepository bloqueRepository, ApartadoRepository apartadoRepository, ComunicadosService comunicadosService,
+      RetrospectivaService retrospectivaService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -171,6 +176,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     this.bloqueRepository = bloqueRepository;
     this.apartadoRepository = apartadoRepository;
     this.comunicadosService = comunicadosService;
+    this.retrospectivaService = retrospectivaService;
   }
 
   /**
@@ -225,6 +231,13 @@ public class MemoriaServiceImpl implements MemoriaService {
     nuevaMemoria.setVersion(1);
     nuevaMemoria.setActivo(Boolean.TRUE);
     nuevaMemoria.setMemoriaOriginal(memoria);
+
+    if (nuevaMemoria.getRequiereRetrospectiva()) {
+      Retrospectiva retrospectiva = Retrospectiva.builder()
+          .estadoRetrospectiva(EstadoRetrospectiva.builder().id(Constantes.ESTADO_RETROSPECTIVA_PENDIENTE).build())
+          .fechaRetrospectiva(memoria.getRetrospectiva().getFechaRetrospectiva()).build();
+      nuevaMemoria.setRetrospectiva(retrospectivaService.create(retrospectiva));
+    }
 
     // La memoria se crea con tipo estado memoria "En elaboración".
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
