@@ -88,6 +88,7 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionBaseR
         .findTareasEquipoTrabajo(evaluacion.getMemoria().getPeticionEvaluacion().getId());
 
     columnsData.add("nombreInvestigador");
+    columnsData.add("articuloInvestigador");
     List<String> personas = new ArrayList<>();
     tareas.forEach(tarea -> {
       Vector<Object> elementsRow = new Vector<>();

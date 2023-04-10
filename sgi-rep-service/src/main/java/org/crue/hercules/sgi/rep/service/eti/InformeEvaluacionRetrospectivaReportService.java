@@ -75,6 +75,7 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     }
 
     columnsData.add("nombrePresidente");
+    columnsData.add("articuloPresidente");
     try {
       String idPresidente = evaluacionService.findIdPresidenteByIdEvaluacion(evaluacion.getId());
       addRowDataInvestigador(idPresidente, elementsRow);
