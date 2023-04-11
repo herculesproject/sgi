@@ -1953,6 +1953,7 @@
   "eti.estado-memoria.PENDIENTE_CORRECCIONES": "Pendiente de correcciones",
   "eti.estado-memoria.SOLICITUD_MODIFICACION": "Solicitud de modificación",
   "eti.evaluacion": "Evaluaci{count,plural, =0{} one{ón} other{ones}}",
+  "eti.evaluacion-seguimiento": "Evaluaci{count,plural, =0{} one{ón} other{ones}} de seguimiento",
   "eti.evaluacion-evaluador.comentario": "Comentario",
   "eti.evaluacion-evaluador.memoria.numero-comentarios": "Nº de comentarios",
   "eti.evaluacion-evaluador.memoria.pdf": "PDF evaluación",
