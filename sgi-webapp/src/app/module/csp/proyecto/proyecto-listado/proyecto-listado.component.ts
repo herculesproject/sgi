@@ -182,6 +182,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       entidadFinanciadora: new FormControl(''),
       fuenteFinanciacion: new FormControl(''),
       codigoExterno: new FormControl(''),
+      codigoInterno: new FormControl(''),
       finalizado: new FormControl(''),
       prorrogado: new FormControl(''),
       palabrasClave: new FormControl(null),
@@ -337,9 +338,9 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   protected initColumns(): void {
     if (this.authService.hasAuthorityForAnyUO('CSP-PRO-R')) {
-      this.columnas = ['id', 'codigoSGE', 'titulo', 'acronimo', 'codigoExterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'activo', 'acciones'];
+      this.columnas = ['id', 'codigoSGE', 'titulo', 'codigoExterno', 'codigoInterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'activo', 'acciones'];
     } else {
-      this.columnas = ['id', 'codigoSGE', 'titulo', 'acronimo', 'codigoExterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'acciones'];
+      this.columnas = ['id', 'codigoSGE', 'titulo', 'codigoExterno', 'codigoInterno', 'fechaInicio', 'fechaFin', 'fechaFinDefinitiva', 'finalizado', 'prorrogado', 'estado', 'acciones'];
     }
   }
 
@@ -353,7 +354,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     const filter = new RSQLSgiRestFilter('id', SgiRestFilterOperator.EQUALS, controls.id.value)
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value)
-      .and('codigoExterno', SgiRestFilterOperator.LIKE_ICASE, controls.codigoExterno.value);
+      .and('codigoExterno', SgiRestFilterOperator.LIKE_ICASE, controls.codigoExterno.value)
+      .and('codigoInterno', SgiRestFilterOperator.LIKE_ICASE, controls.codigoInterno.value);
     if (controls.activo.value !== 'todos') {
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }

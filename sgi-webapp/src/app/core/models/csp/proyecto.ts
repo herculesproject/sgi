@@ -19,6 +19,8 @@ export interface IProyecto {
   acronimo: string;
   /** codigoExterno */
   codigoExterno: string;
+  /** codigoInterno */
+  codigoInterno: string;
   /** Fecha Inicio */
   fechaInicio: DateTime;
   /** Fecha Fin */

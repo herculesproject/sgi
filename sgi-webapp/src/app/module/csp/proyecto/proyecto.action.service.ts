@@ -11,6 +11,7 @@ import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { Module } from '@core/module';
 import { ActionService } from '@core/services/action-service';
+import { ConfiguracionService } from '@core/services/csp/configuracion.service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
@@ -293,7 +294,8 @@ export class ProyectoActionService extends ActionService {
     proyectoPeriodoAmortizacionService: ProyectoPeriodoAmortizacionService,
     periodoAmortizacionService: PeriodoAmortizacionService,
     datosContactoService: DatosContactoService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private configuracionService: ConfiguracionService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -319,7 +321,8 @@ export class ProyectoActionService extends ActionService {
       this.data?.isInvestigador,
       relacionService,
       palabraClaveService,
-      sgiAuthService
+      sgiAuthService,
+      configuracionService
     );
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
 

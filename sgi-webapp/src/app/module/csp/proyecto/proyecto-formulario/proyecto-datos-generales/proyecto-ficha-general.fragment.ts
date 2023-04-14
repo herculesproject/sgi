@@ -12,6 +12,7 @@ import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configu
 import { IRelacion, TipoEntidad } from '@core/models/rel/relacion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { FormFragment } from '@core/services/action-service';
+import { ConfiguracionService } from '@core/services/csp/configuracion.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
@@ -104,6 +105,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private relacionService: RelacionService,
     private readonly palabraClaveService: PalabraClaveService,
     public authService: SgiAuthService,
+    public configuracionService: ConfiguracionService
   ) {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
@@ -227,6 +229,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       titulo: new FormControl('', [
         Validators.required, Validators.maxLength(200)]),
       acronimo: new FormControl('', [Validators.maxLength(50)]),
+      codigoInterno: new FormControl(null, [Validators.maxLength(50)]),
       codigoExterno: new FormControl(null, [Validators.maxLength(50)]),
       fechaInicio: new FormControl(null, [
         Validators.required]),
@@ -432,6 +435,15 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         }));
     }
 
+    this.subscriptions.push(
+      this.configuracionService.getConfiguracion().subscribe(configuracion => {
+        form.controls.codigoInterno.setValidators([
+          form.controls.codigoInterno.validator,
+          Validators.pattern(configuracion.formatoCodigoInternoProyecto)
+        ]);
+      })
+    );
+
     return form;
   }
 
@@ -478,6 +490,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       id: proyecto.id,
       titulo: proyecto.titulo,
       acronimo: proyecto.acronimo,
+      codigoInterno: proyecto.codigoInterno,
       codigoExterno: proyecto.codigoExterno,
       fechaInicio: proyecto.fechaInicio,
       fechaFin: proyecto.fechaFin,
@@ -536,6 +549,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     const form = this.getFormGroup().controls;
     this.proyecto.titulo = form.titulo.value;
     this.proyecto.acronimo = form.acronimo.value;
+    this.proyecto.codigoInterno = form.codigoInterno.value;
     this.proyecto.codigoExterno = form.codigoExterno.value;
     this.proyecto.fechaInicio = form.fechaInicio.value;
     this.proyecto.fechaFin = form.fechaFin.value;

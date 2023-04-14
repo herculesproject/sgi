@@ -15,6 +15,8 @@ export interface IProyectoBackend {
   titulo: string;
   /** Acronimo */
   acronimo: string;
+  /** codigoInterno */
+  codigoInterno: string;
   /** codigoExterno */
   codigoExterno: string;
   /** Fecha Inicio */

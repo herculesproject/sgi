@@ -71,6 +71,14 @@
         <td mat-cell *matCellDef="let proyecto">{{proyecto.codigoExterno}}</td>
       </ng-container>
 
+      <!-- Referencia interna -->
+      <ng-container matColumnDef="codigoInterno">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header scope="header"> {{'csp.proyecto.codigo-interno' |
+          translate}}
+        </th>
+        <td mat-cell *matCellDef="let proyecto">{{proyecto.codigoInterno}}</td>
+      </ng-container>
+
       <!-- Fecha inicio -->
       <ng-container matColumnDef="fechaInicio">
         <th mat-header-cell *matHeaderCellDef mat-sort-header scope="header">
