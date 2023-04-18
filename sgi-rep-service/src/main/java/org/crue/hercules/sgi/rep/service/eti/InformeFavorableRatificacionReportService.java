@@ -36,9 +36,6 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     addColumnAndRowDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
         elementsRow);
 
-    columnsData.add("nombreArticulo");
-    elementsRow.add(evaluacion.getMemoria().getComite().getArticulo());
-
     columnsData.add("memoriaRef");
     elementsRow.add(evaluacion.getMemoria().getNumReferencia());
 
