@@ -952,8 +952,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     final Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    final Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", Genero.M,
-        "nombreDecreto", "articulo", formulario, Boolean.TRUE);
+    final Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
     final TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L); // Nueva
@@ -1048,8 +1047,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", Genero.M, "nombreDecreto",
-        "articulo", formulario, Boolean.TRUE);
+    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);
@@ -1156,8 +1154,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
    */
   private Comite generarMockComite(Long id, String comite, Boolean activo) {
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    return new Comite(id, comite, "nombreSecretario", "nombreInvestigacion", Genero.M, "nombreDecreto", "articulo",
-        formulario, activo);
+    return new Comite(id, comite, "nombreInvestigacion", Genero.M, formulario, activo);
 
   }
 

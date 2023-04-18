@@ -323,8 +323,7 @@ public class EstadoMemoriaServiceTest extends BaseServiceTest {
    */
   private Comite generarMockComite(Long id, String comite, Boolean activo) {
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    return new Comite(id, comite, "nombreSecretario", "nombreInvestigacion", Genero.M, "nombreDecreto", "articulo",
-        formulario, activo);
+    return new Comite(id, comite, "nombreInvestigacion", Genero.M, formulario, activo);
 
   }
 

@@ -1324,8 +1324,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
    */
   private Comite generarMockComite(Long id, String comite, Boolean activo) {
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    return new Comite(id, comite, "nombreSecretario", "nombreInvestigacion", Genero.M, "nombreDecreto", "articulo",
-        formulario, activo);
+    return new Comite(id, comite, "nombreInvestigacion", Genero.M, formulario, activo);
 
   }
 
@@ -1428,8 +1427,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreSecretario", "nombreInvestigacion", Genero.M, "nombreDecreto",
-        "articulo", formulario, Boolean.TRUE);
+    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);
