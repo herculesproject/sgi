@@ -1,0 +1,61 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet context="!test" author="master" id="00.03.00-config">
+    <insert tableName="config">
+      <column name="name" value="web-numero-logos-header" />
+      <column name="description"
+        value="Número de logos por defecto que aparecerán en la cabecera (1,2,3)" />
+      <column name="value" value="3" />
+    </insert>
+  </changeSet>
+
+
+  <changeSet context="!test" author="master" id="00.03.00-resources-update-oracle"
+    dbms="oracle">
+    <!-- web-header-logo-feder -->
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/web/web-header-logo-feder.png" />
+      <where>:name=:value AND dbms_lob.compare(value, default_value) = 0</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-feder" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-feder.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-feder" />
+      </whereParams>
+    </update>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="00.03.00-resources-update-!oracle" dbms="!oracle">
+    <!-- web-header-logo-feder -->
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/web/web-header-logo-feder.png" />
+      <where>:name=:value AND value=default_value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-feder" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-feder.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-feder" />
+      </whereParams>
+    </update>
+
+  </changeSet>
+
+</databaseChangeLog>
