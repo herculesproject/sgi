@@ -23,7 +23,8 @@ export enum ConfigGlobal {
   WEB_HEADER_LOGO_UE = 'web-header-logo-ue',
   WEB_HEADER_LOGO_UE_2X = 'web-header-logo-ue2x',
   WEB_HEADER_LOGO_UE_3X = 'web-header-logo-ue3x',
-  WEB_I18N_ES = 'web-i18n-es'
+  WEB_I18N_ES = 'web-i18n-es',
+  WEB_NUM_LOGOS_HEADER = 'web-numero-logos-header'
 }
 
 @Component({
@@ -36,15 +37,16 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
   private readonly _CONFIG_MAP: Map<ConfigGlobal, IConfigOptions> = new Map([
     [ConfigGlobal.ENTIDAD_IMPLANTACION, { type: ConfigType.TEXT, label: marker(`adm.config.global.ENTIDAD_IMPLANTACION`), required: true }],
     [ConfigGlobal.ID_ENTIDAD_SGEMP, { type: ConfigType.TEXT, label: marker(`adm.config.global.ID_ENTIDAD_SGEMP`), required: true }],
+    [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true }],
     [ConfigGlobal.REP_COMMON_HEADER_LOGO, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_HEADER_LOGO`) }],
     [ConfigGlobal.REP_COMMON_DYNAMIC_LANDSCAPE, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_DYNAMIC_LANDSCAPE`) }],
     [ConfigGlobal.REP_COMMON_DYNAMIC_PORTRAIT, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_DYNAMIC_PORTRAIT`) }],
-    [ConfigGlobal.WEB_HEADER_LOGO_FEDER, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_FEDER`) }],
-    [ConfigGlobal.WEB_HEADER_LOGO_FEDER_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_FEDER_2X`) }],
-    [ConfigGlobal.WEB_HEADER_LOGO_FEDER_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_FEDER_3X`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO_2X`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO_3X`) }],
+    [ConfigGlobal.WEB_HEADER_LOGO_FEDER, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_FEDER`) }],
+    [ConfigGlobal.WEB_HEADER_LOGO_FEDER_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_FEDER_2X`) }],
+    [ConfigGlobal.WEB_HEADER_LOGO_FEDER_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_FEDER_3X`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_UE, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_UE_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE_2X`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_UE_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE_3X`) }],
@@ -86,6 +88,36 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
       this.processError(error);
     } else {
       this.clearProblems();
+    }
+  }
+
+  selectChange(key: string, value: string) {
+    if (key === ConfigGlobal.WEB_NUM_LOGOS_HEADER) {
+      if (value === '1') {
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER).disabled = true;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER_2X).disabled = true;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER_3X).disabled = true;
+
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE).disabled = true;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE_2X).disabled = true;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE_3X).disabled = true;
+      } else if (value === '2') {
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE).disabled = true;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE_2X).disabled = true;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE_3X).disabled = true;
+
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER).disabled = false;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER_2X).disabled = false;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER_3X).disabled = false;
+      } else {
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER).disabled = false;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER_2X).disabled = false;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_FEDER_3X).disabled = false;
+
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE).disabled = false;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE_2X).disabled = false;
+        this.CONFIG_MAP.get(ConfigGlobal.WEB_HEADER_LOGO_UE_3X).disabled = false;
+      }
     }
   }
 
