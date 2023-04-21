@@ -1,0 +1,86 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <!-- 3.4.1 Proceso de reclutamiento -->
+  <changeSet context="!test" author="master" id="00.03.00-apartado">
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_3_4_1.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+        <param
+          name="nombre" value="Proceso de reclutamiento" />
+        <param name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Intervenciones o pruebas en seres humanos')" />
+        <param
+          name="orden" valueNumeric="1" />
+      </whereParams>
+    </update>
+
+    <!-- 3.4.2 Reclutamiento realizado por personal ajeno al equipo investigador -->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_3_4_2.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+        <param
+          name="nombre" value="Reclutamiento realizado por personal ajeno al equipo investigador" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Intervenciones o pruebas en seres humanos')" />
+        <param
+          name="orden" valueNumeric="2" />
+      </whereParams>
+    </update>
+
+    <!-- 5.2 Documento de cesión de datos -->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_5_2.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '5' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+        <param
+          name="nombre" value="Documento de cesión de datos" />
+        <param name="orden" valueNumeric="2" />
+      </whereParams>
+    </update>
+
+    <!-- 5.3 Documento de autorización -->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_5_3.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '5' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+        <param
+          name="nombre" value="Documento de autorización" />
+        <param name="orden" valueNumeric="3" />
+      </whereParams>
+    </update>
+
+    <!-- 5.6 Acuerdo de transferencia de muestras -->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_5_6.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '5' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+        <param
+          name="nombre" value="Acuerdo de transferencia de muestras" />
+        <param name="orden"
+          valueNumeric="6" />
+      </whereParams>
+    </update>
+  </changeSet>
+
+</databaseChangeLog>
