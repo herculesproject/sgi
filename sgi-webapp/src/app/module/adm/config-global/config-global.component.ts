@@ -38,9 +38,6 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.ENTIDAD_IMPLANTACION, { type: ConfigType.TEXT, label: marker(`adm.config.global.ENTIDAD_IMPLANTACION`), required: true }],
     [ConfigGlobal.ID_ENTIDAD_SGEMP, { type: ConfigType.TEXT, label: marker(`adm.config.global.ID_ENTIDAD_SGEMP`), required: true }],
     [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true }],
-    [ConfigGlobal.REP_COMMON_HEADER_LOGO, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_HEADER_LOGO`) }],
-    [ConfigGlobal.REP_COMMON_DYNAMIC_LANDSCAPE, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_DYNAMIC_LANDSCAPE`) }],
-    [ConfigGlobal.REP_COMMON_DYNAMIC_PORTRAIT, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_DYNAMIC_PORTRAIT`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO_2X`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO_3X`) }],
@@ -50,6 +47,9 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.WEB_HEADER_LOGO_UE, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_UE_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE_2X`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_UE_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE_3X`) }],
+    [ConfigGlobal.REP_COMMON_HEADER_LOGO, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_HEADER_LOGO`) }],
+    [ConfigGlobal.REP_COMMON_DYNAMIC_LANDSCAPE, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_DYNAMIC_LANDSCAPE`) }],
+    [ConfigGlobal.REP_COMMON_DYNAMIC_PORTRAIT, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_DYNAMIC_PORTRAIT`) }],
     [ConfigGlobal.WEB_I18N_ES, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_ES`) }]
   ]);
 
