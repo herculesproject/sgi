@@ -329,4 +329,14 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     this.matDialog.open(MemoriaListadoExportModalComponent, config);
   }
 
+  isMemoriaSeguimiento(estadoMemoriaId: number): boolean {
+    if (estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL
+      || estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL
+      || estadoMemoriaId === ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

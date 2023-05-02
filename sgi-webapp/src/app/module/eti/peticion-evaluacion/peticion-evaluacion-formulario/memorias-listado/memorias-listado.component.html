@@ -86,7 +86,7 @@
           <ng-container *ngIf="hasPermisoEnviarSecretaria(wrapper.value.estadoActual.id)">
             <button mat-icon-button color="primary" *sgiHasAuthorityForAnyUO="'ETI-MEM-INV-ESCR'"
               (click)="enviarSecretaria(wrapper.value)" [disabled]="disableEnviarSecretaria"
-              matTooltip="{{'btn.eti.memoria.enviar' | translate}}">
+              matTooltip="{{isMemoriaSeguimiento(wrapper.value.estadoActual?.id) ? ('btn.eti.memoria.enviar-seguimiento' | translate) : ('btn.eti.memoria.enviar' | translate)}}">
               <mat-icon>send</mat-icon>
             </button>
           </ng-container>
