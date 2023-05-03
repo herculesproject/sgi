@@ -54,6 +54,8 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
   public static final Long TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL = 13L;
   public static final Long TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL = 19L;
   public static final Long TIPO_EVALUACION_RETROSPECTIVA = 1L;
+  public static final Long TIPO_EVALUACION_SEGUIMIENTO_ANUAL = 3L;
+  public static final Long TIPO_EVALUACION_SEGUIMIENTO_FINAL = 4L;
 
   @Autowired
   public InformeEvaluacionReportService(SgiConfigProperties sgiConfigProperties,
@@ -136,18 +138,14 @@ public class InformeEvaluacionReportService extends BaseEvaluadorEvaluacionRepor
       elementsRow.add(false);
     }
     columnsDataTitulo.add("seguimientoAnual");
-    if (ObjectUtils.isNotEmpty(evaluacion.getMemoria().getEstadoActual())) {
-      elementsRow.add(
-          evaluacion.getMemoria().getEstadoActual().getId().equals(
-              TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL));
+    if (ObjectUtils.isNotEmpty(evaluacion.getTipoEvaluacion())) {
+      elementsRow.add(evaluacion.getTipoEvaluacion().getId().equals(TIPO_EVALUACION_SEGUIMIENTO_ANUAL));
     } else {
       elementsRow.add(false);
     }
     columnsDataTitulo.add("seguimientoFinal");
-    if (ObjectUtils.isNotEmpty(evaluacion.getMemoria().getEstadoActual())) {
-      elementsRow.add(
-          evaluacion.getMemoria().getEstadoActual().getId()
-              .equals(TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL));
+    if (ObjectUtils.isNotEmpty(evaluacion.getTipoEvaluacion())) {
+      elementsRow.add(evaluacion.getTipoEvaluacion().getId().equals(TIPO_EVALUACION_SEGUIMIENTO_FINAL));
     } else {
       elementsRow.add(false);
     }
