@@ -265,7 +265,6 @@ public class InformeIT extends BaseIT {
     peticionEvaluacion.setId(2L);
     peticionEvaluacion.setCodigo("Codigo");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico");
-    peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);

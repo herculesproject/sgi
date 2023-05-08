@@ -1298,7 +1298,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico" + id);
-    peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);
@@ -1412,7 +1411,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
-    peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);

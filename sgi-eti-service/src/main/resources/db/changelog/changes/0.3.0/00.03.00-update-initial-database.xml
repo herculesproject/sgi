@@ -14,4 +14,8 @@
     <dropColumn columnName="articulo" tableName="comite" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="00.03.00-peticion-evaluacion">
+    <dropColumn columnName="externo" tableName="peticion_evaluacion" />
+  </changeSet>
+
 </databaseChangeLog>

@@ -914,7 +914,6 @@ public class MemoriaIT extends BaseIT {
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico" + id);
-    peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);

@@ -237,7 +237,6 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     return peticionEvaluacionRepository.findById(peticionEvaluacionActualizar.getId()).map(peticionEvaluacion -> {
       peticionEvaluacion.setCodigo(peticionEvaluacionActualizar.getCodigo());
       peticionEvaluacion.setDisMetodologico(peticionEvaluacionActualizar.getDisMetodologico());
-      peticionEvaluacion.setExterno(peticionEvaluacionActualizar.getExterno());
       peticionEvaluacion.setFechaFin(peticionEvaluacionActualizar.getFechaFin());
       peticionEvaluacion.setFechaInicio(peticionEvaluacionActualizar.getFechaInicio());
       peticionEvaluacion.setFuenteFinanciacion(peticionEvaluacionActualizar.getFuenteFinanciacion());
