@@ -32,7 +32,6 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
   ) {
     super(key);
     this.peticionEvaluacion = {
-      externo: false,
       solicitante: { id: sgiAuthService.authStatus$.getValue().userRefId } as IPersona,
       activo: true
     } as IPeticionEvaluacion;

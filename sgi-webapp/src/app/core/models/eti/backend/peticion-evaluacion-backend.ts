@@ -37,8 +37,6 @@ export interface IPeticionEvaluacionBackend {
   objetivos: string;
   /** Diseño metodológico */
   disMetodologico: string;
-  /** Externo */
-  externo: boolean;
   /** Tiene fondos propios */
   tieneFondosPropios: boolean;
   /** Referencia persona solicitante */
