@@ -278,6 +278,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
           return this.formularioService.completado(this.memoria.id, this.formularioTipo);
         }
 
+        this.refreshBlockChanges();
+
         return of(void 0);
       })
     );
@@ -843,4 +845,13 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     return JSON.stringify(respuesta?.valor) !== JSON.stringify(respuestaAnterior?.valor);
   }
 
+  private refreshBlockChanges() {
+    this.blocks$.value.forEach((block) => {
+      block.formlyData.fields.forEach((f) => {
+        if (f.group) {
+          f.group.refreshInitialState();
+        }
+      });
+    });
+  }
 }
