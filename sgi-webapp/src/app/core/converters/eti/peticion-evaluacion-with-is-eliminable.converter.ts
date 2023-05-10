@@ -30,6 +30,7 @@ class PeticionEvaluacionWithIsEliminableConverter
       disMetodologico: value.disMetodologico,
       tieneFondosPropios: value.tieneFondosPropios,
       solicitante: { id: value.personaRef } as IPersona,
+      tutor: { id: value.tutorRef } as IPersona,
       activo: value.activo,
       checklistId: value.checklistId,
       eliminable: value.eliminable
@@ -62,6 +63,7 @@ class PeticionEvaluacionWithIsEliminableConverter
       personaRef: value.solicitante?.id,
       activo: value.activo,
       checklistId: value.checklistId,
+      tutorRef: value.tutor?.id,
       eliminable: value.eliminable
     };
   }

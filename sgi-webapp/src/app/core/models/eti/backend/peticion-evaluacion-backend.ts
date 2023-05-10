@@ -43,6 +43,8 @@ export interface IPeticionEvaluacionBackend {
   personaRef: string;
   /** Identificador checklist */
   checklistId: number;
+  /** Referencia tutor */
+  tutorRef: string;
   /** Activo */
   activo: boolean;
 }

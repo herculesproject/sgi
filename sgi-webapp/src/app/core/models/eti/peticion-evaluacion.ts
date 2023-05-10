@@ -45,6 +45,8 @@ export interface IPeticionEvaluacion {
   solicitante: IPersona;
   /** Identificador checklist */
   checklistId: number;
+  /** Referencia tutor */
+  tutor: IPersona;
   /** Activo */
   activo: boolean;
 }

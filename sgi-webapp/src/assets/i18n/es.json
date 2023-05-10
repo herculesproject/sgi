@@ -2128,6 +2128,7 @@
   "eti.peticion-evaluacion.tipo-valor-social.INVESTIGACION_PROTECCION": "Investigación aplicada a la protección o mejora de las condiciones sociales, políticas, económicas o ambientales en interés del bienestar y/o la salud de los seres humanos",
   "eti.peticion-evaluacion.tipo-valor-social.OTRA_FINALIDAD": "Otra finalidad",
   "eti.peticion-evaluacion.titulo": "Título",
+  "eti.peticion-evaluacion.tutor": "Director/a o Tutor/a",
   "eti.peticion-evaluacion.valor-social": "Valor social",
   "eti.root.title": "Inicio",
   "eti.seguimiento": "Seguimiento{count,plural,=0{} one{} other{s}}",
