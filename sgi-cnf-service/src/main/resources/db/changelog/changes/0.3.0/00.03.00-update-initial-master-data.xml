@@ -36,6 +36,23 @@
         <param name="name" value="web-header-logo-feder" />
       </whereParams>
     </update>
+
+    <!-- report mxx -->
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-mxx.prpt" />
+     <where>:name=:value AND dbms_lob.compare(value, default_value) = 0</where>
+      <whereParams>
+        <param name="name" value="rep-eti-mxx-prpt" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-mxx.prpt" />
+     <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-mxx-prpt" />
+      </whereParams>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="00.03.00-resources-update-!oracle" dbms="!oracle">
@@ -53,6 +70,23 @@
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="web-header-logo-feder" />
+      </whereParams>
+    </update>
+
+    <!-- report mxx -->
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-mxx.prpt" />
+     <where>:name=:value AND value=default_value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-mxx-prpt" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-mxx.prpt" />
+     <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-mxx-prpt" />
       </whereParams>
     </update>
 
