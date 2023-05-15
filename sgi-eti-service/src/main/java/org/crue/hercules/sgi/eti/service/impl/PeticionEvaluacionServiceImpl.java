@@ -253,6 +253,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       peticionEvaluacion.setExisteFinanciacion(peticionEvaluacionActualizar.getExisteFinanciacion());
       peticionEvaluacion.setEstadoFinanciacion(peticionEvaluacionActualizar.getEstadoFinanciacion());
       peticionEvaluacion.setImporteFinanciacion(peticionEvaluacionActualizar.getImporteFinanciacion());
+      peticionEvaluacion.setTutorRef(peticionEvaluacionActualizar.getTutorRef());
 
       PeticionEvaluacion returnValue = peticionEvaluacionRepository.save(peticionEvaluacion);
       log.debug("update(PeticionEvaluacion peticionEvaluacionActualizar) - end");

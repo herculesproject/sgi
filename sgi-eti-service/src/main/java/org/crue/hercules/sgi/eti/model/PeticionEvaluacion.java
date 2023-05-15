@@ -165,6 +165,10 @@ public class PeticionEvaluacion extends BaseEntity {
   @Column(name = "checklistId")
   private Long checklistId;
 
+  /** Referencia tutor */
+  @Column(name = "tutor_ref", length = 250, nullable = true)
+  private String tutorRef;
+
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   private Boolean activo;

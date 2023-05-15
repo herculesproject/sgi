@@ -16,6 +16,9 @@
 
   <changeSet author="user (generated)" id="00.03.00-peticion-evaluacion">
     <dropColumn columnName="externo" tableName="peticion_evaluacion" />
+    <addColumn tableName="peticion_evaluacion">
+      <column name="tutor_ref" type="VARCHAR(255)" />
+    </addColumn>
   </changeSet>
 
 </databaseChangeLog>

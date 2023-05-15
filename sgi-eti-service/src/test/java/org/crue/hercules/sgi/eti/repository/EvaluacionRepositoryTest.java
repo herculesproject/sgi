@@ -454,7 +454,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
         tipoActividad, tipoInvestigacionTutelada, false, "Fuente financiación", null, null, Instant.now(),
         Instant.now(), "Resumen", TipoValorSocial.ENSENIANZA_SUPERIOR, "Otro valor social", "Objetivos",
-        "DiseñoMetodologico", Boolean.FALSE, "user-001", null, Boolean.TRUE);
+        "DiseñoMetodologico", Boolean.FALSE, "user-001", null, null, Boolean.TRUE);
   }
 
   /**
