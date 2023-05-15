@@ -63,7 +63,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       objetivosCientificos: [{ value: '', disabled: this.readonly }, [Validators.required, Validators.maxLength(4000)]],
       disenioMetodologico: [{ value: '', disabled: this.readonly }, [Validators.required, Validators.maxLength(4000)]],
       tieneFondosPropios: [{ value: '', disabled: this.readonly }],
-      tutor: [{ value: null, disabled: this.readonly }, [Validators.required]]
+      tutor: [{ value: null, disabled: this.readonly }]
     });
 
     this.subscriptions.push(form.controls.existeFinanciacion.valueChanges.subscribe((value: boolean) => {

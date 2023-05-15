@@ -35,7 +35,7 @@
     </mat-form-field>
     <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
       <!-- Tipo de actividad-->
-      <mat-form-field fxFlex="20%">
+      <mat-form-field fxFlex="15%">
         <mat-label>{{'eti.peticion-evaluacion.tipo-actividad' | translate}}</mat-label>
         <sgi-select-entity formControlName="tipoActividad" [options]="tipoActividades$ | async" required>
         </sgi-select-entity>
@@ -59,17 +59,17 @@
         <mat-form-field>
           <mat-label>{{'eti.peticion-evaluacion.tutor' | translate}}</mat-label>
           <sgi-select-persona placeholder="{{'eti.peticion-evaluacion.tutor' | translate}}" formControlName="tutor"
-            [tipoColectivo]="tipoColectivoTutor" required>
+            [tipoColectivo]="tipoColectivoTutor" [required]="isInvestigacionTutelada$.getValue()">
           </sgi-select-persona>
-          <mat-error *ngIf="formGroup.controls.tutor.errors?.required">
+          <mat-error *ngIf="isInvestigacionTutelada$.getValue() && formGroup.controls.tutor.errors?.required">
             {{'error.required.entity' | translate:msgParamTutorEntity}}
           </mat-error>
         </mat-form-field>
       </ng-container>
     </div>
-    <div fxFlex="80" fxLayout="row" fxLayoutGap="10px">
+    <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
       <!-- Existe financiación -->
-      <mat-form-field fxFlex="10%">
+      <mat-form-field fxFlex="30%">
         <mat-label>{{'eti.peticion-evaluacion.existe-financiacion' | translate}}</mat-label>
         <sgi-select-boolean formControlName="existeFinanciacion" required></sgi-select-boolean>
         <mat-error *ngIf="formGroup.controls.existeFinanciacion.errors?.required">
@@ -77,7 +77,7 @@
         </mat-error>
       </mat-form-field>
       <!-- Órgano financiador-->
-      <mat-form-field>
+      <mat-form-field fxFlex="40%">
         <mat-label>{{'eti.peticion-evaluacion.organo-financiador' | translate}}</mat-label>
         <input #nombre matInput formControlName="financiacion" type="text"
           [required]="FormGroupUtil.hasValidator(this.formGroup,'financiacion','required')" maxlength="100">
@@ -102,9 +102,9 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <div fxFlex="50" fxLayout="row" fxLayoutGap="10px">
+    <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
       <!-- Estado financiación -->
-      <mat-form-field fxFlex="25%">
+      <mat-form-field fxFlex="15%">
         <mat-label>{{'eti.peticion-evaluacion.estado-financiacion' | translate}}</mat-label>
         <sgi-select-enum formControlName="estadoFinanciacion" [enumMap]="ESTADO_FINANCIACION_MAP"
           [required]="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required')"></sgi-select-enum>
@@ -188,7 +188,7 @@
       </mat-form-field>
     </ng-container>
     <!-- Objetivos científicos -->
-    <mat-form-field class="m-bottom-10">
+    <mat-form-field class="m-bottom-10" fxFlex="100%">
       <mat-label>{{'eti.peticion-evaluacion.objetivo-cientifico' | translate:msgParamObjetivoCientificoEntity}}
       </mat-label>
       <textarea matInput #objetivosCientificos formControlName="objetivosCientificos" required></textarea>
@@ -201,7 +201,7 @@
       </mat-error>
     </mat-form-field>
     <!-- Diseño metodológico -->
-    <mat-form-field class="m-bottom-10">
+    <mat-form-field class="m-bottom-10" fxFlex="99%">
       <mat-label>{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}</mat-label>
       <textarea matInput #disenioMetodologico formControlName="disenioMetodologico" required></textarea>
       <mat-hint>{{disenioMetodologico.value?.length}} / 4000</mat-hint>

@@ -216,11 +216,14 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     if (tipoActividad?.id === 3) {
       this.isInvestigacionTutelada$.next(true);
       this.formGroup.controls.tipoInvestigacionTutelada.setValidators([Validators.required]);
+      this.formGroup.controls.tutor.setValidators([Validators.required]);
     } else {
       this.isInvestigacionTutelada$.next(false);
       this.formGroup.controls.tipoInvestigacionTutelada.clearValidators();
+      this.formGroup.controls.tutor.clearValidators();
     }
     this.formGroup.controls.tipoInvestigacionTutelada.updateValueAndValidity();
+    this.formGroup.controls.tutor.updateValueAndValidity();
   }
 
   ngOnDestroy(): void {
