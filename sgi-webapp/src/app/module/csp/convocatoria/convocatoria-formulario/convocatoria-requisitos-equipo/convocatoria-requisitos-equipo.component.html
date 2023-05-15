@@ -81,7 +81,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumnsNivelAcademico;"></tr>
         </table>
         <div class="separation-button" *ngIf="formPart.hasEditPerm">
-          <button color="three" color="accent" mat-icon-button mat-raised-button (click)="openModalNivelAcademico()">
+          <button color="three" color="accent" mat-button mat-raised-button (click)="openModalNivelAcademico()">
             <mat-icon>add_circle</mat-icon>
             {{ 'btn.add.entity' | translate:msgParamNivelAcademicoEntity }}
           </button>
@@ -178,10 +178,9 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumnsCategoriaProfesional;"></tr>
         </table>
         <div class="separation-button" *ngIf="formPart.hasEditPerm">
-          <button color="three" mat-icon-button color="accent" mat-raised-button
+          <button color="three" mat-button color="accent" mat-raised-button
             (click)="openModalClasificacionProfesional()" [disabled]="disableAddCategoriaProfesional$ | async">
-            <mat-icon>add_circle</mat-icon>
-            {{ 'btn.add.entity' | translate:msgParamCategoriaProfesionalEntity }}
+            <mat-icon>add_circle</mat-icon> {{ 'btn.add.entity' | translate:msgParamCategoriaProfesionalEntity }}
           </button>
         </div>
       </div>
