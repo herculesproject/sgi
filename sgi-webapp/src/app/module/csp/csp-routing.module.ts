@@ -23,6 +23,7 @@ const MSG_TIPO_FINANCIACION_TITLE = marker('menu.csp.configuraciones.tipos-finan
 const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.csp.configuraciones.fuentes-financiacion');
 const MSG_AREA_TEMATICA_TITLE = marker('menu.csp.configuraciones.areas-tematicas');
 const MSG_EJECUCION_ECONOMICA_TITLE = marker('menu.csp.ejecucion-economica');
+const MSG_TIPO_ORIGEN_FUENTE_FINANCIACION_TITLE = marker('menu.csp.tipos-origen-fuente-financiacion');
 const MSG_NOTIFICACION_PRESUPUESTO_SGE_TITLE = marker('menu.csp.notificacion-presupuesto-sge');
 const PROYECTO_KEY = marker('csp.proyectos');
 const AUTORIZACION_KEY = marker('csp.autorizacion');
@@ -244,6 +245,19 @@ const routes: SgiRoutes = [
           title: MSG_EJECUCION_ECONOMICA_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
           hasAnyAuthorityForAnyUO: ['CSP-EJEC-V', 'CSP-EJEC-E', 'CSP-EJEC-INV-VR']
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_ORIGEN_FUENTE_FINANCIACION,
+        loadChildren: () =>
+          import('./tipo-origen-fuente-financiacion/tipo-origen-fuente-financiacion.module').then(
+            (m) => m.TipoOrigenFuenteFinanciacionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPO_ORIGEN_FUENTE_FINANCIACION_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.SINGULAR,
+          hasAnyAuthorityForAnyUO: ['CSP-TOFF-V', 'CSP-TOFF-C', 'CSP-TOFF-E', 'CSP-TOFF-B', 'CSP-TOFF-R']
         }
       },
       {

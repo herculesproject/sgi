@@ -43,13 +43,19 @@
     [route]="urlSistemaGestionExterno" icon="logout" [title]="nombreSistemaGestionExterno">
   </sgi-menu-item-external>
 
-  <sgi-menu-group *sgiHasAnyAuthorityForAnyUO="['CSP-TFASE-V', 'CSP-TFASE-C', 'CSP-TFASE-E','CSP-TFASE-B', 'CSP-TFASE-R','CSP-TFIN-V', 'CSP-TFIN-C','CSP-TFIN-E', 
+  <sgi-menu-group
+    *sgiHasAnyAuthorityForAnyUO="['CSP-TFASE-V', 'CSP-TFASE-C', 'CSP-TFASE-E','CSP-TFASE-B', 'CSP-TFASE-R','CSP-TFIN-V', 'CSP-TFIN-C','CSP-TFIN-E', 
       'CSP-TFIN-B', 'CSP-TFIN-R', 'CSP-TDOC-V', 'CSP-TDOC-C', 'CSP-TDOC-E', 'CSP-TDOC-B', 'CSP-TDOC-R', 'CSP-TENL-V', 'CSP-TENL-C', 'CSP-TENL-E',
        'CSP-TENL-B', 'CSP-TENL-R', 'CSP-THITO-V', 'CSP-THITO-C', 'CSP-THITO-E', 'CSP-THITO-B', 'CSP-THITO-R', 'CSP-ME-V', 'CSP-ME-C', 'CSP-ME-E',
        'CSP-ME-B', 'CSP-ME-R', 'CSP-PRG-V', 'CSP-PRG-C', 'CSP-PRG-E', 'CSP-PRG-B', 'CSP-PRG-R', 'CSP-AREA-V', 'CSP-AREA-C', 'CSP-AREA-E', 'CSP-AREA-B',
        'CSP-AREA-R', 'CSP-FNT-V', 'CSP-FNT-C', 'CSP-FNT-E', 'CSP-FNT-B', 'CSP-FNT-R', 'CSP-TFNA-V', 'CSP-TFNA-C', 'CSP-TFNA-E', 'CSP-TFNA-B', 'CSP-TFNA-R',
-       'CSP-TGTO-V', 'CSP-TGTO-C', 'CSP-TGTO-E', 'CSP-TGTO-B', 'CSP-TGTO-R']"
+       'CSP-TGTO-V', 'CSP-TGTO-C', 'CSP-TGTO-E', 'CSP-TGTO-B', 'CSP-TGTO-R', 'CSP-TOFF-V', 'CSP-TOFF-C', 'CSP-TOFF-E', 'CSP-TOFF-B', 'CSP-TOFF-R']"
     title="{{'menu.csp.configuraciones' | translate}}" icon="settings">
+
+    <sgi-menu-subitem *sgiHasAnyAuthority="['CSP-TOFF-V', 'CSP-TOFF-C', 'CSP-TOFF-E', 'CSP-TOFF-B', 'CSP-TOFF-R']"
+      [route]="[CSP_ROUTE_NAMES.TIPO_ORIGEN_FUENTE_FINANCIACION]"
+      title="{{'menu.csp.tipo-origen-fuente-financiacion' | translate}}">
+    </sgi-menu-subitem>
 
     <sgi-menu-subitem *sgiHasAnyAuthority="['CSP-TFASE-V', 'CSP-TFASE-C', 'CSP-TFASE-E','CSP-TFASE-B','CSP-TFASE-R']"
       [route]="[CSP_ROUTE_NAMES.TIPO_FASE]" title="{{'csp.tipo-fase' |

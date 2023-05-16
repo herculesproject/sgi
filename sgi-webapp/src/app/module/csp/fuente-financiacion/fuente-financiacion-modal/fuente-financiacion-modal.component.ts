@@ -7,7 +7,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
-import { TipoOrigenFuenteFinanciacionService } from '@core/services/csp/tipo-origen-fuente-financiacion.service';
+import { TipoOrigenFuenteFinanciacionService } from '@core/services/csp/tipo-origen-fuente-financiacion/tipo-origen-fuente-financiacion.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
