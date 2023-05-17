@@ -29,6 +29,7 @@ const PROYECTO_KEY = marker('csp.proyectos');
 const AUTORIZACION_KEY = marker('csp.autorizacion');
 const NOTIFICACION_CVN_KEY = marker('csp.notificacion-cvn');
 const MSG_GRUPO_TITLE = marker('csp.grupo');
+const MSG_TIPO_REGIMEN_CONCURRENCIA_TITLE = marker('csp.tipo-regimen-concurrencia');
 
 const routes: SgiRoutes = [
   {
@@ -310,6 +311,19 @@ const routes: SgiRoutes = [
           title: MSG_GRUPO_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAnyAuthorityForAnyUO: ['CSP-GIN-V', 'CSP-GIN-E', 'CSP-GIN-C', 'CSP-GIN-B', 'CSP-GIN-R']
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.TIPOS_REGIMEN_CONCURRENCIA,
+        loadChildren: () =>
+          import('./tipo-regimen-concurrencia/tipo-regimen-concurrencia.module').then(
+            (m) => m.TipoRegimenConcurrenciaModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPO_REGIMEN_CONCURRENCIA_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthorityForAnyUO: ['CSP-TRCO-V', 'CSP-TRCO-E', 'CSP-TRCO-C', 'CSP-TRCO-B', 'CSP-TRCO-R']
         }
       },
       { path: '**', component: null }

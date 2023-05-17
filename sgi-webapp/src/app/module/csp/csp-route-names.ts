@@ -19,5 +19,6 @@ export const CSP_ROUTE_NAMES = {
   NOTIFICACION_PRESUPUESTO_SGE: 'notificacion-presupuesto-sge',
   AUTORIZACION: 'autorizaciones',
   NOTIFICACION_CVN: 'notificaciones-cvn',
-  GRUPO: 'grupos-investigacion'
+  GRUPO: 'grupos-investigacion',
+  TIPOS_REGIMEN_CONCURRENCIA: 'tipos-regimen-concurrencia',
 };

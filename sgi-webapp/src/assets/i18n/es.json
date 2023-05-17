@@ -118,6 +118,8 @@
   "confirmacion.csp.solicitud.cambio-estado": "¿Está seguro que desea realizar el cambio de estado?",
   "csp": "CSP - Convocatorias, Solicitudes y Proyectos",
   "csp.agrupacion-gasto-concepto": "Agrupacion Gasto Concepto",
+  "csp.tipo-regimen-concurrencia": "Tipo{ count, plural, =0{} one{} other{s}} de régimen de concurrencia",
+  "csp.tipo-regimen-concurrencia.nombre": "Nombre",
   "csp.area": "Área{count,plural,=0{} one{} other{s}}",
   "csp.area-tematica": "Área{count,plural,=0{} one{} other{s}} Temática{count,plural,=0{} one{} other{s}}",
   "csp.area-tematica-arbol.descripcion": "Nombre del área temática",

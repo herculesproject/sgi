@@ -10,7 +10,7 @@ import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
-import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia.service';
+import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrenccia/tipo-regimen-concurrencia.service';
 import { DialogService } from '@core/services/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
