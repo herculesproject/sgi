@@ -2331,7 +2331,7 @@
   "menu.csp.solicitudes.desgloses-presupuesto": "Desglose Presupuesto",
   "menu.csp.solicitudes.entidades-financiadoras": "Entidades Financiadoras",
   "menu.csp.solicitudes.equipos-proyecto": "Equipo",
-  "menu.csp.tipo-origen-fuente-financiacion": "Tipo origen fuente financiación",
+  "menu.csp.tipo-origen-fuente-financiacion": "Tipo{count, plural, =0{} one{} other{s}} de origen de fuente de financiación",
   "menu.csp.solicitudes.historicos-estados": "Histórico Estados",
   "menu.csp.timesheet": "Timesheet",
   "menu.eti.evaluacion": "Evaluaci{count,plural,=0{} one{ón} other{ones}}",
