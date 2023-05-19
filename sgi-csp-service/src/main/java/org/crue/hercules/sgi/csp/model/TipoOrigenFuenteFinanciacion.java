@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.crue.hercules.sgi.csp.model.FuenteFinanciacion.OnActualizar;
 import org.crue.hercules.sgi.csp.validation.UniqueNombreTipoOrigenFuenteFinanciacionActiva;
 import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
 
@@ -27,7 +26,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @UniqueNombreTipoOrigenFuenteFinanciacionActiva(groups = { BaseEntity.Update.class, BaseEntity.Create.class,
     BaseActivableEntity.OnActivar.class })
-@ActivableIsActivo(entityClass = TipoOrigenFuenteFinanciacion.class, groups = { OnActualizar.class })
+@ActivableIsActivo(entityClass = TipoOrigenFuenteFinanciacion.class, groups = {
+    TipoOrigenFuenteFinanciacion.OnActualizar.class })
 public class TipoOrigenFuenteFinanciacion extends BaseActivableEntity {
   public static final int NOMBRE_LENGTH = 50;
 

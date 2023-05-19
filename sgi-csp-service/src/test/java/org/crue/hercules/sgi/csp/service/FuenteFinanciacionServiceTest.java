@@ -291,7 +291,7 @@ class FuenteFinanciacionServiceTest extends BaseServiceTest {
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion))
-        .isInstanceOf(ValidationException.class);
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
