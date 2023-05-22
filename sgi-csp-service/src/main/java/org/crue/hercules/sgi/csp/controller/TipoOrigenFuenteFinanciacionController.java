@@ -196,10 +196,10 @@ public class TipoOrigenFuenteFinanciacionController {
 
   private TipoOrigenFuenteFinanciacion convert(Long id,
       TipoOrigenFuenteFinanciacionInput tipoOrigenfuenteFinanciacionInput) {
-    TipoOrigenFuenteFinanciacion fuenteFinanciacion = modelMapper.map(tipoOrigenfuenteFinanciacionInput,
+    TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = modelMapper.map(tipoOrigenfuenteFinanciacionInput,
         TipoOrigenFuenteFinanciacion.class);
-    fuenteFinanciacion.setId(id);
-    return fuenteFinanciacion;
+    tipoOrigenFuenteFinanciacion.setId(id);
+    return tipoOrigenFuenteFinanciacion;
   }
 
   private Page<TipoOrigenFuenteFinanciacionOutput> convert(Page<TipoOrigenFuenteFinanciacion> page) {

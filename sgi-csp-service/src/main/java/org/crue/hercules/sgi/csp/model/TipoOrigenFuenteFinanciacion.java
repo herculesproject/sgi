@@ -24,7 +24,8 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @SuperBuilder
-@UniqueNombreTipoOrigenFuenteFinanciacionActiva(groups = { BaseEntity.Update.class, BaseEntity.Create.class,
+@UniqueNombreTipoOrigenFuenteFinanciacionActiva(groups = {
+    TipoOrigenFuenteFinanciacion.OnActualizar.class, TipoOrigenFuenteFinanciacion.OnCrear.class,
     BaseActivableEntity.OnActivar.class })
 @ActivableIsActivo(entityClass = TipoOrigenFuenteFinanciacion.class, groups = {
     TipoOrigenFuenteFinanciacion.OnActualizar.class })
