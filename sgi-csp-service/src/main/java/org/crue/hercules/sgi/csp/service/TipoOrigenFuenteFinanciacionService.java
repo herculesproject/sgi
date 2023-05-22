@@ -9,6 +9,7 @@ import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoOrigenFuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion.OnActivar;
+import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
 import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
 import org.crue.hercules.sgi.csp.repository.TipoOrigenFuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoOrigenFuenteFinanciacionSpecification;
@@ -111,7 +112,7 @@ public class TipoOrigenFuenteFinanciacionService {
       }
       // Invocar validaciones asociadas a OnActivar
       Set<ConstraintViolation<TipoOrigenFuenteFinanciacion>> result = validator.validate(tipoOrigenFuenteFinanciacion,
-          OnActivar.class);
+          BaseActivableEntity.OnActivar.class);
       if (!result.isEmpty()) {
         throw new ConstraintViolationException(result);
       }

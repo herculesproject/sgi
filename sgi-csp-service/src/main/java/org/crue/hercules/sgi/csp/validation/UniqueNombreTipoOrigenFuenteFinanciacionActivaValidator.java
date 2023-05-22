@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.crue.hercules.sgi.csp.model.LineaInvestigacion;
 import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
 import org.crue.hercules.sgi.csp.repository.TipoOrigenFuenteFinanciacionRepository;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
