@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.cnf.controller;
+package org.crue.hercules.sgi.cnf.controller.publico;
 
 import java.util.concurrent.TimeUnit;
 
