@@ -96,8 +96,4 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     return this.findById('url-sistema-gestion-externo').pipe(map(value => value?.value ?? null));
   }
 
-  getNumeroLogosCabecera(): Observable<string> {
-    return this.findById('web-numero-logos-header').pipe(map(value => value?.value ?? null));
-  }
-
 }

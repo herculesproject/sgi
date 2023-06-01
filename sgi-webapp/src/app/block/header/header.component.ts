@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Module } from '@core/module';
-import { ConfigService } from '@core/services/cnf/config.service';
+import { ConfigPublicService } from '@core/services/cnf/config-public.service';
 import { ResourcePublicService } from '@core/services/cnf/resource-public.service';
 import { LayoutService } from '@core/services/layout.service';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ export class HeaderComponent implements OnDestroy {
   constructor(
     private readonly layout: LayoutService,
     private readonly resourceService: ResourcePublicService,
-    private configService: ConfigService
+    private configService: ConfigPublicService
   ) {
     this.anchoPantalla = window.innerWidth;
     this.subscriptions.push(this.layout.activeModule$.subscribe((res) => this.module = res));
