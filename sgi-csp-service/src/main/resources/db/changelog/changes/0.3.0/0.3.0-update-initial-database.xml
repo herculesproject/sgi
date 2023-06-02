@@ -27,6 +27,8 @@
       tableName="tipo_origen_fuente_financiacion" />
     <dropUniqueConstraint constraintName="UK_TIPOREGIMENCONCURRENCIA_NOMBRE"
       tableName="tipo_regimen_concurrencia" />
+    <dropUniqueConstraint constraintName="UK_TIPOAMBITOGEOGRAFICO_NOMBRE"
+      tableName="tipo_ambito_geografico" />
   </changeSet>
 
 </databaseChangeLog>
