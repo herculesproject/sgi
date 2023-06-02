@@ -66,6 +66,12 @@
       [route]="[CSP_ROUTE_NAMES.TIPO_FASE]" title="{{'csp.tipo-fase' |
               translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
     </sgi-menu-subitem>
+
+    <sgi-menu-subitem *sgiHasAnyAuthority="['CSP-TAGE-V', 'CSP-TAGE-C', 'CSP-TAGE-E','CSP-TAGE-B','CSP-TAGE-R']"
+      [route]="[CSP_ROUTE_NAMES.TIPOS_AMBITO_GEOGRAFICO]"
+      title="{{'menu.csp.tipo-ambito-geografico' | translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
+    </sgi-menu-subitem>
+
     <sgi-menu-subitem *sgiHasAnyAuthority="['CSP-TFIN-V','CSP-TFIN-C','CSP-TFIN-E', 'CSP-TFIN-B', 'CSP-TFIN-R']"
       [route]="[CSP_ROUTE_NAMES.TIPO_FINALIDAD]" title="{{'csp.tipo-finalidad' |
         translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">

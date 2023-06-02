@@ -21,4 +21,5 @@ export const CSP_ROUTE_NAMES = {
   NOTIFICACION_CVN: 'notificaciones-cvn',
   GRUPO: 'grupos-investigacion',
   TIPOS_REGIMEN_CONCURRENCIA: 'tipos-regimen-concurrencia',
+  TIPOS_AMBITO_GEOGRAFICO: 'tipos-ambito-geografico',
 };

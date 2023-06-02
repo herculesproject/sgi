@@ -5,10 +5,10 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
-import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { TipoOrigenFuenteFinanciacionService } from '@core/services/csp/tipo-origen-fuente-financiacion/tipo-origen-fuente-financiacion.service';
+import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,7 +17,7 @@ import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListRes
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { TipoOrigenFuenteFinanciacionModalComponent } from '../tipo-origen-fuente-financiacion-modal/tipo-origen-fuente-financiacion-modal.component';
+import { TipoAmbitoGeograficoModalComponent } from '../tipo-ambito-geografico-modal/tipo-ambito-geografico-modal.component';
 
 const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
 const MSG_UPDATE_SUCCESS = marker('msg.update.entity.success');
@@ -27,17 +27,18 @@ const MSG_ERROR_DEACTIVATE = marker('error.csp.deactivate.entity');
 const MSG_REACTIVE = marker('msg.csp.reactivate');
 const MSG_SUCCESS_REACTIVE = marker('msg.reactivate.entity.success');
 const MSG_ERROR_REACTIVE = marker('error.reactivate.entity');
-const TIPO_ORIGEN_FUENTE_FINANCIACION_KEY = marker('csp.tipo-origen-fuente-financiacion');
+const TIPO_AMBITO_GEOGRAFICO_KEY = marker('csp.tipo-ambito-geografico');
+
 @Component({
-  selector: 'sgi-tipo-origen-fuente-financiacion-listado',
-  templateUrl: './tipo-origen-fuente-financiacion-listado.component.html',
-  styleUrls: ['./tipo-origen-fuente-financiacion-listado.component.scss']
+  selector: 'sgi-tipo-ambito-geografico-listado',
+  templateUrl: './tipo-ambito-geografico-listado.component.html',
+  styleUrls: ['./tipo-ambito-geografico-listado.component.scss']
 })
-export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTablePaginationComponent<ITipoOrigenFuenteFinanciacion> implements OnInit {
+export class TipoAmbitoGeograficoListadoComponent extends AbstractTablePaginationComponent<ITipoAmbitoGeografico> implements OnInit {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  tiposOrigenFuenteFinanciacion$: Observable<ITipoOrigenFuenteFinanciacion[]>;
+  tiposAmbitoGeograficos$: Observable<ITipoAmbitoGeografico[]>;
 
   msgParamEntity = {};
 
@@ -53,7 +54,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly tipoOrigenFuenteFinanciacionService: TipoOrigenFuenteFinanciacionService,
+    private readonly tipoAmbitoGeografico: TipoAmbitoGeograficoService,
     private matDialog: MatDialog,
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService,
@@ -84,12 +85,12 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
 
   private setupI18N(): void {
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
 
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -101,7 +102,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
     ).subscribe((value) => this.textoCrearSuccess = value);
 
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -113,7 +114,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
     ).subscribe((value) => this.textoUpdateSuccess = value);
 
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -125,7 +126,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
     ).subscribe((value) => this.textoDesactivar = value);
 
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -137,7 +138,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
     ).subscribe((value) => this.textoErrorDesactivar = value);
 
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -150,7 +151,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
 
 
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -162,7 +163,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
     ).subscribe((value) => this.textoReactivar = value);
 
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -175,7 +176,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
 
 
     this.translate.get(
-      TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
+      TIPO_AMBITO_GEOGRAFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {
@@ -188,8 +189,8 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
 
   }
 
-  protected createObservable(reset?: boolean): Observable<SgiRestListResult<ITipoOrigenFuenteFinanciacion>> {
-    return this.tipoOrigenFuenteFinanciacionService.findTodos(this.getFindOptions(reset));
+  protected createObservable(reset?: boolean): Observable<SgiRestListResult<ITipoAmbitoGeografico>> {
+    return this.tipoAmbitoGeografico.findTodos(this.getFindOptions(reset));
   }
 
   protected initColumns(): void {
@@ -201,7 +202,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
   }
 
   protected loadTable(reset?: boolean): void {
-    this.tiposOrigenFuenteFinanciacion$ = this.getObservableLoadTable(reset);
+    this.tiposAmbitoGeograficos$ = this.getObservableLoadTable(reset);
   }
 
   protected createFilter(): SgiRestFilter {
@@ -220,19 +221,19 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
   }
 
   /**
-   * Abre un modal para añadir o actualizar un tipo origen fuente financiacion
+   * Abre un modal para añadir o actualizar un tipo ambito geografico
    *
-   * @param tipoOrigenFuenteFinanciacion tipo origen fuente financiacion
+   * @param tipoAmbitoGeografico tipo ambito geografico
    */
-  openModal(tipoOrigenFuenteFinanciacion?: ITipoOrigenFuenteFinanciacion): void {
-    const config: MatDialogConfig<ITipoOrigenFuenteFinanciacion> = {
-      data: tipoOrigenFuenteFinanciacion ? Object.assign({}, tipoOrigenFuenteFinanciacion) : { activo: true } as ITipoOrigenFuenteFinanciacion
+  openModal(tipoAmbitoGeografico?: ITipoAmbitoGeografico): void {
+    const config: MatDialogConfig<ITipoAmbitoGeografico> = {
+      data: tipoAmbitoGeografico ? Object.assign({}, tipoAmbitoGeografico) : { activo: true } as ITipoAmbitoGeografico
     };
-    const dialogRef = this.matDialog.open(TipoOrigenFuenteFinanciacionModalComponent, config);
+    const dialogRef = this.matDialog.open(TipoAmbitoGeograficoModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (result: ITipoOrigenFuenteFinanciacion) => {
+      (result: ITipoAmbitoGeografico) => {
         if (result) {
-          this.snackBarService.showSuccess(tipoOrigenFuenteFinanciacion ? this.textoUpdateSuccess : this.textoCrearSuccess);
+          this.snackBarService.showSuccess(tipoAmbitoGeografico ? this.textoUpdateSuccess : this.textoCrearSuccess);
           this.loadTable();
         }
       }
@@ -240,14 +241,14 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
   }
 
   /**
-   * Desactivamos registro de tipo origen fuente financiacion
-   * @param tipoOrigenFuenteFinanciacion tipo origen fuente financiacion
+   * Desactivamos registro de tipo ambito geografico
+   * @param tipoAmbitoGeografico tipo ambito geografico
    */
-  deactivateTipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion: ITipoOrigenFuenteFinanciacion): void {
+  deactivateTipoAmbitoGeografico(tipoAmbitoGeografico: ITipoAmbitoGeografico): void {
     const subcription = this.dialogService.showConfirmation(this.textoDesactivar)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.tipoOrigenFuenteFinanciacionService.desactivar(tipoOrigenFuenteFinanciacion.id);
+          return this.tipoAmbitoGeografico.desactivar(tipoAmbitoGeografico.id);
         } else {
           return of();
         }
@@ -271,15 +272,15 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
 
 
   /**
-   * Activamos un tipo origen fuente financiacion
-   * @param tipoOrigenFuenteFinanciacion tipo origen fuente financiacion
+   * Activamos un tipo ambito geografico
+   * @param tipoAmbitoGeografico tipo ambito geografico
    */
-  activateTipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion: ITipoOrigenFuenteFinanciacion): void {
+  activateTipoAmbitoGeografico(tipoAmbitoGeografico: ITipoAmbitoGeografico): void {
     const subcription = this.dialogService.showConfirmation(this.textoReactivar)
       .pipe(switchMap((accept) => {
         if (accept) {
-          tipoOrigenFuenteFinanciacion.activo = true;
-          return this.tipoOrigenFuenteFinanciacionService.activar(tipoOrigenFuenteFinanciacion.id);
+          tipoAmbitoGeografico.activo = true;
+          return this.tipoAmbitoGeografico.activar(tipoAmbitoGeografico.id);
         } else {
           return of();
         }
@@ -290,7 +291,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
         },
         (error) => {
           this.logger.error(error);
-          tipoOrigenFuenteFinanciacion.activo = false;
+          tipoAmbitoGeografico.activo = false;
           if (error instanceof SgiError) {
             this.processError(error);
           }
