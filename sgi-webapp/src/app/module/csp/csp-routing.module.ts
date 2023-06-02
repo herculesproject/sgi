@@ -340,6 +340,19 @@ const routes: SgiRoutes = [
           hasAnyAuthority: ['CSP-TAGE-V', 'CSP-TAGE-C', 'CSP-TAGE-E', 'CSP-TAGE-B', 'CSP-TAGE-R']
         }
       },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_FACTURACION,
+        loadChildren: () =>
+          import('./tipo-facturacion/tipo-facturacion.module').then(
+            (m) => m.TipoFacturacionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPO_REGIMEN_CONCURRENCIA_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthorityForAnyUO: ['CSP-TFAC-V', 'CSP-TFAC-E', 'CSP-TFAC-C', 'CSP-TFAC-B', 'CSP-TFAC-R']
+        }
+      },
       { path: '**', component: null }
     ]
   }

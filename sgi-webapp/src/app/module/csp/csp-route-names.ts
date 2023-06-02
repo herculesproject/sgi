@@ -22,4 +22,5 @@ export const CSP_ROUTE_NAMES = {
   GRUPO: 'grupos-investigacion',
   TIPOS_REGIMEN_CONCURRENCIA: 'tipos-regimen-concurrencia',
   TIPOS_AMBITO_GEOGRAFICO: 'tipos-ambito-geografico',
+  TIPO_FACTURACION: 'tipos-facturacion',
 };
