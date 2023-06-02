@@ -31,4 +31,15 @@
       tableName="tipo_ambito_geografico" />
   </changeSet>
 
+  <changeSet id="0.3.0-4" author="master">
+    <dropColumn tableName="tipo_facturacion">
+      <column name="tipo_comunicado" />
+    </dropColumn>
+    <addColumn tableName="tipo_facturacion">
+      <column name="incluir_en_comunicado" type="boolean" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
