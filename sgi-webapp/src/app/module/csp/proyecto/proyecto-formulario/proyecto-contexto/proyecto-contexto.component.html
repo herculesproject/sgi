@@ -89,18 +89,10 @@
             <th mat-header-cell *matHeaderCellDef>{{'label.actions' | translate}}
             </th>
             <td mat-cell *matCellDef="let data">
-              <!-- Botón Seleccionar-->
-              <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E', 'CSP-PRO-C']">
-                <button color="accent" *ngIf="!data.areaTematicaProyecto" mat-icon-button
-                  matTooltip="{{'csp.proyecto.select-area-tematica' | translate}}" (click)="openModal(data)">
-                  <mat-icon>border_color</mat-icon>
-                  {{'csp.proyecto.select-area-tematica' | translate}}
-                </button>
-              </ng-container>
               <!-- Botón Editar-->
-              <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
-                <button color="primary" *ngIf="data.areaTematicaProyecto" mat-icon-button
-                  matTooltip="{{'csp.proyecto.select-area-tematica' | translate}}" (click)="openModal(data)">
+              <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E', 'CSP-PRO-C']">
+                <button color="primary" mat-icon-button matTooltip="{{'csp.proyecto.select-area-tematica' | translate}}"
+                  (click)="openModal(data)">
                   <mat-icon>border_color</mat-icon>
                 </button>
               </ng-container>
