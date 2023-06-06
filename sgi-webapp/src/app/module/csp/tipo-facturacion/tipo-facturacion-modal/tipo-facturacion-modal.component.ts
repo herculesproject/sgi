@@ -81,7 +81,7 @@ export class TipoFacturacionModalComponent extends DialogActionComponent<ITipoFa
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
       nombre: new FormControl(this.tipoFacturacion?.nombre ?? '', Validators.required),
-      incluirEnComunicado: new FormControl(this.tipoFacturacion?.incluirEnComunicado ?? '')
+      incluirEnComunicado: new FormControl(this.tipoFacturacion?.incluirEnComunicado ?? false)
     });
   }
 
