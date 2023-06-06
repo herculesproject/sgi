@@ -10,8 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-const TIPO_FASE_KEY = marker('csp.tipo-origen-fuente-financiacion');
-const TIPO_FASE_NOMBRE_KEY = marker('csp.tipo-origen-fuente-financiacion.nombre');
+const TIPO_AMBITO_GEOGRAFICO = marker('csp.tipo-ambito-geografico');
+const TIPO_AMBITO_GREOGRAFICO_NOMBRE = marker('csp.tipo-ambito-geografico.nombre');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -48,18 +48,18 @@ export class TipoAmbitoGeograficoModalComponent extends DialogActionComponent<IT
 
   private setupI18N(): void {
     this.translate.get(
-      TIPO_FASE_NOMBRE_KEY,
+      TIPO_AMBITO_GREOGRAFICO_NOMBRE,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.isEdit()) {
       this.translate.get(
-        TIPO_FASE_KEY,
+        TIPO_AMBITO_GEOGRAFICO,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.title = value);
     } else {
       this.translate.get(
-        TIPO_FASE_KEY,
+        TIPO_AMBITO_GEOGRAFICO,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).pipe(
         switchMap((value) => {
