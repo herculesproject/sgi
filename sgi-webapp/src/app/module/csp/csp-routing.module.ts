@@ -31,6 +31,7 @@ const NOTIFICACION_CVN_KEY = marker('csp.notificacion-cvn');
 const MSG_GRUPO_TITLE = marker('csp.grupo');
 const MSG_TIPO_REGIMEN_CONCURRENCIA_TITLE = marker('csp.tipo-regimen-concurrencia');
 const MSG_TIPO_AMBITO_GEOGRAFICO_TITLE = marker('csp.tipo-ambito-geografico');
+const MSG_ROL_SOCIO_PROYECTO = marker('menu.csp.rol-socio');
 
 const routes: SgiRoutes = [
   {
@@ -351,6 +352,19 @@ const routes: SgiRoutes = [
           title: MSG_TIPO_REGIMEN_CONCURRENCIA_TITLE,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAnyAuthorityForAnyUO: ['CSP-TFAC-V', 'CSP-TFAC-E', 'CSP-TFAC-C', 'CSP-TFAC-B', 'CSP-TFAC-R']
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.ROL_SOCIO_PROYECTO,
+        loadChildren: () =>
+          import('./rol-socio-proyecto/rol-socio.module').then(
+            (m) => m.RolSocioModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_ROL_SOCIO_PROYECTO,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthority: ['CSP-ROLS-V', 'CSP-ROLS-C', 'CSP-ROLS-E', 'CSP-ROLS-B', 'CSP-ROLS-R']
         }
       },
       { path: '**', component: null }

@@ -6,7 +6,6 @@ import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { RolSocioService } from '@core/services/csp/rol-socio.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -14,6 +13,7 @@ import { merge, Observable, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { ProyectoSocioDatosGeneralesFragment } from './proyecto-socio-datos-generales.fragment';
+import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 
 const MSG_ERROR_INIT = marker('error.load');
 const PROYECTO_SOCIO_IMPORTE_CONCEDIDO_KEY = marker('csp.proyecto-socio.importe-concedido');

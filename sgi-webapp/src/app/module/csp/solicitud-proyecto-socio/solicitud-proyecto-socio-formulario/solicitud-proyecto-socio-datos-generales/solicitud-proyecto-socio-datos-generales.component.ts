@@ -7,7 +7,6 @@ import { IRolSocio } from '@core/models/csp/rol-socio';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { RolSocioService } from '@core/services/csp/rol-socio.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IRange } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,6 +15,7 @@ import { merge, Observable, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 import { SolicitudProyectoSocioDatosGeneralesFragment } from './solicitud-proyecto-socio-datos-generales.fragment';
+import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 
 const MSG_ERROR_INIT = marker('error.load');
 const SOLICITUD_PROYECTO_SOCIO_IMPORTE_SOLICITADO_KEY = marker('csp.proyecto-socio.importe-solicitado');
