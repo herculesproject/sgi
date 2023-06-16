@@ -33,4 +33,6 @@ public interface RolProyectoRepository extends JpaRepository<RolProyecto, Long>,
    * @return el {@link RolProyecto} con el orden indicado.
    */
   Optional<RolProyecto> findByOrdenAndRolPrincipalIsTrueAndActivoIsTrue(Orden orden);
+
+  boolean existsByOrdenAndRolPrincipalIsTrueAndActivoIsTrue(Orden orden);
 }
