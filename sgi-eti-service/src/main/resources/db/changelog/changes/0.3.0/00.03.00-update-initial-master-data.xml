@@ -42,6 +42,37 @@
       </whereParams>
     </update>
 
+    <!-- 3.5.2 Destino de las muestras de origen humano -->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_3_5_2.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+        <param
+          name="nombre" value="Destino de las muestras de origen humano" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Muestras biológicas de origen humano')" />
+        <param
+          name="orden" valueNumeric="2" />
+      </whereParams>
+    </update>
+
+    <!-- 4.4 Información y consentimiento -->
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_4_4.json" />
+    <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+    <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+      <param
+          name="nombre" value="Información y consentimiento" />
+      <param name="orden"
+          valueNumeric="4" />
+      </whereParams>
+    </update>
+
     <!-- 5.2 Documento de cesión de datos -->
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m10_apartado_5_2.json" />
