@@ -32,6 +32,7 @@ const MSG_GRUPO_TITLE = marker('csp.grupo');
 const MSG_TIPO_REGIMEN_CONCURRENCIA_TITLE = marker('csp.tipo-regimen-concurrencia');
 const MSG_TIPO_AMBITO_GEOGRAFICO_TITLE = marker('csp.tipo-ambito-geografico');
 const MSG_ROL_SOCIO_PROYECTO = marker('menu.csp.rol-socio');
+const MSG_ROL_EQUIPO_TITLE = marker('csp.rol-equipo');
 
 const routes: SgiRoutes = [
   {
@@ -365,6 +366,19 @@ const routes: SgiRoutes = [
           title: MSG_ROL_SOCIO_PROYECTO,
           titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
           hasAnyAuthority: ['CSP-ROLS-V', 'CSP-ROLS-C', 'CSP-ROLS-E', 'CSP-ROLS-B', 'CSP-ROLS-R']
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.ROL_EQUIPO,
+        loadChildren: () =>
+          import('./rol-equipo/rol-equipo.module').then(
+            (m) => m.RolEquipoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_ROL_EQUIPO_TITLE,
+          titleParams: MSG_PARAMS.CARDINALIRY.PLURAL,
+          hasAnyAuthorityForAnyUO: ['CSP-ROLE-V', 'CSP-ROLE-E', 'CSP-ROLE-C', 'CSP-ROLE-B', 'CSP-ROLE-R']
         }
       },
       { path: '**', component: null }

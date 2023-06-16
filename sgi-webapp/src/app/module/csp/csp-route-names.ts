@@ -24,4 +24,5 @@ export const CSP_ROUTE_NAMES = {
   TIPOS_AMBITO_GEOGRAFICO: 'tipos-ambito-geografico',
   TIPO_FACTURACION: 'tipos-facturacion',
   ROL_SOCIO_PROYECTO: 'roles-socio-proyecto',
+  ROL_EQUIPO: 'rol-equipo',
 };

@@ -6,7 +6,7 @@ import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IMiembroEquipoSolicitud } from '@core/models/csp/miembro-equipo-solicitud';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { NumberValidator } from '@core/validators/number-validator';

@@ -18,7 +18,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';

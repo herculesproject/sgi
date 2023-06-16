@@ -8,7 +8,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RelacionEjecucionEconomicaService } from '@core/services/csp/relacion-ejecucion-economica/relacion-ejecucion-economica.service';
-import { RolProyectoService } from '@core/services/csp/rol-proyecto.service';
+import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';

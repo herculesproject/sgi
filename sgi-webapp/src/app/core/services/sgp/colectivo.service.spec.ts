@@ -1,23 +1,24 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ColectivoService } from './colectivo.service';
 
-import { RolProyectoService } from './rol-proyecto.service';
-
-describe('RolProyectoService', () => {
-  let service: RolProyectoService;
+describe('ColectivoService', () => {
+  let service: ColectivoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        BrowserAnimationsModule,
-        HttpClientTestingModule,
-        LoggerTestingModule
-      ]
+        LoggerTestingModule,
+        SgiAuthModule
+      ],
+      providers: [
+        SgiAuthService
+      ],
     });
-    service = TestBed.inject(RolProyectoService);
+    service = TestBed.inject(ColectivoService);
   });
 
   it('should be created', () => {

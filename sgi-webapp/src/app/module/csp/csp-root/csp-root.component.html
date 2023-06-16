@@ -67,6 +67,11 @@
       title="{{'menu.csp.tipo-facturacion' | translate: MSG_PARAMS.CARDINALIRY.PLURAL }}">
     </sgi-menu-subitem>
 
+    <sgi-menu-subitem *sgiHasAnyAuthority="['CSP-ROLE-V', 'CSP-ROLE-C', 'CSP-ROLE-E','CSP-ROLE-B','CSP-ROLE-R']"
+      [route]="[CSP_ROUTE_NAMES.ROL_EQUIPO]"
+      title="{{'menu.csp.rol-equipo' | translate: MSG_PARAMS.CARDINALIRY.PLURAL }}">
+    </sgi-menu-subitem>
+
     <sgi-menu-subitem *sgiHasAnyAuthority="['CSP-TFASE-V', 'CSP-TFASE-C', 'CSP-TFASE-E','CSP-TFASE-B','CSP-TFASE-R']"
       [route]="[CSP_ROUTE_NAMES.TIPO_FASE]" title="{{'csp.tipo-fase' |
               translate:MSG_PARAMS.CARDINALIRY.PLURAL}}">
