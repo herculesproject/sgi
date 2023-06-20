@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
+import { ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
 import {
   CreateCtor,

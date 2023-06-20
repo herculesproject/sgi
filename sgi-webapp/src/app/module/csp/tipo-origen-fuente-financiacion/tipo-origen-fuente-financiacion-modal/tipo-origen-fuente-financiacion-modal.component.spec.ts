@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { TipoOrigenFuenteFinanciacionModalComponent } from './tipo-origen-fuente-financiacion-modal.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-import TestUtils from '@core/utils/test-utils';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '@shared/shared.module';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipos-configuracion';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SharedModule } from '@shared/shared.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { TipoOrigenFuenteFinanciacionModalComponent } from './tipo-origen-fuente-financiacion-modal.component';
 
 describe('TipoOrigenFuenteFinanciacionModalComponent', () => {
   let component: TipoOrigenFuenteFinanciacionModalComponent;

@@ -1,4 +1,4 @@
-import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
+import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ITipoOrigenFuenteFinanciacionResponse } from './tipo-origen-fuente-financiacion-response';
 

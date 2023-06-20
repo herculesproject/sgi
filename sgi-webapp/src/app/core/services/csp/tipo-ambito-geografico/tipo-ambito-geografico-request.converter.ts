@@ -1,6 +1,6 @@
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ITipoAmbitoGeograficoRequest } from './tipo-ambito-geografico-request';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 
 class TipoAmbitoGeograficoRequestConverter extends SgiBaseConverter<ITipoAmbitoGeograficoRequest, ITipoAmbitoGeografico>{
   toTarget(value: ITipoAmbitoGeograficoRequest): ITipoAmbitoGeografico {

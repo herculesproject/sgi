@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { IUnidadGestion } from '../usr/unidad-gestion';
 import { IEstadoProyecto } from './estado-proyecto';
 import { IProyectoIVA } from './proyecto-iva';
-import { ITipoAmbitoGeografico } from './tipo-ambito-geografico';
+import { ITipoAmbitoGeografico } from './tipos-configuracion';
 import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
 
 export interface IProyecto {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
+import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
 import {
   CreateCtor,
@@ -17,9 +17,9 @@ import {
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { ITipoOrigenFuenteFinanciacionRequest } from './tipo-origen-fuente-financiacion-request';
+import { TIPO_ORIGEN_FUENTE_FINANCIACION_REQUEST_CONVERTER } from './tipo-origen-fuente-financiacion-request.converter';
 import { ITipoOrigenFuenteFinanciacionResponse } from './tipo-origen-fuente-financiacion-response';
 import { TIPO_ORIGEN_FUENTE_FINANCIACION_RESPONSE_CONVERTER } from './tipo-origen-fuente-financiacion-response.converter';
-import { TIPO_ORIGEN_FUENTE_FINANCIACION_REQUEST_CONVERTER } from './tipo-origen-fuente-financiacion-request.converter';
 
 // tslint:disable-next-line: variable-name
 const _TipoOrigenFuenteFinanciacionServiceMixinBase:

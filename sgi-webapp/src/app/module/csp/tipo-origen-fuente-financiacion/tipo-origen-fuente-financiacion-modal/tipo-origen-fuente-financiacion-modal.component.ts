@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
+import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { TipoOrigenFuenteFinanciacionService } from '@core/services/csp/tipo-origen-fuente-financiacion/tipo-origen-fuente-financiacion.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';

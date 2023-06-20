@@ -6,8 +6,6 @@ import { AbstractTablePaginationComponent } from '@core/component/abstract-table
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
-import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipo-origen-fuente-financiacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
@@ -17,11 +15,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { FuenteFinanciacionModalComponent } from '../fuente-financiacion-modal/fuente-financiacion-modal.component';
-import { TipoOrigenFuenteFinanciacionService } from '@core/services/csp/tipo-origen-fuente-financiacion/tipo-origen-fuente-financiacion.service';
-import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 
 const MSG_SAVE_SUCCESS = marker('msg.save.entity.success');
 const MSG_SAVE_ERROR = marker('error.save.entity');
@@ -46,9 +42,6 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
   fxLayoutProperties: FxLayoutProperties;
   fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
 
-  ambitosGeograficos$: BehaviorSubject<ITipoAmbitoGeografico[]> = new BehaviorSubject<ITipoAmbitoGeografico[]>([]);
-  origenes$: BehaviorSubject<ITipoOrigenFuenteFinanciacion[]> = new BehaviorSubject<ITipoOrigenFuenteFinanciacion[]>([]);
-
   msgParamEntity = {};
 
   textoCrearSuccess: string;
@@ -66,8 +59,6 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly fuenteFinanciacionService: FuenteFinanciacionService,
-    private ambitoGeograficoService: TipoAmbitoGeograficoService,
-    private tipoOrigenFuenteFinanciacionService: TipoOrigenFuenteFinanciacionService,
     private matDialog: MatDialog,
     public authService: SgiAuthService,
     private readonly dialogService: DialogService,
@@ -96,8 +87,6 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
       activo: new FormControl('true')
     });
     this.filter = this.createFilter();
-    this.loadAmbitosGeograficos();
-    this.loadOrigenes();
   }
 
   private setupI18N(): void {
@@ -265,26 +254,6 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     this.formGroup.controls.nombre.setValue('');
     this.formGroup.controls.ambitoGeografico.setValue('');
     this.formGroup.controls.origen.setValue('');
-  }
-
-  private loadAmbitosGeograficos() {
-    this.suscripciones.push(
-      this.ambitoGeograficoService.findAll().subscribe(
-        (res: SgiRestListResult<ITipoAmbitoGeografico>) => this.ambitosGeograficos$.next(res.items),
-        (error) => this.logger.error(error)
-      )
-    );
-  }
-
-  private loadOrigenes() {
-    this.suscripciones.push(
-      this.tipoOrigenFuenteFinanciacionService.findAll().subscribe(
-        (res: SgiRestListResult<ITipoOrigenFuenteFinanciacion>) => this.origenes$.next(res.items),
-        (error) => {
-          this.logger.error(error);
-        }
-      )
-    );
   }
 
   /**

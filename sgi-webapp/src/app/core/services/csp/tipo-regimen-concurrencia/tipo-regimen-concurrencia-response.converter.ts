@@ -1,4 +1,4 @@
-import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
+import { ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ITipoRegimenConcurrenciaResponse } from './tipo-regimen-concurrencia-response';
 

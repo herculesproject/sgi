@@ -92,7 +92,7 @@ export class RolEquipoColectivosComponent extends FragmentComponent implements O
       switchMap((value) => {
         return this.translate.get(
           MSG_DELETE,
-          { entity: value, ...MSG_PARAMS.GENDER.FEMALE }
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
         );
       })
     ).subscribe((value) => this.textoDelete = value);

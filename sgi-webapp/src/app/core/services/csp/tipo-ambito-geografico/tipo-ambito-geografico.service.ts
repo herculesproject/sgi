@@ -19,7 +19,7 @@ import { ITipoAmbitoGeograficoResponse } from './tipo-ambito-geografico-response
 import { ITipoAmbitoGeograficoRequest } from './tipo-ambito-geografico-request';
 import { TIPO_AMBITO_GEOGRAFICO_REQUEST_CONVERTER } from './tipo-ambito-geografico-request.converter';
 import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from './tipo-ambito-geografico-response.converter';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 
 // tslint:disable-next-line: variable-name
 const _TipoAmbitoGeograficoServiceMixinBase:

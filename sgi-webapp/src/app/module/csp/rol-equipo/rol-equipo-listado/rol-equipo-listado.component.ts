@@ -214,9 +214,9 @@ export class RolEquipoListadoComponent extends AbstractTablePaginationComponent<
 
   protected initColumns(): void {
     if (this.authService.hasAuthority('CSP-ROLE-R')) {
-      this.columnas = ['nombre', 'abreviatura', 'equipo', 'principal', 'orden', 'baremablePRC', 'activo', 'acciones'];
+      this.columnas = ['nombre', 'abreviatura', 'equipo', 'rolPrincipal', 'orden', 'baremablePRC', 'activo', 'acciones'];
     } else {
-      this.columnas = ['nombre', 'abreviatura', 'equipo', 'principal', 'orden', 'baremablePRC', 'acciones'];
+      this.columnas = ['nombre', 'abreviatura', 'equipo', 'rolPrincipal', 'orden', 'baremablePRC', 'acciones'];
     }
   }
 

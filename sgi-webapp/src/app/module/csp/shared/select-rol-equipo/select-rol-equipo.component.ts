@@ -2,43 +2,43 @@ import { PlatformLocation } from '@angular/common';
 import { Component, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
-import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
+import { IRolProyecto } from '@core/models/csp/rol-proyecto';
+import { Module } from '@core/module';
+import { ROUTE_NAMES } from '@core/route.names';
+import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TipoAmbitoGeograficoModalComponent } from '../../tipo-ambito-geografico/tipo-ambito-geografico-modal/tipo-ambito-geografico-modal.component';
+import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 
 @Component({
-  selector: 'sgi-select-tipo-ambito-geografico',
+  selector: 'sgi-select-rol-equipo',
   templateUrl: '../../../../core/component/select-service-extended/select-service-extended.component.html',
   styleUrls: ['../../../../core/component/select-service-extended/select-service-extended.component.scss'],
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: SelectTipoAmbitoGeograficoComponent
+      useExisting: SelectRolEquipoComponent
     }
   ]
 })
-export class SelectTipoAmbitoGeograficoComponent extends SelectServiceExtendedComponent<ITipoAmbitoGeografico> {
+export class SelectRolEquipoComponent extends SelectServiceExtendedComponent<IRolProyecto> {
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
-    private service: TipoAmbitoGeograficoService,
+    private service: RolProyectoService,
     private authService: SgiAuthService,
     platformLocation: PlatformLocation,
-    dialog: MatDialog,
     @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    super(defaultErrorStateMatcher, ngControl, platformLocation);
 
-    this.addTarget = TipoAmbitoGeograficoModalComponent;
+    this.addTarget = `/${Module.CSP.path}/${CSP_ROUTE_NAMES.ROL_EQUIPO}/${ROUTE_NAMES.NEW}`;
   }
 
-  protected loadServiceOptions(): Observable<ITipoAmbitoGeografico[]> {
+  protected loadServiceOptions(): Observable<IRolProyecto[]> {
     const findOptions: SgiRestFindOptions = {
       sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
     };
@@ -46,7 +46,7 @@ export class SelectTipoAmbitoGeograficoComponent extends SelectServiceExtendedCo
   }
 
   protected isAddAuthorized(): boolean {
-    return this.authService.hasAuthority('CSP-TAGE-C');
+    return this.authService.hasAuthority('CSP-ROLE-C');
   }
 
 }

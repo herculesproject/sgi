@@ -11,7 +11,7 @@ import { Estado, ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';

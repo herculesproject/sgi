@@ -5,40 +5,40 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
-import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
+import { ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
+import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TipoAmbitoGeograficoModalComponent } from '../../tipo-ambito-geografico/tipo-ambito-geografico-modal/tipo-ambito-geografico-modal.component';
+import { TipoRegimenConcurrenciaModalComponent } from '../../tipo-regimen-concurrencia/tipo-regimen-concurrencia-modal/tipo-regimen-concurrencia-modal.component';
 
 @Component({
-  selector: 'sgi-select-tipo-ambito-geografico',
+  selector: 'sgi-select-tipo-regimen-concurrencia',
   templateUrl: '../../../../core/component/select-service-extended/select-service-extended.component.html',
   styleUrls: ['../../../../core/component/select-service-extended/select-service-extended.component.scss'],
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: SelectTipoAmbitoGeograficoComponent
+      useExisting: SelectTipoRegimenConcurrenciaComponent
     }
   ]
 })
-export class SelectTipoAmbitoGeograficoComponent extends SelectServiceExtendedComponent<ITipoAmbitoGeografico> {
+export class SelectTipoRegimenConcurrenciaComponent extends SelectServiceExtendedComponent<ITipoRegimenConcurrencia> {
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
-    private service: TipoAmbitoGeograficoService,
+    private service: TipoRegimenConcurrenciaService,
     private authService: SgiAuthService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
     @Self() @Optional() ngControl: NgControl) {
     super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
 
-    this.addTarget = TipoAmbitoGeograficoModalComponent;
+    this.addTarget = TipoRegimenConcurrenciaModalComponent;
   }
 
-  protected loadServiceOptions(): Observable<ITipoAmbitoGeografico[]> {
+  protected loadServiceOptions(): Observable<ITipoRegimenConcurrencia[]> {
     const findOptions: SgiRestFindOptions = {
       sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
     };

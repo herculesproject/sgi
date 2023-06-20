@@ -7,7 +7,7 @@ import { IProyectoPalabraClave } from '@core/models/csp/proyecto-palabra-clave';
 import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { IRelacion, TipoEntidad } from '@core/models/rel/relacion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';

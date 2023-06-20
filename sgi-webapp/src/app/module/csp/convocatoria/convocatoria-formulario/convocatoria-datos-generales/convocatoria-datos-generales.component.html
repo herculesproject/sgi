@@ -183,8 +183,8 @@
       <!-- Tipo de régimen de concurrencia-->
       <mat-form-field fxFlex="33%">
         <mat-label>{{'csp.convocatoria.regimen-concurrencia' | translate}}</mat-label>
-        <sgi-select-entity formControlName="regimenConcurrencia" [options]="regimenesConcurrencia$ | async">
-        </sgi-select-entity>
+        <sgi-select-tipo-regimen-concurrencia formControlName="regimenConcurrencia">
+        </sgi-select-tipo-regimen-concurrencia>
         <sgi-field-info matSuffix
           [visible]="formPart.isConvocatoriaVinculada && (formPart.hasProyectoVinculado$ | async) && formPart.hasEditPerm"
           message="{{'csp.convocatoria.regimen-concurrencia.vinculada' | translate}}">

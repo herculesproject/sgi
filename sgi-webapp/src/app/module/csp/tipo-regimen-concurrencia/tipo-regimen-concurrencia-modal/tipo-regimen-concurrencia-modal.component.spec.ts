@@ -9,7 +9,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { TipoRegimenConcurrenciaModalComponent } from './tipo-regimen-concurrencia-modal.component';
-import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
+import { ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
 
 describe('TipoRegimenConcurrenciaModalComponent', () => {
   let component: TipoRegimenConcurrenciaModalComponent;
