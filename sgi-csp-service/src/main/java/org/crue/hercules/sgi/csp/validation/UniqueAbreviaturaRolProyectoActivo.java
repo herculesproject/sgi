@@ -14,7 +14,7 @@ import javax.validation.Payload;
 public @interface UniqueAbreviaturaRolProyectoActivo {
   String message() default "{org.crue.hercules.sgi.csp.validation.UniqueAbreviaturaRolProyectoActivo.message}";
 
-  String field() default "abreviatura";
+  String field() default "abbreviation";
 
   Class<?>[] groups() default {};
 

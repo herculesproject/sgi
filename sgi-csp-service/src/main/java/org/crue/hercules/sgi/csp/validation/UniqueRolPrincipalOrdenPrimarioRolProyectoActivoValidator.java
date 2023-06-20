@@ -32,13 +32,15 @@ public class UniqueRolPrincipalOrdenPrimarioRolProyectoActivoValidator
       return true;
     }
 
-    boolean isValid = this.repository.existsByOrdenAndRolPrincipalIsTrueAndActivoIsTrue(Orden.PRIMARIO);
+    boolean isValid = this.repository.existsByOrdenAndIdNotAndRolPrincipalIsTrueAndActivoIsTrue(Orden.PRIMARIO,
+        value.getId());
 
-    if (isValid && value.getRolPrincipal() && value.getActivo() && (ObjectUtils.isNotEmpty(value.getOrden()) && value
-        .getOrden().equals(Orden.PRIMARIO))) {
+    if (Boolean.TRUE.equals(isValid && value.getRolPrincipal() && value.getActivo())
+        && (ObjectUtils.isNotEmpty(value.getOrden()) && value.getOrden().equals(Orden.PRIMARIO))) {
       this.addEntityMessageParameter(context);
       return false;
     }
+
     return true;
   }
 
@@ -52,7 +54,7 @@ public class UniqueRolPrincipalOrdenPrimarioRolProyectoActivoValidator
     hibernateContext.disableDefaultConstraintViolation();
     // Build a custom message for a property using the default message
     hibernateContext.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
-        .addPropertyNode(field).addConstraintViolation();
+        .addPropertyNode(ApplicationContextSupport.getMessage(field)).addConstraintViolation();
   }
 
 }
