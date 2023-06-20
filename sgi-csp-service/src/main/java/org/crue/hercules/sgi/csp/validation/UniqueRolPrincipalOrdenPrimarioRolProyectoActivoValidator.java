@@ -32,8 +32,14 @@ public class UniqueRolPrincipalOrdenPrimarioRolProyectoActivoValidator
       return true;
     }
 
-    boolean isValid = this.repository.existsByOrdenAndIdNotAndRolPrincipalIsTrueAndActivoIsTrue(Orden.PRIMARIO,
-        value.getId());
+    boolean isValid = false;
+
+    if (value.getId() != null) {
+      isValid = this.repository.existsByOrdenAndIdNotAndRolPrincipalIsTrueAndActivoIsTrue(Orden.PRIMARIO,
+          value.getId());
+    } else {
+      isValid = this.repository.existsByOrdenAndRolPrincipalIsTrueAndActivoIsTrue(Orden.PRIMARIO);
+    }
 
     if (Boolean.TRUE.equals(isValid && value.getRolPrincipal() && value.getActivo())
         && (ObjectUtils.isNotEmpty(value.getOrden()) && value.getOrden().equals(Orden.PRIMARIO))) {

@@ -14,7 +14,7 @@ import javax.validation.Payload;
 public @interface UniqueRolPrincipalOrdenPrimarioRolProyectoActivo {
   String message() default "{org.crue.hercules.sgi.csp.validation.UniqueRolPrincipalOrdenPrimarioRolProyectoActivo.message}";
 
-  String field() default "rolPrincipalPrimario";
+  String field() default "rolPrincipal";
 
   Class<?>[] groups() default {};
 
