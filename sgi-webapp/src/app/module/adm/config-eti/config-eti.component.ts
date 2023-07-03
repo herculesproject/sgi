@@ -11,11 +11,11 @@ import { map, share } from 'rxjs/operators';
 export enum ConfigEti {
   ETI_BLOCKCHAIN_ENABLE = 'eti-blockchain-enable',
   ETI_REP_ACTA_PRPT = 'rep-eti-acta-prpt',
-  ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_PRPT = 'rep-eti-evaluacion-favorable-memoria-modificacion-prpt',
-  ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_PRPT = 'rep-eti-evaluacion-favorable-memoria-nueva-prpt',
-  ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_PRPT = 'rep-eti-evaluacion-favorable-memoria-ratificacion-prpt',
-  ETI_REP_EVALUACION_PRPT = 'rep-eti-evaluacion-prpt',
-  ETI_REP_EVALUACION_RETROSPECTIVA_PRPT = 'rep-eti-evaluacion-retrospectiva-prpt',
+  ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX = 'rep-eti-evaluacion-favorable-memoria-modificacion-docx',
+  ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX = 'rep-eti-evaluacion-favorable-memoria-nueva-docx',
+  ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX = 'rep-eti-evaluacion-favorable-memoria-ratificacion-docx',
+  ETI_REP_EVALUACION_DOCX = 'rep-eti-evaluacion-docx',
+  ETI_REP_EVALUACION_RETROSPECTIVA_DOCX = 'rep-eti-evaluacion-retrospectiva-docx',
   ETI_REP_FICHA_EVALUADOR_PRPT = 'rep-eti-ficha-evaluador-prpt',
   ETI_REP_MXX_PRPT = 'rep-eti-mxx-prpt'
 }
@@ -30,11 +30,11 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
   private readonly _CONFIG_MAP: Map<ConfigEti, IConfigOptions> = new Map([
     [ConfigEti.ETI_BLOCKCHAIN_ENABLE, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_BLOCKCHAIN_ENABLE`), options: this.getBooleanValues(), required: true }],
     [ConfigEti.ETI_REP_ACTA_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_ACTA_PRPT`) }],
-    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_PRPT`) }],
-    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_PRPT`) }],
-    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_PRPT`) }],
-    [ConfigEti.ETI_REP_EVALUACION_RETROSPECTIVA_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_RETROSPECTIVA_PRPT`) }],
-    [ConfigEti.ETI_REP_EVALUACION_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_PRPT`) }],
+    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX`) }],
+    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX`) }],
+    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX`) }],
+    [ConfigEti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX`) }],
+    [ConfigEti.ETI_REP_EVALUACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_DOCX`) }],
     [ConfigEti.ETI_REP_FICHA_EVALUADOR_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_FICHA_EVALUADOR_PRPT`) }],
     [ConfigEti.ETI_REP_MXX_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_MXX_PRPT`) }]
   ]);
