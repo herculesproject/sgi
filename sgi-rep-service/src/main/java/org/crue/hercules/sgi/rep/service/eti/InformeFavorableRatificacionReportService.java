@@ -1,10 +1,10 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
+import java.io.InputStream;
 import java.time.Instant;
-import java.util.Vector;
+import java.util.HashMap;
 
-import javax.swing.table.DefaultTableModel;
-
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
@@ -27,38 +27,23 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService);
   }
 
-  protected DefaultTableModel getTableModelGeneral(EvaluacionDto evaluacion) {
+  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path) {
 
-    Vector<Object> columnsData = new Vector<>();
-    Vector<Vector<Object>> rowsData = new Vector<>();
-    Vector<Object> elementsRow = new Vector<>();
+    addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), dataReport);
+    dataReport.put("memoriaRef", evaluacion.getMemoria().getNumReferencia());
 
-    addColumnAndRowDataInvestigador(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), columnsData,
-        elementsRow);
-
-    columnsData.add("memoriaRef");
-    elementsRow.add(evaluacion.getMemoria().getNumReferencia());
-
-    columnsData.add("fechaEvaluacion");
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
     String pattern = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     Instant fechaEvaluacion = evaluacion.getConvocatoriaReunion().getFechaEvaluacion();
-    elementsRow.add(formatInstantToString(fechaEvaluacion, pattern));
+    dataReport.put("fechaEvaluacion", formatInstantToString(fechaEvaluacion, pattern));
 
-    fillCommonFieldsEvaluacion(evaluacion, columnsData, elementsRow);
+    addDataEvaluacion(evaluacion, dataReport);
 
-    columnsData.add("resourcesBaseURL");
-    elementsRow.add(getRepResourcesBaseURL());
-
-    rowsData.add(elementsRow);
-
-    DefaultTableModel tableModel = new DefaultTableModel();
-    tableModel.setDataVector(rowsData, columnsData);
-    return tableModel;
+    return compileReportData(path, dataReport);
   }
 
   public byte[] getReportInformeFavorableRatificacion(ReportInformeFavorableRatificacion sgiReport, Long idEvaluacion) {
-    getReportFromIdEvaluacion(sgiReport, idEvaluacion, "informeFavorableRatificacion");
+    getReportFromIdEvaluacion(sgiReport, idEvaluacion);
     return sgiReport.getContent();
   }
 

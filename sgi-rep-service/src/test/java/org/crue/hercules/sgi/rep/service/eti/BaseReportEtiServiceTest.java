@@ -131,7 +131,7 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
         .apellidos("apellidos")
         .numeroDocumento(numeroDocumento)
         .tipoDocumento(TipoDocumentoDto.builder().nombre("NIF").build())
-        .sexo(SexoDto.builder().nombre("V").build())
+        .sexo(SexoDto.builder().id("V").nombre("Varon").build())
         .emails(generarMockEmails())
         .build();
   }

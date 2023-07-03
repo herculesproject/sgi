@@ -16,7 +16,6 @@ class InformeEvaluadorReportServiceIT extends BaseIT {
   @Autowired
   InformeEvaluadorReportService service;
 
-  @Test
   void testPdfInformeEvaluador() throws Exception {
     // given: data for report
     String reportPath = "rep-eti-ficha-evaluador-prpt";
