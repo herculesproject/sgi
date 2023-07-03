@@ -92,4 +92,107 @@
 
   </changeSet>
 
+  <changeSet context="!test" author="master" id="00.03.00-insert-resources">
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-evaluacion-retrospectiva-docx" />
+      <column name="description"
+        value="Informe evaluación de retrospectiva" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion-retrospectiva.docx" />
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-evaluacion-retrospectiva.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-evaluacion-favorable-memoria-nueva-docx" />
+      <column name="description"
+        value="Informe evaluación con dictamen favorable de memorias de tipo nueva" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion-favorable-memoria-nueva.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion-favorable-memoria-nueva.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-evaluacion-favorable-memoria-modificacion-docx" />
+      <column name="description"
+        value="Informe evaluación con dictamen favorable de tipo modificación" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-evaluacion-favorable-memoria-ratificacion-docx" />
+      <column name="description"
+        value="Informe evaluación con dictamen favorable de memorias de tipo ratificación" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion-favorable-memoria-ratificacion.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion-favorable-memoria-ratificacion.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-evaluacion-docx" />
+      <column name="description"
+        value="Informe evaluación" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-evaluacion.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-bloque-apartado-docx" />
+      <column name="description"
+        value="Informe con los bloques y apartados del formulario" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-bloque-apartado.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-bloque-apartado.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-prpt" />
+      </whereParams>
+    </delete>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-modificacion-prpt" />
+      </whereParams>
+    </delete>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-nueva-prpt" />
+      </whereParams>
+    </delete>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-favorable-memoria-ratificacion-prpt" />
+      </whereParams>
+    </delete>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-evaluacion-retrospectiva-prpt" />
+      </whereParams>
+    </delete>
+
+  </changeSet>
+
 </databaseChangeLog>
