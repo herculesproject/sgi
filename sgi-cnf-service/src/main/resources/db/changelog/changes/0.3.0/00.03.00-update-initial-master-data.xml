@@ -15,6 +15,217 @@
         value="Número de logos por defecto que aparecerán en la cabecera (1,2,3)" />
       <column name="value" value="3" />
     </insert>
+
+    <insert tableName="config">
+      <column name="name" value="exp-max-num-registros-excel" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name" value="csp-exp-max-num-registros-excel-convocatoria-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de los listados de convocatoria de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name" value="csp-exp-max-num-registros-excel-detalle-operaciones-gastos" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de los detalles de operaciones de gastos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name" value="csp-exp-max-num-registros-excel-detalle-operaciones-ingresos" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de los detalles de operaciones de ingresos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name" value="csp-exp-max-num-registros-excel-detalle-operaciones-modificaciones" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de los detalles de operaciones de modificaciones de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-ejecucion-presupuestaria-estado-actual" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de la ejecución presupuestaria estado actual de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-ejecucion-presupuestaria-gastos" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de la ejecución presupuestaria gastos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-ejecucion-presupuestaria-ingresos" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de la ejecución presupuestaria ingresos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-facturas-emitidas" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de las facturas emitidas de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-facturas-gastos" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de las facturas de gastos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-personal-contratado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del personal contratado de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-viajes-dietas" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de los viajes y dietas de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-seguimiento-justificacion-resumen" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del resumen del seguimiento de datos justificados de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-grupo-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de grupos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-proyecto-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de proyectos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-proyecto-consulta-presupuesto" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de la consulta de presupuestos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-solicitud-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de solicitudes de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-solicitud-presupuesto" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de solicitud proyecto presupuestos de csp" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="eti-exp-max-num-registros-excel-acta-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de actas de eti" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="eti-exp-max-num-registros-excel-convocatoria-reunion-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de convocatorias de reunión de eti" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="eti-exp-max-num-registros-excel-evaluacion-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de evaluaciones de eti" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="eti-exp-max-num-registros-excel-evaluador-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de evaluadores de eti" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="eti-exp-max-num-registros-excel-memoria-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de memorias de eti" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="eti-exp-max-num-registros-excel-peticion-evaluacion-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de solicitudes de evaluacion de eti" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="eti-exp-max-num-registros-excel-seguimiento-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de seguimientos de eti" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="pii-exp-max-num-registros-excel-invencion-listado" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel del listado de invenciones de pii" />
+      <column name="value" value="" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name"
+        value="pii-exp-max-num-registros-excel-solicitud-proteccion" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo excel de solicitudes de protección de pii" />
+      <column name="value" value="" />
+    </insert>
   </changeSet>
 
 
