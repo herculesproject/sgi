@@ -369,6 +369,17 @@
       <column name="public_access" valueBoolean="false" />
     </insert>
 
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-ficha-evaluador-docx" />
+      <column name="description"
+        value="Informe evaluación" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
     <delete tableName="resources">
       <where>:name=:value</where>
       <whereParams>
@@ -401,6 +412,13 @@
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-evaluacion-retrospectiva-prpt" />
+      </whereParams>
+    </delete>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-ficha-evaluador-prpt" />
       </whereParams>
     </delete>
 
