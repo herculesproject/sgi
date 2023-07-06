@@ -24,7 +24,8 @@ export enum ConfigGlobal {
   WEB_HEADER_LOGO_UE_2X = 'web-header-logo-ue2x',
   WEB_HEADER_LOGO_UE_3X = 'web-header-logo-ue3x',
   WEB_I18N_ES = 'web-i18n-es',
-  WEB_NUM_LOGOS_HEADER = 'web-numero-logos-header'
+  WEB_NUM_LOGOS_HEADER = 'web-numero-logos-header',
+  EXP_MAX_NUM_REGISTROS_EXCEL = 'exp-max-num-registros-excel'
 }
 
 @Component({
@@ -38,6 +39,7 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.ENTIDAD_IMPLANTACION, { type: ConfigType.TEXT, label: marker(`adm.config.global.ENTIDAD_IMPLANTACION`), required: true }],
     [ConfigGlobal.ID_ENTIDAD_SGEMP, { type: ConfigType.TEXT, label: marker(`adm.config.global.ID_ENTIDAD_SGEMP`), required: true }],
     [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true }],
+    [ConfigGlobal.EXP_MAX_NUM_REGISTROS_EXCEL, { type: ConfigType.TEXT, label: marker(`adm.config.global.EXP_NUM_MAX_REGISTROS_EXCEL`), required: false, info: marker(`adm.config.global.EXP_NUM_MAX_REGISTROS_EXCEL_INFO`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO_2X`) }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO_3X`) }],

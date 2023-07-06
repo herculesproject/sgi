@@ -14,5 +14,6 @@ export interface IConfigOptions {
   type: ConfigType,
   label: string,
   options?: Observable<KeyValue<string, string>[]>,
-  disabled?: boolean
+  disabled?: boolean,
+  info?: string
 }

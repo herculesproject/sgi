@@ -4,7 +4,7 @@
     <ng-container [ngSwitch]="config.value.type">
       <ng-container *ngSwitchCase="ConfigType.TEXT">
         <sgi-config-input-text [key]="config.key" [label]="config.value.label" [required]="config.value.required"
-          (error)="handleErrors($event)">
+          (error)="handleErrors($event)" [info]="config.value.info">
         </sgi-config-input-text>
       </ng-container>
       <ng-container *ngSwitchCase="ConfigType.EMAILS">

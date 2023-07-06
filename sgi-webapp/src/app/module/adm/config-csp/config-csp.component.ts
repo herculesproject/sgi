@@ -30,11 +30,30 @@ export enum ConfigCsp {
   CSP_COM_SOLICITUD_CAMBIO_ESTADO_ALEGACIONES_DESTINATARIOS_UO = 'csp-com-sol-camb-est-alegaciones-destinatarios-',
   CSP_COM_SOLICITUD_CAMBIO_ESTADO_SOLICITADA_DESTINATARIOS_UO = 'csp-com-sol-camb-est-solicitada-destinatarios-',
   CSP_COM_SOLICITUD_HITOS_DESTINATARIOS_UO = 'csp-sol-hitos-destinatarios-',
+  // Límites exportación excel
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_LISTADO = 'csp-exp-max-num-registros-excel-convocatoria-listado',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_GASTOS = 'csp-exp-max-num-registros-excel-detalle-operaciones-gastos',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_INGRESOS = 'csp-exp-max-num-registros-excel-detalle-operaciones-ingresos',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_MODIFICACIONES = 'csp-exp-max-num-registros-excel-detalle-operaciones-modificaciones',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL = 'csp-exp-max-num-registros-excel-ejecucion-presupuestaria-estado-actual',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_GASTOS = 'csp-exp-max-num-registros-excel-ejecucion-presupuestaria-gastos',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_INGRESOS = 'csp-exp-max-num-registros-excel-ejecucion-presupuestaria-ingresos',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_FACTURAS_EMITIDAS = 'csp-exp-max-num-registros-excel-facturas-emitidas',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_FACTURAS_GASTOS = 'csp-exp-max-num-registros-excel-facturas-gastos',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PERSONAL_CONTRATADO = 'csp-exp-max-num-registros-excel-personal-contratado',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_VIAJES_DIETAS = 'csp-exp-max-num-registros-excel-viajes-dietas',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_JUSTIFICACION_RESUMEN = 'csp-exp-max-num-registros-excel-seguimiento-justificacion-resumen',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_GRUPO_LISTADO = 'csp-exp-max-num-registros-excel-grupo-listado',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PROYECTO_LISTADO = 'csp-exp-max-num-registros-excel-proyecto-listado',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PROYECTO_CONSULTA_PRESUPUESTO = 'csp-exp-max-num-registros-excel-proyecto-consulta-presupuesto',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_LISTADO = 'csp-exp-max-num-registros-excel-solicitud-listado',
+  CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_PRESUPUESTO = 'csp-exp-max-num-registros-excel-solicitud-presupuesto',
   // Titulos
   TITLE_CONVONCATORIA = 'title-convocatoria',
   TITLE_PROYECTO = 'title-proyecto',
   TITLE_PROYECTO_EXTERNO = 'title-proyecto-externo',
   TITLE_SOLICITUD = 'title-solicitud',
+  TITLE_EXPORTACIÓN = 'title-exportacion',
 }
 
 @Component({
@@ -66,6 +85,25 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.TITLE_PROYECTO_EXTERNO, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.proyecto-externo`) }],
     [ConfigCsp.CSP_COM_PROYECTO_EXT_MODIFICAR_AUTORIZACION_ESTADO_PARTICIPACION_DESTINATARIOS, { type: ConfigType.EMAILS, label: marker(`adm.config.csp.CSP_COM_PROYECTO_EXT_MODIFICAR_AUTORIZACION_ESTADO_PARTICIPACION_DESTINATARIOS_UO`), required: true }],
     [ConfigCsp.CSP_COM_PROYECTO_EXT_RECEP_NOTIFICACION_CVN_DESTINATARIOS, { type: ConfigType.EMAILS, label: marker(`adm.config.csp.CSP_COM_PROYECTO_EXT_RECEP_NOTIFICACION_CVN_DESTINATARIOS`), required: true }],
+    //Límite exportación excel
+    [ConfigCsp.TITLE_EXPORTACIÓN, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.exportacion`) }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_LISTADO`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_GASTOS, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_GASTOS`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_INGRESOS, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_INGRESOS`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_MODIFICACIONES, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_DETALLE_OPERACIONES_MODIFICACIONES`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_GASTOS, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_GASTOS`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_INGRESOS, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_EJECUCION_PRESUPUESTARIA_INGRESOS`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_FACTURAS_EMITIDAS, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_FACTURAS_EMITIDAS`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_FACTURAS_GASTOS, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_FACTURAS_GASTOS`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_GRUPO_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_GRUPO_LISTADO`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PERSONAL_CONTRATADO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PERSONAL_CONTRATADO`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PROYECTO_CONSULTA_PRESUPUESTO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PROYECTO_CONSULTA_PRESUPUESTO`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PROYECTO_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_PROYECTO_LISTADO`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_JUSTIFICACION_RESUMEN, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_JUSTIFICACION_RESUMEN`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_LISTADO`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_PRESUPUESTO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_PRESUPUESTO`), required: false }],
+    [ConfigCsp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_VIAJES_DIETAS, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_VIAJES_DIETAS`), required: false }],
   ]);
 
   get ConfigType() {
