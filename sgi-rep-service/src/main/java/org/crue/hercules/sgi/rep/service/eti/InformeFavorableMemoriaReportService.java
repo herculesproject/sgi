@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -26,8 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Validated
-public class InformeFavorableMemoriaReportService extends InformeEvaluacionBaseReportService {
-  private final EvaluacionService evaluacionService;
+public class InformeFavorableMemoriaReportService extends InformeEvaluacionEvaluadorBaseReportService {
   private final PeticionEvaluacionService peticionEvaluacionService;
   private final SgiApiSgpService personaService;
 
@@ -35,8 +35,7 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionBaseR
       SgiApiConfService sgiApiConfService, SgiApiSgpService personaService,
       EvaluacionService evaluacionService, PeticionEvaluacionService peticionEvaluacionService) {
 
-    super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService);
-    this.evaluacionService = evaluacionService;
+    super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService, null);
     this.peticionEvaluacionService = peticionEvaluacionService;
     this.personaService = personaService;
   }
@@ -71,23 +70,25 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionBaseR
     List<TareaDto> tareas = peticionEvaluacionService
         .findTareasEquipoTrabajo(evaluacion.getMemoria().getPeticionEvaluacion().getId());
     List<PersonaDto> personas = new ArrayList<>();
-    tareas.forEach(tarea -> {
-      if (!personas.contains(tarea.getEquipoTrabajo().getPersonaRef())) {
-        PersonaDto persona = personaService.findById(tarea.getEquipoTrabajo().getPersonaRef());
-        if (tarea.getEquipoTrabajo().getPersonaRef()
-            .equals(evaluacion.getMemoria().getPeticionEvaluacion().getTutorRef())) {
-          String textoDirectorMasculino = "(Director " + dataReport.get("fieldDelActividad") + " "
-              + dataReport.get("actividad") + ")";
-          String textoDirectorFemenino = "(Directora " + dataReport.get("fieldDelActividad") + " "
-              + dataReport.get("actividad") + ")";
-          String textoDirector = (persona.getSexo().getId().equals("V") ? textoDirectorMasculino
-              : textoDirectorFemenino);
-          persona.setApellidos(persona.getApellidos() + " " + textoDirector);
-        }
-        personas.add(persona);
+    tareas.stream().filter(tarea -> tarea.getMemoria().getId().equals(evaluacion.getMemoria().getId()))
+        .forEach(tarea -> {
+          if (!personas.stream().map(persona -> persona.getId().toString()).collect(Collectors.toList())
+              .contains(tarea.getEquipoTrabajo().getPersonaRef())) {
+            PersonaDto persona = personaService.findById(tarea.getEquipoTrabajo().getPersonaRef());
+            if (tarea.getEquipoTrabajo().getPersonaRef()
+                .equals(evaluacion.getMemoria().getPeticionEvaluacion().getTutorRef())) {
+              String textoDirectorMasculino = "(Director " + dataReport.get("fieldDelActividad") + " "
+                  + dataReport.get("actividad") + ")";
+              String textoDirectorFemenino = "(Directora " + dataReport.get("fieldDelActividad") + " "
+                  + dataReport.get("actividad") + ")";
+              String textoDirector = (persona.getSexo().getId().equals("V") ? textoDirectorMasculino
+                  : textoDirectorFemenino);
+              persona.setApellidos(persona.getApellidos() + " " + textoDirector);
+            }
+            personas.add(persona);
 
-      }
-    });
+          }
+        });
 
     if (ObjectUtils.isNotEmpty(evaluacion.getMemoria().getPeticionEvaluacion().getTutorRef())) {
       PersonaDto director = personaService.findById(evaluacion.getMemoria().getPeticionEvaluacion().getTutorRef());

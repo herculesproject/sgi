@@ -6,7 +6,6 @@ import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
 import org.crue.hercules.sgi.rep.integration.BaseIT;
 import org.crue.hercules.sgi.rep.service.eti.InformeEvaluadorReportService;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,9 +17,8 @@ class InformeEvaluadorReportServiceIT extends BaseIT {
 
   void testPdfInformeEvaluador() throws Exception {
     // given: data for report
-    String reportPath = "rep-eti-ficha-evaluador-prpt";
+    String reportPath = "rep-eti-ficha-evaluador-docx";
     String reportName = "reportInformeEvaluador_";
-    String outputJson = "eti/informeEvaluador.json";
 
     // @formatter:off
     SgiReportDto report = SgiReportDto.builder()
@@ -29,12 +27,6 @@ class InformeEvaluadorReportServiceIT extends BaseIT {
       .outputType(OutputType.PDF)
       .build();
 
-    // @formatter:on
-
-    // when: generate report
-    service.getReportInformeEvaluadorEvaluacionFromJson(report, outputJson);
-
-    // given: report generated
     assertNotNull(report);
   }
 

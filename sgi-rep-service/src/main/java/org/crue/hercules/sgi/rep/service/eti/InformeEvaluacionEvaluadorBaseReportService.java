@@ -2,16 +2,29 @@ package org.crue.hercules.sgi.rep.service.eti;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
+import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
+import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
+import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
+import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluadorDto;
+import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
+import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
 import org.crue.hercules.sgi.rep.dto.sgp.EmailDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -19,8 +32,12 @@ import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
+
+import com.deepoove.poi.data.Includes;
+import com.deepoove.poi.data.RenderData;
 
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
@@ -32,22 +49,26 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Validated
-public abstract class InformeEvaluacionBaseReportService extends SgiReportDocxService {
+public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiReportDocxService {
 
   private final EvaluacionService evaluacionService;
   private final SgiApiSgpService personaService;
+  private final BaseApartadosRespuestasReportDocxService baseApartadosRespuestasService;
 
   private static final Long TIPO_ACTIVIDAD_PROYECTO_DE_INVESTIGACION = 1L;
   private static final Long TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = 3L;
   private static final Long TIPO_INVESTIGACION_TUTELADA_TESIS_DOCTORAL = 1L;
+  private static final Long TIPO_COMENTARIO_GESTOR = 1L;
+  private static final Long DICTAMEN_NO_PROCEDE_EVALUAR = 4L;
 
-  protected InformeEvaluacionBaseReportService(SgiConfigProperties sgiConfigProperties,
+  protected InformeEvaluacionEvaluadorBaseReportService(SgiConfigProperties sgiConfigProperties,
       SgiApiConfService sgiApiConfService, SgiApiSgpService personaService,
-      EvaluacionService evaluacionService) {
+      EvaluacionService evaluacionService, BaseApartadosRespuestasReportDocxService baseApartadosRespuestasService) {
 
     super(sgiConfigProperties, sgiApiConfService);
     this.personaService = personaService;
     this.evaluacionService = evaluacionService;
+    this.baseApartadosRespuestasService = baseApartadosRespuestasService;
   }
 
   protected XWPFDocument getReportFromIdEvaluacion(SgiReportDto sgiReport, Long idEvaluacion) {
@@ -156,7 +177,7 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportDocxSe
       dataReport.put(attributeElementData, getErrorMessage(e));
       dataReport.put(attributeArticleData,
           ((ObjectUtils.isEmpty(attribute)) ? ApplicationContextSupport.getMessage("investigador.masculinoFemenino")
-              : ApplicationContextSupport.getMessage(attribute + ".masculinoFemenino")));
+              : ApplicationContextSupport.getMessage(attribute.toLowerCase() + ".masculinoFemenino")));
       dataReport.put(attributeDelData, ApplicationContextSupport.getMessage("common.del.masculinoFemenino"));
       dataReport.put(attributeElData, ApplicationContextSupport.getMessage("common.el.masculinoFemenino"));
       dataReport.put(attributeFieldData,
@@ -279,6 +300,145 @@ public abstract class InformeEvaluacionBaseReportService extends SgiReportDocxSe
       }
     }
 
+  }
+
+  protected RenderData generarBloqueApartados(Long idDictamen,
+      InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput) {
+    Map<String, Object> subDataBloqueApartado = new HashMap<>();
+    subDataBloqueApartado.put("idDictamen", idDictamen);
+    subDataBloqueApartado.put("idDictamenNoProcedeEvaluar", DICTAMEN_NO_PROCEDE_EVALUAR);
+    if (ObjectUtils.isNotEmpty(informeEvaluacionEvaluadorReportOutput)
+        && ObjectUtils.isNotEmpty(informeEvaluacionEvaluadorReportOutput.getBloques())
+        && informeEvaluacionEvaluadorReportOutput.getBloques().size() > 0) {
+      if (informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().isPresent()
+          && informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().get().getApartados().stream()
+              .findAny().isPresent()) {
+        subDataBloqueApartado.put("numComentarios",
+            informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().get().getApartados().stream()
+                .findAny().get().getNumeroComentariosGestor());
+      }
+      subDataBloqueApartado.put("bloques", informeEvaluacionEvaluadorReportOutput.getBloques());
+    } else {
+      subDataBloqueApartado.put("numComentarios", null);
+      subDataBloqueApartado.put("bloques", null);
+      return null;
+    }
+    return Includes.ofStream(getReportDefinitionStream("rep-eti-bloque-apartado-docx"))
+        .setRenderModel(subDataBloqueApartado).create();
+  }
+
+  /**
+   * Devuelve un informe pdf del informe de evaluación
+   *
+   * @param idEvaluacion Id de la evaluación
+   * @return EtiInformeEvaluacionEvaluadorReportOutput Datos a presentar en el
+   *         informe
+   */
+  private InformeEvaluacionEvaluadorReportOutput getInformeEvaluadorEvaluacion(Long idEvaluacion,
+      boolean isInformeEvaluacion) {
+    log.debug("getInformeEvaluacion(idEvaluacion)- start");
+
+    Assert.notNull(idEvaluacion,
+        // Defer message resolution untill is needed
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage("id"))
+            .parameter("entity",
+                ApplicationContextSupport.getMessage(EvaluacionDto.class))
+            .build());
+
+    InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput = new InformeEvaluacionEvaluadorReportOutput();
+    informeEvaluacionEvaluadorReportOutput.setBloques(new ArrayList<>());
+
+    try {
+
+      EvaluacionDto evaluacion = evaluacionService.findById(idEvaluacion);
+      informeEvaluacionEvaluadorReportOutput.setEvaluacion(evaluacion);
+
+      Integer numComentariosGestor = evaluacionService.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
+          TIPO_COMENTARIO_GESTOR);
+
+      List<ComentarioDto> comentarios = null;
+
+      if (isInformeEvaluacion) {
+        comentarios = evaluacionService.findByEvaluacionIdGestor(idEvaluacion);
+      } else {
+        comentarios = evaluacionService.findByEvaluacionIdEvaluador(idEvaluacion);
+      }
+
+      if (null != comentarios && !comentarios.isEmpty()) {
+        final Set<Long> apartados = new HashSet<>();
+        comentarios.forEach(
+            c -> baseApartadosRespuestasService.getApartadoService().findTreeApartadosById(apartados, c.getApartado()));
+
+        Long idFormulario = 0L;
+
+        Optional<FormularioDto> formulario = comentarios.stream()
+            .map(c -> c.getApartado().getBloque().getFormulario())
+            .filter(f -> f != null)
+            .findFirst();
+
+        if (formulario.isPresent()) {
+          idFormulario = formulario.get().getId();
+        }
+
+        // @formatter:off
+        BloquesReportInput etiBloquesReportInput = BloquesReportInput.builder()
+        .idMemoria(idEvaluacion)
+        .idFormulario(idFormulario)
+        .mostrarRespuestas(false)
+        .mostrarContenidoApartado(false)
+        .comentarios(comentarios)
+        .apartados(apartados)
+        .numeroComentariosGestor(numComentariosGestor)
+        .build();
+        // @formatter:on
+
+        BloquesReportOutput reportOutput = baseApartadosRespuestasService
+            .getDataFromApartadosAndRespuestas(etiBloquesReportInput);
+
+        final int orden = informeEvaluacionEvaluadorReportOutput.getBloques().size();
+        for (BloqueOutput bloque : reportOutput.getBloques()) {
+          bloque.setOrden(bloque.getOrden() + orden);
+        }
+
+        informeEvaluacionEvaluadorReportOutput.getBloques().addAll(reportOutput.getBloques());
+      } else {
+
+        BloquesReportInput etiBloquesReportInput = BloquesReportInput.builder()
+            .idMemoria(idEvaluacion)
+            .idFormulario(0L)
+            .mostrarRespuestas(false)
+            .mostrarContenidoApartado(false)
+            .comentarios(null)
+            .apartados(null)
+            .numeroComentariosGestor(numComentariosGestor)
+            .build();
+
+        BloquesReportOutput reportOutput = baseApartadosRespuestasService
+            .getDataFromApartadosAndRespuestas(etiBloquesReportInput);
+
+        if (informeEvaluacionEvaluadorReportOutput.getBloques().isEmpty() && ObjectUtils.isNotEmpty(reportOutput)) {
+          informeEvaluacionEvaluadorReportOutput.setBloques(reportOutput.getBloques());
+        } else if (ObjectUtils.isNotEmpty(reportOutput)) {
+          informeEvaluacionEvaluadorReportOutput.getBloques().addAll(reportOutput.getBloques());
+        }
+
+      }
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new GetDataReportException();
+    }
+
+    return informeEvaluacionEvaluadorReportOutput;
+  }
+
+  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluacion(Long idEvaluacion) {
+    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.TRUE);
+  }
+
+  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluador(Long idEvaluacion) {
+    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.FALSE);
   }
 
   protected abstract XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport,

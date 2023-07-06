@@ -18,13 +18,13 @@ import org.springframework.validation.annotation.Validated;
  */
 @Service
 @Validated
-public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluacionBaseReportService {
+public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluacionEvaluadorBaseReportService {
 
   public InformeEvaluacionRetrospectivaReportService(SgiConfigProperties sgiConfigProperties,
       SgiApiConfService sgiApiConfService,
       SgiApiSgpService personaService, EvaluacionService evaluacionService) {
 
-    super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService);
+    super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService, null);
   }
 
   protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path) {

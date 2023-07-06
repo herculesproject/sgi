@@ -20,7 +20,7 @@ import org.springframework.validation.annotation.Validated;
  */
 @Service
 @Validated
-public class InformeFavorableModificacionReportService extends InformeEvaluacionBaseReportService {
+public class InformeFavorableModificacionReportService extends InformeEvaluacionEvaluadorBaseReportService {
 
   private final EvaluacionService evaluacionService;
   private final ConvocatoriaReunionService convocatoriaReunionService;
@@ -29,7 +29,7 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
       SgiApiConfService sgiApiConfService, SgiApiSgpService personaService, EvaluacionService evaluacionService,
       ConvocatoriaReunionService convocatoriaReunionService) {
 
-    super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService);
+    super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService, null);
     this.convocatoriaReunionService = convocatoriaReunionService;
     this.evaluacionService = evaluacionService;
   }
