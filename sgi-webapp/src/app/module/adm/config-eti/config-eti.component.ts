@@ -16,7 +16,7 @@ export enum ConfigEti {
   ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX = 'rep-eti-evaluacion-favorable-memoria-ratificacion-docx',
   ETI_REP_EVALUACION_DOCX = 'rep-eti-evaluacion-docx',
   ETI_REP_EVALUACION_RETROSPECTIVA_DOCX = 'rep-eti-evaluacion-retrospectiva-docx',
-  ETI_REP_FICHA_EVALUADOR_PRPT = 'rep-eti-ficha-evaluador-prpt',
+  ETI_REP_FICHA_EVALUADOR_DOCX = 'rep-eti-ficha-evaluador-docx',
   ETI_REP_MXX_PRPT = 'rep-eti-mxx-prpt',
   // Límites exportación excel
   ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO = 'eti-exp-max-num-registros-excel-acta-listado',
@@ -45,7 +45,7 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
     [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX`) }],
     [ConfigEti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX`) }],
     [ConfigEti.ETI_REP_EVALUACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_DOCX`) }],
-    [ConfigEti.ETI_REP_FICHA_EVALUADOR_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_FICHA_EVALUADOR_PRPT`) }],
+    [ConfigEti.ETI_REP_FICHA_EVALUADOR_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_FICHA_EVALUADOR_DOCX`) }],
     [ConfigEti.ETI_REP_MXX_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_MXX_PRPT`) }],
     //Límite exportación excel
     [ConfigEti.TITLE_EXPORTACIÓN, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.exportacion`) }],
