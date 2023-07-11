@@ -91,12 +91,12 @@
       <artifactId>poi</artifactId>
       <version>4.1.2</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans -->
+    <!-- https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans
     <dependency>
       <groupId>org.apache.xmlbeans</groupId>
       <artifactId>xmlbeans</artifactId>
       <version>5.1.1</version>
-    </dependency>
+    </dependency> -->
 
     <!--
     https://mvnrepository.com/artifact/fr.opensagres.xdocreport/fr.opensagres.poi.xwpf.converter.pdf -->
