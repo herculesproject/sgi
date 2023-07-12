@@ -19,35 +19,35 @@
     <insert tableName="config">
       <column name="name" value="exp-max-num-registros-excel" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx)" />
       <column name="value" value="" />
     </insert>
 
     <insert tableName="config">
       <column name="name" value="csp-exp-max-num-registros-excel-convocatoria-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de los listados de convocatoria de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de convocatorias" />
       <column name="value" value="" />
     </insert>
 
     <insert tableName="config">
       <column name="name" value="csp-exp-max-num-registros-excel-detalle-operaciones-gastos" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de los detalles de operaciones de gastos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de detalle de operaciones de gastos de los proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
     <insert tableName="config">
       <column name="name" value="csp-exp-max-num-registros-excel-detalle-operaciones-ingresos" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de los detalles de operaciones de ingresos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de detalle de operaciones de ingresos de los proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
     <insert tableName="config">
       <column name="name" value="csp-exp-max-num-registros-excel-detalle-operaciones-modificaciones" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de los detalles de operaciones de modificaciones de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de detalle de operaciones de modificación presupuestaria de los proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -55,7 +55,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-ejecucion-presupuestaria-estado-actual" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de la ejecución presupuestaria estado actual de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de estado actual de la ejecución presupuestaria de proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -63,7 +63,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-ejecucion-presupuestaria-gastos" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de la ejecución presupuestaria gastos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de resumen de gastos de la ejecución presupuestaria de proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -71,7 +71,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-ejecucion-presupuestaria-ingresos" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de la ejecución presupuestaria ingresos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de resumen de ingresos de la ejecución presupuestaria de proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -79,7 +79,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-facturas-emitidas" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de las facturas emitidas de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de las facturas emitidas de los proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -87,7 +87,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-facturas-gastos" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de las facturas de gastos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de las facturas y gastos de los proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -95,7 +95,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-personal-contratado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del personal contratado de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de las facturas de tipo personal contratado de los proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -103,7 +103,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-viajes-dietas" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de los viajes y dietas de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de las facturas de tipo viajes y dietas de los proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -111,7 +111,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-seguimiento-justificacion-resumen" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del resumen del seguimiento de datos justificados de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de los gastos justificados de los proyectos económicos" />
       <column name="value" value="" />
     </insert>
 
@@ -119,7 +119,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-grupo-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de grupos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de grupos de investigación" />
       <column name="value" value="" />
     </insert>
 
@@ -127,7 +127,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-proyecto-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de proyectos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de proyectos" />
       <column name="value" value="" />
     </insert>
 
@@ -135,7 +135,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-proyecto-consulta-presupuesto" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de la consulta de presupuestos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de presupuesto de los proyectos" />
       <column name="value" value="" />
     </insert>
 
@@ -143,7 +143,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-solicitud-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de solicitudes de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de las solicitudes" />
       <column name="value" value="" />
     </insert>
 
@@ -151,7 +151,7 @@
       <column name="name"
         value="csp-exp-max-num-registros-excel-solicitud-presupuesto" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de solicitud proyecto presupuestos de csp" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de presupuesto de las solicitudes" />
       <column name="value" value="" />
     </insert>
 
@@ -159,7 +159,7 @@
       <column name="name"
         value="eti-exp-max-num-registros-excel-acta-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de actas de eti" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de actas de reunión" />
       <column name="value" value="" />
     </insert>
 
@@ -167,7 +167,7 @@
       <column name="name"
         value="eti-exp-max-num-registros-excel-convocatoria-reunion-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de convocatorias de reunión de eti" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de convocatorias de reunión" />
       <column name="value" value="" />
     </insert>
 
@@ -175,7 +175,7 @@
       <column name="name"
         value="eti-exp-max-num-registros-excel-evaluacion-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de evaluaciones de eti" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de evaluaciones" />
       <column name="value" value="" />
     </insert>
 
@@ -183,7 +183,7 @@
       <column name="name"
         value="eti-exp-max-num-registros-excel-evaluador-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de evaluadores de eti" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de equipos evaluadores" />
       <column name="value" value="" />
     </insert>
 
@@ -191,7 +191,7 @@
       <column name="name"
         value="eti-exp-max-num-registros-excel-memoria-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de memorias de eti" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de memorias" />
       <column name="value" value="" />
     </insert>
 
@@ -199,7 +199,7 @@
       <column name="name"
         value="eti-exp-max-num-registros-excel-peticion-evaluacion-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de solicitudes de evaluacion de eti" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de solicitudes de evaluación" />
       <column name="value" value="" />
     </insert>
 
@@ -207,7 +207,7 @@
       <column name="name"
         value="eti-exp-max-num-registros-excel-seguimiento-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de seguimientos de eti" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de evaluaciones de seguimiento" />
       <column name="value" value="" />
     </insert>
 
@@ -215,7 +215,7 @@
       <column name="name"
         value="pii-exp-max-num-registros-excel-invencion-listado" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel del listado de invenciones de pii" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de invenciones" />
       <column name="value" value="" />
     </insert>
 
@@ -223,7 +223,7 @@
       <column name="name"
         value="pii-exp-max-num-registros-excel-solicitud-proteccion" />
       <column name="description"
-        value="Número máximo de registros a exportar en los informes de tipo excel de solicitudes de protección de pii" />
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de solicitudes de protección" />
       <column name="value" value="" />
     </insert>
   </changeSet>
