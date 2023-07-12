@@ -49,13 +49,13 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
     [ConfigEti.ETI_REP_MXX_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_MXX_PRPT`) }],
     //Límite exportación excel
     [ConfigEti.TITLE_EXPORTACIÓN, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.exportacion`) }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO`), required: false }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO`), required: false }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO`), required: false }],
     [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_REUNION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_REUNION_LISTADO`), required: false }],
     [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUACION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUACION_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO`), required: false }],
     [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_LISTADO`), required: false }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO`), required: false }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO`), required: false }],
   ]);
 
   get ConfigType() {
