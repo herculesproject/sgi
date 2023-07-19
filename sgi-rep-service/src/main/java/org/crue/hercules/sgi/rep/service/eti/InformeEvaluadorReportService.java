@@ -14,13 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * Servicio de generación de informe de evaluador de ética
  */
 @Service
-@Slf4j
 @Validated
 public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBaseReportService {
 
@@ -57,9 +54,9 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
     dataReport.put("comite", evaluacion.getMemoria().getComite().getComite());
     dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombreInvestigacion());
 
-    dataReport.put("bloqueApartados",
-        generarBloqueApartados(evaluacion.getDictamen().getId(),
-            getInformeEvaluador(evaluacion.getId())));
+    Long dictamenId = evaluacion.getDictamen() != null ? evaluacion.getDictamen().getId() : null;
+
+    dataReport.put("bloqueApartados", generarBloqueApartados(dictamenId, getInformeEvaluador(evaluacion.getId())));
 
     return compileReportData(path, dataReport);
   }
