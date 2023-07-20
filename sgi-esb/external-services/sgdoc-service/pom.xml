@@ -11,7 +11,7 @@
   </parent>
   <groupId>org.crue.hercules.sgi</groupId>
   <artifactId>sgi-sgdoc-service</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
   <name>sgi-sgdoc-service</name>
   <description>Servicios del Sistema de Gestión de Documentos</description>
   <dependencies>
