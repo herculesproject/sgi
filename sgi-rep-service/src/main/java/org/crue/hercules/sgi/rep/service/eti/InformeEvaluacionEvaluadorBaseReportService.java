@@ -59,6 +59,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
   private static final Long TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = 3L;
   private static final Long TIPO_INVESTIGACION_TUTELADA_TESIS_DOCTORAL = 1L;
   private static final Long TIPO_COMENTARIO_GESTOR = 1L;
+  private static final Long TIPO_COMENTARIO_EVALUADOR = 2L;
   private static final Long DICTAMEN_NO_PROCEDE_EVALUAR = 4L;
 
   protected InformeEvaluacionEvaluadorBaseReportService(SgiConfigProperties sgiConfigProperties,
@@ -73,7 +74,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
 
   protected XWPFDocument getReportFromIdEvaluacion(SgiReportDto sgiReport, Long idEvaluacion) {
     try {
-      HashMap<String, Object> dataReport = new HashMap<String, Object>();
+      HashMap<String, Object> dataReport = new HashMap<>();
       EvaluacionDto evaluacion = evaluacionService.findById(idEvaluacion);
 
       dataReport.put("headerImg", getImageHeaderLogo());
@@ -309,13 +310,13 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     subDataBloqueApartado.put("idDictamenNoProcedeEvaluar", DICTAMEN_NO_PROCEDE_EVALUAR);
     if (ObjectUtils.isNotEmpty(informeEvaluacionEvaluadorReportOutput)
         && ObjectUtils.isNotEmpty(informeEvaluacionEvaluadorReportOutput.getBloques())
-        && informeEvaluacionEvaluadorReportOutput.getBloques().size() > 0) {
+        && !informeEvaluacionEvaluadorReportOutput.getBloques().isEmpty()) {
       if (informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().isPresent()
           && informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().get().getApartados().stream()
               .findAny().isPresent()) {
         subDataBloqueApartado.put("numComentarios",
             informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().get().getApartados().stream()
-                .findAny().get().getNumeroComentariosGestor());
+                .findAny().get().getNumeroComentariosTotalesInforme());
       }
       subDataBloqueApartado.put("bloques", informeEvaluacionEvaluadorReportOutput.getBloques());
     } else {
@@ -354,15 +355,18 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
       EvaluacionDto evaluacion = evaluacionService.findById(idEvaluacion);
       informeEvaluacionEvaluadorReportOutput.setEvaluacion(evaluacion);
 
-      Integer numComentariosGestor = evaluacionService.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
-          TIPO_COMENTARIO_GESTOR);
+      Integer numComentarios = null;
 
       List<ComentarioDto> comentarios = null;
 
       if (isInformeEvaluacion) {
         comentarios = evaluacionService.findByEvaluacionIdGestor(idEvaluacion);
+        numComentarios = evaluacionService.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
+            TIPO_COMENTARIO_GESTOR);
       } else {
         comentarios = evaluacionService.findByEvaluacionIdEvaluador(idEvaluacion);
+        numComentarios = evaluacionService.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
+            TIPO_COMENTARIO_EVALUADOR);
       }
 
       if (null != comentarios && !comentarios.isEmpty()) {
@@ -389,7 +393,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
         .mostrarContenidoApartado(false)
         .comentarios(comentarios)
         .apartados(apartados)
-        .numeroComentariosGestor(numComentariosGestor)
+        .numeroComentarios(numComentarios)
         .build();
         // @formatter:on
 
@@ -411,7 +415,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
             .mostrarContenidoApartado(false)
             .comentarios(null)
             .apartados(null)
-            .numeroComentariosGestor(numComentariosGestor)
+            .numeroComentarios(numComentarios)
             .build();
 
         BloquesReportOutput reportOutput = baseApartadosRespuestasService
