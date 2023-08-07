@@ -127,6 +127,113 @@
       </whereParams>
     </update>
 
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_6_1.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Definición" />
+        <param name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Datos referentes a los animales de experimentación' and orden = '6' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="1" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_6_3.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Animales protegidos o en peligro de extinción" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Datos referentes a los animales de experimentación' and orden = '6' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="3" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_7_5.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Analgesia" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal' and orden = '7' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="5" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_7_6.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Anestesia" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal' and orden = '7' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="6" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_7_7.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Administración de sustancias" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal' and orden = '7' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="7" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_7_13.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Eutanasia" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal' and orden = '7' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="13" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_4_1.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Reemplazo" />
+        <param name="orden" valueNumeric="1" />
+      </whereParams>
+    </update>
+
     <!-- Formulario M30 -->
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_1_1.json" />
