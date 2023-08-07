@@ -10,6 +10,7 @@ import { IRespuesta } from '@core/models/eti/respuesta';
 import { ITarea } from '@core/models/eti/tarea';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
+import { Module } from '@core/module';
 import { Fragment, Group } from '@core/services/action-service';
 import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
@@ -89,6 +90,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     comite: IComite,
     readonly: boolean,
     private tipoEvaluacion: TIPO_EVALUACION,
+    private readonly moduloInv: boolean,
     protected formularioService: FormularioService,
     protected memoriaService: MemoriaService,
     protected evaluacionService: EvaluacionService,
@@ -657,6 +659,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
       this.evalExpressionLock(firstFieldConfig, model, formState);
 
+      this.replaceTemplatePlaceholders(firstFieldConfig, formState);
+
       if (
         this.readonly
         || (!this.readonly && (this.comentarios.size || this.comentariosGenerales.length) && !question.apartado.comentario)
@@ -793,6 +797,19 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   // tslint:disable-next-line: ban-types
   private evalExpression(expression: Function, thisArg: any, argVal: any[]): any {
     return expression.apply(thisArg, argVal);
+  }
+
+  private replaceTemplatePlaceholders(fieldConfig: SgiFormlyFieldConfig, formState: any): void {
+    if (fieldConfig.fieldGroup.length) {
+      fieldConfig.fieldGroup
+        .filter(field => !!field.templateOptions && field.templateOptions.replaceTemplatePlaceholders)
+        .forEach(field => {
+          field.template = field.template
+            .replace('#PETICION_EVALUACION_ID#', formState.memoria.peticionEvaluacion.id)
+            .replace('#MEMORIA_ID#', formState.memoria.id)
+            .replace('#MODULE_PATH#', this.moduloInv ? Module.INV.path : Module.ETI.path);
+        });
+    }
   }
 
   /**
