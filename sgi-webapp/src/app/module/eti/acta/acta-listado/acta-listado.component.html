@@ -143,8 +143,8 @@
             </button>
           </ng-container>
           <ng-container *sgiHasAuthorityForAnyUO="'ETI-ACT-FIN'">
-            <button *ngIf="hasFinalizarActa(acta)" mat-icon-button (click)="finishActa(acta.id)" color="primary"
-              matTooltip="{{'eti.acta.finalizar' | translate}}">
+            <button *ngIf="showAddAndFinishActa && hasFinalizarActa(acta)" mat-icon-button (click)="finishActa(acta.id)"
+              color="primary" matTooltip="{{'eti.acta.finalizar' | translate}}">
               <mat-icon>https</mat-icon>
             </button>
           </ng-container>
@@ -172,7 +172,7 @@
     </div>
   </div>
   <sgi-menu-content-footer *sgiHasAuthorityForAnyUO="'ETI-ACT-C'">
-    <sgi-footer-crear [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
+    <sgi-footer-crear *ngIf="showAddAndFinishActa" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
     </sgi-footer-crear>
   </sgi-menu-content-footer>
 </sgi-menu-content>

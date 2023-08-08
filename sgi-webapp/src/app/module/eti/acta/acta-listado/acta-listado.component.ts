@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
@@ -13,6 +14,7 @@ import { ESTADO_ACTA_MAP } from '@core/models/eti/tipo-estado-acta';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { Module } from '@core/module';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { ActaService } from '@core/services/eti/acta.service';
@@ -61,7 +63,12 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     return ESTADO_ACTA_MAP;
   }
 
+  get showAddAndFinishActa(): boolean {
+    return !this.isModuleInv;
+  }
+
   private limiteRegistrosExportacionExcel: string;
+  private isModuleInv: boolean;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -70,9 +77,12 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     private readonly translate: TranslateService,
     private readonly documentoService: DocumentoService,
     private readonly matDialog: MatDialog,
-    private readonly cnfService: ConfigService
+    private readonly cnfService: ConfigService,
+    private readonly route: ActivatedRoute
   ) {
     super();
+
+    this.isModuleInv = route.snapshot.data.module === Module.INV;
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
