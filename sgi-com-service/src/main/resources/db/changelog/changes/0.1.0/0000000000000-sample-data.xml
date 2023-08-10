@@ -1,11 +1,19 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+  logicalFilePath="classpath*:db/changelog/changes/0000000000000-sample-data.xml">
   <property name="schemaPrefix" value="" />
 
   <changeSet context="dev" author="master" id="0000000000000-email">
     <insert tableName="email">
       <column name="id" valueSequenceNext="email_seq" />
-      <column name="emailtpl_id" valueComputed="(select id from ${schemaPrefix}email_tpl where name='GENERIC_EMAIL')" />
+      <column name="emailtpl_id"
+        valueComputed="(select id from ${schemaPrefix}email_tpl where name='GENERIC_EMAIL')" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
       <column name="last_modified_by" value="master" />
@@ -15,7 +23,8 @@
   <changeSet context="dev" author="master" id="0000000000000-email_param">
     <insert tableName="email_param">
       <column name="email_id" valueComputed="(select max(id) from ${schemaPrefix}email)" />
-      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_SUBJECT')" />
+      <column name="param_id"
+        valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_SUBJECT')" />
       <column name="value" value="Subject" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
@@ -24,7 +33,8 @@
     </insert>
     <insert tableName="email_param">
       <column name="email_id" valueComputed="(select max(id) from ${schemaPrefix}email)" />
-      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_CONTENT_TEXT')" />
+      <column name="param_id"
+        valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_CONTENT_TEXT')" />
       <column name="value" value="Content" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
@@ -33,7 +43,8 @@
     </insert>
     <insert tableName="email_param">
       <column name="email_id" valueComputed="(select max(id) from ${schemaPrefix}email)" />
-      <column name="param_id" valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_CONTENT_HTML')" />
+      <column name="param_id"
+        valueComputed="(select id from ${schemaPrefix}param where name='GENERIC_CONTENT_HTML')" />
       <column name="value" value="Content" />
       <column name="created_by" value="master" />
       <column name="creation_date" valueDate="current_timestamp()" />
