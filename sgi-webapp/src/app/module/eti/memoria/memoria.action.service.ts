@@ -22,7 +22,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { FormlyConfig, FormlyFormBuilder } from '@ngx-formly/core';
 import { NGXLogger } from 'ngx-logger';
-import { from, Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { concatMap, filter, map, switchMap, take, takeLast } from 'rxjs/operators';
 import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
 import { MemoriaDatosGeneralesFragment } from './memoria-formulario/memoria-datos-generales/memoria-datos-generales.fragment';
@@ -100,8 +100,15 @@ export class MemoriaActionService extends ActionService {
 
     this.isInvestigador = route.snapshot.data.module === Module.INV;
 
-    this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaService,
-      peticionEvaluacionService, this.isInvestigador);
+    this.datosGenerales = new MemoriaDatosGeneralesFragment(
+      fb,
+      this.readonly,
+      this.memoria?.id,
+      service,
+      personaService,
+      peticionEvaluacionService,
+      this.isInvestigador
+    );
     this.formularios = new MemoriaFormularioFragment(
       logger,
       this.readonly,
@@ -238,6 +245,10 @@ export class MemoriaActionService extends ActionService {
     }
   }
 
+  public getMemoria(): IMemoria {
+    return this.memoria;
+  }
+
   public getComite(): IComite {
     return this.memoria?.comite || this.datosGenerales.getFormGroup()?.controls?.comite?.value;
   }
@@ -252,6 +263,10 @@ export class MemoriaActionService extends ActionService {
 
   public isLoadDocumentoRatificacion(): boolean {
     return this.documentacion.isLoadDocumentoRatificacion;
+  }
+
+  public isModuleInv(): boolean {
+    return this.isInvestigador;
   }
 
   saveOrUpdate(action?: any): Observable<void> {

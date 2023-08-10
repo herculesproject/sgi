@@ -9,6 +9,7 @@ import { IMemoria } from '@core/models/eti/memoria';
 import { IRespuesta } from '@core/models/eti/respuesta';
 import { ITarea } from '@core/models/eti/tarea';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
+import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { Module } from '@core/module';
 import { Fragment, Group } from '@core/services/action-service';
@@ -278,7 +279,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
       switchMap(() => {
         this.refreshBlockChanges();
 
-        if ((formLoadComplete && !hasLastBloqueSavedRespuestas) || this.isFormularioMemoriaModificacion(this.memoria)) {
+        if ((formLoadComplete && !hasLastBloqueSavedRespuestas) || this.isFormularioMemoriaModificacion(this.memoria) || this.memoria.estadoActual.id === ESTADO_MEMORIA.SUBSANACION) {
           return this.formularioService.completado(this.memoria.id, this.formularioTipo);
         }
 

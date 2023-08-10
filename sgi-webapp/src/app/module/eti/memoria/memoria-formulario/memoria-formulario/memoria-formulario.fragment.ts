@@ -60,6 +60,7 @@ export class MemoriaFormularioFragment extends MemoriaFormlyFormFragment {
     const estado = this.memoria.estadoActual.id as ESTADO_MEMORIA;
     switch (+estado) {
       case ESTADO_MEMORIA.COMPLETADA:
+      case ESTADO_MEMORIA.SUBSANACION:
       case ESTADO_MEMORIA.EN_ELABORACION:
       case ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS:
       case ESTADO_MEMORIA.PENDIENTE_CORRECCIONES:

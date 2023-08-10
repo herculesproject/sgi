@@ -1,5 +1,6 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { COMITE, IComite } from '@core/models/eti/comite';
+import { IEstadoMemoria } from '@core/models/eti/estado-memoria';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
@@ -21,12 +22,17 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   public personasResponsable$: BehaviorSubject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
   public mostrarCodOrgano = false;
   public showInfoRatificacion = false;
+  public showComentarioSubsanacion = false;
+  private estadoMemoria: IEstadoMemoria;
 
   public idPeticionEvaluacion: number;
   private isInvestigador: boolean;
 
   constructor(
-    private fb: FormBuilder, readonly: boolean, key: number, private service: MemoriaService,
+    private fb: FormBuilder,
+    readonly: boolean,
+    key: number,
+    private service: MemoriaService,
     private personaService: PersonaService,
     private readonly peticionEvaluacionService: PeticionEvaluacionService,
     private readonly moduloInv: boolean) {
@@ -86,6 +92,9 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       memoriaOriginal: [
         { value: this.isEdit() ? this.memoria.memoriaOriginal : null, disabled: this.isEdit() },
         Validators.required
+      ],
+      comentarioSubsanacion: [
+        { value: '', disabled: true }
       ]
     });
   }
@@ -102,7 +111,8 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       titulo: value.titulo,
       personaResponsable: value.responsable?.id ? value.responsable : null,
       codOrganoCompetente: value.codOrganoCompetente,
-      memoriaOriginal: value.memoriaOriginal
+      memoriaOriginal: value.memoriaOriginal,
+      comentarioSubsanacion: this.estadoMemoria?.comentario ?? ''
     };
   }
 
@@ -184,6 +194,20 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
           } else {
             return of(memoria);
           }
+        }),
+        switchMap(memoria => {
+          if (this.moduloInv && memoria.estadoActual.id === ESTADO_MEMORIA.SUBSANACION) {
+            return this.service.getEstadoActual(memoria.id).pipe(
+              tap(estadoMemoria => {
+                this.estadoMemoria = estadoMemoria;
+                console.error(estadoMemoria);
+                this.showComentarioSubsanacion = true;
+              }),
+              map(_ => memoria)
+            )
+          }
+
+          return of(memoria);
         }),
         tap((memoria) => {
           this.loadResponsable(memoria.peticionEvaluacion.id);

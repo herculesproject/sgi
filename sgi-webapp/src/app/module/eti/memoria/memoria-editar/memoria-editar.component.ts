@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { COMITE } from '@core/models/eti/comite';
+import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,10 +14,12 @@ import { NGXLogger } from 'ngx-logger';
 import { switchMap } from 'rxjs/operators';
 import { MEMORIA_ROUTE_NAMES } from '../memoria-route-names';
 import { MemoriaActionService } from '../memoria.action.service';
+import { IndicarSubsanacionModalComponent, IndicarSubsanacionModalComponentData } from '../modals/indicar-subsanacion-modal/indicar-subsanacion-modal.component';
 
 const MSG_BUTTON_SAVE = marker('btn.save');
 const MSG_SUCCESS = marker('msg.update.entity.success');
 const MSG_ERROR = marker('error.update.entity');
+const MSG_INDICAR_SUBSANACION_SUCCESS = marker('msg.csp.indicar-subsanacion.success');
 const MEMORIA_KEY = marker('eti.memoria');
 
 @Component({
@@ -32,6 +36,10 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
   textoActualizar = MSG_BUTTON_SAVE;
   textoActualizarSuccess: string;
   textoActualizarError: string;
+
+  showIndicarSubsanacionBtn = false;
+
+  private readonly estadosEnableIndicarSubsanacion = [ESTADO_MEMORIA.EN_SECRETARIA];
 
   private from: string;
 
@@ -50,6 +58,7 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
     route: ActivatedRoute,
     public actionService: MemoriaActionService,
     dialogService: DialogService,
+    private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
     super(router, route, actionService, dialogService);
@@ -59,6 +68,7 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
+    this.showIndicarSubsanacionBtn = this.estadosEnableIndicarSubsanacion.includes(this.actionService.getEstadoMemoria().id) && !this.actionService.isModuleInv();
   }
 
   private setupI18N(): void {
@@ -87,24 +97,28 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
     ).subscribe((value) => this.textoActualizarError = value);
   }
 
-  saveOrUpdate(): void {
-    this.actionService.saveOrUpdate().subscribe(
-      () => { },
-      (error) => {
-        this.logger.error(error);
-        if (error instanceof SgiError) {
-          if (!!!error.managed) {
-            this.snackBarService.showError(error);
+  saveOrUpdate(action: 'save' | 'indicar-subsanacion'): void {
+    if (action === 'indicar-subsanacion') {
+      this.openIndicarSubsanacion();
+    } else {
+      this.actionService.saveOrUpdate().subscribe(
+        () => { },
+        (error) => {
+          this.logger.error(error);
+          if (error instanceof SgiError) {
+            if (!!!error.managed) {
+              this.snackBarService.showError(error);
+            }
           }
+          else {
+            this.snackBarService.showError(this.textoActualizarError);
+          }
+        },
+        () => {
+          this.snackBarService.showSuccess(this.textoActualizarSuccess);
         }
-        else {
-          this.snackBarService.showError(this.textoActualizarError);
-        }
-      },
-      () => {
-        this.snackBarService.showSuccess(this.textoActualizarSuccess);
-      }
-    );
+      );
+    }
   }
 
   cancel(): void {
@@ -115,4 +129,26 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
       super.cancel();
     }
   }
+
+  /**
+   * Apertura de modal para indicar subsanacion
+   */
+  private openIndicarSubsanacion(): void {
+    const data: IndicarSubsanacionModalComponentData = {
+      memoriaId: this.actionService.getMemoria().id
+    };
+    const config = {
+      data
+    };
+    const dialogRef = this.matDialog.open(IndicarSubsanacionModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (modalData: IndicarSubsanacionModalComponentData) => {
+        if (modalData) {
+          this.snackBarService.showSuccess(MSG_INDICAR_SUBSANACION_SUCCESS);
+          this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        }
+      }
+    );
+  }
+
 }

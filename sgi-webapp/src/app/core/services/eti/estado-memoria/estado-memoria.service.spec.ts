@@ -1,8 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-
 import { EstadoMemoriaService } from './estado-memoria.service';
 
 describe('EstadoMemoriaService', () => {
@@ -12,12 +11,9 @@ describe('EstadoMemoriaService', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        LoggerTestingModule,
-        SgiAuthModule
-      ],
-      providers: [
-        SgiAuthService
-      ],
+        BrowserAnimationsModule,
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(EstadoMemoriaService);
   });
