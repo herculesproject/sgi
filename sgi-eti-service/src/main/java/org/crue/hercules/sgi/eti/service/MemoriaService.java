@@ -6,9 +6,11 @@ import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria.Tipo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -274,4 +276,21 @@ public interface MemoriaService {
    * @return Entidad {@link Memoria} persistida desactivada.
    */
   Memoria desactivar(Long id);
+
+  /**
+   * Cambia el estado de la memoria a {@link Tipo#SUBSANACION} con el comentario
+   * 
+   * @param id         Id de la {@link Memoria}.
+   * @param comentario comentario subsanacion
+   */
+  void indicarSubsanacion(Long id, String comentario);
+
+  /**
+   * Devuelve el estado actual de la memoria
+   * 
+   * @param id Id de la {@link Memoria}.
+   * @return el estado de la memoria
+   */
+  EstadoMemoria getEstadoActualMemoria(Long id);
+
 }

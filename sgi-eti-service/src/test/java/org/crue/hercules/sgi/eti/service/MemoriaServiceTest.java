@@ -1221,7 +1221,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(memoriaRepository.findAll(ArgumentMatchers.<Specification<Memoria>>any())).willReturn(memorias);
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
     tipoEstadoMemoria.setId(Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
-    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, Instant.now());
+    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, Instant.now(), null);
 
     memoriaServicioActualizado.setEstadoActual(tipoEstadoMemoria);
     BDDMockito.given(this.estadoMemoriaRepository.findTopByMemoriaIdOrderByFechaEstadoDesc(anyLong()))

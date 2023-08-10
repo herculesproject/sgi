@@ -40,6 +40,7 @@ public class Constantes {
   public static final Long TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL = 19L;
   public static final Long TIPO_ESTADO_MEMORIA_FIN_EVALUACION_SEGUIMIENTO_FINAL = 20L;
   public static final Long TIPO_ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL = 21L;
+  public static final Long TIPO_ESTADO_MEMORIA_SUBSANACION = 22L;
 
   // Tipo evaluación
   public static final Long TIPO_EVALUACION_RETROSPECTIVA = 1L;

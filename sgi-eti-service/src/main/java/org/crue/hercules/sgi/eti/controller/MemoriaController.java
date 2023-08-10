@@ -5,15 +5,19 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.BaseEntity;
 import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
+import org.crue.hercules.sgi.eti.model.Checklist;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
@@ -21,6 +25,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria.Tipo;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.custom.CustomConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
@@ -53,6 +58,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * MemoriaController
  */
+@Validated
 @RestController
 @RequestMapping(MemoriaController.REQUEST_MAPPING)
 @Slf4j
@@ -65,6 +71,8 @@ public class MemoriaController {
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
   public static final String PATH_DOCUMENTACION_INICIAL = PATH_ID + PATH_DELIMITER + "documentacion-inicial";
   public static final String PATH_DOCUMENTACION_INICIAL_INVESTIGADOR = PATH_DOCUMENTACION_INICIAL + PATH_INVESTIGADOR;
+  public static final String PATH_ESTADO_ACTUAL = PATH_ID + PATH_DELIMITER + "estado-actual";
+  public static final String PATH_INDICAR_SUBSANACION = PATH_ID + PATH_DELIMITER + "indicar-subsanacion";
 
   /** Memoria service */
   private final MemoriaService service;
@@ -862,6 +870,38 @@ public class MemoriaController {
     }
     log.debug("isResponsableOrCreador(Long id) - end");
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Cambia el estado de la memoria a {@link Tipo#SUBSANACION} con el comentario
+   * 
+   * @param id        Identificador del Checklist a actualizar
+   * @param respuesta La respuesta a actualizar
+   * @return El {@link Checklist} actualizado
+   */
+  @PatchMapping(PATH_INDICAR_SUBSANACION)
+  @PreAuthorize("hasAuthority('ETI-MEM-CEST')")
+  ResponseEntity<Void> indicarSubsanacion(@PathVariable Long id,
+      @NotEmpty @Size(max = EstadoMemoria.COMENTARIO_MAX_LENGTH) @RequestBody String comentario) {
+    log.debug("indicarSubsanacion(Long id, String comentario) - start");
+    service.indicarSubsanacion(id, comentario);
+    log.debug("indicarSubsanacion(Long id, String comentario) - end");
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  /**
+   * Recupera el estado anterior de la {@link Memoria}.
+   * 
+   * @param id Id de {@link Memoria}.
+   * @return la {@link Memoria} si el estado se ha podido actualizar
+   */
+  @GetMapping(PATH_ESTADO_ACTUAL)
+  @PreAuthorize("hasAnyAuthority('ETI-MEM-INV-ER', 'ETI-MEM-V')")
+  ResponseEntity<EstadoMemoria> getEstadoActual(@PathVariable Long id) {
+    log.debug("getEstadoActual(Long id) - start");
+    EstadoMemoria estado = service.getEstadoActualMemoria(id);
+    log.debug("getEstadoActual(Long id) - end");
+    return new ResponseEntity<>(estado, HttpStatus.OK);
   }
 
 }

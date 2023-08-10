@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
@@ -19,7 +17,6 @@ import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionEvaluacionExcepti
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
-import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -54,6 +51,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -183,7 +182,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       retrospectivaRepository.save(evaluacionCompleta.getMemoria().getRetrospectiva());
     } else {
       estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacionCompleta.getMemoria(),
-          evaluacionCompleta.getMemoria().getEstadoActual(), Instant.now()));
+          evaluacionCompleta.getMemoria().getEstadoActual(), Instant.now(), null));
     }
 
     memoriaService.update(evaluacionCompleta.getMemoria());

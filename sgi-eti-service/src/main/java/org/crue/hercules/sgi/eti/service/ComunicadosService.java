@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComEvaluacionModificadaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegAnualPendienteData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegFinalPendienteData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComMemoriaIndicarSubsanacionData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComMemoriaRevisionMinArchivadaData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
@@ -301,6 +302,33 @@ public class ComunicadosService {
           "enviarComunicadoMemoriaRevisionMinimaArchivada() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
     }
     log.debug("enviarComunicadoMemoriaArchivadaAutomaticamentePorInactividad() - end");
+  }
+
+  public void enviarComunicadoIndicarSubsanacion(String nombreInvestigacion, String comentarioEstado,
+      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      throws JsonProcessingException {
+    log.debug(
+        "enviarComunicadoIndicarSubsanacion(String nombreInvestigacion, String comentarioEstado, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
+    List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
+    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
+    if (recipients != null) {
+      EmailOutput emailOutput = emailService.createComunicadoMemoriaIndicarSubsanacion(
+          EtiComMemoriaIndicarSubsanacionData.builder()
+              .enlaceAplicacion(enlaceAplicacion)
+              .comentarioEstado(comentarioEstado)
+              .nombreInvestigacion(nombreInvestigacion)
+              .referenciaMemoria(referenciaMemoria)
+              .tipoActividad(tipoActividad)
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoIndicarSubsanacion(String nombreInvestigacion, String comentarioEstado, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug(
+        "enviarComunicadoIndicarSubsanacion(String nombreInvestigacion, String comentarioEstado, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - end");
   }
 
   /**

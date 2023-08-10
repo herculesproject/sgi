@@ -314,7 +314,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
             1),
         generarMockTipoEstadoMemoria(idDatosEstadoMemoria,
             "TipoEstadoMemoria" + String.format("%03d", idDatosEstadoMemoria), Boolean.TRUE),
-        Instant.now());
+        Instant.now(), null);
 
   }
 

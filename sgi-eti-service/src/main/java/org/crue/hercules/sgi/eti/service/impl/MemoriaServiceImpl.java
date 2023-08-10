@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.EstadoMemoriaIndicarSubsanacionNotValidException;
 import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
@@ -39,6 +40,7 @@ import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria.Tipo;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ApartadoRepository;
@@ -61,6 +63,7 @@ import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -507,11 +510,25 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Override
   public void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria) {
     log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - start");
+    updateEstadoMemoria(memoria, idTipoEstadoMemoria, null);
+    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - end");
+  }
+
+  /**
+   * Se crea el nuevo estado para la memoria recibida y se actualiza el estado
+   * actual de esta.
+   * 
+   * @param memoria             {@link Memoria} a actualizar estado.
+   * @param idTipoEstadoMemoria identificador del estado nuevo de la memoria.
+   * @param comentario          un comentario
+   */
+  private void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria, String comentario) {
+    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria, String comentario) - start");
 
     // se crea el nuevo estado para la memoria
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
     tipoEstadoMemoria.setId(idTipoEstadoMemoria);
-    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, Instant.now());
+    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, Instant.now(), comentario);
 
     estadoMemoriaRepository.save(estadoMemoria);
 
@@ -520,7 +537,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     memoria.setEstadoActual(tipoEstadoMemoria);
     memoriaRepository.save(memoria);
 
-    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - end");
+    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria, String comentario ) - end");
   }
 
   /**
@@ -1348,6 +1365,70 @@ public class MemoriaServiceImpl implements MemoriaService {
 
       return this.memoriaRepository.save(memoria);
     }).orElseThrow(() -> new MemoriaNotFoundException(id));
+  }
+
+  /**
+   * Cambia el estado de la memoria a {@link Tipo#SUBSANACION} con el comentario
+   * 
+   * @param id         Id de la {@link Memoria}.
+   * @param comentario comentario subsanacion
+   */
+  @Transactional
+  @Override
+  public void indicarSubsanacion(Long id, String comentario) {
+    log.debug("indicarSubsanacion(Long id, String comentario) - start");
+
+    AssertHelper.idNotNull(id, Memoria.class);
+
+    Memoria memoria = memoriaRepository.findById(id).orElseThrow(() -> new MemoriaNotFoundException(id));
+
+    if (!Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.EN_SECRETARIA.getId())) {
+      throw new EstadoMemoriaIndicarSubsanacionNotValidException();
+    }
+
+    updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.SUBSANACION.getId(), comentario);
+
+    try {
+      String tipoActividad;
+      if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
+          .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+        tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+      } else {
+        tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+      }
+
+      this.comunicadosService.enviarComunicadoIndicarSubsanacion(
+          memoria.getComite().getNombreInvestigacion(),
+          comentario,
+          memoria.getNumReferencia(),
+          tipoActividad,
+          memoria.getPeticionEvaluacion().getTitulo(),
+          memoria.getPeticionEvaluacion().getPersonaRef());
+    } catch (Exception e) {
+      log.error("indicarSubsanacion(Long id, String comentario) - Error al enviar el comunicado", e);
+    }
+
+    log.debug("indicarSubsanacion(Long id, String comentario) - end");
+  }
+
+  /**
+   * Devuelve el estado actual de la memoria
+   * 
+   * @param id Id de la {@link Memoria}.
+   * @return el estado de la memoria
+   */
+  @Transactional
+  @Override
+  public EstadoMemoria getEstadoActualMemoria(Long id) {
+    log.debug("getEstadoActualMemoria(Long id) - start");
+
+    AssertHelper.idNotNull(id, Memoria.class);
+
+    EstadoMemoria returnValue = this.estadoMemoriaRepository.findTopByMemoriaIdOrderByFechaEstadoDesc(id);
+
+    log.debug("getEstadoActualMemoria(Long id) - end");
+
+    return returnValue;
   }
 
 }
