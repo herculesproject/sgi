@@ -10,7 +10,7 @@ import { map, share } from 'rxjs/operators';
 
 export enum ConfigEti {
   ETI_BLOCKCHAIN_ENABLE = 'eti-blockchain-enable',
-  ETI_REP_ACTA_PRPT = 'rep-eti-acta-prpt',
+  ETI_REP_ACTA_DOCX = 'rep-eti-acta-docx',
   ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX = 'rep-eti-evaluacion-favorable-memoria-modificacion-docx',
   ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX = 'rep-eti-evaluacion-favorable-memoria-nueva-docx',
   ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX = 'rep-eti-evaluacion-favorable-memoria-ratificacion-docx',
@@ -39,7 +39,7 @@ export class ConfigEtiComponent extends AbstractMenuContentComponent {
 
   private readonly _CONFIG_MAP: Map<ConfigEti, IConfigOptions> = new Map([
     [ConfigEti.ETI_BLOCKCHAIN_ENABLE, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_BLOCKCHAIN_ENABLE`), options: this.getBooleanValues(), required: true }],
-    [ConfigEti.ETI_REP_ACTA_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_ACTA_PRPT`) }],
+    [ConfigEti.ETI_REP_ACTA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_ACTA_DOCX`) }],
     [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX`) }],
     [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX`) }],
     [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX`) }],

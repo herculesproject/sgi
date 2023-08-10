@@ -47,7 +47,7 @@
   "adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO": "Memorias - Número máximo de registros en la exportación del listado",
   "adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO": "Solicitudes de evaluación - Número máximo de registros en la exportación del listado",
   "adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_LISTADO": "Seguimientos - Número máximo de registros en la exportación del listado",
-  "adm.config.eti.ETI_REP_ACTA_PRPT": "Plantilla informe acta reuniones evaluación",
+  "adm.config.eti.ETI_REP_ACTA_DOCX": "Plantilla informe acta reuniones evaluación",
   "adm.config.eti.ETI_REP_EVALUACION_DOCX": "Plantilla de informe no favorable de evaluación",
   "adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX": "Plantilla informe favorable de evaluación para memoria de modificación",
   "adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX": "Plantilla informe favorable de evaluación",
