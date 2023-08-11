@@ -14,4 +14,14 @@
     </addColumn>
   </changeSet>
 
+  <!-- Se añade parametro para configurar la duración en años de los proyectos de evaluación en la
+  tabla de configuración -->
+  <changeSet author="user (generated)" id="00.04.00-2">
+    <addColumn tableName="configuracion">
+      <column name="duracion_proyecto_evaluacion" type="bigint"></column>
+    </addColumn>
+    <addUniqueConstraint columnNames="duracion_proyecto_evaluacion"
+      constraintName="UC_CONFIGURACION_DURACION_PROYECTO_EVALUACION_COL" tableName="configuracion" />
+  </changeSet>
+
 </databaseChangeLog>

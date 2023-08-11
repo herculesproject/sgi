@@ -305,4 +305,10 @@
     </update>
   </changeSet>
 
+  <changeSet context="!test" author="master" id="00.04.00-configuracion">
+    <update tableName="configuracion">
+      <column name="duracion_proyecto_evaluacion" valueNumeric="5" />
+    </update>
+  </changeSet>
+
 </databaseChangeLog>
