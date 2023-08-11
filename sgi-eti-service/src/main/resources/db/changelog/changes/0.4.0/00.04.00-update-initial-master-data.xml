@@ -298,4 +298,11 @@
     </insert>
   </changeSet>
 
+  <changeSet context="!test" author="master" id="00.04.00-tipo-tarea">
+    <update tableName="tipo_tarea">
+      <column name="nombre" value="Manipulación de animales o realización de procedimientos" />
+      <where>id=3</where>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>
