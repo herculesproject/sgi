@@ -79,6 +79,22 @@
       </whereParams>
     </update>
 
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m10_apartado_4_6_3.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10'))" />
+        <param
+          name="nombre" value="Vinculación académica con el equipo investigador" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Estudiantes como sujetos de investigación')" />
+        <param
+          name="orden" valueNumeric="3" />
+      </whereParams>
+    </update>
+
     <!-- Formulario M20 -->
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_1_1.json" />
