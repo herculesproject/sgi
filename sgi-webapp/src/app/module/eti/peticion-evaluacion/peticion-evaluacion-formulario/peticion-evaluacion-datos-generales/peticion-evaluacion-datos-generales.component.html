@@ -144,6 +144,9 @@
         <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
           {{'error.required.entity' | translate:msgParamFechaFinEntity}}
         </mat-error>
+        <mat-error *ngIf="formGroup.controls.fechaFin.errors?.duracion">
+          {{'error.peticion-evaluacion.duracion' | translate:msgParamFechaFinDuracion}}
+        </mat-error>
       </mat-form-field>
     </div>
     <!-- Resumen-->

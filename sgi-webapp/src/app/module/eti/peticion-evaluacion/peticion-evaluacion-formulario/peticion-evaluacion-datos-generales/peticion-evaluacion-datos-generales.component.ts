@@ -36,6 +36,7 @@ const PETICION_EVALUACION_IMPORTE_FINANCIACION_KEY = marker('eti.peticion-evalua
 const PETICION_EVALUACION_OTRO_VALOR_SOCIAL_KEY = marker('eti.peticion-evaluacion.otro-valor-social');
 const PETICION_EVALUACION_TIENE_FONDOS_PROPIOS_KEY = marker('eti.peticion-evaluacion.tiene-fondos-propios');
 const PETICION_EVALUACION_TUTOR_KEY = marker('eti.peticion-evaluacion.tutor');
+const PETICION_EVALUACION_DURACION_ERROR_KEY = marker('error.peticion-evaluacion.duracion');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-datos-generales',
@@ -74,6 +75,7 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   msgParamOtroValorSocialEntity = {};
   msgParamTieneFondosPropiosEntity = {};
   msgParamTutorEntity = {};
+  msgParamFechaFinDuracion = {};
 
   get ESTADO_FINANCIACION_MAP() {
     return ESTADO_FINANCIACION_MAP;
@@ -108,6 +110,11 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     this.peticionEvaluacionFragment = this.fragment as PeticionEvaluacionDatosGeneralesFragment;
     this.isInvestigacionTutelada$ = (this.fragment as PeticionEvaluacionDatosGeneralesFragment).isTipoInvestigacionTutelada$;
 
+    this.suscripciones.push((this.fragment as PeticionEvaluacionDatosGeneralesFragment).duracionProyectoEvaluacion$.subscribe(value => {
+      const singularPlural = value > 1 ? MSG_PARAMS.CARDINALIRY.PLURAL : MSG_PARAMS.CARDINALIRY.SINGULAR;
+      this.msgParamFechaFinDuracion = { duracion: value, ...singularPlural }
+    }));
+
     this.tipoActividades$ = this.tipoActividadService.findAll().pipe(
       map(response => response.items));
 
@@ -120,95 +127,95 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     this.setupI18N();
     this.actionService.initializeEquiposInvestigador();
 
-    this.formGroup.controls.tipoActividad.valueChanges.subscribe(value => {
+    this.suscripciones.push(this.formGroup.controls.tipoActividad.valueChanges.subscribe(value => {
       this.selectTipoActividad(value);
-    });
+    }));
   }
 
   private setupI18N(): void {
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_CODIGO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamCodigoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamCodigoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_TITULO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTituloEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamTituloEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_FECHA_INICIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamFechaInicioEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_FECHA_FIN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamFechaFinEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_RESUMEN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamResumenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamResumenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_VALOR_SOCIAL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamValorSocialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamValorSocialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_OBJETIVO_CIENTIFICO_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
-    ).subscribe((value) => this.msgParamObjetivoCientificoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+    ).subscribe((value) => this.msgParamObjetivoCientificoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_DISENIO_METODOLOGICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamDisenioMetodologicoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamDisenioMetodologicoEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_TIPO_ACTIVIDAD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTipoActividadEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamTipoActividadEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_TIPO_INVESTIGACION_TUTELADA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTipoInvestigacionTuteladaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamTipoInvestigacionTuteladaEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_EXISTE_FINANCIACION_KEY
-    ).subscribe((value) => this.msgParamExisteFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamExisteFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_ESTADO_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamEstadoFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamEstadoFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_IMPORTE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamImporteFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamImporteFinanciacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_OTRO_VALOR_SOCIAL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamOtroValorSocialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamOtroValorSocialEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_TIENE_FONDOS_PROPIOS_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTieneFondosPropiosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE });
+    ).subscribe((value) => this.msgParamTieneFondosPropiosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE }));
 
-    this.translate.get(
+    this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_TUTOR_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).subscribe((value) => this.msgParamTutorEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    ).subscribe((value) => this.msgParamTutorEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }));
 
   }
 

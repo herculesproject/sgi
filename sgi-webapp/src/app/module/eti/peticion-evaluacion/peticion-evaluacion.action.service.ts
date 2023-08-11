@@ -31,6 +31,7 @@ import { EquipoInvestigadorListadoFragment } from './peticion-evaluacion-formula
 import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.fragment';
 import { PeticionEvaluacionDatosGeneralesFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.fragment';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.fragment';
+import { ConfiguracionService } from '@core/services/eti/configuracion.service';
 
 @Injectable()
 export class PeticionEvaluacionActionService extends ActionService {
@@ -75,7 +76,8 @@ export class PeticionEvaluacionActionService extends ActionService {
     protected readonly evaluacionService: EvaluacionService,
     formlyConfig: FormlyConfig,
     componentFactoryResolver: ComponentFactoryResolver,
-    injector: Injector
+    injector: Injector,
+    protected readonly configuracionService: ConfiguracionService,
   ) {
     super();
 
@@ -105,6 +107,7 @@ export class PeticionEvaluacionActionService extends ActionService {
       solicitudService,
       this.checklist,
       this.personaService,
+      this.configuracionService,
       this.readonly
     );
     this.equipoInvestigadorListado = new EquipoInvestigadorListadoFragment(

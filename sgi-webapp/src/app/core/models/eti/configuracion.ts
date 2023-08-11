@@ -7,4 +7,6 @@ export interface IConfiguracion {
   mesesArchivadaPendienteCorrecciones: number;
   /** diasLimiteEvaluador */
   diasLimiteEvaluador: number;
+  /** duracionProyectoEvaluacion */
+  duracionProyectoEvaluacion: number;
 }
