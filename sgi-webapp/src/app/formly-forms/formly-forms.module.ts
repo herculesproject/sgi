@@ -7,6 +7,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { TipoValorSocialComponent } from './types/tipo-valor-social.component';
+import { IDateValidatorOptions, dateIsAfter } from './validators/date.validator';
 import { requiredChecked } from './validators/utils.validator';
 import { InfoDivWrapperComponent } from './wrappers/info-div/info-div.wrapper';
 import { PanelWrapperComponent } from './wrappers/panel/panel.wrapper';
@@ -58,7 +59,12 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
       validators: [
         { name: 'requiredChecked', validation: requiredChecked },
         /** TODO: Remove when any declared template didn't use it */
-        { name: 'nif', validation: Validators.required }
+        { name: 'nif', validation: Validators.required },
+        {
+          name: 'date-is-after',
+          validation: dateIsAfter,
+          options: {} as IDateValidatorOptions
+        }
       ]
     }),
     FormlyMaterialModule
