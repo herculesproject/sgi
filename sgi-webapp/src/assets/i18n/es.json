@@ -2246,6 +2246,8 @@
   "info.csp.solicitud-proyecto-socio.socio-con-rol-coordinador.no-informado.tooltip": "No se ha indicado el socio que actuará como coordinador del proyecto.Verifique los datos en el apartado Socios.",
   "info.csp.solicitud-proyecto.new": "Se creará un nuevo proyecto vinculado a la solicitud. Introduzca los siguientes datos:",
   "info.csp.solicitud.datos-generales.solicitud-rrhh-validar": "Para que la solicitud pueda ser validada por su tutor/a debe cambiar el estado de la misma a \"Solicitada\"",
+  "info.eti.convocatoria-reunion.asignancion-memoria.evaluador-conflicto-intereses": "El evaluador {evaluador} no puede ser asignado porque en la actualidad mantiene conflicto de intereses para evaluar la memoria. Se debe proceder a la asignación manual a través del listado proporcionado",
+  "info.eti.convocatoria-reunion.asignancion-memoria.evaluador-no-activo": "El evaluador {evaluador} no puede ser asignado porque no es un miembro activo {generoComite,select,male{del} female{de la} other{del/de la}} {comite} en la actualidad. Se debe proceder a la asignación manual a través del listado proporcionado",
   "info.eti.memoria.comentario.subsanacion": "La memoria ha sido revisada y debe de ser subsanada atendiendo al comentario remitido por Secretaría",
   "inv": "INV - Investigador",
   "inv.convocatoria.listado.titulo": "Búsqueda de convocatorias",

@@ -459,4 +459,31 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
     );
   }
 
+  /**
+   * Obtiene la ultima evaluacion de la memoria
+   * 
+   * @param id identificador de la memoria
+   */
+  getLastEvaluacionMemoria(id: number): Observable<IEvaluacion> {
+    return this.http.get<IEvaluacionBackend>(
+      `${this.endpointUrl}/${id}/last-evaluacion`
+    ).pipe(
+      map(response => EVALUACION_CONVERTER.toTarget(response))
+    );
+  }
+
+
+  /**
+   * Comprueba si la ultima evaluacion de la memoria tiene dictamen pendiente de
+   * correcciones
+   *
+   * @param id Id de la Memoria
+   */
+  isLastEvaluacionMemoriaPendienteCorrecciones(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/last-evaluacion-pendiente-correcciones`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200)
+    );
+  }
+
 }
