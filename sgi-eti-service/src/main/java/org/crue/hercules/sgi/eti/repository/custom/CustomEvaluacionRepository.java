@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -127,4 +128,15 @@ public interface CustomEvaluacionRepository {
    * @return fecha de envío a secretaría
    */
   Instant findFirstFechaEnvioSecretariaByIdEvaluacion(Long idEvaluacion);
+
+  /**
+   * Comprueba si la ultima evaluacion de la memoria tiene dictamen pendiente de
+   * correcciones
+   * 
+   * @param memoriaId identificador de la {@link Memoria}
+   * @return true si la ultima evaluacion tiene dictamen pendiente de correcciones
+   *         / false si no lo tiene
+   */
+  boolean isLastEvaluacionMemoriaPendienteCorrecciones(Long memoriaId);
+
 }

@@ -43,6 +43,7 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoComentario_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluadorSpecifications;
 import org.crue.hercules.sgi.eti.util.Constantes;
@@ -62,8 +63,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepository {
-
-  private static final Long ID_COMITE_CEEA = 2L;
 
   /**
    * The entity manager.
@@ -261,9 +260,11 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
   private Predicate getByMemoriaAndRetrospectivaEnEvaluacionPredicate(String query, Root<Evaluacion> root,
       CriteriaQuery<?> cq, CriteriaBuilder cb) {
     Predicate predicate = cb.and(cb.or(
-        cb.and(cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 1L),
+        cb.and(cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id),
+            TipoEvaluacion.Tipo.RETROSPECTIVA.getId()),
             cb.in(root.get(Evaluacion_.memoria).get(Memoria_.id)).value(getIdsMemoriasRestropectivas(cb, cq, root))),
-        cb.and(cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L),
+        cb.and(
+            cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), TipoEvaluacion.Tipo.MEMORIA.getId()),
             cb.in(root.get(Evaluacion_.memoria).get(Memoria_.id)).value(getIdsMemoriasEstadoActual(cb, cq, root)))));
 
     predicate = cb.and(predicate, cb.equal(root.get(Evaluacion_.activo), Boolean.TRUE));
@@ -751,7 +752,8 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     // Memoria en estado 'En evaluacion' (id = 4)
     // o 'En secretaria revisión minima'(id = 5)
 
-    Predicate memoria = cb.and(cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L),
+    Predicate memoria = cb.and(
+        cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), TipoEvaluacion.Tipo.MEMORIA.getId()),
         cb.in(root.get(Evaluacion_.memoria).get(Memoria_.id)).value(getIdsMemoriasEstadoActual(cb, cq, root)),
         memoriaVersion,
         cb.or(
@@ -768,8 +770,10 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Predicate requiereRetrospectiva = cb.isTrue(subqRoot.get(Evaluacion_.memoria).get(Memoria_.requiereRetrospectiva));
     Predicate estadoRetrospectiva = cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.retrospectiva)
         .get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id), 4L);
-    Predicate comite = cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id), 2L);
-    Predicate tipoEvaluacion = cb.equal(subqRoot.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 1L);
+    Predicate comite = cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id),
+        Constantes.COMITE_CEEA);
+    Predicate tipoEvaluacion = cb.equal(subqRoot.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id),
+        TipoEvaluacion.Tipo.RETROSPECTIVA.getId());
     Predicate evaluador = cb.or(
         cb.in(queryEvaluadores).value(subqRoot.get(Evaluacion_.evaluador1).get(Evaluador_.comite).get(Comite_.comite)),
         cb.in(queryEvaluadores).value(subqRoot.get(Evaluacion_.evaluador2).get(Evaluador_.comite).get(Comite_.comite)));
@@ -1045,4 +1049,54 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     log.debug("findFirstFechaEnvioSecretariaByIdEvaluacion(idEvaluacion) - end");
     return fechaEnvioSecretaria;
   }
+
+  /**
+   * Comprueba si la ultima evaluacion de la memoria tiene dictamen pendiente de
+   * correcciones
+   * 
+   * @param memoriaId identificador de la {@link Memoria}
+   * @return true si la ultima evaluacion tiene dictamen pendiente de correcciones
+   *         / false si no lo tiene
+   */
+  @Override
+  public boolean isLastEvaluacionMemoriaPendienteCorrecciones(Long memoriaId) {
+    log.debug("isLastEvaluacionMemoriaPendienteCorrecciones(Long memoriaId) - start");
+
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Evaluacion> cq = cb.createQuery(Evaluacion.class);
+
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Evaluacion> root = countQuery.from(Evaluacion.class);
+
+    countQuery.select(cb.count(root))
+        .where(cb.and(
+            cb.equal(root.get(Evaluacion_.memoriaId), memoriaId),
+            cb.equal(root.get(Evaluacion_.version), getLastEvaluacionVersionMemoria(cb, cq, memoriaId)),
+            cb.equal(root.get(Evaluacion_.dictamenId), Constantes.DICTAMEN_PENDIENTE_CORRECCIONES)));
+
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
+
+    log.debug("isLastEvaluacionMemoriaPendienteCorrecciones(Long memoriaId) - end");
+    return count > 0;
+  }
+
+  /**
+   * Devuelve una subconsulta con la version de la ultima evaluacion de la memoria
+   * 
+   * @return Subquery<Long> la version de la ultima evaluacion de la memoria
+   */
+  private Subquery<Integer> getLastEvaluacionVersionMemoria(CriteriaBuilder cb, CriteriaQuery<?> cq, Long memoriaId) {
+    log.debug("getLastEvaluacionVersionMemoria(CriteriaBuilder cb, CriteriaQuery<?> cq, Long memoriaId) - start");
+
+    Subquery<Integer> queryLastEvaluacionMemoria = cq.subquery(Integer.class);
+    Root<Evaluacion> subqRoot = queryLastEvaluacionMemoria.from(Evaluacion.class);
+    queryLastEvaluacionMemoria.select(cb.max(subqRoot.get(Evaluacion_.version)))
+        .where(cb.equal(
+            subqRoot.get(Evaluacion_.memoriaId),
+            memoriaId));
+
+    log.debug("getLastEvaluacionVersionMemoria(CriteriaBuilder cb, CriteriaQuery<?> cq, Long memoriaId) - end");
+    return queryLastEvaluacionMemoria;
+  }
+
 }

@@ -245,4 +245,23 @@ public interface EvaluacionService {
    * @return secretario de la evaluación
    */
   Evaluador findSecretarioEvaluacion(Long idEvaluacion);
+
+  /**
+   * Obtiene la ultima evaluacion de la memoria
+   * 
+   * @param memoriaId identificador de la {@link Memoria}
+   * @return la evaluacion
+   */
+  Evaluacion getLastEvaluacionMemoria(Long memoriaId);
+
+  /**
+   * Comprueba si la ultima evaluacion de la memoria tiene dictamen pendiente de
+   * correcciones
+   * 
+   * @param memoriaId identificador de la {@link Memoria}
+   * @return true si la ultima evaluacion tiene dictamen pendiente de correcciones
+   *         / false si no lo tiene
+   */
+  boolean isLastEvaluacionMemoriaPendienteCorrecciones(Long memoriaId);
+
 }

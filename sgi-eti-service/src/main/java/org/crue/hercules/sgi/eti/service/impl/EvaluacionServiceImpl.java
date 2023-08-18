@@ -942,4 +942,22 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     return Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
         .with(LocalTime.MAX).withNano(0);
   }
+
+  @Override
+  public Evaluacion getLastEvaluacionMemoria(Long memoriaId) {
+    log.debug("getLastEvaluacionMemoria(Long memoriaId) - start");
+    Evaluacion evaluacion = evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoriaId)
+        .orElseThrow(() -> new EvaluacionNotFoundException(memoriaId));
+    log.debug("getLastEvaluacionMemoria(Long memoriaId) - end");
+    return evaluacion;
+  }
+
+  @Override
+  public boolean isLastEvaluacionMemoriaPendienteCorrecciones(Long memoriaId) {
+    log.debug("isLastEvaluacionMemoriaPendienteCorrecciones(Long memoriaId) - start");
+    boolean isPendienteCorrecciones = evaluacionRepository.isLastEvaluacionMemoriaPendienteCorrecciones(memoriaId);
+    log.debug("isLastEvaluacionMemoriaPendienteCorrecciones(Long memoriaId) - end");
+    return isPendienteCorrecciones;
+  }
+
 }

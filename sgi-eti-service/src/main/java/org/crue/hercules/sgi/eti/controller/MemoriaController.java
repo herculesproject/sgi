@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.BaseEntity;
 import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
-import org.crue.hercules.sgi.eti.model.Checklist;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
@@ -73,6 +72,9 @@ public class MemoriaController {
   public static final String PATH_DOCUMENTACION_INICIAL_INVESTIGADOR = PATH_DOCUMENTACION_INICIAL + PATH_INVESTIGADOR;
   public static final String PATH_ESTADO_ACTUAL = PATH_ID + PATH_DELIMITER + "estado-actual";
   public static final String PATH_INDICAR_SUBSANACION = PATH_ID + PATH_DELIMITER + "indicar-subsanacion";
+  public static final String PATH_LAST_EVALUACION = PATH_ID + PATH_DELIMITER + "last-evaluacion";
+  public static final String PATH_LAST_EVALUACION_PENDIENTE_CORRECCIONES = PATH_ID + PATH_DELIMITER
+      + "last-evaluacion-pendiente-correcciones";
 
   /** Memoria service */
   private final MemoriaService service;
@@ -875,17 +877,17 @@ public class MemoriaController {
   /**
    * Cambia el estado de la memoria a {@link Tipo#SUBSANACION} con el comentario
    * 
-   * @param id        Identificador del Checklist a actualizar
-   * @param respuesta La respuesta a actualizar
-   * @return El {@link Checklist} actualizado
+   * @param id         Identificador del Checklist a actualizar
+   * @param comentario un comentario
+   * @return {@link HttpStatus#OK}
    */
   @PatchMapping(PATH_INDICAR_SUBSANACION)
   @PreAuthorize("hasAuthority('ETI-MEM-CEST')")
-  ResponseEntity<Void> indicarSubsanacion(@PathVariable Long id,
+  public ResponseEntity<Void> indicarSubsanacion(@PathVariable Long id,
       @NotEmpty @Size(max = EstadoMemoria.COMENTARIO_MAX_LENGTH) @RequestBody String comentario) {
-    log.debug("indicarSubsanacion(Long id, String comentario) - start");
+    log.debug("indicarSubsanacion({}, {}) - start", id, comentario);
     service.indicarSubsanacion(id, comentario);
-    log.debug("indicarSubsanacion(Long id, String comentario) - end");
+    log.debug("indicarSubsanacion({}, {}) - end", id, comentario);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
@@ -897,11 +899,45 @@ public class MemoriaController {
    */
   @GetMapping(PATH_ESTADO_ACTUAL)
   @PreAuthorize("hasAnyAuthority('ETI-MEM-INV-ER', 'ETI-MEM-V')")
-  ResponseEntity<EstadoMemoria> getEstadoActual(@PathVariable Long id) {
-    log.debug("getEstadoActual(Long id) - start");
+  public ResponseEntity<EstadoMemoria> getEstadoActual(@PathVariable Long id) {
+    log.debug("getEstadoActual({}) - start", id);
     EstadoMemoria estado = service.getEstadoActualMemoria(id);
-    log.debug("getEstadoActual(Long id) - end");
+    log.debug("getEstadoActual({}) - end", id);
     return new ResponseEntity<>(estado, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene la ultima evaluacion de la memoria
+   * 
+   * @param id identificador de la {@link Memoria}
+   * @return la evaluacion
+   */
+  @GetMapping(PATH_LAST_EVALUACION)
+  @PreAuthorize("hasAuthority('ETI-CNV-E')")
+  public ResponseEntity<Evaluacion> getLastEvaluacionMemoria(@PathVariable Long id) {
+    log.debug("getLastEvaluacionMemoria({}) - start", id);
+    Evaluacion returnValue = evaluacionService.getLastEvaluacionMemoria(id);
+    log.debug("getLastEvaluacionMemoria({}) - end", id);
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si la ultima evaluacion de la memoria tiene dictamen pendiente de
+   * correcciones
+   * 
+   * @param id identificador de la {@link Memoria}
+   * @return {@link HttpStatus#OK} si la ultima evaluacion tiene dictamen
+   *         pendiente de correcciones / {@link HttpStatus#NO_CONTENT} si no lo
+   *         tiene
+   */
+  @RequestMapping(path = PATH_LAST_EVALUACION_PENDIENTE_CORRECCIONES, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAuthority('ETI-CNV-E')")
+  public ResponseEntity<Void> isLastEvaluacionMemoriaPendienteCorrecciones(@PathVariable Long id) {
+    log.debug("isLastEvaluacionMemoriaPendienteCorrecciones({}) - start", id);
+    boolean isPendienteCorrecciones = evaluacionService.isLastEvaluacionMemoriaPendienteCorrecciones(id);
+    log.debug("isLastEvaluacionMemoriaPendienteCorrecciones({}) - end", id);
+    return isPendienteCorrecciones ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }
