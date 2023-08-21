@@ -16,7 +16,6 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   private memoria: IMemoria;
   public readonly: boolean;
-  public showCodOrganoCompetente = false;
   public showTitulo = false;
   public showMemoriaOriginal = false;
   public personasResponsable$: BehaviorSubject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
@@ -85,10 +84,6 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       personaResponsable: [
         { value: null, disabled: this.readonly }
       ],
-      codOrganoCompetente: [
-        { value: this.isEdit() ? this.memoria.codOrganoCompetente : '', disabled: this.readonly },
-        Validators.maxLength(250)
-      ],
       memoriaOriginal: [
         { value: this.isEdit() ? this.memoria.memoriaOriginal : null, disabled: this.isEdit() },
         Validators.required
@@ -110,7 +105,6 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       tipoMemoria: value.tipoMemoria,
       titulo: value.titulo,
       personaResponsable: value.responsable?.id ? value.responsable : null,
-      codOrganoCompetente: value.codOrganoCompetente,
       memoriaOriginal: value.memoriaOriginal,
       comentarioSubsanacion: this.estadoMemoria?.comentario ?? ''
     };
@@ -125,20 +119,13 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
       this.memoria.titulo = form.titulo.value;
     }
     this.memoria.responsable = form.personaResponsable.value;
-    if (this.memoria.comite.id === COMITE.CEEA) {
-      this.memoria.codOrganoCompetente = form.codOrganoCompetente.value;
-    } else {
-      this.memoria.codOrganoCompetente = null;
-    }
     return this.memoria;
   }
 
   public onComiteChange(comite: IComite) {
-    this.showCodOrganoCompetente = comite.id === COMITE.CEEA;
     this.showTitulo = comite.id === COMITE.CEEA;
 
     this.getFormGroup().controls.tipoMemoria.markAsTouched();
-    this.getFormGroup().controls.codOrganoCompetente?.reset();
   }
 
   public onTipoMemoriaChange(tipoMemoria: ITipoMemoria) {

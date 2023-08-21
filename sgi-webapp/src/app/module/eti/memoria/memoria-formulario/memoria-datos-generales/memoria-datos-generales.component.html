@@ -80,20 +80,6 @@
         </div>
       </ng-container>
 
-      <!-- Código órgano competente -->
-      <ng-container *ngIf="this.datosGeneralesFragment.showCodOrganoCompetente">
-        <div fxFlex="40">
-          <mat-form-field>
-            <mat-label>{{'eti.memoria.codigo-organo-compentente' | translate}}</mat-label>
-            <input type="text" [placeholder]="'eti.memoria.codigo-organo-compentente' | translate" arial-label="Number"
-              matInput formControlName="codOrganoCompetente">
-            <mat-error *ngIf="formGroup.controls.codOrganoCompetente.hasError('maxlength')">
-              {{'error.maxlength.entity' | translate:msgParamCodigoOrganoCompenteteEntity}}
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </ng-container>
-
       <!-- Comentario subsanacion -->
       <ng-container *ngIf="this.datosGeneralesFragment.showComentarioSubsanacion">
         <div fxFlex="95.5">
