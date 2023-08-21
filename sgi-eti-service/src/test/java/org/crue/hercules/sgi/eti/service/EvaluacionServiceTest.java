@@ -847,7 +847,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     // given: Datos existentes con memoriaId = 1
     Memoria memoria = new Memoria(1L, "numRef-001", null, null, "Memoria", "user-001", null, null, Instant.now(),
-        Boolean.TRUE, null, 3, "CodOrganoCompetente", Boolean.TRUE, null);
+        Boolean.TRUE, null, 3, Boolean.TRUE, null);
 
     Long memoriaId = 1L;
     List<Evaluacion> response = new LinkedList<Evaluacion>();
@@ -873,7 +873,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
   public void findAllByMemoriaId_ReturnEmptyPage() {
 
     Memoria memoria = new Memoria(1L, "numRef-001", null, null, "Memoria", "user-001", null, null, Instant.now(),
-        Boolean.TRUE, null, 3, "CodOrganoCompetente", Boolean.TRUE, null);
+        Boolean.TRUE, null, 3, Boolean.TRUE, null);
     // given: No hay datos con memoriaId = 1
     Long memoriaId = 1L;
 
@@ -966,7 +966,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     final Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr,
         "user-00" + id, tipoMemoria, tipoEstadoMemoria, Instant.now(), Boolean.TRUE,
-        new Retrospectiva(id, estadoRetrospectiva, Instant.now()), 3, "CodOrganoCompetente", Boolean.TRUE, null);
+        new Retrospectiva(id, estadoRetrospectiva, Instant.now()), 3, Boolean.TRUE, null);
 
     final TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
@@ -1060,7 +1060,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
         tipoMemoria, tipoEstadoMemoria, Instant.now(), Boolean.TRUE,
-        new Retrospectiva(id, estadoRetrospectiva, Instant.now()), 3, "CodOrganoCompetente", Boolean.TRUE, null);
+        new Retrospectiva(id, estadoRetrospectiva, Instant.now()), 3, Boolean.TRUE, null);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(3L, "Seguimiento", Boolean.TRUE);
 
@@ -1140,7 +1140,7 @@ public class EvaluacionServiceTest extends BaseServiceTest {
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE), Instant.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE, null);
+        generarMockRetrospectiva(1L), version, Boolean.TRUE, null);
   }
 
   /**

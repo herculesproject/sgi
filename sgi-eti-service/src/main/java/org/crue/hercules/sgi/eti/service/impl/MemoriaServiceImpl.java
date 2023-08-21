@@ -478,7 +478,6 @@ public class MemoriaServiceImpl implements MemoriaService {
       memoria.setRequiereRetrospectiva(memoriaActualizar.getRequiereRetrospectiva());
       memoria.setRetrospectiva(memoriaActualizar.getRetrospectiva());
       memoria.setVersion(memoriaActualizar.getVersion());
-      memoria.setCodOrganoCompetente(memoriaActualizar.getCodOrganoCompetente());
       memoria.setActivo(memoriaActualizar.getActivo());
 
       Memoria returnValue = memoriaRepository.save(memoria);
@@ -990,7 +989,7 @@ public class MemoriaServiceImpl implements MemoriaService {
           this.comunicadosService.enviarComunicadoInformeRetrospectivaCeeaPendiente(
               memoria.getComite().getNombreInvestigacion(),
               memoria.getComite().getGenero().toString(), memoria.getNumReferencia(), tipoActividad,
-              memoria.getPeticionEvaluacion().getTitulo(), memoria.getCodOrganoCompetente(),
+              memoria.getPeticionEvaluacion().getTitulo(),
               memoria.getPeticionEvaluacion().getPersonaRef());
         } catch (Exception e) {
           log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - Error al enviar el comunicado", e);

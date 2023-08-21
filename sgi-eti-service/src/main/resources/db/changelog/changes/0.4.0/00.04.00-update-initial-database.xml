@@ -24,4 +24,8 @@
       constraintName="UC_CONFIGURACION_DURACION_PROYECTO_EVALUACION_COL" tableName="configuracion" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="00.04.00-3">
+    <dropColumn columnName="cod_organo_competente" tableName="memoria" />
+  </changeSet>
+
 </databaseChangeLog>

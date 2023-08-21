@@ -148,8 +148,7 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoInformeRetrospectivaCeeaPendiente(String nombreInvestigacion, String generoComite,
-      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String codigoOrganoCompetente,
-      String solicitanteRef)
+      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - start");
 
@@ -163,8 +162,7 @@ public class ComunicadosService {
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
               .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
-              .enlaceAplicacion(enlaceAplicacion)
-              .codigoOrganoCompetente(codigoOrganoCompetente).build(),
+              .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
     } else {
