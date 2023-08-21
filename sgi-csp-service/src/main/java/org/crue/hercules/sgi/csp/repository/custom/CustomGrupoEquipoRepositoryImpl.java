@@ -60,7 +60,7 @@ public class CustomGrupoEquipoRepositoryImpl implements CustomGrupoEquipoReposit
    */
   @Override
   public List<String> findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(Long grupoId, Instant fecha) {
-    log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha) - start");
+    log.debug("findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(Long grupoId, Instant fecha) - start");
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<String> cq = cb.createQuery(String.class);
@@ -80,7 +80,7 @@ public class CustomGrupoEquipoRepositoryImpl implements CustomGrupoEquipoReposit
 
     List<String> returnValue = entityManager.createQuery(cq).getResultList();
 
-    log.debug("findPersonaRefInvestigadoresPrincipales(Long grupoId, Instant fecha) - end");
+    log.debug("findPersonaRefInvestigadoresPrincipalesWithMaxParticipacion(Long grupoId, Instant fecha) - end");
     return returnValue;
   }
 
@@ -124,11 +124,14 @@ public class CustomGrupoEquipoRepositoryImpl implements CustomGrupoEquipoReposit
                 cb.isNull(joinGrupo.get(Grupo_.fechaFin)),
                 cb.greaterThanOrEqualTo(joinGrupo.get(Grupo_.fechaFin), fecha))));
 
+    Predicate rolPrincipal = cb.isTrue(root.get(GrupoEquipo_.rol).get(RolProyecto_.rolPrincipal));
+
     cq.select(root.get(GrupoEquipo_.personaRef))
         .where(cb.and(
             grupoEquals,
             greaterThanFechaInicio,
-            lowerThanFechaFin))
+            lowerThanFechaFin,
+            rolPrincipal))
         .distinct(true);
 
     List<String> returnValue = entityManager.createQuery(cq).getResultList();
