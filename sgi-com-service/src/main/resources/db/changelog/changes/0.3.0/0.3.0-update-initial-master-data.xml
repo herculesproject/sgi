@@ -69,6 +69,18 @@
         valueClobFile="clob/eti-com-mem-indicar-subsanacion/ETI_COM_MEM_INDICAR_SUBSANACION_CONTENT_html.ftl" />
       <where>name='ETI_COM_MEM_INDICAR_SUBSANACION_CONTENT'</where>
     </update>
+
+    <update tableName="content_tpl">
+      <column name="tpl_text"
+        valueClobFile="clob/eti-com-informe/ETI_COM_INF_RETRO_PENDIENTE_CONTENT_text.ftl" />
+      <where>name='ETI_COM_INF_RETRO_PENDIENTE_CONTENT'</where>
+    </update>
+
+    <update tableName="content_tpl">
+      <column name="tpl_html"
+        valueClobFile="clob/eti-com-informe/ETI_COM_INF_RETRO_PENDIENTE_CONTENT_html.ftl" />
+      <where>name='ETI_COM_INF_RETRO_PENDIENTE_CONTENT'</where>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="00.03.00-contenttpl_param">
