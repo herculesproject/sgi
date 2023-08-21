@@ -21,6 +21,7 @@ const MSG_SUCCESS = marker('msg.update.entity.success');
 const MSG_ERROR = marker('error.update.entity');
 const MSG_INDICAR_SUBSANACION_SUCCESS = marker('msg.csp.indicar-subsanacion.success');
 const MEMORIA_KEY = marker('eti.memoria');
+const MSG_ERROR_FORMULARIO = marker('eti.memoria.formulario.error')
 
 @Component({
   selector: 'sgi-memoria-editar',
@@ -36,6 +37,7 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
   textoActualizar = MSG_BUTTON_SAVE;
   textoActualizarSuccess: string;
   textoActualizarError: string;
+  textoErrorFormulario: string;
 
   showIndicarSubsanacionBtn = false;
 
@@ -95,6 +97,10 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
         );
       })
     ).subscribe((value) => this.textoActualizarError = value);
+
+    this.translate.get(
+      MSG_ERROR_FORMULARIO
+    ).subscribe((value) => this.textoErrorFormulario = value);
   }
 
   saveOrUpdate(action: 'save' | 'indicar-subsanacion'): void {
@@ -111,7 +117,11 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
             }
           }
           else {
-            this.snackBarService.showError(this.textoActualizarError);
+            if (error === MSG_ERROR_FORMULARIO) {
+              this.snackBarService.showError(this.textoErrorFormulario);
+            } else {
+              this.snackBarService.showError(this.textoActualizarError);
+            }
           }
         },
         () => {

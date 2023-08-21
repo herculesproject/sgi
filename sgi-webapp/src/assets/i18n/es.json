@@ -2096,6 +2096,7 @@
   "eti.memoria.fecha-evaluacion": "Fecha evaluación",
   "eti.memoria.fecha-limite": "Fecha límite",
   "eti.memoria.formulario": "Formulario",
+  "eti.memoria.formulario.error": "No se pueden guardar los cambios. Es necesario cumplimentar todos los campos obligatorios de cada bloque del formulario que haya sido abierto en pantalla",
   "eti.memoria.indicar-subsanacion.comentario": "Comentario de subsanación",
   "eti.memoria.info-ratificacion": "Debe de adjuntar el informe emitido por el comité o la comisión correspondiente y cualquier otra documentación adicional (Apartado 'Cumplimiento de documentación' del formulario de memoria)",
   "eti.memoria.info.titulo-descriptivo": "Debe describir el procedimiento e incluir la especie animal",
