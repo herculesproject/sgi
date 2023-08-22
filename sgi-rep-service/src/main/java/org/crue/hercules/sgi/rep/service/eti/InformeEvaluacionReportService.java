@@ -129,7 +129,8 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
 
     dataReport.put("dictamen", evaluacion.getDictamen().getNombre());
 
-    dataReport.put("comentarioNoProcedeEvaluar", null != evaluacion.getComentario() ? evaluacion.getComentario() : "");
+    dataReport.put("comentarioNoProcedeEvaluar",
+        !ObjectUtils.isEmpty(evaluacion.getComentario()) ? evaluacion.getComentario() : null);
 
     Integer mesesArchivadaPendienteCorrecciones = configuracionService.findConfiguracion()
         .getMesesArchivadaPendienteCorrecciones();
