@@ -34,18 +34,6 @@
             }
           ]
         }
-      },
-      {
-        "key": "justificarSustancias",
-        "type": "textarea",
-        "hideExpression": "!model.sustanciasRadio || model.sustanciasRadio === 'no'",
-        "templateOptions": {
-          "label": "Justificación",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
-        }
       }
     ]
   }

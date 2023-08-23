@@ -7,10 +7,9 @@
     "templateOptions": {
       "label": "3.7.13 Eutanasia"
     },
-    "hideExpression": "!formState.mainModel.ap3_7.ap3_7_12.destinoFinalRadio || formState.mainModel.ap3_7.ap3_7_12.destinoFinalRadio === 'muerte' || formState.mainModel.ap3_7.ap3_7_12.destinoFinalRadio === 'mantenimiento'",
     "fieldGroup": [
       {
-        "template": "Explicar a continuación el método de eutanasia (programada y no programada) que se va a utilizar."
+        "template": "Explicar a continuación un método de eutanasia (programada y/o no programada) que se vaya a utilizar."
       },
       {
         "wrappers": [
