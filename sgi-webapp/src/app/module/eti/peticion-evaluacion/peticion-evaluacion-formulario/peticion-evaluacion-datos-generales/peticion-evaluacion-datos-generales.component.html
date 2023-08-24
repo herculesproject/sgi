@@ -88,8 +88,8 @@
       <!-- Importe financiación-->
       <mat-form-field fxFlex="18%" *ngIf="formGroup.controls.existeFinanciacion.value">
         <mat-label>{{'eti.peticion-evaluacion.importe-financiacion' | translate}}</mat-label>
-        <input matInput formControlName="importeFinanciacion" type="number"
-          [required]="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required')" min="0">
+        <input matInput formControlName="importeFinanciacion" type="text" sgiInputWithThousandSeparator
+          [required]="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required')">
         <mat-error
           *ngIf="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required') && formGroup.controls.importeFinanciacion.errors?.required">
           {{'error.required.entity' | translate:msgParamImporteFinanciacionEntity}}
