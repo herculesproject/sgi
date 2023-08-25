@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
@@ -544,7 +545,10 @@ public class ComentarioServiceImpl implements ComentarioService {
         || evaluacion.getMemoria().getEstadoActual().getId()
             .equals(Constantes.TIPO_ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS)
         || evaluacion.getMemoria().getEstadoActual().getId()
-            .equals(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL)
+            .equals(TipoEstadoMemoria.Tipo.EN_EVALUACION_SEGUIMIENTO_ANUAL.getId())
+        || (evaluacion.getMemoria().getEstadoActual().getId()
+            .equals(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId())
+            && Boolean.TRUE.equals(evaluacion.getEsRevMinima()))
         || evaluacion.getMemoria().getEstadoActual().getId()
             .equals(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES)
         || evaluacion.getMemoria().getEstadoActual().getId()

@@ -812,7 +812,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
       evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
     }
 
-    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<String>any(),
+    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoAnualOrFinal(ArgumentMatchers.<String>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     // when: find unlimited
@@ -832,7 +832,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     List<Evaluacion> evaluaciones = new ArrayList<>();
     evaluaciones.isEmpty();
 
-    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<String>any(),
+    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoAnualOrFinal(ArgumentMatchers.<String>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
 
     mockMvc

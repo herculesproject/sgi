@@ -441,10 +441,10 @@ public class EvaluacionController {
 
   @GetMapping("/memorias-seguimiento-final")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-EVAL')")
-  public ResponseEntity<Page<Evaluacion>> findByEvaluacionesEnSeguimientoFinal(
+  public ResponseEntity<Page<Evaluacion>> findByEvaluacionesEnSeguimientoAnualOrFinal(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable pageable) {
     log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_START);
-    Page<Evaluacion> page = service.findByEvaluacionesEnSeguimientoFinal(query, pageable);
+    Page<Evaluacion> page = service.findByEvaluacionesEnSeguimientoAnualOrFinal(query, pageable);
     if (page.isEmpty()) {
       log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);

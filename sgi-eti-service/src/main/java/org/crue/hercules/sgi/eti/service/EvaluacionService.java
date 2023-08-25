@@ -140,7 +140,7 @@ public interface EvaluacionService {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
 
-  Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(String query, Pageable pageable);
+  Page<Evaluacion> findByEvaluacionesEnSeguimientoAnualOrFinal(String query, Pageable pageable);
 
   /**
    * Elimina las memorias asignadas a una convocatoria de reunión

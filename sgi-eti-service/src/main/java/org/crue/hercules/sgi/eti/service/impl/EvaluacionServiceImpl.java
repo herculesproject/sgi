@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion.Tipo;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
@@ -477,6 +478,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       }
     }
 
+    // Si el estado de la memoria es "En secretaría seguimiento anual" y es de
+    // Revisión Mínima y el dictamen es "Solicitud de modificaciones"
+    // Se cambia el estado de la memoria a "Solicitud modificación"
+    if (evaluacionActualizar.getMemoria().getEstadoActual().getId()
+        .equals(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId())
+        && evaluacionActualizar.getEsRevMinima().booleanValue()
+        && evaluacionActualizar.getDictamen() != null
+        && evaluacionActualizar.getDictamen().getId().equals((long) Constantes.DICTAMEN_SOLICITUD_MODIFICACIONES)) {
+      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
+          TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId());
+    }
+
     // Si el dictamen es "Favorable pendiente de revisión mínima" y
     // la Evaluación es de Revisión Mínima, se cambia el estado de la
     // memoria a "Favorable Pendiente de Modificaciones Mínimas".
@@ -643,11 +656,11 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    */
 
   @Override
-  public Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(String query, Pageable pageable) {
-    log.debug("findByEvaluacionesEnSeguimientoFinal(String query,Pageable paging) - start");
+  public Page<Evaluacion> findByEvaluacionesEnSeguimientoAnualOrFinal(String query, Pageable pageable) {
+    log.debug("findByEvaluacionesEnSeguimientoAnualOrFinal(String query,Pageable paging) - start");
 
-    Page<Evaluacion> returnValue = evaluacionRepository.findByEvaluacionesEnSeguimientoFinal(query, pageable);
-    log.debug("findByEvaluacionesEnSeguimientoFinal(String query,Pageable paging) - end");
+    Page<Evaluacion> returnValue = evaluacionRepository.findByEvaluacionesEnSeguimientoAnualOrFinal(query, pageable);
+    log.debug("findByEvaluacionesEnSeguimientoAnualOrFinal(String query,Pageable paging) - end");
 
     return returnValue;
   }
@@ -946,7 +959,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   @Override
   public Evaluacion getLastEvaluacionMemoria(Long memoriaId) {
     log.debug("getLastEvaluacionMemoria(Long memoriaId) - start");
-    Evaluacion evaluacion = evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoriaId)
+    Evaluacion evaluacion = evaluacionRepository
+        .findFirstByMemoriaIdAndActivoTrueOrderByVersionDescCreationDateDesc(memoriaId)
         .orElseThrow(() -> new EvaluacionNotFoundException(memoriaId));
     log.debug("getLastEvaluacionMemoria(Long memoriaId) - end");
     return evaluacion;

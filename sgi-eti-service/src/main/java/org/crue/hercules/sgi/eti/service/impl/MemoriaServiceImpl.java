@@ -731,10 +731,25 @@ public class MemoriaServiceImpl implements MemoriaService {
     Assert.notNull(idMemoria, "Memoria id no puede ser null para actualizar la memoria");
 
     Memoria memoria = memoriaRepository.findById(idMemoria).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+    Evaluacion lastEvaluacion = evaluacionRepository
+        .findFirstByMemoriaIdAndActivoTrueOrderByVersionDescCreationDateDesc(idMemoria)
+        .orElse(null);
+
+    Long tipoEvaluacion = TipoEvaluacion.Tipo.MEMORIA.getId();
+
+    if (lastEvaluacion != null) {
+      tipoEvaluacion = lastEvaluacion.getTipoEvaluacion().getId();
+    }
+
     Assert.isTrue(
-        memoria.getEstadoActual().getId() == 2L || memoria.getEstadoActual().getId() == 6L
-            || memoria.getEstadoActual().getId() == 7L || memoria.getEstadoActual().getId() == 8L
-            || memoria.getEstadoActual().getId() == 11L || memoria.getEstadoActual().getId() == 16L
+        memoria.getEstadoActual().getId() == 2L
+            || memoria.getEstadoActual().getId() == 6L
+            || memoria.getEstadoActual().getId() == 7L
+            || memoria.getEstadoActual().getId() == 8L
+            || memoria.getEstadoActual().getId() == 11L
+            || (Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId())
+                && Objects.equals(tipoEvaluacion, TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL.getId()))
+            || memoria.getEstadoActual().getId() == 16L
             || memoria.getEstadoActual().getId() == 21L,
         "No se puede realizar la acción porque la memoria ya ha sido enviada a secretaría");
 
@@ -742,8 +757,6 @@ public class MemoriaServiceImpl implements MemoriaService {
         "El usuario no es el propietario de la petición evaluación.");
 
     boolean crearEvaluacion = false;
-
-    Long tipoEvaluacion = Constantes.TIPO_EVALUACION_MEMORIA;
 
     // Si el estado es 'Completada', 'Pendiente de correcciones' o 'No procede
     // evaluar' se cambia el estado de la memoria a 'En secretaría'
@@ -761,9 +774,18 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     // Si el estado es 'Completada seguimiento anual'
     // se cambia el estado de la memoria a 'En secretaría seguimiento anual'
-    if (memoria.getEstadoActual().getId() == 11L) {
+    if (Objects.equals(memoria.getEstadoActual().getId(),
+        TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_ANUAL.getId())) {
       tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL;
-      updateEstadoMemoria(memoria, 12L);
+      updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId());
+    }
+
+    // Si el estado es 'Solicitud modificación'
+    // se cambia el estado de la memoria a 'En secretaría seguimiento anual'
+    if (Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId())) {
+      tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL;
+      crearEvaluacion = true;
+      updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId());
     }
 
     // Si el estado es 'Completada seguimiento final'

@@ -42,6 +42,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoComentario_;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
@@ -147,7 +148,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
    */
-  public Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(String query, Pageable pageable) {
+  public Page<Evaluacion> findByEvaluacionesEnSeguimientoAnualOrFinal(String query, Pageable pageable) {
 
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -155,6 +156,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
 
     // Define FROM clause
     Root<Evaluacion> root = cq.from(Evaluacion.class);
+    root.join(Evaluacion_.memoria);
 
     // Count query
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
@@ -468,8 +470,14 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     log.debug("getPredicatesEvaluacionesEnSeguimientoAnualByEvaluadorAndEvaluacion : {} - start");
     List<Predicate> listPredicates = new ArrayList<>();
 
-    listPredicates.add(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
-        .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL)));
+    listPredicates.add(
+        cb.or(
+            rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
+                .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL)),
+            cb.and(
+                rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
+                    .in(Arrays.asList(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId())),
+                cb.isTrue(rootEvaluacion.get(Evaluacion_.esRevMinima)))));
 
     listPredicates.add(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id)
         .in(Arrays.asList(Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL)).not());

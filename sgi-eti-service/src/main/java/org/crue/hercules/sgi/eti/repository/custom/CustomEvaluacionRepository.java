@@ -75,7 +75,7 @@ public interface CustomEvaluacionRepository {
    * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
    */
 
-  public Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(String query, Pageable pageable);
+  public Page<Evaluacion> findByEvaluacionesEnSeguimientoAnualOrFinal(String query, Pageable pageable);
 
   /**
    * Identifica si el usuario es {@link Evaluador} en alguna {@link Evaluacion}
