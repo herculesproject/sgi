@@ -9,9 +9,11 @@ import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { COMITE } from '@core/models/eti/comite';
 import { ESTADO_RETROSPECTIVA } from '@core/models/eti/estado-retrospectiva';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { ESTADO_MEMORIA, ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
+import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -23,8 +25,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, from, of } from 'rxjs';
+import { map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
 import { IMemoriaListadoModalData, MemoriaListadoExportModalComponent } from '../modals/memoria-listado-export-modal/memoria-listado-export-modal.component';
 
@@ -43,12 +45,17 @@ const MEMORIA_KEY = marker('eti.memoria');
 const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion');
 const MSG_ERROR_DATOS_ADJUNTOS = marker('error.eti.memoria.enviar-secretaria.documentos-adjuntos');
 
+
+export interface IMemoriaPeticionEvaluacionWithLastEvaluacion extends IMemoriaPeticionEvaluacion {
+  evaluacion: IEvaluacion
+}
+
 @Component({
   selector: 'sgi-memoria-listado-inv',
   templateUrl: './memoria-listado-inv.component.html',
   styleUrls: ['./memoria-listado-inv.component.scss']
 })
-export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent<IMemoriaPeticionEvaluacion> implements OnInit {
+export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent<IMemoriaPeticionEvaluacionWithLastEvaluacion> implements OnInit {
   MEMORIAS_ROUTE = MEMORIAS_ROUTE;
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -170,8 +177,26 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     ).subscribe((value) => this.textoCrear = value);
   }
 
-  protected createObservable(reset?: boolean): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
-    return this.memoriaService.findAllMemoriasEvaluacionByPersonaRef(this.getFindOptions(reset));
+  protected createObservable(reset?: boolean): Observable<SgiRestListResult<IMemoriaPeticionEvaluacionWithLastEvaluacion>> {
+    return this.memoriaService.findAllMemoriasEvaluacionByPersonaRef(this.getFindOptions(reset)).pipe(
+      map(response => {
+        return response as SgiRestListResult<IMemoriaPeticionEvaluacionWithLastEvaluacion>;
+      }),
+      switchMap(response =>
+        from(response.items).pipe(
+          mergeMap(memoria =>
+            this.memoriaService.getLastEvaluacionMemoria(memoria.id).pipe(
+              map(evaluacion => {
+                memoria.evaluacion = evaluacion;
+                return memoria;
+              })
+            )
+          ),
+          toArray(),
+          map(() => response)
+        )
+      )
+    );
   }
 
   protected initColumns(): void {
@@ -191,18 +216,29 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     this.memorias$ = this.getObservableLoadTable(reset);
   }
 
-  hasPermisoEnviarSecretaria(estadoMemoriaId: number, solicitanteRef: string): boolean {
+  hasPermisoEnviarSecretaria(memoria: IMemoriaPeticionEvaluacionWithLastEvaluacion, solicitanteRef: string): boolean {
     // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
     // 'Pendiente de correcciones', 'Completada seguimiento anual',
-    // 'Completada seguimiento final' o 'En aclaracion seguimiento final' se muestra el botón de enviar.
-    if ((estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA || estadoMemoriaId === ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS
-      || estadoMemoriaId === ESTADO_MEMORIA.PENDIENTE_CORRECCIONES || estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL
-      || estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL
-      || estadoMemoriaId === ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL) && this.isUserSolicitantePeticionEvaluacion(solicitanteRef)) {
-      return true;
-    } else {
-      return false;
-    }
+    // 'Completada seguimiento final', 'En aclaracion seguimiento final'
+    // o 'Solicitud modificación' si la evaluacion es de tipo seguimiento anual
+    // se muestra el botón de enviar.
+
+    const estadosEnviarSecretaria = [
+      ESTADO_MEMORIA.COMPLETADA,
+      ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS,
+      ESTADO_MEMORIA.PENDIENTE_CORRECCIONES,
+      ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL,
+      ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL,
+      ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL,
+      ESTADO_MEMORIA.SOLICITUD_MODIFICACION
+    ];
+
+    const solicitudModificacionOnlyIfSeguimientoAnual = memoria.estadoActual.id != ESTADO_MEMORIA.SOLICITUD_MODIFICACION
+      || memoria.evaluacion?.tipoEvaluacion?.id === TIPO_EVALUACION.SEGUIMIENTO_ANUAL;
+
+    return estadosEnviarSecretaria.includes(memoria.estadoActual.id)
+      && this.isUserSolicitantePeticionEvaluacion(solicitanteRef)
+      && solicitudModificacionOnlyIfSeguimientoAnual;
   }
 
   hasPermisoEliminar(estadoMemoriaId: number, solicitanteRef: string): boolean {
@@ -340,14 +376,16 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     this.matDialog.open(MemoriaListadoExportModalComponent, config);
   }
 
-  isMemoriaSeguimiento(estadoMemoriaId: number): boolean {
-    if (estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL
-      || estadoMemoriaId === ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL
-      || estadoMemoriaId === ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL) {
-      return true;
-    } else {
-      return false;
+  isMemoriaSeguimiento(memoria: IMemoriaPeticionEvaluacionWithLastEvaluacion): boolean {
+    if (!!memoria.evaluacion) {
+      return [TIPO_EVALUACION.SEGUIMIENTO_ANUAL, TIPO_EVALUACION.SEGUIMIENTO_FINAL].includes(memoria.evaluacion.tipoEvaluacion.id);
     }
+
+    return [
+      ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL,
+      ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL,
+      ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL
+    ].includes(memoria.estadoActual.id);
   }
 
 }
