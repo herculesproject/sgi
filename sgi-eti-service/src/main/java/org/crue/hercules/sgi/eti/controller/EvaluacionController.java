@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.time.Instant;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -9,13 +10,16 @@ import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.BaseEntity;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
+import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,6 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/evaluaciones")
 @Slf4j
+@RequiredArgsConstructor
 public class EvaluacionController {
 
   private static final String FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END = "findAll(String query,Pageable paging) - end";
@@ -52,18 +58,8 @@ public class EvaluacionController {
   /** Comentario service */
   private final ComentarioService comentarioService;
 
-  /**
-   * Instancia un nuevo EvaluacionController.
-   * 
-   * @param service           EvaluacionService
-   * @param comentarioService ComentarioService
-   */
-  public EvaluacionController(EvaluacionService service, ComentarioService comentarioService) {
-    log.debug("EvaluacionController(EvaluacionService service, ComentarioService comentarioService) - start");
-    this.service = service;
-    this.comentarioService = comentarioService;
-    log.debug("EvaluacionController(EvaluacionService service, ComentarioService comentarioService) - end");
-  }
+  /** Dictamen service */
+  private final DictamenService dictamenService;
 
   /**
    * Devuelve una lista paginada y filtrada {@link Evaluacion}.
@@ -615,6 +611,21 @@ public class EvaluacionController {
     Evaluador secretario = service.findSecretarioEvaluacion(idEvaluacion);
     log.debug("findSecretarioEvaluacion(@PathVariable Long idEvaluacion) - end");
     return new ResponseEntity<>(secretario, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve los dictamenes que se pueden asignar a la evaluacion
+   * 
+   * @param id identificador de la {@link Evaluacion}
+   * @return el listado de {@link Dictamen}
+   */
+  @GetMapping("{id}/dictamenes")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-INV-VR', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
+  public ResponseEntity<Page<Dictamen>> findAllDictamenEvaluacion(@PathVariable Long id) {
+    log.debug("findAllDictamenEvaluacion(Long id, Pageable pageable) - start");
+    List<Dictamen> dictamenes = dictamenService.findAllDictamenByEvaluacionId(id);
+    log.debug("findAllDictamenEvaluacion(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(new PageImpl<>(dictamenes), HttpStatus.OK);
   }
 
 }

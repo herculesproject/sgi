@@ -820,4 +820,14 @@
     </update>
   </changeSet>
 
+  <changeSet context="!test" author="master" id="00.04.00-dictamen">
+    <insert tableName="dictamen">
+      <column name="id" valueNumeric="11" />
+      <column name="nombre" value="Desfavorable" />
+      <column name="tipo_evaluacion_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_evaluacion where nombre='Memoria')" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

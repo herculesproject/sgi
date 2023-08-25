@@ -78,18 +78,6 @@ public class Constantes {
   public static final int ESTADO_MEMORIA_PENDIENTE_CORRECCIONES = 7;
   public static final int ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS = 6;
 
-  // Tipos de dictamen
-  public static final int DICTAMEN_FAVORABLE = 1;
-  public static final int DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA = 2;
-  public static final int DICTAMEN_PENDIENTE_CORRECCIONES = 3;
-  public static final int DICTAMEN_NO_PROCEDE_EVALUAR = 4;
-  public static final int DICTAMEN_FAVORABLE_SEGUIMIENTO_ANUAL = 5;
-  public static final int DICTAMEN_SOLICITUD_MODIFICACIONES = 6;
-  public static final int DICTAMEN_FAVORABLE_SEGUIMIENTO_FINAL = 7;
-  public static final int DICTAMEN_SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL = 8;
-  public static final int DICTAMEN_FAVORABLE_RETROSPECTIVA = 9;
-  public static final int DICTAMEN_DESFAVORABLE_RETROSPECTIVA = 10;
-
   // Tipos de memoria
   public static final int TIPO_MEMORIA_NUEVA = 1;
   public static final int TIPO_MEMORIA_MODIFICACION = 2;

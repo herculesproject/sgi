@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres_;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
+import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo_;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
@@ -1080,7 +1081,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
         .where(cb.and(
             cb.equal(root.get(Evaluacion_.memoriaId), memoriaId),
             cb.equal(root.get(Evaluacion_.version), getLastEvaluacionVersionMemoria(cb, cq, memoriaId)),
-            cb.equal(root.get(Evaluacion_.dictamenId), Constantes.DICTAMEN_PENDIENTE_CORRECCIONES)));
+            cb.equal(root.get(Evaluacion_.dictamenId), Dictamen.Tipo.PENDIENTE_CORRECCIONES.getId())));
 
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 

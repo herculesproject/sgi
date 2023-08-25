@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -111,7 +112,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
-  @Autowired
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
       EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
       MemoriaService memoriaService, ComentarioRepository comentarioRepository,
@@ -485,7 +485,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         .equals(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId())
         && evaluacionActualizar.getEsRevMinima().booleanValue()
         && evaluacionActualizar.getDictamen() != null
-        && evaluacionActualizar.getDictamen().getId().equals((long) Constantes.DICTAMEN_SOLICITUD_MODIFICACIONES)) {
+        && evaluacionActualizar.getDictamen().getId().equals(Dictamen.Tipo.SOLICITUD_MODIFICACIONES.getId())) {
       memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
           TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId());
     }
@@ -502,8 +502,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     // Mínima, se cambia el estado de la memoria a "En aclaracion seguimiento
     // final".
     if (evaluacionActualizar.getDictamen() != null
-        && evaluacionActualizar.getDictamen().getId()
-            .intValue() == Constantes.DICTAMEN_SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL
+        && Objects.equals(evaluacionActualizar.getDictamen().getId(),
+            Dictamen.Tipo.SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL.getId())
         && evaluacionActualizar.getEsRevMinima().booleanValue()) {
       memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
           Constantes.ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL);
@@ -548,27 +548,27 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion) {
     Evaluacion evaluacion = this.findById(idEvaluacion);
     DocumentoOutput documento = null;
-    switch (evaluacion.getTipoEvaluacion().getId().intValue()) {
-      case Constantes.TIPO_EVALUACION_MEMORIA_INT:
-        documento = getDocumentoByTipoEvaluacionMemoria(evaluacion, documento);
+    switch (evaluacion.getTipoEvaluacion().getTipo()) {
+      case MEMORIA:
+        documento = this.getDocumentoByTipoEvaluacionMemoria(evaluacion);
         break;
-      case Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT:
+      case SEGUIMIENTO_ANUAL:
         if (evaluacion.getDictamen() != null
-            && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_SOLICITUD_MODIFICACIONES)) {
+            && evaluacion.getDictamen().getId().equals(Dictamen.Tipo.SOLICITUD_MODIFICACIONES.getId())) {
           documento = this.generarDocumento(evaluacion, false);
         }
         break;
-      case Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL_INT:
+      case SEGUIMIENTO_FINAL:
         if (evaluacion.getDictamen() != null && (evaluacion.getDictamen().getId()
-            .intValue() == Constantes.DICTAMEN_SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL)) {
+            .equals(Dictamen.Tipo.SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL.getId()))) {
           documento = this.generarDocumento(evaluacion, false);
         }
         break;
-      case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT:
+      case RETROSPECTIVA:
       default:
         if (evaluacion.getDictamen() != null
-            && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE
-                || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE_RETROSPECTIVA)) {
+            && (evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE.getId())
+                || evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE_RETROSPECTIVA.getId()))) {
           documento = this.generarDocumento(evaluacion, true);
         }
         break;
@@ -576,18 +576,11 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     return documento;
   }
 
-  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion, DocumentoOutput documento) {
-    if (evaluacion.getDictamen() != null
-        && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE_PENDIENTE_REVISION_MINIMA
-            || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_PENDIENTE_CORRECCIONES
-            || evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_NO_PROCEDE_EVALUAR)) {
-      documento = this.generarDocumento(evaluacion, false);
-    } else if (evaluacion.getDictamen() != null
-        && (evaluacion.getDictamen().getId().intValue() == Constantes.DICTAMEN_FAVORABLE)) {
-      documento = this.generarDocumento(evaluacion, true);
-    }
+  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion) {
+    boolean isFavorable = (evaluacion.getDictamen() != null
+        && (evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE.getId())));
 
-    return documento;
+    return this.generarDocumento(evaluacion, isFavorable);
   }
 
   private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable) {
@@ -961,7 +954,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     log.debug("getLastEvaluacionMemoria(Long memoriaId) - start");
     Evaluacion evaluacion = evaluacionRepository
         .findFirstByMemoriaIdAndActivoTrueOrderByVersionDescCreationDateDesc(memoriaId)
-        .orElseThrow(() -> new EvaluacionNotFoundException(memoriaId));
+        .orElse(null);
     log.debug("getLastEvaluacionMemoria(Long memoriaId) - end");
     return evaluacion;
   }
