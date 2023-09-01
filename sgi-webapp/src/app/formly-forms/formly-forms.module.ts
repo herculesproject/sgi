@@ -8,6 +8,7 @@ import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { TipoValorSocialComponent } from './types/tipo-valor-social.component';
 import { IDateBetweenValidatorOptions, IDateValidatorOptions, dateIsAfter, dateIsBetween } from './validators/date.validator';
+import { IMulticheckboxValidatorOptions, multicheckboxRestricted } from './validators/multicheckbox.validator';
 import { requiredChecked } from './validators/utils.validator';
 import { InfoDivWrapperComponent } from './wrappers/info-div/info-div.wrapper';
 import { PanelWrapperComponent } from './wrappers/panel/panel.wrapper';
@@ -69,6 +70,11 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
           name: 'date-is-between',
           validation: dateIsBetween,
           options: {} as IDateBetweenValidatorOptions
+        },
+        {
+          name: 'multicheckbox-restricted',
+          validation: multicheckboxRestricted,
+          options: {} as IMulticheckboxValidatorOptions
         }
       ]
     }),
