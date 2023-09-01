@@ -36,12 +36,52 @@
               "label": "No es necesaria vacunación"
             }
           ]
+        },
+        "validators": {
+          "validation": [
+            {
+              "name": "multicheckbox-restricted",
+              "options": {
+                "message": "Las respuestas \"${option1}\" y \"${option2}\" no son compatibles",
+                "restrictions": {
+                  "notValidCombinations": [
+                    {
+                      "option": "tetanos",
+                      "incompatibleOptions": [
+                        "noNecesariaVacunacion"
+                      ]
+                    },
+                    {
+                      "option": "hepatitis",
+                      "incompatibleOptions": [
+                        "noNecesariaVacunacion"
+                      ]
+                    },
+                    {
+                      "option": "otras",
+                      "incompatibleOptions": [
+                        "noNecesariaVacunacion"
+                      ]
+                    },
+                    {
+                      "option": "noNecesariaVacunacion",
+                      "incompatibleOptions": [
+                        "tetanos",
+                        "hepatitis",
+                        "otras"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         }
       },
       {
         "key": "otrasTexto",
         "type": "textarea",
-        "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.find((c) => c === 'otras')",
+        "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.some((c) => c === 'otras') || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
           "placeholder": "Especificar",
           "label": "Especificar",
