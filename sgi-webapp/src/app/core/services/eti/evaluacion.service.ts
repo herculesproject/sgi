@@ -8,6 +8,7 @@ import { IComentarioBackend } from '@core/models/eti/backend/comentario-backend'
 import { IEvaluacionBackend } from '@core/models/eti/backend/evaluacion-backend';
 import { IEvaluacionWithIsEliminableBackend } from '@core/models/eti/backend/evaluacion-with-is-eliminable-backend';
 import { IComentario } from '@core/models/eti/comentario';
+import { IDictamen } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is-eliminable';
 import { IDocumentoBackend } from '@core/models/sgdoc/backend/documento-backend';
@@ -299,5 +300,16 @@ export class EvaluacionService extends SgiMutableRestService<number, IEvaluacion
       map(response => response.status === 200)
     );
   }
+
+  /**
+   * Devuelve los dictamenes que se pueden asignar a la evaluacion
+   * 
+   * @param evaluacionId identificador de la evaluacion
+   * @return el listado de dictamenes
+   */
+  findAllDictamenEvaluacion(evaluacionId: number): Observable<SgiRestListResult<IDictamen>> {
+    return this.find<IDictamen, IDictamen>(`${this.endpointUrl}/${evaluacionId}/dictamenes`, null);
+  }
+
 
 }

@@ -1,5 +1,5 @@
 import { IComentario } from '@core/models/eti/comentario';
-import { IDictamen } from '@core/models/eti/dictamen';
+import { DICTAMEN, IDictamen } from '@core/models/eti/dictamen';
 import { Fragment } from '@core/services/action-service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -101,8 +101,7 @@ export class EvaluacionComentarioFragment extends Fragment {
       this.comentarios$.next(current);
       this.setChanges(true);
     }
-    if (this.comentarios$.value.length === 0 &&
-      (this.dictamen?.id === 2 || this.dictamen?.id === 3)) {
+    if (this.comentarios$.value.length === 0 && this.dictamenRequireComentarios()) {
       this.setErrors(true);
     } else {
       this.setErrors(false);
@@ -229,6 +228,14 @@ export class EvaluacionComentarioFragment extends Fragment {
 
   setDictamen(dictamen: IDictamen) {
     this.dictamen = dictamen;
-    this.setErrors((this.dictamen?.id === 2 || this.dictamen?.id === 3) && this.comentarios$.value.length === 0);
+    this.setErrors(this.dictamenRequireComentarios() && this.comentarios$.value.length === 0);
+  }
+
+  private dictamenRequireComentarios(): boolean {
+    return [
+      DICTAMEN.FAVORABLE_PDTE_REV_MINIMA,
+      DICTAMEN.PDTE_CORRECCIONES,
+      DICTAMEN.DESFAVORABLE
+    ].includes(this.dictamen?.id)
   }
 }
