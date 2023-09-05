@@ -42,7 +42,7 @@ const MSG_ERROR_ELIMINAR = marker('error.delete.entity');
 const MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('error.eti.memoria.enviar-secretaria.retrospectiva');
 const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('msg.eti.memoria.enviar-secretaria.retrospectiva');
 const MEMORIA_KEY = marker('eti.memoria');
-const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion');
+const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion-etica-proyecto');
 const MSG_ERROR_DATOS_ADJUNTOS = marker('error.eti.memoria.enviar-secretaria.documentos-adjuntos');
 
 

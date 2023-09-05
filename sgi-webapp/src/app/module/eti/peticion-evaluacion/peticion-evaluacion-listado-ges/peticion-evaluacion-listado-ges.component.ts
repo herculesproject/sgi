@@ -25,7 +25,7 @@ import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-pers
 import { PeticionEvaluacionListadoExportModalComponent } from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
-const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion');
+const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion-etica-proyecto');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-listado-ges',
