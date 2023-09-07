@@ -913,7 +913,7 @@ public class MemoriaController {
    * @return la evaluacion
    */
   @GetMapping(PATH_LAST_EVALUACION)
-  @PreAuthorize("hasAuthority('ETI-CNV-E')")
+  @PreAuthorize("hasAnyAuthority('ETI-CNV-E', 'ETI-MEM-INV-ER', 'ETI-MEM-V')")
   public ResponseEntity<Evaluacion> getLastEvaluacionMemoria(@PathVariable Long id) {
     log.debug("getLastEvaluacionMemoria({}) - start", id);
     Evaluacion returnValue = evaluacionService.getLastEvaluacionMemoria(id);
