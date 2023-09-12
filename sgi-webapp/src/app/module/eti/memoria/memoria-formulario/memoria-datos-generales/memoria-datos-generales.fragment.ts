@@ -183,7 +183,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
           }
         }),
         switchMap(memoria => {
-          if (this.moduloInv && memoria.estadoActual.id === ESTADO_MEMORIA.SUBSANACION) {
+          if (memoria.estadoActual.id === ESTADO_MEMORIA.SUBSANACION) {
             return this.service.getEstadoActual(memoria.id).pipe(
               tap(estadoMemoria => {
                 this.estadoMemoria = estadoMemoria;

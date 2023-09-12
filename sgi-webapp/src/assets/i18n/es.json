@@ -2467,7 +2467,7 @@
   "msg.csp.grupo.linea-investigador.sin-vigencia": "No se puede añadir un miembro cuando el existente no tiene una fecha de inicio establecida",
   "msg.csp.grupo.persona-autorizada.sin-vigencia": "No se puede añadir una persona autorizada cuando el existente no tiene una fecha de inicio establecida",
   "msg.csp.hito.fecha.duplicate": "Ya existe ese hito para la fecha indicada",
-  "msg.csp.indicar-subsanacion.success": "Se ha indicado la subsanación correctamente",
+  "msg.csp.indicar-subsanacion.success": "La memoria ha pasado a estado 'en subsanación' correctamente",
   "msg.csp.modelo-ejecucion.externo": "Externo. El proyecto o contrato se registrará en el SGI pero la participación del personal investigador en el mismo se realizará a través de una entidad externa",
   "msg.csp.notificacion-cvn.asociar-autorizacion": "Solicitudes de participación autorizadas del/la investigador/a",
   "msg.csp.notificacion-cvn.asociar-proyecto": "Indique si desea crear un nuevo proyecto o vincularlo a uno existente",
