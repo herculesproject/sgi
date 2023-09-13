@@ -49,27 +49,6 @@
         }
       },
       {
-        "template": "<p>¿Algún miembro del equipo investigador va a calificar a los estudiantes?</p>"
-      },
-      {
-        "key": "calificacionEstudiantesRadio",
-        "type": "radio",
-        "templateOptions": {
-          "label": "Elige opción:",
-          "required": true,
-          "options": [
-            {
-              "value": "no",
-              "label": "No"
-            },
-            {
-              "value": "si",
-              "label": "Sí"
-            }
-          ]
-        }
-      },
-      {
         "template": "<p>¿Qué medidas especiales van a adoptarse para proteger la voluntariedad de los alumnos vinculados académicamente con el equipo investigador?</p>",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si'"
       },
@@ -110,12 +89,12 @@
       },
       {
         "template": "Especificar",
-        "hideExpression": "!model.medidasEspecialesEquipoInvestigadorRadio || model.medidasEspecialesEquipoInvestigadorRadio !== 'otras'"
+        "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si' || !model.medidasEspecialesEquipoInvestigadorRadio || model.medidasEspecialesEquipoInvestigadorRadio !== 'otras'"
       },
       {
         "key": "especificarOtras",
         "type": "textarea",
-        "hideExpression": "!model.medidasEspecialesEquipoInvestigadorRadio || model.medidasEspecialesEquipoInvestigadorRadio !== 'otras'",
+        "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si' || !model.medidasEspecialesEquipoInvestigadorRadio || model.medidasEspecialesEquipoInvestigadorRadio !== 'otras'",
         "templateOptions": {
           "label": "Especificar",
           "placeholder": "Especificar",
@@ -123,6 +102,27 @@
           "autosize": true,
           "autosizeMinRows": "1",
           "autosizeMaxRows": "10"
+        }
+      },
+      {
+        "template": "<p>¿Algún miembro del equipo investigador va a calificar a los estudiantes?</p>"
+      },
+      {
+        "key": "calificacionEstudiantesRadio",
+        "type": "radio",
+        "templateOptions": {
+          "label": "Elige opción:",
+          "required": true,
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
         }
       }
     ]
