@@ -113,7 +113,7 @@
       </mat-form-field>
     </div>
     <!--Tiene fondos propios -->
-    <mat-form-field fxFlex="28%" *ngIf="formGroup.controls.solicitudConvocatoriaRef.value">
+    <mat-form-field fxFlex="56%" *ngIf="formGroup.controls.solicitudConvocatoriaRef.value">
       <mat-label>{{'eti.peticion-evaluacion.tiene-fondos-propios' | translate}}</mat-label>
       <sgi-select-boolean formControlName="tieneFondosPropios"
         [required]="formGroup.controls.solicitudConvocatoriaRef.value"></sgi-select-boolean>
