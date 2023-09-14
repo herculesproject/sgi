@@ -211,7 +211,9 @@ public class RespuestaServiceImpl implements RespuestaService {
       EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
       estadoRetrospectiva.setId(Constantes.ESTADO_RETROSPECTIVA_PENDIENTE);
       retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
-      retrospectiva.setFechaRetrospectiva(respuestaRetrospectiva.getFechaEvRetrospectiva().toInstant());
+      retrospectiva.setFechaRetrospectiva(respuestaRetrospectiva.getFechaEvRetrospectiva() != null
+          ? respuestaRetrospectiva.getFechaEvRetrospectiva().toInstant()
+          : null);
 
       if (retrospectiva.getId() == null) {
         memoria.setRetrospectiva(retrospectivaService.create(retrospectiva));

@@ -28,4 +28,9 @@
     <dropColumn columnName="cod_organo_competente" tableName="memoria" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="00.04.00-4">
+    <dropNotNullConstraint columnDataType="TIMESTAMP" columnName="fecha_retrospectiva"
+      tableName="retrospectiva" />
+  </changeSet>
+
 </databaseChangeLog>

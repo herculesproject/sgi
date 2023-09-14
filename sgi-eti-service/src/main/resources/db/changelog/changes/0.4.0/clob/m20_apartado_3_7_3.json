@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "¿Estos/Estas procedimientos/intervenciones siguen alguna línea directriz oficial?"
+        "template": "¿Los procedimientos/intervenciones siguen alguna línea directriz oficial?"
       },
       {
         "key": "siguenDirectrizOficialRadio",

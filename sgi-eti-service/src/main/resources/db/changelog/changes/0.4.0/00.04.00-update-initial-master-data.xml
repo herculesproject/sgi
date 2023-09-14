@@ -478,6 +478,21 @@
     </update>
 
     <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_4_2_4.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Protocolo de supervisión" />
+        <param name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Refinamiento' and orden = '2' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="4" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_4_3_2.json" />
       <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
       <whereParams>
@@ -487,6 +502,19 @@
           name="nombre" value="Reutilización" />
         <param name="padre_id"
           valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Reducción' and orden = '3' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="2" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_5_3.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '5' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Informe veterinario" />
         <param
           name="orden" valueNumeric="2" />
       </whereParams>

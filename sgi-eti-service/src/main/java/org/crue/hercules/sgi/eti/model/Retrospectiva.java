@@ -45,8 +45,7 @@ public class Retrospectiva extends BaseEntity {
   private EstadoRetrospectiva estadoRetrospectiva;
 
   /** Fecha Retrospectiva. */
-  @Column(name = "fecha_retrospectiva", nullable = false)
-  @NotNull
+  @Column(name = "fecha_retrospectiva")
   private Instant fechaRetrospectiva;
 
 }

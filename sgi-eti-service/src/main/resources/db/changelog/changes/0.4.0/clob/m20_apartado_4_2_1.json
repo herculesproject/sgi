@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Teniendo en cuenta las intervenciones enumeradas en el apartado 'Procedimientos/Intervenciones que se realizarán al animal' señale las medidas correctoras previstas (p.ej anestesia, analgesia) para minimizar el posible dolor, sufrimiento o ansiedad causados:<ul><li><strong>Efecto buscado</strong>: efecto que se busca en el animal con la intervención realizada: extracción del bazo, subida de un parámetro determinado, anestesiar al animal para la cirugía.</li><li><strong>Efectos colaterales, secundarios o reacciones adversas</strong>: cualquier efecto, diferente al buscado, que pueda provocar que el animal experimente dolor, sufrimiento, angustia o daño duradero equivalente o superior al causado por la introducción de una aguja.</li><li><strong>Medida correctora</strong>: cualquier medida destinada a paliar el sufrimiento del animal y/o los efectos colaterales que se apliquen, sin interferir en el efecto buscado'.</li></ul></p>"
+        "template": "<p>Teniendo en cuenta los procedimientos/intervenciones enumeradas en el apartado 'Procedimientos/Intervenciones que se realizarán al animal' señale las medidas correctoras previstas (p.ej anestesia, analgesia) para minimizar el posible dolor, sufrimiento o ansiedad causados:<ul><li><strong>Efecto buscado</strong>: efecto que se busca en el animal con el procedimiento/intervención realizado: extracción del bazo, subida de un parámetro determinado, anestesiar al animal para la cirugía.</li><li><strong>Efectos colaterales, secundarios o reacciones adversas</strong>: cualquier efecto, diferente al buscado, que pueda provocar que el animal experimente dolor, sufrimiento, angustia o daño duradero equivalente o superior al causado por la introducción de una aguja.</li><li><strong>Medida correctora</strong>: cualquier medida destinada a paliar el sufrimiento del animal y/o los efectos colaterales que se apliquen, sin interferir en el efecto buscado'.</li></ul></p>"
       },
       {
         "type": "table-crud",
@@ -17,6 +17,9 @@
         "templateOptions": {
           "entity": "medida correctora",
           "gender": "female"
+        },
+        "expressionProperties": {
+          "templateOptions.required": "formState.bloques[3].ap3_7?.ap3_7_1?.procedimientoIntervencionMedidaCorrectoraTable.length > 0"
         },
         "fieldArray": {
           "templateOptions": {
@@ -27,7 +30,7 @@
               "key": "intervencion",
               "type": "select",
               "templateOptions": {
-                "label": "Procedimiento/Intervención (severidad)",
+                "label": "Procedimiento/Intervención (categoría de severidad)",
                 "options": [],
                 "order": 10
               },
