@@ -227,7 +227,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
 
     const evaluador1Memoria = (this.formGroup.controls.memoria.value as IMemoriaWithLastEvaluacionModal)?.evaluacion?.evaluador1;
     if (options?.length && !!evaluador1Memoria) {
-      const evaluadorFind = options.map(option => option.item).find(evaluador => evaluador.id === evaluador1Memoria.id);
+      const evaluadorFind = options.map(option => option.item).find(evaluador => evaluador?.persona?.id === evaluador1Memoria?.persona?.id);
       if (evaluadorFind) {
         this.formGroup.controls.evaluador1.setValue(evaluadorFind);
       } else {
@@ -256,7 +256,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
 
     const evaluador2Memoria = (this.formGroup.controls.memoria.value as IMemoriaWithLastEvaluacionModal)?.evaluacion?.evaluador2;
     if (options?.length && !!evaluador2Memoria) {
-      const evaluadorFind = options.map(option => option.item).find(evaluador => evaluador.id === evaluador2Memoria.id);
+      const evaluadorFind = options.map(option => option.item).find(evaluador => evaluador?.persona?.id === evaluador2Memoria?.persona?.id);
       if (evaluadorFind) {
         this.formGroup.controls.evaluador2.setValue(evaluadorFind);
       } else {
