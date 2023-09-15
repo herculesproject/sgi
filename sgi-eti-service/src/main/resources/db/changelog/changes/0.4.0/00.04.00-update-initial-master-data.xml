@@ -417,6 +417,23 @@
     </update>
 
     <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_7_14.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre"
+          value="Mantenimiento con vida" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal')" />
+        <param
+          name="orden" valueNumeric="14" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_15.json" />
       <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
       <whereParams>
@@ -508,7 +525,7 @@
     </update>
 
     <update tableName="apartado">
-      <column name="esquema" valueClobFile="clob/m20_apartado_5_3.json" />
+      <column name="esquema" valueClobFile="clob/m20_apartado_5_2.json" />
       <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
       <whereParams>
         <param name="bloque_id"
