@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.eti.dto.com.EmailOutput;
 import org.crue.hercules.sgi.eti.dto.com.EmailParam;
 import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComAsignacionEvaluacionData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComAvisoRetrospectivaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionSeguimientoRevMinData;
@@ -96,6 +97,10 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private static final String TEMPLATE_ETI_COM_MEN_INDICAR_SUBSANACION = "ETI_COM_MEM_INDICAR_SUBSANACION";
   private static final String TEMPLATE_ETI_COM_MEN_INDICAR_SUBSANACION_PARAM = TEMPLATE_ETI_COM_MEN_INDICAR_SUBSANACION
+      + DATA;
+
+  private static final String TEMPLATE_ETI_COM_ASIGNACION_EVALUACION = "ETI_COM_ASIGNACION_EVALUACION";
+  private static final String TEMPLATE_ETI_COM_ASIGNACION_EVALUACION_PARAM = TEMPLATE_ETI_COM_ASIGNACION_EVALUACION
       + DATA;
 
   private final SgiConfigProperties sgiConfigProperties;
@@ -356,6 +361,14 @@ public class SgiApiComService extends SgiApiBaseService {
     return this.createComunicado(data, recipients,
         TEMPLATE_ETI_COM_MEN_INDICAR_SUBSANACION,
         TEMPLATE_ETI_COM_MEN_INDICAR_SUBSANACION_PARAM);
+  }
+
+  public EmailOutput createComunicadoAsignacionEvaluacion(
+      EtiComAsignacionEvaluacionData data, List<Recipient> recipients)
+      throws JsonProcessingException {
+    return this.createComunicado(data, recipients,
+        TEMPLATE_ETI_COM_ASIGNACION_EVALUACION,
+        TEMPLATE_ETI_COM_ASIGNACION_EVALUACION_PARAM);
   }
 
   /**

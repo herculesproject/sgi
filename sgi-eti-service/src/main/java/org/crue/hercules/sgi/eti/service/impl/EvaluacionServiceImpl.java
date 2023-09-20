@@ -188,6 +188,26 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     memoriaService.update(evaluacionCompleta.getMemoria());
 
+    try {
+      Instant fechaEvaluacionAnterior = null;
+      if (evaluacion.getVersion() > 1) {
+        Optional<Evaluacion> evaluacionAnterior = evaluacionRepository
+            .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(evaluacion.getMemoria().getId(),
+                evaluacion.getTipoEvaluacion().getId());
+
+        if (evaluacionAnterior.isPresent()) {
+          fechaEvaluacionAnterior = evaluacionAnterior.get().getConvocatoriaReunion().getFechaEvaluacion();
+        }
+      }
+      List<Evaluador> evaluadoresComite = this.evaluadorService.findAllByComiteSinconflictoInteresesMemoria(
+          evaluacionCompleta.getConvocatoriaReunion().getComite().getId(), evaluacionCompleta.getMemoria().getId(),
+          Instant.now());
+      this.comunicadosService.enviarComunicadoAsignacionEvaluacion(evaluacionCompleta, evaluadoresComite,
+          fechaEvaluacionAnterior);
+    } catch (JsonProcessingException e) {
+      log.debug("enviarComunicadoAsignacionEvaluacion() - Error al enviar el comunicado", e);
+    }
+
     return evaluacionRepository.save(evaluacionCompleta);
   }
 
