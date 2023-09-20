@@ -29,6 +29,7 @@ import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.ActaSpecifications;
 import org.crue.hercules.sgi.eti.service.ActaService;
+import org.crue.hercules.sgi.eti.service.AsistentesService;
 import org.crue.hercules.sgi.eti.service.ComunicadosService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
@@ -46,6 +47,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,6 +95,8 @@ public class ActaServiceImpl implements ActaService {
   /** Blockchain service */
   private final SgiApiBlockchainService blockchainService;
 
+  private final AsistentesService asistentesService;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   /**
@@ -109,13 +114,14 @@ public class ActaServiceImpl implements ActaService {
    * @param comunicadosService       {@link ComunicadosService}
    * @param configService            {@link SgiApiCnfService}
    * @param blockchainService        {@link SgiApiBlockchainService}
+   * @param asistentesService        {@link AsistentesService}
    */
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
       TipoEstadoActaRepository tipoEstadoActaRepository, EvaluacionRepository evaluacionRepository,
       RetrospectivaRepository retrospectivaRepository, MemoriaService memoriaService,
       RetrospectivaService retrospectivaService, SgiApiRepService reportService, SgdocService sgdocService,
       ComunicadosService comunicadosService, SgiApiCnfService configService,
-      SgiApiBlockchainService blockchainService) {
+      SgiApiBlockchainService blockchainService, AsistentesService asistentesService) {
     this.actaRepository = actaRepository;
     this.estadoActaRepository = estadoActaRepository;
     this.tipoEstadoActaRepository = tipoEstadoActaRepository;
@@ -127,6 +133,7 @@ public class ActaServiceImpl implements ActaService {
     this.comunicadosService = comunicadosService;
     this.configService = configService;
     this.blockchainService = blockchainService;
+    this.asistentesService = asistentesService;
   }
 
   /**
@@ -153,6 +160,13 @@ public class ActaServiceImpl implements ActaService {
     EstadoActa estadoActa = estadoActaRepository
         .save(new EstadoActa(null, returnValue, tipoEstadoActa.get(), Instant.now()));
     Assert.notNull(estadoActa, "No se ha podido crear el EstadoActa inicial");
+
+    try {
+      this.comunicadosService.enviarComunicadoRevisionActa(acta,
+          asistentesService.findAllByConvocatoriaReunionId(acta.getConvocatoriaReunion().getId()));
+    } catch (JsonProcessingException e) {
+      log.debug("enviarComunicadoRevisionActa() - Error al enviar el comunicado", e);
+    }
 
     return returnValue;
   }

@@ -17,8 +17,11 @@ import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegAnualPendienteData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegFinalPendienteData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComMemoriaIndicarSubsanacionData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComMemoriaRevisionMinArchivadaData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComRevisionActaData;
 import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
+import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -378,6 +381,38 @@ public class ComunicadosService {
     }
     log.debug(
         "enviarComunicadoAsignacionEvaluacion(Evaluacion evaluacion, List<Evaluador> evaluadores) - end");
+  }
+
+  public void enviarComunicadoRevisionActa(Acta acta, List<Asistentes> asistentes)
+      throws JsonProcessingException {
+
+    log.debug(
+        "enviarComunicadoRevisionActa(Evaluacion evaluacion, List<Evaluador> evaluadores) - start");
+    List<Recipient> recipients = new ArrayList();
+
+    asistentes.forEach(asistente -> {
+      recipients.addAll(getRecipientsFromPersonaRef(asistente.getEvaluador().getPersonaRef()));
+    });
+
+    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
+    if (!CollectionUtils.isEmpty(recipients)) {
+      EmailOutput emailOutput = emailService.createComunicadoRevisionActa(
+          EtiComRevisionActaData.builder()
+              .enlaceAplicacion(enlaceAplicacion)
+              .nombreInvestigacion(acta.getConvocatoriaReunion().getComite().getNombreInvestigacion())
+              .nombreComite(acta.getConvocatoriaReunion().getComite().getComite())
+              .fechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion())
+              .generoComite(acta.getConvocatoriaReunion().getComite().getGenero().name())
+              .build(),
+          recipients);
+      emailService.sendEmail(emailOutput.getId());
+    } else {
+      log.debug(
+          "enviarComunicadoRevisionActa(Acta acta, List<Asistentes> asistentes) - No se puede enviar el comunicado, no existe ninguna persona asociada");
+    }
+    log.debug(
+        "enviarComunicadoRevisionActa(Acta acta, List<Asistentes> asistentes) - end");
+
   }
 
   /**

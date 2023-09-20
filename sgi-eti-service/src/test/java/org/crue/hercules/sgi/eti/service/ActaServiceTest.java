@@ -75,6 +75,8 @@ public class ActaServiceTest extends BaseServiceTest {
   private SgiApiCnfService configService;
   @Mock
   private SgiApiBlockchainService blockchainService;
+  @Mock
+  private AsistentesService asistentesService;
 
   private ActaService actaService;
   private MemoriaService memoriaService;
@@ -83,7 +85,7 @@ public class ActaServiceTest extends BaseServiceTest {
   public void setUp() throws Exception {
     actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository,
         evaluacionRepository, retrospectivaRepository, memoriaService, retrospectivaService, reportService,
-        sgdocService, comunicadosService, configService, blockchainService);
+        sgdocService, comunicadosService, configService, blockchainService, asistentesService);
   }
 
   @Test
