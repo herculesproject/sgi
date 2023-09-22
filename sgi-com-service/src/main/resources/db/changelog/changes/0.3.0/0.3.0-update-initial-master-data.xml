@@ -185,7 +185,8 @@
     </insert>
 
     <update tableName="content_tpl">
-      <column name="tpl_text"></column>
+      <column name="tpl_text"
+        valueClobFile="clob/eti-com-revision-acta/ETI_COM_REVISION_ACTA_CONTENT_text.ftl" />
       <where>name='ETI_COM_REVISION_ACTA_CONTENT'</where>
     </update>
 
