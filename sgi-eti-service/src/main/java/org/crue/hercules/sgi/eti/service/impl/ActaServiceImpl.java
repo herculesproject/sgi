@@ -408,7 +408,7 @@ public class ActaServiceImpl implements ActaService {
           break;
         }
         case SOLICITUD_MODIFICACIONES: {
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION;
+          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL;
           break;
         }
         default:

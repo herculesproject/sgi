@@ -497,16 +497,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       }
     }
 
-    // Si el estado de la memoria es "En secretaría seguimiento anual" y es de
+    // Si el estado de la memoria es "En secretaria seguimiento anual
+    // modificaciones" y es de
     // Revisión Mínima y el dictamen es "Solicitud de modificaciones"
-    // Se cambia el estado de la memoria a "Solicitud modificación"
+    // Se cambia el estado de la memoria a "Solicitud modificación seguimiento
+    // anual"
     if (evaluacionActualizar.getMemoria().getEstadoActual().getId()
-        .equals(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId())
+        .equals(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL_MODIFICACION.getId())
         && evaluacionActualizar.getEsRevMinima().booleanValue()
         && evaluacionActualizar.getDictamen() != null
         && evaluacionActualizar.getDictamen().getId().equals(Dictamen.Tipo.SOLICITUD_MODIFICACIONES.getId())) {
       memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
-          TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId());
+          TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL.getId());
     }
 
     // Si el dictamen es "Favorable pendiente de revisión mínima" y
@@ -514,7 +516,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     // memoria a "Favorable Pendiente de Modificaciones Mínimas".
     if (evaluacionActualizar.getDictamen() != null && evaluacionActualizar.getDictamen().getId().equals(2L)
         && evaluacionActualizar.getEsRevMinima().booleanValue()) {
-      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 6L);
+      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
+          TipoEstadoMemoria.Tipo.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS.getId());
     }
 
     // Si el dictamen es "Solicitud de aclaraciones" y la Evaluación es de Revisión

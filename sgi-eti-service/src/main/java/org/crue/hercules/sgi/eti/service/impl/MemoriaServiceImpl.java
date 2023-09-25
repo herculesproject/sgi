@@ -749,8 +749,8 @@ public class MemoriaServiceImpl implements MemoriaService {
             || Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.NO_PROCEDE_EVALUAR.getId())
             || Objects.equals(memoria.getEstadoActual().getId(),
                 TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_ANUAL.getId())
-            || (Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId())
-                && Objects.equals(tipoEvaluacion, TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL))
+            || Objects.equals(memoria.getEstadoActual().getId(),
+                TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL.getId())
             || Objects.equals(memoria.getEstadoActual().getId(),
                 TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_FINAL.getId())
             || Objects.equals(memoria.getEstadoActual().getId(),
@@ -790,9 +790,10 @@ public class MemoriaServiceImpl implements MemoriaService {
     // Si el estado es 'Solicitud modificación' y es una evaluacion de seguimiento
     // anual
     // se cambia el estado de la memoria a 'En secretaría seguimiento anual'
-    if (Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId())
-        && Objects.equals(tipoEvaluacion, TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL)) {
+    if (Objects.equals(memoria.getEstadoActual().getId(),
+        TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL.getId())) {
       crearEvaluacionRevMinima = true;
+      tipoEvaluacion = TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL;
       updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL_MODIFICACION.getId());
     }
 

@@ -872,6 +872,11 @@
     </insert>
     <insert tableName="tipo_estado_memoria">
       <column name="id" valueNumeric="24" />
+      <column name="nombre" value="Solicitud modificación seguimiento anual" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" valueNumeric="25" />
       <column name="nombre" value="En secretaría seguimiento anual modificación" />
       <column name="activo" valueBoolean="true" />
     </insert>
