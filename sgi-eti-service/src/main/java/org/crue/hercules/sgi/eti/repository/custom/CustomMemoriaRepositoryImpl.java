@@ -198,6 +198,72 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
   }
 
   /**
+   * Si la convocatoria es de tipo "Seguimiento" devuelve las memorias en estado
+   * "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
+   * fecha de envío es igual o menor a la fecha límite de la convocatoria de
+   * reunión.
+   * 
+   * Si la convocatoria es de tipo "Ordinaria" o "Extraordinaria" devuelve las
+   * memorias en estado "En secretaria" con la fecha de envío es igual o menor a
+   * la fecha límite de la convocatoria de reunión y las que tengan una
+   * retrospectiva en estado "En secretaría".
+   * 
+   * @param idPeticionEvaluacion Identificador del {@link PeticionEvaluacion}
+   * @return lista de memorias a partir de una petición de evaluación asignables a
+   *         la convocatoria.
+   */
+  @Override
+  public List<Memoria> findAllMemoriasAsignablesPeticionEvaluacion(Long idPeticionEvaluacion) {
+    log.debug("findAllMemoriasAsignablesPeticionEvaluacion(Long idPeticionEvaluacion) - start");
+    final List<Predicate> predicates = new ArrayList<>();
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Memoria> cq = cb.createQuery(Memoria.class);
+
+    // Define FROM clause
+    Root<Memoria> root = cq.from(Memoria.class);
+    Join<Memoria, TipoEstadoMemoria> joinMemoriaTipoEstado = root.join(Memoria_.estadoActual);
+    Join<Memoria, Retrospectiva> joinMemoriaRetrospectiva = root.join(Memoria_.retrospectiva, JoinType.LEFT);
+
+    Predicate memoriasSecretaria = cb.equal(joinMemoriaTipoEstado.get(TipoEstadoMemoria_.id),
+        Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA);
+    Predicate retrospectivaSecretaria = cb.equal(
+        joinMemoriaRetrospectiva.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id),
+        Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA);
+    Predicate revMinima = cb.equal(joinMemoriaTipoEstado.get(TipoEstadoMemoria_.id),
+        Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA);
+    Predicate memoriasSecretariaSeguimientoAnualYFinal = joinMemoriaTipoEstado.get(TipoEstadoMemoria_.id)
+        .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL,
+            Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL));
+    Predicate memoriasPredicate = cb.or(memoriasSecretaria, retrospectivaSecretaria, revMinima,
+        memoriasSecretariaSeguimientoAnualYFinal);
+
+    // Memorias activos
+    Predicate memoriasActivas = cb.and(cb.equal(root.get(Memoria_.activo), Boolean.TRUE),
+        cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion));
+
+    // WHERE
+    predicates
+        .add(cb.and(memoriasActivas, memoriasPredicate));
+
+    // Join all restrictions
+    cq.where(cb.and(predicates.toArray(new Predicate[] {})));
+
+    // Execute query
+    List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.ASC, Memoria_.TITULO), root, cb);
+    cq.orderBy(orders);
+
+    TypedQuery<Memoria> typedQuery = entityManager.createQuery(cq);
+
+    List<Memoria> result = typedQuery.getResultList();
+
+    log.debug("findAllMemoriasAsignablesPeticionEvaluacion(Long idPeticionEvaluacion) - end");
+
+    return result;
+  }
+
+  /**
    * Devuelve las memorias de una petición evaluación con su fecha límite y de
    * evaluación.
    * 
@@ -224,7 +290,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
         root.get(Memoria_.activo),
         root.get(Memoria_.requiereRetrospectiva), joinMemoriaRetrospectiva.alias("retrospectiva"),
         root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.personaRef),
-        root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.tutorRef)).distinct(true);
+        root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.tutorRef),
+        root.get(Memoria_.version)).distinct(true);
 
     cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
         cb.isTrue(root.get(Memoria_.activo)));
@@ -301,7 +368,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
         root.get(Memoria_.activo),
         root.get(Memoria_.requiereRetrospectiva), joinMemoriaRetrospectiva.alias("retrospectiva"),
         root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.personaRef),
-        root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.tutorRef)).distinct(true);
+        root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.tutorRef),
+        root.get(Memoria_.version)).distinct(true);
 
     cq.where(predicates.toArray(new Predicate[] {}));
 

@@ -940,4 +940,34 @@ public class MemoriaController {
         : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  /**
+   * Devuelve una lista paginada de {@link Memoria} a partir de una petición de
+   * evaluación asignables para una convocatoria determinada
+   * 
+   * Si la convocatoria es de tipo "Seguimiento" devuelve las memorias en estado
+   * "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
+   * fecha de envío es igual o menor a la fecha límite de la convocatoria de
+   * reunión.
+   * 
+   * Si la convocatoria es de tipo "Ordinaria" o "Extraordinaria" devuelve las
+   * memorias en estado "En secretaria" con la fecha de envío es igual o menor a
+   * la fecha límite de la convocatoria de reunión y las que tengan una
+   * retrospectiva en estado "En secretaría".
+   * 
+   * @param idPeticionEvaluacion identificador de la {@link PeticionEvaluacion}.
+   */
+  @GetMapping("/asignables-peticion-evaluacion/{idPeticionEvaluacion}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-E')")
+  ResponseEntity<List<Memoria>> findAllMemoriasAsignablesPeticionEvaluacion(@PathVariable Long idPeticionEvaluacion) {
+    log.debug("findAllMemoriasAsignablesPeticionEvaluacion(Long idPeticionEvaluacion) - start");
+    List<Memoria> result = service.findAllMemoriasAsignablesPeticionEvaluacion(idPeticionEvaluacion);
+
+    if (result.isEmpty()) {
+      log.debug("findAllMemoriasAsignablesPeticionEvaluacion(Long idPeticionEvaluacion) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllMemoriasAsignablesPeticionEvaluacion(Long idPeticionEvaluacion) - end");
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
 }
