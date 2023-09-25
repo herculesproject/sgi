@@ -43,7 +43,6 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -615,14 +614,14 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now());
         tituloInforme = TITULO_INFORME_EVALUACION_RETROSPECTIVA;
       } else {
-        switch (evaluacion.getMemoria().getTipoMemoria().getId().intValue()) {
-          case Constantes.TIPO_MEMORIA_NUEVA:
+        switch (evaluacion.getMemoria().getTipoMemoria().getTipo()) {
+          case NUEVA:
             informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId());
             break;
-          case Constantes.TIPO_MEMORIA_MODIFICACION:
+          case MODIFICACION:
             informePdf = reportService.getInformeFavorableModificacion(evaluacion.getId());
             break;
-          case Constantes.TIPO_MEMORIA_RATIFICACION:
+          case RATIFICACION:
             informePdf = reportService.getInformeFavorableRatificacion(evaluacion.getId());
             break;
           default:

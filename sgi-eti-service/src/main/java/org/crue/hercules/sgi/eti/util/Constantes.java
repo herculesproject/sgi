@@ -78,11 +78,6 @@ public class Constantes {
   public static final int ESTADO_MEMORIA_PENDIENTE_CORRECCIONES = 7;
   public static final int ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS = 6;
 
-  // Tipos de memoria
-  public static final int TIPO_MEMORIA_NUEVA = 1;
-  public static final int TIPO_MEMORIA_MODIFICACION = 2;
-  public static final int TIPO_MEMORIA_RATIFICACION = 3;
-
   // Formularios
   public static final Long FORMULARIO_M10 = 1L;
   public static final Long FORMULARIO_M20 = 2L;

@@ -321,6 +321,8 @@ public class ActaServiceImpl implements ActaService {
       TipoEstadoMemoria.Tipo tipoEstadoMemoriaUpdate = null;
       switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
         case DESFAVORABLE:
+          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.DESFAVORABLE;
+          break;
         case FAVORABLE:
           tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FIN_EVALUACION;
           break;

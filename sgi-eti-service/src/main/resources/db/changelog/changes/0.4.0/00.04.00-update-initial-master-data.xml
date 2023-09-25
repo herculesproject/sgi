@@ -865,6 +865,11 @@
       <column name="nombre" value="Subsanación" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" valueNumeric="23" />
+      <column name="nombre" value="Desfavorable" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="00.04.00-tipo-tarea">

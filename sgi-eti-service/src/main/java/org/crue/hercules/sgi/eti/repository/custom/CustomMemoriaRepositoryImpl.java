@@ -527,14 +527,18 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Predicate memoriasActivas = cb.and(cb.equal(root.get(Memoria_.activo), Boolean.TRUE),
         cb.equal(root.get(Memoria_.comite).get(Comite_.id), idComite),
         cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
+        cb.equal(root.get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id),
+            TipoEstadoMemoria.Tipo.DESFAVORABLE.getId()).not(),
         cb.greaterThanOrEqualTo(root.get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id),
-            Constantes.TIPO_ESTADO_MEMORIA_FIN_EVALUACION));
+            TipoEstadoMemoria.Tipo.FIN_EVALUACION.getId()));
 
     Predicate memoriasActivasCount = cb.and(cb.equal(rootCount.get(Memoria_.activo), Boolean.TRUE),
         cb.equal(rootCount.get(Memoria_.comite).get(Comite_.id), idComite),
         cb.equal(rootCount.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
+        cb.equal(rootCount.get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id),
+            TipoEstadoMemoria.Tipo.DESFAVORABLE.getId()).not(),
         cb.greaterThanOrEqualTo(rootCount.get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id),
-            Constantes.TIPO_ESTADO_MEMORIA_FIN_EVALUACION));
+            TipoEstadoMemoria.Tipo.FIN_EVALUACION.getId()));
 
     // Join all restrictions
     cq.where(memoriasActivas);

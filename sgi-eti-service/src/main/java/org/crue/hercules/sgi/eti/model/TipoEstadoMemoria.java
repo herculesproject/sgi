@@ -65,7 +65,9 @@ public class TipoEstadoMemoria extends BaseEntity {
     /** En aclaración seguimiento final <code>21L</code> */
     EN_ACLARACION_SEGUIMIENTO_FINAL(21L),
     /** En subsanación <code>22L</code> */
-    SUBSANACION(22L);
+    SUBSANACION(22L),
+    /** Desfavorable <code>23L</code> */
+    DESFAVORABLE(23L);
 
     private final Long id;
 
