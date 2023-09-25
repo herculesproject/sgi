@@ -377,15 +377,15 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
   }
 
   isMemoriaSeguimiento(memoria: IMemoriaPeticionEvaluacionWithLastEvaluacion): boolean {
-    if (!!memoria.evaluacion) {
-      return [TIPO_EVALUACION.SEGUIMIENTO_ANUAL, TIPO_EVALUACION.SEGUIMIENTO_FINAL].includes(memoria.evaluacion.tipoEvaluacion.id);
-    }
+    const isSolicitudModificacionSeguimientoAnual = memoria.evaluacion?.tipoEvaluacion?.id == TIPO_EVALUACION.SEGUIMIENTO_ANUAL
+      && ESTADO_MEMORIA.SOLICITUD_MODIFICACION == memoria.estadoActual.id;
 
-    return [
-      ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL,
-      ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL,
-      ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL
-    ].includes(memoria.estadoActual.id);
+    return isSolicitudModificacionSeguimientoAnual
+      || [
+        ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL,
+        ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL,
+        ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL
+      ].includes(memoria.estadoActual.id);
   }
 
 }
