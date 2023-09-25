@@ -2017,6 +2017,7 @@
   "eti.estado-memoria.NO_PROCEDE_EVALUAR": "No procede evaluar",
   "eti.estado-memoria.PENDIENTE_CORRECCIONES": "Pendiente de correcciones",
   "eti.estado-memoria.SOLICITUD_MODIFICACION": "Solicitud de modificación",
+  "eti.estado-memoria.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL": "Solicitud de modificación seguimiento anual",
   "eti.estado-memoria.SUBSANACION": "Subsanación",
   "eti.evaluacion": "Evaluaci{count,plural, =0{} one{ón} other{ones}}",
   "eti.evaluacion-evaluador.comentario": "Motivo",

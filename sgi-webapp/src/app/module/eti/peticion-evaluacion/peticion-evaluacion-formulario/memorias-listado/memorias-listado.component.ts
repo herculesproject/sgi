@@ -184,12 +184,6 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   }
 
   hasPermisoEnviarSecretaria(memoria: IMemoriaPeticionEvaluacionWithLastEvaluacion): boolean {
-    // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
-    // 'Pendiente de correcciones', 'Completada seguimiento anual',
-    // 'Completada seguimiento final', 'En aclaracion seguimiento final'
-    // o 'Solicitud modificación' si la evaluacion es de tipo seguimiento anual
-    // se muestra el botón de enviar.
-
     const estadosEnviarSecretaria = [
       ESTADO_MEMORIA.COMPLETADA,
       ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS,
@@ -197,14 +191,10 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
       ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL,
       ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL,
       ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL,
-      ESTADO_MEMORIA.SOLICITUD_MODIFICACION
+      ESTADO_MEMORIA.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL
     ];
 
-    const solicitudModificacionOnlyIfSeguimientoAnual = memoria.estadoActual.id != ESTADO_MEMORIA.SOLICITUD_MODIFICACION
-      || memoria.evaluacion?.tipoEvaluacion?.id === TIPO_EVALUACION.SEGUIMIENTO_ANUAL;
-
-    return estadosEnviarSecretaria.includes(memoria.estadoActual.id)
-      && solicitudModificacionOnlyIfSeguimientoAnual;
+    return estadosEnviarSecretaria.includes(memoria.estadoActual.id);
   }
 
   enviarSecretaria(memoria: IMemoriaPeticionEvaluacionWithLastEvaluacion) {
@@ -302,15 +292,12 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   }
 
   isMemoriaSeguimiento(memoria: IMemoriaPeticionEvaluacionWithLastEvaluacion): boolean {
-    const isSolicitudModificacionSeguimientoAnual = memoria.evaluacion?.tipoEvaluacion?.id == TIPO_EVALUACION.SEGUIMIENTO_ANUAL
-      && ESTADO_MEMORIA.SOLICITUD_MODIFICACION == memoria.estadoActual.id;
-
-    return isSolicitudModificacionSeguimientoAnual
-      || [
-        ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL,
-        ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL,
-        ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL
-      ].includes(memoria.estadoActual.id);
+    return [
+      ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL,
+      ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_FINAL,
+      ESTADO_MEMORIA.EN_ACLARACION_SEGUIMIENTO_FINAL,
+      ESTADO_MEMORIA.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL
+    ].includes(memoria.estadoActual.id);
   }
 
 }

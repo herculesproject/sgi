@@ -61,7 +61,7 @@ export class MemoriaSeguimientoAnualFragment extends MemoriaFormlyFormFragment {
     switch (+estado) {
       case ESTADO_MEMORIA.COMPLETADA_SEGUIMIENTO_ANUAL:
       case ESTADO_MEMORIA.FIN_EVALUACION:
-      case ESTADO_MEMORIA.SOLICITUD_MODIFICACION:
+      case ESTADO_MEMORIA.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL:
         // Un año o más de diferencia entre la fecha actual y la fecha de inicio.
         return this.memoria.peticionEvaluacion.fechaInicio.diffNow('years').years <= -1;
       default:
