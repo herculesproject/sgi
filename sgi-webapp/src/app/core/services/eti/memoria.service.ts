@@ -486,4 +486,18 @@ export class MemoriaService extends SgiMutableRestService<number, IMemoriaBacken
     );
   }
 
+  /**
+ * Devuelve todas las memorias de una petición de evaluación asignables a la convocatoria
+ *
+ * @param idPeticionEvaluacion id petición de evaluación.
+ * @return las memorias asignables a la convocatoria.
+ */
+  findAllMemoriasAsignablesPeticionEvaluacion(idPeticionEvaluacion: number): Observable<SgiRestListResult<IMemoria>> {
+    return this.find<IMemoriaBackend, IMemoria>(
+      `${this.endpointUrl}/asignables-peticion-evaluacion/${idPeticionEvaluacion}`,
+      null,
+      MEMORIA_CONVERTER
+    );
+  }
+
 }
