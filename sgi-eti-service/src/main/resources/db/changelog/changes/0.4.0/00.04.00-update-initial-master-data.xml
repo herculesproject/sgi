@@ -870,6 +870,11 @@
       <column name="nombre" value="Desfavorable" />
       <column name="activo" valueBoolean="true" />
     </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" valueNumeric="24" />
+      <column name="nombre" value="En secretaría seguimiento anual modificación" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
   </changeSet>
 
   <changeSet context="!test" author="master" id="00.04.00-tipo-tarea">

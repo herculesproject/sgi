@@ -67,7 +67,9 @@ public class TipoEstadoMemoria extends BaseEntity {
     /** En subsanación <code>22L</code> */
     SUBSANACION(22L),
     /** Desfavorable <code>23L</code> */
-    DESFAVORABLE(23L);
+    DESFAVORABLE(23L),
+    /** En secretaría seguimiento anual modificación <code>24L</code> */
+    EN_SECRETARIA_SEGUIMIENTO_ANUAL_MODIFICACION(24L);
 
     private final Long id;
 

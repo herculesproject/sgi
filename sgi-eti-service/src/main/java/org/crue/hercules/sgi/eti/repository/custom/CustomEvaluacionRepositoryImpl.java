@@ -474,10 +474,10 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     listPredicates.add(
         cb.or(
             rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
-                .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL)),
+                .in(Arrays.asList(TipoEstadoMemoria.Tipo.EN_EVALUACION_SEGUIMIENTO_ANUAL.getId())),
             cb.and(
                 rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
-                    .in(Arrays.asList(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId())),
+                    .in(Arrays.asList(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL_MODIFICACION.getId())),
                 cb.isTrue(rootEvaluacion.get(Evaluacion_.esRevMinima)))));
 
     listPredicates.add(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id)

@@ -396,8 +396,8 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     Specification<Memoria> specs = MemoriaSpecifications.activos()
         .and(MemoriaSpecifications
-            .estadoActualIn(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL,
-                Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL)))
+            .estadoActualIn(Arrays.asList(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId(),
+                TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_FINAL.getId())))
         .and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<Memoria> returnValue = memoriaRepository.findAll(specs, pageable);
@@ -727,7 +727,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Transactional
   @Override
   public void enviarSecretaria(Long idMemoria, String personaRef) {
-    log.debug("enviarSecretaria(Long id) - start");
+    log.debug("enviarSecretaria(Long id, String personaRef) - start");
     Assert.notNull(idMemoria, "Memoria id no puede ser null para actualizar la memoria");
 
     Memoria memoria = memoriaRepository.findById(idMemoria).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
@@ -735,77 +735,87 @@ public class MemoriaServiceImpl implements MemoriaService {
         .findFirstByMemoriaIdAndActivoTrueOrderByVersionDescCreationDateDesc(idMemoria)
         .orElse(null);
 
-    Long tipoEvaluacion = TipoEvaluacion.Tipo.MEMORIA.getId();
+    TipoEvaluacion.Tipo tipoEvaluacion = TipoEvaluacion.Tipo.MEMORIA;
 
     if (lastEvaluacion != null) {
-      tipoEvaluacion = lastEvaluacion.getTipoEvaluacion().getId();
+      tipoEvaluacion = lastEvaluacion.getTipoEvaluacion().getTipo();
     }
 
     Assert.isTrue(
-        memoria.getEstadoActual().getId() == 2L
-            || memoria.getEstadoActual().getId() == 6L
-            || memoria.getEstadoActual().getId() == 7L
-            || memoria.getEstadoActual().getId() == 8L
-            || memoria.getEstadoActual().getId() == 11L
+        Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.COMPLETADA.getId())
+            || Objects.equals(memoria.getEstadoActual().getId(),
+                TipoEstadoMemoria.Tipo.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS.getId())
+            || Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.PENDIENTE_CORRECCIONES.getId())
+            || Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.NO_PROCEDE_EVALUAR.getId())
+            || Objects.equals(memoria.getEstadoActual().getId(),
+                TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_ANUAL.getId())
             || (Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId())
-                && Objects.equals(tipoEvaluacion, TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL.getId()))
-            || memoria.getEstadoActual().getId() == 16L
-            || memoria.getEstadoActual().getId() == 21L,
+                && Objects.equals(tipoEvaluacion, TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL))
+            || Objects.equals(memoria.getEstadoActual().getId(),
+                TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_FINAL.getId())
+            || Objects.equals(memoria.getEstadoActual().getId(),
+                TipoEstadoMemoria.Tipo.EN_ACLARACION_SEGUIMIENTO_FINAL.getId()),
         "No se puede realizar la acción porque la memoria ya ha sido enviada a secretaría");
 
     Assert.isTrue(memoria.getPeticionEvaluacion().getPersonaRef().equals(personaRef),
         "El usuario no es el propietario de la petición evaluación.");
 
-    boolean crearEvaluacion = false;
+    boolean crearEvaluacionRevMinima = false;
 
     // Si el estado es 'Completada', 'Pendiente de correcciones' o 'No procede
     // evaluar' se cambia el estado de la memoria a 'En secretaría'
-    if (memoria.getEstadoActual().getId() == 2L || memoria.getEstadoActual().getId() == 7L
-        || memoria.getEstadoActual().getId() == 8L) {
-      updateEstadoMemoria(memoria, 3L);
+    if (Arrays.asList(
+        TipoEstadoMemoria.Tipo.COMPLETADA.getId(),
+        TipoEstadoMemoria.Tipo.PENDIENTE_CORRECCIONES.getId(),
+        TipoEstadoMemoria.Tipo.NO_PROCEDE_EVALUAR.getId()).contains(memoria.getEstadoActual().getId())) {
+      updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA.getId());
     }
 
     // Si el estado es 'Favorable pendiente de modificaciones mínimas'
     // se cambia el estado de la memoria a 'En secretaría revisión mínima'
-    if (memoria.getEstadoActual().getId() == 6L) {
-      crearEvaluacion = true;
-      updateEstadoMemoria(memoria, 4L);
+    if (Objects.equals(memoria.getEstadoActual().getId(),
+        TipoEstadoMemoria.Tipo.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS.getId())) {
+      crearEvaluacionRevMinima = true;
+      updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_REVISION_MINIMA.getId());
     }
 
     // Si el estado es 'Completada seguimiento anual'
     // se cambia el estado de la memoria a 'En secretaría seguimiento anual'
     if (Objects.equals(memoria.getEstadoActual().getId(),
         TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_ANUAL.getId())) {
-      tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL;
+      tipoEvaluacion = TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL;
       updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId());
     }
 
-    // Si el estado es 'Solicitud modificación'
+    // Si el estado es 'Solicitud modificación' y es una evaluacion de seguimiento
+    // anual
     // se cambia el estado de la memoria a 'En secretaría seguimiento anual'
-    if (Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId())) {
-      tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL;
-      crearEvaluacion = true;
-      updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL.getId());
+    if (Objects.equals(memoria.getEstadoActual().getId(), TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId())
+        && Objects.equals(tipoEvaluacion, TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL)) {
+      crearEvaluacionRevMinima = true;
+      updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL_MODIFICACION.getId());
     }
 
     // Si el estado es 'Completada seguimiento final'
     // se cambia el estado de la memoria a 'En secretaría seguimiento final'
-    if (memoria.getEstadoActual().getId() == 16L) {
-      tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL;
-      updateEstadoMemoria(memoria, 17L);
+    if (Objects.equals(memoria.getEstadoActual().getId(),
+        TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_FINAL.getId())) {
+      tipoEvaluacion = TipoEvaluacion.Tipo.SEGUIMIENTO_FINAL;
+      updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_FINAL.getId());
     }
 
     // Si el estado es 'En aclaración seguimiento final'
     // se cambia el estado de la memoria a 'En secretaría seguimiento final
     // aclaraciones'
-    if (memoria.getEstadoActual().getId() == 21L) {
-      tipoEvaluacion = Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL;
-      crearEvaluacion = true;
-      updateEstadoMemoria(memoria, 18L);
+    if (Objects.equals(memoria.getEstadoActual().getId(),
+        TipoEstadoMemoria.Tipo.EN_ACLARACION_SEGUIMIENTO_FINAL.getId())) {
+      tipoEvaluacion = TipoEvaluacion.Tipo.SEGUIMIENTO_FINAL;
+      crearEvaluacionRevMinima = true;
+      updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES.getId());
     }
 
-    if (crearEvaluacion) {
-      this.crearEvaluacion(memoria, tipoEvaluacion);
+    if (crearEvaluacionRevMinima) {
+      this.crearEvaluacionRevMinima(memoria, tipoEvaluacion);
       memoria.setVersion(memoria.getVersion() + 1);
     }
 
@@ -813,9 +823,9 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     memoriaRepository.save(memoria);
 
-    this.crearInforme(memoria, tipoEvaluacion);
+    this.crearInforme(memoria, tipoEvaluacion.getId());
 
-    log.debug("enviarSecretaria(Long id) - end");
+    log.debug("enviarSecretaria(Long id, String personaRef) - end");
   }
 
   /**
@@ -825,10 +835,10 @@ public class MemoriaServiceImpl implements MemoriaService {
    * @param memoria        los datos de la {@link Memoria}
    * @param tipoEvaluacion el tipo de {@link Evaluacion}
    */
-  private void crearEvaluacion(Memoria memoria, Long tipoEvaluacion) {
-    log.debug("crearEvaluacion(memoria, tipoEvaluacion)- start");
+  private void crearEvaluacionRevMinima(Memoria memoria, TipoEvaluacion.Tipo tipoEvaluacion) {
+    log.debug("crearEvaluacionRevMinima(Memoria memoria, TipoEvaluacion.Tipo tipoEvaluacion) - start");
     Evaluacion evaluacion = evaluacionRepository
-        .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), tipoEvaluacion)
+        .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), tipoEvaluacion.getId())
         .orElseThrow(() -> new EvaluacionNotFoundException(memoria.getId()));
 
     Evaluacion evaluacionNueva = new Evaluacion();
@@ -837,12 +847,11 @@ public class MemoriaServiceImpl implements MemoriaService {
     evaluacionNueva.setVersion(memoria.getVersion() + 1);
     evaluacionNueva.setEsRevMinima(true);
     evaluacionNueva.setDictamen(null);
-    evaluacionNueva.setTipoEvaluacion(new TipoEvaluacion());
-    evaluacionNueva.getTipoEvaluacion().setId(tipoEvaluacion);
+    evaluacionNueva.setTipoEvaluacion(TipoEvaluacion.builder().id(tipoEvaluacion.getId()).build());
     evaluacionNueva.setActivo(true);
     evaluacionRepository.save(evaluacionNueva);
 
-    log.debug("crearEvaluacion(memoria, tipoEvaluacion)- end");
+    log.debug("crearEvaluacionRevMinima(Memoria memoria, TipoEvaluacion.Tipo tipoEvaluacion) - end");
   }
 
   private void crearInforme(Memoria memoria, Long tipoEvaluacion) {
