@@ -474,61 +474,56 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       evaluacionActualizar.setFechaDictamen(Instant.now());
     }
 
-    // Si el dictamen es "Favorable" y la Evaluación es de Revisión Mínima
-    if (evaluacionActualizar.getDictamen() != null
-        && evaluacionActualizar.getDictamen().getNombre().equalsIgnoreCase("FAVORABLE")
-        && evaluacionActualizar.getEsRevMinima().booleanValue()) {
-
-      // Si el estado de la memoria es "En evaluación" o
-      // "En secretaria revisión mínima"
-      // Se cambia el estado de la memoria a "Fin evaluación"
-      if (evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)
-          || evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(5L)) {
-        memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 9L);
+    // Si es una evaluacion de revision minima con dictamen se actualiza el estado
+    // de la memoria
+    if (evaluacionActualizar.getDictamen() != null && evaluacionActualizar.getEsRevMinima().booleanValue()) {
+      switch (evaluacionActualizar.getDictamen().getTipo()) {
+        // Si el dictamen es "Favorable" se cambia al fin de evaluacion correspondiente
+        case FAVORABLE:
+        case FAVORABLE_RETROSPECTIVA:
+        case FAVORABLE_SEGUIMIENTO_ANUAL:
+        case FAVORABLE_SEGUIMIENTO_FINAL:
+          switch (evaluacionActualizar.getMemoria().getEstadoActual().getTipo()) {
+            // memoria
+            case EN_EVALUACION:
+            case EN_SECRETARIA_REVISION_MINIMA:
+              memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
+                  TipoEstadoMemoria.Tipo.FIN_EVALUACION.getId());
+              break;
+            // seguimiento anual
+            case EN_EVALUACION_SEGUIMIENTO_ANUAL:
+            case EN_SECRETARIA_SEGUIMIENTO_ANUAL_MODIFICACION:
+              memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
+                  TipoEstadoMemoria.Tipo.FIN_EVALUACION_SEGUIMIENTO_ANUAL.getId());
+              break;
+            // seguimiento final
+            case EN_EVALUACION_SEGUIMIENTO_FINAL:
+            case EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES:
+              memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
+                  TipoEstadoMemoria.Tipo.FIN_EVALUACION_SEGUIMIENTO_FINAL.getId());
+              break;
+            default:
+              break;
+          }
+          break;
+        case SOLICITUD_MODIFICACIONES:
+          if (evaluacionActualizar.getMemoria().getEstadoActual().getTipo()
+              .equals(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL_MODIFICACION)) {
+            memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
+                TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL.getId());
+          }
+          break;
+        case FAVORABLE_PENDIENTE_REVISION_MINIMA:
+          memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
+              TipoEstadoMemoria.Tipo.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS.getId());
+          break;
+        case SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL:
+          memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
+              Constantes.ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL);
+          break;
+        default:
+          break;
       }
-      // Si el estado de la memoria es "En evaluación seguimiento anual" o "En
-      // evaluación seguimiento final" o "En secretaría seguimiento final
-      // aclaraciones"
-      // Se cambia el estado de la memoria a "Fin evaluación seguimiento final"
-      if (evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(13L)
-          || evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(19L)
-          || evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(18L)) {
-        memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 20L);
-      }
-    }
-
-    // Si el estado de la memoria es "En secretaria seguimiento anual
-    // modificaciones" y es de
-    // Revisión Mínima y el dictamen es "Solicitud de modificaciones"
-    // Se cambia el estado de la memoria a "Solicitud modificación seguimiento
-    // anual"
-    if (evaluacionActualizar.getMemoria().getEstadoActual().getId()
-        .equals(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL_MODIFICACION.getId())
-        && evaluacionActualizar.getEsRevMinima().booleanValue()
-        && evaluacionActualizar.getDictamen() != null
-        && evaluacionActualizar.getDictamen().getId().equals(Dictamen.Tipo.SOLICITUD_MODIFICACIONES.getId())) {
-      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
-          TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL.getId());
-    }
-
-    // Si el dictamen es "Favorable pendiente de revisión mínima" y
-    // la Evaluación es de Revisión Mínima, se cambia el estado de la
-    // memoria a "Favorable Pendiente de Modificaciones Mínimas".
-    if (evaluacionActualizar.getDictamen() != null && evaluacionActualizar.getDictamen().getId().equals(2L)
-        && evaluacionActualizar.getEsRevMinima().booleanValue()) {
-      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
-          TipoEstadoMemoria.Tipo.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS.getId());
-    }
-
-    // Si el dictamen es "Solicitud de aclaraciones" y la Evaluación es de Revisión
-    // Mínima, se cambia el estado de la memoria a "En aclaracion seguimiento
-    // final".
-    if (evaluacionActualizar.getDictamen() != null
-        && Objects.equals(evaluacionActualizar.getDictamen().getId(),
-            Dictamen.Tipo.SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL.getId())
-        && evaluacionActualizar.getEsRevMinima().booleanValue()) {
-      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
-          Constantes.ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL);
     }
 
     return evaluacionRepository.findById(evaluacionActualizar.getId()).map(evaluacion -> {
