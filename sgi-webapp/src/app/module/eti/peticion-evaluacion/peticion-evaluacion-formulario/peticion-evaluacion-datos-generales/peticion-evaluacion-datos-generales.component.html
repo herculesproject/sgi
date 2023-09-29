@@ -21,6 +21,7 @@
         </div>
       </div>
     </ng-container>
+
     <!-- Título-->
     <mat-form-field class="input-form m-bottom-10">
       <mat-label>{{'eti.peticion-evaluacion.titulo' | translate}}</mat-label>
@@ -33,6 +34,7 @@
         {{ 'error.maxlength.entity' | translate:msgParamTituloEntity }}
       </mat-error>
     </mat-form-field>
+
     <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
       <!-- Tipo de actividad-->
       <mat-form-field fxFlex="28%">
@@ -149,18 +151,27 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <!-- Resumen-->
-    <mat-form-field class="m-bottom-10">
-      <mat-label>{{'eti.peticion-evaluacion.resumen' | translate}}</mat-label>
-      <textarea #resumen matInput formControlName="resumen" required></textarea>
-      <mat-hint>{{resumen.value?.length}} / 4000</mat-hint>
-      <mat-error *ngIf="formGroup.controls.resumen.errors?.required">
+    <!-- Resumen -->
+    <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
+      <span class="ckeditor-label">{{'eti.peticion-evaluacion.resumen' | translate}}<span
+          [class]="(formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.required) ? 'warn' : ''">
+          *</span></span>
+      <ckeditor
+        [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''"
+        [editor]="CkEditor" [config]="CkEditor.defaultConfig" formControlName="resumen" required>
+      </ckeditor>
+      <span class="ckeditor-hint"
+        *ngIf="!formGroup.controls.resumen.errors">{{formGroup.controls.resumen?.value?.length}}
+        / 4000</span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.required">
         {{'error.required.entity' | translate:msgParamResumenEntity}}
-      </mat-error>
-      <mat-error *ngIf="formGroup.controls.resumen.errors?.maxlength">
+      </span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.maxlength">
         {{ 'error.maxlength.entity' | translate:msgParamResumenEntity }}
-      </mat-error>
-    </mat-form-field>
+      </span>
+    </div>
     <!-- Valor social -->
     <mat-form-field>
       <mat-label>{{'eti.peticion-evaluacion.valor-social' | translate}}</mat-label>
@@ -179,7 +190,7 @@
       <mat-form-field class="m-bottom-10">
         <mat-label>{{'eti.peticion-evaluacion.otro-valor-social' | translate}}</mat-label>
         <textarea #otroValorSocial matInput formControlName="otroValorSocial" required></textarea>
-        <mat-hint>{{otroValorSocial.value?.length}} / 2000</mat-hint>
+        <mat-hint *ngIf="!formGroup.controls.otroValorSocial.errors">{{otroValorSocial.value?.length}} / 2000</mat-hint>
         <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.required">
           {{'error.required.entity' | translate:msgParamOtroValorSocialEntity}}
         </mat-error>
@@ -189,29 +200,45 @@
       </mat-form-field>
     </ng-container>
     <!-- Objetivos científicos -->
-    <mat-form-field class="m-bottom-10" fxFlex="100%">
-      <mat-label>{{'eti.peticion-evaluacion.objetivo-cientifico' | translate:msgParamObjetivoCientificoEntity}}
-      </mat-label>
-      <textarea matInput #objetivosCientificos formControlName="objetivosCientificos" required></textarea>
-      <mat-hint>{{objetivosCientificos.value?.length}} / 4000</mat-hint>
-      <mat-error *ngIf="formGroup.controls.objetivosCientificos.errors?.required">
+    <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
+      <span class="ckeditor-label">{{'eti.peticion-evaluacion.objetivo-cientifico' |
+        translate:msgParamObjetivoCientificoEntity}}<span
+          [class]="(formGroup.controls.objetivosCientificos.touched && formGroup.controls.objetivosCientificos.errors?.required) ? 'warn' : ''">
+          *</span></span>
+      <ckeditor
+        [class]="formGroup.controls.objetivosCientificos.touched && formGroup.controls.objetivosCientificos.errors ? 'ck-editor-border-warn' : ''"
+        [editor]="CkEditor" [config]="CkEditor.defaultConfig" formControlName="objetivosCientificos" required>
+      </ckeditor>
+      <span *ngIf="!formGroup.controls.objetivosCientificos.errors"
+        class="ckeditor-hint">{{formGroup.controls.objetivosCientificos?.value?.length}} / 4000</span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.objetivosCientificos.touched && formGroup.controls.objetivosCientificos.errors?.required">
         {{'error.required.entity' | translate:msgParamObjetivoCientificoEntity}}
-      </mat-error>
-      <mat-error *ngIf="formGroup.controls.objetivosCientificos.errors?.maxlength">
-        {{'error.maxlength.entity' | translate:msgParamObjetivoCientificoEntity}}
-      </mat-error>
-    </mat-form-field>
+      </span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.objetivosCientificos.touched && formGroup.controls.objetivosCientificos.errors?.maxlength">
+        {{ 'error.maxlength.entity' | translate:msgParamObjetivoCientificoEntity }}
+      </span>
+    </div>
     <!-- Diseño metodológico -->
-    <mat-form-field class="m-bottom-10" fxFlex="99%">
-      <mat-label>{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}</mat-label>
-      <textarea matInput #disenioMetodologico formControlName="disenioMetodologico" required></textarea>
-      <mat-hint>{{disenioMetodologico.value?.length}} / 4000</mat-hint>
-      <mat-error *ngIf="formGroup.controls.disenioMetodologico.errors?.required">
+    <div fxLayout="column" fxFlex="99" fxLayoutGap="10px">
+      <span class="ckeditor-label">{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}<span
+          [class]="(formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors?.required) ? 'warn' : ''">
+          *</span></span>
+      <ckeditor
+        [class]="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors ? 'ck-editor-border-warn' : ''"
+        [editor]="CkEditor" [config]="CkEditor.defaultConfig" formControlName="disenioMetodologico" required>
+      </ckeditor>
+      <span *ngIf="!formGroup.controls.disenioMetodologico.errors"
+        class="ckeditor-hint">{{formGroup.controls.disenioMetodologico?.value?.length}} / 4000</span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors?.required">
         {{'error.required.entity' | translate:msgParamDisenioMetodologicoEntity}}
-      </mat-error>
-      <mat-error *ngIf="formGroup.controls.disenioMetodologico.errors?.maxlength">
-        {{'error.maxlength.entity' | translate:msgParamDisenioMetodologicoEntity}}
-      </mat-error>
-    </mat-form-field>
+      </span>
+      <span class="ckeditor-error"
+        *ngIf="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors?.maxlength">
+        {{ 'error.maxlength.entity' | translate:msgParamDisenioMetodologicoEntity }}
+      </span>
+    </div>
   </form>
 </sgi-fragment>

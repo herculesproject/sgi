@@ -10,6 +10,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { TranslateService } from '@ngx-translate/core';
+import Editor from 'ckeditor5/build/ckeditor';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActaActionService } from '../../acta.action.service';
@@ -28,6 +29,8 @@ const ACTA_RESUMEN_KEY = marker('eti.acta.resumen');
 })
 export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> implements OnInit {
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
+
+  public readonly CkEditor = Editor;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;

@@ -25,7 +25,7 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
       fechaFin: [null],
       horaInicio: [null],
       horaFin: [null],
-      resumen: ['', Validators.required]
+      resumen: ['', [Validators.required, Validators.maxLength(4000)]]
     });
 
     const horaInicio = fb.controls.horaInicio;

@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
+import { CKEditorTemplate } from './types/ckeditor-template';
 import { TipoValorSocialComponent } from './types/tipo-valor-social.component';
 import { IDateBetweenValidatorOptions, IDateValidatorOptions, dateIsAfter, dateIsBetween } from './validators/date.validator';
 import { IMulticheckboxValidatorOptions, multicheckboxRestricted } from './validators/multicheckbox.validator';
@@ -21,7 +23,8 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
     TitleDivWrapperComponent,
     SubtitleDivWrapperComponent,
     InfoDivWrapperComponent,
-    TipoValorSocialComponent
+    TipoValorSocialComponent,
+    CKEditorTemplate
   ],
   imports: [
     CommonModule,
@@ -37,7 +40,12 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
           component: TipoValorSocialComponent,
           wrappers: ['form-field'],
         },
-        { name: 'documento', extends: 'radio' }
+        { name: 'documento', extends: 'radio' },
+        {
+          name: 'ckeditor',
+          component: CKEditorTemplate,
+          wrappers: ['form-field'],
+        },
       ],
       wrappers: [
         {
@@ -55,7 +63,7 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
         {
           name: 'info-div',
           component: InfoDivWrapperComponent
-        }
+        },
       ],
       validators: [
         { name: 'requiredChecked', validation: requiredChecked },
@@ -78,12 +86,14 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
         }
       ]
     }),
-    FormlyMaterialModule
+    FormlyMaterialModule,
+    CKEditorModule
   ],
   exports: [
     FormlyMatDatepickerModule,
     FormlyModule,
-    FormlyMaterialModule
+    FormlyMaterialModule,
+    CKEditorModule
   ]
 })
 export class FormlyFormsModule { }

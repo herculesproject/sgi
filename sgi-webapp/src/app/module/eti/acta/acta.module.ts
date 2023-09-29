@@ -27,6 +27,7 @@ import { ActaMemoriaListadoExportService } from './acta-memoria-listado-export.s
 import { ActaRoutingModule } from './acta-routing.module';
 import { ActaResolver } from './acta.resolver';
 import { ActaListadoExportModalComponent } from './modals/acta-listado-export-modal/acta-listado-export-modal.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ActaListadoExportModalComponent } from './modals/acta-listado-export-mo
     FormsModule,
     ReactiveFormsModule,
     SgpSharedModule,
-    EtiSharedModule
+    EtiSharedModule,
+    CKEditorModule
   ],
   providers: [
     ActaResolver,

@@ -100,7 +100,7 @@ import { SelectComponent } from './select/select.component';
     InputEmailsComponent,
     NotFoundErrorComponent,
     NotFoundErrorDirective,
-    SgiInputWithThousandSeparator
+    SgiInputWithThousandSeparator,
   ],
   imports: [
     CommonModule,
@@ -109,7 +109,7 @@ import { SelectComponent } from './select/select.component';
     TranslateModule,
     FormsModule,
     ReactiveFormsModule,
-    FormlyFormsModule
+    FormlyFormsModule,
   ],
   exports: [
     BreadcrumbComponent,
