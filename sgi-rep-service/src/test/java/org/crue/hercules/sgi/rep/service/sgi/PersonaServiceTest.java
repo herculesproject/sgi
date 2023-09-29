@@ -4,17 +4,18 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.BaseReportServiceTest;
+import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * SgiApiSgpServiceTest
+ * PersonaServiceTest
  */
-class SgiApiSgpServiceTest extends BaseReportServiceTest {
+class PersonaServiceTest extends BaseReportServiceTest {
 
-  private SgiApiSgpService sgiApiSgpService;
+  private PersonaService sgiApiSgpService;
 
   @Mock
   private RestApiProperties restApiProperties;
@@ -24,7 +25,7 @@ class SgiApiSgpServiceTest extends BaseReportServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    sgiApiSgpService = new SgiApiSgpService(restApiProperties, restTemplate);
+    sgiApiSgpService = new PersonaService(restApiProperties, restTemplate);
   }
 
   @Test
@@ -35,23 +36,23 @@ class SgiApiSgpServiceTest extends BaseReportServiceTest {
   }
 
   @Test
-  void findDatosContactoByPersonaId_ReturnsException() throws Exception {
+  void getDatosContacto_ReturnsException() throws Exception {
     String personaRef = "23242342";
-    Assertions.assertThatThrownBy(() -> sgiApiSgpService.findDatosContactoByPersonaId(personaRef))
+    Assertions.assertThatThrownBy(() -> sgiApiSgpService.getDatosContacto(personaRef))
         .isInstanceOf(GetDataReportException.class);
   }
 
   @Test
-  void findDatosAcademicosByPersonaId_ReturnsException() throws Exception {
+  void getDatosAcademicos_ReturnsException() throws Exception {
     String personaRef = "23242342";
-    Assertions.assertThatThrownBy(() -> sgiApiSgpService.findDatosAcademicosByPersonaId(personaRef))
+    Assertions.assertThatThrownBy(() -> sgiApiSgpService.getDatosAcademicos(personaRef))
         .isInstanceOf(GetDataReportException.class);
   }
 
   @Test
-  void findVinculacionByPersonaId_ReturnsException() throws Exception {
+  void getVinculacion_ReturnsException() throws Exception {
     String personaRef = "23242342";
-    Assertions.assertThatThrownBy(() -> sgiApiSgpService.findVinculacionByPersonaId(personaRef))
+    Assertions.assertThatThrownBy(() -> sgiApiSgpService.getVinculacion(personaRef))
         .isInstanceOf(GetDataReportException.class);
   }
 

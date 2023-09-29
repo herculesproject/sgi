@@ -34,7 +34,7 @@ import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
-import org.crue.hercules.sgi.rep.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.pentaho.reporting.engine.classic.core.Band;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.SubReport;
@@ -58,13 +58,13 @@ public class InformeActaReportService extends SgiReportService {
   private static final String TIPO_EVALUACION_SEG_ANUAL = "Seguimiento anual";
   private static final String TIPO_EVALUACION_SEG_FINAL = "Seguimiento final";
 
-  private final SgiApiSgpService personaService;
+  private final PersonaService personaService;
   private final ConvocatoriaReunionService convocatoriaReunionService;
   private final ActaService actaService;
   private final EvaluacionService evaluacionService;
   private final BaseActaComentariosReportService baseActaComentariosReportService;
 
-  public InformeActaReportService(SgiConfigProperties sgiConfigProperties, SgiApiSgpService personaService,
+  public InformeActaReportService(SgiConfigProperties sgiConfigProperties, PersonaService personaService,
       SgiApiConfService sgiApiConfService,
       ConvocatoriaReunionService convocatoriaReunionService, ActaService actaService,
       EvaluacionService evaluacionService,
