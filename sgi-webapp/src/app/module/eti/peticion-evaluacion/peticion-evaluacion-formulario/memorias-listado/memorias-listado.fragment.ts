@@ -20,7 +20,15 @@ export class MemoriasListadoFragment extends Fragment {
 
   solicitantePeticionEvaluacion: IPersona;
 
-  constructor(key: number, private service: PeticionEvaluacionService, private memoriaService: MemoriaService) {
+  get isModuleInv(): boolean {
+    return this.isInvestigador;
+  }
+
+  constructor(
+    key: number,
+    private readonly service: PeticionEvaluacionService,
+    private readonly memoriaService: MemoriaService,
+    private readonly isInvestigador: boolean) {
     super(key);
     this.setComplete(true);
   }

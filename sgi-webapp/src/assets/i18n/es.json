@@ -54,7 +54,7 @@
   "adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX": "Plantilla informe favorable de evaluación para memoria de ratificación",
   "adm.config.eti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX": "Plantilla informe favorable de evaluación de retrospectiva",
   "adm.config.eti.ETI_REP_FICHA_EVALUADOR_DOCX": "Plantilla de informe del equipo evaluador",
-  "adm.config.eti.ETI_REP_MXX_PRPT": "Plantilla informe documento de memoria",
+  "adm.config.eti.ETI_REP_MXX_DOCX": "Plantilla informe documento de memoria",
   "adm.config.eti.PII_EXP_MAX_NUM_REGISTROS_EXCEL_INVENCION_LISTADO": "Invenciones - Número máximo de registros en la exportación del listado",
   "adm.config.eti.PII_EXP_MAX_NUM_REGISTROS_EXCEL_SOLICITUD_PROTECCION": "Solicitudes de protección - Número máximo de registros en la exportación del listado",
   "adm.config.global": "Configuración global",

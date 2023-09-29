@@ -71,6 +71,10 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
     return MSG_PARAMS;
   }
 
+  get isModuleInv(): boolean {
+    return this.listadoFragment.isModuleInv;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     protected readonly dialogService: DialogService,
