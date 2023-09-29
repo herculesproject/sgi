@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -880,20 +881,20 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     Long idFormulario = null;
     String tituloInforme = TITULO_INFORME_MXX;
-    switch (tipoEvaluacion.intValue()) {
-      case Constantes.TIPO_EVALUACION_MEMORIA_INT:
+    switch (TipoEvaluacion.Tipo.fromId(tipoEvaluacion)) {
+      case MEMORIA:
         idFormulario = memoria.getComite().getFormulario().getId();
         break;
-      case Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT:
-        idFormulario = Constantes.FORMULARIO_ANUAL;
+      case SEGUIMIENTO_ANUAL:
+        idFormulario = Formulario.Tipo.SEGUIMIENTO_ANUAL.getId();
         tituloInforme = TITULO_INFORME_SA;
         break;
-      case Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL_INT:
-        idFormulario = Constantes.FORMULARIO_FINAL;
+      case SEGUIMIENTO_FINAL:
+        idFormulario = Formulario.Tipo.SEGUIMIENTO_FINAL.getId();
         tituloInforme = TITULO_INFORME_SF;
         break;
-      case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT:
-        idFormulario = Constantes.FORMULARIO_RETROSPECTIVA;
+      case RETROSPECTIVA:
+        idFormulario = Formulario.Tipo.RETROSPECTIVA.getId();
         tituloInforme = TITULO_INFORME_RETROSPECTIVA;
         break;
       default:

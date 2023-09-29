@@ -480,6 +480,22 @@
     </update>
 
     <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_7_10.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Extracción de sangre" />
+        <param
+          name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal' and orden = '7' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="10" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_11.json" />
       <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
       <whereParams>
@@ -953,6 +969,21 @@
           value="Laboratorio de la Universidad" />
         <param
           name="orden" valueNumeric="1" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m30_apartado_4_2_1_1_3.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))" />
+        <param
+          name="nombre" value="Buenas prácticas de laboratorio" />
+        <param name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Laboratorio de la Universidad')" />
+        <param
+          name="orden" valueNumeric="3" />
       </whereParams>
     </update>
 

@@ -506,23 +506,23 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     boolean isValid = false;
 
-    switch (idTipoEvaluacion.intValue()) {
-      case Constantes.TIPO_EVALUACION_RETROSPECTIVA_INT: {
+    switch (TipoEvaluacion.Tipo.fromId(idTipoEvaluacion)) {
+      case RETROSPECTIVA: {
         isValid = idFormulario == null || Constantes.FORMULARIO_RETROSPECTIVA.equals(idFormulario);
         break;
       }
-      case Constantes.TIPO_EVALUACION_MEMORIA_INT: {
+      case MEMORIA: {
         isValid = idFormulario == null
             || (Constantes.FORMULARIO_M10.equals(idFormulario) && Constantes.COMITE_CEI.equals(idComite))
             || (Constantes.FORMULARIO_M20.equals(idFormulario) && Constantes.COMITE_CEEA.equals(idComite))
             || (Constantes.FORMULARIO_M30.equals(idFormulario) && Constantes.COMITE_CBE.equals(idComite));
         break;
       }
-      case Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT: {
+      case SEGUIMIENTO_ANUAL: {
         isValid = idFormulario == null || Constantes.FORMULARIO_ANUAL.equals(idFormulario);
         break;
       }
-      case Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL_INT: {
+      case SEGUIMIENTO_FINAL: {
         isValid = idFormulario == null || Constantes.FORMULARIO_FINAL.equals(idFormulario);
         break;
       }

@@ -48,11 +48,6 @@ public class Constantes {
   public static final Long TIPO_EVALUACION_SEGUIMIENTO_ANUAL = 3L;
   public static final Long TIPO_EVALUACION_SEGUIMIENTO_FINAL = 4L;
 
-  public static final int TIPO_EVALUACION_RETROSPECTIVA_INT = 1;
-  public static final int TIPO_EVALUACION_MEMORIA_INT = 2;
-  public static final int TIPO_EVALUACION_SEGUIMIENTO_ANUAL_INT = 3;
-  public static final int TIPO_EVALUACION_SEGUIMIENTO_FINAL_INT = 4;
-
   // Tipo estado acta
   public static final Long TIPO_ESTADO_ACTA_EN_ELABORACION = 1L;
   public static final Long TIPO_ESTADO_ACTA_FINALIZADA = 2L;

@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.dto.RespuestaRetrospectivaFormulario;
@@ -241,6 +242,20 @@ public class RespuestaServiceImpl implements RespuestaService {
   @Override
   public Optional<Respuesta> findLastByMemoriaId(Long idMemoria) {
     return respuestaRepository.findTopByMemoriaIdOrderByApartadoBloqueOrdenDescApartadoOrdenDesc(idMemoria);
+  }
+
+  /**
+   * Lista de {@link Respuesta} de la memoria
+   * 
+   * @param id Identificador de la {@link Memoria}
+   * @return la lista de {@link Respuesta} de la memoria
+   */
+  @Override
+  public List<Respuesta> findByMemoriaId(Long id) {
+    log.debug("findByMemoriaId({}) - start");
+    List<Respuesta> respuestas = respuestaRepository.findByMemoriaId(id);
+    log.debug("findByMemoriaId({}) - end");
+    return respuestas;
   }
 
 }

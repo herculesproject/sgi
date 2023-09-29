@@ -12,7 +12,7 @@
         "template": "<p>Describir a continuación el recorrido que siguen los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartícula desde su obtención hasta su eliminación:</p>"
       },
       {
-        "key": "mododeobtención",
+        "key": "mododeObtencion",
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {

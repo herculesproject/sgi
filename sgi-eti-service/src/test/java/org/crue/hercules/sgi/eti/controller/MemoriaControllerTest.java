@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.converter.RespuestaConverter;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
@@ -80,6 +81,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
   @MockBean
   private RespuestaService respuestaService;
+
+  @MockBean
+  private RespuestaConverter respuestaConverter;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_ASIGNABLES = "/asignables/{idConvocatoria}";

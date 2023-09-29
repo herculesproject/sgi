@@ -9,8 +9,10 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
+import org.crue.hercules.sgi.eti.converter.RespuestaConverter;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.RespuestaOutput;
 import org.crue.hercules.sgi.eti.model.BaseEntity;
 import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -52,6 +54,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -60,6 +63,7 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RestController
 @RequestMapping(MemoriaController.REQUEST_MAPPING)
+@RequiredArgsConstructor
 @Slf4j
 public class MemoriaController {
 
@@ -75,6 +79,7 @@ public class MemoriaController {
   public static final String PATH_LAST_EVALUACION = PATH_ID + PATH_DELIMITER + "last-evaluacion";
   public static final String PATH_LAST_EVALUACION_PENDIENTE_CORRECCIONES = PATH_ID + PATH_DELIMITER
       + "last-evaluacion-pendiente-correcciones";
+  public static final String PATH_RESPUESTAS = PATH_ID + PATH_DELIMITER + "respuestas";
 
   /** Memoria service */
   private final MemoriaService service;
@@ -93,31 +98,7 @@ public class MemoriaController {
 
   /** Respuesta service */
   private final RespuestaService respuestaService;
-
-  /**
-   * Instancia un nuevo MemoriaController.
-   * 
-   * @param service                       {@link MemoriaService}
-   * @param evaluacionService             {@link EvaluacionService}
-   * @param documentacionMemoriaService   {@link DocumentacionMemoriaService}
-   * @param informeService                {@link InformeService}
-   * @param convocatoriaReunionRepository {@link CustomConvocatoriaReunionRepository}
-   * @param respuestaService              {@link RespuestaService}
-   */
-  public MemoriaController(MemoriaService service, EvaluacionService evaluacionService,
-      DocumentacionMemoriaService documentacionMemoriaService, InformeService informeService,
-      CustomConvocatoriaReunionRepository convocatoriaReunionRepository, RespuestaService respuestaService) {
-    log.debug(
-        "MemoriaController(MemoriaService service, EvaluacionService evaluacionService, DocumentacionMemoriaService documentacionMemoriaService, InformeService informeService, CustomConvocatoriaReunionRepository convocatoriaReunionRepository, RespuestaService respuestaService) - start");
-    this.service = service;
-    this.evaluacionService = evaluacionService;
-    this.documentacionMemoriaService = documentacionMemoriaService;
-    this.informeService = informeService;
-    this.convocatoriaReunionRepository = convocatoriaReunionRepository;
-    this.respuestaService = respuestaService;
-    log.debug(
-        "MemoriaController(MemoriaService service, EvaluacionService evaluacionService, DocumentacionMemoriaService documentacionMemoriaService, InformeService informeService, CustomConvocatoriaReunionRepository convocatoriaReunionRepository, RespuestaService respuestaService) - end");
-  }
+  private final RespuestaConverter respuestaConverter;
 
   /**
    * Devuelve una lista paginada y filtrada {@link Memoria}.
@@ -270,7 +251,7 @@ public class MemoriaController {
    * @param id             id {@link Memoria} a actualizar.
    * @return {@link Memoria} actualizada.
    */
-  @PutMapping("/{id}")
+  @PutMapping(PATH_ID)
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-MEM-INV-ER')")
   Memoria replaceMemoria(@Validated({ Update.class, Default.class }) @RequestBody Memoria updatedMemoria,
       @PathVariable Long id) {
@@ -287,12 +268,12 @@ public class MemoriaController {
    * @param id Identificador de {@link Memoria}.
    * @return {@link Memoria} correspondiente al id.
    */
-  @GetMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-MEM-INV-ER', 'ETI-MEM-V')")
-  Memoria one(@PathVariable Long id) {
-    log.debug("Memoria one(Long id) - start");
+  @GetMapping(PATH_ID)
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-eti')) or hasAnyAuthority('ETI-MEM-INV-ER', 'ETI-MEM-V')")
+  public Memoria findById(@PathVariable Long id) {
+    log.debug("findById({}) - start", id);
     Memoria returnValue = service.findById(id);
-    log.debug("Memoria one(Long id) - end");
+    log.debug("findById({}) - end", id);
     return returnValue;
   }
 
@@ -301,11 +282,11 @@ public class MemoriaController {
    * 
    * @param id Identificador de {@link Memoria}.
    */
-  @DeleteMapping("/{id}")
+  @DeleteMapping(PATH_ID)
   @PreAuthorize("hasAuthorityForAnyUO('ETI-MEM-INV-BR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
-    Memoria memoria = this.one(id);
+    Memoria memoria = service.findById(id);
     memoria.setActivo(Boolean.FALSE);
     service.update(memoria);
     log.debug("delete(Long id) - end");
@@ -892,10 +873,10 @@ public class MemoriaController {
   }
 
   /**
-   * Recupera el estado anterior de la {@link Memoria}.
+   * Recupera el estado actual de la {@link Memoria}.
    * 
    * @param id Id de {@link Memoria}.
-   * @return la {@link Memoria} si el estado se ha podido actualizar
+   * @return el estado de la {@link Memoria}.
    */
   @GetMapping(PATH_ESTADO_ACTUAL)
   @PreAuthorize("hasAnyAuthority('ETI-MEM-INV-ER', 'ETI-MEM-V')")
@@ -967,6 +948,21 @@ public class MemoriaController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAllMemoriasAsignablesPeticionEvaluacion(Long idPeticionEvaluacion) - end");
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve la lista de {@link RespuestaOutput} de una memoria determinada
+   * 
+   * @param id identificador de la {@link Memoria}.
+   * @return la lista de respuestas
+   */
+  @GetMapping(PATH_RESPUESTAS)
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-eti'))")
+  ResponseEntity<List<RespuestaOutput>> getRespuestasMemoria(@PathVariable Long id) {
+    log.debug("getRespuestasMemoria({}) - start", id);
+    List<RespuestaOutput> result = respuestaConverter.convert(respuestaService.findByMemoriaId(id));
+    log.debug("getRespuestasMemoria({}) - end", id);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
