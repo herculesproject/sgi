@@ -21,14 +21,10 @@
       },
       {
         "key": "descripcionProcesoReclutamiento",
-        "type": "textarea",
+        "type": "ckeditor",
         "templateOptions": {
-          "label": "Proceso de reclutamiento",
-          "placeholder": "Proceso de reclutamiento",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "name": "Proceso de reclutamiento",
+          "required": true
         }
       },
       {

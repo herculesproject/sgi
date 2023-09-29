@@ -23,14 +23,11 @@
       },
       {
         "key": "objetivosCientificos",
-        "type": "textarea",
+        "type": "ckeditor",
         "templateOptions": {
-          "label": "Objetivos cientificos",
+          "name": "Objetivos cientificos",
           "disabled": true,
           "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10",
           "expressionModelValue": "formState.memoria.peticionEvaluacion.objetivos"
         }
       }

@@ -42,14 +42,11 @@
       },
       {
         "key": "especificarDirectriz",
-        "type": "textarea",
+        "type": "ckeditor",
         "hideExpression": "!model.siguenDirectrizOficialRadio || model.siguenDirectrizOficialRadio === 'noSinDisenioSimilar'",
         "templateOptions": {
-          "label": "Especificar",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "name": "Especificar",
+          "required": true
         }
       }
     ]

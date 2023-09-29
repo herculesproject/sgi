@@ -19,13 +19,10 @@
       },
       {
         "key": "justificarRazon",
-        "type": "textarea",
+        "type": "ckeditor",
         "templateOptions": {
-          "label": "Justificar",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "name": "Justificar",
+          "required": true
         }
       }
     ]

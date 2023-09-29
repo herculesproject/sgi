@@ -15,14 +15,10 @@
       },
       {
         "key": "descripcionIntervenciones",
-        "type": "textarea",
+        "type": "ckeditor",
         "templateOptions": {
-          "label": "Intervenciones o pruebas",
-          "placeholder": "Intervenciones o pruebas",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "name": "Intervenciones o pruebas",
+          "required": true
         }
       },
       {

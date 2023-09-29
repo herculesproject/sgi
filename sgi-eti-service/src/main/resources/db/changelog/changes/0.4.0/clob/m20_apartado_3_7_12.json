@@ -42,14 +42,11 @@
       },
       {
         "key": "justificarMantenimiento",
-        "type": "textarea",
+        "type": "ckeditor",
         "hideExpression": "!model.destinoFinalCheck || !model.destinoFinalCheck.some(destino => destino === 'mantenimiento')",
         "templateOptions": {
-          "label": "Justificar",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "name": "Justificar",
+          "required": true
         }
       }
     ]

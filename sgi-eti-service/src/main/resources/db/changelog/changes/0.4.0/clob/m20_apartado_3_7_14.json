@@ -20,13 +20,10 @@
       },
       {
         "key": "mantenimientoConVida",
-        "type": "textarea",
+        "type": "ckeditor",
         "templateOptions": {
-          "label": "Descripción",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "name": "Descripción",
+          "required": true
         }
       }
     ]

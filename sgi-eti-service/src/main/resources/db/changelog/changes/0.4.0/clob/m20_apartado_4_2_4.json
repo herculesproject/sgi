@@ -13,13 +13,10 @@
       },
       {
         "key": "protocoloSupervision",
-        "type": "textarea",
+        "type": "ckeditor",
         "templateOptions": {
-          "label": "Protocolo de supervisión",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "name": "Protocolo de supervisión",
+          "required": true
         }
       }
     ]

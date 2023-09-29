@@ -11,6 +11,7 @@
   <changeSet context="dev" author="master" id="00.04.00-peticion-evaluacion">
     <update tableName="peticion_evaluacion">
       <column name="titulo" value="Proyecto1"></column>
+      <column name="resumen"><![CDATA[<p>Resumen</p>]]></column>
       <where>:name=:value</where>
       <whereParams>
         <param name="codigo" value="PR_1" />
@@ -19,6 +20,7 @@
 
     <update tableName="peticion_evaluacion">
       <column name="titulo" value="Proyecto2"></column>
+      <column name="resumen"><![CDATA[<p>Resumen</p>]]></column>
       <where>:name=:value</where>
       <whereParams>
         <param name="codigo" value="PR_2" />
@@ -27,6 +29,7 @@
 
     <update tableName="peticion_evaluacion">
       <column name="titulo" value="Proyecto3"></column>
+      <column name="resumen"><![CDATA[<p>Resumen</p>]]></column>
       <where>:name=:value</where>
       <whereParams>
         <param name="codigo" value="PR_3" />
@@ -35,6 +38,7 @@
 
     <update tableName="peticion_evaluacion">
       <column name="titulo" value="Proyecto4"></column>
+      <column name="resumen"><![CDATA[<p>Resumen</p>]]></column>
       <where>:name=:value</where>
       <whereParams>
         <param name="codigo" value="PR_4" />
@@ -43,6 +47,7 @@
 
     <update tableName="peticion_evaluacion">
       <column name="titulo" value="Proyecto5"></column>
+      <column name="resumen"><![CDATA[<p>Resumen</p>]]></column>
       <where>:name=:value</where>
       <whereParams>
         <param name="codigo" value="PR_5" />

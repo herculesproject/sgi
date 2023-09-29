@@ -37,14 +37,11 @@
       },
       {
         "key": "especificarRealizarseInvestigacion",
-        "type": "textarea",
+        "type": "ckeditor",
         "hideExpression": "!(model.realizarseInvestigacion && model.realizarseInvestigacion === 'si')",
         "templateOptions": {
-          "label": "Justificar:",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "name": "Justificar:",
+          "required": true
         }
       }
     ]
