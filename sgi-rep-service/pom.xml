@@ -113,12 +113,6 @@
       <version>${org-apache-poi.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>io.github.draco1023</groupId>
-      <artifactId>poi-tl-ext</artifactId>
-      <version>0.4.5</version>
-    </dependency>
-
     <!--
     https://mvnrepository.com/artifact/fr.opensagres.xdocreport/fr.opensagres.poi.xwpf.converter.pdf -->
     <dependency>

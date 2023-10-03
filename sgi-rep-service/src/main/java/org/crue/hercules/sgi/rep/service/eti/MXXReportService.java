@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoTreeDto;
@@ -150,6 +151,10 @@ public class MXXReportService extends SgiReportDocxService {
             })
         .addPlugin('<', new HtmlRenderPolicy())
         .build();
+
+    // Reduce el ratio a la mitad para evitar que se produzca una Zip Bomb exception
+    // al procesar el docx
+    ZipSecureFile.setMinInflateRatio(0.005d);
 
     return compileReportData(path, config, modelReport);
   }
