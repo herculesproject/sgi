@@ -22,14 +22,12 @@
       },
       {
         "key": "objetivosCientificos",
-        "type": "textarea",
+        "type": "ckeditor",
         "templateOptions": {
-          "label": "Descripción objetivos científicos del proyecto",
+          "name": "Descripción objetivos científicos del proyecto",
           "placeholder": "Descripción",
           "disabled": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10",
+          "required": true,
           "expressionModelValue": "formState.memoria.peticionEvaluacion.objetivos"
         }
       }

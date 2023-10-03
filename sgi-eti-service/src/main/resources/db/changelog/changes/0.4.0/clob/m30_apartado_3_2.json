@@ -19,15 +19,12 @@
       },
       {
         "key": "disenoMetodologico",
-        "type": "textarea",
+        "type": "ckeditor",
         "templateOptions": {
-          "label": "Diseño metodológico",
+          "name": "Diseño metodológico",
           "placeholder": "Diseño",
           "disabled": true,
           "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10",
           "expressionModelValue": "formState.memoria.peticionEvaluacion.disMetodologico"
         }
       }
