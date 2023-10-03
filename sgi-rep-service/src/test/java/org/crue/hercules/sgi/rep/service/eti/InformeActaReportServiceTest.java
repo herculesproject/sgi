@@ -67,8 +67,7 @@ class InformeActaReportServiceTest extends BaseReportEtiServiceTest {
         .willReturn((generarMockMemoriasEvaluadas(idActa)));
 
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
-        .willReturn(getResource("eti/prpt/rep-eti-acta.prpt"));
-    BDDMockito.given(sgiApiConfService.getServiceBaseURL()).willReturn("");
+        .willReturn(getResource("eti/docx/rep-eti-acta.docx"));
 
     BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
     BDDMockito.given(convocatoriaReunionService

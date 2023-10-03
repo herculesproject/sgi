@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.rep.dto.eti;
 
 import java.io.Serializable;
 
+import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,4 +27,5 @@ public class MemoriaEvaluadaDto implements Serializable {
   private Integer version;
   private String tipoEvaluacion;
   private String titulo;
+  private PersonaDto responsable;
 }
