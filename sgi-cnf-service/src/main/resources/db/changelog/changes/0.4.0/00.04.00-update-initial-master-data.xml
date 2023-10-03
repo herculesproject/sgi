@@ -19,11 +19,39 @@
       <column name="public_access" valueBoolean="false" />
     </insert>
 
-
     <delete tableName="resources">
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-mxx-prpt" />
+      </whereParams>
+    </delete>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-acta-docx" />
+      <column name="description"
+        value="Informe de la convocatoria de acta" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-acta.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-acta.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-bloque-apartado-acta-docx" />
+      <column name="description"
+        value="Informe con los bloques y apartados del formulario para las actas" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-bloque-apartado-acta.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-bloque-apartado-acta.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-acta-prpt" />
       </whereParams>
     </delete>
   </changeSet>
