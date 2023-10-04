@@ -364,8 +364,8 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
         numComentarios = evaluacionService.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
             TIPO_COMENTARIO_GESTOR);
       } else {
-        comentarios = evaluacionService.findByEvaluacionIdEvaluador(idEvaluacion);
-        numComentarios = evaluacionService.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
+        comentarios = evaluacionService.findByEvaluacionEvaluadorEstadoCerrado(idEvaluacion);
+        numComentarios = evaluacionService.countByEvaluacionIdAndTipoComentarioIdAndEstadoCerrado(evaluacion.getId(),
             TIPO_COMENTARIO_EVALUADOR);
       }
 
