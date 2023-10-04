@@ -311,5 +311,56 @@ export class EvaluacionService extends SgiMutableRestService<number, IEvaluacion
     return this.find<IDictamen, IDictamen>(`${this.endpointUrl}/${evaluacionId}/dictamenes`, null);
   }
 
+  /**
+   * Comprueba si los comentarios del evaluador están en estado cerrado
+   *
+   */
+  isComentariosEvaluadorEnviados(idEvaluacion: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idEvaluacion}/comentarios-evaluador-enviados`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+  * Comprueba si existen comentarios de otro evaluador abiertos
+  *
+  */
+  isPosibleEnviarComentarios(idEvaluacion: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idEvaluacion}/posible-enviar-comentarios`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+ * Permite enviar comentarios de la evaluación
+ * 
+ * * @param idEvaluacion id evaluación
+ */
+  enviarComentarios(idEvaluacion: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idEvaluacion}/enviar-comentarios`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+ * Devuelve los comentarios de tipo EVALUADOR de una evalución
+ *
+ * @param id Id de la evaluación
+ * @param options Opciones de paginación
+ */
+  getComentariosPersonaEvaluador(id: number, personaRef: string): Observable<IComentario[]> {
+    return this.http.get<IComentarioBackend[]>(`${this.endpointUrl}/${id}/comentarios-evaluador/${personaRef}/persona`)
+      .pipe(
+        map(r => {
+          if (r == null) {
+            return [];
+          }
+          return COMENTARIO_CONVERTER.toTargetArray(r);
+        })
+      );
+  }
 
 }

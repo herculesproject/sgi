@@ -19,7 +19,7 @@ export class SeguimientoComentarioFragment extends Fragment {
     private rol: Rol,
     private service: EvaluacionService,
     private readonly personaService: PersonaService,
-    private readonly authService: SgiAuthService
+    private readonly authService: SgiAuthService,
   ) {
     super(key);
   }
