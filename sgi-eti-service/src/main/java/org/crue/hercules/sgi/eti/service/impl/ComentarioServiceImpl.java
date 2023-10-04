@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comentario;
+import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -27,6 +29,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -79,7 +83,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
       log.debug("createComentarioGestor(Long evaluacionId, Comentario comentario) - end");
 
-      return createComentarioEvaluacion(evaluacionId, comentario, 1L);
+      return createComentarioEvaluacion(evaluacionId, comentario, TipoComentario.Tipo.GESTOR.getId());
 
     }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
 
@@ -113,8 +117,10 @@ public class ComentarioServiceImpl implements ComentarioService {
                       .getComite()),
           MSG_EL_USUARIO_NO_COINCIDE_CON_NINGUNO_DE_LOS_EVALUADORES_DE_LA_EVALUACION);
 
+      comentario.setEstado(TipoEstadoComentario.ABIERTO);
+      comentario.setFechaEstado(Instant.now());
       log.debug("createComentarioEvaluador(Long evaluacionId, Comentario comentario) - end");
-      return createComentarioEvaluacion(evaluacionId, comentario, 2L);
+      return createComentarioEvaluacion(evaluacionId, comentario, TipoComentario.Tipo.EVALUADOR.getId());
 
     }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
 
@@ -164,7 +170,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
       log.debug("createComentarioActa(Long evaluacionId, Comentario comentario) - end");
 
-      return createComentarioEvaluacion(evaluacionId, comentario, 3L);
+      return createComentarioEvaluacion(evaluacionId, comentario, TipoComentario.Tipo.ACTA.getId());
 
     }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
 
@@ -206,7 +212,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     validateEstadoEvaluacion(evaluacion);
 
-    deleteComentarioEvaluacion(evaluacionId, comentarioId, 1L);
+    deleteComentarioEvaluacion(evaluacionId, comentarioId, TipoComentario.Tipo.GESTOR.getId());
 
     log.debug("deleteComentarioGestor(Long evaluacionId, Long comentarioId) - end");
 
@@ -237,7 +243,7 @@ public class ComentarioServiceImpl implements ComentarioService {
                     .getComite()),
         MSG_EL_USUARIO_NO_COINCIDE_CON_NINGUNO_DE_LOS_EVALUADORES_DE_LA_EVALUACION);
 
-    deleteComentarioEvaluacion(evaluacionId, comentarioId, 2L);
+    deleteComentarioEvaluacion(evaluacionId, comentarioId, TipoComentario.Tipo.EVALUADOR.getId());
 
     log.debug("deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) - end");
   }
@@ -260,7 +266,7 @@ public class ComentarioServiceImpl implements ComentarioService {
       throw new EvaluacionNotFoundException(evaluacionId);
     }
 
-    deleteComentarioEvaluacion(evaluacionId, comentarioId, 3L);
+    deleteComentarioEvaluacion(evaluacionId, comentarioId, TipoComentario.Tipo.ACTA.getId());
 
     log.debug("deleteComentarioActa(Long evaluacionId, Long comentarioId) - end");
   }
@@ -278,7 +284,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     log.debug("updateComentarioGestor(Long evaluacionId, Comentario comentarioActualizar) - start");
 
     Assert.notNull(evaluacionId, "Evaluación id no puede ser null  para actualizar un comentario.");
-    Assert.isTrue(comentarioActualizar.getTipoComentario().getId().equals(1L),
+    Assert.isTrue(comentarioActualizar.getTipoComentario().getTipo().equals(TipoComentario.Tipo.GESTOR),
         "No se puede actualizar un tipo de comentario que no sea del tipo Gestor.");
 
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
@@ -310,7 +316,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     log.debug("updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) - start");
 
     Assert.notNull(evaluacionId, "Evaluación id no puede ser null  para actualizar un comentario.");
-    Assert.isTrue(comentarioActualizar.getTipoComentario().getId().equals(2L),
+    Assert.isTrue(comentarioActualizar.getTipoComentario().getTipo().equals(TipoComentario.Tipo.EVALUADOR),
         "No se puede actualizar un tipo de comentario que no sea del tipo Evaluador.");
 
     log.debug("updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) - end");
@@ -347,7 +353,8 @@ public class ComentarioServiceImpl implements ComentarioService {
     Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
 
     return evaluacionRepository.findById(id).map(evaluacion -> {
-      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 1L, pageable);
+      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
+          TipoComentario.Tipo.GESTOR.getId(), pageable);
       log.debug("findByEvaluacionIdGestor(Long id, Pageable pageable) - end");
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(id));
@@ -367,9 +374,9 @@ public class ComentarioServiceImpl implements ComentarioService {
   public Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef) {
     log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef) - start");
     Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
-
     return evaluacionRepository.findById(id).map(evaluacion -> {
-      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 2L, pageable);
+      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
+          TipoComentario.Tipo.EVALUADOR.getId(), pageable);
       log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef) - end");
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(id));
@@ -390,7 +397,8 @@ public class ComentarioServiceImpl implements ComentarioService {
     Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
 
     return evaluacionRepository.findById(id).map(evaluacion -> {
-      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 3L, pageable);
+      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
+          TipoComentario.Tipo.ACTA.getId(), pageable);
       log.debug("findByEvaluacionIdActa(Long id, Pageable pageable) - end");
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(id));
@@ -460,6 +468,8 @@ public class ComentarioServiceImpl implements ComentarioService {
       comentario.setEvaluacion(comentarioActualizar.getEvaluacion());
       comentario.setTipoComentario(comentarioActualizar.getTipoComentario());
       comentario.setTexto(comentarioActualizar.getTexto());
+      comentario.setEstado(comentarioActualizar.getEstado());
+      comentario.setFechaEstado(comentarioActualizar.getFechaEstado());
 
       Comentario returnValue = comentarioRepository.save(comentario);
       log.debug("updateComentarioEvaluacion(Long evaluacionId, Comentario comentario) - end");
@@ -557,6 +567,131 @@ public class ComentarioServiceImpl implements ComentarioService {
             && evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId()
                 .equals(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA)),
         "La Evaluación no está en un estado adecuado para añadir comentarios.");
+  }
+
+  /**
+   * Identifica si los {@link Comentario} en la {@link Evaluacion} han sido
+   * enviados
+   * 
+   * @param idEvaluacion identificador de la {@link Evaluacion}
+   * @param personaRef   El usuario de la petición
+   * @return true/false
+   */
+  @Override
+  public boolean isComentariosEvaluadorEnviados(Long idEvaluacion, String personaRef) {
+    log.debug("isComentariosEvaluadorEnviados(Long idEvaluacion, String personaRef) - end");
+    return comentarioRepository.existsByEvaluacionIdAndTipoComentarioIdAndEstadoAndCreatedBy(idEvaluacion,
+        TipoComentario.Tipo.EVALUADOR.getId(),
+        TipoEstadoComentario.CERRADO, personaRef);
+  }
+
+  /**
+   * Obtiene el número total de {@link Comentario} para una determinada
+   * {@link Evaluacion}, un tipo de comentario {@link TipoComentario}
+   * y un {@link TipoEstadoComentario} Abierto
+   * 
+   * @param id               Id de {@link Evaluacion}.
+   * @param idTipoComentario idTipoComentario de {@link TipoComentario}.
+   * @param estado           estado de {@link TipoEstadoComentario}.
+   * @return número de {@link Comentario}
+   */
+  @Override
+  public int countByEvaluacionIdAndTipoComentarioIdAndEstadoAbierto(Long id, Long idTipoComentario) {
+    return comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndEstado(id, idTipoComentario,
+        TipoEstadoComentario.ABIERTO);
+  }
+
+  /**
+   * Obtiene el número total de {@link Comentario} para una determinada
+   * {@link Evaluacion}, un tipo de comentario {@link TipoComentario}
+   * y un {@link TipoEstadoComentario} Cerrado
+   * 
+   * @param id               Id de {@link Evaluacion}.
+   * @param idTipoComentario idTipoComentario de {@link TipoComentario}.
+   * @param estado           estado de {@link TipoEstadoComentario}.
+   * @return número de {@link Comentario}
+   */
+  @Override
+  public int countByEvaluacionIdAndTipoComentarioIdAndEstadoCerrado(Long id, Long idTipoComentario) {
+    return comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndEstado(id, idTipoComentario,
+        TipoEstadoComentario.CERRADO);
+  }
+
+  /**
+   * Obtiene el número total de {@link Comentario} de otros evaluadores distintos
+   * al que realiza la petición para una determinada {@link Evaluacion} y un
+   * {@link TipoEstadoComentario} Abierto
+   * 
+   * @param id         Id de {@link Evaluacion}.
+   * @param personaRef Persona creadora del comentario
+   * @return número de {@link Comentario}
+   */
+  @Override
+  public boolean isPosibleEnviarComentarios(Long id, String personaRef) {
+    if (comentarioRepository.countByEvaluacionIdAndTipoComentarioId(id, TipoComentario.Tipo.EVALUADOR.getId()) == 0) {
+      return false;
+    }
+    return comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(id,
+        TipoComentario.Tipo.EVALUADOR.getId(),
+        personaRef, TipoEstadoComentario.ABIERTO) == 0;
+  }
+
+  /**
+   * Permite enviar los comentarios de {@link Evaluacion} y persona
+   *
+   * @param id         Id del {@link Evaluacion}.
+   * @param personaRef referencia de la persona de los {@link Comentario}
+   * @return true si puede ser enviado / false si no puede ser enviado
+   */
+  @Override
+  @Transactional
+  public boolean enviarByEvaluacion(Long id, String personaRef) {
+    try {
+      List<Comentario> comentarios = comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
+          TipoComentario.Tipo.EVALUADOR.getId(), personaRef);
+      if (CollectionUtils.isNotEmpty(comentarios)) {
+        comentarios.forEach(comentario -> {
+          comentario.setEstado(TipoEstadoComentario.CERRADO);
+          this.updateComentarioEvaluador(id, comentario, personaRef);
+        });
+      }
+      return true;
+    } catch (Exception e) {
+      log.error("enviarByEvaluacion(Long id, String personaRef)", e);
+      return false;
+    }
+  }
+
+  /**
+   * Obtiene todos los {@link Comentario} del tipo "EVALUADOR" por el id de su
+   * evaluación y la persona creadora del comentario
+   *
+   * @param id         el id de la entidad {@link Evaluacion}.
+   * @param personaRef Usuario logueado
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  @Override
+  public List<Comentario> findComentariosEvaluadorByPersonaRef(Long id, String personaRef) {
+    log.debug("findComentariosEvaluadorByPersonaRef(Long id, Pageable pageable, String personaRef) - start");
+    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    return evaluacionRepository.findById(id).map(evaluacion -> {
+      List<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
+          TipoComentario.Tipo.EVALUADOR.getId(), personaRef);
+      log.debug("findComentariosEvaluadorByPersonaRef(Long id, Pageable pageable, String personaRef) - end");
+      return returnValue;
+    }).orElseThrow(() -> new EvaluacionNotFoundException(id));
+  }
+
+  @Override
+  public Page<Comentario> findByEvaluacionEvaluadorAndEstadoCerrado(Long id, Pageable pageable) {
+    log.debug("findByEvaluacionEvaluadorAndEstadoCerrado(Long id, Pageable pageable) - start");
+    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    return evaluacionRepository.findById(id).map(evaluacion -> {
+      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndEstado(id,
+          TipoComentario.Tipo.EVALUADOR.getId(), TipoEstadoComentario.CERRADO, pageable);
+      log.debug("findByEvaluacionEvaluadorAndEstadoCerrado(Long id, Pageable pageable) - end");
+      return returnValue;
+    }).orElseThrow(() -> new EvaluacionNotFoundException(id));
   }
 
 }

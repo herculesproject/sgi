@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionEvaluacionExcepti
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
+import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;

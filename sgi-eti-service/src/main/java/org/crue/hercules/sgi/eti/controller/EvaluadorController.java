@@ -95,7 +95,7 @@ public class EvaluadorController {
    * @param query filtro de búsqueda.
    */
   @GetMapping("comite/{idComite}/sinconflictointereses/{idMemoria}/fecha/{fechaEvaluacion}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E','ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
   ResponseEntity<List<Evaluador>> findAllByComiteSinconflictoInteresesMemoria(@PathVariable Long idComite,
       @PathVariable Long idMemoria, @PathVariable Instant fechaEvaluacion) {
     log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria) - start");

@@ -33,4 +33,12 @@
       tableName="retrospectiva" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="00.04.00-5">
+    <addColumn tableName="comentario">
+      <column name="estado" type="VARCHAR(50)" />
+      <column name="fecha_estado" type="TIMESTAMP" />
+    </addColumn>
+  </changeSet>
+
+
 </databaseChangeLog>
