@@ -592,7 +592,6 @@ public class ComentarioServiceImpl implements ComentarioService {
    * 
    * @param id               Id de {@link Evaluacion}.
    * @param idTipoComentario idTipoComentario de {@link TipoComentario}.
-   * @param estado           estado de {@link TipoEstadoComentario}.
    * @return número de {@link Comentario}
    */
   @Override
@@ -608,7 +607,6 @@ public class ComentarioServiceImpl implements ComentarioService {
    * 
    * @param id               Id de {@link Evaluacion}.
    * @param idTipoComentario idTipoComentario de {@link TipoComentario}.
-   * @param estado           estado de {@link TipoEstadoComentario}.
    * @return número de {@link Comentario}
    */
   @Override

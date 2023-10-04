@@ -714,9 +714,8 @@ public class EvaluacionController {
    * Obtener todas las entidades paginadas {@link Comentario} activas para una
    * determinada {@link Evaluacion}. y con estado CERRADO
    *
-   * @param id            Id de {@link Evaluacion}.
-   * @param pageable      la información de la paginación.
-   * @param authorization autenticación
+   * @param id       Id de {@link Evaluacion}.
+   * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   @GetMapping("/{id}/comentarios-evaluador-cerrados")
