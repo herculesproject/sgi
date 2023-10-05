@@ -2,7 +2,7 @@ import { KeyValue } from '@angular/common';
 import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
-import { ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
+import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { Observable, of } from 'rxjs';
@@ -38,24 +38,24 @@ export enum ConfigEti {
 export class ConfigEtiComponent extends AbstractMenuContentComponent {
 
   private readonly _CONFIG_MAP: Map<ConfigEti, IConfigOptions> = new Map([
-    [ConfigEti.ETI_BLOCKCHAIN_ENABLE, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_BLOCKCHAIN_ENABLE`), options: this.getBooleanValues(), required: true }],
-    [ConfigEti.ETI_REP_ACTA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_ACTA_DOCX`) }],
-    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX`) }],
-    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX`) }],
-    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX`) }],
-    [ConfigEti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX`) }],
-    [ConfigEti.ETI_REP_EVALUACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_DOCX`) }],
-    [ConfigEti.ETI_REP_FICHA_EVALUADOR_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_FICHA_EVALUADOR_DOCX`) }],
-    [ConfigEti.ETI_REP_MXX_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_MXX_DOCX`) }],
+    [ConfigEti.ETI_BLOCKCHAIN_ENABLE, { type: ConfigType.SELECT, label: marker(`adm.config.eti.ETI_BLOCKCHAIN_ENABLE`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
+    [ConfigEti.ETI_REP_ACTA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_ACTA_DOCX`), module: ConfigModule.CNF }],
+    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_NUEVA_DOCX`), module: ConfigModule.CNF }],
+    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_RATIFICACION_DOCX`), module: ConfigModule.CNF }],
+    [ConfigEti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_FAVORABLE_MEMORIA_MODIFICACION_DOCX`), module: ConfigModule.CNF }],
+    [ConfigEti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_RETROSPECTIVA_DOCX`), module: ConfigModule.CNF }],
+    [ConfigEti.ETI_REP_EVALUACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_EVALUACION_DOCX`), module: ConfigModule.CNF }],
+    [ConfigEti.ETI_REP_FICHA_EVALUADOR_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_FICHA_EVALUADOR_DOCX`), module: ConfigModule.CNF }],
+    [ConfigEti.ETI_REP_MXX_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.eti.ETI_REP_MXX_DOCX`), module: ConfigModule.CNF }],
     //Límite exportación excel
-    [ConfigEti.TITLE_EXPORTACIÓN, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.exportacion`) }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_REUNION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_REUNION_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUACION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUACION_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO`), required: false }],
-    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO`), required: false }],
+    [ConfigEti.TITLE_EXPORTACIÓN, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.exportacion`), module: ConfigModule.NONE }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_PETICION_EVALUACION_LISTADO`), required: false, module: ConfigModule.CNF }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_MEMORIA_LISTADO`), required: false, module: ConfigModule.CNF }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_REUNION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_REUNION_LISTADO`), required: false, module: ConfigModule.CNF }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUACION_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUACION_LISTADO`), required: false, module: ConfigModule.CNF }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_SEGUIMIENTO_LISTADO`), required: false, module: ConfigModule.CNF }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_ACTA_LISTADO`), required: false, module: ConfigModule.CNF }],
+    [ConfigEti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO, { type: ConfigType.TEXT, label: marker(`adm.config.eti.ETI_EXP_MAX_NUM_REGISTROS_EXCEL_EVALUADOR_LISTADO`), required: false, module: ConfigModule.CNF }],
   ]);
 
   get ConfigType() {

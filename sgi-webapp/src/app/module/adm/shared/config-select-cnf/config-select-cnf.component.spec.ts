@@ -3,11 +3,12 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { ConfigInputTextComponent } from './config-input-text.component';
+import { SharedModule } from '@shared/shared.module';
+import { ConfigSelectCnfComponent } from './config-select-cnf.component';
 
-describe('ConfigInputTextComponent', () => {
-  let component: ConfigInputTextComponent;
-  let fixture: ComponentFixture<ConfigInputTextComponent>;
+describe('ConfigSelectCnfComponent', () => {
+  let component: ConfigSelectCnfComponent;
+  let fixture: ComponentFixture<ConfigSelectCnfComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -15,14 +16,15 @@ describe('ConfigInputTextComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         MaterialDesignModule,
-        TestUtils.getIdiomas()
+        TestUtils.getIdiomas(),
+        SharedModule
       ],
-      declarations: [ConfigInputTextComponent],
+      declarations: [ConfigSelectCnfComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigInputTextComponent);
+    fixture = TestBed.createComponent(ConfigSelectCnfComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
