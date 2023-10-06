@@ -82,7 +82,7 @@ public class EvaluacionService extends BaseRestTemplateService<EvaluacionDto> {
     Integer numComentarios = null;
     try {
       final ResponseEntity<Integer> responseFormulario = getRestTemplate().exchange(
-          getUrlBase() + URL_API + "/" + idEvaluacion + "/" + tipoComentario + "/numero-comentarios-cerrados",
+          getUrlBase() + URL_API + "/" + idEvaluacion + "/numero-comentarios-cerrados-tipo/" + tipoComentario,
           HttpMethod.GET,
           new HttpEntityBuilder<>().withCurrentUserAuthorization().build(), Integer.class);
 
