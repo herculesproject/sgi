@@ -96,9 +96,9 @@
       </whereParams>
     </update>
 
-    <!-- rep-eti-evaluacion-ficha-evaluador-docx -->
+    <!-- rep-eti-ficha-evaluador-docx -->
     <update tableName="resources">
-      <column name="value" valueBlobFile="blob/rep/rep-eti-evaluacion-ficha-evaluador.docx" />
+      <column name="value" valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
       <where>:name=:value AND dbms_lob.compare(value, default_value) = 0</where>
       <whereParams>
         <param name="name" value="rep-eti-ficha-evaluador-docx" />
@@ -106,10 +106,10 @@
     </update>
 
     <update tableName="resources">
-      <column name="default_value" valueBlobFile="blob/rep/rep-eti-evaluacion-ficha-evaluador.docx" />
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
      <where>:name=:value</where>
       <whereParams>
-        <param name="name" value="rep-eti-evaluacion-ficha-evaluador-docx" />
+        <param name="name" value="rep-eti-ficha-evaluador-docx" />
       </whereParams>
     </update>
 
@@ -149,7 +149,7 @@
       </whereParams>
     </update>
 
-    <!-- rep-eti-evaluacion-ficha-evaluador-docx -->
+    <!-- rep-eti-ficha-evaluador-docx -->
     <update tableName="resources">
       <column name="value" valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
         <where>:name=:value AND value=default_value</where>
