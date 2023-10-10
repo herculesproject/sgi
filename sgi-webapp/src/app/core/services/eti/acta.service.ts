@@ -84,4 +84,38 @@ export class ActaService extends SgiMutableRestService<number, IActaBackend, IAc
     );
   }
 
+  /**
+   * Comprueba si los comentarios del acta están en estado cerrado
+   *
+   */
+  isComentariosEnviados(idEvaluacion: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idEvaluacion}/comentarios-enviados`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+  * Comprueba si existen comentarios de otro usuario abiertos
+  *
+  */
+  isPosibleEnviarComentarios(idEvaluacion: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idEvaluacion}/posible-enviar-comentarios`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
+* Permite enviar comentarios del acta
+* 
+* * @param idActa id Acta
+*/
+  enviarComentarios(idActa: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${idActa}/enviar-comentarios`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
 }

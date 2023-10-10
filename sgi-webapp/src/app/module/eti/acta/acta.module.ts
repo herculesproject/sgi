@@ -28,6 +28,7 @@ import { ActaRoutingModule } from './acta-routing.module';
 import { ActaResolver } from './acta.resolver';
 import { ActaListadoExportModalComponent } from './modals/acta-listado-export-modal/acta-listado-export-modal.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ActaListadoComentariosEquipoEvaluadorComponent } from './acta-formulario/acta-listado-comentarios-equipo-evaluador/acta-listado-comentarios-equipo-evaluador.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     ActaAsistentesEditarModalComponent,
     ActaComentariosComponent,
     ActaListadoExportModalComponent,
+    ActaListadoComentariosEquipoEvaluadorComponent
   ],
   imports: [
     SharedModule,
@@ -59,7 +61,8 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     LuxonDatePipe,
     ActaListadoExportService,
     ActaGeneralListadoExportService,
-    ActaMemoriaListadoExportService
+    ActaMemoriaListadoExportService,
+    ActaListadoComentariosEquipoEvaluadorComponent
   ]
 })
 export class ActaModule { }

@@ -47,11 +47,11 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
   msgParamHoraFinEntity = {};
   msgParamResumenEntity = {};
 
-  private formPart: ActaDatosGeneralesFragment;
+  public formPart: ActaDatosGeneralesFragment;
 
   constructor(
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
-    private actionService: ActaActionService,
+    public actionService: ActaActionService,
     public router: Router,
     private readonly translate: TranslateService
   ) {

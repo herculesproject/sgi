@@ -145,7 +145,7 @@
 
       <!-- Enviada -->
       <ng-container matColumnDef="enviada">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <th mat-header-cell *matHeaderCellDef>
           {{'eti.evaluacion.enviada' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluacion">
@@ -169,7 +169,7 @@
               <mat-icon>visibility</mat-icon>
             </a>
           </ng-container>
-          <ng-container *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR']">
+          <ng-container *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-ECOMR', 'ETI-EVC-INV-ECOMR']">
             <button mat-icon-button color="primary" *ngIf="!evaluacion.enviada && evaluacion.permitirEnviarComentarios"
               (click)="enviarComentarios(evaluacion.id)" matTooltip="{{'btn.eti.evaluacion-enviar' | translate}}">
               <mat-icon>send</mat-icon>

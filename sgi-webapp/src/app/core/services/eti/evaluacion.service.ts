@@ -346,13 +346,31 @@ export class EvaluacionService extends SgiMutableRestService<number, IEvaluacion
   }
 
   /**
- * Devuelve los comentarios de tipo EVALUADOR de una evalución
- *
- * @param id Id de la evaluación
- * @param options Opciones de paginación
- */
+   * Devuelve los comentarios de tipo EVALUADOR de una evaluación
+   *
+   * @param id Id de la evaluación
+   * @param options Opciones de paginación
+   */
   getComentariosPersonaEvaluador(id: number, personaRef: string): Observable<IComentario[]> {
     return this.http.get<IComentarioBackend[]>(`${this.endpointUrl}/${id}/comentarios-evaluador/${personaRef}/persona`)
+      .pipe(
+        map(r => {
+          if (r == null) {
+            return [];
+          }
+          return COMENTARIO_CONVERTER.toTargetArray(r);
+        })
+      );
+  }
+
+  /**
+  * Devuelve los comentarios de tipo ACTA de una evaluación
+  *
+  * @param id Id de la evaluación
+  * @param options Opciones de paginación
+  */
+  getComentariosPersonaActa(id: number, personaRef: string): Observable<IComentario[]> {
+    return this.http.get<IComentarioBackend[]>(`${this.endpointUrl}/${id}/comentarios-acta/${personaRef}/persona`)
       .pipe(
         map(r => {
           if (r == null) {
