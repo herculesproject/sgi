@@ -265,11 +265,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
         if (memoria.retrospectiva && memoria.retrospectiva?.estadoRetrospectiva.id > 1) {
           memoriasColumn.push(memoria.numReferencia + '-' + memoria.estadoActual.nombre + '-' + memoria.version + '-Ret.');
         } else {
-          if (memoria.version >= 1) {
-            memoriasColumn.push(memoria.numReferencia + '-' + memoria.estadoActual.nombre + '-' + memoria.version);
-          } else {
-            memoriasColumn.push(memoria.numReferencia + '-' + memoria.estadoActual.nombre);
-          }
+          memoriasColumn.push(memoria.numReferencia + '-' + memoria.estadoActual.nombre + '-' + (memoria.version === 0 ? '1' : memoria.version));
         }
       });
       return memoriasColumn.join(', ');
