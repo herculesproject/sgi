@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -22,7 +23,7 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
+import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
@@ -38,6 +39,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * ComentarioServiceTest
@@ -53,11 +55,15 @@ public class ComentarioServiceTest extends BaseServiceTest {
   @Mock
   private EvaluadorRepository evaluadorRepository;
 
+  @Mock
+  private ActaRepository actaRepository;
+
   private ComentarioService comentarioService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    comentarioService = new ComentarioServiceImpl(comentarioRepository, evaluacionRepository, evaluadorRepository);
+    comentarioService = new ComentarioServiceImpl(comentarioRepository, evaluacionRepository, evaluadorRepository,
+        actaRepository);
   }
 
   @Test
@@ -743,6 +749,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void createComentarioActaEvaluacionNotExists() {
     // given: EL id de la evaluación es válido pero no existe
     final Long evaluacionId = 12L;
@@ -763,6 +770,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void createComentarioActaComentariosNotValid() {
     // given: EL id de la evaluación no es válido
     final Long evaluacionId = 12L;
@@ -783,6 +791,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void createComentarioActa_estadoMemoria4L_Success() {
     // given: Una evaluación con una memoria en estado 4L
     final Long estadoMemoriaId = 4L; // En secretaría revisión mínima
@@ -817,6 +826,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void createComentarioActa_estadoMemoria5L_Success() {
     // given: Una evaluación con una memoria en estado 5L
     final Long estadoMemoriaId = 5L; // En evaluación
@@ -851,6 +861,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void createComentarioActa_estadoMemoria13L_Success() {
     // given: Una evaluación con una memoria en estado 13L
     final Long estadoMemoriaId = 13L; // En evaluación seguimiento anual
@@ -885,6 +896,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void createComentarioActa_estadoMemoria18L_Success() {
     // given: Una evaluación con una memoria en estado 18L
     final Long estadoMemoriaId = 18L; // En secretaría seguimiento final aclaraciones
@@ -919,6 +931,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void createComentarioActa_estadoMemoria19L_Success() {
     // given: Una evaluación con una memoria en estado 19L
     final Long estadoMemoriaId = 19L; // En evaluación seguimiento final
@@ -953,6 +966,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void createComentarioActa_estadoRetrospectiva4L_Success() {
     // given: Una evaluación con una memoria con una retrospectiva en estado 4L
     final Long estadoMemoriaId = 1L; // En elaboración

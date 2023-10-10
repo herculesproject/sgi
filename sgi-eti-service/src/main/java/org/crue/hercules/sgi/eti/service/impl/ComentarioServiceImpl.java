@@ -1,12 +1,15 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.NoRelatedEntitiesException;
+import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
@@ -17,12 +20,14 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluadorSpecifications;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -50,12 +55,14 @@ public class ComentarioServiceImpl implements ComentarioService {
   private final ComentarioRepository comentarioRepository;
   private final EvaluacionRepository evaluacionRepository;
   private final EvaluadorRepository evaluadorRepository;
+  private final ActaRepository actaRepository;
 
   public ComentarioServiceImpl(ComentarioRepository comentarioRepository, EvaluacionRepository evaluacionRepository,
-      EvaluadorRepository evaluadorRepository) {
+      EvaluadorRepository evaluadorRepository, ActaRepository actaRepository) {
     this.comentarioRepository = comentarioRepository;
     this.evaluacionRepository = evaluacionRepository;
     this.evaluadorRepository = evaluadorRepository;
+    this.actaRepository = actaRepository;
   }
 
   /**
@@ -167,6 +174,11 @@ public class ComentarioServiceImpl implements ComentarioService {
           comentario.getApartado().getBloque());
 
       validateEstadoEvaluacion(evaluacion);
+
+      if (!SgiSecurityContextHolder.hasAuthorityForAnyUO("ETI-ACT-V")) {
+        comentario.setEstado(TipoEstadoComentario.ABIERTO);
+        comentario.setFechaEstado(Instant.now());
+      }
 
       log.debug("createComentarioActa(Long evaluacionId, Comentario comentario) - end");
 
@@ -690,6 +702,55 @@ public class ComentarioServiceImpl implements ComentarioService {
       log.debug("findByEvaluacionEvaluadorAndEstadoCerrado(Long id, Pageable pageable) - end");
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(id));
+  }
+
+  @Override
+  @Transactional
+  public boolean enviarByEvaluacionActa(Long id, String personaRef) {
+    log.error("enviarByEvaluacionActa(Long id, String personaRef) - start");
+    try {
+      List<Comentario> comentarios = comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
+          TipoComentario.Tipo.ACTA.getId(), personaRef);
+      if (CollectionUtils.isNotEmpty(comentarios)) {
+        comentarios.forEach(comentario -> {
+          comentario.setEstado(TipoEstadoComentario.CERRADO);
+          this.updateComentarioEvaluacion(id, comentario);
+        });
+      }
+      log.error("enviarByEvaluacionActa(Long id, String personaRef) - end");
+      return true;
+    } catch (Exception e) {
+      log.error("enviarByEvaluacionActa(Long id, String personaRef)", e);
+      return false;
+    }
+  }
+
+  /**
+   * Obtiene todos los {@link Comentario} del tipo "ACTA" por el id de su
+   * evaluación y la persona creadora del comentario
+   *
+   * @param id         el id de la entidad {@link Acta}.
+   * @param personaRef Usuario logueado
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  @Override
+  public List<Comentario> findComentariosActaByPersonaRef(Long id, String personaRef) {
+    log.debug("findComentariosEvaluadorByPersonaRef(Long id, Pageable pageable, String personaRef) - start");
+    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    return actaRepository.findById(id).map(acta -> {
+      List<Comentario> returnValue = new ArrayList();
+      Page<Evaluacion> evaluaciones = evaluacionRepository
+          .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(
+              acta.getConvocatoriaReunion().getId(), null);
+      if (evaluaciones.hasContent()) {
+        evaluaciones.getContent().forEach(evaluacion -> {
+          returnValue.addAll(comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(evaluacion.getId(),
+              TipoComentario.Tipo.ACTA.getId(), personaRef));
+        });
+      }
+      log.debug("findComentariosEvaluadorByPersonaRef(Long id, Pageable pageable, String personaRef) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ActaNotFoundException(id));
   }
 
 }

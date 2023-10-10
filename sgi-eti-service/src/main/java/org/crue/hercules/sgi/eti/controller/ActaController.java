@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaEvaluada;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
+import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -266,5 +267,64 @@ public class ActaController {
     }
     log.debug("Acta confirmarRegistroBlockchain(Long id) - end");
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Informa si los {@link Comentario} han sido enviados por el usuario
+   *
+   * @param id            Id de {@link Acta}.
+   * @param authorization autenticación
+   * @return HTTP-200 Si se han enviado / HTTP-204 Si no se han enviado
+   */
+  @RequestMapping(path = "/{id}/comentarios-enviados", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-V','ETI-ACT-INV-ER','ETI-ACT-ER')")
+  public ResponseEntity<Void> isComentariosEnviados(@PathVariable Long id, Authentication authorization) {
+    log.debug("isComentariosEnviados(Long id, Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    if (service.isComentariosActaEnviados(id, personaRef)) {
+      log.debug("isComentariosEnviados(Long id, Authentication authorization) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isComentariosEnviados(Long id, Authentication authorization) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Indica si es posible enviar {@link Comentario} por el usuario
+   *
+   * @param id            Id de {@link Evaluacion}.
+   * @param authorization autenticación
+   * @return HTTP-200 Si es posible enviar / HTTP-204 Si no es posible enviar
+   */
+  @RequestMapping(path = "/{id}/posible-enviar-comentarios", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-V','ETI-ACT-INV-ER','ETI-ACT-ER')")
+  public ResponseEntity<Void> isPosibleEnviarComentarios(@PathVariable Long id,
+      Authentication authorization) {
+    log.debug("isPosibleEnviarComentarios(Long id, Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    if (service.isPosibleEnviarComentariosActa(id, personaRef)) {
+      log.debug("isPosibleEnviarComentarios(Long id, Authentication authorization) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("isPosibleEnviarComentarios(Long id, Authentication authorization) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Permite enviar los comentarios del {@link Acta}
+   * 
+   * @param id            Id del {@link Acta}.
+   * @param authorization autenticación
+   * @return HTTP-200 Si se puede enviar / HTTP-204 Si no se puede enviar
+   */
+  @RequestMapping(path = "/{id}/enviar-comentarios", method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-ECOMR','ETI-ACT-INV-ECOMR')")
+  public ResponseEntity<Void> enviarComentarios(@PathVariable Long id, Authentication authorization) {
+    log.debug("enviarComentarios(Long id) - start");
+    String personaRef = authorization.getName();
+    Boolean returnValue = service.enviarComentariosEvaluacion(id, personaRef);
+    log.debug("enviarComentarios(Long id) - end");
+    return Boolean.TRUE.equals(returnValue) ? new ResponseEntity<>(HttpStatus.OK)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

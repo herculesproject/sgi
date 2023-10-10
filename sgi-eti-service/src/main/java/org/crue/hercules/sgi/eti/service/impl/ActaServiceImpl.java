@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,16 +14,20 @@ import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.Comentario;
+import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
+import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
@@ -30,6 +35,7 @@ import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.ActaSpecifications;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
+import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.service.ComunicadosService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
@@ -49,6 +55,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -97,6 +104,12 @@ public class ActaServiceImpl implements ActaService {
 
   private final AsistentesService asistentesService;
 
+  /** Comentario Repository. */
+  private final ComentarioRepository comentarioRepository;
+
+  /** Comentario Service. */
+  private final ComentarioService comentarioService;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   /**
@@ -115,13 +128,16 @@ public class ActaServiceImpl implements ActaService {
    * @param configService            {@link SgiApiCnfService}
    * @param blockchainService        {@link SgiApiBlockchainService}
    * @param asistentesService        {@link AsistentesService}
+   * @param comentarioRepository     {@link ComentarioRepository}
+   * @param comentarioService        {@link ComentarioService}
    */
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
       TipoEstadoActaRepository tipoEstadoActaRepository, EvaluacionRepository evaluacionRepository,
       RetrospectivaRepository retrospectivaRepository, MemoriaService memoriaService,
       RetrospectivaService retrospectivaService, SgiApiRepService reportService, SgdocService sgdocService,
       ComunicadosService comunicadosService, SgiApiCnfService configService,
-      SgiApiBlockchainService blockchainService, AsistentesService asistentesService) {
+      SgiApiBlockchainService blockchainService, AsistentesService asistentesService,
+      ComentarioRepository comentarioRepository, ComentarioService comentarioService) {
     this.actaRepository = actaRepository;
     this.estadoActaRepository = estadoActaRepository;
     this.tipoEstadoActaRepository = tipoEstadoActaRepository;
@@ -134,6 +150,8 @@ public class ActaServiceImpl implements ActaService {
     this.configService = configService;
     this.blockchainService = blockchainService;
     this.asistentesService = asistentesService;
+    this.comentarioRepository = comentarioRepository;
+    this.comentarioService = comentarioService;
   }
 
   /**
@@ -558,5 +576,88 @@ public class ActaServiceImpl implements ActaService {
     String hash = blockchainService.confirmarRegistro(acta.getTransaccionRef());
     log.debug("confirmarRegistroBlockchain(Long idActa) - end");
     return (documento.getHash().equals(hash));
+  }
+
+  /**
+   * Identifica si los {@link Comentario} en el {@link Acta} han sido
+   * enviados
+   * 
+   * @param idActa     identificador del {@link Acta}
+   * @param personaRef El usuario de la petición
+   * @return true/false
+   */
+  @Override
+  public boolean isComentariosActaEnviados(Long idActa, String personaRef) {
+    log.debug("isComentariosActaEnviados(Long idActa, String personaRef) - start");
+    Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
+    Page<Evaluacion> evaluaciones = evaluacionRepository
+        .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(acta.getConvocatoriaReunion().getId(), null);
+    List<Long> enviados = new ArrayList<Long>();
+    if (CollectionUtils.isNotEmpty(evaluaciones.getContent())) {
+      evaluaciones.getContent().forEach(evaluacion -> {
+        boolean comentariosEnviados = comentarioRepository.existsByEvaluacionIdAndTipoComentarioIdAndEstadoAndCreatedBy(
+            evaluacion.getId(),
+            TipoComentario.Tipo.ACTA.getId(),
+            TipoEstadoComentario.CERRADO, personaRef);
+        if (comentariosEnviados) {
+          enviados.add(evaluacion.getId());
+          return;
+        }
+      });
+    }
+    log.debug("isComentariosActaEnviados(Long idActa, String personaRef) - end");
+    return !enviados.isEmpty();
+  }
+
+  @Override
+  public boolean isPosibleEnviarComentariosActa(Long idActa, String personaRef) {
+    log.debug("isPosibleEnviarComentariosActa(Long idActa, String personaRef) - start");
+    Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
+    Page<Evaluacion> evaluaciones = evaluacionRepository
+        .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(acta.getConvocatoriaReunion().getId(), null);
+    List<Long> ids = new ArrayList<Long>();
+    List<Long> idsEvsSinComentarios = new ArrayList<Long>();
+    if (CollectionUtils.isNotEmpty(evaluaciones.getContent())) {
+      evaluaciones.getContent().forEach(evaluacion -> {
+        if (comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(evaluacion.getId(),
+            TipoComentario.Tipo.ACTA.getId(),
+            personaRef, TipoEstadoComentario.ABIERTO) > 0) {
+          ids.add(evaluacion.getId());
+        }
+
+        if (comentarioRepository.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
+            TipoComentario.Tipo.ACTA.getId()) == 0) {
+          idsEvsSinComentarios.add(evaluacion.getId());
+        }
+      });
+    }
+    if (idsEvsSinComentarios.size() == evaluaciones.getSize()) {
+      return false;
+    }
+    log.debug("isPosibleEnviarComentariosActa(Long idActa, String personaRef) - end");
+    return ids.isEmpty();
+  }
+
+  @Override
+  @Transactional
+  public boolean enviarComentariosEvaluacion(Long idActa, String personaRef) {
+    log.debug("enviarComentariosEvaluacion(Long idActa, String personaRef) - start");
+    try {
+      Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
+      Page<Evaluacion> evaluaciones = evaluacionRepository
+          .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(acta.getConvocatoriaReunion().getId(), null);
+      if (CollectionUtils.isNotEmpty(evaluaciones.getContent())) {
+        evaluaciones.getContent().forEach(evaluacion -> {
+          this.comentarioService.enviarByEvaluacionActa(evaluacion.getId(), personaRef);
+        });
+      } else {
+        return false;
+      }
+    } catch (Exception e) {
+      log.error("enviarComentariosEvaluacion(Long idActa, String personaRef)", e);
+      return false;
+    }
+    log.debug("enviarComentariosEvaluacion(Long idActa, String personaRef) - end");
+    return true;
   }
 }

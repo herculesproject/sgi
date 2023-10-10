@@ -3,10 +3,11 @@ package org.crue.hercules.sgi.eti.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
+import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Comentario;
+import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
-import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -221,5 +222,25 @@ public interface ComentarioService {
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   Page<Comentario> findByEvaluacionEvaluadorAndEstadoCerrado(Long id, Pageable pageable);
+
+  /**
+   * Permite enviar los comentarios de las {@link Evaluacion} del {@link Acta} y
+   * persona
+   *
+   * @param id         Id del {@link Evaluacion}.
+   * @param personaRef referencia de la persona de los {@link Comentario}
+   * @return true si puede ser enviado / false si no puede ser enviado
+   */
+  boolean enviarByEvaluacionActa(Long id, String personaRef);
+
+  /**
+   * Obtiene todos los {@link Comentario} del tipo "ACTA" por el id de su
+   * evaluación y la persona creadora del comentario
+   *
+   * @param id         el id de la entidad {@link Acta}.
+   * @param personaRef Usuario logueado
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  List<Comentario> findComentariosActaByPersonaRef(Long id, String personaRef);
 
 }

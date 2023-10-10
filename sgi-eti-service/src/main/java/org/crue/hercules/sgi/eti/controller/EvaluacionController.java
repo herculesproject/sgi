@@ -678,7 +678,7 @@ public class EvaluacionController {
    * @return HTTP-200 Si se puede enviar / HTTP-204 Si no se puede enviar
    */
   @RequestMapping(path = "/{id}/enviar-comentarios", method = RequestMethod.HEAD)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-ECOMR','ETI-EVC-INV-ECOMR')")
   public ResponseEntity<Void> enviarComentarios(@PathVariable Long id, Authentication authorization) {
     log.debug("enviarComentarios(Long id) - start");
     String personaRef = authorization.getName();
@@ -748,6 +748,28 @@ public class EvaluacionController {
         idTipoComentario);
     log.debug("countByEvaluacionIdAndTipoComentarioId(@PathVariable Long idEvaluacion, idTipoComentario) - end");
     return new ResponseEntity<>(countComentarios, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link Comentario} activas para una
+   * determinada {@link Evaluacion}.
+   *
+   * @param id         Id de {@link Evaluacion}.
+   * @param personaRef identificador persona
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  @GetMapping("/{id}/comentarios-acta/{personaRef}/persona")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-INV-ER', 'ETI-ACT-ER', 'ETI-ACT-E')")
+  public ResponseEntity<List<Comentario>> getComentariosActaByPersonaRef(@PathVariable Long id,
+      @PathVariable String personaRef) {
+    log.debug("getComentariosActaByPersonaRef(Long id, String personaRef) - start");
+    List<Comentario> comentariosPersonaActas = comentarioService.findComentariosActaByPersonaRef(id,
+        personaRef);
+    log.debug("getComentariosActaByPersonaRef(Long id,String personaRef) - end");
+    if (comentariosPersonaActas.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(comentariosPersonaActas, HttpStatus.OK);
   }
 
 }
