@@ -3938,10 +3938,10 @@
       },
       "realmRoles": [
         "ETI-ACT-DESR",
+        "ETI-ACT-ECOMR",
         "ETI-ACT-ER",
-        "ETI-ACT-INV-ECOMR",
+        "ETI-EVC-ECOMR",
         "ETI-EVC-EVALR",
-        "ETI-EVC-INV-ECOMR",
         "ETI-EVC-VR"
       ],
       "clientRoles": {},
