@@ -54,7 +54,7 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
       )
     );
 
-    if (this.isRolEvaluador) {
+    if (this.isRolEvaluador()) {
       fb.disable();
     }
 
