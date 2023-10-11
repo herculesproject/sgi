@@ -41,53 +41,55 @@ export class ActaListadoComentariosEquipoEvaluadorComponent extends AbstractTabl
   }
 
   protected createObservable(): Observable<SgiRestListResult<IEvaluadorWithComentariosAndEnviados>> {
-    return this.convocatoriaReunionService.findEvaluacionesActivas(this.convocatoriaReunion?.id).pipe(
-      map((response) => {
-        if (response.items) {
-          return response.items[0].memoria?.id;
-        }
-        else {
-          return null;
-        }
-      }),
-      switchMap((idMemoria) => {
-        return this.evaluadorService.findAllMemoriasAsignablesConvocatoria(this.convocatoriaReunion?.comite?.id, idMemoria, this.convocatoriaReunion?.fechaEvaluacion).pipe(
-          map(response => {
-            return response as SgiRestListResult<IEvaluadorWithComentariosAndEnviados>;
-          }),
-          switchMap(response => from(response.items).pipe(
-            mergeMap(evaluador => {
-              if (evaluador?.persona?.id) {
-                return this.personaService.findById(evaluador.persona.id).pipe(
-                  map(persona => {
-                    evaluador.persona = persona;
-                    evaluador.numComentarios = 0;
-                    evaluador.comentariosEnviados = false;
-                    return evaluador;
-                  })
-                );
-              }
-              return of(evaluador);
+    if (this.convocatoriaReunion?.id) {
+      return this.convocatoriaReunionService.findEvaluacionesActivas(this.convocatoriaReunion?.id).pipe(
+        map((response) => {
+          if (response.items) {
+            return response.items[0].memoria?.id;
+          }
+          else {
+            return null;
+          }
+        }),
+        switchMap((idMemoria) => {
+          return this.evaluadorService.findAllMemoriasAsignablesConvocatoria(this.convocatoriaReunion?.comite?.id, idMemoria, this.convocatoriaReunion?.fechaEvaluacion).pipe(
+            map(response => {
+              return response as SgiRestListResult<IEvaluadorWithComentariosAndEnviados>;
             }),
-            mergeMap(evaluador => {
-              if (evaluador?.persona?.id) {
-                return this.evaluacionService.getComentariosPersonaActa(this.actaId, evaluador.persona.id).pipe(
-                  map(comentariosEvaluador => {
-                    evaluador.numComentarios = comentariosEvaluador.length;
-                    evaluador.comentariosEnviados = comentariosEvaluador.some(comentario => comentario.estado === TipoEstadoComentario.CERRADO);
-                  })
-                );
-              }
-              return of(evaluador);
-            }),
-            toArray(),
-            map(() => {
-              return response;
-            })
-          )
-          ));
-      })
-    )
+            switchMap(response => from(response.items).pipe(
+              mergeMap(evaluador => {
+                if (evaluador?.persona?.id) {
+                  return this.personaService.findById(evaluador.persona.id).pipe(
+                    map(persona => {
+                      evaluador.persona = persona;
+                      evaluador.numComentarios = 0;
+                      evaluador.comentariosEnviados = false;
+                      return evaluador;
+                    })
+                  );
+                }
+                return of(evaluador);
+              }),
+              mergeMap(evaluador => {
+                if (evaluador?.persona?.id) {
+                  return this.evaluacionService.getComentariosPersonaActa(this.actaId, evaluador.persona.id).pipe(
+                    map(comentariosEvaluador => {
+                      evaluador.numComentarios = comentariosEvaluador.length;
+                      evaluador.comentariosEnviados = comentariosEvaluador.some(comentario => comentario.estado === TipoEstadoComentario.CERRADO);
+                    })
+                  );
+                }
+                return of(evaluador);
+              }),
+              toArray(),
+              map(() => {
+                return response;
+              })
+            )
+            ));
+        })
+      )
+    }
   }
 
   protected initColumns(): void {
