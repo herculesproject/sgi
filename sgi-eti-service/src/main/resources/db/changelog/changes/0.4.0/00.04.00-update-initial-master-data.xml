@@ -811,6 +811,19 @@
     </update>
 
     <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m30_apartado_3_3.json" />
+      <where>:name=:value AND :name=:value AND padre_id IS NULL AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))" />
+        <param
+          name="nombre" value="Referencias de publicaciones científicas" />
+        <param name="orden"
+          valueNumeric="3" />
+      </whereParams>
+    </update>
+
+    <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m30_apartado_3_4_1.json" />
     <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
     <whereParams>

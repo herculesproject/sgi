@@ -53,6 +53,38 @@
         <param name="codigo" value="PR_5" />
       </whereParams>
     </update>
+
+    <update tableName="acta">
+      <column name="resumen"><![CDATA[<p>Resumen1</p>]]></column>
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="1" />
+      </whereParams>
+    </update>
+
+    <update tableName="acta">
+      <column name="resumen"><![CDATA[<p>Resumen2</p>]]></column>
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="2" />
+      </whereParams>
+    </update>
+
+    <update tableName="acta">
+      <column name="resumen"><![CDATA[<p>Resumen3</p>]]></column>
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="3" />
+      </whereParams>
+    </update>
+
+    <update tableName="acta">
+      <column name="resumen"><![CDATA[<p>Resumen4</p>]]></column>
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="id" valueNumeric="4" />
+      </whereParams>
+    </update>
   </changeSet>
 
 </databaseChangeLog>
