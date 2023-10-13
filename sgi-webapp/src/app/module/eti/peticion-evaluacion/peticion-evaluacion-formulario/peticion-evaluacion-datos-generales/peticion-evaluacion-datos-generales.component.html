@@ -151,6 +151,19 @@
         </mat-error>
       </mat-form-field>
     </div>
+    <!-- Valor social -->
+    <mat-form-field>
+      <mat-label>{{'eti.peticion-evaluacion.valor-social' | translate}}</mat-label>
+      <mat-select #valorSocial formControlName="valorSocial"
+        matTooltip="{{TIPO_VALOR_SOCIAL_MAP.get(valorSocial.value) | translate}}" required>
+        <mat-option *ngFor="let item of TIPO_VALOR_SOCIAL_MAP | keyvalue"
+          matTooltip="{{TIPO_VALOR_SOCIAL_MAP.get(item?.key) | translate}}" [value]="item?.key">
+          {{TIPO_VALOR_SOCIAL_MAP.get(item?.key) | translate}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.controls.valorSocial.errors?.required">
+        {{'error.required.entity' | translate:msgParamValorSocialEntity}}
+      </mat-error>
+    </mat-form-field>
     <!-- Resumen -->
     <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
       <span class="ckeditor-label">{{'eti.peticion-evaluacion.resumen' | translate}}<span
@@ -172,19 +185,6 @@
         {{ 'error.maxlength.entity' | translate:msgParamResumenEntity }}
       </span>
     </div>
-    <!-- Valor social -->
-    <mat-form-field>
-      <mat-label>{{'eti.peticion-evaluacion.valor-social' | translate}}</mat-label>
-      <mat-select #valorSocial formControlName="valorSocial"
-        matTooltip="{{TIPO_VALOR_SOCIAL_MAP.get(valorSocial.value) | translate}}" required>
-        <mat-option *ngFor="let item of TIPO_VALOR_SOCIAL_MAP | keyvalue"
-          matTooltip="{{TIPO_VALOR_SOCIAL_MAP.get(item?.key) | translate}}" [value]="item?.key">
-          {{TIPO_VALOR_SOCIAL_MAP.get(item?.key) | translate}}</mat-option>
-      </mat-select>
-      <mat-error *ngIf="formGroup.controls.valorSocial.errors?.required">
-        {{'error.required.entity' | translate:msgParamValorSocialEntity}}
-      </mat-error>
-    </mat-form-field>
     <!-- Otro valor social -->
     <ng-container *ngIf="peticionEvaluacionFragment.mostrarCampoEspecificarValorSocial$.getValue()">
       <mat-form-field class="m-bottom-10">
