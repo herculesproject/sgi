@@ -54,7 +54,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -182,8 +181,8 @@ public class ActaServiceImpl implements ActaService {
     try {
       this.comunicadosService.enviarComunicadoRevisionActa(acta,
           asistentesService.findAllByConvocatoriaReunionId(acta.getConvocatoriaReunion().getId()));
-    } catch (JsonProcessingException e) {
-      log.debug("enviarComunicadoRevisionActa() - Error al enviar el comunicado", e);
+    } catch (Exception e) {
+      log.error("enviarComunicadoRevisionActa(actaId: {}) - Error al enviar el comunicado", acta.getId(), e);
     }
 
     return returnValue;
@@ -543,7 +542,8 @@ public class ActaServiceImpl implements ActaService {
           evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
       log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - End");
     } catch (Exception e) {
-      log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - Error al enviar el comunicado", e);
+      log.error("sendComunicadoActaFinalizada(evaluacionId: {}) - Error al enviar el comunicado", evaluacion.getId(),
+          e);
     }
   }
 
@@ -592,7 +592,7 @@ public class ActaServiceImpl implements ActaService {
     Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
     Page<Evaluacion> evaluaciones = evaluacionRepository
         .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(acta.getConvocatoriaReunion().getId(), null);
-    List<Long> enviados = new ArrayList<Long>();
+    List<Long> enviados = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(evaluaciones.getContent())) {
       evaluaciones.getContent().forEach(evaluacion -> {
         boolean comentariosEnviados = comentarioRepository.existsByEvaluacionIdAndTipoComentarioIdAndEstadoAndCreatedBy(
@@ -615,8 +615,8 @@ public class ActaServiceImpl implements ActaService {
     Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
     Page<Evaluacion> evaluaciones = evaluacionRepository
         .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(acta.getConvocatoriaReunion().getId(), null);
-    List<Long> ids = new ArrayList<Long>();
-    List<Long> idsEvsSinComentarios = new ArrayList<Long>();
+    List<Long> ids = new ArrayList<>();
+    List<Long> idsEvsSinComentarios = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(evaluaciones.getContent())) {
       evaluaciones.getContent().forEach(evaluacion -> {
         if (comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(evaluacion.getId(),
@@ -647,9 +647,8 @@ public class ActaServiceImpl implements ActaService {
       Page<Evaluacion> evaluaciones = evaluacionRepository
           .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(acta.getConvocatoriaReunion().getId(), null);
       if (CollectionUtils.isNotEmpty(evaluaciones.getContent())) {
-        evaluaciones.getContent().forEach(evaluacion -> {
-          this.comentarioService.enviarByEvaluacionActa(evaluacion.getId(), personaRef);
-        });
+        evaluaciones.getContent()
+            .forEach(evaluacion -> this.comentarioService.enviarByEvaluacionActa(evaluacion.getId(), personaRef));
       } else {
         return false;
       }

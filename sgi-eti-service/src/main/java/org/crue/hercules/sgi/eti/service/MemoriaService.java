@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria.Tipo;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -147,7 +148,9 @@ public interface MemoriaService {
       String query, Pageable pageable, String personaRef);
 
   /**
-   * Actualiza la memoria a su estado anterior
+   * Actualiza el estado de la memoria a su estado anterior, baja la version de la
+   * memoria y elimina la evaluacion si la memoria se encuentra en el estado
+   * EN_EVALUACION
    * 
    * @param id identificador del objeto {@link Memoria}
    * @return la {@link Memoria} si se ha podido actualizar el estado
@@ -156,20 +159,24 @@ public interface MemoriaService {
 
   /**
    * Recupera la memoria con su estado anterior seteado ya sea memoria o
-   * retrospectiva
+   * retrospectiva, devuelve la memoria a la version anterior y elimina el estado
+   * actual de la memoria
    * 
    * @param memoria el objeto {@link Memoria}
    * @return la memoria o retrospectiva con su estado anterior
    */
-  Memoria getEstadoAnteriorMemoria(Memoria memoria);
+  Memoria getMemoriaWithEstadoAnterior(Memoria memoria);
 
   /**
+   * Actualiza el estado de la {@link Memoria} al estado en secretaria
+   * correspondiente al {@link TipoEvaluacion} y {@link TipoEstadoMemoria}
+   * actuales de la {@link Memoria}.
    * 
-   * Actualiza el estado de la {@link Memoria} a 'En Secretaria' o 'En Secretaría
-   * Revisión Mínima'
+   * Se crea el informe asociado a la version actual de la memoria y si esta en un
+   * estado de revision minima se crea tambien la evaluacion de revision minima.
    * 
-   * @param id         del estado de la memoria nuevo.
-   * @param personaRef Usuario logueado.
+   * @param id         identificador de la {@link Memoria}.
+   * @param personaRef Identificador de la persona que realiza la accion
    */
   void enviarSecretaria(Long id, String personaRef);
 

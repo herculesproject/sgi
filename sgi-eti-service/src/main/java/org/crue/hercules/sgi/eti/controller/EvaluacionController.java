@@ -145,15 +145,10 @@ public class EvaluacionController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-EVAL')")
   public ResponseEntity<Page<Evaluacion>> findAllByMemoriaAndRetrospectivaEnEvaluacion(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_START);
+    log.debug("findAllByMemoriaAndRetrospectivaEnEvaluacion() - start");
     Page<Evaluacion> page = service.findAllByMemoriaAndRetrospectivaEnEvaluacion(query, paging);
-
-    if (page.isEmpty()) {
-      log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findAllByMemoriaAndRetrospectivaEnEvaluacion() - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
@@ -439,14 +434,10 @@ public class EvaluacionController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-EVAL')")
   public ResponseEntity<Page<Evaluacion>> findByEvaluacionesEnSeguimientoAnualOrFinal(
       @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_START);
+    log.debug("findByEvaluacionesEnSeguimientoAnualOrFinal(String query, Pageable pageable) - start");
     Page<Evaluacion> page = service.findByEvaluacionesEnSeguimientoAnualOrFinal(query, pageable);
-    if (page.isEmpty()) {
-      log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug(FIND_ALL_STRING_QUERY_PAGEABLE_PAGING_END);
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    log.debug("findByEvaluacionesEnSeguimientoAnualOrFinal(String query, Pageable pageable) - end");
+    return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
@@ -674,7 +665,8 @@ public class EvaluacionController {
    * Permite enviar los comentarios de
    * {@link Evaluacion}
    * 
-   * @param id Id del {@link Evaluacion}.
+   * @param id            Id del {@link Evaluacion}.
+   * @param authorization autenticación
    * @return HTTP-200 Si se puede enviar / HTTP-204 Si no se puede enviar
    */
   @RequestMapping(path = "/{id}/enviar-comentarios", method = RequestMethod.HEAD)

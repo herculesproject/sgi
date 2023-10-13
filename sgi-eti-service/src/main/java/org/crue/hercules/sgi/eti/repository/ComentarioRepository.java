@@ -122,8 +122,10 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long>, J
    * Obtener todas las entidades {@link Comentario} para una determinada
    * {@link Evaluacion} y persona
    *
-   * @param idEvaluacion Id de {@link Evaluacion}.
-   * @param personaRef   referencia de la persona creadora del {@link Comentario}.
+   * @param idEvaluacion     Id de {@link Evaluacion}.
+   * @param idTipoComentario Id de {@link TipoComentario}.
+   * @param personaRef       referencia de la persona creadora del
+   *                         {@link Comentario}.
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   List<Comentario> findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(Long idEvaluacion, Long idTipoComentario,

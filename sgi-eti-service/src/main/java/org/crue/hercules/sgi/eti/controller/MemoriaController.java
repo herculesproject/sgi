@@ -140,15 +140,10 @@ public class MemoriaController {
   @GetMapping("/asignables/{idConvocatoria}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-E')")
   ResponseEntity<List<Memoria>> findAllMemoriasAsignablesConvocatoria(@PathVariable Long idConvocatoria) {
-    log.debug("findAll(Long idConvocatoria) - start");
+    log.debug("findAllMemoriasAsignablesConvocatoria({}) - start", idConvocatoria);
     List<Memoria> result = service.findAllMemoriasAsignablesConvocatoria(idConvocatoria);
-
-    if (result.isEmpty()) {
-      log.debug("findAll(String query) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug("findAll(String query) - end");
-    return new ResponseEntity<>(result, HttpStatus.OK);
+    log.debug("findAllMemoriasAsignablesConvocatoria({}) - end", idConvocatoria);
+    return result.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   /**

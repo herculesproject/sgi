@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -176,16 +177,16 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         .orElseThrow(() -> new ConvocatoriaReunionNotFoundException(evaluacion.getConvocatoriaReunion().getId()));
     evaluacion.setConvocatoriaReunion(crEvaluacion);
 
-    Evaluacion evaluacionCompleta = rellenarEvaluacionConEstadosMemoria(evaluacion);
+    rellenarEvaluacionConEstadosMemoria(evaluacion);
 
-    if (evaluacionCompleta.getTipoEvaluacion().getId().compareTo(Constantes.TIPO_EVALUACION_RETROSPECTIVA) == 0) {
-      retrospectivaRepository.save(evaluacionCompleta.getMemoria().getRetrospectiva());
+    if (evaluacion.getTipoEvaluacion().getTipo().equals(TipoEvaluacion.Tipo.RETROSPECTIVA)) {
+      retrospectivaRepository.save(evaluacion.getMemoria().getRetrospectiva());
     } else {
-      estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacionCompleta.getMemoria(),
-          evaluacionCompleta.getMemoria().getEstadoActual(), Instant.now(), null));
+      estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacion.getMemoria(),
+          evaluacion.getMemoria().getEstadoActual(), Instant.now(), null));
     }
 
-    memoriaService.update(evaluacionCompleta.getMemoria());
+    memoriaService.update(evaluacion.getMemoria());
 
     try {
       Instant fechaEvaluacionAnterior = null;
@@ -199,60 +200,68 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         }
       }
       List<Evaluador> evaluadoresComite = this.evaluadorService.findAllByComiteSinconflictoInteresesMemoria(
-          evaluacionCompleta.getConvocatoriaReunion().getComite().getId(), evaluacionCompleta.getMemoria().getId(),
+          evaluacion.getConvocatoriaReunion().getComite().getId(), evaluacion.getMemoria().getId(),
           Instant.now());
-      this.comunicadosService.enviarComunicadoAsignacionEvaluacion(evaluacionCompleta, evaluadoresComite,
+      this.comunicadosService.enviarComunicadoAsignacionEvaluacion(evaluacion, evaluadoresComite,
           fechaEvaluacionAnterior);
-    } catch (JsonProcessingException e) {
-      log.debug("enviarComunicadoAsignacionEvaluacion() - Error al enviar el comunicado", e);
+    } catch (Exception e) {
+      log.debug("enviarComunicadoAsignacionEvaluacion(evaluacionId: {}) - Error al enviar el comunicado",
+          evaluacion.getId(), e);
     }
 
-    return evaluacionRepository.save(evaluacionCompleta);
+    return evaluacionRepository.save(evaluacion);
   }
 
-  public Evaluacion rellenarEvaluacionConEstadosMemoria(Evaluacion evaluacion) {
+  /**
+   * La {@link Evaluacion#version} se incremente si la memoria tiene evaluaciones
+   * anteriores (del mismo tipo) y si no se empieza con la version 1.<br/>
+   * <br/>
+   * 
+   * Actualiza el estado de la memoria o de la retrospectiva con el estado en
+   * evaluacion correspondiente al tipo de evaluacion
+   * 
+   * @param evaluacion una {@link Evaluacion}
+   */
+  private void rellenarEvaluacionConEstadosMemoria(Evaluacion evaluacion) {
     /** Se setean campos de evaluación */
 
     evaluacion.setActivo(true);
     evaluacion.setEsRevMinima(false);
     evaluacion.setFechaDictamen(evaluacion.getConvocatoriaReunion().getFechaEvaluacion());
-    evaluacion.setTipoEvaluacion(new TipoEvaluacion());
 
-    // Convocatoria Seguimiento
-    if (evaluacion.getConvocatoriaReunion().getTipoConvocatoriaReunion().getId()
-        .compareTo(Constantes.TIPO_CONVOCATORIA_REUNION_SEGUIMIENTO) == 0) {
-      // mismo tipo seguimiento que la memoria Anual(3) Final(4)
-      evaluacion.getTipoEvaluacion()
-          .setId((evaluacion.getMemoria().getEstadoActual().getId()
-              .compareTo(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL) == 0)
-                  ? Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL
-                  : Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL);
-      // se actualiza estado de la memoria a 'En evaluación'
-      evaluacion.getMemoria().getEstadoActual()
-          .setId((evaluacion.getMemoria().getEstadoActual().getId()
-              .compareTo(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL) == 0)
-                  ? Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL
-                  : Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL);
+    TipoEvaluacion.Tipo tipoEvaluacion = null;
+    TipoEstadoMemoria.Tipo newEstadoMemoria = null;
 
-      // Convocatoria Ordinaria o Extraordinaria
-    } else {
-      // memoria 'en secretaría' y retrospectiva 'en secretaría'
-      if (evaluacion.getMemoria().getEstadoActual().getId() > Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
-          && evaluacion.getMemoria().getRequiereRetrospectiva().booleanValue()
-          && evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId()
-              .compareTo(Constantes.ESTADO_RETROSPECTIVA_EN_SECRETARIA) == 0) {
-        // tipo retrospectiva
-        evaluacion.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_RETROSPECTIVA);
-        // se actualiza el estado retrospectiva a 'En evaluación'
-        evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva()
-            .setId(Constantes.ESTADO_RETROSPECTIVA_EN_EVALUACION);
+    switch (evaluacion.getConvocatoriaReunion().getTipoConvocatoriaReunion().getTipo()) {
+      case SEGUIMIENTO:
+        if (evaluacion.getMemoria().getEstadoActual().getTipo()
+            .equals(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL)) {
+          tipoEvaluacion = TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL;
+          newEstadoMemoria = TipoEstadoMemoria.Tipo.EN_EVALUACION_SEGUIMIENTO_ANUAL;
+        } else {
+          tipoEvaluacion = TipoEvaluacion.Tipo.SEGUIMIENTO_FINAL;
+          newEstadoMemoria = TipoEstadoMemoria.Tipo.EN_EVALUACION_SEGUIMIENTO_FINAL;
+        }
 
-      } else {
-        // tipo 'memoria'
-        evaluacion.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_MEMORIA);
-        // se actualiza estado de la memoria a 'En evaluación'
-        evaluacion.getMemoria().getEstadoActual().setId(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION);
-      }
+        evaluacion.getMemoria().getEstadoActual().setId(newEstadoMemoria.getId());
+        evaluacion.setTipoEvaluacion(TipoEvaluacion.builder().id(tipoEvaluacion.getId()).build());
+        break;
+      case ORDINARIA:
+      case EXTRAORDINARIA:
+        if (evaluacion.getMemoria().getEstadoActual().getId() > TipoEstadoMemoria.Tipo.EN_SECRETARIA.getId()
+            && evaluacion.getMemoria().getRequiereRetrospectiva().booleanValue()
+            && evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getTipo()
+                .equals(EstadoRetrospectiva.Tipo.EN_SECRETARIA)) {
+          tipoEvaluacion = TipoEvaluacion.Tipo.RETROSPECTIVA;
+          evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva()
+              .setId(EstadoRetrospectiva.Tipo.EN_EVALUACION.getId());
+        } else {
+          tipoEvaluacion = TipoEvaluacion.Tipo.MEMORIA;
+          evaluacion.getMemoria().getEstadoActual().setId(TipoEstadoMemoria.Tipo.EN_EVALUACION.getId());
+        }
+
+        evaluacion.setTipoEvaluacion(TipoEvaluacion.builder().id(tipoEvaluacion.getId()).build());
+        break;
     }
 
     Optional<Evaluacion> evaluacionAnterior = evaluacionRepository
@@ -264,10 +273,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     } else {
       evaluacion.setVersion(1);
     }
-
-    evaluacion.getMemoria().setVersion(evaluacion.getVersion());
-
-    return evaluacion;
   }
 
   /**
@@ -522,6 +527,9 @@ public class EvaluacionServiceImpl implements EvaluacionService {
               Constantes.ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL);
           break;
         default:
+          log.info(
+              "update(evaluacionActualizarId: {}) - No se hace ningun cambio para el dictamen: {}",
+              evaluacionActualizar.getId(), evaluacionActualizar.getDictamen().getId());
           break;
       }
     }
@@ -531,7 +539,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       evaluacion.setEsRevMinima(evaluacionActualizar.getEsRevMinima());
       evaluacion.setFechaDictamen(evaluacionActualizar.getFechaDictamen());
       evaluacion.setMemoria(evaluacionActualizar.getMemoria());
-      evaluacion.setVersion(evaluacionActualizar.getVersion());
       evaluacion.setConvocatoriaReunion(evaluacionActualizar.getConvocatoriaReunion());
       evaluacion.setActivo(evaluacionActualizar.getActivo());
       evaluacion.setTipoEvaluacion(evaluacionActualizar.getTipoEvaluacion());
@@ -608,7 +615,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     if (favorable.booleanValue()) {
       // Se obtiene el informe favorable en formato pdf creado mediante el
       // servicio de reporting
-      if (Objects.equals(evaluacion.getTipoEvaluacion().getId(), Constantes.TIPO_EVALUACION_RETROSPECTIVA)) {
+      if (Objects.equals(evaluacion.getTipoEvaluacion().getTipo(), TipoEvaluacion.Tipo.RETROSPECTIVA)) {
         informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now());
         tituloInforme = TITULO_INFORME_EVALUACION_RETROSPECTIVA;
       } else {
@@ -684,39 +691,30 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   @Override
   @Transactional
   public void deleteEvaluacion(Long idConvocatoriaReunion, Long idEvaluacion) {
-    Memoria memoria = null;
+    log.debug("deleteEvaluacion(Long idConvocatoriaReunion, Long idEvaluacion) - start");
 
-    Optional<Evaluacion> evaluacion = evaluacionRepository.findById(idEvaluacion);
-    if (evaluacion.isPresent()) {
-      Assert.isTrue(evaluacion.get().getConvocatoriaReunion().getId().compareTo(idConvocatoriaReunion) == 0,
-          "La evaluación no pertenece a esta convocatoria de reunión");
-      Optional<Memoria> memoriaOpt = memoriaRepository.findById(evaluacion.get().getMemoria().getId());
-      if (!memoriaOpt.isPresent()) {
-        throw new MemoriaNotFoundException(evaluacion.get().getMemoria().getId());
-      } else {
-        memoria = memoriaOpt.get();
-      }
+    Evaluacion evaluacion = evaluacionRepository.findById(idEvaluacion)
+        .orElseThrow(() -> new EvaluacionNotFoundException(idEvaluacion));
 
-    } else {
-      throw new EvaluacionNotFoundException(idEvaluacion);
-    }
+    Assert.isTrue(evaluacion.getConvocatoriaReunion().getId().compareTo(idConvocatoriaReunion) == 0,
+        "La evaluación no pertenece a esta convocatoria de reunión");
 
-    // Volvemos al estado anterior de la memoria
-    memoria = memoriaService.getEstadoAnteriorMemoria(memoria);
-
-    memoria.setVersion(memoria.getVersion() - 1);
-
-    Assert.isTrue(evaluacion.get().getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
+    Assert.isTrue(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
         "La fecha de la convocatoria es anterior a la actual");
 
-    Assert.isNull(evaluacion.get().getDictamen(), "No se pueden eliminar memorias que ya contengan un dictamen");
+    Assert.isNull(evaluacion.getDictamen(), "No se pueden eliminar memorias que ya contengan un dictamen");
 
-    Assert.isTrue(comentarioRepository.countByEvaluacionId(evaluacion.get().getId()) == 0L,
+    Assert.isTrue(comentarioRepository.countByEvaluacionId(evaluacion.getId()) == 0L,
         "No se puede eliminar una memoria que tenga comentarios asociados");
 
+    // Volvemos la memoria a su estado anterior
+    Memoria memoria = memoriaService.getMemoriaWithEstadoAnterior(evaluacion.getMemoria());
+
     memoriaRepository.save(memoria);
-    evaluacion.get().setActivo(Boolean.FALSE);
-    evaluacionRepository.save(evaluacion.get());
+    evaluacion.setActivo(Boolean.FALSE);
+    evaluacionRepository.save(evaluacion);
+
+    log.debug("deleteEvaluacion(Long idConvocatoriaReunion, Long idEvaluacion) - end");
   }
 
   @Override
@@ -835,7 +833,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
           evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
       log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - End");
     } catch (Exception e) {
-      log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - Error al enviar el comunicado", e);
+      log.error("sendComunicadoDictamenEvaluacionRevMin(evaluacionId: {}) - Error al enviar el comunicado",
+          evaluacion.getId(), e);
     }
   }
 
@@ -857,9 +856,9 @@ public class EvaluacionServiceImpl implements EvaluacionService {
           evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
       log.debug("sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - End");
     } catch (Exception e) {
-      log.debug(
-          "sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - Error al enviar el comunicado",
-          e);
+      log.error(
+          "sendComunicadoDictamenEvaluacionSeguimientoRevMin(evaluacionId: {}) - Error al enviar el comunicado",
+          evaluacion.getId(), e);
     }
   }
 
@@ -907,8 +906,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
               evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
               evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
         } catch (Exception e) {
-          log.debug("sendComunicadoInformeSeguimientoAnualPendiente() - Error al enviar el comunicado", e);
-
+          log.error("sendComunicadoInformeSeguimientoAnualPendiente(evaluacionId: {}) - Error al enviar el comunicado",
+              evaluacion.getId(), e);
         }
       });
     }

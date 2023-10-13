@@ -288,7 +288,7 @@ public class InformeServiceTest extends BaseServiceTest {
 
     Assertions.assertThatCode(
         // when: Delete con id existente
-        () -> informeService.deleteInformeMemoria(1L))
+        () -> informeService.deleteLastInformeMemoria(1L))
         // then: No se lanza ninguna excepción
         .doesNotThrowAnyException();
 
@@ -302,7 +302,7 @@ public class InformeServiceTest extends BaseServiceTest {
 
     Assertions.assertThatCode(
         // when: Delete con id existente
-        () -> informeService.deleteInformeMemoria(1L))
+        () -> informeService.deleteLastInformeMemoria(1L))
         // then: No se lanza ninguna excepción
         .doesNotThrowAnyException();
 

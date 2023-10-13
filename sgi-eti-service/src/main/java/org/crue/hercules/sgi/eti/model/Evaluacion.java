@@ -116,4 +116,9 @@ public class Evaluacion extends BaseEntity {
   @Setter(AccessLevel.NONE)
   private final Long dictamenId = null;
 
+  @Column(name = "tipo_evaluacion_id", insertable = false, updatable = false)
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Long tipoEvaluacionId = null;
+
 }

@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
-import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.custom.CustomEvaluacionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,15 +59,6 @@ public interface EvaluacionRepository
    */
   Optional<Evaluacion> findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(Long idMemoria,
       Long idTipoEvaluacion);
-
-  /**
-   * Recupera la evaluación de la memoria con la última versión
-   * 
-   * @param idMemoria el identificador del objeto {@link Memoria}
-   * @param version   el número de versión
-   * @return el objeto {@link Evaluacion}
-   */
-  Evaluacion findByMemoriaIdAndVersionAndActivoTrue(Long idMemoria, Integer version);
 
   /**
    * Comprueba si existen {@link Evaluacion} asociadas a una
