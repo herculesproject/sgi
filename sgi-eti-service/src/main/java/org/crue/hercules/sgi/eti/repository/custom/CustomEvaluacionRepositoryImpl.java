@@ -705,8 +705,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
       CriteriaQuery<Evaluacion> cq, String personaRef, Long idEvaluacion) {
 
     List<Predicate> listPredicates = new ArrayList<>();
-    Predicate memoriaVersion = cb.equal(root.get(Evaluacion_.version),
-        root.get(Evaluacion_.memoria).get(Memoria_.version));
+    Predicate evaluacionLastVersion = cb.equal(root.get(Evaluacion_.version), getLastEvaluacionVersion(cb, cq, root));
 
     Subquery<String> queryPersonaRefEquipoTrabajo = cq.subquery(String.class);
     Root<EquipoTrabajo> subqRootEquipoTrabajo = queryPersonaRefEquipoTrabajo.from(EquipoTrabajo.class);
@@ -754,7 +753,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
         cb.equal(root.get(Evaluacion_.tipoEvaluacionId), TipoEvaluacion.Tipo.MEMORIA.getId()),
         cb.equal(root.get(Evaluacion_.version), getLastEvaluacionVersion(cb, cq, root)),
         cb.in(root.get(Evaluacion_.memoria).get(Memoria_.id)).value(getIdsMemoriasEvaluables(cb, cq)),
-        memoriaVersion,
+        evaluacionLastVersion,
         cb.or(
             cb.in(queryEvaluadores).value(root.get(Evaluacion_.evaluador1).get(Evaluador_.comite).get(Comite_.comite)),
             cb.in(queryEvaluadores)
@@ -779,7 +778,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
 
     queryRetrospectiva.select(subqRoot.get(Evaluacion_.id))
         .where(cb.and(requiereRetrospectiva, estadoRetrospectiva, comite, tipoEvaluacion,
-            evaluador, memoriaVersion));
+            evaluador, evaluacionLastVersion));
 
     Predicate retrospectiva = cb.in(root.get(Evaluacion_.id)).value(queryRetrospectiva);
 
