@@ -41,7 +41,7 @@
     <com-deepoove-poi-tl.version>1.10.5</com-deepoove-poi-tl.version>
     <com-deepoove-poi-tl-jsonmodel-support.version>1.0.0</com-deepoove-poi-tl-jsonmodel-support.version>
     <!-- Última versión compatible con librería pentaho report -->
-    <io.github.draco1023-poi-tl-ext.version>0.4.6</io.github.draco1023-poi-tl-ext.version>
+    <io.github.draco1023-poi-tl-ext.version>0.4.8</io.github.draco1023-poi-tl-ext.version>
     <!-- Última versión compatible con librería pentaho report -->
     <org-apache-poi.version>4.1.2</org-apache-poi.version>
     <!-- Última versión compatible con librería pentaho report -->
