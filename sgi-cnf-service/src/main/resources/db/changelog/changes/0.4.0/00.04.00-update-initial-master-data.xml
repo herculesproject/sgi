@@ -12,7 +12,7 @@
 
     <update tableName="config">
       <column name="description"
-        value="Nombre de la opción de menú que redirigirá al sistema corporativo secundario de gestión de gestión de la investigación" />
+        value="Nombre de la opción de menú que redirigirá al sistema corporativo secundario de gestión de la investigación" />
      <where>:name=:value</where>
       <whereParams>
         <param name="name" value="nombre-sistema-gestion-externo" />
