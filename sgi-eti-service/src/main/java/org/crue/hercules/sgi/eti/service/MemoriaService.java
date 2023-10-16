@@ -238,12 +238,14 @@ public interface MemoriaService {
   List<Long> archivarNoPresentados();
 
   /**
-   * Se actualiza el estado de la memoria a "Archivado" de {@link Memoria} que han
-   * pasado "diasArchivadaInactivo" meses desde la fecha de estado de una memoria
-   * cuyo estados son "Favorable Pendiente de Modificaciones Mínimas" o "No
-   * procede evaluar" o "Solicitud modificación"
+   * Se actualiza el estado de la memoria a "Archivado" de las {@link Memoria}
+   * para las que han pasado "diasArchivadaInactivo" dias desde la fecha desde el
+   * ultimo cambio de estado si esta en alguno de los siguientes estados:
+   * FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS, NO_PROCEDE_EVALUAR,
+   * SOLICITUD_MODIFICACION, EN_ACLARACION_SEGUIMIENTO_FINAL, DESFAVORABLE y
+   * PENDIENTE_CORRECCIONES
    * 
-   * @return Los ids de memorias que pasan al estado "Archivado"
+   * @return Los ids de las memorias que pasan al estado "Archivado"
    */
   List<Long> archivarInactivos();
 
