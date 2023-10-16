@@ -164,6 +164,20 @@
         {{'error.required.entity' | translate:msgParamValorSocialEntity}}
       </mat-error>
     </mat-form-field>
+    <!-- Otro valor social -->
+    <ng-container *ngIf="peticionEvaluacionFragment.mostrarCampoEspecificarValorSocial$.getValue()">
+      <mat-form-field class="m-bottom-10">
+        <mat-label>{{'eti.peticion-evaluacion.otro-valor-social' | translate}}</mat-label>
+        <textarea #otroValorSocial matInput formControlName="otroValorSocial" required></textarea>
+        <mat-hint *ngIf="!formGroup.controls.otroValorSocial.errors">{{otroValorSocial.value?.length}} / 2000</mat-hint>
+        <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.required">
+          {{'error.required.entity' | translate:msgParamOtroValorSocialEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamOtroValorSocialEntity}}
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
     <!-- Resumen -->
     <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
       <span class="ckeditor-label">{{'eti.peticion-evaluacion.resumen' | translate}}<span
@@ -185,20 +199,6 @@
         {{ 'error.maxlength.entity' | translate:msgParamResumenEntity }}
       </span>
     </div>
-    <!-- Otro valor social -->
-    <ng-container *ngIf="peticionEvaluacionFragment.mostrarCampoEspecificarValorSocial$.getValue()">
-      <mat-form-field class="m-bottom-10">
-        <mat-label>{{'eti.peticion-evaluacion.otro-valor-social' | translate}}</mat-label>
-        <textarea #otroValorSocial matInput formControlName="otroValorSocial" required></textarea>
-        <mat-hint *ngIf="!formGroup.controls.otroValorSocial.errors">{{otroValorSocial.value?.length}} / 2000</mat-hint>
-        <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.required">
-          {{'error.required.entity' | translate:msgParamOtroValorSocialEntity}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.maxlength">
-          {{'error.maxlength.entity' | translate:msgParamOtroValorSocialEntity}}
-        </mat-error>
-      </mat-form-field>
-    </ng-container>
     <!-- Objetivos científicos -->
     <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
       <span class="ckeditor-label">{{'eti.peticion-evaluacion.objetivo-cientifico' |
