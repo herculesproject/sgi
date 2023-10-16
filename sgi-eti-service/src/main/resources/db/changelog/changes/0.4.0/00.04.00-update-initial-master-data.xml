@@ -1008,7 +1008,7 @@
           valueComputed="(select id from ${schemaPrefix}bloque where orden = '4' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))" />
         <param
           name="padre_id"
-          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Lugar en el que se realizará el manejo de agentes biológicos, OMG, Sustancias Químicas Peligrosas , Sustancias Radiactivas y/o Nanopartículas' and orden = '1' and padre_id = (select id from ${schemaPrefix}apartado where nombre = 'Medidas técnicas de seguridad' and orden = '2'))" />
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Lugar en el que se realizará el manejo de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas' and orden = '1' and padre_id = (select id from ${schemaPrefix}apartado where nombre = 'Medidas técnicas de seguridad' and orden = '2'))" />
         <param
           name="nombre"
           value="Otro centro o lugar ajeno a la Universidad" />

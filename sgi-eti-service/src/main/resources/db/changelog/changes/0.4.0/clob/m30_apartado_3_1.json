@@ -25,7 +25,6 @@
         "type": "ckeditor",
         "templateOptions": {
           "name": "Descripción objetivos científicos del proyecto",
-          "placeholder": "Descripción",
           "disabled": true,
           "required": true,
           "expressionModelValue": "formState.memoria.peticionEvaluacion.objetivos"

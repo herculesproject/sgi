@@ -22,7 +22,6 @@
         "type": "ckeditor",
         "templateOptions": {
           "name": "Diseño metodológico",
-          "placeholder": "Diseño",
           "disabled": true,
           "required": true,
           "expressionModelValue": "formState.memoria.peticionEvaluacion.disMetodologico"

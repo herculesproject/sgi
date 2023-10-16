@@ -15,7 +15,6 @@
         "key": "referenciasPublicaciones",
         "type": "ckeditor",
         "templateOptions": {
-          "placeholder": "Referencias",
           "name": "Referencias",
           "required": true
         }

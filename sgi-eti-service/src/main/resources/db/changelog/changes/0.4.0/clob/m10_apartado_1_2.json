@@ -18,10 +18,7 @@
         "type": "ckeditor",
         "templateOptions": {
           "name": "Justificación",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
+          "required": true
         }
       }
     ]
