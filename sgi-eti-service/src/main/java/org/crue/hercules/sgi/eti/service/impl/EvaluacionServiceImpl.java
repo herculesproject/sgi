@@ -316,6 +316,22 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   }
 
   /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  public Page<Evaluacion> findAllByConvocatoriaReunionId(Long id, Pageable pageable) {
+    log.debug("findAllByConvocatoriaReunionId(Long id, Pageable pageable) - start");
+    Page<Evaluacion> returnValue = evaluacionRepository
+        .findAllByConvocatoriaReunionIdAndEsRevMinimaFalse(id, pageable);
+    log.debug("findAllByConvocatoriaReunionId(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
    * determinada {@link ConvocatoriaReunion}.
    *

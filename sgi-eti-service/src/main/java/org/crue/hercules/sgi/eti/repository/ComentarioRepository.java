@@ -25,10 +25,9 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long>, J
    *
    * @param idEvaluacion     Id de {@link Evaluacion}.
    * @param idTipoComentario Id de {@link TipoComentario}.
-   * @param pageable         la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
-  Page<Comentario> findByEvaluacionIdAndTipoComentarioId(Long idEvaluacion, Long idTipoComentario, Pageable pageable);
+  List<Comentario> findByEvaluacionIdAndTipoComentarioId(Long idEvaluacion, Long idTipoComentario);
 
   /**
    * Obtener todas las entidades paginadas {@link Comentario} para un determinado
@@ -37,11 +36,10 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long>, J
    * @param idEvaluacion     Id de {@link Evaluacion}.
    * @param idTipoComentario Id de {@link TipoComentario}.
    * @param personaRef       referencia de la persona
-   * @param pageable         la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
-  Page<Comentario> findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(Long idEvaluacion, Long idTipoComentario,
-      String personaRef, Pageable pageable);
+  List<Comentario> findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(Long idEvaluacion, Long idTipoComentario,
+      String personaRef);
 
   /**
    * Obtener todas las entidades paginadas {@link Comentario} para un determinado
@@ -52,12 +50,10 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long>, J
    * @param idTipoComentario Id de {@link TipoComentario}.
    * @param personaRef       referencia de la persona
    * @param estado           estado {@link TipoEstadoComentario}
-   * @param pageable         la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
-  Page<Comentario> findByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(Long idEvaluacion,
-      Long idTipoComentario,
-      String personaRef, TipoEstadoComentario estado, Pageable pageable);
+  List<Comentario> findByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(Long idEvaluacion,
+      Long idTipoComentario, String personaRef, TipoEstadoComentario estado);
 
   /**
    * Obtiene el número total de {@link Comentario} para un determinado
@@ -77,6 +73,18 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long>, J
    * @return número de {@link Comentario}
    */
   int countByEvaluacionIdAndTipoComentarioId(Long id, Long idTipoComentario);
+
+  /**
+   * Obtiene el número total de {@link Comentario} para una determinada
+   * {@link Evaluacion}, un tipo de comentario {@link TipoComentario} y un
+   * identificador de persona
+   * 
+   * @param id               Id de {@link Evaluacion}.
+   * @param idTipoComentario idTipoComentario de {@link TipoComentario}.
+   * @param personaRef       identificador persona
+   * @return número de {@link Comentario}
+   */
+  int countByEvaluacionIdAndTipoComentarioIdAndCreatedBy(Long id, Long idTipoComentario, String personaRef);
 
   /**
    * Identifica si los {@link Comentario} en la {@link Evaluacion} han sido
@@ -115,21 +123,8 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long>, J
    * @param estado           estado de {@link TipoEstadoComentario}.
    * @return número de {@link Comentario}
    */
-  int countByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(Long id, Long idTipoComentario,
+  int countByEvaluacionIdAndTipoComentarioIdAndCreatedByAndEstado(Long id, Long idTipoComentario,
       String personaRef, TipoEstadoComentario estado);
-
-  /**
-   * Obtener todas las entidades {@link Comentario} para una determinada
-   * {@link Evaluacion} y persona
-   *
-   * @param idEvaluacion     Id de {@link Evaluacion}.
-   * @param idTipoComentario Id de {@link TipoComentario}.
-   * @param personaRef       referencia de la persona creadora del
-   *                         {@link Comentario}.
-   * @return la lista de entidades {@link Comentario} paginadas.
-   */
-  List<Comentario> findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(Long idEvaluacion, Long idTipoComentario,
-      String personaRef);
 
   /**
    * Obtener todas las entidades paginadas {@link Comentario} para un determinado

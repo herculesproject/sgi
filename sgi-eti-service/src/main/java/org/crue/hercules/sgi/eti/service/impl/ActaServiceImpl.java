@@ -597,7 +597,7 @@ public class ActaServiceImpl implements ActaService {
       evaluaciones.getContent().forEach(evaluacion -> {
         boolean comentariosEnviados = comentarioRepository.existsByEvaluacionIdAndTipoComentarioIdAndEstadoAndCreatedBy(
             evaluacion.getId(),
-            TipoComentario.Tipo.ACTA.getId(),
+            TipoComentario.Tipo.ACTA_EVALUADOR.getId(),
             TipoEstadoComentario.CERRADO, personaRef);
         if (comentariosEnviados) {
           enviados.add(evaluacion.getId());
@@ -615,27 +615,24 @@ public class ActaServiceImpl implements ActaService {
     Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
     Page<Evaluacion> evaluaciones = evaluacionRepository
         .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(acta.getConvocatoriaReunion().getId(), null);
-    List<Long> ids = new ArrayList<>();
-    List<Long> idsEvsSinComentarios = new ArrayList<>();
+    List<Long> idsEvsComentariosAbiertos = new ArrayList<Long>();
+    List<Long> idsEvsComentariosCerrados = new ArrayList<Long>();
     if (CollectionUtils.isNotEmpty(evaluaciones.getContent())) {
       evaluaciones.getContent().forEach(evaluacion -> {
-        if (comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(evaluacion.getId(),
-            TipoComentario.Tipo.ACTA.getId(),
-            personaRef, TipoEstadoComentario.ABIERTO) > 0) {
-          ids.add(evaluacion.getId());
-        }
 
-        if (comentarioRepository.countByEvaluacionIdAndTipoComentarioId(evaluacion.getId(),
-            TipoComentario.Tipo.ACTA.getId()) == 0) {
-          idsEvsSinComentarios.add(evaluacion.getId());
+        if (comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedByAndEstado(evaluacion.getId(),
+            TipoComentario.Tipo.ACTA_EVALUADOR.getId(), personaRef, TipoEstadoComentario.CERRADO) > 0) {
+          idsEvsComentariosCerrados.add(evaluacion.getId());
+        }
+        if (comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedByAndEstado(evaluacion.getId(),
+            TipoComentario.Tipo.ACTA_EVALUADOR.getId(), personaRef, TipoEstadoComentario.ABIERTO) > 0) {
+          idsEvsComentariosAbiertos.add(evaluacion.getId());
         }
       });
     }
-    if (idsEvsSinComentarios.size() == evaluaciones.getSize()) {
-      return false;
-    }
+
     log.debug("isPosibleEnviarComentariosActa(Long idActa, String personaRef) - end");
-    return ids.isEmpty();
+    return !idsEvsComentariosAbiertos.isEmpty() && idsEvsComentariosCerrados.isEmpty();
   }
 
   @Override

@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.service.ActaService;
+import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,16 +45,20 @@ public class ActaController {
 
   /** Acta service */
   private final ActaService service;
+  /** Comentario service */
+  private final ComentarioService comentariosService;
 
   /**
    * Instancia un nuevo ActaController.
    * 
-   * @param service {@link ActaService}
+   * @param service            {@link ActaService}
+   * @param comentariosService {@link ComentarioService}
    */
-  public ActaController(ActaService service) {
-    log.debug("ActaController(ActaService service) - start");
+  public ActaController(ActaService service, ComentarioService comentariosService) {
+    log.debug("ActaController(ActaService service, ComentarioService comentariosService) - start");
     this.service = service;
-    log.debug("ActaController(ActaService service) - end");
+    this.comentariosService = comentariosService;
+    log.debug("ActaController(ActaService service,ComentarioService comentariosService) - end");
   }
 
   /**
@@ -326,5 +331,27 @@ public class ActaController {
     log.debug("enviarComentarios(Long id) - end");
     return Boolean.TRUE.equals(returnValue) ? new ResponseEntity<>(HttpStatus.OK)
         : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link Comentario} activas para una
+   * determinada {@link Acta}.
+   *
+   * @param id         Id de {@link Acta}.
+   * @param personaRef identificador persona
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  @GetMapping("/{id}/comentarios-evaluador/{personaRef}/persona")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
+  public ResponseEntity<List<Comentario>> getComentariosEvaluadorByPersonaRef(@PathVariable Long id,
+      @PathVariable String personaRef) {
+    log.debug("getComentariosEvaluadorByPersonaRef(Long id, String personaRef) - start");
+    List<Comentario> comentariosPersonaEvaluador = comentariosService.findComentariosActaByPersonaRef(id,
+        personaRef);
+    log.debug("getComentariosEvaluadorByPersonaRef(Long id,String personaRef) - end");
+    if (comentariosPersonaEvaluador.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(comentariosPersonaEvaluador, HttpStatus.OK);
   }
 }

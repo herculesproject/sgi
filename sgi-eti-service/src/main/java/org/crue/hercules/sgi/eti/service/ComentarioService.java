@@ -45,7 +45,18 @@ public interface ComentarioService {
    * @param comentario   {@link Comentario} a guardar.
    * @return lista de entidades {@link Comentario} persistida.
    */
-  Comentario createComentarioActa(Long evaluacionId, Comentario comentario);
+  Comentario createComentarioActaGestor(Long evaluacionId, Comentario comentario);
+
+  /**
+   * Guardar un {@link Comentario} de {@link TipoComentario} "ACTA" de una
+   * {@link Evaluacion}.
+   *
+   * @param evaluacionId Id de la evaluación
+   * @param comentario   {@link Comentario} a guardar.
+   * @param personaRef   Usuario logueado
+   * @return lista de entidades {@link Comentario} persistida.
+   */
+  Comentario createComentarioActaEvaluador(Long evaluacionId, Comentario comentario, String personaRef);
 
   /**
    * Actualizar un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
@@ -79,32 +90,39 @@ public interface ComentarioService {
    * Obtiene todos los {@link Comentario} del tipo "GESTOR" por el id de su
    * evaluación.
    *
-   * @param id       el id de la entidad {@link Evaluacion}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @param id el id de la entidad {@link Evaluacion}.
+   * @return la lista de entidades {@link Comentario}.
    */
-  Page<Comentario> findByEvaluacionIdGestor(Long id, Pageable pageable);
+  List<Comentario> findByEvaluacionIdGestor(Long id);
 
   /**
    * Obtiene todos los {@link Comentario} del tipo "EVALUADOR" por el id de su
    * evaluación.
    *
    * @param id         el id de la entidad {@link Evaluacion}.
-   * @param pageable   la información de la paginación.
    * @param personaRef Usuario logueado
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
-  Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef);
+  List<Comentario> findByEvaluacionIdEvaluador(Long id, String personaRef);
 
   /**
-   * Obtiene todos los {@link Comentario} del tipo "ACTA" por el id de su
+   * Obtiene todos los {@link Comentario} del tipo "ACTA_GESTOR" por el id de su
    * evaluación.
    *
-   * @param id       el id de la entidad {@link Evaluacion}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @param id el id de la entidad {@link Evaluacion}.
+   * @return la lista de entidades {@link Comentario}.
    */
-  Page<Comentario> findByEvaluacionIdActa(Long id, Pageable pageable);
+  List<Comentario> findByEvaluacionIdActaGestor(Long id);
+
+  /**
+   * Obtiene todos los {@link Comentario} del tipo "ACTA_EVALUADOR" por el id de
+   * su
+   * evaluación.
+   *
+   * @param id el id de la entidad {@link Evaluacion}.
+   * @return la lista de entidades {@link Comentario}.
+   */
+  List<Comentario> findByEvaluacionIdActaEvaluador(Long id, String personaRef);
 
   /**
    * Elimina un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
@@ -125,12 +143,23 @@ public interface ComentarioService {
       throws ComentarioNotFoundException;
 
   /**
-   * Elimina un {@link Comentario} de tipo "ACTA" de una {@link Evaluacion}.
+   * Elimina un {@link Comentario} de tipo "ACTA_GESTOR" de una
+   * {@link Evaluacion}.
    *
    * @param evaluacionId Id de {@link Evaluacion}
    * @param idComentario Id de {@link Comentario}
    */
-  void deleteComentarioActa(Long evaluacionId, Long idComentario) throws ComentarioNotFoundException;
+  void deleteComentarioActaGestor(Long evaluacionId, Long idComentario) throws ComentarioNotFoundException;
+
+  /**
+   * Elimina un {@link Comentario} de tipo "ACTA" de una {@link Evaluacion}.
+   *
+   * @param evaluacionId Id de {@link Evaluacion}
+   * @param idComentario Id de {@link Comentario}
+   * @param personaRef   identificador usuario
+   */
+  void deleteComentarioActaEvaluador(Long evaluacionId, Long idComentario, String personaRef)
+      throws ComentarioNotFoundException;
 
   /**
    * Obtiene el número total de {@link Comentario} para una determinada
@@ -209,7 +238,7 @@ public interface ComentarioService {
    *
    * @param id         el id de la entidad {@link Evaluacion}.
    * @param personaRef Usuario logueado
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
   List<Comentario> findComentariosEvaluadorByPersonaRef(Long id, String personaRef);
 
@@ -239,7 +268,7 @@ public interface ComentarioService {
    *
    * @param id         el id de la entidad {@link Acta}.
    * @param personaRef Usuario logueado
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
   List<Comentario> findComentariosActaByPersonaRef(Long id, String personaRef);
 

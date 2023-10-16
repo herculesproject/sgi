@@ -29,6 +29,7 @@ import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -153,7 +154,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   }
 
   /**
-   * Guardar un {@link Comentario} de {@link TipoComentario} "ACTA" de una
+   * Guardar un {@link Comentario} de {@link TipoComentario} "ACTA_GESTOR" de una
    * {@link Evaluacion}.
    * 
    * @param evaluacionId Id de la evaluación
@@ -162,7 +163,39 @@ public class ComentarioServiceImpl implements ComentarioService {
    */
   @Override
   @Transactional
-  public Comentario createComentarioActa(Long evaluacionId, Comentario comentario) {
+  public Comentario createComentarioActaGestor(Long evaluacionId, Comentario comentario) {
+    log.debug("createComentarioActaGestor(Long evaluacionId, Comentario comentario) - start");
+
+    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_CREAR_UN_NUEVO_COMENTARIO);
+
+    return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
+
+      validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
+          evaluacion.getMemoria().getComite().getId(),
+          comentario.getApartado().getBloque());
+
+      validateEstadoEvaluacion(evaluacion);
+
+      log.debug("createComentarioActaGestor(Long evaluacionId, Comentario comentario) - end");
+
+      return createComentarioEvaluacion(evaluacionId, comentario, TipoComentario.Tipo.ACTA_GESTOR.getId());
+
+    }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
+
+  }
+
+  /**
+   * Guardar un {@link Comentario} de {@link TipoComentario} "ACTA_EVALUADOR" de
+   * una
+   * {@link Evaluacion}.
+   * 
+   * @param evaluacionId Id de la evaluación
+   * @param comentario   {@link Comentario} a guardar.
+   * @return lista de entidades {@link Comentario} persistida.
+   */
+  @Override
+  @Transactional
+  public Comentario createComentarioActaEvaluador(Long evaluacionId, Comentario comentario, String personaRef) {
     log.debug("createComentarioActa(Long evaluacionId, Comentario comentario) - start");
 
     Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_CREAR_UN_NUEVO_COMENTARIO);
@@ -175,14 +208,12 @@ public class ComentarioServiceImpl implements ComentarioService {
 
       validateEstadoEvaluacion(evaluacion);
 
-      if (!SgiSecurityContextHolder.hasAuthorityForAnyUO("ETI-ACT-V")) {
-        comentario.setEstado(TipoEstadoComentario.ABIERTO);
-        comentario.setFechaEstado(Instant.now());
-      }
+      comentario.setEstado(TipoEstadoComentario.ABIERTO);
+      comentario.setFechaEstado(Instant.now());
 
       log.debug("createComentarioActa(Long evaluacionId, Comentario comentario) - end");
 
-      return createComentarioEvaluacion(evaluacionId, comentario, TipoComentario.Tipo.ACTA.getId());
+      return createComentarioEvaluacion(evaluacionId, comentario, TipoComentario.Tipo.ACTA_EVALUADOR.getId());
 
     }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
 
@@ -261,15 +292,16 @@ public class ComentarioServiceImpl implements ComentarioService {
   }
 
   /**
-   * Elimina un {@link Comentario} de tipo "ACTA" de una {@link Evaluacion}.
+   * Elimina un {@link Comentario} de tipo "ACTA_GESTOR" de una
+   * {@link Evaluacion}.
    *
    * @param evaluacionId Id de {@link Evaluacion}
    * @param comentarioId Id de {@link Comentario}
    */
   @Override
   @Transactional
-  public void deleteComentarioActa(Long evaluacionId, Long comentarioId) throws ComentarioNotFoundException {
-    log.debug("deleteComentarioActa(Long evaluacionId, Long comentarioId) - start");
+  public void deleteComentarioActaGestor(Long evaluacionId, Long comentarioId) throws ComentarioNotFoundException {
+    log.debug("deleteComentarioActaGestor(Long evaluacionId, Long comentarioId) - start");
 
     Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
     Assert.notNull(comentarioId, MSG_COMENTARIO_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
@@ -278,9 +310,34 @@ public class ComentarioServiceImpl implements ComentarioService {
       throw new EvaluacionNotFoundException(evaluacionId);
     }
 
-    deleteComentarioEvaluacion(evaluacionId, comentarioId, TipoComentario.Tipo.ACTA.getId());
+    deleteComentarioEvaluacion(evaluacionId, comentarioId, TipoComentario.Tipo.ACTA_GESTOR.getId());
 
-    log.debug("deleteComentarioActa(Long evaluacionId, Long comentarioId) - end");
+    log.debug("deleteComentarioActaGestor(Long evaluacionId, Long comentarioId) - end");
+  }
+
+  /**
+   * Elimina un {@link Comentario} de tipo "ACTA_EVALUADOR" de una
+   * {@link Evaluacion}.
+   *
+   * @param evaluacionId Id de {@link Evaluacion}
+   * @param comentarioId Id de {@link Comentario}
+   */
+  @Override
+  @Transactional
+  public void deleteComentarioActaEvaluador(Long evaluacionId, Long comentarioId, String personaRef)
+      throws ComentarioNotFoundException {
+    log.debug("deleteComentarioActaEvaluador(Long evaluacionId, Long comentarioId) - start");
+
+    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
+    Assert.notNull(comentarioId, MSG_COMENTARIO_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
+
+    if (!evaluacionRepository.existsById(evaluacionId)) {
+      throw new EvaluacionNotFoundException(evaluacionId);
+    }
+
+    deleteComentarioEvaluacion(evaluacionId, comentarioId, TipoComentario.Tipo.ACTA_EVALUADOR.getId());
+
+    log.debug("deleteComentarioActaEvaluador(Long evaluacionId, Long comentarioId) - end");
   }
 
   /**
@@ -355,19 +412,18 @@ public class ComentarioServiceImpl implements ComentarioService {
    * Obtiene todos los {@link Comentario} del tipo "GESTOR" por el id de su
    * evaluación.
    *
-   * @param id       el id de la entidad {@link Evaluacion}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @param id el id de la entidad {@link Evaluacion}.
+   * @return la lista de entidades {@link Comentario}.
    */
   @Override
-  public Page<Comentario> findByEvaluacionIdGestor(Long id, Pageable pageable) {
-    log.debug("findByEvaluacionIdGestor(Long id, Pageable pageable) - start");
+  public List<Comentario> findByEvaluacionIdGestor(Long id) {
+    log.debug("findByEvaluacionIdGestor(Long id) - start");
     Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
 
     return evaluacionRepository.findById(id).map(evaluacion -> {
-      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
-          TipoComentario.Tipo.GESTOR.getId(), pageable);
-      log.debug("findByEvaluacionIdGestor(Long id, Pageable pageable) - end");
+      List<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
+          TipoComentario.Tipo.GESTOR.getId());
+      log.debug("findByEvaluacionIdGestor(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(id));
 
@@ -378,41 +434,83 @@ public class ComentarioServiceImpl implements ComentarioService {
    * evaluación.
    *
    * @param id         el id de la entidad {@link Evaluacion}.
-   * @param pageable   la información de la paginación.
    * @param personaRef referencia de la persona
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
   @Override
-  public Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef) {
-    log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef) - start");
-    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+  public List<Comentario> findByEvaluacionIdEvaluador(Long id, String personaRef) {
+    log.debug("findByEvaluacionIdEvaluador(Long id, String personaRef) - start");
     return evaluacionRepository.findById(id).map(evaluacion -> {
-      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
-          TipoComentario.Tipo.EVALUADOR.getId(), pageable);
-      log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef) - end");
+      List<Comentario> comentarios = new ArrayList<Comentario>();
+      List<Comentario> comentariosUsuarioEvaluador = comentarioRepository
+          .findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
+              TipoComentario.Tipo.EVALUADOR.getId(), personaRef);
+      if (!comentariosUsuarioEvaluador.isEmpty()) {
+        comentarios.addAll(comentariosUsuarioEvaluador);
+      }
+      List<Comentario> comentariosCerradosOtrosUsuarios = comentarioRepository
+          .findByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(id, TipoComentario.Tipo.EVALUADOR.getId(),
+              personaRef, TipoEstadoComentario.CERRADO);
+      if (!comentariosCerradosOtrosUsuarios.isEmpty()) {
+        comentarios.addAll(comentariosCerradosOtrosUsuarios);
+      }
+      log.debug("findByEvaluacionIdEvaluador(Long id, String personaRef) - end");
+      return comentarios;
+    }).orElseThrow(() -> new EvaluacionNotFoundException(id));
+
+  }
+
+  /**
+   * Obtiene todos los {@link Comentario} del tipo "ACTA_GESTOR" por el id de su
+   * evaluación.
+   *
+   * @param id el id de la entidad {@link Evaluacion}.
+   * @return la lista de entidades {@link Comentario}.
+   */
+  @Override
+  public List<Comentario> findByEvaluacionIdActaGestor(Long id) {
+    log.debug("findByEvaluacionIdActaGestor(Long id) - start");
+    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+
+    return evaluacionRepository.findById(id).map(evaluacion -> {
+      List<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
+          TipoComentario.Tipo.ACTA_GESTOR.getId());
+      log.debug("findByEvaluacionIdActaGestor(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(id));
 
   }
 
   /**
-   * Obtiene todos los {@link Comentario} del tipo "ACTA" por el id de su
+   * Obtiene todos los {@link Comentario} del tipo "ACTA_EVALUADOR" por el id de
+   * su
    * evaluación.
    *
-   * @param id       el id de la entidad {@link Evaluacion}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @param id         el id de la entidad {@link Evaluacion}.
+   * @param personaRef identificador del usuario
+   * @return la lista de entidades {@link Comentario}.
    */
   @Override
-  public Page<Comentario> findByEvaluacionIdActa(Long id, Pageable pageable) {
-    log.debug("findByEvaluacionIdActa(Long id, Pageable pageable) - start");
+  public List<Comentario> findByEvaluacionIdActaEvaluador(Long id, String personaRef) {
+    log.debug("findByEvaluacionIdActaEvaluador(Long id, String personaRef) - start");
     Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
 
     return evaluacionRepository.findById(id).map(evaluacion -> {
-      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
-          TipoComentario.Tipo.ACTA.getId(), pageable);
-      log.debug("findByEvaluacionIdActa(Long id, Pageable pageable) - end");
-      return returnValue;
+      List<Comentario> comentarios = new ArrayList<Comentario>();
+      List<Comentario> comentariosUsuarioEvaluador = comentarioRepository
+          .findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
+              TipoComentario.Tipo.ACTA_EVALUADOR.getId(), personaRef);
+      if (!comentariosUsuarioEvaluador.isEmpty()) {
+        comentarios.addAll(comentariosUsuarioEvaluador);
+      }
+      List<Comentario> comentariosCerradosOtrosUsuarios = comentarioRepository
+          .findByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(id, TipoComentario.Tipo.ACTA_EVALUADOR.getId(),
+              personaRef, TipoEstadoComentario.CERRADO);
+      if (!comentariosCerradosOtrosUsuarios.isEmpty()) {
+        comentarios.addAll(comentariosCerradosOtrosUsuarios);
+      }
+      log.debug("findByEvaluacionIdActaEvaluador(Long id, String personaRef) - end");
+      return comentarios;
     }).orElseThrow(() -> new EvaluacionNotFoundException(id));
 
   }
@@ -638,12 +736,14 @@ public class ComentarioServiceImpl implements ComentarioService {
    */
   @Override
   public boolean isPosibleEnviarComentarios(Long id, String personaRef) {
-    if (comentarioRepository.countByEvaluacionIdAndTipoComentarioId(id, TipoComentario.Tipo.EVALUADOR.getId()) == 0) {
+    if (comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
+        TipoComentario.Tipo.EVALUADOR.getId(), personaRef) == 0) {
       return false;
     }
-    return comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(id,
+
+    return comentarioRepository.countByEvaluacionIdAndTipoComentarioIdAndCreatedByAndEstado(id,
         TipoComentario.Tipo.EVALUADOR.getId(),
-        personaRef, TipoEstadoComentario.ABIERTO) == 0;
+        personaRef, TipoEstadoComentario.ABIERTO) > 0;
   }
 
   /**
@@ -682,7 +782,7 @@ public class ComentarioServiceImpl implements ComentarioService {
    */
   @Override
   public List<Comentario> findComentariosEvaluadorByPersonaRef(Long id, String personaRef) {
-    log.debug("findComentariosEvaluadorByPersonaRef(Long id, Pageable pageable, String personaRef) - start");
+    log.debug("findComentariosEvaluadorByPersonaRef(Long id, String personaRef) - start");
     Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
     return evaluacionRepository.findById(id).map(evaluacion -> {
       List<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
@@ -710,7 +810,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     log.error("enviarByEvaluacionActa(Long id, String personaRef) - start");
     try {
       List<Comentario> comentarios = comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
-          TipoComentario.Tipo.ACTA.getId(), personaRef);
+          TipoComentario.Tipo.ACTA_EVALUADOR.getId(), personaRef);
       if (CollectionUtils.isNotEmpty(comentarios)) {
         comentarios.forEach(comentario -> {
           comentario.setEstado(TipoEstadoComentario.CERRADO);
@@ -745,7 +845,7 @@ public class ComentarioServiceImpl implements ComentarioService {
       if (evaluaciones.hasContent()) {
         evaluaciones.getContent().forEach(evaluacion -> {
           returnValue.addAll(comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(evaluacion.getId(),
-              TipoComentario.Tipo.ACTA.getId(), personaRef));
+              TipoComentario.Tipo.ACTA_EVALUADOR.getId(), personaRef));
         });
       }
       log.debug("findComentariosEvaluadorByPersonaRef(Long id, Pageable pageable, String personaRef) - end");

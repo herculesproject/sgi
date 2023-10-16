@@ -439,8 +439,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .append("/comentarios-gestor").toString();
 
     BDDMockito
-        .given(comentarioService.findByEvaluacionIdGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(Collections.emptyList()));
+        .given(comentarioService.findByEvaluacionIdGestor(ArgumentMatchers.anyLong()))
+        .willReturn(Collections.emptyList());
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -462,8 +462,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     response.add(generarMockComentario(Long.valueOf(3), "texto2", 1L));
 
     BDDMockito
-        .given(comentarioService.findByEvaluacionIdGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(response));
+        .given(comentarioService.findByEvaluacionIdGestor(ArgumentMatchers.anyLong()))
+        .willReturn(response);
 
     // when: Se buscan todos los comentarios
     MvcResult result = mockMvc
@@ -488,9 +488,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .append("/comentarios-evaluador").toString();
 
     BDDMockito
-        .given(comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
-        .willReturn(new PageImpl<>(Collections.emptyList()));
+        .given(comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn(Collections.emptyList());
 
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -511,8 +510,9 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     response.add(generarMockComentario(Long.valueOf(1), "texto", 2L));
     response.add(generarMockComentario(Long.valueOf(3), "texto2", 2L));
 
-    BDDMockito.given(comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString())).willReturn(new PageImpl<>(response));
+    BDDMockito
+        .given(comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn(response);
 
     // when: Se buscan los comentarios de tipo Evaluador
     MvcResult result = mockMvc

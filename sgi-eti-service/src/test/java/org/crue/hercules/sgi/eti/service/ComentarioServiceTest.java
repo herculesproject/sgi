@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.exceptions.NoRelatedEntitiesException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comentario;
+import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -104,18 +105,16 @@ public class ComentarioServiceTest extends BaseServiceTest {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 1L));
     }
     BDDMockito.given(
-        comentarioRepository.findByEvaluacionIdAndTipoComentarioId(evaluacionId, tipoComentarioId, Pageable.unpaged()))
-        .willReturn(new PageImpl<>(comentarios));
+        comentarioRepository.findByEvaluacionIdAndTipoComentarioId(evaluacionId, tipoComentarioId))
+        .willReturn(comentarios);
     // when: se listen sus comentarios
-    final Page<Comentario> page = comentarioService.findByEvaluacionIdGestor(evaluacionId, Pageable.unpaged());
+    final List<Comentario> resultList = comentarioService.findByEvaluacionIdGestor(evaluacionId);
 
     // then: se debe devolver una lista de comentarios
-    Assertions.assertThat(page.getContent().size()).isEqualTo(numeroComentario);
-    Assertions.assertThat(page.getNumber()).isZero();
-    Assertions.assertThat(page.getSize()).isEqualTo(numeroComentario);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(numeroComentario);
+    Assertions.assertThat(resultList.size()).isEqualTo(numeroComentario);
+
     for (int i = 0; i < numeroComentario; i++) {
-      final Comentario comentario = page.getContent().get(i);
+      final Comentario comentario = resultList.get(i);
       Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", i));
     }
   }
@@ -133,34 +132,17 @@ public class ComentarioServiceTest extends BaseServiceTest {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 1L));
     }
 
-    final int numPagina = 3;
-    final int numElementos = 10;
     BDDMockito.given(comentarioRepository.findByEvaluacionIdAndTipoComentarioId(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Comentario>>() {
-          @Override
-          public Page<Comentario> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(2, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<Comentario> content = comentarios.subList(fromIndex, toIndex);
-            Page<Comentario> page = new PageImpl<>(content, pageable, comentarios.size());
-            return page;
-          }
-        });
+        ArgumentMatchers.<Long>any())).willReturn(comentarios);
     // when: se listen sus comentarios
-    Pageable paging = PageRequest.of(3, 10);
-    final Page<Comentario> page = comentarioService.findByEvaluacionIdGestor(evaluacionId, paging);
+
+    final List<Comentario> listResult = comentarioService.findByEvaluacionIdGestor(evaluacionId);
 
     // then: se debe devolver una lista de comentarios
-    Assertions.assertThat(page.getContent().size()).isEqualTo(numElementos);
-    Assertions.assertThat(page.getNumber()).isEqualTo(numPagina);
-    Assertions.assertThat(page.getSize()).isEqualTo(numElementos);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(numeroComentario);
-    for (int i = 0, j = (numPagina * 10) + 1; i < 10; i++, j++) {
-      final Comentario comentario = page.getContent().get(i);
-      Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", j));
+    Assertions.assertThat(listResult.size()).isEqualTo(numeroComentario);
+    for (int i = 0; i < 9; i++) {
+      final Comentario comentario = listResult.get(i);
+      Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario00" + (i + 1));
     }
   }
 
@@ -170,7 +152,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long evaluacionId = null;
     try {
       // when: se quiera listar sus comentarios
-      comentarioService.findByEvaluacionIdGestor(evaluacionId, Pageable.unpaged());
+      comentarioService.findByEvaluacionIdGestor(evaluacionId);
       Assertions.fail("El id no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -193,24 +175,26 @@ public class ComentarioServiceTest extends BaseServiceTest {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 2L));
     }
     BDDMockito.given(
-        comentarioRepository.findByEvaluacionIdAndTipoComentarioId(evaluacionId, tipoComentarioId, Pageable.unpaged()))
-        .willReturn(new PageImpl<>(comentarios));
+        comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(evaluacionId, tipoComentarioId,
+            personaRef))
+        .willReturn(comentarios);
+
+    BDDMockito.given(
+        comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(evaluacionId,
+            tipoComentarioId, personaRef, TipoEstadoComentario.CERRADO))
+        .willReturn(comentarios);
     // when: se listen sus comentarios
-    final Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(evaluacionId, Pageable.unpaged(),
+    final List<Comentario> listResult = comentarioService.findByEvaluacionIdEvaluador(evaluacionId,
         personaRef);
 
     // then: se debe devolver una lista de comentarios
-    Assertions.assertThat(page.getContent().size()).isEqualTo(numeroComentario);
-    Assertions.assertThat(page.getNumber()).isZero();
-    Assertions.assertThat(page.getSize()).isEqualTo(numeroComentario);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(numeroComentario);
+    Assertions.assertThat(listResult.size()).isEqualTo(numeroComentario * 2);
     for (int i = 0; i < numeroComentario; i++) {
-      final Comentario comentario = page.getContent().get(i);
+      final Comentario comentario = listResult.get(i);
       Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", i));
     }
   }
 
-  @Test
   public void findByEvaluacionEvaluadorWithPagingValidId() {
     // given: EL id de la evaluación sea valido
     final Long evaluacionId = 1L;
@@ -227,8 +211,16 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final int numPagina = 7;
     final int numElementos = 10;
     final Pageable paging = PageRequest.of(numPagina, numElementos);
-    BDDMockito.given(comentarioRepository.findByEvaluacionIdAndTipoComentarioId(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Comentario>>() {
+    BDDMockito
+        .given(comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
+        .willReturn(comentarios);
+
+    BDDMockito
+        .given(comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(
+            ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(), ArgumentMatchers.<TipoEstadoComentario>any()))
+        .willAnswer(new Answer<Page<Comentario>>() {
           @Override
           public Page<Comentario> answer(final InvocationOnMock invocation) throws Throwable {
             final Pageable pageable = invocation.getArgument(2, Pageable.class);
@@ -242,15 +234,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
           }
         });
     // when: se listen sus comentarios
-    final Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(evaluacionId, paging, personaRef);
+    final List<Comentario> resultList = comentarioService.findByEvaluacionIdEvaluador(evaluacionId, personaRef);
 
     // then: se debe devolver una lista de comentarios
-    Assertions.assertThat(page.getContent().size()).isEqualTo(numElementos);
-    Assertions.assertThat(page.getNumber()).isEqualTo(numPagina);
-    Assertions.assertThat(page.getSize()).isEqualTo(numElementos);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(numeroComentario);
+    Assertions.assertThat(resultList.size()).isEqualTo(numElementos);
     for (int i = 0, j = (numPagina * 10) + 1; i < 10; i++, j++) {
-      final Comentario comentario = page.getContent().get(i);
+      final Comentario comentario = resultList.get(i);
       Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", j));
     }
   }
@@ -262,12 +251,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final String personaRef = "user-002";
     try {
       // when: se quiera listar sus comentario
-      comentarioService.findByEvaluacionIdEvaluador(evaluacionId, Pageable.unpaged(), personaRef);
+      comentarioService.findByEvaluacionIdEvaluador(evaluacionId, personaRef);
       Assertions.fail("El id no puede ser nulo");
       // then: se debe lanzar una excepción
-    } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la evaluación no puede ser nulo para listar sus comentarios");
+    } catch (final EvaluacionNotFoundException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluacion " + evaluacionId + " does not exist.");
     }
   }
 
@@ -285,18 +273,15 @@ public class ComentarioServiceTest extends BaseServiceTest {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 1L));
     }
     BDDMockito.given(
-        comentarioRepository.findByEvaluacionIdAndTipoComentarioId(evaluacionId, tipoComentarioId, Pageable.unpaged()))
-        .willReturn(new PageImpl<>(comentarios));
+        comentarioRepository.findByEvaluacionIdAndTipoComentarioId(evaluacionId, tipoComentarioId))
+        .willReturn(comentarios);
     // when: se listen sus comentarios
-    final Page<Comentario> page = comentarioService.findByEvaluacionIdActa(evaluacionId, Pageable.unpaged());
+    final List<Comentario> resultList = comentarioService.findByEvaluacionIdActaGestor(evaluacionId);
 
     // then: se debe devolver una lista de comentarios
-    Assertions.assertThat(page.getContent().size()).isEqualTo(numeroComentario);
-    Assertions.assertThat(page.getNumber()).isZero();
-    Assertions.assertThat(page.getSize()).isEqualTo(numeroComentario);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(numeroComentario);
+    Assertions.assertThat(resultList.size()).isEqualTo(numeroComentario);
     for (int i = 0; i < numeroComentario; i++) {
-      final Comentario comentario = page.getContent().get(i);
+      final Comentario comentario = resultList.get(i);
       Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", i));
     }
   }
@@ -313,36 +298,13 @@ public class ComentarioServiceTest extends BaseServiceTest {
     for (int i = 1; i <= numeroComentario; i++) {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 1L));
     }
-
-    final int numPagina = 3;
-    final int numElementos = 10;
     BDDMockito.given(comentarioRepository.findByEvaluacionIdAndTipoComentarioId(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Comentario>>() {
-          @Override
-          public Page<Comentario> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(2, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<Comentario> content = comentarios.subList(fromIndex, toIndex);
-            Page<Comentario> page = new PageImpl<>(content, pageable, comentarios.size());
-            return page;
-          }
-        });
+        ArgumentMatchers.<Long>any())).willReturn(comentarios);
     // when: se listen sus comentarios
-    Pageable paging = PageRequest.of(3, 10);
-    final Page<Comentario> page = comentarioService.findByEvaluacionIdActa(evaluacionId, paging);
+    final List<Comentario> resultList = comentarioService.findByEvaluacionIdActaGestor(evaluacionId);
 
     // then: se debe devolver una lista de comentarios
-    Assertions.assertThat(page.getContent().size()).isEqualTo(numElementos);
-    Assertions.assertThat(page.getNumber()).isEqualTo(numPagina);
-    Assertions.assertThat(page.getSize()).isEqualTo(numElementos);
-    Assertions.assertThat(page.getTotalElements()).isEqualTo(numeroComentario);
-    for (int i = 0, j = (numPagina * 10) + 1; i < 10; i++, j++) {
-      final Comentario comentario = page.getContent().get(i);
-      Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", j));
-    }
+    Assertions.assertThat(resultList.size()).isEqualTo(numeroComentario);
   }
 
   @Test
@@ -351,7 +313,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long evaluacionId = null;
     try {
       // when: se quiera listar sus comentarios
-      comentarioService.findByEvaluacionIdActa(evaluacionId, Pageable.unpaged());
+      comentarioService.findByEvaluacionIdActaGestor(evaluacionId);
       Assertions.fail("El id no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -733,13 +695,13 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void createComentarioActaEvaluacionIdNull() {
+  public void createComentarioActaGestorEvaluacionIdNull() {
     // given: EL id de la evaluación sea null
     final Long evaluacionId = null;
 
     try {
       // when: se quiera añadir comentario
-      comentarioService.createComentarioActa(evaluacionId, new Comentario());
+      comentarioService.createComentarioActaGestor(evaluacionId, new Comentario());
       Assertions.fail("Evaluación id no puede ser null para crear un nuevo comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -750,7 +712,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void createComentarioActaEvaluacionNotExists() {
+  public void createComentarioActaGestorEvaluacionNotExists() {
     // given: EL id de la evaluación es válido pero no existe
     final Long evaluacionId = 12L;
 
@@ -761,7 +723,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     try {
       // when: se quiera añadir comentarios
-      comentarioService.createComentarioActa(evaluacionId, comentario);
+      comentarioService.createComentarioActaGestor(evaluacionId, comentario);
       Assertions.fail("El id de la evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
@@ -771,7 +733,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void createComentarioActaComentariosNotValid() {
+  public void createComentarioActaGestorComentariosNotValid() {
     // given: EL id de la evaluación no es válido
     final Long evaluacionId = 12L;
 
@@ -781,7 +743,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     try {
-      comentarioService.createComentarioActa(evaluacionId, comentario);
+      comentarioService.createComentarioActaGestor(evaluacionId, comentario);
       Assertions.fail("La evaluación no debe estar rellena para crear un nuevo comentario");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -792,7 +754,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void createComentarioActa_estadoMemoria4L_Success() {
+  public void createComentarioActaGestor_estadoMemoria4L_Success() {
     // given: Una evaluación con una memoria en estado 4L
     final Long estadoMemoriaId = 4L; // En secretaría revisión mínima
     final Long evaluacionId = 12L;
@@ -819,7 +781,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
 
     // when: se crea el comentario
-    final Comentario comentarioCreado = comentarioService.createComentarioActa(evaluacionId, comentario);
+    final Comentario comentarioCreado = comentarioService.createComentarioActaGestor(evaluacionId, comentario);
 
     // then: Comprobamos que se ha creado el comentario.
     Assertions.assertThat(comentarioCreado).isNotNull();
@@ -827,7 +789,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void createComentarioActa_estadoMemoria5L_Success() {
+  public void createComentarioActaGestor_estadoMemoria5L_Success() {
     // given: Una evaluación con una memoria en estado 5L
     final Long estadoMemoriaId = 5L; // En evaluación
     final Long evaluacionId = 12L;
@@ -854,7 +816,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
 
     // when: se crea el comentario
-    final Comentario comentarioCreado = comentarioService.createComentarioActa(evaluacionId, comentario);
+    final Comentario comentarioCreado = comentarioService.createComentarioActaGestor(evaluacionId, comentario);
 
     // then: Comprobamos que se ha creado el comentario.
     Assertions.assertThat(comentarioCreado).isNotNull();
@@ -862,7 +824,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void createComentarioActa_estadoMemoria13L_Success() {
+  public void createComentarioActaGestor_estadoMemoria13L_Success() {
     // given: Una evaluación con una memoria en estado 13L
     final Long estadoMemoriaId = 13L; // En evaluación seguimiento anual
     final Long evaluacionId = 12L;
@@ -889,7 +851,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
 
     // when: se crea el comentario
-    final Comentario comentarioCreado = comentarioService.createComentarioActa(evaluacionId, comentario);
+    final Comentario comentarioCreado = comentarioService.createComentarioActaGestor(evaluacionId, comentario);
 
     // then: Comprobamos que se ha creado el comentario.
     Assertions.assertThat(comentarioCreado).isNotNull();
@@ -897,7 +859,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void createComentarioActa_estadoMemoria18L_Success() {
+  public void createComentarioActaGestor_estadoMemoria18L_Success() {
     // given: Una evaluación con una memoria en estado 18L
     final Long estadoMemoriaId = 18L; // En secretaría seguimiento final aclaraciones
     final Long evaluacionId = 12L;
@@ -924,7 +886,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
 
     // when: se crea el comentario
-    final Comentario comentarioCreado = comentarioService.createComentarioActa(evaluacionId, comentario);
+    final Comentario comentarioCreado = comentarioService.createComentarioActaGestor(evaluacionId, comentario);
 
     // then: Comprobamos que se ha creado el comentario.
     Assertions.assertThat(comentarioCreado).isNotNull();
@@ -932,7 +894,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void createComentarioActa_estadoMemoria19L_Success() {
+  public void createComentarioActaGestor_estadoMemoria19L_Success() {
     // given: Una evaluación con una memoria en estado 19L
     final Long estadoMemoriaId = 19L; // En evaluación seguimiento final
     final Long evaluacionId = 12L;
@@ -959,7 +921,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
 
     // when: se crea el comentario
-    final Comentario comentarioCreado = comentarioService.createComentarioActa(evaluacionId, comentario);
+    final Comentario comentarioCreado = comentarioService.createComentarioActaGestor(evaluacionId, comentario);
 
     // then: Comprobamos que se ha creado el comentario.
     Assertions.assertThat(comentarioCreado).isNotNull();
@@ -967,7 +929,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void createComentarioActa_estadoRetrospectiva4L_Success() {
+  public void createComentarioActaGestor_estadoRetrospectiva4L_Success() {
     // given: Una evaluación con una memoria con una retrospectiva en estado 4L
     final Long estadoMemoriaId = 1L; // En elaboración
     final Long estadoRetrospectivaId = 4L; // En evaluación
@@ -1000,7 +962,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
 
     // when: se crea el comentario
-    final Comentario comentarioCreado = comentarioService.createComentarioActa(evaluacionId, comentario);
+    final Comentario comentarioCreado = comentarioService.createComentarioActaGestor(evaluacionId, comentario);
 
     // then: Comprobamos que se ha creado el comentario.
     Assertions.assertThat(comentarioCreado).isNotNull();
@@ -1811,14 +1773,14 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void deleteComentarioActa_EvaluacionIdNull() {
+  public void deleteComentarioActaGestor_EvaluacionIdNull() {
     // given: EL id de la evaluación sea null
     final Long evaluacionId = null;
     final Long comentarioId = 1L;
 
     try {
       // when: se quiera eliminar comentario
-      comentarioService.deleteComentarioActa(evaluacionId, comentarioId);
+      comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
       Assertions.fail("Evaluación id no puede ser null para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -1827,14 +1789,14 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void deleteComentarioActa_EvaluacionNotExists() {
+  public void deleteComentarioActaGestor_EvaluacionNotExists() {
     // given: EL id de la evaluación es válido pero no existe
     final Long evaluacionId = 12L;
     final Long comentarioId = 1L;
 
     try {
       // when: se quiere eliminar comentario
-      comentarioService.deleteComentarioActa(evaluacionId, comentarioId);
+      comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
       Assertions.fail("El id de la Evaluación debe existir para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
@@ -1843,14 +1805,14 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void deleteComentarioActa_ComentarioIdNull() {
+  public void deleteComentarioActaGestor_ComentarioIdNull() {
     // given: EL id de la evaluación es válido pero el comentario es null
     final Long evaluacionId = 12L;
     final Long comentarioId = null;
 
     try {
       // when: se quiera eliminar comentario
-      comentarioService.deleteComentarioActa(evaluacionId, comentarioId);
+      comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
       Assertions.fail("Comentario id no puede ser null para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -1859,7 +1821,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void deleteComentarioActa_EvaluacionIdNotValid() {
+  public void deleteComentarioActaGestor_EvaluacionIdNotValid() {
     // given: EL id de la evaluación no es válido
     final Long evaluacionId = 12L;
     final Long comentarioId = 1L;
@@ -1872,7 +1834,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // when: se quiera eliminar un comentario cuya evaluacion no coincide
     // con el id indicado
     try {
-      comentarioService.deleteComentarioActa(evaluacionId, comentarioId);
+      comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
       Assertions.fail("El comentario no pertenece a la evaluación recibida");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -1881,7 +1843,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void deleteComentarioActa_TipoComentarioNotValid() {
+  void deleteComentarioActaGestor_TipoComentarioNotValid() {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 200L;
     final Long comentarioId = 1L;
@@ -1893,7 +1855,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     // when: se quiera eliminar un comentario
     try {
-      comentarioService.deleteComentarioActa(evaluacionId, comentarioId);
+      comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
       Assertions.fail("No se puede eliminar el comentario debido a su tipo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -1902,7 +1864,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void deleteComentarioActa_throwNotFoundException() {
+  public void deleteComentarioActaGestor_throwNotFoundException() {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
     final Long comentarioId = 1L;
@@ -1911,7 +1873,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     // when: se quiera eliminar un comentario que no existe
 
-    Assertions.assertThatThrownBy(() -> comentarioService.deleteComentarioActa(evaluacionId, comentarioId))
+    Assertions.assertThatThrownBy(() -> comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId))
         .isInstanceOf(ComentarioNotFoundException.class);
 
   }

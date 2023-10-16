@@ -214,68 +214,84 @@ public class EvaluacionController {
   }
 
   /**
-   * Obtener todas las entidades paginadas {@link Comentario} activas para una
+   * Obtener todas las entidades {@link Comentario} activas para una
    * determinada {@link Evaluacion}.
    *
-   * @param id       Id de {@link Evaluacion}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @param id Id de {@link Evaluacion}.
+   * @return la lista de entidades {@link Comentario}.
    */
   @GetMapping("/{id}/comentarios-gestor")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-PEV-INV-ER', 'ETI-EVC-EVALR')")
-  public ResponseEntity<Page<Comentario>> getComentariosGestor(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("getComentariosGestor(Long id, Pageable pageable) - start");
-    Page<Comentario> page = comentarioService.findByEvaluacionIdGestor(id, pageable);
+  public ResponseEntity<List<Comentario>> getComentariosGestor(@PathVariable Long id) {
+    log.debug("getComentariosGestor(Long id) - start");
+    List<Comentario> comentarios = comentarioService.findByEvaluacionIdGestor(id);
     log.debug("getComentariosGestor(Long id, Pageable pageable) - end");
-    if (page.isEmpty()) {
+    if (comentarios.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    return new ResponseEntity<>(comentarios, HttpStatus.OK);
   }
 
   /**
-   * Obtener todas las entidades paginadas {@link Comentario} activas para una
+   * Obtener todas las entidades {@link Comentario} activas para una
    * determinada {@link Evaluacion}.
    *
    * @param id            Id de {@link Evaluacion}.
-   * @param pageable      la información de la paginación.
    * @param authorization autenticación
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
   @GetMapping("/{id}/comentarios-evaluador")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
-  public ResponseEntity<Page<Comentario>> getComentariosEvaluador(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable pageable, Authentication authorization) {
-    log.debug("getComentariosEvaluador(Long id, Pageable pageable) - start");
+  public ResponseEntity<List<Comentario>> getComentariosEvaluador(@PathVariable Long id, Authentication authorization) {
+    log.debug("getComentariosEvaluador(Long id - start");
     String personaRef = authorization.getName();
-    Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(id, pageable, personaRef);
-    log.debug("getComentariosEvaluador(Long id, Pageable pageable) - end");
-    if (page.isEmpty()) {
+    List<Comentario> comentarios = comentarioService.findByEvaluacionIdEvaluador(id, personaRef);
+    log.debug("getComentariosEvaluador(Long id) - end");
+    if (comentarios.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    return new ResponseEntity<>(page, HttpStatus.OK);
+    return new ResponseEntity<>(comentarios, HttpStatus.OK);
   }
 
   /**
-   * Obtener todas las entidades paginadas {@link Comentario} activas para una
-   * determinada {@link Evaluacion} de tipoComentario Acta.
+   * Obtener todas las entidades {@link Comentario} activas para una
+   * determinada {@link Evaluacion} de tipoComentario ACTA_GESTOR.
    *
-   * @param id       Id de {@link Evaluacion}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @param id Id de {@link Evaluacion}.
+   * @return la lista de entidades {@link Comentario}.
    */
-  @GetMapping("/{id}/comentarios-acta")
+  @GetMapping("/{id}/comentarios-acta-gestor")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-E', 'ETI-ACT-INV-ER', 'ETI-ACT-ER')")
-  public ResponseEntity<Page<Comentario>> getComentariosActa(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("getComentariosActa(Long id, Pageable pageable) - start");
-    Page<Comentario> page = comentarioService.findByEvaluacionIdActa(id, pageable);
-    log.debug("getComentariosActa(Long id, Pageable pageable) - end");
-    if (page.isEmpty()) {
+  public ResponseEntity<List<Comentario>> getComentariosActaGestor(@PathVariable Long id) {
+    log.debug("getComentariosActa(Long id) - start");
+    List<Comentario> comentarios = comentarioService.findByEvaluacionIdActaGestor(id);
+    log.debug("getComentariosActa(Long id) - end");
+    if (comentarios.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    return new ResponseEntity<>(page, HttpStatus.OK);
+
+    return new ResponseEntity<>(comentarios, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades {@link Comentario} activas para una
+   * determinada {@link Evaluacion} de tipoComentario ACTA_EVALUADOR.
+   *
+   * @param id Id de {@link Evaluacion}.
+   * @return la lista de entidades {@link Comentario}.
+   */
+  @GetMapping("/{id}/comentarios-acta-evaluador")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-ER', 'ETI-ACT-INV-ER')")
+  public ResponseEntity<List<Comentario>> getComentariosActaEvaluador(@PathVariable Long id,
+      Authentication authorization) {
+    log.debug("getComentariosActa(Long id) - start");
+    String personaRef = authorization.getName();
+    List<Comentario> comentarios = comentarioService.findByEvaluacionIdActaEvaluador(id, personaRef);
+    log.debug("getComentariosActa(Long id) - end");
+    if (comentarios.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(comentarios, HttpStatus.OK);
   }
 
   /**
@@ -316,19 +332,37 @@ public class EvaluacionController {
   }
 
   /**
-   * Crea un nuevo {@link Comentario} de tipo "ACTA".
+   * Crea un nuevo {@link Comentario} de tipo "ACTA_GESTOR".
    * 
    * @param id         Id de {@link Evaluacion}.
    * @param comentario {@link Comentario} a crear.
    * @return Nuevo {@link Comentario} creado.
    */
-  @PostMapping("/{id}/comentario-acta")
+  @PostMapping("/{id}/comentario-acta-gestor")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-INV-ER', 'ETI-ACT-ER', 'ETI-ACT-E')")
-  public ResponseEntity<Comentario> createComentarioActa(@PathVariable Long id,
+  public ResponseEntity<Comentario> createComentarioActaGestor(@PathVariable Long id,
       @Valid @RequestBody Comentario comentario) {
     log.debug("createComentarioActa(Comentario comentario) - start");
-    Comentario returnValue = comentarioService.createComentarioActa(id, comentario);
+    Comentario returnValue = comentarioService.createComentarioActaGestor(id, comentario);
     log.debug("createComentarioActa(comentario) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Crea un nuevo {@link Comentario} de tipo "ACTA_EVALUADOR".
+   * 
+   * @param id         Id de {@link Evaluacion}.
+   * @param comentario {@link Comentario} a crear.
+   * @return Nuevo {@link Comentario} creado.
+   */
+  @PostMapping("/{id}/comentario-acta-evaluador")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-INV-ER', 'ETI-ACT-ER', 'ETI-ACT-E')")
+  public ResponseEntity<Comentario> createComentarioActaEvaluador(@PathVariable Long id,
+      @Valid @RequestBody Comentario comentario, Authentication authorization) {
+    log.debug("createComentarioActaEvaluador(Long id, Comentario comentario, Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    Comentario returnValue = comentarioService.createComentarioActaEvaluador(id, comentario, personaRef);
+    log.debug("createComentarioActaEvaluador(Long id, Comentario comentario, Authentication authorization) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 
@@ -408,17 +442,34 @@ public class EvaluacionController {
   }
 
   /**
-   * Elimina un {@link Comentario} de tipo "ACTA" de una evaluación.
+   * Elimina un {@link Comentario} de tipo "ACTA_GESTOR" de una evaluación.
    * 
    * @param id           Id de {@link Evaluacion}.
    * @param idComentario Identificador de {@link Comentario}.
    */
-  @DeleteMapping("/{id}/comentario-acta/{idComentario}")
+  @DeleteMapping("/{id}/comentario-acta-gestor/{idComentario}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-INV-ER', 'ETI-ACT-ER', 'ETI-ACT-E')")
-  public void deleteComentarioACTA(@PathVariable Long id, @PathVariable Long idComentario) {
+  public void deleteComentarioActaGestor(@PathVariable Long id, @PathVariable Long idComentario) {
     log.debug("deleteComentarioEvaluacion(Long id,  Long idComentario) - start");
-    comentarioService.deleteComentarioActa(id, idComentario);
+    comentarioService.deleteComentarioActaGestor(id, idComentario);
     log.debug("deleteComentarioEvaluacion(Long id,  Long idComentario) - end");
+  }
+
+  /**
+   * Elimina un {@link Comentario} de tipo "ACTA_EVALUADOR" de una evaluación.
+   * 
+   * @param id            Id de {@link Evaluacion}.
+   * @param idComentario  Identificador de {@link Comentario}.
+   * @param authorization autenticación
+   */
+  @DeleteMapping("/{id}/comentario-acta-evaluador/{idComentario}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-INV-ER', 'ETI-ACT-ER', 'ETI-ACT-E')")
+  public void deleteComentarioActaEvaluador(@PathVariable Long id, @PathVariable Long idComentario,
+      Authentication authorization) {
+    log.debug("deleteComentarioActaEvaluador(Long id,  Long idComentario, Authentication authorization) - start");
+    String personaRef = authorization.getName();
+    comentarioService.deleteComentarioActaEvaluador(id, idComentario, personaRef);
+    log.debug("deleteComentarioActaEvaluador(Long id,  Long idComentario, Authentication authorization) - end");
   }
 
   /**
@@ -681,12 +732,12 @@ public class EvaluacionController {
   }
 
   /**
-   * Obtener todas las entidades paginadas {@link Comentario} activas para una
+   * Obtener todas las entidades {@link Comentario} activas para una
    * determinada {@link Evaluacion}.
    *
    * @param id         Id de {@link Evaluacion}.
    * @param personaRef identificador persona
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
   @GetMapping("/{id}/comentarios-evaluador/{personaRef}/persona")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR')")
@@ -743,15 +794,15 @@ public class EvaluacionController {
   }
 
   /**
-   * Obtener todas las entidades paginadas {@link Comentario} activas para una
+   * Obtener todas las entidades {@link Comentario} activas para una
    * determinada {@link Evaluacion}.
    *
    * @param id         Id de {@link Evaluacion}.
    * @param personaRef identificador persona
-   * @return la lista de entidades {@link Comentario} paginadas.
+   * @return la lista de entidades {@link Comentario}.
    */
-  @GetMapping("/{id}/comentarios-acta/{personaRef}/persona")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-INV-ER', 'ETI-ACT-ER', 'ETI-ACT-E')")
+  @GetMapping("/{id}/comentarios-acta-evaluador/{personaRef}/persona")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-INV-ER', 'ETI-ACT-ER')")
   public ResponseEntity<List<Comentario>> getComentariosActaByPersonaRef(@PathVariable Long id,
       @PathVariable String personaRef) {
     log.debug("getComentariosActaByPersonaRef(Long id, String personaRef) - start");

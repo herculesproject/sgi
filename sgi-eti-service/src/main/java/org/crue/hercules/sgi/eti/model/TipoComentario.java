@@ -32,8 +32,10 @@ public class TipoComentario extends BaseEntity {
     GESTOR(1L),
     /** EVALUADOR <code>2L</code> */
     EVALUADOR(2L),
-    /** ACTA <code>3L</code> */
-    ACTA(3L);
+    /** ACTA_GESTOR <code>3L</code> */
+    ACTA_GESTOR(3L),
+    /** ACTA_EVALUADOR <code>4L</code> */
+    ACTA_EVALUADOR(4L);
 
     private final Long id;
 

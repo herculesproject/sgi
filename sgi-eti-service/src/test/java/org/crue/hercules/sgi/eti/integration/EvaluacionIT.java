@@ -503,11 +503,6 @@ public class EvaluacionIT extends BaseIT {
     final List<Comentario> comentarios = response.getBody();
 
     Assertions.assertThat(comentarios.size()).isEqualTo(2);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("2");
-
-    // Contiene de comentario.id=4L
 
     Assertions.assertThat(comentarios.get(0).getId()).isEqualTo(4L);
   }
@@ -525,17 +520,7 @@ public class EvaluacionIT extends BaseIT {
         buildRequest(headers, null), new ParameterizedTypeReference<List<Comentario>>() {
         }, 3L);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    final List<Comentario> comentarios = response.getBody();
-
-    Assertions.assertThat(comentarios.size()).isEqualTo(1);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("1");
-
-    // Contiene de comentario.id=3L
-    Assertions.assertThat(comentarios.get(0).getId()).isEqualTo(3L);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   @Test
