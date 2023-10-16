@@ -78,6 +78,7 @@ export class EvaluacionListadoComentariosEquipoEvaluadorComponent extends Abstra
           }),
           toArray(),
           map(() => {
+            response.total = response.items.length;
             return response;
           })
         )

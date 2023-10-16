@@ -75,8 +75,7 @@
   </form>
 
   <sgi-acta-listado-comentarios-equipo-evaluador
-    *ngIf="this.formPart.isRolEvaluador() && this.actionService.getConvocatoriaReunion()"
-    [actaId]="this.formPart.getKey()" [convocatoriaReunion]="this.actionService.getConvocatoriaReunion()"
-    (errors)="this.formPart.handleErrors($event)">
+    *ngIf="this.formPart.isRolGestor() && this.actionService.getConvocatoriaReunion()" [actaId]="this.formPart.getKey()"
+    [convocatoriaReunion]="this.actionService.getConvocatoriaReunion()" (errors)="this.formPart.handleErrors($event)">
   </sgi-acta-listado-comentarios-equipo-evaluador>
 </sgi-fragment>

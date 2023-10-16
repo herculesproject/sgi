@@ -377,7 +377,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     const enviarComentariosDialogSubscription = this.dialogService.showConfirmation(this.textoEnviarComentario).subscribe(
       (aceptado: boolean) => {
         if (aceptado) {
-          const enviarComentariosSubscription = this.evaluacionService
+          const enviarComentariosSubscription = this.actasService
             .enviarComentarios(idActa)
             .pipe(
               map(() => {

@@ -40,9 +40,6 @@
       </mat-form-field>
     </div>
   </form>
-  <sgi-seguimiento-listado-comentarios-equipo-evaluador [evaluacion]="this.actionService.getEvaluacion()"
-    [rol]="this.actionService.getRol()" (errors)="formPart.handleErrors($event)">
-  </sgi-seguimiento-listado-comentarios-equipo-evaluador>
   <sgi-seguimiento-listado-anterior-memoria #evaluaciones [rol]="this.actionService.getRol()"
     (errors)="formPart.handleErrors($event)">
   </sgi-seguimiento-listado-anterior-memoria>

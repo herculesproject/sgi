@@ -11,8 +11,8 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
 
   private acta: IActa;
 
-  public isRolEvaluador(): boolean {
-    return this.rol === Rol.EVALUADOR
+  public isRolGestor(): boolean {
+    return this.rol === Rol.GESTOR;
   }
 
   constructor(private fb: FormBuilder, key: number, private rol: Rol, private service: ActaService) {
@@ -54,7 +54,7 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
       )
     );
 
-    if (this.isRolEvaluador()) {
+    if (!this.isRolGestor()) {
       fb.disable();
     }
 

@@ -457,7 +457,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         if (!value.id) {
           return of([] as IComentario[]);
         }
-        return this.evaluacionService.getComentariosGestor(value.id).pipe(map(response => response.items));
+        return this.evaluacionService.getComentariosGestor(value.id).pipe(map(response => response));
       }),
       tap((comentarios) => {
         this._comentariosGenerales = comentarios.filter(c => !!!c.apartado.bloque.formulario?.id);

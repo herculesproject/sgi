@@ -36,8 +36,8 @@ export class EvaluacionComentarioFragment extends Fragment {
       }
 
       this.subscriptions.push(evaluacionComentarios$.pipe(
-        switchMap(result => {
-          return from(result.items).pipe(
+        switchMap(results => {
+          return from(results).pipe(
             mergeMap(element => {
               return this.personaService.findById(element.evaluador.id).pipe(
                 map(persona => {
@@ -46,10 +46,9 @@ export class EvaluacionComentarioFragment extends Fragment {
                 })
               );
             }),
-            map(() => result)
+            map(() => results)
           );
         }),
-        map(response => response.items)
       ).subscribe((comentarios) => {
         this.comentarios$.next(comentarios.map(comentario => new StatusWrapper<IComentario>(comentario)));
       }));
