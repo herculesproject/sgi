@@ -20,6 +20,7 @@ public class MemoriaEvaluadaDto implements Serializable {
    */
   private static final long serialVersionUID = 1L;
 
+  private Long id;
   private Long evaluacionId;
   private String numReferencia;
   private String personaRef;

@@ -157,35 +157,14 @@ public class InformeActaReportService extends SgiReportDocxService {
 
     List<MemoriaEvaluadaDto> memorias = actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(acta.getId());
 
-    Optional<MemoriaEvaluadaDto> memoriaEvaluada = memorias
+    Optional<MemoriaEvaluadaDto> memoriasEvaluadasNoFavorables = memorias
         .stream().filter(memoria -> !memoria.getDictamen().equals(DICTAMEN_FAVORABLE)
             && (memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_MEMORIA)
                 || memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_SEG_ANUAL)
                 || memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_SEG_FINAL)))
-        .findFirst();
+        .findAny();
 
-    Integer numComentarios = 0;
-
-    if (memoriaEvaluada.isPresent()) {
-      dataReport.put("referenciaMemoria", memoriaEvaluada.get().getNumReferencia());
-      dataReport.put("tituloProyecto", memoriaEvaluada.get().getTitulo());
-      try {
-        PersonaDto persona = personaService.findById(memoriaEvaluada.get().getPersonaRef());
-        dataReport.put("responsableMemoria", persona.getNombre() + " " + persona.getApellidos());
-      } catch (Exception e) {
-        dataReport.put("responsableMemoria", e.getMessage());
-        log.error(e.getMessage());
-      }
-      dataReport.put("dictamen", memoriaEvaluada.get().getDictamen());
-      numComentarios = evaluacionService.countByEvaluacionIdAndTipoComentarioId(memoriaEvaluada.get().getEvaluacionId(),
-          TIPO_COMENTARIO_GESTOR);
-    } else {
-      dataReport.put("referenciaMemoria", null);
-      dataReport.put("tituloProyecto", null);
-      dataReport.put("responsableMemoria", null);
-      dataReport.put("dictamen", null);
-    }
-    dataReport.put("numComentarios", numComentarios);
+    dataReport.put("existsComentarios", memoriasEvaluadasNoFavorables.isPresent());
 
     addDataAsistentes(acta, dataReport);
 
@@ -251,6 +230,7 @@ public class InformeActaReportService extends SgiReportDocxService {
 
     List<MemoriaEvaluadaDto> memorias = actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(acta.getId());
 
+    dataReport.put("isMemoriasEvaluadas", !memorias.isEmpty());
     dataReport.put("memoriasEvaluadas", memorias);
     memorias.forEach(memoria -> {
       try {
@@ -330,7 +310,7 @@ public class InformeActaReportService extends SgiReportDocxService {
 
           // @formatter:off
               BloquesReportInput etiBloquesReportInput = BloquesReportInput.builder()
-              .idMemoria(memoria.getEvaluacionId())
+              .idMemoria(memoria.getId())
               .idFormulario(idFormulario)
               .mostrarRespuestas(false)
               .mostrarContenidoApartado(false)
@@ -369,10 +349,11 @@ public class InformeActaReportService extends SgiReportDocxService {
         && ObjectUtils
             .isNotEmpty(actaComentariosReportOutput.getComentariosMemoria().stream().findAny().get().getBloques())
         && actaComentariosReportOutput.getComentariosMemoria().stream().findAny().get().getBloques().size() > 0) {
-      subDataBloqueApartado.put("bloques",
-          actaComentariosReportOutput.getComentariosMemoria().stream().findAny().get().getBloques());
+      List<BloqueOutput> bloquesOutput = new ArrayList<BloqueOutput>();
+      subDataBloqueApartado.put("comentariosMemoria",
+          actaComentariosReportOutput.getComentariosMemoria());
     } else {
-      subDataBloqueApartado.put("bloques", null);
+      subDataBloqueApartado.put("comentariosMemoria", null);
       return null;
     }
     return Includes.ofStream(getReportDefinitionStream("rep-eti-bloque-apartado-acta-docx"))
