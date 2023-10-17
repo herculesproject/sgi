@@ -1,23 +1,33 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+  logicalFilePath="classpath*:db/changelog/changes/0000000000000-sample-data.xml">
 
   <changeSet context="dev" author="master" id="0000000000000-resultado_informe_patentabilidad">
     <insert tableName="resultado_informe_patentabilidad">
       <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
       <column name="nombre" value="Favorable" />
-      <column name="descripcion" value="Se considera viable gestionar solicitudes de protección para la invención." />
+      <column name="descripcion"
+        value="Se considera viable gestionar solicitudes de protección para la invención." />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="resultado_informe_patentabilidad">
       <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
       <column name="nombre" value="Parcialmente favorable" />
-      <column name="descripcion" value="Se considera viable gestionar solicitudes de protección para una parte acotada de la invención. Se ha de analizar el informe en busca de los puntos que se recomienda no incluir." />
+      <column name="descripcion"
+        value="Se considera viable gestionar solicitudes de protección para una parte acotada de la invención. Se ha de analizar el informe en busca de los puntos que se recomienda no incluir." />
       <column name="activo" valueBoolean="true" />
     </insert>
     <insert tableName="resultado_informe_patentabilidad">
       <column name="id" valueSequenceNext="resultado_informe_patentabilidad_seq" />
       <column name="nombre" value="Desfavorable" />
-      <column name="descripcion" value="No se considera viable iniciar acciones de solicitud de protección de la invención tal y como está planteada." />
+      <column name="descripcion"
+        value="No se considera viable iniciar acciones de solicitud de protección de la invención tal y como está planteada." />
       <column name="activo" valueBoolean="true" />
     </insert>
   </changeSet>
@@ -26,25 +36,29 @@
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="Patente" />
-      <column name="descripcion" value="Derecho de impedir temporalmente a otros la fabricación, venta o utilización comercial en España de la invención protegida." />
+      <column name="descripcion"
+        value="Derecho de impedir temporalmente a otros la fabricación, venta o utilización comercial en España de la invención protegida." />
       <column name="tipo_propiedad" value="INDUSTRIAL" />
     </insert>
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="Modelo de utilidad" />
-      <column name="descripcion" value="Protege una invención de menor rango inventivo que una patente. En general son mejoras a aparatos o herramientas ya conocidos, es decir, invenciones mecánicas." />
+      <column name="descripcion"
+        value="Protege una invención de menor rango inventivo que una patente. En general son mejoras a aparatos o herramientas ya conocidos, es decir, invenciones mecánicas." />
       <column name="tipo_propiedad" value="INDUSTRIAL" />
     </insert>
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="Diseño industrial " />
-      <column name="descripcion" value="Derecho exclusivo, sobre la apariencia de la totalidad o de una parte de un producto, que se derive de las características de, en particular, las líneas, contornos, colores, forma, textura o materiales del producto en sí o de su ornamentación." />
+      <column name="descripcion"
+        value="Derecho exclusivo, sobre la apariencia de la totalidad o de una parte de un producto, que se derive de las características de, en particular, las líneas, contornos, colores, forma, textura o materiales del producto en sí o de su ornamentación." />
       <column name="tipo_propiedad" value="INDUSTRIAL" />
     </insert>
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="Marca" />
-      <column name="descripcion" value="Título que concede el derecho exclusivo a la utilización de un signo para la identificación de un producto o un servicio en el mercado." />
+      <column name="descripcion"
+        value="Título que concede el derecho exclusivo a la utilización de un signo para la identificación de un producto o un servicio en el mercado." />
       <column name="tipo_propiedad" value="INDUSTRIAL" />
     </insert>
     <insert tableName="tipo_proteccion">
@@ -64,19 +78,22 @@
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="Secreto industrial " />
-      <column name="descripcion" value="Acuerdo privado de confidencialidad y uso del producto o conocimiento desarrollado, vendrían a ser tratados como acuerdos de know-how, pero en el marco de tipo de protección industrial." />
+      <column name="descripcion"
+        value="Acuerdo privado de confidencialidad y uso del producto o conocimiento desarrollado, vendrían a ser tratados como acuerdos de know-how, pero en el marco de tipo de protección industrial." />
       <column name="tipo_propiedad" value="INDUSTRIAL" />
     </insert>
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="Software" />
-      <column name="descripcion" value="Demostración de autoría de un programa informático y derecho de explotación del mismo." />
+      <column name="descripcion"
+        value="Demostración de autoría de un programa informático y derecho de explotación del mismo." />
       <column name="tipo_propiedad" value="INTELECTUAL" />
     </insert>
     <insert tableName="tipo_proteccion">
       <column name="id" valueSequenceNext="tipo_proteccion_seq" />
       <column name="nombre" value="Know-how" />
-      <column name="descripcion" value="Información sin documentar de conocimiento limitado al ámbito interno a la organización. Puede tener un valor comercial y es susceptible de ser incluido en los contratos de licencia. No hay forma de registrarlo y su robo puede ser difícil de probar." />
+      <column name="descripcion"
+        value="Información sin documentar de conocimiento limitado al ámbito interno a la organización. Puede tener un valor comercial y es susceptible de ser incluido en los contratos de licencia. No hay forma de registrarlo y su robo puede ser difícil de probar." />
       <column name="tipo_propiedad" value="INTELECTUAL" />
     </insert>
   </changeSet>
@@ -87,10 +104,13 @@
 
     <insert tableName="invencion">
       <column name="id" valueSequenceNext="invencion_seq" />
-      <column name="titulo" value="Concentrador solar térmico para generación de vapor industrial y frío solar" />
+      <column name="titulo"
+        value="Concentrador solar térmico para generación de vapor industrial y frío solar" />
       <column name="fecha_comunicacion" valueDate="2021-06-22T15:00:00" />
-      <column name="descripcion" value="La invención consiste en un concentrador parabólico de foco puntual, que utiliza tecnología de concentración de la luz solar. La tecnología incorpora un novedoso receptor, patentado, desarrollado por el grupo de investigación, que optimiza la captación de radiación solar, gracias a un novedoso diseño y el empleo de materiales y elementos complementarios que lo hacen más eficiente." />
-      <column name="comentarios" value="La tecnología se encuentra protegida mediante patente nacional española" />
+      <column name="descripcion"
+        value="La invención consiste en un concentrador parabólico de foco puntual, que utiliza tecnología de concentración de la luz solar. La tecnología incorpora un novedoso receptor, patentado, desarrollado por el grupo de investigación, que optimiza la captación de radiación solar, gracias a un novedoso diseño y el empleo de materiales y elementos complementarios que lo hacen más eficiente." />
+      <column name="comentarios"
+        value="La tecnología se encuentra protegida mediante patente nacional española" />
       <column name="tipo_proteccion_id" valueNumeric="5" />
       <column name="activo" valueBoolean="true" />
     </insert>
@@ -98,7 +118,8 @@
       <column name="id" valueSequenceNext="invencion_seq" />
       <column name="titulo" value="Trampa para Insectos" />
       <column name="fecha_comunicacion" valueDate="2021-03-15T16:00:00" />
-      <column name="descripcion" value="La presente invención se refiere a una trampa para aquellos insectos que viven en el suelo o que tienen capacidad de vuelo activo y que, generalmente, son nocivos para las plantas, los árboles, los frutos o la salud; en caso de que los insectos o las plagas ocurran en un ámbito industrial, alimentario, hostelero o público, como colegios u hospitales." />
+      <column name="descripcion"
+        value="La presente invención se refiere a una trampa para aquellos insectos que viven en el suelo o que tienen capacidad de vuelo activo y que, generalmente, son nocivos para las plantas, los árboles, los frutos o la salud; en caso de que los insectos o las plagas ocurran en un ámbito industrial, alimentario, hostelero o público, como colegios u hospitales." />
       <column name="comentarios" value="Ciencias" />
       <column name="tipo_proteccion_id" valueNumeric="3" />
       <column name="activo" valueBoolean="true" />
@@ -107,7 +128,8 @@
       <column name="id" valueSequenceNext="invencion_seq" />
       <column name="titulo" value="Programa informático RREA: Respuesta Rápida al Estado Ambiental" />
       <column name="fecha_comunicacion" valueDate="2021-04-18T17:00:00" />
-      <column name="descripcion" value="El programa RREA (Respuesta Rápida al Estado Ambiental) tiene como objetivo estimar el efecto de diferentes presiones ambientales sobre las masas de agua superficiales continentales. Está pensado para su aplicación a escala de grandes sistemas de recursos hídricos. Su utilidad es muy variada permitiendo, por ejemplo: definir zonas no muestreadas con alto riesgo de contaminación, estimar la eficacia de las medidas de depuración o calcular la situación del sistema en diferentes escenarios (cambio climático, épocas de sequía, etc.) Básicamente el programa estima concentraciones de contaminantes en las masas de agua superficiales teniendo en cuenta la carga que se aporta en cada masa, la contaminación que proviene de aguas arriba y la posible degradación que se produce en la propia masa de agua. El programa ha sido desarrollado por el profesor Javier Paredes Arquiola del Grupo de Ingeniería de Recursos Hídricos (GIRH) de la Universidad Politécnica de Valencia (UPV). Este programa está enfocado como una herramienta fundamental para los entes gestores de agua y consultoras especializadas en recursos hídricos. El programa RREA es determinante para el desarrollo de los planes hidrológicos de cuenca al amparo de la Directiva Marco en Política de Aguas." />
+      <column name="descripcion"
+        value="El programa RREA (Respuesta Rápida al Estado Ambiental) tiene como objetivo estimar el efecto de diferentes presiones ambientales sobre las masas de agua superficiales continentales. Está pensado para su aplicación a escala de grandes sistemas de recursos hídricos. Su utilidad es muy variada permitiendo, por ejemplo: definir zonas no muestreadas con alto riesgo de contaminación, estimar la eficacia de las medidas de depuración o calcular la situación del sistema en diferentes escenarios (cambio climático, épocas de sequía, etc.) Básicamente el programa estima concentraciones de contaminantes en las masas de agua superficiales teniendo en cuenta la carga que se aporta en cada masa, la contaminación que proviene de aguas arriba y la posible degradación que se produce en la propia masa de agua. El programa ha sido desarrollado por el profesor Javier Paredes Arquiola del Grupo de Ingeniería de Recursos Hídricos (GIRH) de la Universidad Politécnica de Valencia (UPV). Este programa está enfocado como una herramienta fundamental para los entes gestores de agua y consultoras especializadas en recursos hídricos. El programa RREA es determinante para el desarrollo de los planes hidrológicos de cuenca al amparo de la Directiva Marco en Política de Aguas." />
       <column name="comentarios" value="SOFTWARE" />
       <column name="tipo_proteccion_id" valueNumeric="8" />
       <column name="activo" valueBoolean="true" />

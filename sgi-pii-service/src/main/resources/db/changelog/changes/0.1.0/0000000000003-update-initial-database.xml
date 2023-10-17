@@ -1,5 +1,12 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+  logicalFilePath="classpath*:db/changelog/changes/0000000000003-update-initial-database.xml">
   <changeSet author="master" id="0000000000003-1">
     <createSequence incrementBy="1" sequenceName="invencion_palabra_clave_seq" startValue="1" />
   </changeSet>
@@ -21,6 +28,9 @@
     </createTable>
   </changeSet>
   <changeSet author="master" id="0000000000003-3">
-    <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_palabra_clave" constraintName="FK_INVENCIONPALABRACLAVE_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="invencion_palabra_clave"
+      constraintName="FK_INVENCIONPALABRACLAVE_INVENCION" deferrable="false"
+      initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion"
+      validate="true" />
   </changeSet>
 </databaseChangeLog>

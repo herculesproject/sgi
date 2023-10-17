@@ -1,5 +1,12 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+  logicalFilePath="classpath*:db/changelog/changes/0000000000002-update-sample-data.xml">
 
   <changeSet context="dev" author="master" id="0000000000002-reparto">
     <insert tableName="reparto">
@@ -106,8 +113,10 @@
       <column name="id" valueNumeric="107" />
       <column name="titulo" value="Dispositivo de aseguramiento de tuerca y tornillo" />
       <column name="fecha_comunicacion" valueDate="2021-06-22T15:00:00" />
-      <column name="descripcion" value="La presente invención se refiere a un dispositivo de aseguramiento de tuerca y tornillo en donde la tuerca tiene un orificio roscado, el tornillo tiene una porción de su longitud con un roscado exterior para conexión por rosca con la tuerca." />
-      <column name="comentarios" value="La tecnología se encuentra protegida mediante patente nacional española" />
+      <column name="descripcion"
+        value="La presente invención se refiere a un dispositivo de aseguramiento de tuerca y tornillo en donde la tuerca tiene un orificio roscado, el tornillo tiene una porción de su longitud con un roscado exterior para conexión por rosca con la tuerca." />
+      <column name="comentarios"
+        value="La tecnología se encuentra protegida mediante patente nacional española" />
       <column name="tipo_proteccion_id" valueNumeric="5" />
       <column name="activo" valueBoolean="true" />
     </insert>

@@ -1,5 +1,12 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+  logicalFilePath="classpath*:db/changelog/changes/0000000000002-update-initial-database.xml">
 
   <changeSet author="master" id="0000000000002-1">
     <createSequence incrementBy="1" sequenceName="sector_licenciado_seq" startValue="1" />
@@ -37,10 +44,15 @@
     </createTable>
   </changeSet>
   <changeSet author="master" id="0000000000002-3">
-    <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="sector_licenciado" constraintName="FK_SECTORLICENCIADO_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="sector_licenciado"
+      constraintName="FK_SECTORLICENCIADO_INVENCION" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="invencion" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-4">
-    <addForeignKeyConstraint baseColumnNames="sector_aplicacion_id" baseTableName="sector_licenciado" constraintName="FK_SECTORLICENCIADO_SECTORAPLICACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sector_aplicacion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="sector_aplicacion_id"
+      baseTableName="sector_licenciado" constraintName="FK_SECTORLICENCIADO_SECTORAPLICACION"
+      deferrable="false" initiallyDeferred="false" referencedColumnNames="id"
+      referencedTableName="sector_aplicacion" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-5">
     <createSequence incrementBy="1" sequenceName="reparto_seq" startValue="1" />
@@ -69,7 +81,9 @@
     </createTable>
   </changeSet>
   <changeSet author="master" id="0000000000002-7">
-    <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="reparto" constraintName="FK_REPARTO_INVENCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="invencion_id" baseTableName="reparto"
+      constraintName="FK_REPARTO_INVENCION" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="invencion" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-8">
     <addColumn tableName="tramo_reparto">
@@ -185,19 +199,30 @@
     </createTable>
   </changeSet>
   <changeSet author="master" id="0000000000002-20">
-    <addForeignKeyConstraint baseColumnNames="reparto_id" baseTableName="reparto_equipo_inventor" constraintName="FK_REPARTOEQUIPOINVENTOR_REPARTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reparto" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="reparto_id" baseTableName="reparto_equipo_inventor"
+      constraintName="FK_REPARTOEQUIPOINVENTOR_REPARTO" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="reparto" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-21">
-    <addForeignKeyConstraint baseColumnNames="invencion_gasto_id" baseTableName="reparto_gasto" constraintName="FK_REPARTOGASTO_INVENCIONGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion_gasto" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="invencion_gasto_id" baseTableName="reparto_gasto"
+      constraintName="FK_REPARTOGASTO_INVENCIONGASTO" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="invencion_gasto" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-22">
-    <addForeignKeyConstraint baseColumnNames="reparto_id" baseTableName="reparto_gasto" constraintName="FK_REPARTOGASTO_REPARTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reparto" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="reparto_id" baseTableName="reparto_gasto"
+      constraintName="FK_REPARTOGASTO_REPARTO" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="reparto" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-23">
-    <addForeignKeyConstraint baseColumnNames="invencion_ingreso_id" baseTableName="reparto_ingreso" constraintName="FK_REPARTOINGRESO_INVENCIONINGRESO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion_ingreso" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="invencion_ingreso_id" baseTableName="reparto_ingreso"
+      constraintName="FK_REPARTOINGRESO_INVENCIONINGRESO" deferrable="false"
+      initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion_ingreso"
+      validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-24">
-    <addForeignKeyConstraint baseColumnNames="reparto_id" baseTableName="reparto_ingreso" constraintName="FK_REPARTOINGRESO_REPARTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reparto" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="reparto_id" baseTableName="reparto_ingreso"
+      constraintName="FK_REPARTOINGRESO_REPARTO" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="reparto" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-25">
     <createTable tableName="procedimiento">
@@ -245,16 +270,29 @@
     </createTable>
   </changeSet>
   <changeSet author="master" id="0000000000002-27">
-    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id" baseTableName="pais_validado" constraintName="FK_PAISVALIDADO_SOLICITUDPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proteccion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id" baseTableName="pais_validado"
+      constraintName="FK_PAISVALIDADO_SOLICITUDPROTECCION" deferrable="false"
+      initiallyDeferred="false" referencedColumnNames="id"
+      referencedTableName="solicitud_proteccion" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-28">
-    <addForeignKeyConstraint baseColumnNames="procedimiento_id" baseTableName="procedimiento_documento" constraintName="FK_PROCEDIMIENTODOCUMENTO_PROCEDIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="procedimiento" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="procedimiento_id"
+      baseTableName="procedimiento_documento"
+      constraintName="FK_PROCEDIMIENTODOCUMENTO_PROCEDIMIENTO" deferrable="false"
+      initiallyDeferred="false" referencedColumnNames="id" referencedTableName="procedimiento"
+      validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-29">
-    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id" baseTableName="procedimiento" constraintName="FK_PROCEDIMIENTO_SOLICITUDPROTECCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="solicitud_proteccion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id" baseTableName="procedimiento"
+      constraintName="FK_PROCEDIMIENTO_SOLICITUDPROTECCION" deferrable="false"
+      initiallyDeferred="false" referencedColumnNames="id"
+      referencedTableName="solicitud_proteccion" validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-30">
-    <addForeignKeyConstraint baseColumnNames="tipo_procedimiento_id" baseTableName="procedimiento" constraintName="FK_PROCEDIMIENTO_TIPOPROCEDIMIENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_procedimiento" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_procedimiento_id" baseTableName="procedimiento"
+      constraintName="FK_PROCEDIMIENTO_TIPOPROCEDIMIENTO" deferrable="false"
+      initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_procedimiento"
+      validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-31">
     <addColumn tableName="reparto_equipo_inventor">
@@ -264,7 +302,11 @@
     </addColumn>
   </changeSet>
   <changeSet author="master" id="0000000000002-32">
-    <addForeignKeyConstraint baseColumnNames="invencion_inventor_id" baseTableName="reparto_equipo_inventor" constraintName="FK_REPARTOEQUIPOINVENTOR_INVENCIONINVENTOR" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion_inventor" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="invencion_inventor_id"
+      baseTableName="reparto_equipo_inventor"
+      constraintName="FK_REPARTOEQUIPOINVENTOR_INVENCIONINVENTOR" deferrable="false"
+      initiallyDeferred="false" referencedColumnNames="id" referencedTableName="invencion_inventor"
+      validate="true" />
   </changeSet>
   <changeSet author="master" id="0000000000002-33">
     <dropColumn columnName="PERSONA_REF" tableName="REPARTO_EQUIPO_INVENTOR" />
