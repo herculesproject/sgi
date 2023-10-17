@@ -1967,7 +1967,7 @@
   "eti.configuracion.dias-evaluar": "Días límite para evaluar memoria",
   "eti.configuracion.dias-evaluar.descripcion": "Número de días previos a la convocatoria de evaluación de los que dispone el equipo de evaluadores para aportar sus comentarios",
   "eti.configuracion.dias-inactiva": "Días para pasar a estado archivada",
-  "eti.configuracion.dias-inactiva.descripcion": "Número de días para realizar las modificaciones de un dictamen 'pendiente de correcciones', 'favorable pendiente de revisión mínima', 'solicitud de modificaciones' (seguimiento anual) o 'solicitud de aclaraciones' (seguimiento final) antes de que la memoria pase a estado 'archivada'. Número de días para que una memoria con dictamen 'no procede evaluar' o 'desfavorable' pase a estado 'Archivada'",
+  "eti.configuracion.dias-inactiva.descripcion": "Número de días para realizar las modificaciones de un dictamen 'favorable pendiente de revisión mínima', 'solicitud de modificaciones' (seguimiento anual) o 'solicitud de aclaraciones' (seguimiento final) antes de que la memoria pase a estado 'archivada'. Número de días para que una memoria con dictamen 'no procede evaluar' o 'desfavorable' pase a estado 'Archivada'",
   "eti.configuracion.duracion-proyecto-evaluacion": "Años de duración de los proyectos de evaluación",
   "eti.configuracion.duracion-proyecto-evaluacion.descripcion": "Número de años de duración para los proyectos de evaluación",
   "eti.configuracion.meses-correcciones": "Número de meses para presentar correcciones",
