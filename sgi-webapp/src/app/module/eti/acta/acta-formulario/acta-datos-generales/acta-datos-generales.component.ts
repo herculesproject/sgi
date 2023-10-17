@@ -10,7 +10,8 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { TranslateService } from '@ngx-translate/core';
-import Editor from 'ckeditor5/build/ckeditor';
+import { SgiCkEditorConfig } from '@shared/sgi-ckeditor-config';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActaActionService } from '../../acta.action.service';
@@ -31,6 +32,7 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   public readonly CkEditor = Editor;
+  public readonly configCkEditor = SgiCkEditorConfig.defaultConfig;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;

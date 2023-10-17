@@ -19,58 +19,61 @@ import { Table, TableColumnResize, TableToolbar } from '@ckeditor/ckeditor5-tabl
 // See https://ckeditor.com/docs/ckeditor5/latest/installation/plugins/installing-plugins.html for details.
 
 class Editor extends ClassicEditor {
-	public static override builtinPlugins = [
-		Alignment,
-		Bold,
-		Essentials,
-		FontBackgroundColor,
-		FontColor,
-		FontFamily,
-		FontSize,
-		Heading,
-		Italic,
-		Link,
-		List,
-		Paragraph,
-		Table,
-		TableColumnResize,
-		TableToolbar,
-		Underline
-	];
+  public static override builtinPlugins = [
+    Alignment,
+    Bold,
+    Essentials,
+    FontBackgroundColor,
+    FontColor,
+    FontFamily,
+    FontSize,
+    Heading,
+    Italic,
+    Link,
+    List,
+    Paragraph,
+    Table,
+    TableColumnResize,
+    TableToolbar,
+    Underline
+  ];
 
-	public static override defaultConfig = {
-		toolbar: {
-			items: [
-				'heading',
-				'|',
-				'bold',
-				'italic',
-				'underline',
-				'link',
-				'|',
-				'fontBackgroundColor',
-				'fontColor',
-				'fontFamily',
-				'fontSize',
-				'|',
-				'bulletedList',
-				'numberedList',
-				'alignment',
-				'insertTable',
-				'|',
-				'undo',
-				'redo'
-			]
-		},
-		language: 'es',
-		table: {
-			contentToolbar: [
-				'tableColumn',
-				'tableRow',
-				'mergeTableCells'
-			]
-		}
-	};
+  public static override defaultConfig = {
+    toolbar: {
+      items: [
+        'heading',
+        '|',
+        'bold',
+        'italic',
+        'underline',
+        'link',
+        '|',
+        'fontBackgroundColor',
+        'fontColor',
+        'fontFamily',
+        'fontSize',
+        '|',
+        'bulletedList',
+        'numberedList',
+        'alignment',
+        'insertTable',
+        '|',
+        'undo',
+        'redo'
+      ]
+    },
+    link: {
+      defaultProtocol: 'https://'
+    },
+    language: 'es',
+    table: {
+      contentToolbar: [
+        'tableColumn',
+        'tableRow',
+        'mergeTableCells'
+      ]
+    }
+  };
 }
 
 export default Editor;

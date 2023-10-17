@@ -187,7 +187,6 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
             return this.service.getEstadoActual(memoria.id).pipe(
               tap(estadoMemoria => {
                 this.estadoMemoria = estadoMemoria;
-                console.error(estadoMemoria);
                 this.showComentarioSubsanacion = true;
               }),
               map(_ => memoria)

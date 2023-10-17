@@ -185,7 +185,7 @@
           *</span></span>
       <ckeditor
         [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''"
-        [editor]="CkEditor" [config]="CkEditor.defaultConfig" formControlName="resumen" required>
+        [editor]="CkEditor" [config]="configCkEditor" formControlName="resumen" required>
       </ckeditor>
       <span class="ckeditor-hint"
         *ngIf="!formGroup.controls.resumen.errors">{{formGroup.controls.resumen?.value?.length}}
@@ -207,7 +207,7 @@
           *</span></span>
       <ckeditor
         [class]="formGroup.controls.objetivosCientificos.touched && formGroup.controls.objetivosCientificos.errors ? 'ck-editor-border-warn' : ''"
-        [editor]="CkEditor" [config]="CkEditor.defaultConfig" formControlName="objetivosCientificos" required>
+        [editor]="CkEditor" [config]="configCkEditor" formControlName="objetivosCientificos" required>
       </ckeditor>
       <span *ngIf="!formGroup.controls.objetivosCientificos.errors"
         class="ckeditor-hint">{{formGroup.controls.objetivosCientificos?.value?.length}} / 4000</span>
@@ -227,7 +227,7 @@
           *</span></span>
       <ckeditor
         [class]="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors ? 'ck-editor-border-warn' : ''"
-        [editor]="CkEditor" [config]="CkEditor.defaultConfig" formControlName="disenioMetodologico" required>
+        [editor]="CkEditor" [config]="configCkEditor" formControlName="disenioMetodologico" required>
       </ckeditor>
       <span *ngIf="!formGroup.controls.disenioMetodologico.errors"
         class="ckeditor-hint">{{formGroup.controls.disenioMetodologico?.value?.length}} / 4000</span>

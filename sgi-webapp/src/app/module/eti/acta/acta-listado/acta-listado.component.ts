@@ -274,23 +274,23 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
    * @param actaId id del acta a finalizar.
    */
   finishActa(actaId: number) {
-    this.suscripciones.push(this.actasService.finishActa(actaId).subscribe((acta) => {
-      this.snackBarService.showSuccess(MSG_FINALIZAR_SUCCESS);
-      this.loadTable(false);
-    },
-      catchError((error) => {
-        this.logger.error(error);
-        // On error reset pagination values
-        this.paginator.firstPage();
-        this.totalElementos = 0;
-        if (error instanceof SgiError) {
-          this.processError(error);
-        }
-        else {
-          this.processError(new SgiError(this.textoFinalizarError));
-        }
-        return of([]);
-      })));
+    this.suscripciones.push(
+      this.actasService.finishActa(actaId).subscribe(() => {
+        this.snackBarService.showSuccess(MSG_FINALIZAR_SUCCESS);
+        this.loadTable(false);
+      },
+        (error) => {
+          this.logger.error(error);
+          // On error reset pagination values
+          if (error instanceof SgiError) {
+            this.processError(error);
+          }
+          else {
+            this.processError(new SgiError(this.textoFinalizarError));
+          }
+          return of([]);
+        })
+    );
   }
 
   /**

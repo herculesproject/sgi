@@ -13,15 +13,16 @@ import { List } from '@ckeditor/ckeditor5-list';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
 import { Table, TableColumnResize, TableToolbar } from '@ckeditor/ckeditor5-table';
 declare class Editor extends ClassicEditor {
-    static builtinPlugins: (typeof Alignment | typeof Bold | typeof Essentials | typeof FontBackgroundColor | typeof FontColor | typeof FontFamily | typeof FontSize | typeof Heading | typeof Italic | typeof Link | typeof List | typeof Paragraph | typeof Table | typeof TableColumnResize | typeof TableToolbar | typeof Underline)[];
-    static defaultConfig: {
-        toolbar: {
-            items: string[];
-        };
-        language: string;
-        table: {
-            contentToolbar: string[];
-        };
+  static builtinPlugins: (typeof Alignment | typeof Bold | typeof Essentials | typeof FontBackgroundColor | typeof FontColor | typeof FontFamily | typeof FontSize | typeof Heading | typeof Italic | typeof Link | typeof List | typeof Paragraph | typeof Table | typeof TableColumnResize | typeof TableToolbar | typeof Underline)[];
+  static defaultConfig: {
+    toolbar: {
+      items: string[];
     };
+    link: {};
+    language: string;
+    table: {
+      contentToolbar: string[];
+    };
+  };
 }
 export default Editor;

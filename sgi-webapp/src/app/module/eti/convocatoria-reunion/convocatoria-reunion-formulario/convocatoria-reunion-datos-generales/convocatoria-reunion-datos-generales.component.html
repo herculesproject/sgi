@@ -144,7 +144,7 @@
           *</span></span>
       <ckeditor
         [class]="formGroup.controls.ordenDia.touched && formGroup.controls.ordenDia.errors ? 'ck-editor-border-warn' : ''"
-        [editor]="CkEditor" [config]="CkEditor.defaultConfig" formControlName="ordenDia" required>
+        [editor]="CkEditor" [config]="configCkEditor" formControlName="ordenDia" required>
       </ckeditor>
       <span *ngIf="!formGroup.controls.ordenDia.errors"
         class="ckeditor-hint">{{formGroup.controls.ordenDia?.value?.length}} / 2000</span>

@@ -13,7 +13,8 @@ import { TipoActividadService } from '@core/services/eti/tipo-actividad.service'
 import { TipoInvestigacionTuteladaService } from '@core/services/eti/tipo-investigacion-tutelada.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
-import Editor from 'ckeditor5/build/ckeditor';
+import { SgiCkEditorConfig } from '@shared/sgi-ckeditor-config';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
@@ -49,6 +50,7 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   public readonly CkEditor = Editor;
+  public readonly configCkEditor = SgiCkEditorConfig.defaultConfig;
 
   FormGroupUtil = FormGroupUtil;
   fxFlexProperties: FxFlexProperties;
@@ -123,7 +125,6 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
 
     this.tipoInvestigacionTuteladas$ = this.tipoInvestigacionTuteladaService.findAll().pipe(
       map(response => response.items));
-
   }
 
   ngOnInit(): void {
