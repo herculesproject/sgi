@@ -40,5 +40,11 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="user (generated)" id="00.04.00-6">
+    <addUniqueConstraint columnNames="memoria_id, apartado_id"
+      constraintName="UK_RESPUESTA_MEMORIA_ID_APARTADO_ID"
+      tableName="respuesta" />
+  </changeSet>
+
 
 </databaseChangeLog>
