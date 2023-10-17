@@ -1230,7 +1230,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     // una memoria cuyo estado es "Pendiente Correcciones"
     Specification<Memoria> specsMemoriasByMesesArchivadaPendienteCorrecciones = MemoriaSpecifications.activos()
         .and(
-            MemoriaSpecifications.estadoActualIn(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_PENDIENTE_CORRECCIONES)));
+            MemoriaSpecifications.estadoActualIn(Arrays.asList(TipoEstadoMemoria.Tipo.PENDIENTE_CORRECCIONES.getId())));
 
     List<Memoria> memorias = memoriaRepository.findAll(specsMemoriasByMesesArchivadaPendienteCorrecciones).stream()
         .filter(memoria -> {
@@ -1240,7 +1240,7 @@ public class MemoriaServiceImpl implements MemoriaService {
               .minus(Period.ofMonths(configuracion.getMesesArchivadaPendienteCorrecciones())).toInstant());
         }).map(memoria -> {
           try {
-            this.updateEstadoMemoria(memoria, Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO);
+            this.updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.ARCHIVADA.getId());
           } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;
@@ -1279,8 +1279,7 @@ public class MemoriaServiceImpl implements MemoriaService {
             TipoEstadoMemoria.Tipo.NO_PROCEDE_EVALUAR.getId(),
             TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION.getId(),
             TipoEstadoMemoria.Tipo.EN_ACLARACION_SEGUIMIENTO_FINAL.getId(),
-            TipoEstadoMemoria.Tipo.DESFAVORABLE.getId(),
-            TipoEstadoMemoria.Tipo.PENDIENTE_CORRECCIONES.getId())));
+            TipoEstadoMemoria.Tipo.DESFAVORABLE.getId())));
 
     return memoriaRepository.findAll(specsMemoriasByDiasArchivadaInactivo).stream()
         .filter(memoria -> {
