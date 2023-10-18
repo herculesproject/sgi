@@ -79,7 +79,7 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.comentarios$.subscribe(elements => {
       this.dataSource.data = elements;
-      if (elements.length > 0) {
+      if (elements.length > 0 && elements.filter(comentario => comentario.value.evaluador.id === this.personaId).length > 0) {
         this.disabledCreate = !elements.some(comentario => comentario.value.estado ? (comentario.value.estado === this.TIPO_ESTADO_COMENTARIO.ABIERTO || comentario.value.estado === null) : true);
       }
     }));

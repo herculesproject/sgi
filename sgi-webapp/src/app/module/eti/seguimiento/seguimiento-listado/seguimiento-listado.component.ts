@@ -134,11 +134,11 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
     return evaluaciones.sort((a, b) => {
       if ((a.evaluador1.persona.id !== this.usuarioRef && b.evaluador1.persona.id === this.usuarioRef)
         || (a.evaluador2.persona.id !== this.usuarioRef && b.evaluador2.persona.id === this.usuarioRef)) {
-        return -1;
+        return 1;
       }
       if ((a.evaluador1.persona.id === this.usuarioRef && b.evaluador1.persona.id !== this.usuarioRef)
         || (a.evaluador2.persona.id === this.usuarioRef && b.evaluador2.persona.id !== this.usuarioRef)) {
-        return 1;
+        return -1;
       }
       return 0;
     });
