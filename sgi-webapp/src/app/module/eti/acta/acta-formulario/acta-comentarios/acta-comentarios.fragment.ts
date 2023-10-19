@@ -12,6 +12,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { Rol } from '../../acta-rol';
+import { ActaService } from '@core/services/eti/acta.service';
 
 export class ActaComentariosFragment extends Fragment {
 
@@ -30,6 +31,7 @@ export class ActaComentariosFragment extends Fragment {
 
   constructor(
     key: number,
+    private actaService: ActaService,
     private service: EvaluacionService,
     private convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly personaService: PersonaService,
@@ -37,12 +39,15 @@ export class ActaComentariosFragment extends Fragment {
     private rol: Rol
   ) {
     super(key);
-    this.selectedIdConvocatoria = key;
   }
 
   protected onInitialize(): void {
     if (this.getKey()) {
-      this.loadEvaluaciones(this.getKey() as number);
+      this.subscriptions.push(this.actaService.findById(this.getKey() as number).subscribe(
+        value => {
+          this.selectedIdConvocatoria = value.convocatoriaReunion?.id;
+          this.loadEvaluaciones(value.convocatoriaReunion?.id);
+        }));
     }
   }
 
