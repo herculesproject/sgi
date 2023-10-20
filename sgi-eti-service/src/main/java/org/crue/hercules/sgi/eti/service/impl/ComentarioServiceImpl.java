@@ -473,10 +473,20 @@ public class ComentarioServiceImpl implements ComentarioService {
     Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
 
     return evaluacionRepository.findById(id).map(evaluacion -> {
-      List<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
+      List<Comentario> comentarios = new ArrayList<Comentario>();
+      List<Comentario> comentariosGestores = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
           TipoComentario.Tipo.ACTA_GESTOR.getId());
+      if (!comentariosGestores.isEmpty()) {
+        comentarios.addAll(comentariosGestores);
+      }
+      List<Comentario> comentariosEvaluadoresCerrados = comentarioRepository
+          .findByEvaluacionIdAndTipoComentarioIdAndEstado(id,
+              TipoComentario.Tipo.ACTA_EVALUADOR.getId(), TipoEstadoComentario.CERRADO);
+      if (!comentariosEvaluadoresCerrados.isEmpty()) {
+        comentarios.addAll(comentariosEvaluadoresCerrados);
+      }
       log.debug("findByEvaluacionIdActaGestor(Long id) - end");
-      return returnValue;
+      return comentarios;
     }).orElseThrow(() -> new EvaluacionNotFoundException(id));
 
   }

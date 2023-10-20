@@ -138,4 +138,17 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Long>, J
    */
   Page<Comentario> findByEvaluacionIdAndTipoComentarioIdAndEstado(Long idEvaluacion, Long idTipoComentario,
       TipoEstadoComentario tipoEstadoComentario, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link Comentario} para un determinado
+   * {@link Evaluacion} y {@link TipoComentario}.
+   *
+   * @param idEvaluacion         Id de {@link Evaluacion}.
+   * @param idTipoComentario     Id de {@link TipoComentario}.
+   * @param tipoEstadoComentario estado {@link TipoEstadoComentario}.
+   * @param pageable             la información de la paginación.
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  List<Comentario> findByEvaluacionIdAndTipoComentarioIdAndEstado(Long idEvaluacion, Long idTipoComentario,
+      TipoEstadoComentario tipoEstadoComentario);
 }
