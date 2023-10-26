@@ -1,6 +1,15 @@
 @import "colors.scss";
 
 :host ::ng-deep {
+  .mat-elevation-z4 {
+    margin-bottom: 1.5em;
+  }
+
+  .tbl-label {
+    font-size: 0.9em;
+    color: map-get($sgi-custom-colors, label);
+  }
+
   formly-field-mat-multicheckbox mat-checkbox {
     display: block;
   }
@@ -9,9 +18,4 @@
     color: map-get($palette-warn, $warn-color);
     font-size: 75%;
   }
-}
-
-.tbl-label {
-  font-weight: 600;
-  color: map-get($sgi-custom-colors, label);
 }
