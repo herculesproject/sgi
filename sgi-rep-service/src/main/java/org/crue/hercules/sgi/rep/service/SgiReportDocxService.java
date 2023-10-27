@@ -17,7 +17,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
-import org.ddr.poi.html.HtmlRenderPolicy;
+import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
@@ -144,7 +144,7 @@ public class SgiReportDocxService {
 
     Configure config = Configure.builder()
         .useSpringEL()
-        .addPlugin('<', new HtmlRenderPolicy())
+        .addPlugin('<', new SgiHtmlRenderPolicy())
         .build();
 
     return compileReportData(is, config, dataReport);
