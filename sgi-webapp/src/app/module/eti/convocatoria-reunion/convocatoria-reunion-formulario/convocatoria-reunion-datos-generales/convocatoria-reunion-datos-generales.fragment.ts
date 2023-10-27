@@ -173,7 +173,6 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
       // Para que en la carga inicial no se permita editar si hay evaluaciones asignadas.
       if (value.numEvaluaciones > 0) {
         this.getFormGroup().controls.comite.disable({ onlySelf: true });
-        this.getFormGroup().controls.fechaLimite.disable({ onlySelf: true });
         this.getFormGroup().controls.tipoConvocatoriaReunion.disable({ onlySelf: true });
       } else if (value.fechaEnvio) {
         // Si ya se ha enviado no se podrá modificar el comité
