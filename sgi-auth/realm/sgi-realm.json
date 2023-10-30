@@ -3476,6 +3476,16 @@
       "path": "/ADMINISTRADOR-PII",
       "attributes": {},
       "realmRoles": [
+        "CSP-PRO-MOD-V",
+        "ESB-EMP-C",
+        "ESB-EMP-E",
+        "ESB-PER-C",
+        "ESB-PER-E",
+        "PII-INV-B",
+        "PII-INV-C",
+        "PII-INV-E",
+        "PII-INV-R",
+        "PII-INV-V",
         "PII-RIP-B",
         "PII-RIP-C",
         "PII-RIP-E",
@@ -3497,7 +3507,8 @@
         "PII-VPR-C",
         "PII-VPR-E",
         "PII-VPR-R",
-        "PII-VPR-V"
+        "PII-VPR-V",
+        "REL-V"
       ],
       "clientRoles": {},
       "subGroups": []
@@ -4174,7 +4185,6 @@
         "/ADMINISTRADOR-SGI",
         "/GESTOR-CSP",
         "/GESTOR-EER",
-        "/GESTOR-PII",
         "/GESTOR-PRC",
         "/INVESTIGADOR",
         "/SYSADM-CSP"
