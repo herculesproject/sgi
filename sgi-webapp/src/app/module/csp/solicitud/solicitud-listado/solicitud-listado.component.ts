@@ -171,6 +171,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.formGroup = new FormGroup({
       convocatoria: new FormControl(undefined),
       estadoSolicitud: new FormControl(''),
+      acronimo: new FormControl(''),
       plazoAbierto: new FormControl(false),
       fechaInicioDesde: new FormControl(null),
       fechaInicioHasta: new FormControl(null),
@@ -422,6 +423,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     const rsqlFilter = new RSQLSgiRestFilter('convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString())
+      .and('solicitudProyecto.acronimo', SgiRestFilterOperator.LIKE_ICASE, controls.acronimo.value)
       .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitud.value)
       .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value);
     if (this.busquedaAvanzada) {

@@ -5,7 +5,7 @@
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Convocatoria -->
-        <mat-form-field fxFlex="33%">
+        <mat-form-field fxFlex="25%">
           <mat-label>{{'csp.solicitud.convocatoria' | translate}}</mat-label>
           <sgi-select-convocatoria [authorities]="['CSP-PRO-V', ' CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R']"
             placeholder="{{'csp.solicitud.convocatoria' | translate}}" formControlName="convocatoria" extended="false">
@@ -14,7 +14,7 @@
 
 
         <!-- Estado solicitud -->
-        <mat-form-field fxFlex="33%">
+        <mat-form-field fxFlex="25%">
           <mat-label>{{'csp.solicitud.estado-solicitud' | translate}}</mat-label>
           <mat-select matNativeControl formControlName="estadoSolicitud">
             <mat-option [value]="undefined"></mat-option>
@@ -25,10 +25,17 @@
         </mat-form-field>
 
         <!-- Título Solicitud -->
-        <mat-form-field fxFlex="33%">
+        <mat-form-field fxFlex="25%">
           <mat-label>{{'csp.solicitud.titulo-listado' | translate}}</mat-label>
           <input matInput formControlName="tituloSolicitud" type="text" id="tituloSolicitud"
             placeholder="{{'csp.solicitud.titulo-listado' | translate}}">
+        </mat-form-field>
+
+        <!-- Acronimo -->
+        <mat-form-field fxFlex="25%">
+          <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.acronimo' | translate}}</mat-label>
+          <input matInput formControlName="acronimo" type="text" id="acronimo"
+            placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.acronimo' | translate}}">
         </mat-form-field>
       </div>
 
