@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleGrupo;
 import org.crue.hercules.sgi.rep.dto.prc.DetalleGrupoInvestigacionOutput.ResumenCosteIndirectoOutput;
 import org.crue.hercules.sgi.rep.dto.prc.DetalleGrupoInvestigacionOutput.ResumenSexenioOutput;
 import org.crue.hercules.sgi.rep.service.BaseReportServiceTest;
+import org.crue.hercules.sgi.rep.service.SgiReportExcelService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiPrcService;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,10 +41,13 @@ class InformeDetalleGrupoReportServiceTest extends BaseReportServiceTest {
   @Mock
   private SgiApiPrcService sgiApiPrcService;
 
+  @Mock
+  private SgiReportExcelService sgiReportExcelService;
+
   @BeforeEach
   public void setUp() throws Exception {
     informeDetalleGrupoReportService = new InformeDetalleGrupoReportService(
-        sgiConfigProperties, sgiApiConfService, sgiApiPrcService);
+        sgiConfigProperties, sgiApiConfService, sgiApiPrcService, sgiReportExcelService);
   }
 
   @Test

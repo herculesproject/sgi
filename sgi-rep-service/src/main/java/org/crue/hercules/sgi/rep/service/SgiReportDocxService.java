@@ -18,7 +18,6 @@ import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
-import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -51,8 +50,6 @@ public class SgiReportDocxService {
     this.sgiConfigProperties = sgiConfigProperties;
     this.sgiApiConfService = sgiApiConfService;
 
-    // Initialize the reporting engine
-    ClassicEngineBoot.getInstance().start();
   }
 
   /**

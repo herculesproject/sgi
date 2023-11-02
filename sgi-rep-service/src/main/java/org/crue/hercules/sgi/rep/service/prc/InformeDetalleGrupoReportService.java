@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleGrupo;
 import org.crue.hercules.sgi.rep.dto.prc.DetalleGrupoInvestigacionOutput.ResumenCosteIndirectoOutput;
 import org.crue.hercules.sgi.rep.dto.prc.DetalleGrupoInvestigacionOutput.ResumenSexenioOutput;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.service.SgiReportExcelService;
 import org.crue.hercules.sgi.rep.service.SgiReportService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiPrcService;
@@ -36,12 +37,14 @@ public class InformeDetalleGrupoReportService extends SgiReportService {
   private static final String NUMERO = "numero";
 
   private final SgiApiPrcService sgiApiPrcService;
+  private final SgiReportExcelService sgiReportExcelService;
 
   public InformeDetalleGrupoReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService,
-      SgiApiPrcService sgiApiPrcService) {
+      SgiApiPrcService sgiApiPrcService, SgiReportExcelService sgiReportExcelService) {
 
-    super(sgiConfigProperties, sgiApiConfService);
+    super(sgiConfigProperties, sgiApiConfService, sgiReportExcelService);
     this.sgiApiPrcService = sgiApiPrcService;
+    this.sgiReportExcelService = sgiReportExcelService;
   }
 
   private DefaultTableModel getTableModelGeneral(DetalleGrupoInvestigacionOutput detalleGrupo) {

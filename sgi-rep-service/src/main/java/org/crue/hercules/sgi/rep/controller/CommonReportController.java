@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.rep.controller;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto;
@@ -43,14 +45,18 @@ public class CommonReportController {
   public ResponseEntity<Resource> getDynamic(@Valid @RequestBody SgiDynamicReportDto sgiReport) {
 
     log.debug("getDynamic(SgiDynamicReportDto) - start");
-
-    byte[] reportContent = sgiDynamicReportService.generateDynamicReport(sgiReport);
-    ByteArrayResource archivo = new ByteArrayResource(reportContent);
-
     HttpHeaders headers = new HttpHeaders();
     headers.add("Content-Type", sgiReport.getOutputType().getType());
-
+    ByteArrayResource archivo = null;
+    try {
+      byte[] reportContent = sgiDynamicReportService.exportExcelOrCsv(sgiReport);
+      archivo = new ByteArrayResource(reportContent);
+    } catch (IOException e) {
+      log.error("getDynamic(SgiDynamicReportDto) - end", e);
+    }
+    log.debug("getDynamic(SgiDynamicReportDto) - end");
     return new ResponseEntity<>(archivo, headers, HttpStatus.OK);
+
   }
 
 }

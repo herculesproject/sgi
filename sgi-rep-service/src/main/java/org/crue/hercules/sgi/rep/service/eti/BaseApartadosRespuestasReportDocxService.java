@@ -6,6 +6,7 @@ import javax.swing.table.TableModel;
 
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ElementOutput;
+import org.crue.hercules.sgi.rep.service.SgiReportExcelService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -23,8 +24,9 @@ public class BaseApartadosRespuestasReportDocxService extends BaseApartadosRespu
 
   protected BaseApartadosRespuestasReportDocxService(SgiConfigProperties sgiConfigProperties,
       SgiApiConfService sgiApiConfService, BloqueService bloqueService, ApartadoService apartadoService,
-      SgiFormlyService sgiFormlyService, RespuestaService respuestaService) {
-    super(sgiConfigProperties, sgiApiConfService, bloqueService, apartadoService, sgiFormlyService, respuestaService);
+      SgiFormlyService sgiFormlyService, RespuestaService respuestaService, SgiReportExcelService sgiExcelService) {
+    super(sgiConfigProperties, sgiApiConfService, bloqueService, apartadoService, sgiFormlyService, respuestaService,
+        sgiExcelService);
   }
 
   @Override

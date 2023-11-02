@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.rep.dto.eti.ActaComentariosReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ElementOutput;
+import org.crue.hercules.sgi.rep.service.SgiReportExcelService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -41,9 +42,10 @@ public class BaseActaComentariosReportService extends BaseApartadosRespuestasRep
   protected BaseActaComentariosReportService(SgiConfigProperties sgiConfigProperties,
       SgiApiConfService sgiApiConfService,
       BloqueService bloqueService, ApartadoService apartadoService, SgiFormlyService sgiFormlyService,
-      RespuestaService respuestaService) {
+      RespuestaService respuestaService, SgiReportExcelService sgiExcelService) {
 
-    super(sgiConfigProperties, sgiApiConfService, bloqueService, apartadoService, sgiFormlyService, respuestaService);
+    super(sgiConfigProperties, sgiApiConfService, bloqueService, apartadoService, sgiFormlyService, respuestaService,
+        sgiExcelService);
   }
 
   protected Map<String, TableModel> generateTableModelFromReportOutput(ActaComentariosReportOutput actaComentarios) {

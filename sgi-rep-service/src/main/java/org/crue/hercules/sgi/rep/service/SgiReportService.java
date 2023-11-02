@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.rep.service;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -27,6 +28,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
+import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto.FieldOrientation;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -77,6 +79,8 @@ public class SgiReportService {
 
   private final SgiApiConfService sgiApiConfService;
 
+  private final SgiReportExcelService sgiExcelService;
+
   protected static final String EMPTY_TYPE = "empty";
   protected static final String COMPONENT_ID = "component_id";
   protected static final String COMPONENT_TYPE = "component_type";
@@ -97,9 +101,11 @@ public class SgiReportService {
   private static final String PATH_DELIMITER = "/";
   private static final String PATH_RESOURCES = PATH_DELIMITER + "public/resources/";
 
-  public SgiReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService) {
+  public SgiReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService,
+      SgiReportExcelService sgiExcelService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.sgiApiConfService = sgiApiConfService;
+    this.sgiExcelService = sgiExcelService;
 
     // Initialize the reporting engine
     ClassicEngineBoot.getInstance().start();
@@ -451,6 +457,24 @@ public class SgiReportService {
    */
   protected String getRepResourcesBaseURL() {
     return sgiApiConfService.getServiceBaseURL().concat(PATH_RESOURCES);
+  }
+
+  protected byte[] export(SgiDynamicReportDto sgiReport) throws IOException {
+    return sgiExcelService.export(sgiReport, getByteImageHeaderLogo());
+  }
+
+  /**
+   * Obtiene la imágen de la cabecera del informe
+   * 
+   * @return byte[]
+   */
+  private byte[] getByteImageHeaderLogo() {
+    try {
+      return sgiApiConfService.getResource("rep-common-header-logo");
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new GetDataReportException();
+    }
   }
 
 }

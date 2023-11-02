@@ -15,9 +15,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
-import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto;
-import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.ColumnType;
-import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.SgiColumReportDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueDto;
@@ -29,12 +26,8 @@ import org.crue.hercules.sgi.rep.dto.eti.ElementOutput;
 import org.crue.hercules.sgi.rep.dto.eti.RespuestaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiDynamicReportService;
+import org.crue.hercules.sgi.rep.service.SgiReportExcelService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
-import org.pentaho.reporting.engine.classic.core.MasterReport;
-import org.pentaho.reporting.engine.classic.core.SubReport;
-import org.pentaho.reporting.engine.classic.core.TableDataFactory;
-import org.pentaho.reporting.engine.classic.core.function.FormulaExpression;
-import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -56,6 +49,7 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
   private final ApartadoService apartadoService;
   private final SgiFormlyService sgiFormlyService;
   private final RespuestaService respuestaService;
+  private final SgiReportExcelService sgiExcelService;
 
   // @formatter:off
   protected static final String[] COLUMNS_TABLE_MODEL = new String[] { 
@@ -71,12 +65,14 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
 
   protected BaseApartadosRespuestasReportService(SgiConfigProperties sgiConfigProperties,
       SgiApiConfService sgiApiConfService, BloqueService bloqueService,
-      ApartadoService apartadoService, SgiFormlyService sgiFormlyService, RespuestaService respuestaService) {
-    super(sgiConfigProperties, sgiApiConfService);
+      ApartadoService apartadoService, SgiFormlyService sgiFormlyService, RespuestaService respuestaService,
+      SgiReportExcelService sgiExcelService) {
+    super(sgiConfigProperties, sgiApiConfService, sgiExcelService);
     this.bloqueService = bloqueService;
     this.apartadoService = apartadoService;
     this.sgiFormlyService = sgiFormlyService;
     this.respuestaService = respuestaService;
+    this.sgiExcelService = sgiExcelService;
   }
 
   protected ApartadoService getApartadoService() {
@@ -421,39 +417,6 @@ public abstract class BaseApartadosRespuestasReportService extends SgiDynamicRep
       .content(SgiFormlyService.P_HTML + question + SgiFormlyService.I_HTML + answer + SgiFormlyService.I_CLOSE_HTML +  SgiFormlyService.P_CLOSE_HTML )
       .build();
     // @formatter:on
-  }
-
-  protected void generateSubreportTableCrud(MasterReport report, String queryKey, TableModel tableModel,
-      String elementKey) {
-
-    Map<String, TableModel> hmTableModel = new HashMap<>();
-    hmTableModel.put(NAME_GENERAL_TABLE_MODEL, tableModel);
-
-    SgiDynamicReportDto sgiReportDto = SgiDynamicReportDto.builder().dataModel(hmTableModel).customWidth(WIDTH_PORTRAIT)
-        .columns(new ArrayList<>()).build();
-
-    for (int columnIndex = 0; columnIndex < tableModel.getColumnCount(); columnIndex++) {
-      String name = tableModel.getColumnName(columnIndex);
-      sgiReportDto.getColumns().add(SgiColumReportDto.builder().type(ColumnType.STRING).name(name).title(name).build());
-    }
-
-    SubReport subReportTableCrud = getSubreportTableCrud(sgiReportDto, 0);
-
-    FormulaExpression formulaExpression = new FormulaExpression();
-    formulaExpression.setName("expression_" + elementKey);
-    formulaExpression.setFormula("=IF(AND([" + COMPONENT_ID + "]=\"" + elementKey + "\";[" + COMPONENT_TYPE + "]=\""
-        + SgiFormlyService.TABLE_CRUD_TYPE + "\");\"true\";\"false\")");
-    subReportTableCrud.setStyleExpression(ElementStyleKeys.VISIBLE, formulaExpression);
-
-    TableDataFactory dataFactorySubReportTableCrud = new TableDataFactory();
-    dataFactorySubReportTableCrud.addTable(queryKey, tableModel);
-    subReportTableCrud.setDataFactory(dataFactorySubReportTableCrud);
-
-    subReportTableCrud.setQuery(queryKey);
-    if (elementKey.contains("memoriasProyecto")) {
-      subReportTableCrud.getReportFooter().setPagebreakBeforePrint(true);
-    }
-    report.getItemBand().addSubReport(subReportTableCrud);
   }
 
   /**
