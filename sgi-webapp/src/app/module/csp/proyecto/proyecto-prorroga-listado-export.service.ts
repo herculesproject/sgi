@@ -136,6 +136,7 @@ export class ProyectoProrrogaListadoExportService extends AbstractTableExportFil
         name: PRORROGA_IMPORTE_FIELD + idProrroga,
         title: titleProrroga + idProrroga + ': ' + this.translate.instant(PRORROGA_IMPORTE_KEY),
         type: ColumnType.NUMBER,
+        format: null
       };
       columns.push(columnImporteProrroga);
     }

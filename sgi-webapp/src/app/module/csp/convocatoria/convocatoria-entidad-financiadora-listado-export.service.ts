@@ -164,6 +164,7 @@ export class ConvocatoriaEntidadFinanciadoraListadoExportService
           + idEntidadFinanciadora + ': '
           + this.translate.instant(ENTIDAD_FINANCIADORA_IMPORTE_FINANCIACION_KEY),
         type: ColumnType.NUMBER,
+        format: null
       };
       columns.push(columnImporteFinanciacionEntidadFinanciadora);
 
@@ -173,6 +174,7 @@ export class ConvocatoriaEntidadFinanciadoraListadoExportService
           + idEntidadFinanciadora + ': '
           + this.translate.instant(ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY),
         type: ColumnType.NUMBER,
+        format: '#,#" "%'
       };
       columns.push(columnPorcentajeFinanciacionEntidadFinanciadora);
     }

@@ -172,7 +172,8 @@ export class ProyectoCalendarioFacturacionListadoExportService
       const columnIvaCalendarioFacturacion: ISgiColumnReport = {
         name: CALENDARIO_FACTURACION_IVA_FIELD + idCalendarioFacturacion,
         title: titleCalendarioFacturacion + idCalendarioFacturacion + ': ' + this.translate.instant(CALENDARIO_FACTURACION_IVA_KEY),
-        type: ColumnType.STRING,
+        type: ColumnType.NUMBER,
+        format: '#,#" "%'
       };
       columns.push(columnIvaCalendarioFacturacion);
 
@@ -286,8 +287,7 @@ export class ProyectoCalendarioFacturacionListadoExportService
       elementsRow.push(proyectoCalendarioFacturacion.numeroPrevision ?? '');
       elementsRow.push(LuxonUtils.toBackend(proyectoCalendarioFacturacion?.fechaEmision) ?? '');
       elementsRow.push(proyectoCalendarioFacturacion.importeBase.toString() ?? '');
-      elementsRow.push(proyectoCalendarioFacturacion.porcentajeIVA ?
-        this.percentPipe.transform(proyectoCalendarioFacturacion.porcentajeIVA / 100) : '');
+      elementsRow.push(proyectoCalendarioFacturacion.porcentajeIVA ? proyectoCalendarioFacturacion.porcentajeIVA / 100 : '');
       elementsRow.push(this.getImporteTotal(
         proyectoCalendarioFacturacion.importeBase, proyectoCalendarioFacturacion.porcentajeIVA
       ).toString() ?? '');
