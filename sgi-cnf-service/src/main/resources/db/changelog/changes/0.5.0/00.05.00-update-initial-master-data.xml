@@ -27,6 +27,61 @@
         <param name="name" value="rep-csp-certificado-autorizacion-proyecto-externo-prpt" />
       </whereParams>
     </delete>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-prc-detalle-grupo-docx" />
+      <column name="description"
+        value="Informe del detalle de grupo" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-prc-detalle-grupo.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-prc-detalle-grupo.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-prc-detalle-grupo-prpt" />
+      </whereParams>
+    </delete>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-prc-resumen-puntuacion-grupos-docx" />
+      <column name="description"
+        value="Informe del resumen de puntuación de grupos" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-prc-resumen-puntuacion-grupos.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-prc-resumen-puntuacion-grupos.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <insert tableName="resources">
+      <column name="name" value="rep-prc-detalle-produccion-investigador-docx" />
+      <column name="description"
+        value="Informe del detalle de grupos de producción por investigador" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-prc-detalle-produccion-investigador.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-prc-detalle-produccion-investigador.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-common-dynamic-portrait-prpt" />
+      </whereParams>
+    </delete>
+
+    <delete tableName="resources">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-common-dynamic-landscape-prpt" />
+      </whereParams>
+    </delete>
+
   </changeSet>
 
 </databaseChangeLog>
