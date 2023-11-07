@@ -12,8 +12,6 @@ export enum ConfigGlobal {
   ENTIDAD_IMPLANTACION = 'entidad-implantacion',
   ID_ENTIDAD_SGEMP = 'id-entidad-sgemp',
   REP_COMMON_HEADER_LOGO = 'rep-common-header-logo',
-  REP_COMMON_DYNAMIC_LANDSCAPE = 'rep-common-dynamic-landscape-prpt',
-  REP_COMMON_DYNAMIC_PORTRAIT = 'rep-common-dynamic-portrait-prpt',
   WEB_HEADER_LOGO_FEDER = 'web-header-logo-feder',
   WEB_HEADER_LOGO_FEDER_2X = 'web-header-logo-feder2x',
   WEB_HEADER_LOGO_FEDER_3X = 'web-header-logo-feder3x',
@@ -50,8 +48,6 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.WEB_HEADER_LOGO_UE_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE_2X`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_UE_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE_3X`), module: ConfigModule.CNF }],
     [ConfigGlobal.REP_COMMON_HEADER_LOGO, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_HEADER_LOGO`), module: ConfigModule.CNF }],
-    [ConfigGlobal.REP_COMMON_DYNAMIC_LANDSCAPE, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_DYNAMIC_LANDSCAPE`), module: ConfigModule.CNF }],
-    [ConfigGlobal.REP_COMMON_DYNAMIC_PORTRAIT, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_DYNAMIC_PORTRAIT`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_I18N_ES, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_ES`), module: ConfigModule.CNF }]
   ]);
 
