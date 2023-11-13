@@ -750,6 +750,8 @@
   "csp.identificador-justificacion.fecha-presentacion-justificacion": "Fecha presentación justificación",
   "csp.identificador-justificacion.identificador-justificacion": "Identificador justificación",
   "csp.identificador-justificacion.identificador-justificacion-tooltip": "El formato del identificador de justificación es {mask} ",
+  "csp.identificador-justificacion.identificador-justificacion.identificador-vinculado-gastos": "El ID de justificación que va a modificar/eliminar ya tiene gastos asociados a requerimientos ¿desea continuar?",
+  "csp.identificador-justificacion.identificador-justificacion.identificador-vinculado-requerimiento": "Existe un requerimiento asociado a este ID de justificación que va a modificar/eliminar ¿desea continuar?",
   "csp.identificador-justificacion.title": "Identificador de justificación",
   "csp.linea-investigacion": "Línea{count,plural,=0{} one{} other{s}} de Investigación",
   "csp.linea-investigacion.nombre": "Nombre",

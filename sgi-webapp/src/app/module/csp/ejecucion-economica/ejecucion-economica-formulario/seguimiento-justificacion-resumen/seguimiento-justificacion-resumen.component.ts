@@ -9,7 +9,6 @@ import { TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { ISeguimientoJustificacionAnualidad } from '@core/models/csp/seguimiento-justificacion-anualidad';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestFindOptions } from '@sgi/framework/http';
 import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
@@ -328,7 +327,6 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
     dialogRef.afterClosed().subscribe(
       (modalData: StatusWrapper<IProyectoPeriodoJustificacionWithTituloProyecto>) => {
         if (modalData) {
-          const { tituloProyecto, ...proyectoPeriodoJustificacion } = modalData.value;
           this.formPart.updatePeriodoJustificacion(modalData);
         }
       }

@@ -74,7 +74,7 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
           return from(periodosJustificacionListado)
             .pipe(
               mergeMap(periodoJustificacionListado =>
-                this.proyectoPeriodoJustifiacionService.checkDeleteable(periodoJustificacionListado.proyectoPeriodoJustificacion.value.id)
+                this.proyectoPeriodoJustifiacionService.hasRequerimientosJustificacion(periodoJustificacionListado.proyectoPeriodoJustificacion.value.id)
                   .pipe(
                     map(isDeleteable => {
                       periodoJustificacionListado.isProyectoPeriodoJustificacionDeleteable = isDeleteable;
