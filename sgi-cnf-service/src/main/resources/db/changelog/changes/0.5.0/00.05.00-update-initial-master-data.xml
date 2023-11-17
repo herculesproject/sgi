@@ -81,7 +81,140 @@
         <param name="name" value="rep-common-dynamic-landscape-prpt" />
       </whereParams>
     </delete>
+  </changeSet>
 
+  <changeSet context="!test" author="master" id="00.05.00-resources-update-oracle"
+    dbms="oracle">
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-acta.docx" />
+      <where>:name=:value AND dbms_lob.compare(value, default_value) = 0</where>
+      <whereParams>
+        <param name="name" value="rep-eti-acta-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-acta.docx" />
+     <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-acta-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-bloque-apartado-acta.docx" />
+      <where>:name=:value AND dbms_lob.compare(value, default_value) = 0</where>
+      <whereParams>
+        <param name="name" value="rep-eti-bloque-apartado-acta-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-bloque-apartado-acta.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-bloque-apartado-acta-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
+      <where>:name=:value AND dbms_lob.compare(value, default_value) = 0</where>
+      <whereParams>
+        <param name="name" value="rep-eti-ficha-evaluador-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-ficha-evaluador-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-mxx.docx" />
+      <where>:name=:value AND dbms_lob.compare(value, default_value) = 0</where>
+      <whereParams>
+        <param name="name" value="rep-eti-mxx-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-mxx.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-mxx-docx" />
+      </whereParams>
+    </update>
+
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="00.05.00-resources-update-!oracle" dbms="!oracle">
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-acta.docx" />
+        <where>:name=:value AND value=default_value</where>
+        <whereParams>
+        <param name="name" value="rep-eti-acta-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-acta.docx" />
+     <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-acta-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-bloque-apartado-acta.docx" />
+        <where>:name=:value AND value=default_value</where>
+        <whereParams>
+        <param name="name" value="rep-eti-bloque-apartado-acta-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-bloque-apartado-acta.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-bloque-apartado-acta-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
+        <where>:name=:value AND value=default_value</where>
+        <whereParams>
+        <param name="name" value="rep-eti-ficha-evaluador-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-ficha-evaluador.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-ficha-evaluador-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="value" valueBlobFile="blob/rep/rep-eti-mxx.docx" />
+        <where>:name=:value AND value=default_value</where>
+        <whereParams>
+        <param name="name" value="rep-eti-mxx-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/rep/rep-eti-mxx.docx" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="rep-eti-mxx-docx" />
+      </whereParams>
+    </update>
   </changeSet>
 
 </databaseChangeLog>
