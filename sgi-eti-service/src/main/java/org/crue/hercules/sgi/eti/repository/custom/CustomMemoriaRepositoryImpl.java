@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Comite_;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva_;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
@@ -143,12 +144,10 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
         sqFechaLimiteConvocatoria);
     Predicate retrospectivaSecretaria = cb.equal(
         joinMemoriaRetrospectiva.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id),
-        TipoEstadoMemoria.Tipo.EN_SECRETARIA.getId());
-    Predicate pteCorrecciones = cb.equal(joinMemoriaTipoEstado.get(TipoEstadoMemoria_.id),
-        TipoEstadoMemoria.Tipo.PENDIENTE_CORRECCIONES.getId());
+        EstadoRetrospectiva.Tipo.EN_SECRETARIA.getId());
 
     Predicate memoriasConvocatoriaOrdinariaExtraordinaria = cb.and(comiteConvocatoriaReunionOrdExtraord,
-        cb.or(cb.and(memoriasSecretaria, fechaEnvioMenorFechaLimite), retrospectivaSecretaria, pteCorrecciones));
+        cb.or(cb.and(memoriasSecretaria, fechaEnvioMenorFechaLimite), retrospectivaSecretaria));
 
     // Memorias convocatoria seguimiento
     Predicate comiteConvocatoriaReunionSeguimiento = cb.equal(joinMemoriaComite.get(Comite_.id),
