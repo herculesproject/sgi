@@ -66,20 +66,20 @@ public class InformeActaReportService extends SgiReportDocxService {
   private final ConvocatoriaReunionService convocatoriaReunionService;
   private final ActaService actaService;
   private final EvaluacionService evaluacionService;
-  private final BaseActaComentariosReportService baseActaComentariosReportService;
+  private final BaseApartadosRespuestasReportService baseApartadosRespuestasReportService;
 
   public InformeActaReportService(SgiConfigProperties sgiConfigProperties, PersonaService personaService,
       SgiApiConfService sgiApiConfService,
       ConvocatoriaReunionService convocatoriaReunionService, ActaService actaService,
       EvaluacionService evaluacionService,
-      BaseActaComentariosReportService baseActaComentariosReportService) {
+      BaseApartadosRespuestasReportService baseApartadosRespuestasReportService) {
 
     super(sgiConfigProperties, sgiApiConfService);
     this.personaService = personaService;
     this.convocatoriaReunionService = convocatoriaReunionService;
     this.actaService = actaService;
     this.evaluacionService = evaluacionService;
-    this.baseActaComentariosReportService = baseActaComentariosReportService;
+    this.baseApartadosRespuestasReportService = baseApartadosRespuestasReportService;
   }
 
   private XWPFDocument getDocument(ActaDto acta, HashMap<String, Object> dataReport, InputStream path) {
@@ -294,8 +294,9 @@ public class InformeActaReportService extends SgiReportDocxService {
 
               final Set<Long> apartados = new HashSet<>();
               comentarios
-                  .forEach(c -> baseActaComentariosReportService.getApartadoService().findTreeApartadosById(apartados,
-                      c.getApartado()));
+                  .forEach(
+                      c -> baseApartadosRespuestasReportService.getApartadoService().findTreeApartadosById(apartados,
+                          c.getApartado()));
 
               Long idFormulario = 0L;
 
@@ -319,7 +320,7 @@ public class InformeActaReportService extends SgiReportDocxService {
               .build();
               // @formatter:on
 
-              BloquesReportOutput reportOutput = baseActaComentariosReportService
+              BloquesReportOutput reportOutput = baseApartadosRespuestasReportService
                   .getDataFromApartadosAndRespuestas(etiBloquesReportInput);
 
               final int orden = comentariosMemoriaReportOutput.getBloques().size();

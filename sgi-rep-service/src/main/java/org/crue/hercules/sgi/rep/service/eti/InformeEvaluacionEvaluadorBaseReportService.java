@@ -53,7 +53,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
 
   private final EvaluacionService evaluacionService;
   private final PersonaService personaService;
-  private final BaseApartadosRespuestasReportDocxService baseApartadosRespuestasService;
+  private final BaseApartadosRespuestasReportService baseApartadosRespuestasService;
 
   private static final Long TIPO_ACTIVIDAD_PROYECTO_DE_INVESTIGACION = 1L;
   private static final Long TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = 3L;
@@ -64,7 +64,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
 
   protected InformeEvaluacionEvaluadorBaseReportService(SgiConfigProperties sgiConfigProperties,
       SgiApiConfService sgiApiConfService, PersonaService personaService,
-      EvaluacionService evaluacionService, BaseApartadosRespuestasReportDocxService baseApartadosRespuestasService) {
+      EvaluacionService evaluacionService, BaseApartadosRespuestasReportService baseApartadosRespuestasService) {
 
     super(sgiConfigProperties, sgiApiConfService);
     this.personaService = personaService;

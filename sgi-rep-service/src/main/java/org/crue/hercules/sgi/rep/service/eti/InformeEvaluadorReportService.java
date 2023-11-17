@@ -23,7 +23,7 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
 
   public InformeEvaluadorReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService,
       PersonaService personaService, EvaluacionService evaluacionService,
-      BaseApartadosRespuestasReportDocxService baseApartadosRespuestasService) {
+      BaseApartadosRespuestasReportService baseApartadosRespuestasService) {
 
     super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService, baseApartadosRespuestasService);
   }

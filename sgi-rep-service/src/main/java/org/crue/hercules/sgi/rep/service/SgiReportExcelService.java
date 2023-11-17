@@ -19,25 +19,28 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.ColumnType;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.SgiColumReportDto;
 import org.crue.hercules.sgi.rep.dto.SgiDynamicReportDto.SgiRowReportDto;
+import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -61,14 +64,17 @@ public class SgiReportExcelService {
   private static final String DEFAULT_FORMAT_INTEGER = "#";
 
   private final SgiConfigProperties sgiConfigProperties;
+  private final SgiApiConfService sgiApiConfService;
 
-  public SgiReportExcelService(SgiConfigProperties sgiConfigProperties) {
+  public SgiReportExcelService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService) {
     this.sgiConfigProperties = sgiConfigProperties;
+    this.sgiApiConfService = sgiApiConfService;
   }
 
-  public byte[] export(SgiDynamicReportDto sgiReport, byte[] headerImg) {
+  public byte[] export(SgiDynamicReportDto sgiReport) {
     log.debug("export(SgiDynamicReportDto sgiReport, byte[] headerImg) - start");
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    byte[] headerImg = getByteImageHeaderLogo();
     try {
       if (sgiReport.getOutputType().name().equalsIgnoreCase("csv")) {
 
@@ -79,8 +85,8 @@ public class SgiReportExcelService {
         if (sgiReport.getTitle() == null) {
           title = DEFAULT_TITLE;
         }
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet(title);
+        Workbook workbook = WorkbookFactory.create(false);
+        Sheet sheet = workbook.createSheet(title);
         writeHeaderLogo(workbook, sheet, sgiReport, headerImg);
         writeHeaderLine(workbook, sheet, sgiReport);
         writeDataLines(workbook, sheet, sgiReport);
@@ -97,16 +103,19 @@ public class SgiReportExcelService {
     return bos.toByteArray();
   }
 
-  private void writeHeaderLogo(XSSFWorkbook workbook, XSSFSheet sheet, SgiDynamicReportDto sgiReport,
+  private void writeHeaderLogo(Workbook workbook, Sheet sheet, SgiDynamicReportDto sgiReport,
       byte[] headerImgByte) {
     int headerImg = workbook.addPicture(headerImgByte, Workbook.PICTURE_TYPE_JPEG);
-    XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
-    XSSFClientAnchor headerImgAnchor = new XSSFClientAnchor();
-    Picture picture = drawing.createPicture(headerImgAnchor, headerImg);
+    ClientAnchor headerImgAnchor = new HSSFClientAnchor();
+    headerImgAnchor.setCol1(0);
+    headerImgAnchor.setCol2(1);
+    headerImgAnchor.setRow1(0);
+    headerImgAnchor.setRow2(1);
+    Picture picture = sheet.createDrawingPatriarch().createPicture(headerImgAnchor, headerImg);
     picture.resize(4);
   }
 
-  private void writeHeaderLine(XSSFWorkbook workbook, XSSFSheet sheet, SgiDynamicReportDto sgiReport) {
+  private void writeHeaderLine(Workbook workbook, Sheet sheet, SgiDynamicReportDto sgiReport) {
     Row row = sheet.createRow(5);
 
     int columnCount = 0;
@@ -116,7 +125,7 @@ public class SgiReportExcelService {
 
   }
 
-  private void writeDataLines(XSSFWorkbook workbook, XSSFSheet sheet, SgiDynamicReportDto sgiReport) {
+  private void writeDataLines(Workbook workbook, Sheet sheet, SgiDynamicReportDto sgiReport) {
     int rowCount = 6;
     if (CollectionUtils.isNotEmpty(sgiReport.getRows())) {
       List<SgiRowReportDto> rowsReport = sgiReport.getRows();
@@ -158,14 +167,14 @@ public class SgiReportExcelService {
     return bos.toByteArray();
   }
 
-  private void createCellHeader(XSSFWorkbook workbook, XSSFSheet sheet, Row row, int columnCount, Object value) {
+  private void createCellHeader(Workbook workbook, Sheet sheet, Row row, int columnCount, Object value) {
     CellStyle style = workbook.createCellStyle();
     style.setBorderBottom(BorderStyle.THIN);
     style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
     style.setBorderTop(BorderStyle.THIN);
     style.setTopBorderColor(IndexedColors.BLACK.getIndex());
-    XSSFFont font = workbook.createFont();
-    font.setFontHeight(10);
+    Font font = workbook.createFont();
+    font.setFontHeight((short) 200);
     font.setBold(true);
     style.setFont(font);
     sheet.autoSizeColumn(columnCount);
@@ -174,13 +183,13 @@ public class SgiReportExcelService {
     cell.setCellStyle(style);
   }
 
-  private void createCell(XSSFWorkbook workbook, XSSFSheet sheet, Row row, int columnCount, Object value,
+  private void createCell(Workbook workbook, Sheet sheet, Row row, int columnCount, Object value,
       SgiColumReportDto columnReportDto) {
     CellStyle style = workbook.createCellStyle();
     style.setBorderBottom(BorderStyle.THIN);
     style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-    XSSFFont font = workbook.createFont();
-    font.setFontHeight(10);
+    Font font = workbook.createFont();
+    font.setFontHeight((short) 200);
     style.setFont(font);
     sheet.autoSizeColumn(columnCount);
     Cell cell = row.createCell(columnCount);
@@ -307,6 +316,20 @@ public class SgiReportExcelService {
 
   private String formatInstantToString(Instant instantDate) {
     return formatInstantToString(instantDate, DATE_PATTERN_DEFAULT);
+  }
+
+  /**
+   * Obtiene la imágen de la cabecera del informe
+   * 
+   * @return byte[]
+   */
+  private byte[] getByteImageHeaderLogo() {
+    try {
+      return sgiApiConfService.getResource("rep-common-header-logo");
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new GetDataReportException();
+    }
   }
 
 }

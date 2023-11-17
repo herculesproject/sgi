@@ -38,7 +38,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
       SgiApiConfService sgiApiConfService, PersonaService personaService,
       EvaluacionService evaluacionService,
       ConfiguracionService configuracionService,
-      BaseApartadosRespuestasReportDocxService baseApartadosRespuestasService) {
+      BaseApartadosRespuestasReportService baseApartadosRespuestasService) {
 
     super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService, baseApartadosRespuestasService);
     this.configuracionService = configuracionService;

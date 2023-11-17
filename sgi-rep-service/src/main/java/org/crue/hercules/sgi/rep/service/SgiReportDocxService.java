@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -116,7 +117,11 @@ public class SgiReportDocxService {
    */
   protected String getErrorMessage(Exception e) {
     log.error(e.getMessage());
-    return "<b>" + e.getMessage() + "</b>";
+    String msgError = " - Error - ";
+    if (ObjectUtils.isNotEmpty(e.getMessage())) {
+      msgError = e.getMessage();
+    }
+    return msgError;
   }
 
   protected String formatInstantToString(Instant instantDate, String pattern) {

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.rep.controller;
 
-import org.crue.hercules.sgi.rep.service.SgiDynamicReportService;
+import org.crue.hercules.sgi.rep.service.SgiReportExcelService;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -11,6 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 class CommonReportControllerTest extends BaseControllerTest {
 
   @MockBean
-  private SgiDynamicReportService sgiDynamicReportService;
+  private SgiReportExcelService sgiReportExcelService;
 
 }
