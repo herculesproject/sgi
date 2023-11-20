@@ -19,7 +19,8 @@ export class TableProyectosRelacionadosComponent implements OnInit {
     'nombre',
     'responsables',
     'fechaInicio',
-    'fechaFin'
+    'fechaFin',
+    'fechaFinDefinitiva'
   ];
 
   readonly dataSource = new MatTableDataSource<IRelacionEjecucionEconomicaWithResponsables>();

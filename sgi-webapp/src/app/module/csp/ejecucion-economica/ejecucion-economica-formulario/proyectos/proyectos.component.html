@@ -83,6 +83,16 @@
         </td>
       </ng-container>
 
+      <!-- Fecha fin definitiva Column -->
+      <ng-container matColumnDef="fechaFinDefinitiva">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.fecha-fin-definitiva' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.fechaFinDefinitiva | luxon:'shortDate'}}
+        </td>
+      </ng-container>
+
       <!-- Porcentaje IVA Column -->
       <ng-container matColumnDef="iva">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>

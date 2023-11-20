@@ -30,6 +30,7 @@ export class ProyectosComponent extends FragmentComponent implements OnInit, OnD
     'responsables',
     'fechaInicio',
     'fechaFin',
+    'fechaFinDefinitiva',
     'iva',
     'causaExencion',
     'sectorIva',
