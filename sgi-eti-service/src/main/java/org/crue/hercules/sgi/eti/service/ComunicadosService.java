@@ -180,14 +180,14 @@ public class ComunicadosService {
     log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - end");
   }
 
-  public void enviarComunicadoCambiosEvaluacionEti(String comite, String nombreInvestigacion, String referenciaMemoria,
+  public void enviarComunicadoCambiosEvaluacionEti(String evaluador1Ref, String evaluador2Ref,
+      String nombreInvestigacion, String referenciaMemoria,
       String tituloSolicitudEvaluacion) throws JsonProcessingException {
     log.debug("enviarComunicadoCambiosEvaluacionEti(Evaluacion evaluacion) - start");
-    List<Evaluador> evaluadoresMemoria = evaluadorService
-        .findAllByComite(comite);
 
-    List<String> idsPersonaRef = evaluadoresMemoria.stream().map(Evaluador::getPersonaRef)
-        .collect(Collectors.toList());
+    List<String> idsPersonaRef = new ArrayList<>();
+    idsPersonaRef.add(evaluador1Ref);
+    idsPersonaRef.add(evaluador2Ref);
 
     if (idsPersonaRef == null) {
       log.debug(

@@ -890,7 +890,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     log.debug("enviarComunicado(Long idEvaluacion) - start");
     Evaluacion evaluacion = this.findById(idEvaluacion);
     try {
-      this.comunicadosService.enviarComunicadoCambiosEvaluacionEti(evaluacion.getMemoria().getComite().getComite(),
+      this.comunicadosService.enviarComunicadoCambiosEvaluacionEti(evaluacion.getEvaluador1().getPersonaRef(), evaluacion.getEvaluador2().getPersonaRef(),
           evaluacion.getMemoria().getComite().getNombreInvestigacion(), evaluacion.getMemoria().getNumReferencia(),
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
       log.debug("enviarComunicado(Long idEvaluacion) - end");
