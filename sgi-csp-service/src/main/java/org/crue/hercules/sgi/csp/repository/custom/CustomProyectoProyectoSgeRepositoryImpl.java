@@ -91,7 +91,9 @@ public class CustomProyectoProyectoSgeRepositoryImpl implements CustomProyectoPr
         root.get(ProyectoProyectoSge_.proyecto).get(Proyecto_.fechaFin).alias(
             ProyectoProyectoSgePredicateResolver.Property.FECHA_FIN_PROYECTO.getCode()),
         root.get(ProyectoProyectoSge_.proyectoSgeRef),
-        cb.literal(RelacionEjecucionEconomica.TipoEntidad.PROYECTO.toString()));
+        cb.literal(RelacionEjecucionEconomica.TipoEntidad.PROYECTO.toString()),
+        root.get(ProyectoProyectoSge_.proyecto).get(Proyecto_.fechaFinDefinitiva).alias(
+            ProyectoProyectoSgePredicateResolver.Property.FECHA_FIN_DEFINITIVA_PROYECTO.getCode()));
 
     countQuery.select(cb.count(rootCount));
 
