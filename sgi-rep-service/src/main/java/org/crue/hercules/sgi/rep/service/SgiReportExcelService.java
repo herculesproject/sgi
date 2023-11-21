@@ -232,7 +232,13 @@ public class SgiReportExcelService {
           }
           break;
         default:
-          cell.setCellValue((String) value);
+          try {
+            cell.setCellValue((String) value);
+          } catch (Exception e) {
+            log.error(
+                "createCell() - columnReportDto: " + columnReportDto.getTitle(), e);
+            cell.setCellValue(value.toString());
+          }
           break;
       }
     } else {

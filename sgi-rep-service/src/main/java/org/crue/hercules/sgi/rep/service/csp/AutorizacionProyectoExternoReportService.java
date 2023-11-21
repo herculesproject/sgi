@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.HashMap;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -101,17 +102,25 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
     dataReport.put("universidad", universidadString);
 
     String investigadorString = null;
+    String fieldInvestigador = "-";
     if (autorizacionProyectoExterno.getResponsableRef() != null) {
       try {
         PersonaDto persona = personaService.findById(autorizacionProyectoExterno.getResponsableRef());
         investigadorString = persona.getNombre() + " " + persona.getApellidos();
+        if (persona.getSexo().getId().equals("V")) {
+          fieldInvestigador = ApplicationContextSupport.getMessage("field.capitalize.investigador.masculino");
+        } else {
+          fieldInvestigador = ApplicationContextSupport.getMessage("field.capitalize.investigador.femenino");
+        }
       } catch (Exception e) {
         investigadorString = getErrorMessage(e);
       }
     } else {
       investigadorString = autorizacionProyectoExterno.getDatosResponsable();
+      fieldInvestigador = ApplicationContextSupport.getMessage("field.capitalize.investigador.masculinoFemenino");
     }
     dataReport.put("investigador", investigadorString);
+    dataReport.put("fieldCapitalizeInvestigador", fieldInvestigador);
 
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
     String pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
@@ -121,14 +130,19 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
   }
 
   private void getDatosSolicitante(AutorizacionDto autorizacionProyectoExterno, HashMap<String, Object> dataReport) {
+    boolean isSolicitanteMasculino = true;
     try {
       PersonaDto persona = personaService.findById(autorizacionProyectoExterno.getSolicitanteRef());
       dataReport.put("solicitanteNombre", persona.getNombre() + " " + persona.getApellidos());
       dataReport.put("solicitanteNif", persona.getNumeroDocumento());
+      if (!persona.getSexo().getId().equals("V")) {
+        isSolicitanteMasculino = false;
+      }
     } catch (Exception e) {
       dataReport.put("solicitanteNombre", getErrorMessage(e));
       dataReport.put("solicitanteNif", getErrorMessage(e));
     }
+    dataReport.put("isSolicitanteMasculino", isSolicitanteMasculino);
 
     try {
       VinculacionDto vinculacionPersona = personaService
