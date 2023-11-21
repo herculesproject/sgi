@@ -44,6 +44,7 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
     'responsables',
     'fechaInicio',
     'fechaFin',
+    'fechaFinDefinitiva',
     'tituloConvocatoria',
     'entidadesFinanciadoras',
     'importeConcedido',
