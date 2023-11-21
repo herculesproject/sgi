@@ -5,16 +5,15 @@
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Convocatoria -->
-        <mat-form-field fxFlex="25%">
+        <mat-form-field fxFlex="33%">
           <mat-label>{{'csp.solicitud.convocatoria' | translate}}</mat-label>
           <sgi-select-convocatoria [authorities]="['CSP-PRO-V', ' CSP-PRO-E', 'CSP-PRO-B', 'CSP-PRO-R']"
             placeholder="{{'csp.solicitud.convocatoria' | translate}}" formControlName="convocatoria" extended="false">
           </sgi-select-convocatoria>
         </mat-form-field>
 
-
         <!-- Estado solicitud -->
-        <mat-form-field fxFlex="25%">
+        <mat-form-field fxFlex="16%">
           <mat-label>{{'csp.solicitud.estado-solicitud' | translate}}</mat-label>
           <mat-select matNativeControl formControlName="estadoSolicitud">
             <mat-option [value]="undefined"></mat-option>
@@ -24,41 +23,25 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- Título Solicitud -->
-        <mat-form-field fxFlex="25%">
-          <mat-label>{{'csp.solicitud.titulo-listado' | translate}}</mat-label>
-          <input matInput formControlName="tituloSolicitud" type="text" id="tituloSolicitud"
-            placeholder="{{'csp.solicitud.titulo-listado' | translate}}">
+        <!-- Tipo formulario-->
+        <mat-form-field fxFlex="16%">
+          <mat-label>{{'csp.solicitud.formulario-solicitud' | translate}}</mat-label>
+          <mat-select matNativeControl formControlName="formularioSolicitud">
+            <mat-option *ngFor="let formularioSolicitud of FORMULARIO_SOLICITUD_MAP | keyvalue"
+              [value]="formularioSolicitud.key">
+              {{ formularioSolicitud.value | translate}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
 
         <!-- Acronimo -->
-        <mat-form-field fxFlex="25%">
+        <mat-form-field fxFlex="33%">
           <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.acronimo' | translate}}</mat-label>
           <input matInput formControlName="acronimo" type="text" id="acronimo"
             placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.acronimo' | translate}}">
         </mat-form-field>
       </div>
 
-
-      <!-- Acciones -->
-      <div class="buttons-final" *ngIf="!busquedaAvanzada">
-        <div class="col filter-button">
-          <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
-            <mat-icon>search</mat-icon> {{'btn.search'| translate}}
-          </button>
-          <button class="link-busqueda underline" aria-label="Center Align" mat-button
-            (click)="toggleBusquedaAvanzada()">
-            {{'btn.search.advanced'| translate}}
-          </button>
-          <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
-            translate}}
-          </button>
-        </div>
-      </div>
-    </form>
-
-    <form *ngIf="busquedaAvanzada" [ngClass]="busquedaAvanzada ? 'busqueda-avanzada' : ''" [formGroup]="formGroup"
-      fxLayout="column">
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- solicitante Investigador -->
         <mat-form-field fxFlex="33%">
@@ -83,6 +66,26 @@
         </mat-form-field>
       </div>
 
+      <!-- Acciones -->
+      <div class="buttons-final" *ngIf="!busquedaAvanzada">
+        <div class="col filter-button">
+          <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
+            <mat-icon>search</mat-icon> {{'btn.search'| translate}}
+          </button>
+          <button class="link-busqueda underline" aria-label="Center Align" mat-button
+            (click)="toggleBusquedaAvanzada()">
+            {{'btn.search.advanced'| translate}}
+          </button>
+          <button color="warn" aria-label="Center Align" (click)="onClearFilters()" mat-button>{{'btn.clean'|
+            translate}}
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <form *ngIf="busquedaAvanzada" [ngClass]="busquedaAvanzada ? 'busqueda-avanzada' : ''" [formGroup]="formGroup"
+      fxLayout="column">
+
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- plazoAbierto -->
         <mat-checkbox color="primary" formControlName="plazoAbierto">{{'csp.solicitud.plazo.abierto' | translate}}
@@ -92,6 +95,7 @@
       <div class="checkplazo" fxFlex fxLayout="row" fxLayoutGap="10px" *ngIf="formGroup.controls.plazoAbierto.value">
         {{'csp.solicitud.plazo-presentacion' | translate}}
       </div>
+
       <div fxFlex fxLayout="row" fxLayoutGap="10px" *ngIf="formGroup.controls.plazoAbierto.value">
         <!-- fechaInicioDesde -->
         <mat-form-field class=" input-form" fxFlex="25%">
@@ -131,6 +135,12 @@
       </div>
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Título Solicitud -->
+        <mat-form-field fxFlex="34%">
+          <mat-label>{{'csp.solicitud.titulo-listado' | translate}}</mat-label>
+          <input matInput formControlName="tituloSolicitud" type="text" id="tituloSolicitud"
+            placeholder="{{'csp.solicitud.titulo-listado' | translate}}">
+        </mat-form-field>
         <!-- Entidad convocantes -->
         <mat-form-field class="input-form" fxFlex="33%">
           <mat-label>{{'title.csp.solicitud-entidad-convocante' | translate}}</mat-label>
