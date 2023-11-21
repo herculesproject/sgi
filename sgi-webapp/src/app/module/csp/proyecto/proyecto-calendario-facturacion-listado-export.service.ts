@@ -151,7 +151,7 @@ export class ProyectoCalendarioFacturacionListadoExportService
       const columnNumPrevisionCalendarioFacturacion: ISgiColumnReport = {
         name: CALENDARIO_FACTURACION_NUM_PREVISION_FIELD + idCalendarioFacturacion,
         title: titleCalendarioFacturacion + idCalendarioFacturacion + ': ' + this.translate.instant(CALENDARIO_FACTURACION_NUM_PREVISION_KEY),
-        type: ColumnType.STRING,
+        type: ColumnType.NUMBER,
       };
       columns.push(columnNumPrevisionCalendarioFacturacion);
 

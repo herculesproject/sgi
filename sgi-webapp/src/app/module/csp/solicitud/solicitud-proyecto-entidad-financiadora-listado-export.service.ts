@@ -214,8 +214,7 @@ export class SolicitudProyectoEntidadFinanciadoraListadoExportService
         title: titleEntidadFinanciadora
           + idEntidadFinanciadora + ': '
           + this.translate.instant(ENTIDAD_FINANCIADORA_PORCENTAJE_FINANCIACION_KEY),
-        type: ColumnType.NUMBER,
-        format: '#,#" "%'
+        type: ColumnType.STRING
       };
       columns.push(columnPorcentajeFinanciacionEntidadFinanciadora);
 
