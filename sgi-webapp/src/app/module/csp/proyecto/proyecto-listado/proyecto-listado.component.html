@@ -49,20 +49,15 @@
           </mat-form-field>
         </div>
 
-        <!-- Estado -->
-        <ng-container>
-          <div class="col" fxFlex="15%">
-            <mat-form-field>
-              <mat-label>{{'csp.proyecto.estado' | translate}}</mat-label>
-              <mat-select matNativeControl formControlName="estado">
-                <mat-option [value]="undefined"></mat-option>
-                <mat-option *ngFor="let estado of ESTADO_MAP |  keyvalue" [value]="estado.key">
-                  {{ estado.value | translate}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </ng-container>
+        <!-- Unidad de gestión -->
+        <div class="col" fxFlex="1 1.5 auto">
+          <mat-form-field>
+            <mat-label>{{'csp.proyecto.unidad-gestion' | translate}}
+            </mat-label>
+            <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion">
+            </sgi-select-unidad-gestion>
+          </mat-form-field>
+        </div>
 
       </div>
 
@@ -87,8 +82,28 @@
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+        <!-- Modelo de ejecución -->
+        <mat-form-field fxFlex="15%" [fxFlexOrder]="fxFlexProperties.order">
+          <mat-label>{{'csp.convocatoria.modelo-ejecucion' | translate}}</mat-label>
+          <sgi-select-modelo-ejecucion #modeloEjecucion formControlName="modeloEjecucion"
+            [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
+            [resetOnChange]="unidadGestion.selectionChange" extended="false">
+          </sgi-select-modelo-ejecucion>
+        </mat-form-field>
+
+        <!-- Finalidades -->
+        <mat-form-field fxFlex="20%" [fxFlexOrder]="fxFlexProperties.order">
+          <mat-label>{{'csp.convocatoria.finalidad' | translate}}</mat-label>
+          <sgi-select-tipo-finalidad formControlName="finalidad"
+            [modeloEjecucionId]="formGroup.controls.modeloEjecucion.value?.id"
+            [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
+            [resetOnChange]="modeloEjecucion.selectionChange" extended="false">
+          </sgi-select-tipo-finalidad>
+        </mat-form-field>
+
         <!-- Acronimo -->
-        <div class="col">
+        <div class="col" [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field>
             <mat-label>{{'csp.proyecto.acronimo' | translate}}</mat-label>
             <input matInput placeholder="{{'csp.proyecto.acronimo' | translate}}" formControlName="acronimo">
@@ -96,8 +111,7 @@
         </div>
         <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-R'">
           <!-- Activo -->
-          <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
+          <div fxFlex="10%" [fxFlexOrder]="fxFlexProperties.order">
             <mat-form-field>
               <mat-label>{{'label.activo' | translate}}</mat-label>
               <mat-select matNativeControl formControlName="activo">
@@ -109,19 +123,23 @@
           </div>
         </ng-container>
 
-        <!-- Unidad de gestión -->
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
-          <mat-form-field class="input-form">
-            <mat-label>{{'csp.proyecto.unidad-gestion' | translate}}</mat-label>
-            <sgi-select-unidad-gestion formControlName="unidadGestion">
-            </sgi-select-unidad-gestion>
-          </mat-form-field>
-        </div>
+        <!-- Estado -->
+        <ng-container>
+          <div class="col" fxFlex="15%" [fxFlexOrder]="fxFlexProperties.order">
+            <mat-form-field>
+              <mat-label>{{'csp.proyecto.estado' | translate}}</mat-label>
+              <mat-select matNativeControl formControlName="estado">
+                <mat-option [value]="undefined"></mat-option>
+                <mat-option *ngFor="let estado of ESTADO_MAP |  keyvalue" [value]="estado.key">
+                  {{ estado.value | translate}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </ng-container>
 
         <!-- Finalizado -->
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
+        <div fxFlex="10%" [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field>
             <mat-label>{{'csp.proyecto.finalizado' | translate}}</mat-label>
             <sgi-select-boolean formControlName="finalizado">
@@ -130,8 +148,7 @@
         </div>
 
         <!-- Prorrogado -->
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
+        <div fxFlex="10%" [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field>
             <mat-label>{{'csp.proyecto.prorrogado' | translate}}</mat-label>
             <sgi-select-boolean formControlName="prorrogado">
@@ -204,9 +221,6 @@
             </sgi-select-entity>
           </mat-form-field>
         </div>
-      </div>
-      <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-        [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
         <!-- Responsable de proyecto -->
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
@@ -225,9 +239,6 @@
               formControlName="miembroEquipo" [colectivos]="colectivosMiembroEquipo"></sgi-select-persona>
           </mat-form-field>
         </div>
-      </div>
-      <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-        [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
         <!-- Socio colaborador -->
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
@@ -251,9 +262,6 @@
             </sgi-select-convocatoria>
           </mat-form-field>
         </div>
-      </div>
-      <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-        [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
         <!-- Entidad convocante -->
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
@@ -265,18 +273,13 @@
           </mat-form-field>
         </div>
         <!-- Plan de investigación -->
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
+        <div fxFlex="15%" [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form">
             <mat-label>{{'csp.proyecto.plan-investigacion' | translate}}</mat-label>
             <sgi-select-entity formControlName="planInvestigacion" [options]="planInvestigacion$ | async">
             </sgi-select-entity>
           </mat-form-field>
         </div>
-      </div>
-
-      <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-        [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
         <!-- Entidad financiadora -->
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
@@ -288,10 +291,8 @@
             </sgi-select-empresa>
           </mat-form-field>
         </div>
-
         <!-- Fuente financiacion -->
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
+        <div fxFlex="15%" [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field class="input-form">
             <mat-label>{{'csp.proyecto.fuente-financiacion' | translate}}</mat-label>
             <sgi-select-fuente-financiacion formControlName="fuenteFinanciacion" extended="false">

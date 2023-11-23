@@ -106,6 +106,7 @@
             <mat-label>{{'csp.convocatoria.finalidad' | translate}}</mat-label>
             <sgi-select-tipo-finalidad formControlName="finalidad"
               [modeloEjecucionId]="formGroup.controls.modeloEjecucion.value?.id"
+              [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
               [resetOnChange]="modeloEjecucion.selectionChange" extended="false">
             </sgi-select-tipo-finalidad>
           </mat-form-field>

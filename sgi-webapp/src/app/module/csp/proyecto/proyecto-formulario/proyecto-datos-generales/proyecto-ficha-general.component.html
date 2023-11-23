@@ -197,6 +197,7 @@
         <mat-label>{{'csp.proyecto.finalidad' | translate}}</mat-label>
         <sgi-select-tipo-finalidad formControlName="finalidad" [required]="formPart.abiertoRequired"
           [modeloEjecucionId]="formGroup.controls.modeloEjecucion.value?.id"
+          [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
           [resetOnChange]="modeloEjecucion.selectionChange">
         </sgi-select-tipo-finalidad>
         <sgi-field-info matSuffix
