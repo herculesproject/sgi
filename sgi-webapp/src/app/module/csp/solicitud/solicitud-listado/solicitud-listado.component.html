@@ -87,54 +87,6 @@
       fxLayout="column">
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
-        <!-- plazoAbierto -->
-        <mat-checkbox color="primary" formControlName="plazoAbierto">{{'csp.solicitud.plazo.abierto' | translate}}
-        </mat-checkbox>
-      </div>
-
-      <div class="checkplazo" fxFlex fxLayout="row" fxLayoutGap="10px" *ngIf="formGroup.controls.plazoAbierto.value">
-        {{'csp.solicitud.plazo-presentacion' | translate}}
-      </div>
-
-      <div fxFlex fxLayout="row" fxLayoutGap="10px" *ngIf="formGroup.controls.plazoAbierto.value">
-        <!-- fechaInicioDesde -->
-        <mat-form-field class=" input-form" fxFlex="25%">
-          <mat-label>{{'csp.solicitud.fecha-inicio-desde' | translate}}</mat-label>
-          <input matInput formControlName="fechaInicioDesde" [ngxMatDatetimePicker]="fechaInicioDesde">
-          <mat-datepicker-toggle matSuffix [for]="fechaInicioDesde"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #fechaInicioDesde showSeconds="true" [defaultTime]="[0,0,0]">
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
-
-        <!-- fechaInicioHasta -->
-        <mat-form-field class="input-form" fxFlex="25%">
-          <mat-label>{{'csp.solicitud.fecha-inicio-hasta' | translate}}</mat-label>
-          <input matInput formControlName="fechaInicioHasta" [ngxMatDatetimePicker]="fechaInicioHasta">
-          <mat-datepicker-toggle matSuffix [for]="fechaInicioHasta"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #fechaInicioHasta showSeconds="true" [defaultTime]="[23,59,59]">
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
-
-        <!-- fechaFinDesde -->
-        <mat-form-field class="input-form" fxFlex="25%">
-          <mat-label>{{'csp.solicitud.fecha-fin-desde' | translate}}</mat-label>
-          <input matInput formControlName="fechaFinDesde" [ngxMatDatetimePicker]="fechaFinDesde">
-          <mat-datepicker-toggle matSuffix [for]="fechaFinDesde"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #fechaFinDesde showSeconds="true" [defaultTime]="[0,0,0]">
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
-
-        <!-- fechaFinHasta -->
-        <mat-form-field class="input-form" fxFlex="25%">
-          <mat-label>{{'csp.solicitud.fecha-fin-hasta' | translate}}</mat-label>
-          <input matInput formControlName="fechaFinHasta" [ngxMatDatetimePicker]="fechaFinHasta">
-          <mat-datepicker-toggle matSuffix [for]="fechaFinHasta"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #fechaFinHasta showSeconds="true" [defaultTime]="[23,59,59]">
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
-      </div>
-
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Título Solicitud -->
         <mat-form-field fxFlex="34%">
           <mat-label>{{'csp.solicitud.titulo-listado' | translate}}</mat-label>
@@ -177,12 +129,61 @@
           </sgi-select-fuente-financiacion>
         </mat-form-field>
       </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- plazoAbierto -->
+        <mat-checkbox class="checkplazo" color="primary" formControlName="plazoAbierto">{{'csp.solicitud.plazo.abierto'
+          | translate}}
+        </mat-checkbox>
+      </div>
+
+      <div class="fieldset-form" fxFlex="100%">
+        {{'csp.solicitud.plazo-presentacion' | translate}}
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- fechaInicioDesde -->
+        <mat-form-field class=" input-form" fxFlex="25%">
+          <mat-label>{{'csp.solicitud.fecha-inicio-desde' | translate}}</mat-label>
+          <input matInput formControlName="fechaInicioDesde" [ngxMatDatetimePicker]="fechaInicioDesde">
+          <mat-datepicker-toggle matSuffix [for]="fechaInicioDesde"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #fechaInicioDesde showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+
+        <!-- fechaInicioHasta -->
+        <mat-form-field class="input-form" fxFlex="25%">
+          <mat-label>{{'csp.solicitud.fecha-inicio-hasta' | translate}}</mat-label>
+          <input matInput formControlName="fechaInicioHasta" [ngxMatDatetimePicker]="fechaInicioHasta">
+          <mat-datepicker-toggle matSuffix [for]="fechaInicioHasta"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #fechaInicioHasta showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+
+        <!-- fechaFinDesde -->
+        <mat-form-field class="input-form" fxFlex="25%">
+          <mat-label>{{'csp.solicitud.fecha-fin-desde' | translate}}</mat-label>
+          <input matInput formControlName="fechaFinDesde" [ngxMatDatetimePicker]="fechaFinDesde">
+          <mat-datepicker-toggle matSuffix [for]="fechaFinDesde"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #fechaFinDesde showSeconds="true" [defaultTime]="[0,0,0]">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+
+        <!-- fechaFinHasta -->
+        <mat-form-field class="input-form" fxFlex="25%">
+          <mat-label>{{'csp.solicitud.fecha-fin-hasta' | translate}}</mat-label>
+          <input matInput formControlName="fechaFinHasta" [ngxMatDatetimePicker]="fechaFinHasta">
+          <mat-datepicker-toggle matSuffix [for]="fechaFinHasta"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #fechaFinHasta showSeconds="true" [defaultTime]="[23,59,59]">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+      </div>
+
       <div class="fieldset-form" fxFlex="100%">
         {{'csp.solicitud.fecha-publicacion-convocatoria' | translate}}
       </div>
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- fechaPublicacionConvocatoriaDesde-->
-        <mat-form-field fxFlex="19%">
+        <mat-form-field fxFlex="25%">
           <mat-label>{{'csp.solicitud.fecha-publicacion-convocatoria-desde' | translate}}</mat-label>
           <input matInput formControlName="fechaPublicacionConvocatoriaDesde"
             [matDatepicker]="pickerFechaPublicacionConvocatoriaDesde"
@@ -193,7 +194,7 @@
         </mat-form-field>
 
         <!-- fechaPublicacionConvocatoriaHasta-->
-        <mat-form-field sgiEndDate fxFlex="19%">
+        <mat-form-field sgiEndDate fxFlex="25%">
           <mat-label>{{'csp.solicitud.fecha-publicacion-convocatoria-hasta' | translate}}</mat-label>
           <input matInput formControlName="fechaPublicacionConvocatoriaHasta"
             [matDatepicker]="pickerFechaPublicacionConvocatoriaHasta"

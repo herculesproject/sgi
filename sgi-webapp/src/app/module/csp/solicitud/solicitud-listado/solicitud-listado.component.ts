@@ -437,19 +437,16 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       .and('solicitanteExterno.apellidos', SgiRestFilterOperator.LIKE_ICASE, controls.apellidosSolicitanteExterno.value)
       ;
     if (this.busquedaAvanzada) {
-      if (controls.plazoAbierto.value) {
-        rsqlFilter
-          .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.plazoAbierto.value.toString())
-          .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
-            SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
-          .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
-            SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioHasta.value))
-          .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin',
-            SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinDesde.value))
-          .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin',
-            SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value));
-      }
       rsqlFilter
+        .and('abiertoPlazoPresentacionSolicitud', SgiRestFilterOperator.EQUALS, controls.plazoAbierto.value.toString())
+        .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
+          SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))
+        .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio',
+          SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioHasta.value))
+        .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin',
+          SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinDesde.value))
+        .and('convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin',
+          SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinHasta.value))
         .and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value)
         .and('convocatoria.fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL,
           LuxonUtils.toBackend(controls.fechaPublicacionConvocatoriaDesde.value))
