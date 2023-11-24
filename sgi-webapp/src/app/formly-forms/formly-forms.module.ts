@@ -16,6 +16,7 @@ import { InfoDivWrapperComponent } from './wrappers/info-div/info-div.wrapper';
 import { PanelWrapperComponent } from './wrappers/panel/panel.wrapper';
 import { SubtitleDivWrapperComponent } from './wrappers/subtitle-div/subtitle-div.wrapper';
 import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper';
+import { SelectProcedimientosTypeComponent } from './types/select-procedimientos.type';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
     SubtitleDivWrapperComponent,
     InfoDivWrapperComponent,
     TipoValorSocialComponent,
+    SelectProcedimientosTypeComponent,
     CKEditorTemplate
   ],
   imports: [
@@ -38,6 +40,11 @@ import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper
         {
           name: 'tipo-valor-social',
           component: TipoValorSocialComponent,
+          wrappers: ['form-field'],
+        },
+        {
+          name: 'selector-procedimientos',
+          component: SelectProcedimientosTypeComponent,
           wrappers: ['form-field'],
         },
         { name: 'documento', extends: 'radio' },
