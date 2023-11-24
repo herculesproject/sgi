@@ -1,0 +1,84 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+
+  <changeSet context="!test" author="master" id="00.05.00-respuesta">
+    <delete tableName="respuesta">
+      <where>apartado_id = (SELECT a.id FROM ${schemaPrefix}apartado a INNER JOIN
+      ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN ${schemaPrefix}apartado padre on
+      padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden = 3 AND padre.orden = 7 and
+      a.orden = 7) </where>
+    </delete>
+
+    <sql>UPDATE ${schemaPrefix}respuesta r SET r.apartado_id = ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 7 ) WHERE r.apartado_id in ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.ID INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 8 )</sql>
+
+    <sql>UPDATE ${schemaPrefix}respuesta r SET r.apartado_id = ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 8 ) WHERE r.apartado_id in ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.ID INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 9 )</sql>
+
+    <sql>UPDATE ${schemaPrefix}respuesta r SET r.apartado_id = ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 9 ) WHERE r.apartado_id in ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.ID INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 10 )</sql>
+
+    <sql>UPDATE ${schemaPrefix}respuesta r SET r.apartado_id = ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 10 ) WHERE r.apartado_id in ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.ID INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 11 )</sql>
+
+    <sql>UPDATE ${schemaPrefix}respuesta r SET r.apartado_id = ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 11 ) WHERE r.apartado_id in ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.ID INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 12 )</sql>
+
+    <sql>UPDATE ${schemaPrefix}respuesta r SET r.apartado_id = ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 12 ) WHERE r.apartado_id in ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.ID INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 13 )</sql>
+
+    <sql>UPDATE ${schemaPrefix}respuesta r SET r.apartado_id = ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 13 ) WHERE r.apartado_id in ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.ID INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 14 )</sql>
+
+    <sql>UPDATE ${schemaPrefix}respuesta r SET r.apartado_id = ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.id INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 14 ) WHERE r.apartado_id in ( SELECT a.id FROM
+      ${schemaPrefix}apartado a INNER JOIN ${schemaPrefix}bloque b on a.bloque_id = b.ID INNER JOIN
+      ${schemaPrefix}apartado padre on padre.id = a.padre_id WHERE b.formulario_id = 2 and b.orden =
+      3 and padre.orden = 7 and a.orden = 15 )</sql>
+  </changeSet>
+
+</databaseChangeLog>
