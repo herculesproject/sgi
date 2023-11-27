@@ -80,13 +80,13 @@ export class SelectModeloEjecucionComponent extends SelectServiceExtendedCompone
   }
 
   protected loadServiceOptions(): Observable<IModeloEjecucion[]> {
+    const findOptions: SgiRestFindOptions = {};
+
+    if (this.requestByExterno) {
+      findOptions.filter = (new RSQLSgiRestFilter('externo', SgiRestFilterOperator.EQUALS, this.externo.toString()));
+    }
+
     if (this.requestByUnidadGestion) {
-      const findOptions: SgiRestFindOptions = {};
-
-      if (this.requestByExterno) {
-        findOptions.filter = (new RSQLSgiRestFilter('externo', SgiRestFilterOperator.EQUALS, this.externo.toString()));
-      }
-
       if (this.unidadGestionRef) {
         if (findOptions.filter) {
           findOptions.filter.and(new RSQLSgiRestFilter('modelosUnidad.unidadGestionRef', SgiRestFilterOperator.EQUALS, this.unidadGestionRef?.toString()));
@@ -118,11 +118,7 @@ export class SelectModeloEjecucionComponent extends SelectServiceExtendedCompone
       );
     }
     else {
-      const findOptions: SgiRestFindOptions = {};
-      if (this.requestByExterno) {
-        findOptions.filter = (new RSQLSgiRestFilter('externo', SgiRestFilterOperator.EQUALS, this.externo.toString()));
-      }
-      return this.service.findAll(findOptions).pipe(map(response => response.items));
+      return this.service.findAllTodos(findOptions).pipe(map(response => response.items));
     }
   }
 

@@ -10,16 +10,14 @@ import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { Module } from '@core/module';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 import { MODELO_EJECUCION_ROUTE_NAMES } from '../../modelo-ejecucion/modelo-ejecucion-route-names';
 import { TipoFinalidadModalComponent } from '../../tipo-finalidad/tipo-finalidad-modal/tipo-finalidad-modal.component';
-import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
-import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'sgi-select-tipo-finalidad',
@@ -114,9 +112,8 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
         return this.findAllFinalidadByUnidadesGestionUsuario();
       } else {
         const findOptions: SgiRestFindOptions = {
-          filter: new RSQLSgiRestFilter('activo', SgiRestFilterOperator.EQUALS, 'true')
+          filter: new RSQLSgiRestFilter('modelosTipoFinalidad.modeloEjecucion.id', SgiRestFilterOperator.EQUALS, this.modeloEjecucionId.toString())
         };
-        findOptions.filter.and(new RSQLSgiRestFilter('modelosTipoFinalidad.modeloEjecucion.id', SgiRestFilterOperator.EQUALS, this.modeloEjecucionId.toString()));
         return this.service.findAll(findOptions).pipe(
           map(response => response.items)
         );
@@ -124,14 +121,12 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
 
     }
     else {
-      return this.service.findAll().pipe(map(response => response.items));
+      return this.service.findTodos().pipe(map(response => response.items));
     }
   }
 
   private findAllFinalidadByUnidadesGestionUsuario(): Observable<ITipoFinalidad[]> {
-    const findOptions: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('activo', SgiRestFilterOperator.EQUALS, 'true')
-    };
+
     if (this.unidadGestionRef) {
       const findOptionsUges: SgiRestFindOptions = {
         filter: new RSQLSgiRestFilter('modelosUnidad.unidadGestionRef', SgiRestFilterOperator.EQUALS, this.unidadGestionRef.toString())
@@ -140,7 +135,9 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
         map(response => response.items.map(item => item.id.toString())),
         switchMap(modelosEjecucion => {
           if (modelosEjecucion.length > 0) {
-            findOptions.filter.and(new RSQLSgiRestFilter('modelosTipoFinalidad.modeloEjecucion.id', SgiRestFilterOperator.IN, modelosEjecucion));
+            const findOptions: SgiRestFindOptions = {
+              filter: new RSQLSgiRestFilter('modelosTipoFinalidad.modeloEjecucion.id', SgiRestFilterOperator.IN, modelosEjecucion)
+            };
             return this.service.findAll(findOptions).pipe(
               map(response => response.items)
             );
@@ -161,7 +158,9 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
             return this.modeloEjecucionService.findAll(findOptionsUges).pipe(
               map(response => response.items.map(item => item.id.toString())),
               switchMap(modelosEjecucion => {
-                findOptions.filter.and(new RSQLSgiRestFilter('modelosTipoFinalidad.modeloEjecucion.id', SgiRestFilterOperator.IN, modelosEjecucion));
+                const findOptions: SgiRestFindOptions = {
+                  filter: new RSQLSgiRestFilter('modelosTipoFinalidad.modeloEjecucion.id', SgiRestFilterOperator.IN, modelosEjecucion)
+                };
                 return this.service.findAll(findOptions).pipe(
                   map(response => response.items)
                 );
