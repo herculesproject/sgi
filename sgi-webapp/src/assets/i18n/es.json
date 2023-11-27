@@ -1119,7 +1119,7 @@
   "csp.proyecto-prorroga.importe": "Importe concedido en prórroga",
   "csp.proyecto-prorroga.numero-prorroga": "Número de prórroga",
   "csp.proyecto-prorroga.observaciones": "Observaciones",
-  "csp.proyecto-proyecto-sge.codigo-sge": "Código de identificación SGE",
+  "csp.proyecto-proyecto-sge.codigo-sge": "Código SGE",
   "csp.proyecto-proyecto-sge.identificador-sge": "Identificador SGE",
   "csp.proyecto-proyecto-sge.sector-iva": "Sector IVA",
   "csp.proyecto-relacion": "Relaci{count,plural,=0{ones} one{ón} other{ones}}",
