@@ -111,7 +111,7 @@ public class TipoFinalidadController {
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-INV-V', 'CSP-ME-C', 'CSP-ME-E', 'CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-MOD-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-INV-V', 'CSP-ME-C', 'CSP-ME-E', 'CSP-PRO-E', 'CSP-PRO-V', 'CSP-PRO-MOD-V', 'CSP-CNV-V', 'CSP-CNV-E')")
   public ResponseEntity<List<TipoFinalidad>> findAll(@RequestParam(name = "q", required = false) String query) {
     log.debug("findAll(String query) - start");
     List<TipoFinalidad> returnValue = service.findAll(query);
@@ -132,7 +132,7 @@ public class TipoFinalidadController {
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
   @GetMapping("/todos")
-  @PreAuthorize("hasAnyAuthority('CSP-TFIN-V','CSP-TFIN-C','CSP-TFIN-E', 'CSP-TFIN-B', 'CSP-TFIN-R')")
+  @PreAuthorize("hasAnyAuthority('CSP-TFIN-V','CSP-TFIN-C','CSP-TFIN-E', 'CSP-TFIN-B', 'CSP-TFIN-R', 'CSP-PRO-V', 'CSP-PRO-E', 'CSP-CNV-V', 'CSP-CNV-E')")
   public ResponseEntity<Page<TipoFinalidad>> findAllTodos(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllTodos(String query,Pageable paging) - start");
