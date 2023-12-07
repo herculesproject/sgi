@@ -3,10 +3,12 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,19 +31,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeService {
 
   private final ProyectoProyectoSgeRepository repository;
+  private final ProyectoRepository proyectoRepository;
   private final ProyectoHelper proyectoHelper;
   private final SgiConfigProperties sgiConfigProperties;
-
-  public ProyectoProyectoSgeServiceImpl(ProyectoProyectoSgeRepository proyectoProrrogaRepository,
-      ProyectoHelper proyectoHelper, SgiConfigProperties sgiConfigProperties) {
-    this.repository = proyectoProrrogaRepository;
-    this.proyectoHelper = proyectoHelper;
-    this.sgiConfigProperties = sgiConfigProperties;
-  }
 
   /**
    * Guarda la entidad {@link ProyectoProyectoSge}.
@@ -57,6 +55,11 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
     Assert.notNull(proyectoProyectoSge.getProyectoId(), "Id Proyecto no puede ser null para crear ProyectoProyectoSge");
     Assert.notNull(proyectoProyectoSge.getProyectoSgeRef(),
         "Ref ProyectoSge no puede ser null para crear ProyectoProyectoSge");
+
+    if (!proyectoRepository.existsById(proyectoProyectoSge.getProyectoId())) {
+      throw new ProyectoNotFoundException(proyectoProyectoSge.getProyectoId());
+    }
+
     ProyectoProyectoSge returnValue = repository.save(proyectoProyectoSge);
     log.debug("create(ProyectoProyectoSge proyectoProyectoSge) - end");
     return returnValue;

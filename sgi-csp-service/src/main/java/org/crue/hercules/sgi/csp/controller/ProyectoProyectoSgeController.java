@@ -60,7 +60,7 @@ public class ProyectoProyectoSgeController {
    * @return Nuevo {@link ProyectoProyectoSge} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-PRO-E')")
   public ResponseEntity<ProyectoProyectoSge> create(@Valid @RequestBody ProyectoProyectoSge proyectoProyectoSge) {
     log.debug("create(ProyectoProyectoSge proyectoProyectoSge) - start");
     ProyectoProyectoSge returnValue = service.create(proyectoProyectoSge);
@@ -92,7 +92,7 @@ public class ProyectoProyectoSgeController {
    *         y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-EJEC-V', 'CSP-EJEC-E')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-EJEC-V', 'CSP-EJEC-E')")
   public ResponseEntity<Page<ProyectoProyectoSge>> findAll(@RequestParam(name = "q", required = false) String query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
