@@ -11,11 +11,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.collections4.CollectionUtils;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaWithRelatedProyectoFacturacionException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProrrogaSpecifications;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
@@ -44,17 +48,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
   private final ProrrogaDocumentoRepository prorrogaDocumentoRepository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
   private final ProyectoHelper proyectoHelper;
-
-  public ProyectoProrrogaServiceImpl(ProyectoProrrogaRepository proyectoProrrogaRepository,
-      ProyectoRepository proyectoRepository, ProrrogaDocumentoRepository prorrogaDocumentoRepository,
-      ProyectoEquipoRepository proyectoEquipoRepository,
-      ProyectoHelper proyectoHelper) {
-    this.repository = proyectoProrrogaRepository;
-    this.proyectoRepository = proyectoRepository;
-    this.prorrogaDocumentoRepository = prorrogaDocumentoRepository;
-    this.proyectoEquipoRepository = proyectoEquipoRepository;
-    this.proyectoHelper = proyectoHelper;
-  }
+  private final ProyectoFacturacionRepository proyectoFacturacionRepository;
 
   /**
    * Guarda la entidad {@link ProyectoProrroga}.
@@ -161,6 +155,10 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
       }
       return proyectoProrroga;
     }).orElseThrow(() -> new ProyectoProrrogaNotFoundException(id));
+
+    if (proyectoFacturacionRepository.existsByProyectoProrrogaId(id)) {
+      throw new ProyectoProrrogaWithRelatedProyectoFacturacionException();
+    }
 
     // Borrado de los documentos asociados a la prórroga
     prorrogaDocumentoRepository.deleteByProyectoProrrogaId(id);

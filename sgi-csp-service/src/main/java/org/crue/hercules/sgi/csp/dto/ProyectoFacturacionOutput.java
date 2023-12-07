@@ -31,6 +31,7 @@ public class ProyectoFacturacionOutput implements Serializable {
   private Long proyectoId;
   private EstadoValidacionIP estadoValidacionIP;
   private TipoFacturacion tipoFacturacion;
+  private Long proyectoProrrogaId;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

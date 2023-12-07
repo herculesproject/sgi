@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
@@ -50,13 +51,15 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
   private ProyectoResponsableEconomicoRepository proyectoResponsableEconomicoRepository;
   @Mock
   private ProyectoHelper proyectoHelper;
+  @Mock
+  private ProyectoFacturacionRepository proyectoFacturacionRepository;
 
   private ProyectoProrrogaService service;
 
   @BeforeEach
   void setUp() throws Exception {
     service = new ProyectoProrrogaServiceImpl(repository, proyectoRepository, prorrogaDocumentoRepository,
-        proyectoEquipoRepository, proyectoHelper);
+        proyectoEquipoRepository, proyectoHelper, proyectoFacturacionRepository);
   }
 
   @Test

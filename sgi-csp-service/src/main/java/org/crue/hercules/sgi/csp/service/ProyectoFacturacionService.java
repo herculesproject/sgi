@@ -94,6 +94,7 @@ public class ProyectoFacturacionService {
     beforeUpdate.setTipoFacturacion(toUpdate.getTipoFacturacion());
     beforeUpdate.setFechaEmision(toUpdate.getFechaEmision());
     beforeUpdate.setFechaConformidad(toUpdate.getFechaConformidad());
+    beforeUpdate.setProyectoProrrogaId(toUpdate.getProyectoProrrogaId());
 
     if (toUpdate.getEstadoValidacionIP().getEstado() != beforeUpdate.getEstadoValidacionIP().getEstado()) {
       beforeUpdate.setEstadoValidacionIP(persistEstadoValidacionIP(toUpdate.getEstadoValidacionIP(), toUpdate.getId()));
