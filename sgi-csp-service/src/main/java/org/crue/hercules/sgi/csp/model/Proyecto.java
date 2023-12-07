@@ -169,6 +169,10 @@ public class Proyecto extends BaseEntity {
   @Column(name = "paquetes_trabajo", nullable = true)
   private Boolean permitePaquetesTrabajo;
 
+  /** IVA deducible */
+  @Column(name = "iva_deducible", nullable = true)
+  private Boolean ivaDeducible;
+
   /** Iva */
   @ManyToOne
   @JoinColumn(name = "proyecto_iva_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PROYECTO_PROYECTOIVA"))

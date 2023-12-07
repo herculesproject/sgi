@@ -24,4 +24,10 @@
       referencedColumnNames="id" referencedTableName="proyecto_prorroga" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="0.5.0-3">
+    <addColumn tableName="proyecto">
+      <column name="iva_deducible" type="BOOLEAN" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
