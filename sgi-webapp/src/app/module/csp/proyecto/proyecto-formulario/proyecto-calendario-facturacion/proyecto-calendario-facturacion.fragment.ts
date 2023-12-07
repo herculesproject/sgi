@@ -3,6 +3,7 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoFacturacionService } from '@core/services/csp/proyecto-facturacion/proyecto-facturacion.service';
+import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { FacturaPrevistaEmitidaService } from '@core/services/sge/factura-prevista-emitida/factura-prevista-emitida.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -29,6 +30,7 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
     private proyectoService: ProyectoService,
     private proyectoFacturacionService: ProyectoFacturacionService,
     private facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
+    private proyectoProrrogaService: ProyectoProrrogaService,
     private readonly isInvestigador: boolean
   ) {
     super(key);
@@ -69,7 +71,20 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
               } else {
                 return of(data);
               }
-            }), toArray(),
+            }),
+            mergeMap(data => {
+              if (!data.value.proyectoProrroga) {
+                return of(data);
+              }
+
+              return this.proyectoProrrogaService.findById(data.value.proyectoProrroga.id).pipe(
+                map(proyectoProrroga => {
+                  data.value.proyectoProrroga = proyectoProrroga;
+                  return data;
+                })
+              );
+            }),
+            toArray(),
             map(() => {
               return response;
             })

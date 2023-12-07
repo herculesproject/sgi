@@ -12,4 +12,5 @@ export interface IProyectoFacturacionResponse {
   proyectoId: number;
   tipoFacturacion: ITipoFacturacion;
   estadoValidacionIP: IEstadoValidacionIP;
+  proyectoProrrogaId: number;
 }

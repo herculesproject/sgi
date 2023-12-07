@@ -48,7 +48,8 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
     'iva',
     'importeTotal',
     'comentario',
-    'hitoFacturacion',
+    'tipoFacturacion',
+    'prorroga',
     'fechaConformidad',
     'numFacturaEmitida',
     'validacionIP',
@@ -117,7 +118,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
 
     this.dataSource.sortingDataAccessor = (wrapper, property) => {
       switch (property) {
-        case 'hitoFacturacion':
+        case 'tipoFacturacion':
           return wrapper.value.tipoFacturacion.nombre;
         case 'importeTotal':
           return this.getImporteTotal(wrapper.value.importeBase, wrapper.value.porcentajeIVA);
@@ -127,6 +128,8 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
           return wrapper.value.numeroPrevision;
         case 'iva':
           return wrapper.value.porcentajeIVA;
+        case 'prorroga':
+          return wrapper.value.proyectoProrroga.numProrroga;
         default:
           return wrapper.value[property];
       }
@@ -175,6 +178,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
     proyectoFacturacion: IProyectoFacturacionData,
     row: number, action: DialogAction): void {
     const modalData: IProyectoCalendarioFacturacionModalData = {
+      proyectoId: this.formPart.getKey() as number,
       proyectoFacturacion,
       porcentajeIVA: proyectoFacturacion.porcentajeIVA || this.formPart.proyectoIVA,
       action

@@ -32,6 +32,8 @@ import { SelectProyectoProyectoSgeComponent } from './select-proyecto-proyecto-s
 import { SearchProyectoModalComponent } from './select-proyecto/dialog/search-proyecto.component';
 import { SelectProyectoComponent } from './select-proyecto/select-proyecto.component';
 import { SelectRequerimientoJustificacionComponent } from './select-requerimiento-justificacion/select-requerimiento-justificacion.component';
+import { SelectRolEquipoComponent } from './select-rol-equipo/select-rol-equipo.component';
+import { SelectRolSocioComponent } from './select-rol-socio/select-rol-socio.component';
 import { SelectTipoAmbitoGeograficoComponent } from './select-tipo-ambito-geografico/select-tipo-ambito-geografico.component';
 import { SelectTipoDocumentoComponent } from './select-tipo-documento/select-tipo-documento.component';
 import { SelectTipoEnlaceComponent } from './select-tipo-enlace/select-tipo-enlace.component';
@@ -44,8 +46,7 @@ import { SelectTipoRegimenConcurrenciaComponent } from './select-tipo-regimen-co
 import { SelectTipoRequerimientoComponent } from './select-tipo-requerimiento/select-tipo-requerimiento.component';
 import { SelectUnidadGestionComponent } from './select-unidad-gestion/select-unidad-gestion.component';
 import { SolicitiudPresupuestoModalComponent } from './solicitud-presupuesto-modal/solicitud-presupuesto-modal.component';
-import { SelectRolSocioComponent } from './select-rol-socio/select-rol-socio.component';
-import { SelectRolEquipoComponent } from './select-rol-equipo/select-rol-equipo.component';
+import { SelectProyectoProrrogaComponent } from './select-proyecto-prorroga/select-proyecto-prorroga.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { SelectRolEquipoComponent } from './select-rol-equipo/select-rol-equipo.
     SelectProyectoAnualidadComponent,
     SelectProyectoComponent,
     SelectProyectoPeriodoJustificacionComponent,
+    SelectProyectoProrrogaComponent,
     SelectProyectoProyectoSgeComponent,
     SelectRequerimientoJustificacionComponent,
     SelectRolEquipoComponent,
@@ -119,6 +121,7 @@ import { SelectRolEquipoComponent } from './select-rol-equipo/select-rol-equipo.
     SelectProyectoAnualidadComponent,
     SelectProyectoComponent,
     SelectProyectoPeriodoJustificacionComponent,
+    SelectProyectoProrrogaComponent,
     SelectProyectoProyectoSgeComponent,
     SelectRequerimientoJustificacionComponent,
     SelectRolEquipoComponent,

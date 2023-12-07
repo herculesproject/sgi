@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IEstadoValidacionIP, TipoEstadoValidacion, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
+import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP, TipoEstadoValidacion } from '@core/models/csp/estado-validacion-ip';
 import { ITipoFacturacion } from '@core/models/csp/tipo-facturacion';
 import { TipoFacturacionService } from '@core/services/csp/tipo-facturacion/tipo-facturacion.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,6 +17,7 @@ export enum DialogAction {
   NEW = 'NEW', EDIT = 'EDIT', VALIDAR_IP = 'VALIDAR_IP'
 }
 export interface IProyectoCalendarioFacturacionModalData {
+  proyectoId: number;
   proyectoFacturacion: IProyectoFacturacionData;
   porcentajeIVA?: number;
   action: DialogAction;
@@ -115,7 +116,8 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       importeBase: this.formGroup.controls.importeBase.value,
       porcentajeIVA: this.formGroup.controls.porcentajeIVA.value,
       comentario: this.formGroup.controls.comentario.value,
-      tipoFacturacion: this.formGroup.controls.hitoFacturacion.value
+      tipoFacturacion: this.formGroup.controls.tipoFacturacion.value,
+      proyectoProrroga: this.formGroup.controls.proyectoProrroga.value
     };
     return this.data;
   }
@@ -132,7 +134,8 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       importeBase: new FormControl(data?.importeBase, [Validators.required]),
       porcentajeIVA: new FormControl(isNaN(data?.porcentajeIVA) ? this.data?.porcentajeIVA : data?.porcentajeIVA, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(0), Validators.max(100)]),
       comentario: new FormControl(data?.comentario, [Validators.maxLength(COMENTARIO_MAX_LENGTH)]),
-      hitoFacturacion: new FormControl(data?.tipoFacturacion),
+      tipoFacturacion: new FormControl(data?.tipoFacturacion),
+      proyectoProrroga: new FormControl(data?.proyectoProrroga),
       nuevoEstadoValidacionIP: new FormControl(null),
       mensajeMotivoRechazo: new FormControl('')
     });
@@ -149,7 +152,8 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       form.controls.importeBase.disable({ emitEvent: false });
       form.controls.porcentajeIVA.disable({ emitEvent: false });
       form.controls.comentario.disable({ emitEvent: false });
-      form.controls.hitoFacturacion.disable({ emitEvent: false });
+      form.controls.tipoFacturacion.disable({ emitEvent: false });
+      form.controls.proyectoProrroga.disable({ emitEvent: false });
       form.controls.nuevoEstadoValidacionIP.setValidators([Validators.required]);
     }
 

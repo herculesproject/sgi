@@ -1,5 +1,5 @@
-import { IEstadoValidacionIP } from '@core/models/csp/estado-validacion-ip';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
+import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IProyectoFacturacionResponse } from './proyecto-facturacion-response';
@@ -19,7 +19,8 @@ class ProyectoFacturacionResponseConverter extends
       numeroPrevision: value.numeroPrevision,
       porcentajeIVA: value.porcentajeIVA,
       proyectoId: value.proyectoId,
-      tipoFacturacion: value.tipoFacturacion
+      tipoFacturacion: value.tipoFacturacion,
+      proyectoProrroga: value.proyectoProrrogaId ? { id: value.proyectoProrrogaId } as IProyectoProrroga : null
     };
   }
 
@@ -34,7 +35,8 @@ class ProyectoFacturacionResponseConverter extends
       numeroPrevision: value.numeroPrevision,
       porcentajeIVA: value.porcentajeIVA,
       proyectoId: value.proyectoId,
-      tipoFacturacion: value.tipoFacturacion
+      tipoFacturacion: value.tipoFacturacion,
+      proyectoProrrogaId: value.proyectoProrroga?.id
     };
   }
 
