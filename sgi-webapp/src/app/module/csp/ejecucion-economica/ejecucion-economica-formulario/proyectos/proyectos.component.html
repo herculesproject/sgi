@@ -93,6 +93,17 @@
         </td>
       </ng-container>
 
+      <!-- IVA deducible Column -->
+      <ng-container matColumnDef="ivaDeducible">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.ejecucion-economica.iva-deducible' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.ivaDeducible === undefined || element.ivaDeducible === null ? ''
+          : ((element.ivaDeducible ? 'label.si' : 'label.no') | translate)}}
+        </td>
+      </ng-container>
+
       <!-- Porcentaje IVA Column -->
       <ng-container matColumnDef="iva">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -119,7 +130,7 @@
           {{'csp.ejecucion-economica.sector-iva' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.sectorIva === undefined ? ''
+          {{element.sectorIva === undefined || element.sectorIva === null ? ''
           : ((element.sectorIva ? 'label.si' : 'label.no') | translate)}}
         </td>
       </ng-container>

@@ -250,6 +250,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       colaborativo: new FormControl(null),
       coordinadorExterno: new FormControl(null),
       permitePaquetesTrabajo: new FormControl(null),
+      ivaDeducible: new FormControl(null),
       iva: new FormControl(null, [
         Validators.min(0),
         Validators.max(100),
@@ -507,6 +508,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       colaborativo: proyecto.coordinado ? proyecto.colaborativo : null,
       coordinadorExterno: proyecto.coordinado ? proyecto.coordinadorExterno : null,
       permitePaquetesTrabajo: proyecto.permitePaquetesTrabajo,
+      ivaDeducible: proyecto.ivaDeducible,
       iva: proyecto.iva?.iva ?? null,
       causaExencion: proyecto.causaExencion,
       observaciones: proyecto.observaciones,
@@ -569,6 +571,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.colaborativo = form.colaborativo.value;
     this.proyecto.coordinado = form.coordinado.value;
     this.proyecto.permitePaquetesTrabajo = form.permitePaquetesTrabajo.value;
+    this.proyecto.ivaDeducible = form.ivaDeducible.value;
     this.proyecto.iva = {} as IProyectoIVA;
     this.proyecto.iva.iva = form.iva.value;
 

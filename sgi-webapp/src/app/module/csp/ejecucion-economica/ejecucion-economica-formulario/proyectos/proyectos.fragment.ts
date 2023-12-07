@@ -9,6 +9,7 @@ import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-eco
 
 export interface IRelacionEjecucionEconomicaWithIva extends IRelacionEjecucionEconomicaWithResponsables {
   iva: number;
+  ivaDeducible: boolean;
   causaExencion: CausaExencion;
   sectorIva: boolean;
 }
@@ -33,6 +34,7 @@ export class ProyectosFragment extends Fragment {
           return this.proyectoService.findById(relacion.id).pipe(
             map(proyecto => {
               relacion.iva = proyecto.iva?.iva;
+              relacion.ivaDeducible = proyecto.ivaDeducible;
               relacion.causaExencion = proyecto.causaExencion;
               relacion.sectorIva = this.proyectoSge.sectorIva;
               return relacion;

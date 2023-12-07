@@ -59,6 +59,8 @@ export interface IProyecto {
   permitePaquetesTrabajo: boolean;
   /** iva */
   iva: IProyectoIVA;
+  /** IVA deducible */
+  ivaDeducible: boolean;
   /** causaExencion */
   causaExencion: CausaExencion;
   /** observaciones */
