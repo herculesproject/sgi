@@ -64,7 +64,12 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
       (proyectoProrrogas) => {
         this.dataSource.data = proyectoProrrogas;
         if (proyectoProrrogas.length > 0) {
-          this.lastProyectoProrroga = proyectoProrrogas[proyectoProrrogas.length - 1].value;
+          this.lastProyectoProrroga = proyectoProrrogas.map(wrapper => wrapper.value).reduce((ultimaProrroga: IProyectoProrroga | null, prorroga: IProyectoProrroga) => {
+            if (!ultimaProrroga || prorroga.fechaConcesion > ultimaProrroga.fechaConcesion) {
+              return prorroga;
+            }
+            return ultimaProrroga;
+          }, null);
         }
       }
     );
