@@ -277,7 +277,9 @@ public class EvaluacionController {
    * Obtener todas las entidades {@link Comentario} activas para una
    * determinada {@link Evaluacion} de tipoComentario ACTA_EVALUADOR.
    *
-   * @param id Id de {@link Evaluacion}.
+   * @param id            Id de {@link Evaluacion}.
+   * @param authorization autenticación
+   * 
    * @return la lista de entidades {@link Comentario}.
    */
   @GetMapping("/{id}/comentarios-acta-evaluador")
@@ -351,8 +353,10 @@ public class EvaluacionController {
   /**
    * Crea un nuevo {@link Comentario} de tipo "ACTA_EVALUADOR".
    * 
-   * @param id         Id de {@link Evaluacion}.
-   * @param comentario {@link Comentario} a crear.
+   * @param id            Id de {@link Evaluacion}.
+   * @param comentario    {@link Comentario} a crear.
+   * @param authorization autenticación
+   * 
    * @return Nuevo {@link Comentario} creado.
    */
   @PostMapping("/{id}/comentario-acta-evaluador")

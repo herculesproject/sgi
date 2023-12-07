@@ -97,11 +97,15 @@ class EvaluacionServiceTest extends BaseServiceTest {
   @Mock
   private EvaluadorService evaluadorService;
 
+  @Mock
+  private RetrospectivaService retrospectivaService;
+
   @BeforeEach
   void setUp() throws Exception {
-    evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, estadoMemoriaRepository,
-        retrospectivaRepository, memoriaService, comentarioRepository, convocatoriaReunionRepository, memoriaRepository,
-        evaluacionConverter, reportService, sgdocService, comunicadosService, sgiConfigProperties, evaluadorService);
+    evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, memoriaService, comentarioRepository,
+        convocatoriaReunionRepository, memoriaRepository,
+        evaluacionConverter, reportService, sgdocService, comunicadosService, sgiConfigProperties, evaluadorService,
+        retrospectivaService);
   }
 
   @Test

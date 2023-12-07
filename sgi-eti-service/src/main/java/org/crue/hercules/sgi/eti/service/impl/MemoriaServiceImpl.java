@@ -419,23 +419,6 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   /**
-   * Elimina una entidad {@link Memoria} por id.
-   *
-   * @param id el id de la entidad {@link Memoria}.
-   */
-  @Transactional
-  @Override
-  public void delete(Long id) throws MemoriaNotFoundException {
-    log.debug("Petición a delete Memoria : {}  - start", id);
-    Assert.notNull(id, "El id de Memoria no puede ser null.");
-    if (!memoriaRepository.existsById(id)) {
-      throw new MemoriaNotFoundException(id);
-    }
-    memoriaRepository.deleteById(id);
-    log.debug("Petición a delete Memoria : {}  - end", id);
-  }
-
-  /**
    * Actualiza los datos del {@link Memoria}.
    * 
    * @param memoriaActualizar {@link Memoria} con los datos actualizados.
@@ -453,31 +436,33 @@ public class MemoriaServiceImpl implements MemoriaService {
     Assert.notNull(memoriaActualizar.getId(), "Memoria id no puede ser null para actualizar un tipo memoria");
 
     return memoriaRepository.findById(memoriaActualizar.getId()).map(memoria -> {
-
-      // Se comprueba si se está desactivando la memoria
-      if (Boolean.TRUE.equals(memoria.getActivo()) && Boolean.FALSE.equals(memoriaActualizar.getActivo())) {
-        Assert.isTrue(
-            Objects.equals(memoria.getEstadoActual().getId(), Constantes.TIPO_ESTADO_MEMORIA_EN_ELABORACION)
-                || Objects.equals(memoria.getEstadoActual().getId(), Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA),
-            "El estado actual de la memoria no es el correcto para desactivar la memoria");
-      }
-
-      memoria.setNumReferencia(memoriaActualizar.getNumReferencia());
-      memoria.setPeticionEvaluacion(memoriaActualizar.getPeticionEvaluacion());
-      memoria.setComite((memoriaActualizar.getComite()));
       memoria.setTitulo(memoriaActualizar.getTitulo());
       memoria.setPersonaRef(memoriaActualizar.getPersonaRef());
-      memoria.setTipoMemoria(memoriaActualizar.getTipoMemoria());
-      memoria.setEstadoActual(memoriaActualizar.getEstadoActual());
-      memoria.setFechaEnvioSecretaria(memoriaActualizar.getFechaEnvioSecretaria());
-      memoria.setRequiereRetrospectiva(memoriaActualizar.getRequiereRetrospectiva());
-      memoria.setRetrospectiva(memoriaActualizar.getRetrospectiva());
-      memoria.setActivo(memoriaActualizar.getActivo());
 
       Memoria returnValue = memoriaRepository.save(memoria);
       log.debug("update(Memoria memoriaActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new MemoriaNotFoundException(memoriaActualizar.getId()));
+  }
+
+  /**
+   * Se crea el nuevo estado para la memoria recibida y se actualiza el estado
+   * actual de esta.
+   * 
+   * @param id                    Identificador de la {@link Memoria}
+   * @param requiereRetrospectiva flag para identificar si la {@link Memoria}
+   *                              requiere retrospectiva
+   * @param retrospectiva         la {@link Retrospectiva}
+   */
+  @Transactional
+  @Override
+  public void updateDatosRetrospectiva(Long id, boolean requiereRetrospectiva, Retrospectiva retrospectiva) {
+    log.debug("updateDatosRetrospectiva(Long id, boolean requiereRetrospectiva, Retrospectiva retrospectiva) - start");
+    Memoria memoria = memoriaRepository.findById(id).orElseThrow(() -> new MemoriaNotFoundException(id));
+    memoria.setRequiereRetrospectiva(requiereRetrospectiva);
+    memoria.setRetrospectiva(retrospectiva);
+    memoriaRepository.save(memoria);
+    log.debug("updateDatosRetrospectiva(Long id, boolean requiereRetrospectiva, Retrospectiva retrospectiva) - end");
   }
 
   /**
@@ -490,6 +475,22 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Override
   public List<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion) {
     return memoriaRepository.findMemoriasEvaluacion(idPeticionEvaluacion, null);
+  }
+
+  /**
+   * Se crea el nuevo estado para la memoria recibida y se actualiza el estado
+   * actual de esta.
+   * 
+   * @param memoriaId           Identificador de la {@link Memoria}.
+   * @param tipoEstadoMemoriaId Identificador del estado nuevo de la memoria.
+   */
+  @Transactional
+  @Override
+  public void updateEstadoMemoria(Long memoriaId, Long tipoEstadoMemoriaId) {
+    log.debug("updateEstadoMemoria(Long memoriaId, Long tipoEstadoMemoriaId) - start");
+    Memoria memoria = memoriaRepository.findById(memoriaId).orElseThrow(() -> new MemoriaNotFoundException(memoriaId));
+    updateEstadoMemoria(memoria, tipoEstadoMemoriaId, null);
+    log.debug("updateEstadoMemoria(Long memoriaId, Long tipoEstadoMemoriaId) - end");
   }
 
   /**

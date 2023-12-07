@@ -19,7 +19,6 @@ import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
-import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -31,15 +30,14 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion.Tipo;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
-import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
-import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.ComunicadosService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.EvaluadorService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
@@ -74,14 +72,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   /** Propiedades de configuración de la aplicación */
   private final SgiConfigProperties sgiConfigProperties;
 
-  /** Estado Memoria repository */
-  private final EstadoMemoriaRepository estadoMemoriaRepository;
-
   /** Evaluación repository */
   private final EvaluacionRepository evaluacionRepository;
-
-  /** Retrospectiva repository */
-  private final RetrospectivaRepository retrospectivaRepository;
 
   /** Memoria service */
   private final MemoriaService memoriaService;
@@ -110,19 +102,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   /** Evaluador service */
   private final EvaluadorService evaluadorService;
 
+  private final RetrospectivaService retrospectivaService;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
-      EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
       MemoriaService memoriaService, ComentarioRepository comentarioRepository,
       ConvocatoriaReunionRepository convocatoriaReunionRepository, MemoriaRepository memoriaRepository,
       EvaluacionConverter evaluacionConverter, SgiApiRepService reportService, SgdocService sgdocService,
       ComunicadosService comunicadosService, SgiConfigProperties sgiConfigProperties,
-      EvaluadorService evaluadorService) {
+      EvaluadorService evaluadorService, RetrospectivaService retrospectivaService) {
 
     this.evaluacionRepository = evaluacionRepository;
-    this.estadoMemoriaRepository = estadoMemoriaRepository;
-    this.retrospectivaRepository = retrospectivaRepository;
     this.memoriaService = memoriaService;
     this.convocatoriaReunionRepository = convocatoriaReunionRepository;
     this.comentarioRepository = comentarioRepository;
@@ -133,6 +124,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     this.comunicadosService = comunicadosService;
     this.sgiConfigProperties = sgiConfigProperties;
     this.evaluadorService = evaluadorService;
+    this.retrospectivaService = retrospectivaService;
   }
 
   /**
@@ -178,13 +170,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     evaluacion.setConvocatoriaReunion(crEvaluacion);
 
     rellenarEvaluacionConEstadosMemoria(evaluacion);
-
-    if (evaluacion.getTipoEvaluacion().getTipo().equals(TipoEvaluacion.Tipo.RETROSPECTIVA)) {
-      retrospectivaRepository.save(evaluacion.getMemoria().getRetrospectiva());
-    } else {
-      estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacion.getMemoria(),
-          evaluacion.getMemoria().getEstadoActual(), Instant.now(), null));
-    }
 
     memoriaService.update(evaluacion.getMemoria());
 
@@ -244,6 +229,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         }
 
         evaluacion.getMemoria().getEstadoActual().setId(newEstadoMemoria.getId());
+        memoriaService.updateEstadoMemoria(evaluacion.getMemoria().getId(),
+            TipoEstadoMemoria.Tipo.EN_EVALUACION.getId());
         evaluacion.setTipoEvaluacion(TipoEvaluacion.builder().id(tipoEvaluacion.getId()).build());
         break;
       case ORDINARIA:
@@ -255,9 +242,13 @@ public class EvaluacionServiceImpl implements EvaluacionService {
           tipoEvaluacion = TipoEvaluacion.Tipo.RETROSPECTIVA;
           evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva()
               .setId(EstadoRetrospectiva.Tipo.EN_EVALUACION.getId());
+          retrospectivaService.updateEstadoRetrospectiva(evaluacion.getMemoria().getRetrospectiva().getId(),
+              evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId());
         } else {
           tipoEvaluacion = TipoEvaluacion.Tipo.MEMORIA;
           evaluacion.getMemoria().getEstadoActual().setId(TipoEstadoMemoria.Tipo.EN_EVALUACION.getId());
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria().getId(),
+              evaluacion.getMemoria().getEstadoActual().getId());
         }
 
         evaluacion.setTipoEvaluacion(TipoEvaluacion.builder().id(tipoEvaluacion.getId()).build());
