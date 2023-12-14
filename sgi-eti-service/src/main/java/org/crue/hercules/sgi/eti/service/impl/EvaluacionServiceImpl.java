@@ -230,7 +230,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
         evaluacion.getMemoria().getEstadoActual().setId(newEstadoMemoria.getId());
         memoriaService.updateEstadoMemoria(evaluacion.getMemoria().getId(),
-            TipoEstadoMemoria.Tipo.EN_EVALUACION.getId());
+            evaluacion.getMemoria().getEstadoActual().getId());
         evaluacion.setTipoEvaluacion(TipoEvaluacion.builder().id(tipoEvaluacion.getId()).build());
         break;
       case ORDINARIA:
@@ -881,7 +881,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     log.debug("enviarComunicado(Long idEvaluacion) - start");
     Evaluacion evaluacion = this.findById(idEvaluacion);
     try {
-      this.comunicadosService.enviarComunicadoCambiosEvaluacionEti(evaluacion.getEvaluador1().getPersonaRef(), evaluacion.getEvaluador2().getPersonaRef(),
+      this.comunicadosService.enviarComunicadoCambiosEvaluacionEti(evaluacion.getEvaluador1().getPersonaRef(),
+          evaluacion.getEvaluador2().getPersonaRef(),
           evaluacion.getMemoria().getComite().getNombreInvestigacion(), evaluacion.getMemoria().getNumReferencia(),
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
       log.debug("enviarComunicado(Long idEvaluacion) - end");
