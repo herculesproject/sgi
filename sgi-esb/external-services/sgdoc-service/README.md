@@ -1,3 +1,3 @@
-# sgp-service
+# sgdoc-service
 
-Servicios del Sistema de Gestión de Personas
+Servicios del Sistema de Gestión Documental
