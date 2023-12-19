@@ -17,6 +17,7 @@ import { PanelWrapperComponent } from './wrappers/panel/panel.wrapper';
 import { SubtitleDivWrapperComponent } from './wrappers/subtitle-div/subtitle-div.wrapper';
 import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper';
 import { SelectProcedimientosTypeComponent } from './types/select-procedimientos.type';
+import { WarnDivWrapperComponent } from './wrappers/warn-div/warn-div.wrapper';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { SelectProcedimientosTypeComponent } from './types/select-procedimientos
     InfoDivWrapperComponent,
     TipoValorSocialComponent,
     SelectProcedimientosTypeComponent,
-    CKEditorTemplate
+    CKEditorTemplate,
+    WarnDivWrapperComponent,
   ],
   imports: [
     CommonModule,
@@ -70,6 +72,10 @@ import { SelectProcedimientosTypeComponent } from './types/select-procedimientos
         {
           name: 'info-div',
           component: InfoDivWrapperComponent
+        },
+        {
+          name: 'warn-div',
+          component: WarnDivWrapperComponent
         },
       ],
       validators: [
