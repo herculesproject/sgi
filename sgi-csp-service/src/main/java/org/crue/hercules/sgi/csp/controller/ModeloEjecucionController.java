@@ -103,7 +103,7 @@ public class ModeloEjecucionController {
    *         paginadas y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-MOD-V', 'CSP-PRO-E', 'CSP-PRO-V', 'CSP-CNV-V', 'CSP-CNV-E')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-MOD-V', 'CSP-PRO-E', 'CSP-PRO-V', 'CSP-CNV-V', 'CSP-CNV-E', 'CSP-PRO-INV-VR', 'CSP-PRO-INV-ER')")
   public ResponseEntity<List<ModeloEjecucion>> findAll(@RequestParam(name = "q", required = false) String query) {
     log.debug("findAll(String query, Pageable paging) - start");
     List<ModeloEjecucion> returnValue = modeloEjecucionService.findAll(query);
