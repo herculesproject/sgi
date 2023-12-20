@@ -38,6 +38,7 @@ const CLASIFICACION_CVN_KEY = marker('csp.convocatoria.clasificacion-produccion-
 const COORDINADO_KEY = marker('csp.proyecto.proyecto-coordinado');
 const COORDINADOR_EXTERNO_KEY = marker('csp.proyecto.coordinador-externo');
 const PROYECTO_COLABORATIVO_KEY = marker('csp.proyecto.proyecto-colaborativo');
+const IVA_DECUCIBLE_KEY = marker('csp.ejecucion-economica.iva-deducible');
 const PORCENTAJE_IVA_KEY = marker('csp.ejecucion-economica.iva');
 const CAUSA_EXENCION_IVA_KEY = marker('csp.proyecto.causa-exencion');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica.nombre');
@@ -212,6 +213,11 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
         type: ColumnType.STRING
       },
       {
+        title: this.translate.instant(IVA_DECUCIBLE_KEY),
+        name: 'ivaDeducible',
+        type: ColumnType.STRING
+      },
+      {
         title: this.translate.instant(PORCENTAJE_IVA_KEY),
         name: 'porcentajeIVA',
         type: ColumnType.STRING
@@ -255,6 +261,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.coordinado) ? this.getI18nBooleanYesNo(proyecto.coordinado) : '');
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.coordinadorExterno) ? this.getI18nBooleanYesNo(proyecto.coordinadorExterno) : '');
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.colaborativo) ? this.getI18nBooleanYesNo(proyecto.colaborativo) : '');
+    elementsRow.push(this.notIsNullAndNotUndefined(proyecto.ivaDeducible) ? this.getI18nBooleanYesNo(proyecto.ivaDeducible) : '');
     elementsRow.push(this.percentPipe.transform(proyecto.iva?.iva / 100));
     elementsRow.push(proyecto.causaExencion ? this.translate.instant(CAUSA_EXENCION_MAP.get(proyecto.causaExencion)) : '');
     elementsRow.push(proyecto.contextoProyecto?.areaTematica?.nombre);
