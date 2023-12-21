@@ -30,4 +30,10 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.5.0-4">
+    <addColumn tableName="configuracion">
+      <column name="validacion_clasificacion_gastos" type="varchar(50)" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

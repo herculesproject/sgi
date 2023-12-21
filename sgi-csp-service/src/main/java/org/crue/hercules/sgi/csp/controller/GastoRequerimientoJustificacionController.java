@@ -117,6 +117,8 @@ public class GastoRequerimientoJustificacionController {
    * Comprueba si la entidad {@link ProyectoPeriodoJustificacion} se puede
    * eliminar.
    * 
+   * @param identificadorJustificacion Identificador de la justificacion
+   * 
    * @return {@link HttpStatus#OK} si existe,
    *         {@link HttpStatus#NO_CONTENT} en cualquier otro caso
    */

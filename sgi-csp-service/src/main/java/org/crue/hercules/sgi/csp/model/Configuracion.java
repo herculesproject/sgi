@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,6 +32,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Configuracion extends BaseEntity {
 
+  public enum ValidacionClasificacionGastos {
+    VALIDACION,
+    CLASIFICACION,
+    ELEGIBILIDAD;
+  }
+
   public enum Param {
     /**
      * Formato codigo partida presupuestaria
@@ -43,8 +51,9 @@ public class Configuracion extends BaseEntity {
      */
     FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA("plantillaFormatoPartidaPresupuestaria",
         "Formato en el que se deben de introducir las partidas presupuestarias de acuerdo al Sistema de gestión económico corporativo. Ejemplo: XX.XXXX.XXXX.XXXXX"),
-    /** Validacion gastos <code>validacionGastos</code> */
-    VALIDACION_GASTOS("validacionGastos", "Activación del apartado Validación de gastos en Ejecución económica"),
+    /** Validacion gastos <code>validacionClasificacionGastos</code> */
+    VALIDACION_CLASIFICACION_GASTOS("validacionClasificacionGastos",
+        "Activación del apartado Validación de gastos en Ejecución económica"),
     /**
      * Formato identificador justificacion
      * <code>formatoIdentificadorJustificacion</code>
@@ -118,9 +127,10 @@ public class Configuracion extends BaseEntity {
   @NotNull
   private String plantillaFormatoPartidaPresupuestaria;
 
-  /** Validacion gastos */
-  @Column(name = "validacion_gastos", columnDefinition = "boolean default false", nullable = true)
-  private Boolean validacionGastos;
+  /** Validacion/Clasificacion gastos */
+  @Column(name = "validacion_clasificacion_gastos", nullable = false, unique = true)
+  @Enumerated(EnumType.STRING)
+  private ValidacionClasificacionGastos validacionClasificacionGastos;
 
   /** Formato identificador justificacion. */
   @Column(name = "formato_identificador_justificacion", nullable = true, unique = true)
@@ -158,8 +168,8 @@ public class Configuracion extends BaseEntity {
         return this.getFormatoPartidaPresupuestaria();
       case FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA:
         return this.getPlantillaFormatoPartidaPresupuestaria();
-      case VALIDACION_GASTOS:
-        return this.getValidacionGastos();
+      case VALIDACION_CLASIFICACION_GASTOS:
+        return this.getValidacionClasificacionGastos();
       default:
         return null;
     }
@@ -188,8 +198,8 @@ public class Configuracion extends BaseEntity {
       case FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA:
         this.setPlantillaFormatoPartidaPresupuestaria(newValue);
         break;
-      case VALIDACION_GASTOS:
-        this.setValidacionGastos(new Boolean(newValue));
+      case VALIDACION_CLASIFICACION_GASTOS:
+        this.setValidacionClasificacionGastos(ValidacionClasificacionGastos.valueOf(newValue));
         break;
     }
   }
