@@ -53,7 +53,8 @@ export class ViajesDietasExportModalComponent
       reportOptions: {
         data: this.modalData.data,
         columns: this.modalData.columns,
-        columnMinWidth: 120
+        columnMinWidth: 120,
+        showColumClasificadoAutomaticamente: false
       }
     };
     return reportModalData;

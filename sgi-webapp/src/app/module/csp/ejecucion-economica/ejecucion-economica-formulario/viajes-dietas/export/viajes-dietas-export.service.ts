@@ -22,6 +22,9 @@ const CONCEPTO_GASTO_KEY = marker('sge.dato-economico.concepto-gasto');
 const APLICACION_PRESUPUESTARIA_KEY = marker('sge.dato-economico.partida-presupuestaria');
 const CODIGO_ECONOMICO_KEY = marker('sge.dato-economico.codigo-economico');
 const FECHA_DEVENGO_KEY = marker('sge.dato-economico.fecha-devengo');
+const CLASIFICADO_AUTOMATICAMENTE_KEY = marker('sge.dato-economico.clasificado-automaticamente');
+const MSG_TRUE = marker('label.si');
+const MSG_FALSE = marker('label.no');
 
 @Injectable()
 export class ViajesDietasExportService
@@ -47,6 +50,11 @@ export class ViajesDietasExportService
       row.elements.push(item.anualidad);
       row.elements.push(item.proyecto?.titulo ?? 'Sin clasificar');
       row.elements.push(item.conceptoGasto?.nombre ?? 'Sin clasificar');
+
+      if (reportConfig.reportOptions.showColumClasificadoAutomaticamente) {
+        row.elements.push(this.getI18nBooleanYesNo(item.clasificadoAutomaticamente));
+      }
+
       row.elements.push(item.clasificacionSGE?.nombre ?? 'Sin clasificar');
       row.elements.push(item.partidaPresupuestaria);
 
@@ -74,10 +82,10 @@ export class ViajesDietasExportService
   protected getColumns(resultados: IDatoEconomico[], reportConfig: IReportConfig<IEjecucionPresupuestariaReportOptions>):
     Observable<ISgiColumnReport[]> {
 
-    return of(this.toReportColumns(reportConfig.reportOptions.columns));
+    return of(this.toReportColumns(reportConfig.reportOptions.columns, reportConfig.reportOptions.showColumClasificadoAutomaticamente));
   }
 
-  private toReportColumns(columns: IColumnDefinition[]): ISgiColumnReport[] {
+  private toReportColumns(columns: IColumnDefinition[], showColumClasificadoAutomaticamente = false): ISgiColumnReport[] {
 
     const columnsReport: ISgiColumnReport[] = [
       {
@@ -117,6 +125,15 @@ export class ViajesDietasExportService
       }
     ];
 
+    if (showColumClasificadoAutomaticamente) {
+      const column: ISgiColumnReport = {
+        title: this.translate.instant(CLASIFICADO_AUTOMATICAMENTE_KEY),
+        name: 'clasificadoAutomaticamente',
+        type: ColumnType.STRING
+      };
+      columnsReport.splice(3, 0, column);
+    }
+
     columns.forEach(column => {
       columnsReport.push({
         name: column.id,
@@ -134,5 +151,9 @@ export class ViajesDietasExportService
       visible: true
     };
     return groupBy;
+  }
+
+  protected getI18nBooleanYesNo(field: boolean): string {
+    return field ? this.translate.instant(MSG_TRUE) : this.translate.instant(MSG_FALSE);
   }
 }

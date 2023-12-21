@@ -1,3 +1,17 @@
+import { marker } from "@biesbjerg/ngx-translate-extract-marker";
+
+export enum ValidacionClasificacionGastos {
+  VALIDACION = 'VALIDACION',
+  CLASIFICACION = 'CLASIFICACION',
+  ELEGIBILIDAD = 'ELEGIBILIDAD'
+}
+
+export const VALIDACION_CLASIFICACION_GASTOS_MAP: Map<ValidacionClasificacionGastos, string> = new Map([
+  [ValidacionClasificacionGastos.VALIDACION, marker(`csp.validacion-clasificacion-gastos.VALIDACION`)],
+  [ValidacionClasificacionGastos.CLASIFICACION, marker(`csp.validacion-clasificacion-gastos.CLASIFICACION`)],
+  [ValidacionClasificacionGastos.ELEGIBILIDAD, marker(`csp.validacion-clasificacion-gastos.ELEGIBILIDAD`)]
+]);
+
 export interface IConfiguracion {
   id: number;
   /** Expresión regular para validar el formato del código de las partidas presupuestarias */
@@ -5,7 +19,7 @@ export interface IConfiguracion {
   /** Plantilla informativa del formato del código de las partidas presupuestarias */
   plantillaFormatoPartidaPresupuestaria: string;
   /** Determina cuándo la validación de gastos está activa en la app */
-  validacionGastos: boolean;
+  validacionClasificacionGastos: ValidacionClasificacionGastos;
   /** Expresión regular para validar el formato del código de los identificadores de justificación */
   formatoIdentificadorJustificacion: string;
   /** Plantilla informativa del formato del código de los identificadores de justificación */

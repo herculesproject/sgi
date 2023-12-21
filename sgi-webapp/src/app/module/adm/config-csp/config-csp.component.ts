@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
+import { VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { Observable, of } from 'rxjs';
@@ -57,7 +58,7 @@ export enum ConfigCsp {
   // Config CSP service
   CSP_FORMATO_PARTIDA_PRESUPUESTARIA = 'formatoPartidaPresupuestaria',
   CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA = 'plantillaFormatoPartidaPresupuestaria',
-  CSP_VALIDACION_GASTOS = 'validacionGastos',
+  CSP_VALIDACION_GASTOS = 'validacionClasificacionGastos',
   CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION = 'formatoIdentificadorJustificacion',
   CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA = 'plantillaFormatoIdentificadorJustificacion',
   CSP_DEDICACION_MINIMA_GRUPO = 'dedicacionMinimaGrupo',
@@ -73,7 +74,7 @@ export enum ConfigCsp {
 export class ConfigCspComponent extends AbstractMenuContentComponent {
 
   private readonly _CONFIG_MAP: Map<ConfigCsp, IConfigOptions> = new Map([
-    [ConfigCsp.CSP_VALIDACION_GASTOS, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_VALIDACION_GASTOS`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP }],
+    [ConfigCsp.CSP_VALIDACION_GASTOS, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_VALIDACION_CLASIFICACION_GASTOS`), options: this.getValidacionclasificacionGastoValues(), required: true, module: ConfigModule.CSP }],
     [ConfigCsp.CSP_NOMBRE_SISTEMA_GESTION_EXTERNO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_NOMBRE_SISTEMA_GESTION_EXTERNO`), required: false, module: ConfigModule.CNF }],
     [ConfigCsp.CSP_URL_SISTEMA_GESTION_EXTERNO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_URL_SISTEMA_GESTION_EXTERNO`), required: false, module: ConfigModule.CNF }],
     [ConfigCsp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA`), required: true, module: ConfigModule.CSP }],
@@ -165,8 +166,14 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     }
   }
 
-  private getBooleanValues(): Observable<KeyValue<string, string>[]> {
-    return of([{ key: 'true', value: marker('label.si') }, { key: 'false', value: marker('label.no') }]);
+  private getValidacionclasificacionGastoValues(): Observable<KeyValue<string, string>[]> {
+    const keyValueList: KeyValue<string, string>[] = [];
+
+    for (const [key, value] of VALIDACION_CLASIFICACION_GASTOS_MAP.entries()) {
+      keyValueList.push({ key, value });
+    }
+
+    return of(keyValueList);
   }
 
 }

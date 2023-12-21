@@ -13,6 +13,7 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { EJECUCION_ECONOMICA_DATA_KEY } from '../../ejecucion-economica-data.resolver';
 import { EjecucionEconomicaActionService, IEjecucionEconomicaData, IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { ViajesDietasComponent } from './viajes-dietas.component';
+import { IConfiguracion } from '@core/models/csp/configuracion';
 
 describe('ViajesDietasComponent', () => {
   let component: ViajesDietasComponent;
@@ -21,7 +22,8 @@ describe('ViajesDietasComponent', () => {
     [EJECUCION_ECONOMICA_DATA_KEY]: {
       proyectoSge: {},
       relaciones: [{ id: 1 } as IRelacionEjecucionEconomicaWithResponsables],
-      readonly: false
+      readonly: false,
+      configuracion: {} as IConfiguracion
     } as IEjecucionEconomicaData
   };
   const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);
