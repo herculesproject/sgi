@@ -7,14 +7,25 @@
                       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
                       http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-  <changeSet context="!test" author="master" id="0.5.0-configuracion1">
+  <changeSet context="!test" author="master" id="0.5.0-configuracion-postgresql" dbms="postgresql">
     <update tableName="configuracion">
       <column name="validacion_clasificacion_gastos" value="VALIDACION" />
       <where>validacion_gastos IS true</where>
     </update>
     <update tableName="configuracion">
       <column name="validacion_clasificacion_gastos" value="ELEGIBILIDAD" />
-      <where>validacion_gastos NOT IS true</where>
+      <where>validacion_gastos IS false</where>
+    </update>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="0.5.0-configuracion" dbms="!postgresql">
+    <update tableName="configuracion">
+      <column name="validacion_clasificacion_gastos" value="VALIDACION" />
+      <where>validacion_gastos = 1</where>
+    </update>
+    <update tableName="configuracion">
+      <column name="validacion_clasificacion_gastos" value="ELEGIBILIDAD" />
+      <where>validacion_gastos != 1</where>
     </update>
   </changeSet>
 
