@@ -12,10 +12,10 @@
               {{'csp.ejecucion-economica.gastos-clasificados-sgi.todos' | translate}}
             </mat-option>
             <mat-option [value]="GastosClasficadosSgiEnum.SI">
-              {{'label.si' | translate}}
+              {{'csp.ejecucion-economica.gastos-clasificados-sgi.clasificados' | translate}}
             </mat-option>
             <mat-option [value]="GastosClasficadosSgiEnum.NO">
-              {{'label.no' | translate}}
+              {{'csp.ejecucion-economica.gastos-clasificados-sgi.sin-clasificar' | translate}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -132,10 +132,14 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let element" [class.computed]="column.compute">
             <ng-container *ngIf="column.compute">
-              {{element?.columnas[column.id] | number: '1.2-2'}}
+              {{element?.columnas[element.tipo === TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS ?
+              column.idFacturasGastos : (element.tipo === TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS ?
+              column.idViajesDietas : column.idPersonalContratado)] | number: '1.2-2'}}
             </ng-container>
             <ng-container *ngIf="!column.compute">
-              {{element?.columnas[column.id]}}
+              {{element?.columnas[element.tipo === TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS ?
+              column.idFacturasGastos : (element.tipo === TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS ?
+              column.idViajesDietas : column.idPersonalContratado)]}}
             </ng-container>
           </mat-cell>
         </ng-container>

@@ -10,10 +10,10 @@ import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-pr
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { GastoService } from '@core/services/sge/gasto/gasto.service';
+import { EjecucionEconomicaService, TipoOperacion } from '@core/services/sge/ejecucion-economica.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
-import { BehaviorSubject, Observable, from, of } from 'rxjs';
+import { BehaviorSubject, Observable, from, merge, of } from 'rxjs';
 import { concatAll, concatMap, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IColumnDefinition } from '../desglose-economico.fragment';
@@ -23,6 +23,7 @@ export interface ClasificacionGasto extends IDatoEconomico {
   proyecto: IProyecto;
   conceptoGasto: IConceptoGasto;
   clasificadoAutomaticamente: boolean;
+  tipo: TipoOperacion;
 }
 
 export class ClasificacionGastosFragment extends Fragment {
@@ -39,7 +40,7 @@ export class ClasificacionGastosFragment extends Fragment {
     key: number,
     readonly relaciones: IRelacionEjecucionEconomicaWithResponsables[],
     private proyectoSge: IProyectoSge,
-    private gastoService: GastoService,
+    private ejecucionEconomicaService: EjecucionEconomicaService,
     private proyectoService: ProyectoService,
     private gastoProyectoService: GastoProyectoService,
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
@@ -71,13 +72,27 @@ export class ClasificacionGastosFragment extends Fragment {
   public searchGastos(fechaDesde: string, fechaHasta: string, gastosClasficadosSgiFilter: GastosClasficadosSgiEnum): void {
     const gastosListado: ClasificacionGasto[] = [];
     this.gastos$.next(gastosListado);
-    let gastos$: Observable<IDatoEconomico[]>;
-    gastos$ = this.gastoService.getGastosAnyEstado(this.proyectoSge.id, fechaDesde, fechaHasta, true);
+    let gastos$: Observable<ClasificacionGasto[]>;
+    gastos$ = merge(
+      this.ejecucionEconomicaService.getViajesDietas(this.proyectoSge.id).pipe(
+        map(gastos => gastos.map(gasto => {
+          return { ...gasto, tipo: TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS } as ClasificacionGasto;
+        }))
+      ),
+      this.ejecucionEconomicaService.getFacturasGastos(this.proyectoSge.id).pipe(
+        map(gastos => gastos.map(gasto => {
+          return { ...gasto, tipo: TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS } as ClasificacionGasto;
+        }))
+      ),
+      this.ejecucionEconomicaService.getPersonalContratado(this.proyectoSge.id).pipe(
+        map(gastos => gastos.map(gasto => {
+          return { ...gasto, tipo: TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO } as ClasificacionGasto;
+        }))
+      )
+    );
 
     this.subscriptions.push(
       gastos$.pipe(
-        map(gastos => gastos.map(gasto => gasto as ClasificacionGasto))
-      ).pipe(
         map(gastos => {
           if (gastos.length === 0) {
             return of(void 0);
@@ -272,16 +287,61 @@ export class ClasificacionGastosFragment extends Fragment {
 
 
   private getColumns(): Observable<IColumnDefinition[]> {
-    return this.gastoService.getColumnas(true)
+    return this.ejecucionEconomicaService.getColumnasFacturasGastos(null)
       .pipe(
         map(columnas => columnas.map(columna => {
           return {
-            id: columna.id,
+            id: TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS + columna.id,
             name: columna.nombre,
-            compute: columna.acumulable
+            compute: columna.acumulable,
+            idFacturasGastos: columna.id,
+            idViajesDietas: null,
+            idPersonalContratado: null
           };
         })
-        )
+        ),
+        switchMap(columnas => this.ejecucionEconomicaService.getColumnasViajesDietas(null).pipe(
+          map(columnasViajesDietas => {
+            columnasViajesDietas.forEach(columna => {
+              const cc = columnas.find(c => c.name === columna.nombre);
+              if (!!cc) {
+                cc.idViajesDietas = columna.id;
+              } else {
+                columnas.push({
+                  id: TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS + columna.id,
+                  name: columna.nombre,
+                  compute: columna.acumulable,
+                  idFacturasGastos: null,
+                  idViajesDietas: columna.id,
+                  idPersonalContratado: null
+                });
+              }
+            });
+
+            return columnas;
+          })
+        )),
+        switchMap(columnas => this.ejecucionEconomicaService.getColumnasPersonalContratado(null).pipe(
+          map(columnasPersonalContratado => {
+            columnasPersonalContratado.forEach(columna => {
+              const cc = columnas.find(c => c.name === columna.nombre);
+              if (!!cc) {
+                cc.idPersonalContratado = columna.id;
+              } else {
+                columnas.push({
+                  id: TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO + columna.id,
+                  name: columna.nombre,
+                  compute: columna.acumulable,
+                  idFacturasGastos: null,
+                  idViajesDietas: null,
+                  idPersonalContratado: columna.id
+                });
+              }
+            });
+
+            return columnas;
+          })
+        ))
       );
   }
 

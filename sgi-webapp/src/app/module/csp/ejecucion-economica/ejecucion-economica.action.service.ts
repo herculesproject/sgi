@@ -162,7 +162,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       id,
       this.data.relaciones.filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO),
       this.data.proyectoSge,
-      gastoService,
+      ejecucionEconomicaService,
       proyectoService,
       gastoProyectoService,
       proyectoConceptoGastoCodigoEcService,

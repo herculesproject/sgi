@@ -7,10 +7,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
+import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { DialogService } from '@core/services/dialog.service';
-import { GastoService } from '@core/services/sge/gasto/gasto.service';
+import { EjecucionEconomicaService, TipoOperacion } from '@core/services/sge/ejecucion-economica.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { Observable, Subscription, forkJoin, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -44,11 +45,15 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
     return GastosClasficadosSgiEnum;
   }
 
+  get TipoOperacion() {
+    return TipoOperacion;
+  }
+
   constructor(
     public actionService: EjecucionEconomicaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private gastoService: GastoService,
+    private ejecucionEconomicaService: EjecucionEconomicaService,
     private gastoProyectoService: GastoProyectoService,
     private proyectoProyectoSgeService: ProyectoProyectoSgeService
   ) {
@@ -123,7 +128,7 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
     this.subscriptions.push(
       forkJoin({
         proyectosSgiIds: this.proyectoProyectoSgeService.findByProyectoSgeId(element.proyectoId).pipe(map(response => response.items.map(e => e.proyecto.id))),
-        gastoDetalle: this.gastoService.findById(element.id),
+        gastoDetalle: this.getGastoDetalle(element),
         gastoProyecto: this.getGastoProyecto(element.id)
       }).pipe(
         switchMap(({ proyectosSgiIds, gastoDetalle, gastoProyecto }) => {
@@ -135,7 +140,7 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
               tituloModal: MODAL_CLASIFICACION_TITLE_KEY,
               proyecto: null,
               vinculacion: null,
-              showDatosCongreso: true
+              showDatosCongreso: element.tipo === TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS
             }
           };
 
@@ -166,6 +171,26 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
     }
 
     return this.gastoProyectoService.findByGastoRef(gastoRef);
+  }
+
+  private getGastoDetalle(gasto: ClasificacionGasto): Observable<IDatoEconomicoDetalle> {
+    let detalleGasto$: Observable<IDatoEconomicoDetalle>;
+    switch (gasto.tipo) {
+      case TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS:
+        detalleGasto$ = this.ejecucionEconomicaService.getFacturaGasto(gasto.id);
+        break;
+      case TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS:
+        detalleGasto$ = this.ejecucionEconomicaService.getViajeDieta(gasto.id);
+        break;
+      case TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO:
+        detalleGasto$ = this.ejecucionEconomicaService.getPersonaContratada(gasto.id);
+        break;
+
+      default:
+        detalleGasto$ = of(void 0);
+    }
+
+    return detalleGasto$;
   }
 
   private loadForm() {
