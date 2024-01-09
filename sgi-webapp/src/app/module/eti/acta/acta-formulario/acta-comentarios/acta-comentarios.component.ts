@@ -181,7 +181,7 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
       const actaData: ComentarioModalData = {
         evaluaciones,
         comentario: wrapperRef.value,
-        readonly: this.readonly
+        readonly: !this.isEditable(wrapperRef)
       };
 
       const config = {
@@ -232,5 +232,9 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
 
   isTipoGestor(comentario: IComentario): boolean {
     return comentario.tipoComentario.id === TIPO_COMENTARIO.ACTA_GESTOR;
+  }
+
+  isEditable(wrapperComentario: StatusWrapper<IComentario>): boolean {
+    return (wrapperComentario.value.estado === undefined || (this.isTipoGestor(wrapperComentario.value) || (wrapperComentario.value.estado === this.TIPO_ESTADO_COMENTARIO.ABIERTO && this.personaId === wrapperComentario.value.evaluador?.id))) && !this.readonly;
   }
 }

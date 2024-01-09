@@ -165,7 +165,7 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     const evaluacionData: ComentarioModalData = {
       evaluaciones: [this.actionService.getEvaluacion()],
       comentario: wrapperRef.value,
-      readonly: false
+      readonly: !this.isEditable(wrapperRef)
     };
 
     const config = {
@@ -216,5 +216,9 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
 
   isTipoGestor(comentario: IComentario): boolean {
     return comentario.tipoComentario.id === TIPO_COMENTARIO.GESTOR;
+  }
+
+  isEditable(wrapperComentario: StatusWrapper<IComentario>): boolean {
+    return (wrapperComentario.value.estado === undefined || (this.isTipoGestor(wrapperComentario.value) || (wrapperComentario.value.estado === this.TIPO_ESTADO_COMENTARIO.ABIERTO && this.personaId === wrapperComentario.value.evaluador?.id)))
   }
 }
