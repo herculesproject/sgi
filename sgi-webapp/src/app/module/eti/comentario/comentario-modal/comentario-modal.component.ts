@@ -35,6 +35,7 @@ const MEMORIA_KEY = marker('eti.memoria');
 export interface ComentarioModalData {
   evaluaciones: IEvaluacion[];
   comentario: IComentario;
+  readonly: boolean;
 }
 
 class NodeApartado {
@@ -132,7 +133,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
   ) {
     super(matDialogRef, !!data.comentario);
     if (this.data?.comentario) {
-      this.readonly = this.data.comentario?.estado === TipoEstadoComentario.CERRADO || this.data.comentario?.evaluador?.id !== this.authService.authStatus$.value.userRefId;
+      this.readonly = this.data?.readonly ?? (this.data.comentario?.estado === TipoEstadoComentario.CERRADO || this.data.comentario?.evaluador?.id !== this.authService.authStatus$.value.userRefId);
     }
   }
 
