@@ -47,9 +47,8 @@
             (click)="openEditModal(wrapper)">
             <mat-icon>border_color</mat-icon>
           </button>
-          <button
-            *ngIf="wrapper.value.estado === TIPO_ESTADO_COMENTARIO.CERRADO || this.personaId !== wrapper.value.evaluador?.id"
-            color="primary" mat-icon-button matTooltip="{{'btn.view' | translate}}" (click)="openEditModal(wrapper)">
+          <button *ngIf="!isEditable(wrapper)" color="primary" mat-icon-button matTooltip="{{'btn.view' | translate}}"
+            (click)="openEditModal(wrapper)">
             <mat-icon>visibility</mat-icon>
           </button>
           <button *ngIf="isEditable(wrapper)" color="warn" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
