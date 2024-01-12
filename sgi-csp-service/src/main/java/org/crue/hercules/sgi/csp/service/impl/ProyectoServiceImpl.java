@@ -378,7 +378,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setColaborativo(proyectoActualizar.getColaborativo());
       data.setConfidencial(proyectoActualizar.getConfidencial());
       data.setConvocatoriaExterna(proyectoActualizar.getConvocatoriaExterna());
-      data.setCoordinadorExterno(proyectoActualizar.getCoordinadorExterno());
+      data.setRolUniversidadId(proyectoActualizar.getRolUniversidadId());
       data.setFechaFin(proyectoActualizar.getFechaFin());
       data.setFechaInicio(proyectoActualizar.getFechaInicio());
       data.setFinalidad(proyectoActualizar.getFinalidad());
@@ -983,7 +983,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     proyecto.setCodigoExterno(solicitudProyecto.getCodExterno());
     proyecto.setColaborativo(solicitudProyecto.getColaborativo());
     proyecto.setCoordinado(solicitudProyecto.getCoordinado());
-    proyecto.setCoordinadorExterno(solicitudProyecto.getCoordinadorExterno());
+    proyecto.setRolUniversidadId(solicitudProyecto.getRolUniversidadId());
     log.debug(
         "copyDatosGeneralesSolicitudProyectoToProyecto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - end");
     return proyecto;
@@ -1725,8 +1725,8 @@ public class ProyectoServiceImpl implements ProyectoService {
           "El campo Proyecto coordinado debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
 
       if (proyecto.getCoordinado() != null && proyecto.getCoordinado().booleanValue()) {
-        Assert.isTrue(proyecto.getCoordinadorExterno() != null,
-            "El campo coordinadorExterno debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+        Assert.isTrue(proyecto.getRolUniversidadId() != null,
+            "El campo rolUniversidad debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
       }
 
       Assert.isTrue(proyecto.getPermitePaquetesTrabajo() != null,

@@ -157,9 +157,9 @@ public class Proyecto extends BaseEntity {
   @Column(name = "colaborativo", nullable = true)
   private Boolean colaborativo;
 
-  /** Coordinador Externo */
-  @Column(name = "coordinador_externo", nullable = true)
-  private Boolean coordinadorExterno;
+  /** Rol universidad */
+  @Column(name = "rol_universidad", nullable = true)
+  private Long rolUniversidadId;
 
   /** Excelencia */
   @Column(name = "excelencia", nullable = true)
@@ -246,6 +246,12 @@ public class Proyecto extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Solicitud solicitud = null;
+
+  @ManyToOne
+  @JoinColumn(name = "rol_universidad", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTO_ROLSOCIO"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final RolSocio rolUniversidad = null;
 
   @OneToMany(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)

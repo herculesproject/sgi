@@ -36,4 +36,26 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.5.0-5">
+    <addColumn tableName="solicitud_proyecto">
+      <column name="rol_universidad" type="BIGINT" />
+    </addColumn>
+    <addForeignKeyConstraint baseColumnNames="rol_universidad"
+      baseTableName="solicitud_proyecto"
+      constraintName="FK_SOLICITUDPROYECTO_ROLSOCIO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="rol_socio" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="0.5.0-6">
+    <addColumn tableName="proyecto">
+      <column name="rol_universidad" type="BIGINT" />
+    </addColumn>
+    <addForeignKeyConstraint baseColumnNames="rol_universidad"
+      baseTableName="proyecto"
+      constraintName="FK_PROYECTO_ROLSOCIO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="rol_socio" validate="true" />
+  </changeSet>
+
 </databaseChangeLog>

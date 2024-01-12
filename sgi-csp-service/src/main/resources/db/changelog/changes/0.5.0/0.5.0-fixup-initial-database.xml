@@ -13,4 +13,12 @@
     <dropColumn columnName="validacion_gastos" tableName="configuracion" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="0.5.0-f2">
+    <dropColumn columnName="coordinador_externo" tableName="solicitud_proyecto" />
+  </changeSet>
+
+  <changeSet author="user (generated)" id="0.5.0-f3">
+    <dropColumn columnName="coordinador_externo" tableName="proyecto" />
+  </changeSet>
+
 </databaseChangeLog>
