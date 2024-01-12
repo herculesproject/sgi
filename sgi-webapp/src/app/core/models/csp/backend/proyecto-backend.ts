@@ -47,8 +47,8 @@ export interface IProyectoBackend {
   colaborativo: boolean;
   /** excelencia */
   excelencia: boolean;
-  /** coordinadorExterno */
-  coordinadorExterno: boolean;
+  /** Id de RolSocio de la Universidad */
+  rolUniversidadId: number;
   /** permitePaquetesTrabajo */
   permitePaquetesTrabajo: boolean;
   /** iva */

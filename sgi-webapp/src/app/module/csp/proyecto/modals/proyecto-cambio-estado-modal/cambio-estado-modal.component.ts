@@ -25,7 +25,7 @@ const PROYECTO_FINALIDAD = marker('csp.proyecto.finalidad');
 const PROYECTO_AMBITO_GEOGRAFICO = marker('csp.proyecto.ambito-geografico');
 const PROYECTO_CONFIDENCIAL = marker('csp.proyecto.confidencial');
 const PROYECTO_COORDINADO = marker('csp.proyecto.proyecto-coordinado');
-const PROYECTO_COORDINADOR_EXTERNO = marker('csp.proyecto.coordinador-externo');
+const PROYECTO_ROL_UNIVERSIDAD = marker('csp.proyecto.rol-universidad');
 const PROYECTO_PAQUETES_TRABAJO = marker('csp.proyecto.permite-paquetes-trabajo');
 const MSG_PROYECTO_EQUIPO_SOLICITANTE_REQUIRED = marker('error.csp.proyecto-equipo.solicitante.required');
 const MSG_CAMBIO_ESTADO_ERROR = marker('msg.csp.proyecto.cambio-estado.error');
@@ -53,7 +53,7 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoPro
   msgProyectoAmbitoGeograficoRequired: string;
   msgProyectoConfidencialRequired: string;
   msgProyectoCoordinadoRequired: string;
-  msgProyectoCoordinadorExternoRequired: string;
+  msgProyectoRolUniversidadRequired: string;
   msgProyectoPaquetesTrabajoRequired: string;
   msgProyectoEquipoSolicitanteRequired: string;
   msgCambioEstadoError: string;
@@ -127,10 +127,10 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoPro
       }
     );
     this.msgProyectoCoordinadoRequired = this.translate.instant(MSG_FIELD_REQUIRED, { field: this.translate.instant(PROYECTO_COORDINADO) });
-    this.msgProyectoCoordinadorExternoRequired = this.translate.instant(
+    this.msgProyectoRolUniversidadRequired = this.translate.instant(
       MSG_FIELD_REQUIRED,
       {
-        field: this.translate.instant(PROYECTO_COORDINADOR_EXTERNO)
+        field: this.translate.instant(PROYECTO_ROL_UNIVERSIDAD)
       }
     );
     this.msgProyectoPaquetesTrabajoRequired = this.translate.instant(
@@ -217,8 +217,8 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoPro
     }
 
     if (!!this.data.proyecto.coordinado
-      && (this.data.proyecto.coordinadorExterno === undefined || this.data.proyecto.coordinadorExterno === null)) {
-      problems.push(this.buildValidationError(this.msgProyectoCoordinadorExternoRequired));
+      && (this.data.proyecto.rolUniversidad === undefined || this.data.proyecto.rolUniversidad === null)) {
+      problems.push(this.buildValidationError(this.msgProyectoRolUniversidadRequired));
     }
 
     if (this.data.proyecto.permitePaquetesTrabajo === undefined || this.data.proyecto.permitePaquetesTrabajo === null) {

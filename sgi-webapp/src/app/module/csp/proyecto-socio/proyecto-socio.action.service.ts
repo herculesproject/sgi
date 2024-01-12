@@ -41,7 +41,7 @@ export class ProyectoSocioActionService extends ActionService {
   private data: IProyectoSocioData;
 
   get coordinadorExterno(): boolean {
-    return this.data.proyecto.coordinadorExterno;
+    return !this.data.proyecto.rolUniversidad.coordinador;
   }
 
   get proyectoSocios(): IProyectoSocio[] {
@@ -53,11 +53,11 @@ export class ProyectoSocioActionService extends ActionService {
   }
 
   get showPeriodoJustificacion(): boolean {
-    return !this.data.proyecto.coordinadorExterno;
+    return !this.coordinadorExterno;
   }
 
   get showPeriodoPago(): boolean {
-    return !this.data.proyecto.coordinadorExterno;
+    return !this.coordinadorExterno;
   }
 
   get readonly(): boolean {

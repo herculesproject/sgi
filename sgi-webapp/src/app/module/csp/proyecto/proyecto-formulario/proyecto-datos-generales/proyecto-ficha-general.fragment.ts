@@ -5,6 +5,7 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { IProyectoPalabraClave } from '@core/models/csp/proyecto-palabra-clave';
 import { IProyectoProrroga, Tipo } from '@core/models/csp/proyecto-prorroga';
+import { IRolSocio } from '@core/models/csp/rol-socio';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -16,6 +17,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
@@ -28,7 +30,7 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, from, merge, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, from, merge, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../proyecto-relaciones/proyecto-relaciones.fragment';
 
@@ -97,14 +99,15 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private solicitudService: SolicitudService,
     private proyectoIvaService: ProyectoIVAService,
     public readonly: boolean,
-    public disableCoordinadorExterno: boolean,
+    public disableRolUniversidad: boolean,
     private hasAnyProyectoSocioCoordinador: boolean,
     public isVisor: boolean,
     public isInvestigador: boolean,
     private relacionService: RelacionService,
     private readonly palabraClaveService: PalabraClaveService,
-    public authService: SgiAuthService,
-    public configuracionService: ConfigService
+    private authService: SgiAuthService,
+    private configuracionService: ConfigService,
+    private rolSocioService: RolSocioService
   ) {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
@@ -132,83 +135,38 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         }
         return proyecto as IProyectoDatosGenerales;
       }),
-      switchMap((proyecto) => {
-        return this.getUnidadGestion(proyecto.unidadGestion.id).pipe(
-          map(unidadGestion => {
-            proyecto.unidadGestion = unidadGestion;
-            return proyecto;
-          })
-        );
-      }),
-      switchMap((proyecto) => {
-        if (proyecto.convocatoriaId) {
-          const convocatoria$ = this.isInvestigador ?
-            this.service.findConvocatoria(proyecto.id) : this.convocatoriaService.findById(proyecto.convocatoriaId);
-          return convocatoria$.pipe(
-            map(convocatoria => {
-              proyecto.convocatoria = convocatoria;
-              return proyecto;
-            })
-          );
-        } else {
-          return of(proyecto);
-        }
-      }),
-      switchMap((proyecto) => {
-        if (proyecto.solicitudId) {
-          return this.solicitudService.findSolicitudProyecto(proyecto.solicitudId).pipe(
-            map(solicitudProyecto => {
-              proyecto.solicitudProyecto = solicitudProyecto;
-              this.mostrarSolicitud = Boolean(solicitudProyecto);
-              return proyecto;
-            })
-          );
-        } else {
-          return of(proyecto);
-        }
-      }),
-      switchMap((proyecto) => {
-        if (proyecto.id) {
-          const options: SgiRestFindOptions = {
-            sort: new RSQLSgiRestSort('numProrroga', SgiRestSortDirection.DESC)
-          };
-          return this.service.findAllProyectoProrrogaProyecto(proyecto.id, options).pipe(
-            map(prorrogas => {
-              this.ultimaProrroga = prorrogas.items.shift();
-              return proyecto;
-            })
-          );
-        } else {
-          return of(proyecto);
-        }
-      }),
-      switchMap((proyecto) => {
-        return this.verifyProyectoSocioCoordinado(proyecto);
-      }),
-      switchMap(proyecto =>
-        this.service.findPalabrasClave(key).pipe(
-          map(({ items }) => items.map(proyectoPalabraClave => proyectoPalabraClave.palabraClave)),
-          tap(palabrasClave => this.getFormGroup().controls.palabrasClave.setValue(palabrasClave)),
-          map(() => proyecto)
-        )
+      switchMap(proyecto => forkJoin({
+        convocatoria: this.getConvocatoria(proyecto),
+        hasAnyProyectoSocio: this.service.hasAnyProyectoSocio(proyecto.id),
+        palabrasClave: this.service.findPalabrasClave(proyecto.id).pipe(map(({ items }) => items.map(proyectoPalabraClave => proyectoPalabraClave.palabraClave))),
+        rolUniversidad: this.getRolUniversidad(proyecto),
+        solicitudProyecto: this.getSocilictudProyecto(proyecto),
+        ultimaProrroga: this.getUltimaProrroga(proyecto),
+        unidadGestion: this.getUnidadGestion(proyecto.unidadGestion.id),
+      }).pipe(
+        map(({ convocatoria, hasAnyProyectoSocio, palabrasClave, rolUniversidad, solicitudProyecto, ultimaProrroga, unidadGestion }) => {
+          proyecto.convocatoria = convocatoria;
+          proyecto.rolUniversidad = rolUniversidad;
+          proyecto.solicitudProyecto = solicitudProyecto;
+          proyecto.unidadGestion = unidadGestion;
+
+          this.getFormGroup().controls.palabrasClave.setValue(palabrasClave);
+
+          this.hasPopulatedSocios = hasAnyProyectoSocio;
+          this.hasPopulatedSocios$.next(hasAnyProyectoSocio);
+
+          this.mostrarSolicitud = !!solicitudProyecto;
+          this.ultimaProrroga = ultimaProrroga;
+
+          return proyecto;
+        })
+      )
       ),
       catchError((error) => {
         this.logger.error(error);
         return EMPTY;
       })
     );
-  }
-
-  private verifyProyectoSocioCoordinado(proyecto: IProyectoDatosGenerales): Observable<IProyectoDatosGenerales> {
-    if (proyecto.id) {
-      return this.service.hasAnyProyectoSocio(proyecto.id).pipe(
-        map(response => {
-          this.hasPopulatedSocios = response;
-          this.hasPopulatedSocios$.next(response);
-          return proyecto;
-        }));
-    }
-    return of(proyecto);
   }
 
   protected buildFormGroup(): FormGroup {
@@ -248,7 +206,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       clasificacionCVN: new FormControl(null),
       coordinado: new FormControl(null),
       colaborativo: new FormControl(null),
-      coordinadorExterno: new FormControl(null),
+      rolUniversidad: new FormControl(null),
       permitePaquetesTrabajo: new FormControl(null),
       ivaDeducible: new FormControl(null),
       iva: new FormControl(null, [
@@ -404,10 +362,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
       this.subscribeToOnCoordinadoChangeHandler(form.controls.coordinado as FormControl);
 
-      this.subscriptions.push(this.coordinadoExternoValueChangeListener(form.controls.coordinadorExterno as FormControl));
+      this.subscriptions.push(this.rolUniversidadValueChangeListener(form.controls.rolUniversidad as FormControl));
 
-      this.subscribeToVerifyIfCoordinadoAndCoordinadorExternoChecked(form.controls.coordinado as FormControl,
-        form.controls.coordinadorExterno as FormControl);
+      this.subscribeToVerifyIfCoordinadoAndRolUniversidadNoCoordinadorChecked(
+        form.controls.coordinado as FormControl,
+        form.controls.rolUniversidad as FormControl
+      );
 
       this.hasAnyProyectoSocioWithRolCoordinador$.next(this.hasAnyProyectoSocioCoordinador);
 
@@ -447,14 +407,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return form;
   }
 
-  private subscribeToVerifyIfCoordinadoAndCoordinadorExternoChecked(coordinado: FormControl, coordinadorExterno: FormControl): void {
+  private subscribeToVerifyIfCoordinadoAndRolUniversidadNoCoordinadorChecked(coordinado: FormControl, rolUniversidad: FormControl): void {
 
     this.subscriptions.push(
       merge(
-        coordinadorExterno.valueChanges,
+        rolUniversidad.valueChanges,
         coordinado.valueChanges
       ).pipe(
-        map(() => coordinadorExterno.value && coordinado.value)
+        map(() => coordinado.value && (!!rolUniversidad.value ? !rolUniversidad.value.coordinador : false))
       ).subscribe(
         (value) => {
           this.hasProyectoCoordinadoAndCoordinadorExterno$.next(value);
@@ -470,16 +430,16 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
     this.subscriptions.push(coordinado.valueChanges.subscribe((value: boolean) => {
       if (!value) {
-        this.getFormGroup().controls?.coordinadorExterno.setValue(null);
+        this.getFormGroup().controls?.rolUniversidad.setValue(null);
         this.getFormGroup().controls?.colaborativo.setValue(null);
-        this.getFormGroup().controls?.coordinadorExterno.setValidators([]);
+        this.getFormGroup().controls?.rolUniversidad.setValidators([]);
 
       } else {
-        this.getFormGroup().controls?.coordinadorExterno.setValidators([Validators.required]);
+        this.getFormGroup().controls?.rolUniversidad.setValidators([Validators.required]);
         this.disableCoordinadoFormControl(this.hasPopulatedSocios);
       }
 
-      this.getFormGroup().controls?.coordinadorExterno.updateValueAndValidity();
+      this.getFormGroup().controls?.rolUniversidad.updateValueAndValidity();
       this.coordinado$.next(value);
     }));
   }
@@ -506,7 +466,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       clasificacionCVN: proyecto.clasificacionCVN,
       coordinado: proyecto.coordinado,
       colaborativo: proyecto.coordinado ? proyecto.colaborativo : null,
-      coordinadorExterno: proyecto.coordinado ? proyecto.coordinadorExterno : null,
+      rolUniversidad: proyecto.coordinado ? proyecto.rolUniversidad : null,
       permitePaquetesTrabajo: proyecto.permitePaquetesTrabajo,
       ivaDeducible: proyecto.ivaDeducible,
       iva: proyecto.iva?.iva ?? null,
@@ -584,7 +544,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.comentario = form.comentario.value;
     this.proyecto.observaciones = form.observaciones.value;
 
-    this.proyecto.coordinadorExterno = form.coordinadorExterno.value;
+    this.proyecto.rolUniversidad = form.rolUniversidad.value;
 
     return this.proyecto;
   }
@@ -682,7 +642,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       formgroup.get('coordinado').setValidators([
         Validators.required]);
-      formgroup.get('coordinadorExterno').setValidators([
+      formgroup.get('rolUniversidad').setValidators([
         Validators.required]);
       formgroup.get('permitePaquetesTrabajo').setValidators([
         Validators.required]);
@@ -796,20 +756,19 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     }
   }
 
-  private disableCoordinadorExternoFormControl(value: boolean): void {
+  private disableRolUniversidadFormControl(value: boolean): void {
 
     if (value || this.readonly || this.isInvestigador || this.isVisor) {
-      this.getFormGroup()?.controls.coordinadorExterno.disable({ emitEvent: false });
+      this.getFormGroup()?.controls.rolUniversidad.disable({ emitEvent: false });
     } else {
-      this.getFormGroup()?.controls.coordinadorExterno.enable({ emitEvent: false });
+      this.getFormGroup()?.controls.rolUniversidad.enable({ emitEvent: false });
     }
   }
 
-  private coordinadoExternoValueChangeListener(coordinadorExterno: FormControl): Subscription {
-
-    return coordinadorExterno.valueChanges.subscribe((value) => {
-      this.coordinadorExterno$.next(value);
-      this.disableCoordinadorExternoFormControl(this.disableCoordinadorExterno);
+  private rolUniversidadValueChangeListener(rolUniversidad: FormControl): Subscription {
+    return rolUniversidad.valueChanges.subscribe((value) => {
+      this.coordinadorExterno$.next(!!value ? !value.coordinador : true);
+      this.disableRolUniversidadFormControl(this.disableRolUniversidad);
     });
   }
 
@@ -861,6 +820,40 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   private getEntidadRelacionadaId(relacion: IRelacion): number {
     return relacion.entidadOrigen.id === this.getKey() ? relacion.entidadDestino.id : relacion.entidadOrigen.id;
+  }
+
+  private getConvocatoria(proyecto: IProyecto): Observable<IConvocatoria> {
+    if (!proyecto.convocatoriaId) {
+      return of(null);
+    }
+
+    return this.isInvestigador ? this.service.findConvocatoria(proyecto.id) : this.convocatoriaService.findById(proyecto.convocatoriaId);
+  }
+
+  private getSocilictudProyecto(proyecto: IProyecto): Observable<ISolicitudProyecto> {
+    if (!proyecto.solicitudId) {
+      return of(null);
+    }
+
+    return this.solicitudService.findSolicitudProyecto(proyecto.solicitudId);
+  }
+
+  private getUltimaProrroga(proyecto: IProyecto): Observable<IProyectoProrroga> {
+    const options: SgiRestFindOptions = {
+      sort: new RSQLSgiRestSort('numProrroga', SgiRestSortDirection.DESC)
+    };
+
+    return this.service.findAllProyectoProrrogaProyecto(proyecto.id, options).pipe(
+      map(prorrogas => prorrogas.items.shift())
+    );
+  }
+
+  private getRolUniversidad(proyecto: IProyecto): Observable<IRolSocio> {
+    if (!proyecto.rolUniversidad) {
+      return of(null);
+    }
+
+    return this.rolSocioService.findById(proyecto.rolUniversidad.id);
   }
 
   disablePermitePaquetesTrabajoFormControl(): void {

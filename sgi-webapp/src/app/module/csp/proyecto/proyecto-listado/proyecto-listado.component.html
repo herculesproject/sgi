@@ -233,7 +233,16 @@
         </mat-form-field>
 
       </div>
-
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Rol Universidad -->
+        <div fxFlex="20%">
+          <mat-form-field fxFill>
+            <mat-label>{{'csp.proyecto.rol-participacion-universidad' | translate}}</mat-label>
+            <sgi-select-rol-socio formControlName="rolUniversidad" extended="false">
+            </sgi-select-rol-socio>
+          </mat-form-field>
+        </div>
+      </div>
       <!-- Palabras clave -->
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <div fxFlex="100%">

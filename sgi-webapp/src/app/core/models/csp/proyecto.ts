@@ -5,8 +5,8 @@ import { DateTime } from 'luxon';
 import { IUnidadGestion } from '../usr/unidad-gestion';
 import { IEstadoProyecto } from './estado-proyecto';
 import { IProyectoIVA } from './proyecto-iva';
-import { ITipoAmbitoGeografico } from './tipos-configuracion';
-import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
+import { IRolSocio } from './rol-socio';
+import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad } from './tipos-configuracion';
 
 export interface IProyecto {
   /** Id */
@@ -53,8 +53,8 @@ export interface IProyecto {
   excelencia: boolean;
   /** colaborativo */
   colaborativo: boolean;
-  /** coordinadorExterno */
-  coordinadorExterno: boolean;
+  /** Rol universidad */
+  rolUniversidad: IRolSocio;
   /** permitePaquetesTrabajo */
   permitePaquetesTrabajo: boolean;
   /** iva */

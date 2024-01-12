@@ -97,6 +97,7 @@ import { ProyectoRelacionFragment } from './proyecto-formulario/proyecto-relacio
 import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
+import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 
 const MSG_SOLICITUDES = marker('csp.solicitud');
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
@@ -106,7 +107,7 @@ export interface IProyectoData {
   solicitanteRefSolicitud: string;
   solicitudFormularioSolicitud: FormularioSolicitud;
   readonly: boolean;
-  disableCoordinadorExterno: boolean;
+  disableRolUniversidad: boolean;
   hasAnyProyectoSocioCoordinador: boolean;
   isVisor: boolean;
   isInvestigador: boolean;
@@ -295,7 +296,8 @@ export class ProyectoActionService extends ActionService {
     periodoAmortizacionService: PeriodoAmortizacionService,
     datosContactoService: DatosContactoService,
     private dialogService: DialogService,
-    private configuracionService: ConfigService
+    private configuracionService: ConfigService,
+    rolSocioService: RolSocioService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -315,14 +317,15 @@ export class ProyectoActionService extends ActionService {
       logger, fb, id, proyectoService, unidadGestionService,
       modeloEjecucionService, tipoFinalidadService, tipoAmbitoGeograficoService, convocatoriaService, solicitudService, proyectoIvaService,
       this.data?.readonly,
-      this.data?.disableCoordinadorExterno,
+      this.data?.disableRolUniversidad,
       this.data?.hasAnyProyectoSocioCoordinador,
       this.data?.isVisor,
       this.data?.isInvestigador,
       relacionService,
       palabraClaveService,
       sgiAuthService,
-      configuracionService
+      configuracionService,
+      rolSocioService
     );
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
 
@@ -719,24 +722,13 @@ export class ProyectoActionService extends ActionService {
   }
 
   private onProyectoSocioListChangeHandle(proyectoSocios: StatusWrapper<IProyectoSocio>[]): void {
-
     if (this.data?.proyecto?.coordinado) {
       const numSocios = proyectoSocios.length;
       this.hasPopulatedSocios$.next(numSocios > 0);
     }
-    let needShow = false;
-    if (this.data?.proyecto?.coordinado && this.data?.proyecto?.coordinadorExterno) {
-      const socioCoordinador = proyectoSocios.find((socio: StatusWrapper<IProyectoSocio>) => socio.value.rolSocio.coordinador);
 
-      if (socioCoordinador) {
-        needShow = false;
-      } else {
-        needShow = true;
-      }
-    } else {
-      needShow = false;
-    }
-    this.hasAnyProyectoSocioWithRolCoordinador$.next(!needShow);
+    const hasSocioCoordinador = proyectoSocios.some((socio: StatusWrapper<IProyectoSocio>) => socio.value.rolSocio.coordinador);
+    this.hasAnyProyectoSocioWithRolCoordinador$.next(hasSocioCoordinador);
   }
 
   private isModuleINV(): boolean {

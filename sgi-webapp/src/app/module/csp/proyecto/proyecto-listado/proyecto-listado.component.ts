@@ -182,7 +182,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       prorrogado: new FormControl(''),
       palabrasClave: new FormControl(null),
       modeloEjecucion: new FormControl(null),
-      finalidad: new FormControl(null)
+      finalidad: new FormControl(null),
+      rolUniversidad: new FormControl(null)
     });
     this.loadAmbitoGeografico();
     this.loadPlanInvestigacion();
@@ -383,7 +384,8 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       .and('prorrogado', SgiRestFilterOperator.EQUALS, controls.prorrogado.value?.toString())
       .and('solicitudId', SgiRestFilterOperator.EQUALS, this.solicitudId?.toString())
       .and('modeloEjecucion.id', SgiRestFilterOperator.EQUALS, controls.modeloEjecucion.value?.id?.toString())
-      .and('finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString());
+      .and('finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString())
+      .and('rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString());
 
     const palabrasClave = controls.palabrasClave.value as string[];
     if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {

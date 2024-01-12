@@ -295,21 +295,21 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Coordinador externo -->
+      <!-- Rol universidad -->
       <mat-form-field fxFlex="33%" *ngIf="(formPart.coordinado$ | async)">
-        <mat-label>{{'csp.proyecto.coordinador-externo' | translate}}</mat-label>
-        <sgi-select-boolean formControlName="coordinadorExterno" [required]="(formPart.coordinado$ | async)">
-        </sgi-select-boolean>
+        <mat-label>{{'csp.proyecto.rol-universidad' | translate}}</mat-label>
+        <sgi-select-rol-socio formControlName="rolUniversidad"
+          [required]="(formPart.coordinado$ | async)"></sgi-select-rol-socio>
         <sgi-field-info matSuffix
-          [visible]="formPart.disableCoordinadorExterno && formGroup.controls?.coordinadorExterno.value === false && !formPart.isInvestigador && !formPart.isVisor"
+          [visible]="formPart.disableRolUniversidad && !!formGroup.controls.rolUniversidad.value?.coordinador && !formPart.isInvestigador && !formPart.isVisor"
           message="{{'msg.csp.solicitud-proyecto.unmodifiable-due-periodos-socios-dependencies.info' | translate}}">
         </sgi-field-info>
         <sgi-field-info matSuffix
           [visible]="!(formPart.hasAnyProyectoSocioWithRolCoordinador$ | async) && (formPart.coordinadorExterno$ | async) && !formPart.isInvestigador && !formPart.isVisor"
           message="{{'info.csp.solicitud-proyecto-socio.socio-con-rol-coordinador.no-informado.tooltip' | translate}}">
         </sgi-field-info>
-        <mat-error *ngIf="formGroup.controls.coordinadorExterno.errors?.required">
-          {{'error.required.entity' | translate:msgParamCoordinadorExternoEntity}}
+        <mat-error *ngIf="formGroup.controls.rolUniversidad.errors?.required">
+          {{'error.required.entity' | translate:msgParamRolUniversidadEntity}}
         </mat-error>
       </mat-form-field>
 

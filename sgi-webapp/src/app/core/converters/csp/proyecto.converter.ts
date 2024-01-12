@@ -1,5 +1,6 @@
 import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
 import { IProyecto } from '@core/models/csp/proyecto';
+import { IRolSocio } from '@core/models/csp/rol-socio';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -34,7 +35,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       colaborativo: value.colaborativo,
       excelencia: value.excelencia,
       coordinado: value.coordinado,
-      coordinadorExterno: value.coordinadorExterno,
+      rolUniversidad: value.rolUniversidadId ? { id: value.rolUniversidadId } as IRolSocio : null,
       permitePaquetesTrabajo: value.permitePaquetesTrabajo,
       causaExencion: value.causaExencion,
       iva: PROYECTO_IVA_CONVERTER.toTarget(value.iva),
@@ -81,7 +82,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       coordinado: value.coordinado,
       colaborativo: value.colaborativo,
       excelencia: value.excelencia,
-      coordinadorExterno: value.coordinadorExterno,
+      rolUniversidadId: value.rolUniversidad?.id,
       permitePaquetesTrabajo: value.permitePaquetesTrabajo,
       causaExencion: value.causaExencion,
       iva: PROYECTO_IVA_CONVERTER.fromTarget(value.iva),
