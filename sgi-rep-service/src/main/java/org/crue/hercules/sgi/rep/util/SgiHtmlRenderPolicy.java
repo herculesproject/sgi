@@ -20,7 +20,7 @@ public class SgiHtmlRenderPolicy extends HtmlRenderPolicy {
 
   @Override
   public void doRender(RenderContext<String> context) throws Exception {
-    String convertedHtml = convertHSLColors(context.getData());
+    String convertedHtml = convertHSLColors(convertRGBWithPercentageColors(context.getData()));
     String styledHtml = addStyles(convertedHtml);
     super.doRender(new RenderContext<>(context.getEleTemplate(), styledHtml, context.getTemplate()));
   }
@@ -48,6 +48,27 @@ public class SgiHtmlRenderPolicy extends HtmlRenderPolicy {
    */
   private String addStyleToHTML(String html, String tagName, String style) {
     return html.replace("<" + tagName + ">", "<" + tagName + " style='" + style + "'>");
+  }
+
+  /**
+   * Convierte los colores RGB con porcentajes en el contenido HTML a RGB.
+   *
+   * @param htmlString El contenido HTML.
+   * @return El contenido HTML con los colores RGB con porcentajes convertidos a
+   *         RGB.
+   */
+  private String convertRGBWithPercentageColors(String htmlString) {
+    Pattern pattern = Pattern.compile("rgb\\((\\d+\\.*\\d+)%,(\\d+\\.*\\d+)%,(\\d+\\.*\\d+)%\\)");
+    Matcher matcher = pattern.matcher(htmlString);
+    StringBuffer result = new StringBuffer();
+    while (matcher.find()) {
+      int red = (int) (Double.parseDouble(matcher.group(1)) * 2.55);
+      int green = (int) (Double.parseDouble(matcher.group(2)) * 2.55);
+      int blue = (int) (Double.parseDouble(matcher.group(3)) * 2.55);
+      matcher.appendReplacement(result, "rgb(" + red + "," + green + "," + blue + ")");
+    }
+    matcher.appendTail(result);
+    return result.toString();
   }
 
   /**
