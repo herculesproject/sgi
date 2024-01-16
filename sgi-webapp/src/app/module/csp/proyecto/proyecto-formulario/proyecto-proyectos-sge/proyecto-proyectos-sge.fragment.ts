@@ -11,7 +11,6 @@ import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoProyectosSgeFragment extends Fragment {
   proyectosSge$ = new BehaviorSubject<StatusWrapper<IProyectoProyectoSge>[]>([]);
-  private proyectosSgeEliminados: StatusWrapper<IProyectoProyectoSge>[] = [];
 
   constructor(
     key: number,
@@ -66,24 +65,8 @@ export class ProyectoProyectosSgeFragment extends Fragment {
     this.setChanges(true);
   }
 
-  public deleteProyectoSge(wrapper: StatusWrapper<IProyectoProyectoSge>) {
-    const current = this.proyectosSge$.value;
-    const index = current.findIndex(
-      (value) => value === wrapper
-    );
-    if (index >= 0) {
-      if (!wrapper.created) {
-        this.proyectosSgeEliminados.push(current[index]);
-      }
-      current.splice(index, 1);
-      this.proyectosSge$.next(current);
-      this.setChanges(true);
-    }
-  }
-
   saveOrUpdate(): Observable<void> {
     return concat(
-      this.deleteProyectosSge(),
       this.createProyectosSge()
     ).pipe(
       takeLast(1),
@@ -91,23 +74,6 @@ export class ProyectoProyectosSgeFragment extends Fragment {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
         }
-      })
-    );
-  }
-
-  private deleteProyectosSge(): Observable<void> {
-    if (this.proyectosSgeEliminados.length === 0) {
-      return of(void 0);
-    }
-    return from(this.proyectosSgeEliminados).pipe(
-      mergeMap((wrapped) => {
-        return this.service.deleteById(wrapped.value.id)
-          .pipe(
-            tap(() => {
-              this.proyectosSgeEliminados = this.proyectosSgeEliminados.filter(deletedProyectoSge =>
-                deletedProyectoSge.value.id !== wrapped.value.id);
-            })
-          );
       })
     );
   }
@@ -136,7 +102,7 @@ export class ProyectoProyectosSgeFragment extends Fragment {
 
   private isSaveOrUpdateComplete(): boolean {
     const touched: boolean = this.proyectosSge$.value.some((wrapper) => wrapper.touched);
-    return !(this.proyectosSgeEliminados.length > 0 || touched);
+    return !(touched);
   }
 
 }

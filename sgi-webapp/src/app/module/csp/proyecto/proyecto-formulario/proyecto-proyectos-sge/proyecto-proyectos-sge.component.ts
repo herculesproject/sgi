@@ -9,17 +9,14 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { forkJoin, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { SearchProyectoEconomicoModalComponent, SearchProyectoEconomicoModalData } from 'src/app/esb/sge/shared/search-proyecto-economico-modal/search-proyecto-economico-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoProyectosSgeFragment } from './proyecto-proyectos-sge.fragment';
 
-const MSG_DELETE = marker('msg.delete.entity');
 const IDENTIFICADOR_SGE_KEY = marker('csp.proyecto-proyecto-sge.identificador-sge');
 
 @Component({
@@ -35,10 +32,9 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
   fxLayoutProperties: FxLayoutProperties;
 
   elementosPagina = [5, 10, 25, 100];
-  displayedColumns = ['proyectoSgeRef', 'sectorIva', 'acciones'];
+  displayedColumns = ['proyectoSgeRef', 'sectorIva'];
 
   msgParamEntity = {};
-  textoDelete: string;
 
   dataSource = new MatTableDataSource<StatusWrapper<IProyectoProyectoSge>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -54,8 +50,7 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService,
-    private proyectoService: ProyectoService
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.PROYECTOS_SGE, actionService);
 
@@ -83,7 +78,6 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
       this.dataSource.data = elements;
     }));
 
-    this.loadCanDeleteProyectosSge();
   }
 
   private setupI18N(): void {
@@ -91,18 +85,6 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
       IDENTIFICADOR_SGE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
-
-    this.translate.get(
-      IDENTIFICADOR_SGE_KEY,
-      MSG_PARAMS.CARDINALIRY.SINGULAR
-    ).pipe(
-      switchMap((value) => {
-        return this.translate.get(
-          MSG_DELETE,
-          { entity: value, ...MSG_PARAMS.GENDER.MALE }
-        );
-      })
-    ).subscribe((value) => this.textoDelete = value);
   }
 
   openModal(): void {
@@ -128,30 +110,8 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     );
   }
 
-  deleteProyectoSge(wrapper: StatusWrapper<IProyectoProyectoSge>): void {
-    this.subscriptions.push(
-      this.dialogService.showConfirmation(this.textoDelete).subscribe(
-        (aceptado) => {
-          if (aceptado) {
-            this.formPart.deleteProyectoSge(wrapper);
-          }
-        }
-      )
-    );
-  }
-
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  private loadCanDeleteProyectosSge(): void {
-    forkJoin({
-      anualidadGastos: this.proyectoService.hasAnualidadGastos(this.formPart.getKey() as number),
-      anualidadIngresos: this.proyectoService.hasAnualidadIngresos(this.formPart.getKey() as number),
-      gastosProyecto: this.proyectoService.hasGastosProyecto(this.formPart.getKey() as number)
-    }).pipe(
-      map(({ anualidadGastos, anualidadIngresos, gastosProyecto }) => !anualidadGastos && !anualidadIngresos && !gastosProyecto)
-    ).subscribe(canDelete => this.canDeleteProyectosSge = canDelete);
   }
 
 }
