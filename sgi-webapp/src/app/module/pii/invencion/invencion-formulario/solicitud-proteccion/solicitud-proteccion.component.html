@@ -210,14 +210,14 @@
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
         <td mat-cell *matCellDef="let solicitudprot; let row = index;">
           <ng-container *sgiHasAuthority="'PII-INV-E'">
-            <button color="primary" *ngIf="solicitudprot?.activo" mat-icon-button
-              matTooltip="{{'btn.edit' | translate}}" [routerLink]="[solicitudprot.id]">
+            <button color="primary" mat-icon-button matTooltip="{{'btn.edit' | translate}}"
+              [routerLink]="[solicitudprot.id]">
               <mat-icon>border_color</mat-icon>
             </button>
           </ng-container>
           <ng-container *sgiHasAuthority="'PII-INV-E'">
-            <button color="warn" *ngIf="!solicitudprot?.id" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
-              (click)="deactivateSolicitudProteccion(solicitudprot, row)">
+            <button color="warn" mat-icon-button matTooltip="{{'btn.delete' | translate}}"
+              (click)="deleteSolicitudProteccion(solicitudprot)">
               <mat-icon>highlight_off</mat-icon>
             </button>
           </ng-container>

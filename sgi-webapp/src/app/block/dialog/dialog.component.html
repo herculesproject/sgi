@@ -1,5 +1,4 @@
-<mat-dialog-content align="center">
-  {{message | translate:params}}
+<mat-dialog-content align="center" [innerHtml]="message | translate:params">
 </mat-dialog-content>
 <mat-dialog-actions align="center">
   <button [color]="continuarButtonStyle" mat-raised-button (click)="confirmacionClick()" mat-dialog-close
