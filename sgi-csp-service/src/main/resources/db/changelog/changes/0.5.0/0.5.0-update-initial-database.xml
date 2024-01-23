@@ -34,6 +34,9 @@
     <addColumn tableName="configuracion">
       <column name="validacion_clasificacion_gastos" type="varchar(50)" />
     </addColumn>
+    <addColumn tableName="configuracion">
+      <column defaultValueBoolean="true" name="gin_ejecucion_economica" type="boolean"></column>
+    </addColumn>
   </changeSet>
 
   <changeSet author="master" id="0.5.0-5">

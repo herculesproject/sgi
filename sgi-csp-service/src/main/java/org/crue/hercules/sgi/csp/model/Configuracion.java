@@ -43,56 +43,47 @@ public class Configuracion extends BaseEntity {
      * Formato codigo partida presupuestaria
      * <code>formatoPartidaPresupuestaria</code>
      */
-    FORMATO_PARTIDA_PRESUPUESTARIA("formatoPartidaPresupuestaria",
-        "Expresión regular que se aplicará para la validación de las partidas presupuestarias de acuerdo al Sistema de gestión económica corporativo. Ejemplo: ^[A-Z0-9]{2}\\.[A-Z0-9]{4}\\.[A-Z0-9]{4}(\\.[A-Z0-9]{5,})$"),
+    FORMATO_PARTIDA_PRESUPUESTARIA("formatoPartidaPresupuestaria"),
     /**
      * Plantilla formato codigo partida presupuestaria
      * <code>plantillaFormatoPartidaPresupuestaria</code>
      */
-    FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA("plantillaFormatoPartidaPresupuestaria",
-        "Formato en el que se deben de introducir las partidas presupuestarias de acuerdo al Sistema de gestión económico corporativo. Ejemplo: XX.XXXX.XXXX.XXXXX"),
+    FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA("plantillaFormatoPartidaPresupuestaria"),
     /** Validacion gastos <code>validacionClasificacionGastos</code> */
-    VALIDACION_CLASIFICACION_GASTOS("validacionClasificacionGastos",
-        "Activación del apartado Validación de gastos en Ejecución económica"),
+    VALIDACION_CLASIFICACION_GASTOS("validacionClasificacionGastos"),
     /**
      * Formato identificador justificacion
      * <code>formatoIdentificadorJustificacion</code>
      */
-    FORMATO_IDENTIFICADOR_JUSTIFICACION("formatoIdentificadorJustificacion",
-        "Expresión regular que se aplicará para la validación del identificador de justificación, de acuerdo al Sistema de gestión económica. Ejemplo: ^[0-9]{1,5}\\/[0-9]{4}$"),
+    FORMATO_IDENTIFICADOR_JUSTIFICACION("formatoIdentificadorJustificacion"),
     /**
      * Plantilla formato identificador justificacion
      * <code>plantillaFormatoIdentificadorJustificacion</code>
      */
-    FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA("plantillaFormatoIdentificadorJustificacion",
-        "Formato en el que se debe de introducir el campo identificador de justificación en el apartado Seguimiento de justificación de acuerdo al Sistema de gestión económica. Ejemplo: AAAA-YYYY"),
+    FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA("plantillaFormatoIdentificadorJustificacion"),
     /** Dedicacion minima grupo <code>dedicacionMinimaGrupo</code> */
-    DEDICACION_MINIMA_GRUPO("dedicacionMinimaGrupo",
-        "El valor porcentaje de dedicación de los miembros de los Grupos de investigación debe de superar este valor"),
+    DEDICACION_MINIMA_GRUPO("dedicacionMinimaGrupo"),
     /** Formato codigo interno proyecto <code>formatoCodigoInternoProyecto</code> */
-    FORMATO_CODIGO_INTERNO_PROYECTO("formatoCodigoInternoProyecto",
-        "Expresión regular que se aplicará para la validación del campo referencia interna (cod Interno) del proyecto. Ejemplo: ^[A-Za-z0-9] {4}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}$"),
+    FORMATO_CODIGO_INTERNO_PROYECTO("formatoCodigoInternoProyecto"),
     /**
      * Plantilla formato codigo interno proyecto
      * <code>plantillaFormatoCodigoInternoProyecto</code>
      */
-    FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA("plantillaFormatoCodigoInternoProyecto",
-        "Formato en el que se debe de introducir el campo referencia interna del proyecto. Ejemplo: AAAA.YYY.YYY");
+    FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA("plantillaFormatoCodigoInternoProyecto"),
+    /**
+     * Habilitar Ejecución económica de Grupos de investigación
+     * <code>ejecucionEconomicaGruposEnabled</code>
+     */
+    EJECUCION_ECONOMICA_GRUPOS_ENABLED("ejecucionEconomicaGruposEnabled");
 
     private final String key;
-    private final String description;
 
-    private Param(String key, String description) {
+    private Param(String key) {
       this.key = key;
-      this.description = description;
     }
 
     public String getKey() {
       return this.key;
-    }
-
-    public String getDescription() {
-      return this.description;
     }
 
     public static Param fromKey(String key) {
@@ -152,6 +143,10 @@ public class Configuracion extends BaseEntity {
   @Column(name = "plantilla_formato_codigo_interno_proyecto", nullable = true, unique = true)
   private String plantillaFormatoCodigoInternoProyecto;
 
+  /** Habilitar Ejecución económica de Grupos de investigación */
+  @Column(name = "gin_ejecucion_economica", columnDefinition = "boolean default true", nullable = true, unique = true)
+  private Boolean ejecucionEconomicaGruposEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -170,6 +165,8 @@ public class Configuracion extends BaseEntity {
         return this.getPlantillaFormatoPartidaPresupuestaria();
       case VALIDACION_CLASIFICACION_GASTOS:
         return this.getValidacionClasificacionGastos();
+      case EJECUCION_ECONOMICA_GRUPOS_ENABLED:
+        return this.getEjecucionEconomicaGruposEnabled();
       default:
         return null;
     }
@@ -200,6 +197,9 @@ public class Configuracion extends BaseEntity {
         break;
       case VALIDACION_CLASIFICACION_GASTOS:
         this.setValidacionClasificacionGastos(ValidacionClasificacionGastos.valueOf(newValue));
+        break;
+      case EJECUCION_ECONOMICA_GRUPOS_ENABLED:
+        this.setEjecucionEconomicaGruposEnabled(new Boolean(newValue));
         break;
     }
   }
