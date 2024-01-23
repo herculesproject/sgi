@@ -1,7 +1,7 @@
 <sgi-action [actionService]="actionService">
   <ng-container menu>
     <sgi-action-fragment-menu-item [route]="[EJECUCION_ECONOMICA_ROUTE_NAMES.PROYECTOS]"
-      [title]="'csp.ejecucion-economica.proyectos' | translate"
+      [title]="(actionService.isEjecucionEconomicaGruposEnabled ? 'menu.csp.ejecucion-economica.proyectos-grupos' : 'menu.csp.ejecucion-economica.proyectos') | translate"
       [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTOS)">
     </sgi-action-fragment-menu-item>
     <sgi-action-fragment-menu-group *sgiHasAnyAuthorityForAnyUO="['CSP-EJEC-V', 'CSP-EJEC-E']"

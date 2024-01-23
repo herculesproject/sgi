@@ -55,15 +55,17 @@ export enum ConfigCsp {
   TITLE_PROYECTO_EXTERNO = 'title-proyecto-externo',
   TITLE_SOLICITUD = 'title-solicitud',
   TITLE_EXPORTACIÓN = 'title-exportacion',
+  TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS = 'title-integracion-sistemas-corporativos',
   // Config CSP service
   CSP_FORMATO_PARTIDA_PRESUPUESTARIA = 'formatoPartidaPresupuestaria',
   CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA = 'plantillaFormatoPartidaPresupuestaria',
-  CSP_VALIDACION_GASTOS = 'validacionClasificacionGastos',
+  CSP_VALIDACION_CLASIFICACION_GASTOS = 'validacionClasificacionGastos',
   CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION = 'formatoIdentificadorJustificacion',
   CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA = 'plantillaFormatoIdentificadorJustificacion',
   CSP_DEDICACION_MINIMA_GRUPO = 'dedicacionMinimaGrupo',
   CSP_FORMATO_CODIGO_INTERNO_PROYECTO = 'formatoCodigoInternoProyecto',
-  CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA = 'plantillaFormatoCodigoInternoProyecto'
+  CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA = 'plantillaFormatoCodigoInternoProyecto',
+  CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED = 'ejecucionEconomicaGruposEnabled'
 }
 
 @Component({
@@ -74,17 +76,19 @@ export enum ConfigCsp {
 export class ConfigCspComponent extends AbstractMenuContentComponent {
 
   private readonly _CONFIG_MAP: Map<ConfigCsp, IConfigOptions> = new Map([
-    [ConfigCsp.CSP_VALIDACION_GASTOS, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_VALIDACION_CLASIFICACION_GASTOS`), options: this.getValidacionclasificacionGastoValues(), required: true, module: ConfigModule.CSP }],
+    [ConfigCsp.CSP_VALIDACION_CLASIFICACION_GASTOS, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_VALIDACION_CLASIFICACION_GASTOS`), options: this.getValidacionclasificacionGastoValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_VALIDACION_CLASIFICACION_GASTOS.description`) }],
     [ConfigCsp.CSP_NOMBRE_SISTEMA_GESTION_EXTERNO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_NOMBRE_SISTEMA_GESTION_EXTERNO`), required: false, module: ConfigModule.CNF }],
     [ConfigCsp.CSP_URL_SISTEMA_GESTION_EXTERNO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_URL_SISTEMA_GESTION_EXTERNO`), required: false, module: ConfigModule.CNF }],
-    [ConfigCsp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA`), required: true, module: ConfigModule.CSP }],
-    [ConfigCsp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA`), required: true, module: ConfigModule.CSP }],
-    [ConfigCsp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO`), required: true, module: ConfigModule.CSP }],
-    [ConfigCsp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA`), required: true, module: ConfigModule.CSP }],
-    [ConfigCsp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION`), required: true, module: ConfigModule.CSP }],
-    [ConfigCsp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA`), required: true, module: ConfigModule.CSP }],
-    [ConfigCsp.CSP_DEDICACION_MINIMA_GRUPO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO`), required: true, module: ConfigModule.CSP }],
+    [ConfigCsp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA.description`) }],
+    [ConfigCsp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA.description`) }],
+    [ConfigCsp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO.description`), }],
+    [ConfigCsp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA.description`) }],
+    [ConfigCsp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION.description`) }],
+    [ConfigCsp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION_PLANTILLA.description`) }],
+    [ConfigCsp.CSP_DEDICACION_MINIMA_GRUPO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO.description`) }],
     [ConfigCsp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_PRPT`), module: ConfigModule.CNF }],
+    [ConfigCsp.TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.integracion-sistemas-corporativos`), module: ConfigModule.NONE }],
+    [ConfigCsp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED.description`) }],
     [ConfigCsp.TITLE_CONVONCATORIA, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.convocatoria`), module: ConfigModule.NONE }],
     [ConfigCsp.CSP_COM_CONVOCATORIA_FASES_DESTINATARIOS_UO, { type: ConfigType.EMAILS_UO, label: marker(`adm.config.csp.CSP_COM_CONVOCATORIA_FASES_DESTINATARIOS_UO`), required: true, module: ConfigModule.CNF }],
     [ConfigCsp.CSP_COM_CONVOCATORIA_HITOS_DESTINATARIOS_UO, { type: ConfigType.EMAILS_UO, label: marker(`adm.config.csp.CSP_COM_CONVOCATORIA_HITOS_DESTINATARIOS_UO`), required: true, module: ConfigModule.CNF }],
@@ -174,6 +178,10 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     }
 
     return of(keyValueList);
+  }
+
+  private getBooleanValues(): Observable<KeyValue<string, string>[]> {
+    return of([{ key: 'true', value: marker('label.si') }, { key: 'false', value: marker('label.no') }]);
   }
 
 }

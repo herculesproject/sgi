@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IConfigValue } from '@core/models/cnf/config-value';
+import { IConfiguracion } from '@core/models/csp/configuracion';
 import { environment } from '@env';
 import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
-import { TimeZoneConfigService } from '../timezone.service';
-import { IConfigValue } from '@core/models/cnf/config-value';
-import { IConfigValueResponse } from '../cnf/config-value-response';
 import { map } from 'rxjs/operators';
+import { ConfigCsp } from 'src/app/module/adm/config-csp/config-csp.component';
+import { IConfigValueResponse } from '../cnf/config-value-response';
 import { CONFIG_VALUE_RESPONSE_CONVERTER } from '../cnf/config-value-response.converter';
-import { IConfiguracion } from '@core/models/csp/configuracion';
+import { TimeZoneConfigService } from '../timezone.service';
 
 
 // tslint:disable-next-line: variable-name
@@ -49,6 +50,12 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
       value
     ).pipe(
       map((response => CONFIG_VALUE_RESPONSE_CONVERTER.toTarget(response)))
+    );
+  }
+
+  isEjecucionEconomicaGruposEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
     );
   }
 

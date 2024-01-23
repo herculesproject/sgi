@@ -90,6 +90,10 @@ export class EjecucionEconomicaActionService extends ActionService {
 
   private readonly data: IEjecucionEconomicaData;
 
+  get isEjecucionEconomicaGruposEnabled(): boolean {
+    return this.data.configuracion?.ejecucionEconomicaGruposEnabled ?? false;
+  }
+
   constructor(
     route: ActivatedRoute,
     proyectoService: ProyectoService,
@@ -114,31 +118,73 @@ export class EjecucionEconomicaActionService extends ActionService {
     this.data = route.snapshot.data[EJECUCION_ECONOMICA_DATA_KEY];
     const id = Number(route.snapshot.paramMap.get(EJECUCION_ECONOMICA_ROUTE_PARAMS.ID));
 
-    this.proyectos = new ProyectosFragment(id, this.data.proyectoSge, this.data.relaciones, proyectoService);
+    this.proyectos = new ProyectosFragment(
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      proyectoService,
+      this.data.configuracion
+    );
 
     this.ejecucionPresupuestariaEstadoActual = new EjecucionPresupuestariaEstadoActualFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService, ejecucionEconomicaService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      proyectoService,
+      proyectoAnualidadService,
+      ejecucionEconomicaService,
+      this.data.configuracion
+    );
 
     this.ejecucionPresupuestariaGastos = new EjecucionPresupuestariaGastosFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService, ejecucionEconomicaService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      proyectoService,
+      proyectoAnualidadService,
+      ejecucionEconomicaService,
+      this.data.configuracion
+    );
 
     this.ejecucionPresupuestariaIngresos = new EjecucionPresupuestariaIngresosFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService, ejecucionEconomicaService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      proyectoService,
+      proyectoAnualidadService,
+      ejecucionEconomicaService,
+      this.data.configuracion
+    );
 
     this.detalleOperacionesGastos = new DetalleOperacionesGastosFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService, ejecucionEconomicaService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      proyectoService,
+      proyectoAnualidadService,
+      ejecucionEconomicaService,
+      this.data.configuracion
+    );
 
     this.detalleOperacionesIngresos = new DetalleOperacionesIngresosFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService, ejecucionEconomicaService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      proyectoService,
+      proyectoAnualidadService,
+      ejecucionEconomicaService,
+      this.data.configuracion
+    );
 
     this.detalleOperacionesModificaciones = new DetalleOperacionesModificacionesFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService, ejecucionEconomicaService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      proyectoService,
+      proyectoAnualidadService,
+      ejecucionEconomicaService,
+      this.data.configuracion
+    );
 
     this.facturasGastos = new FacturasGastosFragment(
       id, this.data.proyectoSge, this.data.relaciones,
@@ -173,8 +219,14 @@ export class EjecucionEconomicaActionService extends ActionService {
       id, this.data.proyectoSge, gastoService, proyectoService, gastoProyectoService);
 
     this.facturasEmitidas = new FacturasEmitidasFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService, calendarioFacturacionService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      proyectoService,
+      proyectoAnualidadService,
+      calendarioFacturacionService,
+      this.data.configuracion
+    );
 
     this.seguimientoJustificacionResumen = new SeguimientoJustificacionResumenFragment(
       id, this.data.proyectoSge, this.data.relaciones.filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO),

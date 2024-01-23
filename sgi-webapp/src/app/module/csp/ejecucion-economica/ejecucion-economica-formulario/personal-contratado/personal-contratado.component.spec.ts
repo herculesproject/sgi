@@ -22,8 +22,8 @@ describe('PersonalContratadoComponent', () => {
     [EJECUCION_ECONOMICA_DATA_KEY]: {
       proyectoSge: {},
       relaciones: [{ id: 1 } as IRelacionEjecucionEconomicaWithResponsables],
-      readonly: false,
-      configuracion: {} as IConfiguracion
+      configuracion: { ejecucionEconomicaGruposEnabled: true } as IConfiguracion,
+      readonly: false
     } as IEjecucionEconomicaData
   };
   const routeMock = TestUtils.buildActivatedRouteMock('1', routeData);

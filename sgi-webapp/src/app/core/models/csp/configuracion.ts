@@ -30,4 +30,6 @@ export interface IConfiguracion {
   formatoCodigoInternoProyecto: string;
   /** Plantilla informativa del formato del código interno de proyecto */
   plantillaFormatoCodigoInternoProyecto: string;
+  /** Habilitar Ejecución económica de Grupos de investigació */
+  ejecucionEconomicaGruposEnabled: boolean;
 }

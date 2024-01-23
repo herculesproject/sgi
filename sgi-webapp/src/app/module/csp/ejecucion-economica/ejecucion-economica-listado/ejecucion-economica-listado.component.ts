@@ -6,6 +6,7 @@ import { IRelacionEjecucionEconomica, TIPO_ENTIDAD_MAP, TipoEntidad } from '@cor
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
+import { ConfigService as ConfigCspService } from '@core/services/csp/config.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RelacionEjecucionEconomicaService } from '@core/services/csp/relacion-ejecucion-economica/relacion-ejecucion-economica.service';
@@ -64,7 +65,8 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     private relacionEjecucionEconomicaService: RelacionEjecucionEconomicaService,
     private grupoService: GrupoService,
     private readonly matDialog: MatDialog,
-    private readonly cnfService: ConfigService
+    private readonly cnfService: ConfigService,
+    private readonly configCspService: ConfigCspService
   ) {
     super();
   }
@@ -226,6 +228,16 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     });
 
     this.initFormGroup();
+
+    this.suscripciones.push(
+      this.configCspService.isEjecucionEconomicaGruposEnabled().subscribe(enabled => {
+        if (enabled) {
+          this.formGroup.controls.tipoEntidad.enable();
+        } else {
+          this.formGroup.controls.tipoEntidad.disable();
+        }
+      })
+    );
   }
 
   private initFormGroup(reset = false): void {

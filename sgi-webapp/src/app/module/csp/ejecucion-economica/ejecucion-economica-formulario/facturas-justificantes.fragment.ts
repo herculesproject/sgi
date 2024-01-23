@@ -67,7 +67,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private configuracion: IConfiguracion,
   ) {
-    super(key, proyectoSge, relaciones, proyectoService, proyectoAnualidadService);
+    super(key, proyectoSge, relaciones, proyectoService, proyectoAnualidadService, configuracion);
     this.setComplete(true);
   }
 

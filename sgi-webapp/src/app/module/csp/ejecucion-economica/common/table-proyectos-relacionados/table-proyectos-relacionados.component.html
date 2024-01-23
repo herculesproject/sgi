@@ -35,7 +35,8 @@
     <!-- Nombre / Titulo Column -->
     <ng-container matColumnDef="nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{'csp.ejecucion-economica.proyectos-grupos.nombre' | translate}}
+        {{(isEjecucionEconomicaGruposEnabled ? 'csp.ejecucion-economica.proyectos-grupos.nombre' :
+        'csp.ejecucion-economica.proyectos.nombre') | translate}}
       </th>
       <td mat-cell *matCellDef="let element">
         {{element.nombre}}

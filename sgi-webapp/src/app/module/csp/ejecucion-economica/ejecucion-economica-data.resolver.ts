@@ -34,7 +34,7 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
     private personaService: PersonaService,
     private proyectoService: ProyectoService,
     private proyectoSgeService: ProyectoSgeService,
-    private configuracionService: ConfigService,
+    private configuracionService: ConfigService
   ) {
     super(logger, router, snackBar, MSG_NOT_FOUND);
   }

@@ -25,7 +25,8 @@ describe('EjecucionEconomicaEditarComponent', () => {
       relaciones: [{ id: 1 } as IRelacionEjecucionEconomicaWithResponsables],
       readonly: false,
       configuracion: {
-        validacionClasificacionGastos: ValidacionClasificacionGastos.ELEGIBILIDAD
+        validacionClasificacionGastos: ValidacionClasificacionGastos.ELEGIBILIDAD,
+        ejecucionEconomicaGruposEnabled: true
       }
     } as IEjecucionEconomicaData
   };

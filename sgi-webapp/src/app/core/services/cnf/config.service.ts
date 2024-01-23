@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatListIconCssMatStyler } from '@angular/material/list';
 import { IConfigValue } from '@core/models/cnf/config-value';
 import { IRecipient } from '@core/models/com/recipient';
 import { environment } from '@env';
 import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { TimeZoneConfigService } from '../timezone.service';
 import { IConfigValueRequest } from './config-value-request';
 import { CONFIG_VALUE_REQUEST_CONVERTER } from './config-value-request.converter';
