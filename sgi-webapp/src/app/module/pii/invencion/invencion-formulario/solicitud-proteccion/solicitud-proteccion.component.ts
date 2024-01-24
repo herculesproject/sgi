@@ -37,6 +37,7 @@ const SOLICITUD_PROTECCION_NO_DELETABLE = marker('pii.solicitud-proteccion.no-de
 const INVENCION_GASTO_KEY = marker('pii.invencion-gastos');
 const PAIESES_VALIDADOS_KEY = marker('pii.solicitud-proteccion.pais-validado.titulo');
 const PROCEDIMIENTOS_KEY = marker('pii.solicitud-proteccion.procedimiento');
+const MSG_AND = marker('msg.and');
 
 
 @Component({
@@ -280,11 +281,28 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
         switchMap(({ hasInvencionGastos, hasPaisesValidados, hasProcedimientos }) => {
           const isEliminable = !hasInvencionGastos && !hasPaisesValidados && !hasProcedimientos
           if (!isEliminable) {
-            const relaciones = (hasInvencionGastos ? '<li>' + this.translate.instant(INVENCION_GASTO_KEY) + '</li>' : '')
-              + (hasPaisesValidados ? '<li>' + this.translate.instant(PAIESES_VALIDADOS_KEY, MSG_PARAMS.CARDINALIRY.PLURAL) + '</li>' : '')
-              + (hasProcedimientos ? '<li>' + this.translate.instant(PROCEDIMIENTOS_KEY, MSG_PARAMS.CARDINALIRY.PLURAL) + '</li>' : '');
+            const relaciones = [];
+            if (hasInvencionGastos) {
+              relaciones.push(this.translate.instant(INVENCION_GASTO_KEY));
+            }
 
-            return this.dialogService.showConfirmation(SOLICITUD_PROTECCION_NO_DELETABLE, { entities: relaciones });
+            if (hasPaisesValidados) {
+              relaciones.push(this.translate.instant(PAIESES_VALIDADOS_KEY, MSG_PARAMS.CARDINALIRY.PLURAL));
+            }
+
+            if (hasProcedimientos) {
+              relaciones.push(this.translate.instant(PROCEDIMIENTOS_KEY, MSG_PARAMS.CARDINALIRY.PLURAL));
+            }
+
+            let relacionesMsg = '';
+            if (relaciones.length > 2) {
+              const lastRelacion = relaciones.pop();
+              relacionesMsg = `${relaciones.join(', ')} ${this.translate.instant(MSG_AND)} ${lastRelacion}`;
+            } else {
+              relacionesMsg = relaciones.join(` ${this.translate.instant(MSG_AND)} `);
+            }
+
+            return this.dialogService.showInfoDialog(SOLICITUD_PROTECCION_NO_DELETABLE, { entities: relacionesMsg });
           }
 
           return this.dialogService.showConfirmation(this.msgConfirmDelete).pipe(
