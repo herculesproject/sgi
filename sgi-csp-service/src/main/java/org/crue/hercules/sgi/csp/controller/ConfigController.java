@@ -97,7 +97,7 @@ public class ConfigController {
    * @return ConfigOutput the {@link ConfigParamOutput}
    */
   @GetMapping(PATH_NAME)
-  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-cnf')) or hasAuthority('ADM-CNF-E')")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-cnf')) or hasAnyAuthorityForAnyUO('ADM-CNF-E', 'CSP-EJEC-V', 'CSP-EJEC-E', 'CSP-EJEC-INV-VR', 'CSP-GIN-E', 'CSP-GIN-V', 'CSP-GIN-INV-VR')")
   public ResponseEntity<ConfigParamOutput> get(@PathVariable String name) {
     log.debug("getById(@PathVariable Long id) - start");
     ConfigParamOutput returnValue = service.get(name);
