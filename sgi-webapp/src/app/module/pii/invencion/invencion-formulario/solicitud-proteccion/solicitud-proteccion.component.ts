@@ -63,7 +63,6 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
       'fechaPrioridadSolicitud',
       'numeroSolicitud',
       'numeroRegistro',
-      'activo',
       'acciones'],
     industrial: [
       'viaProteccion.nombre',
@@ -73,7 +72,6 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
       'numeroPublicacion',
       'numeroConcesion',
       'estado',
-      'activo',
       'acciones'
     ]
   };
@@ -267,7 +265,7 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
   }
 
   /**
-   * Desactivar Solicitud de Proteccion.
+   * Eliminar Solicitud de Proteccion.
    * @param solicitudProteccion: ISolicitudProteccion
    */
   deleteSolicitudProteccion(solicitudProteccion: ISolicitudProteccion): void {
