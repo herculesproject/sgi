@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
-import { VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
+import { CARDINALIDAD_RELACION_SGI_SGE_MAP, VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { Observable, of } from 'rxjs';
@@ -65,7 +65,8 @@ export enum ConfigCsp {
   CSP_DEDICACION_MINIMA_GRUPO = 'dedicacionMinimaGrupo',
   CSP_FORMATO_CODIGO_INTERNO_PROYECTO = 'formatoCodigoInternoProyecto',
   CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA = 'plantillaFormatoCodigoInternoProyecto',
-  CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED = 'ejecucionEconomicaGruposEnabled'
+  CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED = 'ejecucionEconomicaGruposEnabled',
+  CSP_CARDINALIDAD_RELACION_SGI_SGE = 'cardinalidadRelacionSgiSge'
 }
 
 @Component({
@@ -88,6 +89,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_DEDICACION_MINIMA_GRUPO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO.description`) }],
     [ConfigCsp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_PRPT`), module: ConfigModule.CNF }],
     [ConfigCsp.TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.integracion-sistemas-corporativos`), module: ConfigModule.NONE }],
+    [ConfigCsp.CSP_CARDINALIDAD_RELACION_SGI_SGE, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE`), options: this.getCardinalidadRelacionSgiSgeValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE.description`) }],
     [ConfigCsp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED.description`) }],
     [ConfigCsp.TITLE_CONVONCATORIA, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.convocatoria`), module: ConfigModule.NONE }],
     [ConfigCsp.CSP_COM_CONVOCATORIA_FASES_DESTINATARIOS_UO, { type: ConfigType.EMAILS_UO, label: marker(`adm.config.csp.CSP_COM_CONVOCATORIA_FASES_DESTINATARIOS_UO`), required: true, module: ConfigModule.CNF }],
@@ -168,6 +170,16 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     } else {
       this.clearProblems();
     }
+  }
+
+  private getCardinalidadRelacionSgiSgeValues(): Observable<KeyValue<string, string>[]> {
+    const keyValueList: KeyValue<string, string>[] = [];
+
+    for (const [key, value] of CARDINALIDAD_RELACION_SGI_SGE_MAP.entries()) {
+      keyValueList.push({ key, value });
+    }
+
+    return of(keyValueList);
   }
 
   private getValidacionclasificacionGastoValues(): Observable<KeyValue<string, string>[]> {

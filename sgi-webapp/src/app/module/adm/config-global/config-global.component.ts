@@ -36,8 +36,8 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
   private readonly _CONFIG_MAP: Map<ConfigGlobal, IConfigOptions> = new Map([
     [ConfigGlobal.ENTIDAD_IMPLANTACION, { type: ConfigType.TEXT, label: marker(`adm.config.global.ENTIDAD_IMPLANTACION`), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.ID_ENTIDAD_SGEMP, { type: ConfigType.TEXT, label: marker(`adm.config.global.ID_ENTIDAD_SGEMP`), required: true, module: ConfigModule.CNF }],
-    [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.EXP_MAX_NUM_REGISTROS_EXCEL, { type: ConfigType.TEXT, label: marker(`adm.config.global.EXP_MAX_NUM_REGISTROS_EXCEL`), required: false, info: marker(`adm.config.global.EXP_MAX_NUM_REGISTROS_EXCEL_INFO`), module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO_2X`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO_3X`), module: ConfigModule.CNF }],

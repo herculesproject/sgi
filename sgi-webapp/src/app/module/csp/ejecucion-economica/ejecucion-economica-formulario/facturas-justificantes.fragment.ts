@@ -1,6 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
-import { IConfiguracion, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
+import { CardinalidadRelacionSgiSge, IConfiguracion, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoAgrupacionGasto } from '@core/models/csp/proyecto-agrupacion-gasto';
@@ -54,6 +54,15 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
 
   get configuracionValidacionClasificacionGastos(): ValidacionClasificacionGastos {
     return this.configuracion.validacionClasificacionGastos;
+  }
+
+  get isClasificacionGastosEnabled(): boolean {
+    return this.configuracion.validacionClasificacionGastos === ValidacionClasificacionGastos.CLASIFICACION;
+  }
+
+  get disableProyectoSgi(): boolean {
+    return this.config.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
+      || this.config.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_N;
   }
 
   constructor(

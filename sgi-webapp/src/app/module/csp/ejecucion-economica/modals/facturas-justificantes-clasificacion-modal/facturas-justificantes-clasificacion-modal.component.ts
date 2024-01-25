@@ -27,6 +27,7 @@ export interface DatoEconomicoDetalleClasificacionModalData extends IDatoEconomi
   vinculacion: string;
   tituloModal: string;
   showDatosCongreso: boolean;
+  disableProyectoSgi: boolean;
 }
 
 enum ConceptoGastoTipo {
@@ -92,7 +93,7 @@ export class FacturasJustificantesClasificacionModal extends DialogFormComponent
 
     const formGroup = new FormGroup(
       {
-        proyecto: new FormControl(proyecto),
+        proyecto: new FormControl({ value: proyecto, disabled: this.data.disableProyectoSgi }),
         conceptoGastoFiltro: new FormControl(conceptoGastoFiltro),
         conceptoGasto: new FormControl(conceptoGasto)
       }

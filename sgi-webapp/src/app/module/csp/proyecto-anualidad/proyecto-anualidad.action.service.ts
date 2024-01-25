@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TipoPartida } from '@core/enums/tipo-partida';
 import { IAnualidadResumen } from '@core/models/csp/anualidad-resumen';
+import { CardinalidadRelacionSgiSge } from '@core/models/csp/configuracion';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoAnualidadResumen } from '@core/models/csp/proyecto-anualidad-resumen';
 import { ActionService } from '@core/services/action-service';
@@ -21,6 +22,7 @@ import { PROYECTO_ANUALIDAD_ROUTE_PARAMS } from './proyecto-anualidad-route-para
 export interface IProyectoAnualidadData {
   proyecto: IProyecto;
   proyectoAnualidadResumen: IProyectoAnualidadResumen[];
+  cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
   readonly: boolean;
 }
 
@@ -71,11 +73,32 @@ export class ProyectoAnualidadActionService extends ActionService {
     }
 
     this.datosGenerales = new ProyectoAnualidadDatosGeneralesFragment(
-      id, this.data.proyecto, proyectoAnualidadService, this.data.readonly);
+      id,
+      this.data.proyecto,
+      proyectoAnualidadService,
+      this.data.readonly
+    );
+
     this.anualidadGastos = new ProyectoAnualidadGastosFragment(
-      logger, id, this.data.proyecto.id, proyectoAnualidadService, anualidadGastoService, codigoEconomicoGastoService);
+      logger,
+      id,
+      this.data.proyecto.id,
+      proyectoAnualidadService,
+      anualidadGastoService,
+      codigoEconomicoGastoService,
+      this.data.cardinalidadRelacionSgiSge
+    );
+
     this.anualidadIngresos = new ProyectoAnualidadIngresosFragment(
-      logger, id, this.data.proyecto.id, proyectoAnualidadService, anualidadIngresoService, codigoEconomicoIngresoService);
+      logger,
+      id,
+      this.data.proyecto.id,
+      proyectoAnualidadService,
+      anualidadIngresoService,
+      codigoEconomicoIngresoService,
+      this.data.cardinalidadRelacionSgiSge
+    );
+
     this.anualidadResumen = new ProyectoAnualidadResumenFragment(id, proyectoAnualidadService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);

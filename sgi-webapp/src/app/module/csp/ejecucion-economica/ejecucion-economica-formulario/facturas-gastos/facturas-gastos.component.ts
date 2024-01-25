@@ -139,6 +139,7 @@ export class FacturasGastosComponent extends FragmentComponent implements OnInit
         switchMap(modalData => {
           modalData.tituloModal = MODAL_CLASIFICACION_TITLE_KEY;
           modalData.showDatosCongreso = false;
+          modalData.disableProyectoSgi = this.formPart.disableProyectoSgi;
           const config: MatDialogConfig<DatoEconomicoDetalleClasificacionModalData> = {
             data: modalData
           };
@@ -174,7 +175,9 @@ export class FacturasGastosComponent extends FragmentComponent implements OnInit
           columns: exportData?.columns,
           data: exportData?.data,
           totalRegistrosExportacionExcel: this.totalElementos,
-          limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+          limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel),
+          showColumClasificadoAutomaticamente: this.formPart.isClasificacionGastosEnabled,
+          showColumnProyectoSgi: !this.formPart.disableProyectoSgi
         };
 
         const config = {

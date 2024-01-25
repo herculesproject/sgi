@@ -183,7 +183,7 @@ export class InvencionInventorComponent extends FragmentComponent implements OnI
       eliminable$.pipe(
         switchMap(isEliminable => {
           if (!isEliminable) {
-            return this.dialogService.showConfirmation(this.msgNoDeletable);
+            return this.dialogService.showInfoDialog(this.msgNoDeletable);
           }
 
           return this.dialogService.showConfirmation(this.msgConfirmDelete).pipe(

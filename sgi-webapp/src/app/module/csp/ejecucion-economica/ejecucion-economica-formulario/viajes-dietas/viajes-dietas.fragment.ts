@@ -48,6 +48,10 @@ export class ViajesDietasFragment extends FacturasJustificantesFragment {
           ...columns.map(column => column.id),
           'acciones'
         ];
+
+        if (this.disableProyectoSgi) {
+          this.displayColumns.splice(1, 1);
+        }
       }
     ));
   }

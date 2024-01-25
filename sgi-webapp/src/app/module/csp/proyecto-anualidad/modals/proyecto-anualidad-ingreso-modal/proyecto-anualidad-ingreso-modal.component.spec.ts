@@ -19,6 +19,7 @@ describe('ProyectoAnualidadIngresoModalComponent', () => {
     isEdit: false,
     anualidadIngreso: {} as IAnualidadIngreso,
     proyectoId: null,
+    disableIndentificadorSge: false,
     readonly: false
   };
 

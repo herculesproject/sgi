@@ -21,6 +21,7 @@ describe('ProyectoAnualidadGastoModalComponent', () => {
     proyectoId: 1,
     fechaInicioAnualidad: null,
     fechaFinAnualidad: null,
+    disableIndentificadorSge: false,
     readonly: false
   };
 

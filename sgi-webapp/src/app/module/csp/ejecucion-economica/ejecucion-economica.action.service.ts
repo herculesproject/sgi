@@ -212,11 +212,18 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoService,
       gastoProyectoService,
       proyectoConceptoGastoCodigoEcService,
-      proyectoConceptoGastoService
+      proyectoConceptoGastoService,
+      this.data.configuracion
     );
 
     this.validacionGastos = new ValidacionGastosFragment(
-      id, this.data.proyectoSge, gastoService, proyectoService, gastoProyectoService);
+      id,
+      this.data.proyectoSge,
+      gastoService,
+      proyectoService,
+      gastoProyectoService,
+      this.data.configuracion
+    );
 
     this.facturasEmitidas = new FacturasEmitidasFragment(
       id,

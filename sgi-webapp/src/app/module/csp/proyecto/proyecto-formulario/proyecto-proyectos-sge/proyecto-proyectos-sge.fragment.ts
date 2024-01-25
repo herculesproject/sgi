@@ -1,22 +1,32 @@
+import { CardinalidadRelacionSgiSge } from '@core/models/csp/configuracion';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { Fragment } from '@core/services/action-service';
+import { ConfigService } from '@core/services/csp/config.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, concat, from, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, concat, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoProyectosSgeFragment extends Fragment {
   proyectosSge$ = new BehaviorSubject<StatusWrapper<IProyectoProyectoSge>[]>([]);
+
+  private _cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
+  private _disableAddIdentificadorSge: boolean;
+
+  get disableAddIdentificadorSge(): boolean {
+    return this._disableAddIdentificadorSge;
+  }
 
   constructor(
     key: number,
     private service: ProyectoProyectoSgeService,
     private proyectoService: ProyectoService,
     private proyectoSgeService: ProyectoSgeService,
+    private configService: ConfigService,
     public readonly: boolean,
     public isVisor: boolean
   ) {
@@ -26,27 +36,40 @@ export class ProyectoProyectosSgeFragment extends Fragment {
 
   protected onInitialize(): void {
     if (this.getKey()) {
-      const subscription = this.proyectoService.findAllProyectosSgeProyecto(this.getKey() as number).pipe(
-        map(response => response.items.map(proyectoProyectoSge => new StatusWrapper<IProyectoProyectoSge>(proyectoProyectoSge))),
-        switchMap(response => {
-          const requestsProyectoSge: Observable<StatusWrapper<IProyectoProyectoSge>>[] = [];
-          response.forEach(proyectoProyectoSge => {
-            requestsProyectoSge.push(this.proyectoSgeService.findById(proyectoProyectoSge.value.proyectoSge.id).pipe(
-              map((proyectoSge) => {
-                proyectoProyectoSge.value.proyectoSge = proyectoSge;
-                return proyectoProyectoSge;
-              })
-            ));
-          });
-          return of(response).pipe(
-            tap(() => merge(...requestsProyectoSge).subscribe())
-          );
-        })
-      ).subscribe((proyectoProyectoSge) => {
-        this.proyectosSge$.next(proyectoProyectoSge);
-      });
 
-      this.subscriptions.push(subscription);
+      this.subscriptions.push(
+        forkJoin({
+          proyectosSge: this.proyectoService.findAllProyectosSgeProyecto(this.getKey() as number).pipe(
+            map(response => response.items.map(proyectoProyectoSge => new StatusWrapper<IProyectoProyectoSge>(proyectoProyectoSge))),
+            switchMap(response => {
+              const requestsProyectoSge: Observable<StatusWrapper<IProyectoProyectoSge>>[] = [];
+              response.forEach(proyectoProyectoSge => {
+                requestsProyectoSge.push(this.proyectoSgeService.findById(proyectoProyectoSge.value.proyectoSge.id).pipe(
+                  map((proyectoSge) => {
+                    proyectoProyectoSge.value.proyectoSge = proyectoSge;
+                    return proyectoProyectoSge;
+                  })
+                ));
+              });
+              return of(response).pipe(
+                tap(() => merge(...requestsProyectoSge).subscribe())
+              );
+            })
+          ),
+          cardinalidadRelacionSgiSge: this.configService.getCardinalidadRelacionSgiSge()
+        }).subscribe(({ cardinalidadRelacionSgiSge, proyectosSge }) => {
+          this._cardinalidadRelacionSgiSge = cardinalidadRelacionSgiSge;
+          this.proyectosSge$.next(proyectosSge);
+        })
+      );
+
+      this.subscriptions.push(
+        this.proyectosSge$.subscribe(proyectosSge => {
+          this._disableAddIdentificadorSge = (proyectosSge?.length ?? 0) > 0
+            && (this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
+              || this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1);
+        })
+      )
     }
   }
 

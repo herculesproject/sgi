@@ -6,4 +6,5 @@ export interface IEjecucionPresupuestariaReportOptions extends IReportOptions {
   data: IDatoEconomico[];
   columns: IColumnDefinition[];
   showColumClasificadoAutomaticamente?: boolean;
+  showColumnProyectoSgi?: boolean;
 }

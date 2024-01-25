@@ -1,4 +1,5 @@
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
+import { CardinalidadRelacionSgiSge, IConfiguracion } from '@core/models/csp/configuracion';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
@@ -26,6 +27,12 @@ export interface ClasificacionGasto extends IDatoEconomico {
   tipo: TipoOperacion;
 }
 
+export interface ColumnDefinitionClasificacionGasto extends IColumnDefinition {
+  idFacturasGastos: string,
+  idViajesDietas: string,
+  idPersonalContratado: string
+}
+
 export class ClasificacionGastosFragment extends Fragment {
   private proyectosMap = new Map<number, IProyecto>();
   readonly gastos$ = new BehaviorSubject<ClasificacionGasto[]>([]);
@@ -34,7 +41,12 @@ export class ClasificacionGastosFragment extends Fragment {
   private proyectoConceptoGastosMap = new Map<string, IProyectoConceptoGasto>();
 
   displayColumns: string[] = [];
-  columns: IColumnDefinition[] = [];
+  columns: ColumnDefinitionClasificacionGasto[] = [];
+
+  get disableProyectoSgi(): boolean {
+    return this.config.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
+      || this.config.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_N;
+  }
 
   constructor(
     key: number,
@@ -44,7 +56,8 @@ export class ClasificacionGastosFragment extends Fragment {
     private proyectoService: ProyectoService,
     private gastoProyectoService: GastoProyectoService,
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
-    private proyectoConceptoGastoService: ProyectoConceptoGastoService
+    private proyectoConceptoGastoService: ProyectoConceptoGastoService,
+    private readonly config: IConfiguracion
   ) {
     super(key);
     this.setComplete(true);
@@ -65,6 +78,10 @@ export class ClasificacionGastosFragment extends Fragment {
           ...columns.map(column => column.id),
           'acciones'
         ];
+
+        if (this.disableProyectoSgi) {
+          this.displayColumns.splice(1, 1);
+        }
       }
     ));
   }
@@ -286,7 +303,7 @@ export class ClasificacionGastosFragment extends Fragment {
   }
 
 
-  private getColumns(): Observable<IColumnDefinition[]> {
+  private getColumns(): Observable<ColumnDefinitionClasificacionGasto[]> {
     return this.ejecucionEconomicaService.getColumnasFacturasGastos(null)
       .pipe(
         map(columnas => columnas.map(columna => {

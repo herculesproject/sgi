@@ -82,7 +82,24 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
           return `${gasto.codigoEconomico?.id} ${gasto.codigoEconomico?.nombre ? '-' : ''} ${gasto.codigoEconomico?.nombre}`;
         default:
           const gastoColumn = this.formPart.columns.find(column => column.id === property);
-          return gastoColumn ? gasto.columnas[gastoColumn.id] : gasto[property];
+
+          let columnId: string;
+          switch (gasto.tipo) {
+            case TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS:
+              columnId = gastoColumn.idFacturasGastos;
+              break;
+            case TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS:
+              columnId = gastoColumn.idViajesDietas;
+              break;
+            case TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO:
+              columnId = gastoColumn.idPersonalContratado;
+              break;
+
+            default:
+              break;
+          }
+
+          return columnId ? gasto.columnas[columnId] : gasto[property];
       }
     };
     this.dataSource.sort = this.sort;
@@ -140,7 +157,8 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
               tituloModal: MODAL_CLASIFICACION_TITLE_KEY,
               proyecto: null,
               vinculacion: null,
-              showDatosCongreso: element.tipo === TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS
+              showDatosCongreso: element.tipo === TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS,
+              disableProyectoSgi: this.formPart.disableProyectoSgi
             }
           };
 

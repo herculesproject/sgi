@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConfigValue } from '@core/models/cnf/config-value';
-import { IConfiguracion } from '@core/models/csp/configuracion';
+import { CardinalidadRelacionSgiSge, IConfiguracion } from '@core/models/csp/configuracion';
 import { environment } from '@env';
 import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -56,6 +56,12 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
   isEjecucionEconomicaGruposEnabled(): Observable<boolean> {
     return this.findById(ConfigCsp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED).pipe(
       map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
+  getCardinalidadRelacionSgiSge(): Observable<CardinalidadRelacionSgiSge> {
+    return this.findById(ConfigCsp.CSP_CARDINALIDAD_RELACION_SGI_SGE).pipe(
+      map(configValue => configValue?.value)
     );
   }
 

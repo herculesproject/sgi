@@ -44,6 +44,7 @@ export interface ProyectoAnualidadGastoModalData {
   proyectoId: number;
   fechaInicioAnualidad: DateTime;
   fechaFinAnualidad: DateTime;
+  disableIndentificadorSge: boolean;
   isEdit: boolean;
   readonly: boolean;
 }
@@ -247,7 +248,7 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
 
     const formGroup = new FormGroup(
       {
-        identificadorSge: new FormControl(identificadorSge, Validators.required),
+        identificadorSge: new FormControl({ value: identificadorSge, disabled: this.data.disableIndentificadorSge }, Validators.required),
         conceptoGastoFiltro: new FormControl(conceptoGastoFiltro),
         conceptoGasto: new FormControl(conceptoGasto, Validators.required),
         codigoEconomicoFiltro: new FormControl(codigoEconomicoFiltro),

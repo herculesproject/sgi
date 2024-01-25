@@ -79,6 +79,8 @@ export class RowTreeDesglose<T extends IDatoEconomico> extends RowTree<T> {
 export interface IDesgloseEconomicoExportData extends IBaseExportModalData {
   data: IDatoEconomico[];
   columns: IColumnDefinition[];
+  showColumClasificadoAutomaticamente?: boolean;
+  showColumnProyectoSgi?: boolean;
 }
 
 export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extends Fragment {

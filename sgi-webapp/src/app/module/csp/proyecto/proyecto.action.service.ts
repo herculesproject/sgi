@@ -41,6 +41,7 @@ import { ProyectoResponsableEconomicoService } from '@core/services/csp/proyecto
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
@@ -97,7 +98,6 @@ import { ProyectoRelacionFragment } from './proyecto-formulario/proyecto-relacio
 import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
-import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 
 const MSG_SOLICITUDES = marker('csp.solicitud');
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
@@ -339,8 +339,16 @@ export class ProyectoActionService extends ActionService {
         proyectoProrrogaService,
         this.isInvestigador
       );
-      this.proyectosSge = new ProyectoProyectosSgeFragment(id, proyectoProyectoSgeService, proyectoService,
-        proyectoSgeService, this.readonly, this.data?.isVisor);
+
+      this.proyectosSge = new ProyectoProyectosSgeFragment(
+        id,
+        proyectoProyectoSgeService,
+        proyectoService,
+        proyectoSgeService,
+        configuracionService,
+        this.readonly,
+        this.data?.isVisor
+      );
 
       this.addFragment(this.FRAGMENT.CALENDARIO_FACTURACION, this.proyectoCalendarioFacturacion);
       this.addFragment(this.FRAGMENT.PROYECTOS_SGE, this.proyectosSge);
@@ -423,8 +431,15 @@ export class ProyectoActionService extends ActionService {
         );
         this.clasificaciones = new ProyectoClasificacionesFragment(id, proyectoClasificacionService, proyectoService,
           clasificacionService, this.readonly, this.data?.isVisor);
-        this.proyectosSge = new ProyectoProyectosSgeFragment(id, proyectoProyectoSgeService, proyectoService,
-          proyectoSgeService, this.readonly, this.data?.isVisor);
+        this.proyectosSge = new ProyectoProyectosSgeFragment(
+          id,
+          proyectoProyectoSgeService,
+          proyectoService,
+          proyectoSgeService,
+          configuracionService,
+          this.readonly,
+          this.data?.isVisor
+        );
         this.partidasPresupuestarias = new ProyectoPartidasPresupuestariasFragment(id, this.data?.proyecto,
           proyectoService, proyectoPartidaService, convocatoriaService, this.readonly);
         this.elegibilidad = new ProyectoConceptosGastoFragment(id, this.data.proyecto, proyectoService, proyectoConceptoGastoService,

@@ -1,4 +1,5 @@
 import { IAnualidadIngreso } from '@core/models/csp/anualidad-ingreso';
+import { CardinalidadRelacionSgiSge } from '@core/models/csp/configuracion';
 import { Fragment } from '@core/services/action-service';
 import { AnualidadIngresoService } from '@core/services/csp/anualidad-ingreso/anualidad-ingreso.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
@@ -12,13 +13,19 @@ export class ProyectoAnualidadIngresosFragment extends Fragment {
 
   anualidadIngresos$ = new BehaviorSubject<StatusWrapper<IAnualidadIngreso>[]>([]);
 
+  get disableIndentificadorSge(): boolean {
+    return this.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
+      || this.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     readonly proyectoId: number,
     private proyectoAnualidadService: ProyectoAnualidadService,
     private anualidadIngresoService: AnualidadIngresoService,
-    private codigoEconomicoIngresoService: CodigoEconomicoIngresoService
+    private codigoEconomicoIngresoService: CodigoEconomicoIngresoService,
+    private readonly cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge
   ) {
     super(key);
     this.setComplete(true);

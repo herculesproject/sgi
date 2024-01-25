@@ -1,4 +1,5 @@
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
+import { CardinalidadRelacionSgiSge } from '@core/models/csp/configuracion';
 import { Fragment } from '@core/services/action-service';
 import { AnualidadGastoService } from '@core/services/csp/anualidad-gasto/anualidad-gasto.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
@@ -14,13 +15,19 @@ export class ProyectoAnualidadGastosFragment extends Fragment {
   fechaInicioAnualidad: DateTime;
   fechaFinAnualidad: DateTime;
 
+  get disableIndentificadorSge(): boolean {
+    return this.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
+      || this.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     readonly proyectoId: number,
     private proyectoAnualidadService: ProyectoAnualidadService,
     private anualidadGastoService: AnualidadGastoService,
-    private codigoEconomicoGastoService: CodigoEconomicoGastoService
+    private codigoEconomicoGastoService: CodigoEconomicoGastoService,
+    private readonly cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge
   ) {
     super(key);
     this.setComplete(true);

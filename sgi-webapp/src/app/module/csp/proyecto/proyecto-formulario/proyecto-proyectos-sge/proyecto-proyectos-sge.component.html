@@ -35,7 +35,8 @@
   </div>
 
   <div class="separation-button" *ngIf="!formPart.readonly">
-    <button *ngIf="!this.formPart.isVisor" color="three" mat-button mat-raised-button (click)="openModal()">
+    <button *ngIf="!this.formPart.isVisor" [disabled]="this.formPart.disableAddIdentificadorSge" color="three"
+      mat-button mat-raised-button (click)="openModal()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

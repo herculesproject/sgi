@@ -29,6 +29,7 @@ const TITLE_NEW_ENTITY = marker('title.new.entity');
 export interface ProyectoAnualidadIngresoModalData {
   anualidadIngreso: IAnualidadIngreso;
   proyectoId: number;
+  disableIndentificadorSge: boolean;
   isEdit: boolean;
   readonly: boolean;
 }
@@ -170,7 +171,7 @@ export class ProyectoAnualidadIngresoModalComponent extends DialogFormComponent<
 
     const formGroup = new FormGroup(
       {
-        identificadorSge: new FormControl(identificadorSge, [Validators.required]),
+        identificadorSge: new FormControl({ value: identificadorSge, disabled: this.data.disableIndentificadorSge }, [Validators.required]),
         proyectoPartida: proyectoPartidaFormControl,
         codigoEconomico: new FormControl(
           this.data.anualidadIngreso?.codigoEconomico?.id
