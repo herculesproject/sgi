@@ -3,14 +3,17 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.exceptions.CardinalidadRelacionSgiSgeException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNotFoundException;
+import org.crue.hercules.sgi.csp.model.Configuracion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
+import org.crue.hercules.sgi.csp.service.ConfiguracionService;
 import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -39,6 +42,7 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
   private final ProyectoRepository proyectoRepository;
   private final ProyectoHelper proyectoHelper;
   private final SgiConfigProperties sgiConfigProperties;
+  private final ConfiguracionService configuracionService;
 
   /**
    * Guarda la entidad {@link ProyectoProyectoSge}.
@@ -59,6 +63,8 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
     if (!proyectoRepository.existsById(proyectoProyectoSge.getProyectoId())) {
       throw new ProyectoNotFoundException(proyectoProyectoSge.getProyectoId());
     }
+
+    validateCardinalidadRelacionSgiSge(proyectoProyectoSge.getProyectoId(), proyectoProyectoSge.getProyectoSgeRef());
 
     ProyectoProyectoSge returnValue = repository.save(proyectoProyectoSge);
     log.debug("create(ProyectoProyectoSge proyectoProyectoSge) - end");
@@ -185,6 +191,55 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
     boolean returnValue = repository.existsByProyectoId(proyectoId);
     log.debug("existsByProyecto(Long proyectoId) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba si con la cardinalidad definida en la configuracion es posible
+   * crear una nueva relacion entre los proyectos
+   * 
+   * @param proyectoSgiId  Identificador del {@link Proyecto} del SGI
+   * @param proyectoSgeRef Identificador del proyecto del SGE
+   */
+  private void validateCardinalidadRelacionSgiSge(Long proyectoSgiId, String proyectoSgeRef) {
+    log.debug("validateCardinalidadRelacionSgiSge({}, {}) - start", proyectoSgiId, proyectoSgeRef);
+
+    Specification<ProyectoProyectoSge> specs = ProyectoProyectoSgeSpecifications.byProyectoId(proyectoSgiId).or(
+        ProyectoProyectoSgeSpecifications.byProyectoSgeRef(proyectoSgeRef));
+
+    List<ProyectoProyectoSge> relaciones = repository.findAll(specs);
+
+    Configuracion configuracion = configuracionService.findConfiguracion();
+    switch (configuracion.getCardinalidadRelacionSgiSge()) {
+      case SGI_1_SGE_1:
+        if (!relaciones.isEmpty()) {
+          throw new CardinalidadRelacionSgiSgeException();
+        }
+        log.debug("validateCardinalidadRelacionSgiSge({}, {}) - Cardinalidad (1:1) validada", proyectoSgiId,
+            proyectoSgeRef);
+        break;
+      case SGI_1_SGE_N:
+        if (relaciones.stream().map(ProyectoProyectoSge::getProyectoId)
+            .anyMatch(id -> id.equals(proyectoSgiId))) {
+          throw new CardinalidadRelacionSgiSgeException();
+        }
+        log.debug("validateCardinalidadRelacionSgiSge({}, {}) - Cardinalidad (1:n) validada", proyectoSgiId,
+            proyectoSgeRef);
+        break;
+      case SGI_N_SGE_1:
+        if (relaciones.stream().map(ProyectoProyectoSge::getProyectoSgeRef)
+            .anyMatch(ref -> ref.equals(proyectoSgeRef))) {
+          throw new CardinalidadRelacionSgiSgeException();
+        }
+        log.debug("validateCardinalidadRelacionSgiSge({}, {}) - Cardinalidad (n:1) validada", proyectoSgiId,
+            proyectoSgeRef);
+        break;
+      case SGI_N_SGE_N:
+        log.debug("validateCardinalidadRelacionSgiSge({}, {}) - Cardinalidad (n:n) validada", proyectoSgiId,
+            proyectoSgeRef);
+        break;
+    }
+
+    log.debug("validateCardinalidadRelacionSgiSge({}, {}) - end", proyectoSgiId, proyectoSgeRef);
   }
 
 }

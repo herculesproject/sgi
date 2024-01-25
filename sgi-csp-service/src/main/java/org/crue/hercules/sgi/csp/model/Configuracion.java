@@ -38,6 +38,13 @@ public class Configuracion extends BaseEntity {
     ELEGIBILIDAD;
   }
 
+  public enum CardinalidadRelacionSgiSge {
+    SGI_1_SGE_1,
+    SGI_1_SGE_N,
+    SGI_N_SGE_1,
+    SGI_N_SGE_N;
+  }
+
   public enum Param {
     /**
      * Formato codigo partida presupuestaria
@@ -74,7 +81,12 @@ public class Configuracion extends BaseEntity {
      * Habilitar Ejecución económica de Grupos de investigación
      * <code>ejecucionEconomicaGruposEnabled</code>
      */
-    EJECUCION_ECONOMICA_GRUPOS_ENABLED("ejecucionEconomicaGruposEnabled");
+    EJECUCION_ECONOMICA_GRUPOS_ENABLED("ejecucionEconomicaGruposEnabled"),
+    /**
+     * Cardinalidad relación proyecto SGI - identificador SGE
+     * <code>cardinalidadRelacionSgiSge</code>
+     */
+    CARDINALIDAD_RELACION_SGI_SGE("cardinalidadRelacionSgiSge");
 
     private final String key;
 
@@ -147,6 +159,11 @@ public class Configuracion extends BaseEntity {
   @Column(name = "gin_ejecucion_economica", columnDefinition = "boolean default true", nullable = true, unique = true)
   private Boolean ejecucionEconomicaGruposEnabled;
 
+  /** Cardinalidad relación proyecto SGI - identificador SGE */
+  @Column(name = "cardinalidad_relacion_sgi_sge", nullable = false, unique = true)
+  @Enumerated(EnumType.STRING)
+  private CardinalidadRelacionSgiSge cardinalidadRelacionSgiSge;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -167,6 +184,8 @@ public class Configuracion extends BaseEntity {
         return this.getValidacionClasificacionGastos();
       case EJECUCION_ECONOMICA_GRUPOS_ENABLED:
         return this.getEjecucionEconomicaGruposEnabled();
+      case CARDINALIDAD_RELACION_SGI_SGE:
+        return this.getCardinalidadRelacionSgiSge();
       default:
         return null;
     }
@@ -201,6 +220,8 @@ public class Configuracion extends BaseEntity {
       case EJECUCION_ECONOMICA_GRUPOS_ENABLED:
         this.setEjecucionEconomicaGruposEnabled(new Boolean(newValue));
         break;
+      case CARDINALIDAD_RELACION_SGI_SGE:
+        this.setCardinalidadRelacionSgiSge(CardinalidadRelacionSgiSge.valueOf(newValue));
     }
   }
 }
