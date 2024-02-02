@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.enums.TipoPartida;
+import org.crue.hercules.sgi.csp.validation.ProyectoPartidaCodigoOrPartidaRefRequired;
 import org.crue.hercules.sgi.csp.validation.UniqueCodigoTipoProyectoPartida;
 
 import lombok.AccessLevel;
@@ -37,6 +38,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @UniqueCodigoTipoProyectoPartida(groups = { BaseEntity.Create.class, BaseEntity.Update.class })
+@ProyectoPartidaCodigoOrPartidaRefRequired(groups = { BaseEntity.Create.class, BaseEntity.Update.class })
 public class ProyectoPartida extends BaseEntity {
 
   /**
@@ -60,10 +62,14 @@ public class ProyectoPartida extends BaseEntity {
   @Column(name = "convocatoria_partida_id", nullable = true)
   private Long convocatoriaPartidaId;
 
-  /** Convocatoria partida id. */
-  @Column(name = "codigo", length = 50, nullable = false)
+  /** Partida sge ref. */
+  @Column(name = "partida_ref", length = 50, nullable = true)
   @Size(max = 50)
-  @NotNull
+  private String partidaRef;
+
+  /** Codigo. */
+  @Column(name = "codigo", length = 50, nullable = true)
+  @Size(max = 50)
   private String codigo;
 
   /** Descripcion */

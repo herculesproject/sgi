@@ -33,12 +33,9 @@
   <changeSet author="master" id="0.5.0-4">
     <addColumn tableName="configuracion">
       <column name="validacion_clasificacion_gastos" type="varchar(50)" />
-    </addColumn>
-    <addColumn tableName="configuracion">
-      <column defaultValueBoolean="true" name="gin_ejecucion_economica" type="boolean"></column>
-    </addColumn>
-    <addColumn tableName="configuracion">
-      <column defaultValueBoolean="true" name="cardinalidad_relacion_sgi_sge" type="varchar(50)"></column>
+      <column name="gin_ejecucion_economica" defaultValueBoolean="true" type="boolean" />
+      <column name="cardinalidad_relacion_sgi_sge" type="varchar(50)" />
+      <column name="partidas_presupuestarias_sge" defaultValueBoolean="false" type="boolean" />
     </addColumn>
   </changeSet>
 
@@ -62,6 +59,22 @@
       constraintName="FK_PROYECTO_ROLSOCIO" deferrable="false"
       initiallyDeferred="false"
       referencedColumnNames="id" referencedTableName="rol_socio" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="0.5.0-7">
+    <addColumn tableName="convocatoria_partida">
+      <column name="partida_ref" type="varchar(50)" />
+    </addColumn>
+    <dropNotNullConstraint columnDataType="varchar(50)" columnName="codigo"
+      tableName="convocatoria_partida" />
+  </changeSet>
+
+  <changeSet author="master" id="0.5.0-8">
+    <addColumn tableName="proyecto_partida">
+      <column name="partida_ref" type="varchar(50)" />
+    </addColumn>
+    <dropNotNullConstraint columnDataType="varchar(50)" columnName="codigo"
+      tableName="proyecto_partida" />
   </changeSet>
 
 </databaseChangeLog>

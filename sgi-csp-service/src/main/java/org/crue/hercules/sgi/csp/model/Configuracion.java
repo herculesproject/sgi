@@ -86,7 +86,12 @@ public class Configuracion extends BaseEntity {
      * Cardinalidad relación proyecto SGI - identificador SGE
      * <code>cardinalidadRelacionSgiSge</code>
      */
-    CARDINALIDAD_RELACION_SGI_SGE("cardinalidadRelacionSgiSge");
+    CARDINALIDAD_RELACION_SGI_SGE("cardinalidadRelacionSgiSge"),
+    /**
+     * Habilitar creación de Partidas presupuestarias en el SGE
+     * <code>partidasPresupuestariasSGE</code>
+     */
+    PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED("partidasPresupuestariasSgeEnabled");
 
     private final String key;
 
@@ -164,6 +169,10 @@ public class Configuracion extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private CardinalidadRelacionSgiSge cardinalidadRelacionSgiSge;
 
+  /** Habilitar creación de Partidas presupuestarias en el SGE */
+  @Column(name = "partidas_presupuestarias_sge", columnDefinition = "boolean default false", nullable = true, unique = true)
+  private Boolean partidasPresupuestariasSGE;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -186,6 +195,8 @@ public class Configuracion extends BaseEntity {
         return this.getEjecucionEconomicaGruposEnabled();
       case CARDINALIDAD_RELACION_SGI_SGE:
         return this.getCardinalidadRelacionSgiSge();
+      case PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED:
+        return this.getPartidasPresupuestariasSGE();
       default:
         return null;
     }
@@ -222,6 +233,10 @@ public class Configuracion extends BaseEntity {
         break;
       case CARDINALIDAD_RELACION_SGI_SGE:
         this.setCardinalidadRelacionSgiSge(CardinalidadRelacionSgiSge.valueOf(newValue));
+        break;
+      case PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED:
+        this.setPartidasPresupuestariasSGE(new Boolean(newValue));
+        break;
     }
   }
 }
