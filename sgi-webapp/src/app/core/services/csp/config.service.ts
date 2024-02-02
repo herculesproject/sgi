@@ -11,7 +11,6 @@ import { IConfigValueResponse } from '../cnf/config-value-response';
 import { CONFIG_VALUE_RESPONSE_CONVERTER } from '../cnf/config-value-response.converter';
 import { TimeZoneConfigService } from '../timezone.service';
 
-
 // tslint:disable-next-line: variable-name
 const _ConfigServiceMixinBase:
   FindByIdCtor<string, IConfigValue, IConfigValueResponse> &
@@ -62,6 +61,12 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
   getCardinalidadRelacionSgiSge(): Observable<CardinalidadRelacionSgiSge> {
     return this.findById(ConfigCsp.CSP_CARDINALIDAD_RELACION_SGI_SGE).pipe(
       map(configValue => configValue?.value)
+    );
+  }
+
+  isPartidasPresupuestariasSgeEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
     );
   }
 

@@ -31,7 +31,7 @@ import { ProyectoFaseService } from '@core/services/csp/proyecto-fase.service';
 import { ProyectoHitoService } from '@core/services/csp/proyecto-hito/proyecto-hito.service';
 import { ProyectoIVAService } from '@core/services/csp/proyecto-iva.service';
 import { ProyectoPaqueteTrabajoService } from '@core/services/csp/proyecto-paquete-trabajo.service';
-import { ProyectoPartidaService } from '@core/services/csp/proyecto-partida.service';
+import { ProyectoPartidaPresupuestariaService } from '@core/services/csp/proyecto-partida-presupuestaria/proyecto-partida-presupuestaria.service';
 import { ProyectoPeriodoAmortizacionService } from '@core/services/csp/proyecto-periodo-amortizacion/proyecto-periodo-amortizacion.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
@@ -51,6 +51,8 @@ import { InvencionService } from '@core/services/pii/invencion/invencion.service
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { FacturaPrevistaEmitidaService } from '@core/services/sge/factura-prevista-emitida/factura-prevista-emitida.service';
+import { PartidaPresupuestariaGastoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-gasto-sge.service';
+import { PartidaPresupuestariaIngresoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-ingreso-sge.service';
 import { PeriodoAmortizacionService } from '@core/services/sge/periodo-amortizacion/periodo-amortizacion.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { DatosContactoService } from '@core/services/sgemp/datos-contacto/datos-contacto.service';
@@ -246,58 +248,60 @@ export class ProyectoActionService extends ActionService {
     logger: NGXLogger,
     private route: ActivatedRoute,
     protected proyectoService: ProyectoService,
-    empresaService: EmpresaService,
-    proyectoSocioService: ProyectoSocioService,
-    unidadGestionService: UnidadGestionService,
-    modeloEjecucionService: ModeloEjecucionService,
-    tipoFinalidadService: TipoFinalidadService,
-    tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
-    convocatoriaService: ConvocatoriaService,
-    proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
-    proyectoHitoService: ProyectoHitoService,
-    proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
-    proyectoPlazoService: ProyectoFaseService,
-    contextoProyectoService: ContextoProyectoService,
-    proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
-    documentoService: DocumentoService,
-    proyectoEntidadGestora: ProyectoEntidadGestoraService,
-    proyectoEquipoService: ProyectoEquipoService,
-    personaService: PersonaService,
-    proyectoProrrogaService: ProyectoProrrogaService,
-    proyectoDocumentoService: ProyectoDocumentoService,
-    solicitudService: SolicitudService,
-    proyectoIvaService: ProyectoIVAService,
-    proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
-    proyectoClasificacionService: ProyectoClasificacionService,
-    clasificacionService: ClasificacionService,
-    proyectoAreaConocimiento: ProyectoAreaConocimientoService,
-    areaConocimientoService: AreaConocimientoService,
-    proyectoProyectoSgeService: ProyectoProyectoSgeService,
-    proyectoSgeService: ProyectoSgeService,
-    proyectoPartidaService: ProyectoPartidaService,
-    proyectoConceptoGastoService: ProyectoConceptoGastoService,
-    proyectoResponsableEconomicoService: ProyectoResponsableEconomicoService,
-    proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
-    private translate: TranslateService,
-    proyectoAnualidadService: ProyectoAnualidadService,
-    proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
-    datosAcademicosService: DatosAcademicosService,
-    convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
-    viculacionService: VinculacionService,
-    convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
-    datosPersonalesService: DatosPersonalesService,
-    relacionService: RelacionService,
-    invencionService: InvencionService,
+    private readonly areaConocimientoService: AreaConocimientoService,
+    private readonly clasificacionService: ClasificacionService,
+    private readonly configService: ConfigService,
+    private readonly contextoProyectoService: ContextoProyectoService,
+    private readonly convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
+    private readonly convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
+    private readonly convocatoriaService: ConvocatoriaService,
+    private readonly datosAcademicosService: DatosAcademicosService,
+    private readonly datosContactoService: DatosContactoService,
+    private readonly datosPersonalesService: DatosPersonalesService,
+    private readonly dialogService: DialogService,
+    private readonly documentoService: DocumentoService,
+    private readonly empresaService: EmpresaService,
+    private readonly facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
+    private readonly invencionService: InvencionService,
+    private readonly modeloEjecucionService: ModeloEjecucionService,
+    private readonly palabraClaveService: PalabraClaveService,
+    private readonly partidaPresupuestariaGastoSgeService: PartidaPresupuestariaGastoSgeService,
+    private readonly partidaPresupuestariaIngresoSgeService: PartidaPresupuestariaIngresoSgeService,
+    private readonly periodoAmortizacionService: PeriodoAmortizacionService,
+    private readonly personaService: PersonaService,
+    private readonly proyectoAgrupacionGastoService: ProyectoAgrupacionGastoService,
+    private readonly proyectoAnualidadService: ProyectoAnualidadService,
+    private readonly proyectoAreaConocimiento: ProyectoAreaConocimientoService,
+    private readonly proyectoClasificacionService: ProyectoClasificacionService,
+    private readonly proyectoConceptoGastoService: ProyectoConceptoGastoService,
+    private readonly proyectoDocumentoService: ProyectoDocumentoService,
+    private readonly proyectoEntidadFinanciadoraService: ProyectoEntidadFinanciadoraService,
+    private readonly proyectoEntidadGestora: ProyectoEntidadGestoraService,
+    private readonly proyectoEquipoService: ProyectoEquipoService,
+    private readonly proyectoFacturacionService: ProyectoFacturacionService,
+    private readonly proyectoHitoService: ProyectoHitoService,
+    private readonly proyectoIvaService: ProyectoIVAService,
+    private readonly proyectoPaqueteTrabajoService: ProyectoPaqueteTrabajoService,
+    private readonly proyectoPartidaPresupuestariaService: ProyectoPartidaPresupuestariaService,
+    private readonly proyectoPeriodoAmortizacionService: ProyectoPeriodoAmortizacionService,
+    private readonly proyectoPeriodoJustificacionService: ProyectoPeriodoJustificacionService,
+    private readonly proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
+    private readonly proyectoPlazoService: ProyectoFaseService,
+    private readonly proyectoProrrogaService: ProyectoProrrogaService,
+    private readonly proyectoProyectoSgeService: ProyectoProyectoSgeService,
+    private readonly proyectoResponsableEconomicoService: ProyectoResponsableEconomicoService,
+    private readonly proyectoSgeService: ProyectoSgeService,
+    private readonly proyectoSocioPeriodoJustificacionService: ProyectoSocioPeriodoJustificacionService,
+    private readonly proyectoSocioService: ProyectoSocioService,
+    private readonly relacionService: RelacionService,
+    private readonly rolSocioService: RolSocioService,
     private readonly sgiAuthService: SgiAuthService,
-    proyectoFacturacionService: ProyectoFacturacionService,
-    facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
-    palabraClaveService: PalabraClaveService,
-    proyectoPeriodoAmortizacionService: ProyectoPeriodoAmortizacionService,
-    periodoAmortizacionService: PeriodoAmortizacionService,
-    datosContactoService: DatosContactoService,
-    private dialogService: DialogService,
-    private configuracionService: ConfigService,
-    rolSocioService: RolSocioService
+    private readonly solicitudService: SolicitudService,
+    private readonly tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
+    private readonly tipoFinalidadService: TipoFinalidadService,
+    private readonly translate: TranslateService,
+    private readonly unidadGestionService: UnidadGestionService,
+    private readonly viculacionService: VinculacionService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -324,7 +328,7 @@ export class ProyectoActionService extends ActionService {
       relacionService,
       palabraClaveService,
       sgiAuthService,
-      configuracionService,
+      configService,
       rolSocioService
     );
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
@@ -345,7 +349,7 @@ export class ProyectoActionService extends ActionService {
         proyectoProyectoSgeService,
         proyectoService,
         proyectoSgeService,
-        configuracionService,
+        configService,
         this.readonly,
         this.data?.isVisor
       );
@@ -436,12 +440,21 @@ export class ProyectoActionService extends ActionService {
           proyectoProyectoSgeService,
           proyectoService,
           proyectoSgeService,
-          configuracionService,
+          configService,
           this.readonly,
           this.data?.isVisor
         );
-        this.partidasPresupuestarias = new ProyectoPartidasPresupuestariasFragment(id, this.data?.proyecto,
-          proyectoService, proyectoPartidaService, convocatoriaService, this.readonly);
+        this.partidasPresupuestarias = new ProyectoPartidasPresupuestariasFragment(
+          id,
+          this.data?.proyecto,
+          configService,
+          convocatoriaService,
+          partidaPresupuestariaGastoSgeService,
+          partidaPresupuestariaIngresoSgeService,
+          proyectoPartidaPresupuestariaService,
+          proyectoService,
+          this.readonly
+        );
         this.elegibilidad = new ProyectoConceptosGastoFragment(id, this.data.proyecto, proyectoService, proyectoConceptoGastoService,
           convocatoriaService, this.readonly, this.data?.isVisor);
         this.presupuesto = new ProyectoPresupuestoFragment(logger, id, proyectoService, proyectoAnualidadService,

@@ -47,5 +47,7 @@ export interface IConfiguracion {
   /** Habilitar Ejecución económica de Grupos de investigación */
   ejecucionEconomicaGruposEnabled: boolean;
   /** Cardinalidad relación proyecto SGI - identificador SGE */
-  cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge
+  cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
+  /** Habilitar creación de Partidas presupuestarias en el SGE */
+  partidasPresupuestariasSgeEnabled: boolean;
 }

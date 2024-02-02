@@ -54,6 +54,8 @@
   "adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA": "Plantilla para el campo partida presupuestaria",
   "adm.config.csp.CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA.description": "Formato en el que se deben de introducir las partidas presupuestarias de acuerdo al Sistema de gestión económico corporativo. Ejemplo: XX.XXXX.XXXX.XXXXX",
   "adm.config.csp.CSP_NOMBRE_SISTEMA_GESTION_EXTERNO": "Texto acceso a sistema corporativo secundario de gestión de la investigación",
+  "adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED": "Obtener partidas SGE",
+  "adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED.description": "Habilitar creación de Partidas presupuestarias en el SGE",
   "adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_PRPT": "Plantilla informe de autorización de participación en proyecto externo",
   "adm.config.csp.CSP_URL_SISTEMA_GESTION_EXTERNO": "URL sistema corporativo secundario de gestión de la investigación",
   "adm.config.csp.CSP_VALIDACION_CLASIFICACION_GASTOS": "Activación validación/clasificación de gastos",

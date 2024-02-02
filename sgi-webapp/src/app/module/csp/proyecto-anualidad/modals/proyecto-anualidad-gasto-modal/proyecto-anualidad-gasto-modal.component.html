@@ -155,10 +155,11 @@
       <!--  Partida Presupuestaria -->
       <mat-form-field fxFlex="50">
         <mat-label>{{'csp.proyecto-anualidad.partida.partida-presupuestaria' | translate}}</mat-label>
-        <sgi-select-entity formControlName="partidaPresupuestaria" required [options]="proyectosPartida$ | async"
-          [displayWith]="displayerProyectoPartida">
-        </sgi-select-entity>
-        <mat-error *ngIf="formGroup.controls.partidaPresupuestaria.errors?.required">
+        <sgi-select-proyecto-partida formControlName="proyectoPartida" [proyectoId]="data.proyectoId"
+          [tipoPartida]="tipoPartidaGasto" (selectValuesChange)="selectFirstProyectoPartidaIfOnlyOneOption($event)"
+          required>
+        </sgi-select-proyecto-partida>
+        <mat-error *ngIf="formGroup.controls.proyectoPartida.errors?.required">
           {{'error.required.entity' | translate:msgParamPartidaPresupuestariaEntity}}
         </mat-error>
       </mat-form-field>

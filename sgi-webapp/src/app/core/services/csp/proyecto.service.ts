@@ -18,6 +18,7 @@ import { PROYECTO_PRORROGA_CONVERTER } from '@core/converters/csp/proyecto-prorr
 import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-proyecto-sge.converter';
 import { PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/proyecto-socio.converter';
 import { PROYECTO_CONVERTER } from '@core/converters/csp/proyecto.converter';
+import { TipoPartida } from '@core/enums/tipo-partida';
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { IEstadoProyectoBackend } from '@core/models/csp/backend/estado-proyecto-backend';
 import { IProyectoAreaConocimientoBackend } from '@core/models/csp/backend/proyecto-area-conocimiento-backend';
@@ -100,6 +101,8 @@ import { PROYECTO_HITO_RESPONSE_CONVERTER } from './proyecto-hito/proyecto-hito-
 import { PROYECTO_PALABRACLAVE_REQUEST_CONVERTER } from './proyecto-palabra-clave/proyecto-palabra-clave-request.converter';
 import { IProyectoPalabraClaveResponse } from './proyecto-palabra-clave/proyecto-palabra-clave-response';
 import { PROYECTO_PALABRACLAVE_RESPONSE_CONVERTER } from './proyecto-palabra-clave/proyecto-palabra-clave-response.converter';
+import { IProyectoPartidaPresupuestariaResponse } from './proyecto-partida-presupuestaria/proyecto-partida-presupuestaria-response';
+import { PROYECTO_PARTIDA_PRESUPUESTARIA_RESPONSE_CONVERTER } from './proyecto-partida-presupuestaria/proyecto-partida-presupuestaria-response.converter';
 import { IProyectoPeriodoJustificacionResponse } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response';
 import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
 import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico/proyecto-responsable-economico-response';
@@ -523,10 +526,41 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    */
   findAllProyectoPartidas(proyectoId: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IProyectoPartida>> {
-    return this.find<IProyectoPartida, IProyectoPartida>(
+    return this.find<IProyectoPartidaPresupuestariaResponse, IProyectoPartida>(
       `${this.endpointUrl}/${proyectoId}/proyecto-partidas`,
-      options
+      options,
+      PROYECTO_PARTIDA_PRESUPUESTARIA_RESPONSE_CONVERTER
     );
+  }
+
+  /**
+   * Recupera los IProyectoPartida del proyecto de tipo ingreso
+   *
+   * @param proyectoId Id del proyecto
+   * @returns observable con la lista de IProyectoPartida de tipo ingreso del proyecto
+   */
+  findAllProyectoPartidasIngresos(proyectoId: number):
+    Observable<SgiRestListResult<IProyectoPartida>> {
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('tipoPartida', SgiRestFilterOperator.EQUALS, TipoPartida.INGRESO)
+    };
+
+    return this.findAllProyectoPartidas(proyectoId, options);
+  }
+
+  /**
+   * Recupera los IProyectoPartida del proyecto de tipo gasto
+   *
+   * @param proyectoId Id del proyecto
+   * @returns observable con la lista de IProyectoPartida de tipo gasto del proyecto
+   */
+  findAllProyectoPartidasGastos(proyectoId: number):
+    Observable<SgiRestListResult<IProyectoPartida>> {
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('tipoPartida', SgiRestFilterOperator.EQUALS, TipoPartida.GASTO)
+    };
+
+    return this.findAllProyectoPartidas(proyectoId, options);
   }
 
   /**

@@ -11,6 +11,8 @@ import { AnualidadIngresoService } from '@core/services/csp/anualidad-ingreso/an
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { CodigoEconomicoIngresoService } from '@core/services/sge/codigo-economico-ingreso.service';
+import { PartidaPresupuestariaGastoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-gasto-sge.service';
+import { PartidaPresupuestariaIngresoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-ingreso-sge.service';
 import { NGXLogger } from 'ngx-logger';
 import { PROYECTO_ANUALIDAD_DATA_KEY } from './proyecto-anualidad-data.resolver';
 import { ProyectoAnualidadDatosGeneralesFragment } from './proyecto-anualidad-formulario/proyecto-anualidad-datos-generales/proyecto-anualidad-datos-generales.fragment';
@@ -58,11 +60,13 @@ export class ProyectoAnualidadActionService extends ActionService {
   constructor(
     logger: NGXLogger,
     route: ActivatedRoute,
-    proyectoAnualidadService: ProyectoAnualidadService,
     anualidadGastoService: AnualidadGastoService,
     anualidadIngresoService: AnualidadIngresoService,
     codigoEconomicoGastoService: CodigoEconomicoGastoService,
-    codigoEconomicoIngresoService: CodigoEconomicoIngresoService
+    codigoEconomicoIngresoService: CodigoEconomicoIngresoService,
+    partidaPresupuestariaGastoSgeService: PartidaPresupuestariaGastoSgeService,
+    partidaPresupuestariaIngresoSgeService: PartidaPresupuestariaIngresoSgeService,
+    proyectoAnualidadService: ProyectoAnualidadService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_ANUALIDAD_DATA_KEY];
@@ -83,9 +87,10 @@ export class ProyectoAnualidadActionService extends ActionService {
       logger,
       id,
       this.data.proyecto.id,
-      proyectoAnualidadService,
       anualidadGastoService,
       codigoEconomicoGastoService,
+      partidaPresupuestariaGastoSgeService,
+      proyectoAnualidadService,
       this.data.cardinalidadRelacionSgiSge
     );
 
@@ -93,9 +98,10 @@ export class ProyectoAnualidadActionService extends ActionService {
       logger,
       id,
       this.data.proyecto.id,
-      proyectoAnualidadService,
       anualidadIngresoService,
       codigoEconomicoIngresoService,
+      partidaPresupuestariaIngresoSgeService,
+      proyectoAnualidadService,
       this.data.cardinalidadRelacionSgiSge
     );
 

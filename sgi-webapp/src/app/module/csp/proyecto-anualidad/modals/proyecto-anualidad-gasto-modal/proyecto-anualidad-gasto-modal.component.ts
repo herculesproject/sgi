@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -90,7 +90,6 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
   readonly optionsCodigoEconomico: CodigoEconomicoTipo[];
 
   proyectosSge$ = new BehaviorSubject<IProyectoProyectoSge[]>([]);
-  proyectosPartida$ = new BehaviorSubject<IProyectoPartida[]>([]);
 
   conceptosGasto$ = new BehaviorSubject<IConceptoGasto[]>([]);
   codigosEconomicos$ = new BehaviorSubject<ICodigoEconomicoGasto[]>([]);
@@ -117,6 +116,10 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
 
   get CODIGO_ECONOMICO_TIPO_MAP() {
     return CODIGO_ECONOMICO_TIPO_MAP;
+  }
+
+  get tipoPartidaGasto(): TipoPartida {
+    return TipoPartida.GASTO;
   }
 
   constructor(
@@ -215,7 +218,7 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
     this.data.anualidadGasto.codigoEconomico = this.formGroup.controls.codigoEconomico.value;
     this.data.anualidadGasto.importeConcedido = this.formGroup.controls.importeConcedido.value;
     this.data.anualidadGasto.importePresupuesto = this.formGroup.controls.importePresupuesto.value;
-    this.data.anualidadGasto.proyectoPartida = this.formGroup.controls.partidaPresupuestaria.value;
+    this.data.anualidadGasto.proyectoPartida = this.formGroup.controls.proyectoPartida.value;
     this.data.anualidadGasto.conceptoGasto =
       this.formGroup.controls.conceptoGasto.value?.conceptoGasto ? this.formGroup.controls.conceptoGasto.value?.conceptoGasto :
         this.formGroup.controls.conceptoGasto.value;
@@ -248,24 +251,15 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
 
     const formGroup = new FormGroup(
       {
-        identificadorSge: new FormControl({ value: identificadorSge, disabled: this.data.disableIndentificadorSge }, Validators.required),
+        identificadorSge: new FormControl({ value: identificadorSge, disabled: !!identificadorSge && this.data.disableIndentificadorSge }, Validators.required),
         conceptoGastoFiltro: new FormControl(conceptoGastoFiltro),
         conceptoGasto: new FormControl(conceptoGasto, Validators.required),
         codigoEconomicoFiltro: new FormControl(codigoEconomicoFiltro),
         codigoEconomico: new FormControl(this.data.anualidadGasto?.codigoEconomico),
-        partidaPresupuestaria: new FormControl(proyectoPartida, Validators.required),
+        proyectoPartida: new FormControl(proyectoPartida, Validators.required),
         importePresupuesto: new FormControl(this.data.anualidadGasto.importePresupuesto, Validators.required),
         importeConcedido: new FormControl(this.data.anualidadGasto.importeConcedido, Validators.required),
       }
-    );
-
-    const optionsProyectoPartida: SgiRestFindOptions = {
-      filter: new RSQLSgiRestFilter('tipoPartida', SgiRestFilterOperator.EQUALS, TipoPartida.GASTO)
-    };
-
-    this.subscriptions.push(
-      this.proyectoService.findAllProyectoPartidas(this.data.proyectoId, optionsProyectoPartida)
-        .subscribe((response) => this.proyectosPartida$.next(response.items))
     );
 
     if (!this.data.anualidadGasto?.proyectoSgeRef) {
@@ -273,16 +267,10 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
         this.proyectosSge$.subscribe((values) => {
           if (values.length === 1) {
             this.formGroup.controls.identificadorSge.setValue(values[0]);
-          }
-        })
-      );
-    }
 
-    if (!this.data.anualidadGasto?.proyectoPartida) {
-      this.subscriptions.push(
-        this.proyectosPartida$.subscribe((values) => {
-          if (values.length === 1) {
-            this.formGroup.controls.partidaPresupuestaria.setValue(values[0]);
+            if (this.data.disableIndentificadorSge) {
+              this.formGroup.controls.identificadorSge.disable();
+            }
           }
         })
       );
@@ -320,6 +308,12 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
     });
 
     return formGroup;
+  }
+
+  selectFirstProyectoPartidaIfOnlyOneOption(options: SelectValue<IProyectoPartida>[]): void {
+    if (options?.length === 1 && !this.formGroup.controls.proyectoPartida.value) {
+      this.formGroup.controls.proyectoPartida.setValue(options[0].item);
+    }
   }
 
   displayerIdentificadorSge(proyectoSge: IProyectoProyectoSge): string {
@@ -592,10 +586,6 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
 
   displayerCodigoEconomico(codigoEconomico: ICodigoEconomicoGasto): string {
     return `${codigoEconomico?.id} - ${codigoEconomico?.nombre ?? ''}` ?? '';
-  }
-
-  displayerProyectoPartida(proyectoPartida: IProyectoPartida): string {
-    return proyectoPartida?.codigo;
   }
 
 }
