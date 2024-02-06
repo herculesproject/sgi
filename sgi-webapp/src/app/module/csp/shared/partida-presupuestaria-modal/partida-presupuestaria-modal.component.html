@@ -4,6 +4,17 @@
     <div fxFlex fxLayout="column" fxLayoutGap="10px">
       <h3 *ngIf="showDatosPartidaPresupuestaria">&nbsp;</h3>
 
+      <!-- Tipo -->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-partida-presupuestaria.tipo-partida' | translate}}</mat-label>
+          <sgi-select-enum formControlName="tipo" #tipoPartida [enumMap]="TIPO_PARTIDA_MAP" required></sgi-select-enum>
+          <mat-error *ngIf="formGroup.controls.tipo.errors?.required">
+            {{'error.required.entity' | translate:msgParamTipoEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
       <!-- Codigo -->
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <ng-container *ngIf="this.data.partidasPresupuestariasSgeEnabled else partidaSgi">
@@ -45,17 +56,6 @@
             </mat-error>
           </mat-form-field>
         </ng-template>
-      </div>
-
-      <!-- Tipo -->
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto-partida-presupuestaria.tipo-partida' | translate}}</mat-label>
-          <sgi-select-enum formControlName="tipo" #tipoPartida [enumMap]="TIPO_PARTIDA_MAP" required></sgi-select-enum>
-          <mat-error *ngIf="formGroup.controls.tipo.errors?.required">
-            {{'error.required.entity' | translate:msgParamTipoEntity}}
-          </mat-error>
-        </mat-form-field>
       </div>
 
       <!-- Descripcion -->
