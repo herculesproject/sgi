@@ -110,10 +110,10 @@ public class BloqueServiceImpl implements BloqueService {
    */
   @Override
   public Bloque getBloqueComentariosGeneralesAllLanguages() {
-    log.debug("getBloqueComentariosGenerales(String lang) - start");
+    log.debug("getBloqueComentariosGenerales() - start");
     final Bloque bloque = bloqueRepository.findOne(BloqueSpecifications.bloqueComentarioGenerales())
         .orElseThrow(() -> new BloqueNotFoundException(null));
-    log.debug("getBloqueComentariosGenerales(String lang) - end");
+    log.debug("getBloqueComentariosGenerales() - end");
     return bloque;
   }
 
