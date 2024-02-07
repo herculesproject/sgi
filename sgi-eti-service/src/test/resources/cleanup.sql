@@ -22,7 +22,9 @@ DELETE FROM test.acta
 DELETE FROM test.tipo_estado_acta
 DELETE FROM test.convocatoria_reunion
 DELETE FROM test.tipo_convocatoria_reunion
+DELETE FROM test.apartado_nombre
 DELETE FROM test.apartado
+DELETE FROM test.bloque_nombre
 DELETE FROM test.bloque
 DELETE FROM test.comite
 DELETE FROM test.tipo_estado_memoria
@@ -37,4 +39,5 @@ DELETE FROM test.retrospectiva
 DELETE FROM test.estado_retrospectiva
 DELETE FROM test.tipo_tarea
 DELETE FROM test.checklist
+DELETE FROM test.formly_nombre
 DELETE FROM test.formly

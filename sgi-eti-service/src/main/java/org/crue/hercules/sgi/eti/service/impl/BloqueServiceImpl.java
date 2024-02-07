@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.exceptions.BloqueNotFoundException;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
@@ -62,10 +63,11 @@ public class BloqueServiceImpl implements BloqueService {
    *                                 id.
    */
   @Override
-  public Bloque findById(final Long id) throws BloqueNotFoundException {
-    log.debug("Petición a get Bloque : {}  - start", id);
-    final Bloque bloque = bloqueRepository.findById(id).orElseThrow(() -> new BloqueNotFoundException(id));
-    log.debug("Petición a get Bloque : {}  - end", id);
+  public BloqueOutput findByIdAndLanguage(final Long id, String lang) throws BloqueNotFoundException {
+    log.debug("Petición a get Bloque : {} - start", id);
+    bloqueRepository.findById(id).orElseThrow(() -> new BloqueNotFoundException(id));
+    final BloqueOutput bloque = bloqueRepository.findByBloqueIdAndLanguage(id, lang);
+    log.debug("Petición a get Bloque : {} - end", id);
     return bloque;
   }
 
@@ -74,30 +76,51 @@ public class BloqueServiceImpl implements BloqueService {
    * {@link Formulario}.
    * 
    * @param id       Id del formulario
+   * @param lang     code language
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Bloque} paginadas y/o filtradas.
    */
   @Override
-  public Page<Bloque> findByFormularioId(Long id, Pageable pageable) {
+  public Page<BloqueOutput> findByFormularioId(Long id, String lang, Pageable pageable) {
     log.debug("update(Bloque bloqueActualizar) - start");
     Assert.notNull(id, "El id del formulario no puede ser null para listar sus bloques");
-    Page<Bloque> resultado = bloqueRepository.findByFormularioId(id, pageable);
+    Page<BloqueOutput> bloque = bloqueRepository.findByFormularioIdAndLanguage(id, lang, pageable);
     log.debug("update(Bloque bloqueActualizar) - start");
-    return resultado;
+    return bloque;
+  }
+
+  /**
+   * Obtiene el {@link Bloque} de comentarios generales.
+   *
+   * @param lang code language
+   * @return la entidad {@link Bloque}.
+   */
+  @Override
+  public BloqueOutput getBloqueComentariosGenerales(String lang) {
+    log.debug("getBloqueComentariosGenerales(String lang) - start");
+    final BloqueOutput bloque = bloqueRepository.getBloqueComentarioGenerales(lang);
+    log.debug("getBloqueComentariosGenerales(String lang) - end");
+    return bloque;
   }
 
   /**
    * Obtiene el {@link Bloque} de comentarios generales.
    *
    * @return la entidad {@link Bloque}.
-   * @throws BloqueNotFoundException Si no existe el {@link Bloque}
    */
   @Override
-  public Bloque getBloqueComentariosGenerales() throws BloqueNotFoundException {
-    log.debug("getBloqueComentariosGenerales() - start");
-    final Bloque bloque = bloqueRepository.findOne(BloqueSpecifications.bloqueComentarioGenerales()).orElseThrow(() -> new BloqueNotFoundException(null));
-    log.debug("getBloqueComentariosGenerales() - end");
+  public Bloque getBloqueComentariosGeneralesAllLanguages() {
+    log.debug("getBloqueComentariosGenerales(String lang) - start");
+    final Bloque bloque = bloqueRepository.findOne(BloqueSpecifications.bloqueComentarioGenerales())
+        .orElseThrow(() -> new BloqueNotFoundException(null));
+    log.debug("getBloqueComentariosGenerales(String lang) - end");
     return bloque;
+  }
+
+  @Override
+  public Page<Bloque> findByFormularioIdAllLanguages(Long id, Pageable pageable) {
+    Page<Bloque> bloques = bloqueRepository.findByFormularioId(id, pageable);
+    return bloques;
   }
 
 }

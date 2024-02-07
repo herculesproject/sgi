@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaEvaluada;
+import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.ActaDocumento;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -26,6 +29,7 @@ import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.repository.ActaDocumentoRepository;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
@@ -45,6 +49,7 @@ import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -109,6 +114,9 @@ public class ActaServiceImpl implements ActaService {
   /** Comentario Service. */
   private final ComentarioService comentarioService;
 
+  /** Documento Repository. */
+  private final ActaDocumentoRepository actaDocumentoRepository;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   /**
@@ -129,6 +137,7 @@ public class ActaServiceImpl implements ActaService {
    * @param asistentesService        {@link AsistentesService}
    * @param comentarioRepository     {@link ComentarioRepository}
    * @param comentarioService        {@link ComentarioService}
+   * @param actaDocumentoRepository  {@link ActaDocumentoRepository}
    */
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
       TipoEstadoActaRepository tipoEstadoActaRepository, EvaluacionRepository evaluacionRepository,
@@ -136,7 +145,8 @@ public class ActaServiceImpl implements ActaService {
       RetrospectivaService retrospectivaService, SgiApiRepService reportService, SgdocService sgdocService,
       ComunicadosService comunicadosService, SgiApiCnfService configService,
       SgiApiBlockchainService blockchainService, AsistentesService asistentesService,
-      ComentarioRepository comentarioRepository, ComentarioService comentarioService) {
+      ComentarioRepository comentarioRepository, ComentarioService comentarioService,
+      ActaDocumentoRepository actaDocumentoRepository) {
     this.actaRepository = actaRepository;
     this.estadoActaRepository = estadoActaRepository;
     this.tipoEstadoActaRepository = tipoEstadoActaRepository;
@@ -151,6 +161,7 @@ public class ActaServiceImpl implements ActaService {
     this.asistentesService = asistentesService;
     this.comentarioRepository = comentarioRepository;
     this.comentarioService = comentarioService;
+    this.actaDocumentoRepository = actaDocumentoRepository;
   }
 
   /**
@@ -315,11 +326,12 @@ public class ActaServiceImpl implements ActaService {
    * - En caso de ser una retrospectiva se actualiza siempre a estado "Fin
    * evaluación".
    * 
-   * @param id identificador del {@link Acta} a finalizar.
+   * @param id   identificador del {@link Acta} a finalizar.
+   * @param lang code language
    */
   @Override
   @Transactional
-  public void finishActa(Long id) {
+  public void finishActa(Long id, String lang) {
 
     log.debug("finishActa(Long id) - start");
 
@@ -327,45 +339,48 @@ public class ActaServiceImpl implements ActaService {
 
     Acta acta = actaRepository.findById(id).orElseThrow(() -> new ActaNotFoundException(id));
 
-    acta = this.generarDocumento(acta);
-
     // Tipo evaluación memoria
     List<Evaluacion> listEvaluacionesMemoria = evaluacionRepository
         .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(TipoEvaluacion.Tipo.MEMORIA.getId(),
             Boolean.FALSE, acta.getConvocatoriaReunion().getId());
 
-    for (Evaluacion evaluacion : listEvaluacionesMemoria) {
-      TipoEstadoMemoria.Tipo tipoEstadoMemoriaUpdate = null;
-      switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
-        case DESFAVORABLE:
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.DESFAVORABLE;
-          break;
-        case FAVORABLE:
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FIN_EVALUACION;
-          break;
-        case FAVORABLE_PENDIENTE_REVISION_MINIMA:
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS;
-          break;
-        case PENDIENTE_CORRECCIONES:
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.PENDIENTE_CORRECCIONES;
-          break;
-        case NO_PROCEDE_EVALUAR:
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.NO_PROCEDE_EVALUAR;
-          break;
-        case SOLICITUD_MODIFICACIONES:
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION;
-          break;
-        default:
-          throw new DictamenNotFoundException(id);
-      }
+    TipoEvaluacion tipoEvaluacion = null;
 
-      memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), tipoEstadoMemoriaUpdate.getId());
+    if (ObjectUtils.isNotEmpty(listEvaluacionesMemoria)) {
+      tipoEvaluacion = TipoEvaluacion.builder().id(TipoEvaluacion.Tipo.MEMORIA.getId()).build();
 
-      // Enviar comunicado de cada evaluación al finalizar un acta
-      if (!evaluacion.getEsRevMinima().booleanValue()) {
-        sendComunicadoActaFinalizada(evaluacion);
-      }
+      listEvaluacionesMemoria.forEach(evaluacion -> {
+        TipoEstadoMemoria.Tipo tipoEstadoMemoriaUpdate = null;
+        switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
+          case DESFAVORABLE:
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.DESFAVORABLE;
+            break;
+          case FAVORABLE:
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FIN_EVALUACION;
+            break;
+          case FAVORABLE_PENDIENTE_REVISION_MINIMA:
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS;
+            break;
+          case PENDIENTE_CORRECCIONES:
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.PENDIENTE_CORRECCIONES;
+            break;
+          case NO_PROCEDE_EVALUAR:
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.NO_PROCEDE_EVALUAR;
+            break;
+          case SOLICITUD_MODIFICACIONES:
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION;
+            break;
+          default:
+            throw new DictamenNotFoundException(id);
+        }
 
+        memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), tipoEstadoMemoriaUpdate.getId());
+
+        // Enviar comunicado de cada evaluación al finalizar un acta
+        if (!evaluacion.getEsRevMinima().booleanValue()) {
+          sendComunicadoActaFinalizada(evaluacion);
+        }
+      });
     }
 
     // Tipo evaluación retrospectiva
@@ -373,70 +388,78 @@ public class ActaServiceImpl implements ActaService {
         .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
             TipoEvaluacion.Tipo.RETROSPECTIVA.getId(), Boolean.FALSE, acta.getConvocatoriaReunion().getId());
 
-    listEvaluacionesRetrospectiva.forEach(evaluacion -> {
+    if (ObjectUtils.isNotEmpty(listEvaluacionesRetrospectiva)) {
+      tipoEvaluacion = TipoEvaluacion.builder().id(TipoEvaluacion.Tipo.RETROSPECTIVA.getId()).build();
 
-      switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
-        case DESFAVORABLE_RETROSPECTIVA:
-        case FAVORABLE_RETROSPECTIVA:
-        default:
-          retrospectivaService.updateEstadoRetrospectiva(evaluacion.getMemoria().getRetrospectiva(),
-              EstadoRetrospectiva.Tipo.FIN_EVALUACION.getId());
-          break;
-      }
-
-    });
+      listEvaluacionesRetrospectiva.forEach(evaluacion -> {
+        switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
+          case DESFAVORABLE_RETROSPECTIVA:
+          case FAVORABLE_RETROSPECTIVA:
+          default:
+            retrospectivaService.updateEstadoRetrospectiva(evaluacion.getMemoria().getRetrospectiva(),
+                EstadoRetrospectiva.Tipo.FIN_EVALUACION.getId());
+            break;
+        }
+      });
+    }
 
     // Tipo evaluación seguimiento final
     List<Evaluacion> listEvaluacionesSegFinal = evaluacionRepository
         .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
             TipoEvaluacion.Tipo.SEGUIMIENTO_FINAL.getId(), Boolean.FALSE, acta.getConvocatoriaReunion().getId());
 
-    listEvaluacionesSegFinal.forEach(evaluacion -> {
-      TipoEstadoMemoria.Tipo tipoEstadoMemoriaUpdate = null;
+    if (ObjectUtils.isNotEmpty(listEvaluacionesSegFinal)) {
+      tipoEvaluacion = TipoEvaluacion.builder().id(TipoEvaluacion.Tipo.SEGUIMIENTO_FINAL.getId()).build();
+      listEvaluacionesSegFinal.forEach(evaluacion -> {
+        TipoEstadoMemoria.Tipo tipoEstadoMemoriaUpdate = null;
+        switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
+          case FAVORABLE_SEGUIMIENTO_FINAL:
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FIN_EVALUACION_SEGUIMIENTO_FINAL;
+            break;
+          case SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL:
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.EN_ACLARACION_SEGUIMIENTO_FINAL;
+            break;
+          default:
+            throw new DictamenNotFoundException(id);
+        }
 
-      switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
-        case FAVORABLE_SEGUIMIENTO_FINAL:
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FIN_EVALUACION_SEGUIMIENTO_FINAL;
-          break;
-        case SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL:
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.EN_ACLARACION_SEGUIMIENTO_FINAL;
-          break;
-        default:
-          throw new DictamenNotFoundException(id);
-      }
+        memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), tipoEstadoMemoriaUpdate.getId());
 
-      memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), tipoEstadoMemoriaUpdate.getId());
-
-      // Enviar comunicado de cada evaluación al finalizar un acta
-      sendComunicadoActaFinalizada(evaluacion);
-    });
+        // Enviar comunicado de cada evaluación al finalizar un acta
+        sendComunicadoActaFinalizada(evaluacion);
+      });
+    }
 
     // Tipo evaluación seguimiento anual
     List<Evaluacion> listEvaluacionesSegAnual = evaluacionRepository
         .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
             TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL.getId(), Boolean.FALSE, acta.getConvocatoriaReunion().getId());
 
-    listEvaluacionesSegAnual.forEach(evaluacion -> {
-      TipoEstadoMemoria.Tipo tipoEstadoMemoriaUpdate = null;
-
-      switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
-        case FAVORABLE_SEGUIMIENTO_ANUAL: {
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FIN_EVALUACION_SEGUIMIENTO_ANUAL;
-          break;
+    if (ObjectUtils.isNotEmpty(listEvaluacionesSegAnual)) {
+      tipoEvaluacion = TipoEvaluacion.builder().id(TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL.getId()).build();
+      listEvaluacionesSegAnual.forEach(evaluacion -> {
+        TipoEstadoMemoria.Tipo tipoEstadoMemoriaUpdate = null;
+        switch (Dictamen.Tipo.fromId(evaluacion.getDictamen().getId())) {
+          case FAVORABLE_SEGUIMIENTO_ANUAL: {
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.FIN_EVALUACION_SEGUIMIENTO_ANUAL;
+            break;
+          }
+          case SOLICITUD_MODIFICACIONES: {
+            tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL;
+            break;
+          }
+          default:
+            throw new DictamenNotFoundException(id);
         }
-        case SOLICITUD_MODIFICACIONES: {
-          tipoEstadoMemoriaUpdate = TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL;
-          break;
-        }
-        default:
-          throw new DictamenNotFoundException(id);
-      }
 
-      memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), tipoEstadoMemoriaUpdate.getId());
+        memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), tipoEstadoMemoriaUpdate.getId());
 
-      // Enviar comunicado de cada evaluación al finalizar un acta
-      sendComunicadoActaFinalizada(evaluacion);
-    });
+        // Enviar comunicado de cada evaluación al finalizar un acta
+        sendComunicadoActaFinalizada(evaluacion);
+      });
+    }
+
+    this.generarDocumentosActa(acta.getId(), lang);
 
     // Se crea el nuevo estado acta 2:"Finalizado"
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
@@ -499,20 +522,6 @@ public class ActaServiceImpl implements ActaService {
   }
 
   /**
-   * Obtiene el informe de un {@link Acta}
-   * 
-   * @param idActa id {@link Acta}
-   * @return El documento del informe del acta
-   */
-  @Override
-  public DocumentoOutput generarDocumentoActa(Long idActa) {
-    Resource informePdf = reportService.getInformeActa(idActa);
-    // Se sube el informe a sgdoc
-    String fileName = TITULO_INFORME_ACTA + "_" + idActa + LocalDate.now() + ".pdf";
-    return sgdocService.uploadInforme(fileName, informePdf);
-  }
-
-  /**
    * Identifica si el usuario es {@link Evaluador} en algun {@link Acta}
    * 
    * @param personaRef El usuario de la petición
@@ -547,33 +556,16 @@ public class ActaServiceImpl implements ActaService {
     }
   }
 
-  private Acta generarDocumento(Acta acta) {
-    log.debug("generarDocumento(Acta acta) - start");
-    DocumentoOutput documento = generarDocumentoActa(acta.getId());
-    acta.setDocumentoRef(documento.getDocumentoRef());
-
-    try {
-      if (configService.isBlockchainEnable().booleanValue()) {
-        String transaccion = blockchainService.sellarDocumento(documento.getHash());
-        acta.setTransaccionRef(transaccion);
-      }
-    } catch (Exception e) {
-      log.debug("generarDocumento(Acta acta) - Error blockchain", e);
-    }
-
-    log.debug("generarDocumento(Acta acta) - end");
-    return acta;
-  }
-
   @Override
   @Transactional
-  public Boolean confirmarRegistroBlockchain(Long idActa) {
+  public Boolean confirmarRegistroBlockchain(Long idActa, String lang) {
     log.debug("confirmarRegistroBlockchain(Long idActa) - start");
     Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
+    ActaDocumento actaDocumento = actaDocumentoRepository.findByActaIdAndLang(idActa, Language.fromCode(lang));
 
-    DocumentoOutput documento = sgdocService.getDocumento(acta.getDocumentoRef());
+    DocumentoOutput documento = sgdocService.getDocumento(actaDocumento.getDocumentoRef());
 
-    String hash = blockchainService.confirmarRegistro(acta.getTransaccionRef());
+    String hash = blockchainService.confirmarRegistro(actaDocumento.getTransaccionRef());
     log.debug("confirmarRegistroBlockchain(Long idActa) - end");
     return (documento.getHash().equals(hash));
   }
@@ -655,5 +647,89 @@ public class ActaServiceImpl implements ActaService {
     }
     log.debug("enviarComentariosEvaluacion(Long idActa, String personaRef) - end");
     return true;
+  }
+
+  @Transactional
+  public DocumentoOutput generarDocumentosActa(Long idActa, String lang) {
+    DocumentoOutput returnDocumento = null;
+
+    for (Language language : Language.values()) {
+      ActaDocumento actaDocumento = null;
+      Resource informePdf = reportService.getInformeActa(idActa, language.getCode());
+      // Se sube el informe a sgdoc
+      String fileName = TITULO_INFORME_ACTA + "_" + idActa + LocalDate.now() + ".pdf";
+      DocumentoOutput documento = null;
+      actaDocumento = actaDocumentoRepository.findByActaIdAndLang(idActa, language);
+      if (ObjectUtils.isNotEmpty(actaDocumento) && ObjectUtils.isNotEmpty(actaDocumento.getDocumentoRef())) {
+        try {
+          documento = sgdocService.getDocumento(actaDocumento.getDocumentoRef());
+          actaDocumentoRepository.delete(actaDocumento);
+          if (ObjectUtils.isNotEmpty(documento)) {
+            sgdocService.delete(documento.getDocumentoRef());
+          }
+        } catch (Exception e) {
+          log.error("No se encuentra el documento en el sgdoc: " + actaDocumento.getDocumentoRef(), e);
+        }
+      }
+      actaDocumento = new ActaDocumento();
+      actaDocumento.setActaId(idActa);
+      documento = sgdocService.uploadInforme(fileName, informePdf);
+
+      if (language.getCode().equals(lang)) {
+        returnDocumento = new DocumentoOutput();
+        BeanUtils.copyProperties(documento, returnDocumento);
+      }
+
+      actaDocumento.setDocumentoRef(documento.getDocumentoRef());
+      actaDocumento.setLang(language);
+
+      try {
+        if (configService.isBlockchainEnable().booleanValue() && ObjectUtils.isNotEmpty(documento)) {
+          String transaccion = blockchainService.sellarDocumento(documento.getHash());
+          actaDocumento.setTransaccionRef(transaccion);
+        }
+      } catch (Exception e) {
+        log.debug("generarDocumento(Acta acta) - Error blockchain", e);
+      }
+
+      actaDocumentoRepository.save(actaDocumento);
+    }
+
+    return returnDocumento;
+  }
+
+  @Override
+  @Transactional
+  public DocumentoOutput generarDocumentoActa(Long idActa, String lang) {
+
+    ActaDocumento actaDocumento = null;
+    Acta acta = this.findById(idActa);
+    boolean isActaFinalizada = acta.getEstadoActual().getId() == 2L;
+
+    String fileName = TITULO_INFORME_ACTA + "_" + idActa + LocalDate.now() + ".pdf";
+    DocumentoOutput documento = null;
+    actaDocumento = actaDocumentoRepository.findByActaIdAndLang(idActa, Language.fromCode(lang));
+    if (ObjectUtils.isNotEmpty(actaDocumento) && ObjectUtils.isNotEmpty(actaDocumento.getDocumentoRef())) {
+      documento = sgdocService.getDocumento(actaDocumento.getDocumentoRef());
+      if (!isActaFinalizada) {
+        actaDocumentoRepository.delete(actaDocumento);
+        if (ObjectUtils.isNotEmpty(documento)) {
+          sgdocService.delete(documento.getDocumentoRef());
+        }
+      }
+    }
+
+    if (!isActaFinalizada) {
+      actaDocumento = new ActaDocumento();
+      actaDocumento.setActaId(idActa);
+      Resource informePdf = reportService.getInformeActa(idActa, lang);
+      documento = sgdocService.uploadInforme(fileName, informePdf);
+      actaDocumento.setDocumentoRef(documento.getDocumentoRef());
+      actaDocumento.setLang(Language.fromCode(lang));
+
+      actaDocumentoRepository.save(actaDocumento);
+    }
+
+    return documento;
   }
 }

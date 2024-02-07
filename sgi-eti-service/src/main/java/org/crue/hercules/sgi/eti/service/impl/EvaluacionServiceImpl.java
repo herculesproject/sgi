@@ -571,23 +571,23 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
   @Transactional
   @Override
-  public DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion) {
+  public DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion, String lang) {
     Evaluacion evaluacion = this.findById(idEvaluacion);
     DocumentoOutput documento = null;
     switch (evaluacion.getTipoEvaluacion().getTipo()) {
       case MEMORIA:
-        documento = this.getDocumentoByTipoEvaluacionMemoria(evaluacion);
+        documento = this.getDocumentoByTipoEvaluacionMemoria(evaluacion, lang);
         break;
       case SEGUIMIENTO_ANUAL:
         if (evaluacion.getDictamen() != null
             && evaluacion.getDictamen().getId().equals(Dictamen.Tipo.SOLICITUD_MODIFICACIONES.getId())) {
-          documento = this.generarDocumento(evaluacion, false);
+          documento = this.generarDocumento(evaluacion, false, lang);
         }
         break;
       case SEGUIMIENTO_FINAL:
         if (evaluacion.getDictamen() != null && (evaluacion.getDictamen().getId()
             .equals(Dictamen.Tipo.SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL.getId()))) {
-          documento = this.generarDocumento(evaluacion, false);
+          documento = this.generarDocumento(evaluacion, false, lang);
         }
         break;
       case RETROSPECTIVA:
@@ -595,21 +595,21 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         if (evaluacion.getDictamen() != null
             && (evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE.getId())
                 || evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE_RETROSPECTIVA.getId()))) {
-          documento = this.generarDocumento(evaluacion, true);
+          documento = this.generarDocumento(evaluacion, true, lang);
         }
         break;
     }
     return documento;
   }
 
-  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion) {
+  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion, String lang) {
     boolean isFavorable = (evaluacion.getDictamen() != null
         && (evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE.getId())));
 
-    return this.generarDocumento(evaluacion, isFavorable);
+    return this.generarDocumento(evaluacion, isFavorable, lang);
   }
 
-  private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable) {
+  private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable, String lang) {
     log.debug("generarDocumento(Evaluacion evaluacion, Boolean favorable)- start");
 
     Resource informePdf = null;
@@ -618,18 +618,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       // Se obtiene el informe favorable en formato pdf creado mediante el
       // servicio de reporting
       if (Objects.equals(evaluacion.getTipoEvaluacion().getTipo(), TipoEvaluacion.Tipo.RETROSPECTIVA)) {
-        informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now());
+        informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now(), lang);
         tituloInforme = TITULO_INFORME_EVALUACION_RETROSPECTIVA;
       } else {
         switch (evaluacion.getMemoria().getTipoMemoria().getTipo()) {
           case NUEVA:
-            informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId());
+            informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId(), lang);
             break;
           case MODIFICACION:
-            informePdf = reportService.getInformeFavorableModificacion(evaluacion.getId());
+            informePdf = reportService.getInformeFavorableModificacion(evaluacion.getId(), lang);
             break;
           case RATIFICACION:
-            informePdf = reportService.getInformeFavorableRatificacion(evaluacion.getId());
+            informePdf = reportService.getInformeFavorableRatificacion(evaluacion.getId(), lang);
             break;
           default:
             break;
@@ -639,7 +639,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     } else {
       // Se obtiene el informe de evaluación en formato pdf creado mediante el
       // servicio de reporting
-      informePdf = reportService.getInformeEvaluacion(evaluacion.getId());
+      informePdf = reportService.getInformeEvaluacion(evaluacion.getId(), lang);
       tituloInforme = TITULO_INFORME_EVALUACION;
     }
 
@@ -654,11 +654,12 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * Obtiene el documento de la ficha del Evaluador
    * 
    * @param idEvaluacion id {@link Evaluacion}
+   * @param lang         code language
    * @return El documento del informe de la ficha del Evaluador
    */
   @Override
-  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion) {
-    Resource informePdf = reportService.getInformeEvaluador(idEvaluacion);
+  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion, String lang) {
+    Resource informePdf = reportService.getInformeEvaluador(idEvaluacion, lang);
     // Se sube el informe a sgdoc
     String fileName = TITULO_INFORME_FICHA_EVALUADOR + "_" + idEvaluacion + LocalDate.now() + ".pdf";
     return sgdocService.uploadInforme(fileName, informePdf);

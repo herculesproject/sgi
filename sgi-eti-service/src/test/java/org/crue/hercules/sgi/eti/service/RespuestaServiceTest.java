@@ -56,7 +56,6 @@ public class RespuestaServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(respuesta.getId()).isEqualTo(1L);
     Assertions.assertThat(respuesta.getMemoria().getId()).isEqualTo(1L);
-    Assertions.assertThat(respuesta.getApartado().getEsquema()).isEqualTo("{\"nombre\":\"EsquemaApartado01\"}");
     Assertions.assertThat(respuesta.getValor()).isEqualTo("{\"valor\":\"Valor1\"}");
 
   }
@@ -265,7 +264,6 @@ public class RespuestaServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(respuesta.get().getId()).isEqualTo(1L);
     Assertions.assertThat(respuesta.get().getMemoria().getId()).isEqualTo(1L);
-    Assertions.assertThat(respuesta.get().getApartado().getEsquema()).isEqualTo("{\"nombre\":\"EsquemaApartado01\"}");
     Assertions.assertThat(respuesta.get().getValor()).isEqualTo("{\"valor\":\"Valor1\"}");
   }
 
@@ -315,7 +313,7 @@ public class RespuestaServiceTest extends BaseServiceTest {
   private Apartado getMockApartado(Long id, Long bloqueId, Long padreId) {
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
-    Bloque Bloque = new Bloque(bloqueId, formulario, "Bloque " + bloqueId, bloqueId.intValue());
+    Bloque Bloque = new Bloque(bloqueId, formulario, bloqueId.intValue(), null);
 
     Apartado padre = (padreId != null) ? getMockApartado(padreId, bloqueId, null) : null;
 
@@ -324,10 +322,8 @@ public class RespuestaServiceTest extends BaseServiceTest {
     final Apartado data = new Apartado();
     data.setId(id);
     data.setBloque(Bloque);
-    data.setNombre("Apartado" + txt);
     data.setPadre(padre);
     data.setOrden(id.intValue());
-    data.setEsquema("{\"nombre\":\"EsquemaApartado" + txt + "\"}");
 
     return data;
   }
@@ -365,6 +361,6 @@ public class RespuestaServiceTest extends BaseServiceTest {
    * @return el objeto Bloque
    */
   public Bloque generarMockBloque(Long id, Formulario formulario) {
-    return new Bloque(id, formulario, "Bloque " + id, id.intValue());
+    return new Bloque(id, formulario, id.intValue(), null);
   }
 }

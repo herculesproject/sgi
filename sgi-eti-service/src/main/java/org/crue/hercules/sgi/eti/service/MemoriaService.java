@@ -225,9 +225,10 @@ public interface MemoriaService {
    * 
    * @param nuevaMemoria Nueva {@link Memoria} a crear.
    * @param id           Identificador de {@link Memoria} de la que se parte.
+   * @param lang         code language
    * @return {@link Memoria} creada.
    */
-  Memoria createModificada(Memoria nuevaMemoria, Long id);
+  Memoria createModificada(Memoria nuevaMemoria, Long id, String lang);
 
   /**
    * Comprobación de si están o no los documentos obligatorios aportados para

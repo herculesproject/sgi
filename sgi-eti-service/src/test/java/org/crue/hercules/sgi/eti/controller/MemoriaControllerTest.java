@@ -172,7 +172,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1);
 
-    BDDMockito.given(memoriaService.createModificada(ArgumentMatchers.<Memoria>any(), ArgumentMatchers.anyLong()))
+    BDDMockito
+        .given(memoriaService.createModificada(ArgumentMatchers.<Memoria>any(), ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyString()))
         .willReturn(memoria);
 
     // when: Creamos una memoria
@@ -195,7 +197,9 @@ public class MemoriaControllerTest extends BaseControllerTest {
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"19/06/2020\","
         + "\"tipoMemoria\": {\"id\": 2, \"nombre\": \"Modificada\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}";
 
-    BDDMockito.given(memoriaService.createModificada(ArgumentMatchers.<Memoria>any(), ArgumentMatchers.anyLong()))
+    BDDMockito
+        .given(memoriaService.createModificada(ArgumentMatchers.<Memoria>any(), ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyString()))
         .willThrow(new IllegalArgumentException());
 
     // when: Creamos una memoria
@@ -1547,7 +1551,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     Informe informe = new Informe();
     informe.setId(id);
-    informe.setDocumentoRef("TipoDocumento" + id);
+    // informe.setDocumentoRef("TipoDocumento" + id);
     informe.setMemoria(memoria);
     informe.setTipoEvaluacion(tipoEvaluacion);
 

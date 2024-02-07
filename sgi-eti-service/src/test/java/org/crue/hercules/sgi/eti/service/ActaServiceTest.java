@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
+import org.crue.hercules.sgi.eti.repository.ActaDocumentoRepository;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
@@ -82,6 +83,8 @@ public class ActaServiceTest extends BaseServiceTest {
   private ComentarioRepository comentarioRepository;
   @Mock
   private ComentarioService comentarioService;
+  @Mock
+  private ActaDocumentoRepository actaDocumentoRepository;
 
   private ActaService actaService;
   private MemoriaService memoriaService;
@@ -91,7 +94,7 @@ public class ActaServiceTest extends BaseServiceTest {
     actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository,
         evaluacionRepository, retrospectivaRepository, memoriaService, retrospectivaService, reportService,
         sgdocService, comunicadosService, configService, blockchainService, asistentesService, comentarioRepository,
-        comentarioService);
+        comentarioService, actaDocumentoRepository);
   }
 
   @Test
@@ -308,7 +311,7 @@ public class ActaServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: Delete un id no existente
-        () -> actaService.finishActa(1L))
+        () -> actaService.finishActa(1L, "es"))
         // then: Lanza ActaNotFoundException
         .isInstanceOf(ActaNotFoundException.class);
 
@@ -321,17 +324,17 @@ public class ActaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(actaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(acta));
 
-    BDDMockito.given(reportService.getInformeActa(ArgumentMatchers.anyLong()))
+    BDDMockito.given(reportService.getInformeActa(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(new FileSystemResource("path"));
-
-    BDDMockito.given(sgdocService
-        .uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.<FileSystemResource>any()))
-        .willReturn(new DocumentoOutput());
 
     BDDMockito
         .given(evaluacionRepository.findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
             ArgumentMatchers.anyLong(), ArgumentMatchers.anyBoolean(), ArgumentMatchers.anyLong()))
         .willReturn(Collections.emptyList());
+
+    BDDMockito.given(sgdocService
+        .uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.<FileSystemResource>any()))
+        .willReturn(new DocumentoOutput());
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa(9L, "Finalizada", Boolean.TRUE);
 
@@ -344,7 +347,7 @@ public class ActaServiceTest extends BaseServiceTest {
     // when: Actualizamos el acta
     BDDMockito.given(actaRepository.save(ArgumentMatchers.<Acta>any())).willReturn(acta);
 
-    actaService.finishActa(1L);
+    actaService.finishActa(1L, "es");
 
     Mockito.verify(actaRepository, Mockito.times(1)).save(ArgumentMatchers.<Acta>any());
 

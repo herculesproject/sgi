@@ -530,7 +530,7 @@ public class EvaluacionIT extends BaseIT {
     apartado.setId(1L);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    Bloque Bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(Bloque);
 
     Memoria memoria = new Memoria();
@@ -561,7 +561,7 @@ public class EvaluacionIT extends BaseIT {
     apartado.setId(1L);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    Bloque Bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(Bloque);
 
     Comentario comentario = new Comentario();
@@ -589,7 +589,7 @@ public class EvaluacionIT extends BaseIT {
     apartado.setId(1L);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    Bloque Bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(Bloque);
 
     Memoria memoria = new Memoria();
@@ -621,7 +621,7 @@ public class EvaluacionIT extends BaseIT {
     apartado.setId(1L);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    Bloque Bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(Bloque);
 
     Comentario comentario = new Comentario();
@@ -649,7 +649,7 @@ public class EvaluacionIT extends BaseIT {
     apartado.setId(1L);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    Bloque Bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(Bloque);
 
     TipoComentario tipoComentario = new TipoComentario();
@@ -687,7 +687,7 @@ public class EvaluacionIT extends BaseIT {
     apartado.setId(1L);
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    Bloque Bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(Bloque);
 
     TipoComentario tipoComentario = new TipoComentario();

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
+import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
@@ -34,6 +35,8 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
+import org.crue.hercules.sgi.eti.model.InformeDocumento;
+import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
@@ -50,6 +53,7 @@ import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.InformeDocumentoRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
@@ -147,6 +151,9 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   private final RetrospectivaService retrospectivaService;
 
+  /** Informe documento repository */
+  private final InformeDocumentoRepository informeDocumentoRepository;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   public MemoriaServiceImpl(SgiConfigProperties sgiConfigProperties, MemoriaRepository memoriaRepository,
@@ -157,7 +164,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       RespuestaRepository respuestaRepository, TareaRepository tareaRepository,
       ConfiguracionService configuracionService, SgiApiRepService reportService, SgdocService sgdocService,
       BloqueRepository bloqueRepository, ApartadoRepository apartadoRepository, ComunicadosService comunicadosService,
-      RetrospectivaService retrospectivaService) {
+      RetrospectivaService retrospectivaService, InformeDocumentoRepository informeDocumentoRepository) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -176,6 +183,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     this.apartadoRepository = apartadoRepository;
     this.comunicadosService = comunicadosService;
     this.retrospectivaService = retrospectivaService;
+    this.informeDocumentoRepository = informeDocumentoRepository;
   }
 
   /**
@@ -216,7 +224,7 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   @Transactional
   @Override
-  public Memoria createModificada(Memoria nuevaMemoria, Long id) {
+  public Memoria createModificada(Memoria nuevaMemoria, Long id, String lang) {
     log.debug("createModificada(Memoria memoria, Long id) - start");
 
     validacionesCreateMemoria(nuevaMemoria);
@@ -261,8 +269,8 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     // Guardamos los ids de los apartados del formulario de retrospectiva
     List<Long> idsApartadosRetrospectiva = new ArrayList<>();
-    Page<Bloque> bloques = bloqueRepository.findByFormularioId(Constantes.FORMULARIO_RETROSPECTIVA,
-        null);
+    Page<BloqueOutput> bloques = bloqueRepository.findByFormularioIdAndLanguage(Constantes.FORMULARIO_RETROSPECTIVA,
+        lang, null);
     bloques.getContent().stream().forEach(bloque -> {
       Page<Apartado> apartados = apartadoRepository.findByBloqueIdAndPadreIsNull(bloque.getId(), null);
       apartados.getContent().stream().forEach(apartado -> idsApartadosRetrospectiva.add(apartado.getId()));
@@ -915,18 +923,30 @@ public class MemoriaServiceImpl implements MemoriaService {
         break;
     }
 
-    // Se obtiene el informe en formato pdf creado mediante el servicio de reporting
-    Resource informePdf = reportService.getMXX(memoria.getId(), idFormulario);
+    Informe informeNuevo = informeService.create(informe);
 
-    // Se sube el informe a sgdoc
-    String fileName = tituloInforme + "_" + memoria.getId() + LocalDate.now() + ".pdf";
-    DocumentoOutput documento = sgdocService.uploadInforme(fileName, informePdf);
-
-    // Se adjunta referencia del documento a sgdoc y se crea el informe
-    informe.setDocumentoRef(documento.getDocumentoRef());
-    informeService.create(informe);
+    for (Language lang : Language.values()) {
+      // Se obtiene el informe en formato pdf creado mediante el servicio de reporting
+      this.createInformeAllLanguages(tituloInforme, informeNuevo, memoria.getId(), idFormulario,
+          lang.getCode());
+    }
 
     log.debug("crearInforme(memoria, tipoEvaluacion)- end");
+  }
+
+  private void createInformeAllLanguages(String tituloInforme, Informe informe, Long idMemoria, Long idFormulario,
+      String lang) {
+    Resource informePdf = reportService.getMXX(idMemoria, idFormulario, lang);
+    // Se sube el informe a sgdoc
+    String fileName = tituloInforme + "_" + idMemoria + LocalDate.now() + ".pdf";
+    DocumentoOutput documento = sgdocService.uploadInforme(fileName, informePdf);
+
+    InformeDocumento informeDocumento = new InformeDocumento();
+    informeDocumento.setDocumentoRef(documento.getDocumentoRef());
+    informeDocumento.setInformeId(informe.getId());
+    informeDocumento.setLang(Language.fromCode(lang));
+    informeDocumentoRepository.save(informeDocumento);
+
   }
 
   /**

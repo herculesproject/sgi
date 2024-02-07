@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
+import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.exceptions.BloqueNotFoundException;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
@@ -23,12 +24,32 @@ public interface BloqueService {
   /**
    * Obtiene {@link Bloque} por id.
    *
-   * @param id el id de la entidad {@link Bloque}.
+   * @param id   el id de la entidad {@link Bloque}.
+   * @param lang code language
    * @return la entidad {@link Bloque}.
    * @throws BloqueNotFoundException Si no existe ningún {@link Bloque} con ese
    *                                 id.
    */
-  Bloque findById(Long id) throws BloqueNotFoundException;
+  BloqueOutput findByIdAndLanguage(Long id, String lang) throws BloqueNotFoundException;
+
+  /**
+   * Obtener todas las entidades {@link Bloque} paginadas de una
+   * {@link Formulario}.
+   * 
+   * @param id       Id del formulario
+   * @param lang     code language
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Bloque} paginadas y/o filtradas.
+   */
+  Page<BloqueOutput> findByFormularioId(Long id, String lang, Pageable pageable);
+
+  /**
+   * Obtiene el {@link Bloque} de comentarios generales.
+   * 
+   * @param lang code language
+   * @return el {@link Bloque}.
+   */
+  BloqueOutput getBloqueComentariosGenerales(String lang);
 
   /**
    * Obtener todas las entidades {@link Bloque} paginadas de una
@@ -38,14 +59,13 @@ public interface BloqueService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Bloque} paginadas y/o filtradas.
    */
-  Page<Bloque> findByFormularioId(Long id, Pageable pageable);
+  Page<Bloque> findByFormularioIdAllLanguages(Long id, Pageable pageable);
 
   /**
    * Obtiene el {@link Bloque} de comentarios generales.
    *
    * @return el {@link Bloque}.
-   * @throws BloqueNotFoundException Si no existe el {@link Bloque}
    */
-  Bloque getBloqueComentariosGenerales() throws BloqueNotFoundException;
+  Bloque getBloqueComentariosGeneralesAllLanguages();
 
 }

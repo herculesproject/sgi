@@ -1,11 +1,15 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.util.Locale;
+
+import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.service.BloqueService;
 import org.crue.hercules.sgi.eti.service.FormularioService;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -97,9 +101,12 @@ public class FormularioController {
 
   @GetMapping("/{id}/bloques")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER')")
-  ResponseEntity<Page<Bloque>> getBloques(@PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+  ResponseEntity<Page<BloqueOutput>> getBloques(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
     log.debug("getBloques(Long id, Pageable paging - start");
-    Page<Bloque> page = bloqueService.findByFormularioId(id, paging);
+    Locale locale = LocaleContextHolder.getLocale();
+    bloqueService.findByFormularioIdAllLanguages(id, paging);
+    Page<BloqueOutput> page = bloqueService.findByFormularioId(id, locale.getLanguage(), paging);
     log.debug("getBloques(Long id, Pageable paging - end");
     if (page.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -122,6 +129,20 @@ public class FormularioController {
     formularioService.completado(memoriaId, tipoFormulario);
     log.debug("completado(Long memoriaId, Long tipoFormulario) - end");
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping("/{id}/bloques/all-languages")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER')")
+  ResponseEntity<Page<Bloque>> getBloquesAllLanguages(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("getBloques(Long id, Pageable paging - start");
+    Locale locale = LocaleContextHolder.getLocale();
+    Page<Bloque> page = bloqueService.findByFormularioIdAllLanguages(id, paging);
+    log.debug("getBloques(Long id, Pageable paging - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

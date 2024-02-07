@@ -36,6 +36,7 @@ public class ApartadoTreeOutput implements Serializable {
   private Long padreId;
   private Integer orden;
   private List<ApartadoTreeOutput> hijos;
+  private String lang;
 
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)

@@ -1,12 +1,16 @@
 package org.crue.hercules.sgi.eti.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -14,10 +18,13 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "acta")
@@ -91,17 +98,14 @@ public class Acta extends BaseEntity {
   @NotNull
   private Boolean inactiva;
 
-  /** Referencia al documento */
-  @Column(name = "documento_ref", nullable = true)
-  private String documentoRef;
-
-  /** Referencia a la transacción blockchain */
-  @Column(name = "transaccion_ref", nullable = true)
-  private String transaccionRef;
-
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   @NotNull
   private Boolean activo;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "acta")
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final List<ActaDocumento> actaDocumentos = null;
 
 }

@@ -222,15 +222,16 @@ public interface EvaluacionService {
    */
   Instant findFirstFechaEnvioSecretariaByIdEvaluacion(Long idEvaluacion);
 
-  DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion);
+  DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion, String lang);
 
   /**
    * Obtiene el documento de la ficha del Evaluador
    * 
    * @param idEvaluacion id {@link Evaluacion}
+   * @param lang         code language
    * @return El documento del informe de la ficha del Evaluador
    */
-  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion);
+  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion, String lang);
 
   /**
    * 

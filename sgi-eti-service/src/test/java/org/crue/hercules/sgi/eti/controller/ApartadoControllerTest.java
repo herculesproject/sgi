@@ -9,6 +9,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
@@ -45,21 +46,21 @@ public class ApartadoControllerTest extends BaseControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String APARTADO_CONTROLLER_BASE_PATH = "/apartados";
-  private static final String PATH_PARAMETER_HIJOS = "/hijos";
+  private static final String PATH_PARAMETER_HIJOS = "/hijos/{lang}";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-APARTADO-VER" })
   public void findById_WithExistingId_ReturnsApartado() throws Exception {
 
     // given: Entidad con un determinado Id
-    Apartado response = getMockData(1L, 1L, null);
+    ApartadoOutput response = getMockDataOutput(1L, 1L, null);
     // @formatter:off
     final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
 
-    BDDMockito.given(service.findById(response.getId())).willReturn(response);
+    BDDMockito.given(service.findByIdAndLanguage(response.getId(), "es")).willReturn(response);
 
     // when: Se busca la entidad por ese Id
     mockMvc
@@ -67,12 +68,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera la entidad con el Id
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("bloque").value(response.getBloque()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(response.getNombre()))
-        .andExpect(MockMvcResultMatchers.jsonPath("padre").value(response.getPadre()))
-        .andExpect(MockMvcResultMatchers.jsonPath("orden").value(response.getOrden()));
+        .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
@@ -88,9 +84,10 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .toString();
     // @formatter:on
 
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new ApartadoNotFoundException(invocation.getArgument(0));
-    });
+    BDDMockito.given(service.findByIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .will((InvocationOnMock invocation) -> {
+          throw new ApartadoNotFoundException(invocation.getArgument(0));
+        });
 
     // when: Se busca entidad con ese id
     mockMvc
@@ -231,7 +228,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
           public Page<Apartado> answer(InvocationOnMock invocation) throws Throwable {
             List<Apartado> content = new LinkedList<>();
             for (Apartado item : response) {
-              if (item.getNombre().startsWith("Apartado0") && item.getId() == 3L) {
+              if (item.getId() == 3L) {
                 content.add(item);
               }
             }
@@ -262,11 +259,13 @@ public class ApartadoControllerTest extends BaseControllerTest {
     final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_HIJOS).toString();
 
-    BDDMockito.given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+            ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
-    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id, "es").with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -286,7 +285,9 @@ public class ApartadoControllerTest extends BaseControllerTest {
       apartados.add(apartado);
     }
 
-    BDDMockito.given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+            ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Apartado>>() {
           @Override
           public Page<Apartado> answer(InvocationOnMock invocation) throws Throwable {
@@ -299,7 +300,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         });
     // when: Se buscan todos los apartados hijos de ese apartador
     mockMvc
-        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+        .perform(MockMvcRequestBuilders.get(url, id, "es").with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los apartados hijos relacionados
@@ -319,7 +320,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
   private Apartado getMockData(Long id, Long bloqueId, Long padreId) {
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
-    Bloque bloque = new Bloque(bloqueId, formulario, "Bloque " + bloqueId, bloqueId.intValue());
+    Bloque bloque = new Bloque(padreId, formulario, 1, null);
 
     Apartado padre = (padreId != null) ? getMockData(padreId, bloqueId, null) : null;
 
@@ -328,11 +329,29 @@ public class ApartadoControllerTest extends BaseControllerTest {
     final Apartado data = new Apartado();
     data.setId(id);
     data.setBloque(bloque);
-    data.setNombre("Apartado" + txt);
     data.setPadre(padre);
     data.setOrden(id.intValue());
-    data.setEsquema("{\"nombre\":\"EsquemaApartado" + txt + "\"}");
 
+    return data;
+  }
+
+  /**
+   * Genera un objeto {@link Apartado}
+   * 
+   * @param id
+   * @param bloqueId
+   * @param componenteFormularioId
+   * @param padreId
+   * @return Apartado
+   */
+  private ApartadoOutput getMockDataOutput(Long id, Long bloqueId, Long padreId) {
+    Apartado apartado = getMockData(id, bloqueId, padreId);
+    final ApartadoOutput data = new ApartadoOutput();
+    data.setId(id);
+    data.setBloque(apartado.getBloque());
+    data.setPadre(new ApartadoOutput());
+    data.getPadre().setId(padreId);
+    data.setOrden(id.intValue());
     return data;
   }
 }

@@ -121,7 +121,6 @@ public class InformeServiceImpl implements InformeService {
     Assert.notNull(informeActualizar.getId(), "Informe id no puede ser null para actualizar un informe");
 
     return informeRepository.findById(informeActualizar.getId()).map(informe -> {
-      informe.setDocumentoRef(informeActualizar.getDocumentoRef());
       informe.setMemoria(informeActualizar.getMemoria());
 
       Informe returnValue = informeRepository.save(informe);
@@ -142,7 +141,6 @@ public class InformeServiceImpl implements InformeService {
     if (informe.isPresent()) {
       informeRepository.delete(informe.get());
     }
-
   }
 
   /**

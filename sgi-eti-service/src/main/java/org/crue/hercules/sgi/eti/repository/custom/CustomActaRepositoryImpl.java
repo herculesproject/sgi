@@ -20,7 +20,12 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.dto.MemoriaEvaluada;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.ActaDocumento;
+import org.crue.hercules.sgi.eti.model.ActaDocumento_;
 import org.crue.hercules.sgi.eti.model.Acta_;
+import org.crue.hercules.sgi.eti.model.Bloque;
+import org.crue.hercules.sgi.eti.model.BloqueNombre;
+import org.crue.hercules.sgi.eti.model.BloqueNombre_;
 import org.crue.hercules.sgi.eti.model.Comite_;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres_;
@@ -126,9 +131,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
         getNumEvaluaciones(root, cb, cq, Boolean.TRUE).alias("numEvaluaciones"),
         getNumEvaluaciones(root, cb, cq, Boolean.FALSE).alias("numRevisiones"),
         getNumEvaluacionesNoEvaluadas(root, cb, cq).alias("evaluacionesEvaluadas"),
-        root.get(Acta_.estadoActual).alias("estadoActa"),
-        root.get(Acta_.documentoRef).alias("documentoRef"),
-        root.get(Acta_.transaccionRef).alias("transaccionRef"));
+        root.get(Acta_.estadoActual).alias("estadoActa"));
 
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);

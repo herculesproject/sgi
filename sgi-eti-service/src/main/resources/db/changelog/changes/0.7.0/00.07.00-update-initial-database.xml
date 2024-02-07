@@ -1,0 +1,162 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+  <property name="defaultLang" value="es" />
+
+  <changeSet author="user (generated)" id="00.07.00-1">
+
+    <createTable tableName="informe_documento">
+      <column name="informe_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="documento_ref" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="informe_documento" columnNames="informe_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="informe_id" baseTableName="informe_documento"
+      constraintName="FK_INFORMEDOCUMENTO_INFORME" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="informe" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}informe_documento(informe_id, documento_ref, lang) SELECT id,
+      documento_ref, '${defaultLang}' FROM ${schemaPrefix}informe</sql>
+
+    <dropColumn columnName="documento_ref" tableName="informe" />
+  </changeSet>
+
+  <changeSet author="user (generated)" id="00.07.00-2">
+
+    <createTable tableName="acta_documento">
+      <column name="acta_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="documento_ref" type="VARCHAR(250)">
+        <constraints nullable="true" />
+      </column>
+      <column name="transaccion_ref" type="VARCHAR(250)">
+        <constraints nullable="true" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="acta_documento" columnNames="acta_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="acta_id" baseTableName="acta_documento"
+      constraintName="FK_ACTADOCUMENTO_ACTA" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="acta" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}acta_documento(acta_id, documento_ref, transaccion_ref, lang)
+      SELECT id, documento_ref, transaccion_ref, '${defaultLang}' FROM ${schemaPrefix}acta</sql>
+
+    <dropColumn columnName="documento_ref" tableName="acta" />
+    <dropColumn columnName="transaccion_ref" tableName="acta" />
+
+  </changeSet>
+
+  <changeSet author="user (generated)" id="00.07.00-3">
+
+    <createTable tableName="bloque_nombre">
+      <column name="bloque_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="nombre" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="bloque_nombre" columnNames="bloque_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="bloque_id" baseTableName="bloque_nombre"
+      constraintName="FK_BLOQUENOMBRE_BLOQUE" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="bloque" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}bloque_nombre(bloque_id, nombre, lang) SELECT id, nombre,
+      '${defaultLang}' FROM ${schemaPrefix}bloque</sql>
+
+    <dropColumn columnName="nombre" tableName="bloque" />
+  </changeSet>
+
+  <changeSet author="user (generated)" id="00.07.00-4">
+
+    <createTable tableName="apartado_nombre">
+      <column name="apartado_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="esquema" type="CLOB">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="apartado_nombre" columnNames="apartado_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="apartado_id" baseTableName="apartado_nombre"
+      constraintName="FK_APARTADONOMBRE_APARTADO" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="apartado" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}apartado_nombre(apartado_id, nombre, esquema, lang) SELECT id,
+      nombre, esquema, '${defaultLang}' FROM ${schemaPrefix}apartado</sql>
+
+    <dropColumn columnName="nombre" tableName="apartado" />
+    <dropColumn columnName="esquema" tableName="apartado" />
+  </changeSet>
+
+  <changeSet author="user (generated)" id="00.07.00-5">
+
+    <createTable tableName="formly_nombre">
+      <column name="formly_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="esquema" type="CLOB">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey
+      tableName="formly_nombre" columnNames="formly_id, lang" />
+
+    <addForeignKeyConstraint
+      baseColumnNames="formly_id" baseTableName="formly_nombre"
+      constraintName="FK_FORMLYNOMBRE_FORMLY" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="formly" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}formly_nombre(formly_id, nombre, esquema, lang) SELECT id,
+      nombre, esquema, '${defaultLang}' FROM ${schemaPrefix}formly</sql>
+
+    <dropUniqueConstraint constraintName="UK_FORMLY_NOMBRE_VERSION"
+      tableName="formly" />
+
+    <dropColumn columnName="nombre" tableName="formly" />
+    <dropColumn
+      columnName="esquema" tableName="formly" />
+
+  </changeSet>
+
+</databaseChangeLog>

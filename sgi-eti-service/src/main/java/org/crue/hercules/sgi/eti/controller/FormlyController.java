@@ -1,9 +1,12 @@
 package org.crue.hercules.sgi.eti.controller;
 
+import java.util.Locale;
+
 import org.crue.hercules.sgi.eti.dto.FormlyOutput;
 import org.crue.hercules.sgi.eti.model.Formly;
 import org.crue.hercules.sgi.eti.service.FormlyService;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,10 +67,9 @@ public class FormlyController {
    */
   @GetMapping("/{nombre:[^\\d].*}")
   @PreAuthorize("hasAnyAuthority('ETI-CHKLST-MOD-V', 'ETI-CHKLST-MOD-C', 'ETI-CHK-INV-E')")
-  FormlyOutput getByNombre(@PathVariable String nombre) {
+  Formly getByNombre(@PathVariable String nombre) {
     log.debug("getByNombre(@PathVariable String nombre) - start");
-    Formly formly = service.getByNombre(nombre);
-    FormlyOutput returnValue = convert(formly);
+    Formly returnValue = service.findFirstByOrderByVersionDesc(nombre);
     log.debug("getByNombre(@PathVariable String nombre) - end");
     return returnValue;
   }

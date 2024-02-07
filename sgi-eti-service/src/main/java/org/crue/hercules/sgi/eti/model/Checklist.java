@@ -49,7 +49,6 @@ public class Checklist extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "formly_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CHECKLIST_FORMLY"))
   @ExistsById(entityClass = Formly.class)
-  @FieldValueEquals(entityClass = Formly.class, fieldName = "nombre", value = "CHECKLIST")
   private Formly formly;
 
   /** Respuestas del formulario definido en el Formly */

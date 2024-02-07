@@ -1,0 +1,67 @@
+package org.crue.hercules.sgi.eti.model;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.crue.hercules.sgi.eti.enums.Language;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * Informe
+ */
+
+@Entity
+@IdClass(InformeDocumentoKey.class)
+@Table(name = "informe_documento")
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+public class InformeDocumento implements Serializable {
+  /**
+   * Serial version
+   */
+  private static final long serialVersionUID = 1L;
+
+  /** Informe */
+  @Id
+  @Column(name = "informe_id", nullable = false)
+  @NotNull
+  private Long informeId;
+
+  /** Language. */
+  @Id
+  @Column(name = "lang", length = 2)
+  @Enumerated(EnumType.STRING)
+  private Language lang;
+
+  /** Referencia documento */
+  @Column(name = "documento_ref", length = 250, nullable = false)
+  private String documentoRef;
+
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "informe_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_INFORMEDOCUMENTO_INFORME"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final Informe informe = null;
+
+}

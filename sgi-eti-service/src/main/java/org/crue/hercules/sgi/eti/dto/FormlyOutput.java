@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 
+import org.crue.hercules.sgi.eti.enums.Language;
+import org.crue.hercules.sgi.eti.model.Bloque;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -39,6 +42,8 @@ public class FormlyOutput implements Serializable {
   @Setter(AccessLevel.NONE)
   private String esquema;
 
+  private String lang;
+
   @JsonRawValue
   public String getEsquema() {
     return esquema;
@@ -62,5 +67,13 @@ public class FormlyOutput implements Serializable {
         setEsquema(stringWriter.toString());
       }
     }
+  }
+
+  public FormlyOutput(Long id, String nombre, Integer version, String esquema, Language lang) {
+    this.id = id;
+    this.nombre = nombre;
+    this.version = version;
+    this.esquema = esquema;
+    this.lang = lang.getCode();
   }
 }

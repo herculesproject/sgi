@@ -184,7 +184,9 @@ public class FormularioControllerTest extends BaseControllerTest {
     final String url = new StringBuffer(FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_BLOQUES).toString();
 
-    BDDMockito.given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+            ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
@@ -208,7 +210,9 @@ public class FormularioControllerTest extends BaseControllerTest {
       formularios.add(formulario);
     }
 
-    BDDMockito.given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+            ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Formulario>>() {
           @Override
           public Page<Formulario> answer(InvocationOnMock invocation) throws Throwable {

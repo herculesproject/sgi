@@ -72,9 +72,10 @@ public interface ActaService {
   /**
    * Finaliza el {@link Acta} con el id recibido como parámetro.
    * 
-   * @param id identificador del {@link Acta} a finalizar.
+   * @param id   identificador del {@link Acta} a finalizar.
+   * @param lang code language
    */
-  void finishActa(Long id);
+  void finishActa(Long id, String lang);
 
   /**
    * Devuelve el {@link Acta} asociada a una {@link ConvocatoriaReunion}
@@ -113,9 +114,10 @@ public interface ActaService {
    * Obtiene el informe de un {@link Acta}
    * 
    * @param idActa id {@link Acta}
+   * @param lang   code language
    * @return El documento del informe del acta
    */
-  DocumentoOutput generarDocumentoActa(Long idActa);
+  DocumentoOutput generarDocumentoActa(Long idActa, String lang);
 
   /**
    * Devuelve si el usuario es miembro activo del comité del {@link Acta}
@@ -137,10 +139,11 @@ public interface ActaService {
   /**
    * Confirma si el hash del blockchain sellado es igual o ha sido alterado
    * 
-   * @param id identificador del {@link Acta} a confirmar.
+   * @param id   identificador del {@link Acta} a confirmar.
+   * @param lang code language
    * @return true/false
    */
-  Boolean confirmarRegistroBlockchain(Long id);
+  Boolean confirmarRegistroBlockchain(Long id, String lang);
 
   /**
    * Identifica si los {@link Comentario} en el {@link Acta} han sido

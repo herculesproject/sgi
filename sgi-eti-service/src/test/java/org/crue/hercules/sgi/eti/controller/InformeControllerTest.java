@@ -63,8 +63,7 @@ public class InformeControllerTest extends BaseControllerTest {
         .perform(MockMvcRequestBuilders.get(INFORME_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value("Documento1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1));
     ;
   }
 
@@ -97,8 +96,7 @@ public class InformeControllerTest extends BaseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(nuevoInformeJson))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo informe y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value("Documento1"));
+        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1));
   }
 
   @Test
@@ -136,8 +134,7 @@ public class InformeControllerTest extends BaseControllerTest {
             .content(replaceInformeJson))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el informe y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value("Replace Documento1"));
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1));
 
   }
 
@@ -240,7 +237,8 @@ public class InformeControllerTest extends BaseControllerTest {
     // containing documentoRef='Documento031' to 'Documento040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Informe informe = actual.get(i);
-      Assertions.assertThat(informe.getDocumentoRef()).isEqualTo("Documento" + String.format("%03d", j));
+      // Assertions.assertThat(informe.getDocumentoRef()).isEqualTo("Documento" +
+      // String.format("%03d", j));
     }
   }
 
@@ -260,7 +258,7 @@ public class InformeControllerTest extends BaseControllerTest {
           public Page<Informe> answer(InvocationOnMock invocation) throws Throwable {
             List<Informe> content = new ArrayList<>();
             for (Informe informe : informes) {
-              if (informe.getDocumentoRef().startsWith("Documento") && informe.getId().equals(5L)) {
+              if (informe.getId().equals(5L)) {
                 content.add(informe);
               }
             }
@@ -348,7 +346,7 @@ public class InformeControllerTest extends BaseControllerTest {
 
     Informe informe = new Informe();
     informe.setId(id);
-    informe.setDocumentoRef(documentoRef);
+    // informe.setDocumentoRef(documentoRef);
     informe.setMemoria(memoria);
     informe.setVersion(3);
     informe.setTipoEvaluacion(tipoEvaluacion);

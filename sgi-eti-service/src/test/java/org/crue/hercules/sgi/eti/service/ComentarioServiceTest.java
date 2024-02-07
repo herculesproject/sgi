@@ -393,7 +393,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
     apartado.setBloque(bloque);
@@ -425,7 +425,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
     apartado.setBloque(bloque);
@@ -457,7 +457,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
     apartado.setBloque(bloque);
@@ -489,7 +489,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
     apartado.setBloque(bloque);
@@ -521,7 +521,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
     apartado.setBloque(bloque);
@@ -1078,7 +1078,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
     apartado.setId(1L);
@@ -1111,7 +1111,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
     apartado.setId(1L);
@@ -1144,7 +1144,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
     apartado.setId(1L);
@@ -1177,7 +1177,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
     apartado.setId(1L);
@@ -1210,7 +1210,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     final Comentario comentario = new Comentario();
     Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
     apartado.setId(1L);
@@ -1891,7 +1891,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
 
-    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    Bloque Bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(Bloque);
 
     final Evaluacion evaluacion = new Evaluacion();
@@ -1951,7 +1951,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     Formulario formulario = new Formulario(1L, "Nombre", "Descripcion");
     Comite comite = new Comite(comiteId, "nombreComite", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
-    Bloque bloque = new Bloque(1L, formulario, "Bloque1", 1);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
     apartado.setBloque(bloque);

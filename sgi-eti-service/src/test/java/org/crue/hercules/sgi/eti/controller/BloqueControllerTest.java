@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.exceptions.BloqueNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
@@ -32,6 +30,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 /**
  * BloqueControllerTest
  */
@@ -46,28 +46,29 @@ public class BloqueControllerTest extends BaseControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String BLOQUE_CONTROLLER_BASE_PATH = "/bloques";
-  private static final String PATH_PARAMETER_APARTADOS = "/apartados";
+  private static final String PATH_PARAMETER_APARTADOS = "/apartados/{lang}";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-Bloque-VER" })
   public void getBloque_WithId_ReturnsBloque() throws Exception {
-    BDDMockito.given(bloqueService.findById(ArgumentMatchers.anyLong())).willReturn((generarMockBloque(1L, "Bloque1")));
+    BDDMockito.given(bloqueService.findByIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn((generarMockBloqueOutput(1L, "Bloque1")));
 
     mockMvc
         .perform(MockMvcRequestBuilders.get(BLOQUE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Bloque1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1));
     ;
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-Bloque-VER" })
   public void getBloque_NotFound_Returns404() throws Exception {
-    BDDMockito.given(bloqueService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new BloqueNotFoundException(invocation.getArgument(0));
-    });
+    BDDMockito.given(bloqueService.findByIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .will((InvocationOnMock invocation) -> {
+          throw new BloqueNotFoundException(invocation.getArgument(0));
+        });
     mockMvc
         .perform(MockMvcRequestBuilders.get(BLOQUE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -158,7 +159,6 @@ public class BloqueControllerTest extends BaseControllerTest {
     // containing nombre='Bloque031' to 'Bloque040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Bloque bloque = actual.get(i);
-      Assertions.assertThat(bloque.getNombre()).isEqualTo("Bloque" + String.format("%03d", j));
     }
   }
 
@@ -178,7 +178,7 @@ public class BloqueControllerTest extends BaseControllerTest {
           public Page<Bloque> answer(InvocationOnMock invocation) throws Throwable {
             List<Bloque> content = new ArrayList<>();
             for (Bloque bloque : bloques) {
-              if (bloque.getNombre().startsWith("Bloque") && bloque.getId() == 5L) {
+              if (bloque.getId() == 5L) {
                 content.add(bloque);
               }
             }
@@ -205,11 +205,13 @@ public class BloqueControllerTest extends BaseControllerTest {
     final String url = new StringBuffer(BLOQUE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append(PATH_PARAMETER_APARTADOS).toString();
 
-    BDDMockito.given(apartadoService.findByBloqueId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(apartadoService.findByBloqueId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+            ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
-    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id, "es").with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -229,7 +231,9 @@ public class BloqueControllerTest extends BaseControllerTest {
       apartados.add(apartado);
     }
 
-    BDDMockito.given(apartadoService.findByBloqueId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(apartadoService.findByBloqueId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+            ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Apartado>>() {
           @Override
           public Page<Apartado> answer(InvocationOnMock invocation) throws Throwable {
@@ -242,7 +246,7 @@ public class BloqueControllerTest extends BaseControllerTest {
         });
     // when: Se buscan todos los documentos de esa memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+        .perform(MockMvcRequestBuilders.get(url, id, "es").with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los documentos relacionados
@@ -268,7 +272,29 @@ public class BloqueControllerTest extends BaseControllerTest {
     Bloque bloque = new Bloque();
     bloque.setId(id);
     bloque.setFormulario(formulario);
-    bloque.setNombre(nombre);
+    bloque.setOrden(1);
+
+    return bloque;
+  }
+
+  /**
+   * Función que devuelve un objeto Bloque
+   * 
+   * @param id     id del Bloque
+   * @param nombre el nombre de Bloque
+   * @return el objeto Bloque
+   */
+
+  public BloqueOutput generarMockBloqueOutput(Long id, String nombre) {
+
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("Formulario1");
+    formulario.setDescripcion("Descripcion formulario 1");
+
+    BloqueOutput bloque = new BloqueOutput();
+    bloque.setId(id);
+    bloque.setFormulario(formulario);
     bloque.setOrden(1);
 
     return bloque;
@@ -286,7 +312,7 @@ public class BloqueControllerTest extends BaseControllerTest {
   private Apartado getMockApartado(Long id, Long bloqueId, Long padreId) {
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
-    Bloque bloque = new Bloque(bloqueId, formulario, "Bloque " + bloqueId, bloqueId.intValue());
+    Bloque bloque = new Bloque(bloqueId, formulario, 1, null);
 
     Apartado padre = (padreId != null) ? getMockApartado(padreId, bloqueId, null) : null;
 
@@ -295,10 +321,8 @@ public class BloqueControllerTest extends BaseControllerTest {
     final Apartado data = new Apartado();
     data.setId(id);
     data.setBloque(bloque);
-    data.setNombre("Apartado" + txt);
     data.setPadre(padre);
     data.setOrden(id.intValue());
-    data.setEsquema("{\"nombre\":\"EsquemaApartado" + txt + "\"}");
 
     return data;
   }

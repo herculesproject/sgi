@@ -3,8 +3,11 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.eti.converter.ApartadoConverter;
 import org.crue.hercules.sgi.eti.converter.ApartadoTreeConverter;
+import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.dto.ApartadoTreeOutput;
+import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
@@ -30,10 +33,13 @@ public class ApartadoServiceImpl implements ApartadoService {
 
   private final ApartadoRepository repository;
   private final ApartadoTreeConverter apartadoTreeConverter;
+  private final ApartadoConverter apartadoConverter;
 
-  public ApartadoServiceImpl(ApartadoRepository repository, ApartadoTreeConverter apartadoTreeConverter) {
+  public ApartadoServiceImpl(ApartadoRepository repository, ApartadoTreeConverter apartadoTreeConverter,
+      ApartadoConverter apartadoConverter) {
     this.repository = repository;
     this.apartadoTreeConverter = apartadoTreeConverter;
+    this.apartadoConverter = apartadoConverter;
   }
 
   /**
@@ -67,10 +73,29 @@ public class ApartadoServiceImpl implements ApartadoService {
    * @throws IllegalArgumentException  Si no se informa Id.
    */
   @Override
-  public Apartado findById(final Long id) {
+  public ApartadoOutput findByIdAndLanguage(final Long id, String lang) {
     log.debug("findById(final Long id) - start");
     Assert.notNull(id, "Apartado id no puede ser null para buscar un apartado por Id");
-    final Apartado apartado = repository.findById(id).orElseThrow(() -> new ApartadoNotFoundException(id));
+    repository.findById(id).orElseThrow(() -> new ApartadoNotFoundException(id));
+    final ApartadoOutput apartado = repository.findByApartadoIdAndLanguage(id, lang);
+    log.debug("findById(final Long id) - end");
+    return apartado;
+  }
+
+  /**
+   * Obtiene {@link Apartado} por id.
+   *
+   * @param id El id de la entidad {@link Apartado}.
+   * @return La entidad {@link Apartado}.
+   * @throws ApartadoNotFoundException Si no existe ninguna entidad
+   *                                   {@link Apartado} con ese id.
+   * @throws IllegalArgumentException  Si no se informa Id.
+   */
+  @Override
+  public ApartadoOutput findByIdAndPadreIdAndLanguage(final Long id, Long idPadre, String lang) {
+    log.debug("findById(final Long id) - start");
+    Assert.notNull(id, "Apartado id no puede ser null para buscar un apartado por Id");
+    final ApartadoOutput apartado = repository.findByApartadoIdAndPadreIdAndLanguage(id, idPadre, lang);
     log.debug("findById(final Long id) - end");
     return apartado;
   }
@@ -85,10 +110,12 @@ public class ApartadoServiceImpl implements ApartadoService {
    * @return el listado de entidades {@link Apartado} paginadas y filtradas.
    */
   @Override
-  public Page<Apartado> findByBloqueId(Long id, Pageable pageable) {
+  public Page<ApartadoOutput> findByBloqueId(Long id, String lang, Pageable pageable) {
     log.debug("findByBloqueId(Long id, Pageable pageable) - start");
     Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su Bloque");
-    final Page<Apartado> apartado = repository.findByBloqueIdAndPadreIsNull(id, pageable);
+    final Page<ApartadoOutput> apartado = repository.findByBloqueIdAndPadreIsNullAndLanguage(id, lang, pageable);
+    // Page<ApartadoOutput> resultado = apartadoConverter.convertPage(apartado,
+    // lang);
     log.debug("findByBloqueId(Long id, Pageable pageable) - end");
     return apartado;
   }
@@ -98,14 +125,17 @@ public class ApartadoServiceImpl implements ApartadoService {
    * de su padre {@link Apartado}.
    *
    * @param id       id del {@link Apartado}.
+   * @param lang     code language
    * @param pageable pageable
    * @return el listado de entidades {@link Apartado} paginadas y filtradas.
    */
   @Override
-  public Page<Apartado> findByPadreId(Long id, Pageable pageable) {
+  public Page<ApartadoOutput> findByPadreId(Long id, String lang, Pageable pageable) {
     log.debug("findByPadreId(Long id, Pageable pageable) - start");
     Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
-    final Page<Apartado> apartado = repository.findByPadreId(id, pageable);
+    final Page<ApartadoOutput> apartado = repository.findByPadreIdAndLanguage(id, lang, pageable);
+    // Page<ApartadoOutput> resultado = apartadoConverter.convertPage(apartado,
+    // lang);
     log.debug("findByPadreId(Long id, Pageable pageable) - end");
     return apartado;
   }
@@ -119,10 +149,10 @@ public class ApartadoServiceImpl implements ApartadoService {
    * @param pageable pageable
    * @return el listado de entidades {@link ApartadoTreeOutput} paginadas.
    */
-  public Page<ApartadoTreeOutput> findApartadosTreeByBloqueId(Long id, Pageable pageable) {
+  public Page<ApartadoTreeOutput> findApartadosTreeByBloqueId(Long id, String lang, Pageable pageable) {
     log.debug("findByPadreId(Long id, Pageable pageable) - start");
     Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
-    final Page<ApartadoTreeOutput> apartados = repository.findByBloqueIdAndPadreIsNull(id, pageable)
+    final Page<ApartadoTreeOutput> apartados = repository.findByBloqueIdAndPadreIsNullAndLanguage(id, lang, pageable)
         .map(apartadoTreeConverter::convert)
         .map(this::fillApartadoTreeHijosRecursive);
 
@@ -132,12 +162,79 @@ public class ApartadoServiceImpl implements ApartadoService {
 
   private ApartadoTreeOutput fillApartadoTreeHijosRecursive(ApartadoTreeOutput apartado) {
     List<ApartadoTreeOutput> hijos = apartadoTreeConverter.convertList(
-        repository.findByPadreIdOrderByOrdenDesc(apartado.getId()))
+        repository.findByPadreIdAndLanguageOrderByOrdenDesc(apartado.getId(), apartado.getLang()))
         .stream()
         .map(this::fillApartadoTreeHijosRecursive)
         .collect(Collectors.toList());
     apartado.setHijos(hijos);
 
+    return apartado;
+  }
+
+  /**
+   * Obtiene las entidades {@link Apartado} en todos los idiomas
+   *
+   * @param id id del {@link Apartado}.
+   * @return el listado de entidades {@link Apartado} paginadas y filtradas.
+   */
+  @Override
+  public Apartado findByApartadoAllLanguages(Long id) {
+    log.debug("findByApartadoAllLanguages(Long id) - start");
+    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
+    final Apartado apartado = repository.findById(id).orElseThrow(() -> new ApartadoNotFoundException(id));
+    log.debug("findByApartadoAllLanguages(Long id) - end");
+    return apartado;
+  }
+
+  /**
+   * Obtiene las entidades {@link Apartado} filtrados por el padreen todos los
+   * idiomas
+   *
+   * @param id      id del {@link Apartado}.
+   * @param idPadre id padre del {@link Apartado}.
+   * @return el listado de entidades {@link Apartado} paginadas y filtradas.
+   */
+  @Override
+  public List<Apartado> findByApartadoAndPadreAllLanguages(Long id, Long idPadre) {
+    log.debug("findByApartadoAndPadreAllLanguages(Long id, Long idPadre) - start");
+    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
+    final List<Apartado> apartados = repository.findByIdAndPadreId(id, idPadre);
+    log.debug("findByApartadoAndPadreAllLanguages(Long id, Long idPadre) - end");
+    return apartados;
+  }
+
+  /**
+   * Obtiene las entidades {@link Apartado} filtradas y paginadas según por el id
+   * de su padre {@link Apartado}.
+   *
+   * @param id       id del {@link Apartado}.
+   * @param pageable pageable
+   * @return el listado de entidades {@link Apartado} paginadas y filtradas.
+   */
+  @Override
+  public Page<Apartado> findByPadreIdAllLanguages(Long id, Pageable pageable) {
+    log.debug("findByPadreId(Long id, Pageable pageable) - start");
+    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
+    final Page<Apartado> apartado = repository.findByPadreId(id, pageable);
+    log.debug("findByPadreId(Long id, Pageable pageable) - end");
+    return apartado;
+  }
+
+  /**
+   * Obtiene las entidades {@link Apartado} filtradas y paginadas según por el id
+   * de su {@link Bloque}. Solamente se devuelven los Apartados de primer nivel
+   * (sin padre).
+   *
+   * @param id       id del {@link Bloque}.
+   * @param pageable pageable
+   * @return el listado de entidades {@link Apartado} paginadas y filtradas.
+   */
+  @Override
+  public Page<Apartado> findByBloqueIdAllLanguages(Long id, Pageable pageable) {
+    log.debug("findByBloqueId(Long id, Pageable pageable) - start");
+    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su Bloque");
+    final Page<Apartado> apartado = repository.findByBloqueIdAndPadreIsNull(id, pageable);
+    log.debug("findByBloqueId(Long id, Pageable pageable) - end");
     return apartado;
   }
 

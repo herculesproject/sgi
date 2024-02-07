@@ -361,7 +361,7 @@ public class RespuestaControllerTest extends BaseControllerTest {
   private Apartado getMockApartado(Long id, Long bloqueId, Long padreId) {
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
-    Bloque Bloque = new Bloque(bloqueId, formulario, "Bloque " + bloqueId, bloqueId.intValue());
+    Bloque Bloque = new Bloque(bloqueId, formulario, 1, null);
 
     Apartado padre = (padreId != null) ? getMockApartado(padreId, bloqueId, null) : null;
 
@@ -370,10 +370,8 @@ public class RespuestaControllerTest extends BaseControllerTest {
     final Apartado data = new Apartado();
     data.setId(id);
     data.setBloque(Bloque);
-    data.setNombre("Apartado" + txt);
     data.setPadre(padre);
     data.setOrden(id.intValue());
-    data.setEsquema("{\"nombre\":\"EsquemaApartado" + txt + "\"}");
 
     return data;
   }

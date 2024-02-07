@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.exceptions.BloqueNotFoundException;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
@@ -41,12 +42,12 @@ public class BloqueServiceTest extends BaseServiceTest {
   @Test
   public void find_WithId_ReturnsBloque() {
     BDDMockito.given(bloqueRepository.findById(1L)).willReturn(Optional.of(generarMockBloque(1L, "Bloque1")));
+    BDDMockito.given(bloqueRepository.findByBloqueIdAndLanguage(1L, "es"))
+        .willReturn(generarMockBloqueOutput(1L, "Bloque1"));
 
-    Bloque Bloque = bloqueService.findById(1L);
+    BloqueOutput Bloque = bloqueService.findByIdAndLanguage(1L, "es");
 
     Assertions.assertThat(Bloque.getId()).isEqualTo(1L);
-
-    Assertions.assertThat(Bloque.getNombre()).isEqualTo("Bloque1");
 
   }
 
@@ -54,7 +55,8 @@ public class BloqueServiceTest extends BaseServiceTest {
   public void find_NotFound_ThrowsBloqueNotFoundException() throws Exception {
     BDDMockito.given(bloqueRepository.findById(1L)).willReturn(Optional.empty());
 
-    Assertions.assertThatThrownBy(() -> bloqueService.findById(1L)).isInstanceOf(BloqueNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> bloqueService.findByIdAndLanguage(1L, "es"))
+        .isInstanceOf(BloqueNotFoundException.class);
   }
 
   @Test
@@ -115,10 +117,6 @@ public class BloqueServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getNumber()).isEqualTo(3);
     Assertions.assertThat(page.getSize()).isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
-    for (int i = 0, j = 31; i < 10; i++, j++) {
-      Bloque Bloque = page.getContent().get(i);
-      Assertions.assertThat(Bloque.getNombre()).isEqualTo("Bloque" + String.format("%03d", j));
-    }
   }
 
   @Test
@@ -127,16 +125,18 @@ public class BloqueServiceTest extends BaseServiceTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long formularioId = 1L;
     // given: 1 Bloque y 1 Formulario
-    List<Bloque> bloques = new ArrayList<>();
+    List<BloqueOutput> bloques = new ArrayList<>();
     for (int i = 1; i <= 10; i++) {
-      bloques.add(generarMockBloque(Long.valueOf(i), "Bloque" + String.format("%03d", i)));
+      bloques.add(generarMockBloqueOutput(Long.valueOf(i), "Bloque" + String.format("%03d", i)));
     }
 
-    BDDMockito.given(bloqueRepository.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(bloqueRepository.findByFormularioIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+            ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(bloques));
 
     // when: Se buscan todos las datos
-    Page<Bloque> result = bloqueService.findByFormularioId(formularioId, Pageable.unpaged());
+    Page<BloqueOutput> result = bloqueService.findByFormularioId(formularioId, "es", Pageable.unpaged());
 
     // then: Se recuperan todos los datos
     Assertions.assertThat(result.getContent()).isEqualTo(bloques);
@@ -160,12 +160,35 @@ public class BloqueServiceTest extends BaseServiceTest {
     formulario.setNombre("Formulario1");
     formulario.setDescripcion("Descripcion formulario 1");
 
-    Bloque Bloque = new Bloque();
-    Bloque.setId(id);
-    Bloque.setFormulario(formulario);
-    Bloque.setNombre(nombre);
-    Bloque.setOrden(1);
+    Bloque bloque = new Bloque();
+    bloque.setId(id);
+    bloque.setFormulario(formulario);
+    bloque.setOrden(1);
 
-    return Bloque;
+    return bloque;
+  }
+
+  /**
+   * Función que devuelve un objeto Bloque
+   * 
+   * @param id     id del Bloque
+   * @param nombre el nombre de Bloque
+   * @return el objeto Bloque
+   */
+
+  private BloqueOutput generarMockBloqueOutput(Long id, String nombre) {
+
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("Formulario1");
+    formulario.setDescripcion("Descripcion formulario 1");
+
+    BloqueOutput bloque = new BloqueOutput();
+    bloque.setId(id);
+    bloque.setFormulario(formulario);
+    bloque.setOrden(1);
+    bloque.setNombre(nombre);
+
+    return bloque;
   }
 }

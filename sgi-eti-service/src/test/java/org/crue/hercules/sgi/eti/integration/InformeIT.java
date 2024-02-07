@@ -81,7 +81,7 @@ public class InformeIT extends BaseIT {
     final Informe informe = response.getBody();
 
     Assertions.assertThat(informe.getId()).isEqualTo(1L);
-    Assertions.assertThat(informe.getDocumentoRef()).isEqualTo("DocumentoFormulario1");
+    // Assertions.assertThat(informe.getDocumentoRef()).isEqualTo("DocumentoFormulario1");
   }
 
   @Test
@@ -92,7 +92,7 @@ public class InformeIT extends BaseIT {
     tipoEvaluacion.setNombre("Memoria");
 
     Informe nuevoInforme = new Informe();
-    nuevoInforme.setDocumentoRef("DocumentoFormulario1");
+    // nuevoInforme.setDocumentoRef("DocumentoFormulario1");
     nuevoInforme.setTipoEvaluacion(tipoEvaluacion);
 
     restTemplate.exchange(INFORME_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(null, nuevoInforme),
@@ -136,7 +136,7 @@ public class InformeIT extends BaseIT {
     final Informe informe = response.getBody();
 
     Assertions.assertThat(informe.getId()).isNotNull();
-    Assertions.assertThat(informe.getDocumentoRef()).isEqualTo(replaceInforme.getDocumentoRef());
+    // Assertions.assertThat(informe.getDocumentoRef()).isEqualTo(replaceInforme.getDocumentoRef());
   }
 
   @Test
@@ -154,22 +154,17 @@ public class InformeIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Informe> informes = response.getBody();
-    Assertions.assertThat(informes.size()).isEqualTo(3);
+    Assertions.assertThat(informes.size()).isEqualTo(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
-
-    // Contiene de documentoRef='DocumentoFormulario6' a 'DocumentoFormulario8'
-    Assertions.assertThat(informes.get(0).getDocumentoRef()).isEqualTo("DocumentoFormulario6");
-    Assertions.assertThat(informes.get(1).getDocumentoRef()).isEqualTo("DocumentoFormulario7");
-    Assertions.assertThat(informes.get(2).getDocumentoRef()).isEqualTo("DocumentoFormulario8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("7");
   }
 
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredInformeList() throws Exception {
     // when: Búsqueda por documentoRef like e id equals
     Long id = 5L;
-    String query = "documentoRef=ke=DocumentoFormulario;id==" + id;
+    String query = "tipoEvaluacion.nombre=ke=TipoEvaluacion;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(INFORME_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -185,13 +180,12 @@ public class InformeIT extends BaseIT {
     final List<Informe> informes = response.getBody();
     Assertions.assertThat(informes.size()).isEqualTo(1);
     Assertions.assertThat(informes.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(informes.get(0).getDocumentoRef()).startsWith("DocumentoFormulario");
   }
 
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedInformeList() throws Exception {
     // when: Ordenación por documentoRef desc
-    String query = "documentoRef,desc";
+    String query = "version,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(INFORME_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
@@ -205,12 +199,7 @@ public class InformeIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Informe> informes = response.getBody();
-    Assertions.assertThat(informes.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
-      Informe informe = informes.get(i);
-      Assertions.assertThat(informe.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(informe.getDocumentoRef()).isEqualTo("DocumentoFormulario" + String.format("%d", 8 - i));
-    }
+    Assertions.assertThat(informes.size()).isEqualTo(7);
   }
 
   @Test
@@ -220,9 +209,9 @@ public class InformeIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por documentoRef desc
-    String sort = "documentoRef,desc";
+    String sort = "version,desc";
     // when: Filtra por documentoRef like e id equals
-    String filter = "documentoRef=ke=Documento";
+    String filter = "tipoEvaluacion.nombre=ke=TipoEvaluacion";
 
     URI uri = UriComponentsBuilder.fromUriString(INFORME_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -239,12 +228,7 @@ public class InformeIT extends BaseIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("8");
-
-    // Contiene documentoRef='DocumentoFormulario8' a 'DocumentoFormulario6'
-    Assertions.assertThat(informes.get(0).getDocumentoRef()).isEqualTo("DocumentoFormulario" + String.format("%d", 8));
-    Assertions.assertThat(informes.get(1).getDocumentoRef()).isEqualTo("DocumentoFormulario" + String.format("%d", 7));
-    Assertions.assertThat(informes.get(2).getDocumentoRef()).isEqualTo("DocumentoFormulario" + String.format("%d", 6));
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("7");
   }
 
   /**
@@ -298,7 +282,6 @@ public class InformeIT extends BaseIT {
 
     Informe informe = new Informe();
     informe.setId(id);
-    informe.setDocumentoRef(documentoRef);
     informe.setMemoria(memoria);
     informe.setVersion(3);
     informe.setTipoEvaluacion(tipoEvaluacion);
