@@ -46,7 +46,7 @@ class ReportServiceTest extends BaseServiceTest {
             ArgumentMatchers.<Long>any()))
         .willReturn(expectedResource);
 
-    Resource resource = reportService.getInformeAutorizacion(idAutorizacion);
+    Resource resource = reportService.getInformeAutorizacion(idAutorizacion, "es");
 
     Assertions.assertThat(resource).isNotNull().isEqualTo(expectedResource.getBody());
   }

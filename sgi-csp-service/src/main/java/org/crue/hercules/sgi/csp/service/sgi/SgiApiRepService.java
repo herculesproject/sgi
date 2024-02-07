@@ -35,9 +35,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe Autorizacion en pdf
    *
    * @param idAutorizacion Identificador de la Autorizacion
+   * @param lang           code language
    * @return Resource informe
    */
-  public Resource getInformeAutorizacion(Long idAutorizacion) {
+  public Resource getInformeAutorizacion(Long idAutorizacion, String lang) {
     log.debug("getInformeAutorizacion(Long idAutorizacion)- start");
     Assert.notNull(
         idAutorizacion,
@@ -48,13 +49,13 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/csp/autorizacion-proyecto-externo/{id}";
+      String relativeUrl = "/report/csp/autorizacion-proyecto-externo/{id}/{lang}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idAutorizacion).getBody();
+          }, idAutorizacion, lang).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();

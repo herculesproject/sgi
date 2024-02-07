@@ -481,11 +481,12 @@ public class AutorizacionService {
    * Obtiene el informe de una {@link Autorizacion}
    * 
    * @param idAutorizacion identificador {@link Autorizacion}
-   * @param fileName nombre del fichero
+   * @param fileName       nombre del fichero
+   * @param lang           code language
    * @return El documento del informe de la {@link Autorizacion}
    */
-  public DocumentoOutput generarDocumentoAutorizacion(Long idAutorizacion, String fileName) {
-    Resource informePdf = reportService.getInformeAutorizacion(idAutorizacion);
+  public DocumentoOutput generarDocumentoAutorizacion(Long idAutorizacion, String fileName, String lang) {
+    Resource informePdf = reportService.getInformeAutorizacion(idAutorizacion, lang);
     // Se sube el informe a sgdoc
     String pattern = "yyyyMMddHH:mm:ss";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern)
