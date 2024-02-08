@@ -30,6 +30,7 @@ import org.crue.hercules.sgi.rep.util.AssertHelper;
 import org.crue.hercules.sgi.rep.util.CustomSpELRenderDataCompute;
 import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 
 import com.deepoove.poi.config.Configure;
@@ -77,9 +78,11 @@ public class MXXReportService extends SgiReportDocxService {
    * @param reportMXX    SgiReport
    * @param memoriaId    Id de la memoria
    * @param formularioId Id del formulario
+   * @param lang         Code del language
    * @return byte[] Report
    */
-  public byte[] getReport(ReportMXX reportMXX, Long memoriaId, Long formularioId) {
+  public byte[] getReport(ReportMXX reportMXX, Long memoriaId, Long formularioId, String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     AssertHelper.idNotNull(memoriaId, MemoriaDto.class);
     AssertHelper.idNotNull(formularioId, FormularioDto.class);
 
@@ -89,7 +92,7 @@ public class MXXReportService extends SgiReportDocxService {
     List<RespuestaInput> respuestasMemoriaOriginal = isMemoriaModificacion
         ? memoriaService.getRespuestas(memoria.getMemoriaOriginal().getId())
         : Collections.emptyList();
-    List<BloqueDto> bloques = bloqueService.findByFormularioId(formularioId);
+    List<BloqueDto> bloques = bloqueService.findByFormularioId(formularioId, lang);
 
     List<MemoriaPeticionEvaluacionDto> memoriasPeticionEvaluacion = peticionEvaluacionService
         .getMemorias(memoria.getPeticionEvaluacion().getId());
@@ -106,7 +109,7 @@ public class MXXReportService extends SgiReportDocxService {
         .getPersonaRef());
 
     List<ApartadoTreeDto> apartados = new ArrayList<>();
-    bloques.forEach(bloque -> apartados.addAll(bloqueService.getApartados(bloque.getId())));
+    bloques.forEach(bloque -> apartados.addAll(bloqueService.getApartados(bloque.getId(), lang)));
 
     try {
       HashMap<String, Object> dataReport = getReportModelFormulario(bloques, apartados, respuestas,
@@ -121,7 +124,7 @@ public class MXXReportService extends SgiReportDocxService {
       dataReport.put("tutor", tutor);
       dataReport.put("zoneId", sgiConfigProperties.getTimeZone().toZoneId().getId());
 
-      XWPFDocument document = getDocument(dataReport, getReportDefinitionStream(reportMXX.getPath()));
+      XWPFDocument document = getDocument(dataReport, getReportDefinitionStream(reportMXX.getPath() + SUFIJO_LANGUAGE));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = PdfOptions.create();
@@ -251,54 +254,60 @@ public class MXXReportService extends SgiReportDocxService {
 
     GsonHandler provider = new DefaultGsonHandler();
     JsonArray apartadoJson = new Gson().fromJson(apartado.getEsquema(), JsonArray.class);
-    String apartadoKey = apartadoJson.get(0).getAsJsonObject().get("key").getAsString();
-    apartadoModel.put("apartado", apartado);
-    apartadoModel.put("esquema",
-        provider.parser().fromJson(apartado.getEsquema(), ArrayList.class).get(0));
+    if (!ObjectUtils.isEmpty(apartadoJson.get(0).getAsJsonObject().get("key"))) {
+      String apartadoKey = apartadoJson.get(0).getAsJsonObject().get("key").getAsString();
+      apartadoModel.put("apartado", apartado);
+      apartadoModel.put("esquema",
+          provider.parser().fromJson(apartado.getEsquema(), ArrayList.class).get(0));
 
-    Optional<RespuestaInput> respuesta = respuestas.stream()
-        .filter(r -> r.getApartadoId().equals(apartado.getId())).findFirst();
-
-    boolean isModificado = false;
-    if (respuestasMemoriaOriginal != null) {
-      Optional<RespuestaInput> respuestaMemoriaOriginal = respuestasMemoriaOriginal.stream()
+      Optional<RespuestaInput> respuesta = respuestas.stream()
           .filter(r -> r.getApartadoId().equals(apartado.getId())).findFirst();
 
-      isModificado = respuesta.isPresent() != respuestaMemoriaOriginal.isPresent()
-          || (respuesta.isPresent() && respuestaMemoriaOriginal.isPresent()
-              && !respuesta.get().getValor().equals(respuestaMemoriaOriginal.get().getValor()));
-    }
+      boolean isModificado = false;
+      if (respuestasMemoriaOriginal != null) {
+        Optional<RespuestaInput> respuestaMemoriaOriginal = respuestasMemoriaOriginal.stream()
+            .filter(r -> r.getApartadoId().equals(apartado.getId())).findFirst();
 
-    apartadoModel.put("isModificado", isModificado);
-
-    JsonObject respuestaApartadoJson = null;
-    Object respuestaObject = null;
-    if (respuesta.isPresent()) {
-      respuestaObject = provider.parser().fromJson(respuesta.get().getValor(), Object.class);
-    } else if (apartado.getPadreId() != null) {
-      RespuestaInput respuestaApartado = respuestas.stream()
-          .filter(r -> r.getApartadoId().equals(apartado.getPadreId())).findFirst().orElse(null);
-
-      if (respuestaApartado != null) {
-        JsonObject respuestaJson = new Gson().fromJson(respuestaApartado.getValor(), JsonObject.class);
-        respuestaApartadoJson = respuestaJson.get(apartadoKey).getAsJsonObject();
-        respuestaObject = new Gson().fromJson(respuestaJson.get(apartadoKey), Object.class);
-      } else if (respuestaPadreJson != null) {
-        JsonObject respuestaJson = respuestaPadreJson;
-        respuestaApartadoJson = respuestaPadreJson.get(apartadoKey).getAsJsonObject();
-        respuestaObject = new Gson().fromJson(respuestaJson.get(apartadoKey), Object.class);
+        isModificado = respuesta.isPresent() != respuestaMemoriaOriginal.isPresent()
+            || (respuesta.isPresent() && respuestaMemoriaOriginal.isPresent()
+                && !respuesta.get().getValor().equals(respuestaMemoriaOriginal.get().getValor()));
       }
-    }
 
-    if (respuestaObject != null) {
-      apartadoModel.put("respuesta", respuestaObject);
-    }
+      apartadoModel.put("isModificado", isModificado);
 
-    for (ApartadoTreeDto apartadoHijo : apartado.getHijos()) {
-      apartadoModel.putAll(getReportModelApartado(apartadoHijo, respuestas, respuestaApartadoJson));
-    }
+      JsonObject respuestaApartadoJson = null;
+      Object respuestaObject = null;
+      if (respuesta.isPresent()) {
+        respuestaObject = provider.parser().fromJson(respuesta.get().getValor(), Object.class);
+      } else if (apartado.getPadreId() != null) {
+        RespuestaInput respuestaApartado = respuestas.stream()
+            .filter(r -> r.getApartadoId().equals(apartado.getPadreId())).findFirst().orElse(null);
 
-    reportModel.put(apartadoKey, apartadoModel);
+        if (respuestaApartado != null) {
+          JsonObject respuestaJson = new Gson().fromJson(respuestaApartado.getValor(), JsonObject.class);
+          respuestaApartadoJson = respuestaJson.get(apartadoKey).getAsJsonObject();
+          respuestaObject = new Gson().fromJson(respuestaJson.get(apartadoKey), Object.class);
+        } else if (respuestaPadreJson != null) {
+          JsonObject respuestaJson = respuestaPadreJson;
+          respuestaApartadoJson = respuestaPadreJson.get(apartadoKey).getAsJsonObject();
+          respuestaObject = new Gson().fromJson(respuestaJson.get(apartadoKey), Object.class);
+        }
+      }
+
+      if (respuestaObject != null) {
+        apartadoModel.put("respuesta", respuestaObject);
+      }
+
+      for (ApartadoTreeDto apartadoHijo : apartado.getHijos()) {
+        apartadoModel.putAll(getReportModelApartado(apartadoHijo, respuestas, respuestaApartadoJson));
+      }
+
+      reportModel.put(apartadoKey, apartadoModel);
+    } else {
+      apartadoModel.put("apartado", apartado);
+      apartadoModel.put("esquema", "-");
+      apartadoModel.put("isModificado", false);
+    }
 
     return reportModel;
   }

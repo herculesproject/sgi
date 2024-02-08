@@ -39,11 +39,13 @@ public class CspReportController {
    * investigación
    *
    * @param idAutorizacion identificador de la Autorización
+   * @param lang           code language
    * @return Resource
    */
-  @GetMapping("/autorizacion-proyecto-externo/{idAutorizacion}")
+  @GetMapping("/autorizacion-proyecto-externo/{idAutorizacion}/{lang}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-B','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR')")
-  public ResponseEntity<Resource> getAutorizacionProyectoExterno(@PathVariable Long idAutorizacion) {
+  public ResponseEntity<Resource> getAutorizacionProyectoExterno(@PathVariable Long idAutorizacion,
+      @PathVariable String lang) {
 
     log.debug("getAutorizacionProyectoExterno(idAutorizacion) - start");
 
@@ -51,7 +53,7 @@ public class CspReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = autorizacionProyectoExternoReportService.getReportAutorizacionProyectoExterno(report,
-        idAutorizacion);
+        idAutorizacion, lang);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();

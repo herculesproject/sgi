@@ -149,7 +149,8 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
   }
 
   private XWPFDocument getReportFromDetalleGrupo(ReportInformeDetalleGrupo sgiReport, Integer anio,
-      Long grupoId) {
+      Long grupoId, String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     try {
 
       HashMap<String, Object> dataReport = new HashMap<>();
@@ -159,7 +160,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
       DetalleGrupoInvestigacionOutput detalleGrupo = sgiApiPrcService.getDataReportDetalleGrupo(anio, grupoId);
 
       XWPFDocument document = getDocument(detalleGrupo, dataReport,
-          getReportDefinitionStream(sgiReport.getPath()));
+          getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = PdfOptions.create();
@@ -175,8 +176,8 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
     }
   }
 
-  public byte[] getReportDetalleGrupo(ReportInformeDetalleGrupo sgiReport, Integer anio, Long grupoId) {
-    getReportFromDetalleGrupo(sgiReport, anio, grupoId);
+  public byte[] getReportDetalleGrupo(ReportInformeDetalleGrupo sgiReport, Integer anio, Long grupoId, String lang) {
+    getReportFromDetalleGrupo(sgiReport, anio, grupoId, lang);
     return sgiReport.getContent();
   }
 
@@ -203,7 +204,8 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
   }
 
   private XWPFDocument getReportFromResumenPuntuacionGrupos(ReportInformeResumenPuntuacionGrupos sgiReport,
-      Integer anio) {
+      Integer anio, String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     try {
 
       HashMap<String, Object> dataReport = new HashMap<>();
@@ -213,7 +215,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
       ResumenPuntuacionGrupoAnioOutput resumen = sgiApiPrcService.getDataReportResumenPuntuacionGrupos(anio);
 
       XWPFDocument document = getDocumentResumenPuntuacionGrupos(resumen, dataReport,
-          getReportDefinitionStream(sgiReport.getPath()));
+          getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = PdfOptions.create();
@@ -229,8 +231,9 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
     }
   }
 
-  public byte[] getReportResumenPuntuacionGrupos(ReportInformeResumenPuntuacionGrupos sgiReport, Integer anio) {
-    getReportFromResumenPuntuacionGrupos(sgiReport, anio);
+  public byte[] getReportResumenPuntuacionGrupos(ReportInformeResumenPuntuacionGrupos sgiReport, Integer anio,
+      String lang) {
+    getReportFromResumenPuntuacionGrupos(sgiReport, anio, lang);
     return sgiReport.getContent();
   }
 
@@ -261,7 +264,8 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
 
   private XWPFDocument getReportFromDetalleProduccionInvestigador(
       ReportInformeDetalleProduccionInvestigador sgiReport,
-      Integer anio, String personaRef) {
+      Integer anio, String personaRef, String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     try {
 
       HashMap<String, Object> dataReport = new HashMap<>();
@@ -272,7 +276,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
           .getDataReportDetalleProduccionInvestigador(anio, personaRef);
 
       XWPFDocument document = getDocumentDetalleProduccionInvestigador(detalleProduccionInvestigador, dataReport,
-          getReportDefinitionStream(sgiReport.getPath()));
+          getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = PdfOptions.create();
@@ -289,9 +293,8 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
   }
 
   public byte[] getReportDetalleProduccionInvestigador(ReportInformeDetalleProduccionInvestigador sgiReport,
-      Integer anio,
-      String personaRef) {
-    getReportFromDetalleProduccionInvestigador(sgiReport, anio, personaRef);
+      Integer anio, String personaRef, String lang) {
+    getReportFromDetalleProduccionInvestigador(sgiReport, anio, personaRef, lang);
     return sgiReport.getContent();
   }
 }

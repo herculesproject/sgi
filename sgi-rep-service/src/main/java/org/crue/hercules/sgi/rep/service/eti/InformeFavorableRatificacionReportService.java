@@ -27,7 +27,8 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService, null);
   }
 
-  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path) {
+  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
+      String lang) {
 
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), dataReport);
     dataReport.put("memoriaRef", evaluacion.getMemoria().getNumReferencia());
@@ -42,8 +43,9 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     return compileReportData(path, dataReport);
   }
 
-  public byte[] getReportInformeFavorableRatificacion(ReportInformeFavorableRatificacion sgiReport, Long idEvaluacion) {
-    getReportFromEvaluacionId(sgiReport, idEvaluacion);
+  public byte[] getReportInformeFavorableRatificacion(ReportInformeFavorableRatificacion sgiReport, Long idEvaluacion,
+      String lang) {
+    getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }
 

@@ -28,7 +28,8 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
     super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService, baseApartadosRespuestasService);
   }
 
-  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path) {
+  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
+      String lang) {
 
     dataReport.put("referenciaMemoria", evaluacion.getMemoria().getNumReferencia());
     dataReport.put("version", evaluacion.getVersion());
@@ -56,19 +57,19 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
 
     Long dictamenId = evaluacion.getDictamen() != null ? evaluacion.getDictamen().getId() : null;
 
-    dataReport.put("bloqueApartados", generarBloqueApartados(dictamenId, getInformeEvaluador(evaluacion.getId()),
-        "rep-eti-bloque-apartado-ficha-evaluador-docx"));
+    dataReport.put("bloqueApartados", generarBloqueApartados(dictamenId, getInformeEvaluador(evaluacion.getId(), lang),
+        "rep-eti-bloque-apartado-ficha-evaluador-docx", lang));
 
     return compileReportData(path, dataReport);
   }
 
-  private XWPFDocument getReportFromEvaluador(SgiReportDto sgiReport, Long idEvaluacion) {
-    return this.getReportFromEvaluacionId(sgiReport, idEvaluacion);
+  private XWPFDocument getReportFromEvaluador(SgiReportDto sgiReport, Long idEvaluacion, String lang) {
+    return this.getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
 
   }
 
-  public byte[] getReportInformeEvaluadorEvaluacion(ReportInformeEvaluador sgiReport, Long idEvaluacion) {
-    this.getReportFromEvaluador(sgiReport, idEvaluacion);
+  public byte[] getReportInformeEvaluadorEvaluacion(ReportInformeEvaluador sgiReport, Long idEvaluacion, String lang) {
+    this.getReportFromEvaluador(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }
 }

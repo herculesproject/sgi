@@ -28,7 +28,8 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     super(sgiConfigProperties, sgiApiConfService, personaService, evaluacionService, baseApartadosRespuestasService);
   }
 
-  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path) {
+  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
+      String lang) {
 
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(),
         dataReport);
@@ -46,8 +47,8 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
   }
 
   public byte[] getReportInformeEvaluacionRetrospectiva(ReportInformeEvaluacionRetrospectiva sgiReport,
-      InformeEvaluacionReportInput input) {
-    getReportFromEvaluacionId(sgiReport, input.getIdEvaluacion());
+      InformeEvaluacionReportInput input, String lang) {
+    getReportFromEvaluacionId(sgiReport, input.getIdEvaluacion(), lang);
     return sgiReport.getContent();
   }
 

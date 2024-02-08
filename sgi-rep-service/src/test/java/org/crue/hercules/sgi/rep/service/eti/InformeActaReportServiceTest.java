@@ -76,7 +76,7 @@ class InformeActaReportServiceTest extends BaseReportEtiServiceTest {
     ReportInformeActa report = new ReportInformeActa();
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa);
+    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa, "es");
     assertNotNull(reportContent);
 
   }

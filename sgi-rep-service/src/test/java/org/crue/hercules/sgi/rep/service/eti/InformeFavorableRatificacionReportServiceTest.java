@@ -54,7 +54,7 @@ class InformeFavorableRatificacionReportServiceTest extends BaseReportEtiService
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(report,
-        idEvaluacion);
+        idEvaluacion, "es");
     assertNotNull(reportContent);
 
   }

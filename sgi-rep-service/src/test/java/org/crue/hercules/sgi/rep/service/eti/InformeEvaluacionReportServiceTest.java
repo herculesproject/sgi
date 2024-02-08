@@ -60,7 +60,7 @@ class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
         .willReturn(getResource("eti/docx/rep-eti-evaluacion.docx"));
 
     Assertions
-        .assertThatThrownBy(() -> informeEvaluacionReportService.getReportInformeEvaluacion(report, null))
+        .assertThatThrownBy(() -> informeEvaluacionReportService.getReportInformeEvaluacion(report, null, "es"))
         .isInstanceOf(GetDataReportException.class);
   }
 
@@ -78,7 +78,7 @@ class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
     ReportInformeEvaluacion report = new ReportInformeEvaluacion();
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion);
+    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion, "es");
 
     assertNotNull(reportContent);
   }

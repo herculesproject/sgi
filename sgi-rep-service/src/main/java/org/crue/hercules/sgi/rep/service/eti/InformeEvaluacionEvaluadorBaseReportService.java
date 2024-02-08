@@ -72,14 +72,16 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     this.baseApartadosRespuestasService = baseApartadosRespuestasService;
   }
 
-  protected XWPFDocument getReportFromEvaluacionId(SgiReportDto sgiReport, Long idEvaluacion) {
+  protected XWPFDocument getReportFromEvaluacionId(SgiReportDto sgiReport, Long idEvaluacion, String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     try {
       HashMap<String, Object> dataReport = new HashMap<>();
       EvaluacionDto evaluacion = evaluacionService.findById(idEvaluacion);
 
       dataReport.put("headerImg", getImageHeaderLogo());
 
-      XWPFDocument document = getDocument(evaluacion, dataReport, getReportDefinitionStream(sgiReport.getPath()));
+      XWPFDocument document = getDocument(evaluacion, dataReport,
+          getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE), lang);
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = PdfOptions.create();
@@ -304,7 +306,9 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
   }
 
   protected RenderData generarBloqueApartados(Long idDictamen,
-      InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput, String namePlantillaDocx) {
+      InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput, String namePlantillaDocx,
+      String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     Map<String, Object> subDataBloqueApartado = new HashMap<>();
     subDataBloqueApartado.put("idDictamen", idDictamen);
     subDataBloqueApartado.put("idDictamenNoProcedeEvaluar", DICTAMEN_NO_PROCEDE_EVALUAR);
@@ -324,7 +328,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
       subDataBloqueApartado.put("bloques", null);
       return null;
     }
-    return Includes.ofStream(getReportDefinitionStream(namePlantillaDocx))
+    return Includes.ofStream(getReportDefinitionStream(namePlantillaDocx + SUFIJO_LANGUAGE))
         .setRenderModel(subDataBloqueApartado).create();
   }
 
@@ -336,7 +340,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
    *         informe
    */
   private InformeEvaluacionEvaluadorReportOutput getInformeEvaluadorEvaluacion(Long idEvaluacion,
-      boolean isInformeEvaluacion) {
+      boolean isInformeEvaluacion, String lang) {
     log.debug("getInformeEvaluacion(idEvaluacion)- start");
 
     Assert.notNull(idEvaluacion,
@@ -403,7 +407,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
         // @formatter:on
 
         BloquesReportOutput reportOutput = baseApartadosRespuestasService
-            .getDataFromApartadosAndRespuestas(etiBloquesReportInput);
+            .getDataFromApartadosAndRespuestas(etiBloquesReportInput, lang);
 
         final int orden = informeEvaluacionEvaluadorReportOutput.getBloques().size();
         for (BloqueOutput bloque : reportOutput.getBloques()) {
@@ -424,7 +428,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
             .build();
 
         BloquesReportOutput reportOutput = baseApartadosRespuestasService
-            .getDataFromApartadosAndRespuestas(etiBloquesReportInput);
+            .getDataFromApartadosAndRespuestas(etiBloquesReportInput, lang);
 
         if (informeEvaluacionEvaluadorReportOutput.getBloques().isEmpty() && ObjectUtils.isNotEmpty(reportOutput)) {
           informeEvaluacionEvaluadorReportOutput.setBloques(reportOutput.getBloques());
@@ -442,15 +446,15 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     return informeEvaluacionEvaluadorReportOutput;
   }
 
-  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluacion(Long idEvaluacion) {
-    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.TRUE);
+  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluacion(Long idEvaluacion, String lang) {
+    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.TRUE, lang);
   }
 
-  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluador(Long idEvaluacion) {
-    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.FALSE);
+  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluador(Long idEvaluacion, String lang) {
+    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.FALSE, lang);
   }
 
   protected abstract XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport,
-      InputStream path);
+      InputStream path, String lang);
 
 }

@@ -82,7 +82,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     this.baseApartadosRespuestasReportService = baseApartadosRespuestasReportService;
   }
 
-  private XWPFDocument getDocument(ActaDto acta, HashMap<String, Object> dataReport, InputStream path) {
+  private XWPFDocument getDocument(ActaDto acta, HashMap<String, Object> dataReport, InputStream path, String lang) {
     Assert.notNull(
         acta,
         // Defer message resolution untill is needed
@@ -173,7 +173,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     getTableMemoriasEvaluadas(acta, dataReport);
 
     dataReport.put("bloqueApartados",
-        generarBloqueApartados(getActaComentariosSubReport(acta.getId())));
+        generarBloqueApartados(getActaComentariosSubReport(acta.getId(), lang), lang));
 
     return compileReportData(path, dataReport);
   }
@@ -200,19 +200,21 @@ public class InformeActaReportService extends SgiReportDocxService {
 
   }
 
-  public byte[] getReportInformeActa(ReportInformeActa sgiReport, Long idActa) {
-    getReportFromIdActa(sgiReport, idActa);
+  public byte[] getReportInformeActa(ReportInformeActa sgiReport, Long idActa, String lang) {
+    getReportFromIdActa(sgiReport, idActa, lang);
     return sgiReport.getContent();
   }
 
-  private XWPFDocument getReportFromIdActa(SgiReportDto sgiReport, Long idActa) {
+  private XWPFDocument getReportFromIdActa(SgiReportDto sgiReport, Long idActa, String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     try {
       HashMap<String, Object> dataReport = new HashMap<>();
       ActaDto acta = actaService.findById(idActa);
 
       dataReport.put("headerImg", getImageHeaderLogo());
 
-      XWPFDocument document = getDocument(acta, dataReport, getReportDefinitionStream(sgiReport.getPath()));
+      XWPFDocument document = getDocument(acta, dataReport,
+          getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE), lang);
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = PdfOptions.create();
@@ -251,7 +253,7 @@ public class InformeActaReportService extends SgiReportDocxService {
    * @param actaId Id del acta
    * @return ActaComentariosReportOutput Datos a presentar en el informe
    */
-  protected ActaComentariosReportOutput getActaComentariosSubReport(Long actaId) {
+  protected ActaComentariosReportOutput getActaComentariosSubReport(Long actaId, String lang) {
     log.debug("getActaComentariosSubReport(actaId) - start");
 
     Assert.notNull(
@@ -323,7 +325,7 @@ public class InformeActaReportService extends SgiReportDocxService {
               // @formatter:on
 
               BloquesReportOutput reportOutput = baseApartadosRespuestasReportService
-                  .getDataFromApartadosAndRespuestas(etiBloquesReportInput);
+                  .getDataFromApartadosAndRespuestas(etiBloquesReportInput, lang);
 
               final int orden = comentariosMemoriaReportOutput.getBloques().size();
               for (BloqueOutput bloque : reportOutput.getBloques()) {
@@ -345,21 +347,21 @@ public class InformeActaReportService extends SgiReportDocxService {
     return actaComentariosSubReportOutput;
   }
 
-  protected RenderData generarBloqueApartados(ActaComentariosReportOutput actaComentariosReportOutput) {
+  protected RenderData generarBloqueApartados(ActaComentariosReportOutput actaComentariosReportOutput, String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     Map<String, Object> subDataBloqueApartado = new HashMap<>();
     if (ObjectUtils.isNotEmpty(actaComentariosReportOutput)
         && ObjectUtils.isNotEmpty(actaComentariosReportOutput.getComentariosMemoria())
         && ObjectUtils
             .isNotEmpty(actaComentariosReportOutput.getComentariosMemoria().stream().findAny().get().getBloques())
         && actaComentariosReportOutput.getComentariosMemoria().stream().findAny().get().getBloques().size() > 0) {
-      List<BloqueOutput> bloquesOutput = new ArrayList<BloqueOutput>();
       subDataBloqueApartado.put("comentariosMemoria",
           actaComentariosReportOutput.getComentariosMemoria());
     } else {
       subDataBloqueApartado.put("comentariosMemoria", null);
       return null;
     }
-    return Includes.ofStream(getReportDefinitionStream("rep-eti-bloque-apartado-acta-docx"))
+    return Includes.ofStream(getReportDefinitionStream("rep-eti-bloque-apartado-acta-docx" + SUFIJO_LANGUAGE))
         .setRenderModel(subDataBloqueApartado).create();
   }
 

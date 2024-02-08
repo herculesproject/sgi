@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -30,14 +31,14 @@ public class ApartadoService extends BaseRestTemplateService<ApartadoDto> {
     return URL_API;
   }
 
-  public List<ApartadoDto> findByPadreId(Long idPadre) {
+  public List<ApartadoDto> findByPadreId(Long idPadre, String lang) {
     List<ApartadoDto> result = null;
     try {
-
+      HttpHeaders headers = new HttpHeaders();
       String sort = "orden,asc";
-      URI uri = UriComponentsBuilder.fromUriString(getUrlBase() + getUrlApi() + "/" + idPadre + "/hijos")
+      URI uri = UriComponentsBuilder.fromUriString(getUrlBase() + getUrlApi() + "/" + idPadre + "/hijos/" + lang)
           .queryParam("s", sort).build(false).toUri();
-      result = findAllFromURI(uri, new HttpHeaders(), new ParameterizedTypeReference<List<ApartadoDto>>() {
+      result = findAllFromURI(uri, headers, new ParameterizedTypeReference<List<ApartadoDto>>() {
       });
 
     } catch (Exception e) {
@@ -47,14 +48,15 @@ public class ApartadoService extends BaseRestTemplateService<ApartadoDto> {
     return result;
   }
 
-  public List<ApartadoDto> findByBloqueId(Long idBloque) {
+  public List<ApartadoDto> findByBloqueId(Long idBloque, String lang) {
     List<ApartadoDto> result = null;
     try {
-
+      HttpHeaders headers = new HttpHeaders();
       String sort = "orden,asc";
-      URI uri = UriComponentsBuilder.fromUriString(getUrlBase() + BloqueService.URL_API + "/" + idBloque + URL_API)
+      URI uri = UriComponentsBuilder
+          .fromUriString(getUrlBase() + BloqueService.URL_API + "/" + idBloque + URL_API + "/" + lang)
           .queryParam("s", sort).build(false).toUri();
-      result = findAllFromURI(uri, new HttpHeaders(), new ParameterizedTypeReference<List<ApartadoDto>>() {
+      result = findAllFromURI(uri, headers, new ParameterizedTypeReference<List<ApartadoDto>>() {
       });
     } catch (Exception e) {
       log.error(e.getMessage(), e);

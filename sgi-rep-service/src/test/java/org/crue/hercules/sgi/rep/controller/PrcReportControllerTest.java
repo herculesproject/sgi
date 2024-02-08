@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.rep.controller;
 
 import java.nio.charset.Charset;
 
+import javax.servlet.http.Cookie;
+
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleGrupo;
 import org.crue.hercules.sgi.rep.service.prc.InformeDetalleGrupoReportService;
@@ -36,20 +38,23 @@ class PrcReportControllerTest extends BaseControllerTest {
     Long grupoId = 1L;
     Integer anio = 2021;
 
-    final String url = new StringBuffer(PrcReportController.MAPPING).append("/informedetallegrupo/{anio}/{grupoRef}")
+    Cookie cookie = new Cookie("sgi-locale", "es");
+
+    final String url = new StringBuffer(PrcReportController.MAPPING)
+        .append("/informedetallegrupo/{anio}/{grupoRef}")
         .toString();
 
     BDDMockito.given(informeDetalleGrupoReportService.getReportDetalleGrupo(
         ArgumentMatchers.<ReportInformeDetalleGrupo>any(),
         ArgumentMatchers.<Integer>any(),
-        ArgumentMatchers.<Long>any()))
+        ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });
 
     // when: Se genera el informe
     MvcResult requestResult = mockMvc.perform(MockMvcRequestBuilders.get(url,
-        grupoId, anio).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        anio, grupoId).cookie(cookie).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera el informe
         .andExpect(MockMvcResultMatchers.status().isOk())

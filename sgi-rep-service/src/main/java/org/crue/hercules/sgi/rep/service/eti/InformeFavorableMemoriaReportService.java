@@ -37,7 +37,8 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionEvalu
     this.personaService = personaService;
   }
 
-  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path) {
+  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
+      String lang) {
 
     dataReport.put("codigoMemoria", evaluacion.getMemoria().getNumReferencia());
 
@@ -104,8 +105,9 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionEvalu
     dataReport.put("equipo", personas);
   }
 
-  public byte[] getReportInformeFavorableMemoria(ReportInformeFavorableMemoria sgiReport, Long idEvaluacion) {
-    getReportFromEvaluacionId(sgiReport, idEvaluacion);
+  public byte[] getReportInformeFavorableMemoria(ReportInformeFavorableMemoria sgiReport, Long idEvaluacion,
+      String lang) {
+    getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }
 

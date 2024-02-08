@@ -34,7 +34,7 @@ class ApartadoServiceTest extends BaseReportEtiServiceTest {
   void findByPadreId_ReturnsException() throws Exception {
     Long idPadre = 1L;
 
-    Assertions.assertThatThrownBy(() -> apartadoService.findByPadreId(idPadre))
+    Assertions.assertThatThrownBy(() -> apartadoService.findByPadreId(idPadre, "es"))
         .isInstanceOf(GetDataReportException.class);
   }
 
@@ -42,7 +42,7 @@ class ApartadoServiceTest extends BaseReportEtiServiceTest {
   void findByBloqueId_ReturnsException() throws Exception {
     Long idBloque = 1L;
 
-    Assertions.assertThatThrownBy(() -> apartadoService.findByBloqueId(idBloque))
+    Assertions.assertThatThrownBy(() -> apartadoService.findByBloqueId(idBloque, "es"))
         .isInstanceOf(GetDataReportException.class);
   }
 

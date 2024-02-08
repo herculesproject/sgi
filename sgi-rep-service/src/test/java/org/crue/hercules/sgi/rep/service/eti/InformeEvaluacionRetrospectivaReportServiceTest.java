@@ -62,7 +62,7 @@ class InformeEvaluacionRetrospectivaReportServiceTest extends BaseReportEtiServi
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(report,
-        input);
+        input, "es");
     assertNotNull(reportContent);
 
   }

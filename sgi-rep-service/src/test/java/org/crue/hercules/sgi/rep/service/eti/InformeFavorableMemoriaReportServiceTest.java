@@ -67,7 +67,8 @@ class InformeFavorableMemoriaReportServiceTest extends BaseReportEtiServiceTest 
     ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria();
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion);
+    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion,
+        "es");
     assertNotNull(reportContent);
 
   }
@@ -93,7 +94,8 @@ class InformeFavorableMemoriaReportServiceTest extends BaseReportEtiServiceTest 
     ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria();
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion);
+    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion,
+        "es");
     assertNotNull(reportContent);
 
   }

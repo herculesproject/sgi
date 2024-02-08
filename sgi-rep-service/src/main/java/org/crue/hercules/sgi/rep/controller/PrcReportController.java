@@ -1,10 +1,13 @@
 package org.crue.hercules.sgi.rep.controller;
 
+import java.util.Locale;
+
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleGrupo;
 import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleProduccionInvestigador;
 import org.crue.hercules.sgi.rep.dto.prc.ReportInformeResumenPuntuacionGrupos;
 import org.crue.hercules.sgi.rep.service.prc.InformeDetalleGrupoReportService;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -44,11 +47,13 @@ public class PrcReportController {
   public ResponseEntity<Resource> getInformeDetalleGrupo(@PathVariable Integer anio, @PathVariable Long grupoRef) {
 
     log.debug("getInformeDetalleGrupo({}, {}) - start", anio, grupoRef);
+    Locale locale = LocaleContextHolder.getLocale();
 
     ReportInformeDetalleGrupo report = new ReportInformeDetalleGrupo();
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeDetalleGrupoReportService.getReportDetalleGrupo(report, anio, grupoRef);
+    byte[] reportContent = informeDetalleGrupoReportService.getReportDetalleGrupo(report, anio, grupoRef,
+        locale.getLanguage());
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -69,11 +74,12 @@ public class PrcReportController {
   public ResponseEntity<Resource> getInformeResumenPuntuacionGrupos(@PathVariable Integer anio) {
 
     log.debug("getInformeResumenPuntuacionGrupos({}) - start", anio);
-
+    Locale locale = LocaleContextHolder.getLocale();
     ReportInformeResumenPuntuacionGrupos report = new ReportInformeResumenPuntuacionGrupos();
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeDetalleGrupoReportService.getReportResumenPuntuacionGrupos(report, anio);
+    byte[] reportContent = informeDetalleGrupoReportService.getReportResumenPuntuacionGrupos(report, anio,
+        locale.getLanguage());
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -96,12 +102,13 @@ public class PrcReportController {
       @PathVariable String personaRef) {
 
     log.debug("getInformeDetalleProduccionInvestigador({},{}) - start", anio, personaRef);
+    Locale locale = LocaleContextHolder.getLocale();
 
     ReportInformeDetalleProduccionInvestigador report = new ReportInformeDetalleProduccionInvestigador();
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeDetalleGrupoReportService.getReportDetalleProduccionInvestigador(report, anio,
-        personaRef);
+        personaRef, locale.getLanguage());
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();

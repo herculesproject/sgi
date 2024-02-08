@@ -68,7 +68,7 @@ public class BaseApartadosRespuestasReportService {
    * @param input BloquesReportInput
    * @return BloquesReportOutput
    */
-  public BloquesReportOutput getDataFromApartadosAndRespuestas(@Valid BloquesReportInput input) {
+  public BloquesReportOutput getDataFromApartadosAndRespuestas(@Valid BloquesReportInput input, String lang) {
     log.debug("getDataFromApartadosAndRespuestas(EtiBloquesReportInput) - start");
 
     BloquesReportOutput bloquesReportOutput = new BloquesReportOutput();
@@ -77,10 +77,10 @@ public class BaseApartadosRespuestasReportService {
     try {
       List<BloqueDto> bloques = new ArrayList<>();
       if (input.getIdFormulario() > 0) {
-        bloques.addAll(bloqueService.findByFormularioId(input.getIdFormulario()));
+        bloques.addAll(bloqueService.findByFormularioId(input.getIdFormulario(), lang));
       }
       if (!CollectionUtils.isEmpty(input.getComentarios())) {
-        bloques.add(bloqueService.getBloqueComentariosGenerales());
+        bloques.add(bloqueService.getBloqueComentariosGenerales(lang));
       }
 
       final int tamBloques = bloquesReportOutput.getBloques().size();
@@ -93,7 +93,7 @@ public class BaseApartadosRespuestasReportService {
         }
 
         if (parseBloque) {
-          parseBloque(input, bloquesReportOutput, bloque, tamBloques);
+          parseBloque(input, bloquesReportOutput, bloque, tamBloques, lang);
         }
       }
     } catch (Exception e) {
@@ -104,7 +104,7 @@ public class BaseApartadosRespuestasReportService {
   }
 
   private void parseBloque(BloquesReportInput input, BloquesReportOutput bloquesReportOutput, BloqueDto bloque,
-      int tamBloques) {
+      int tamBloques, String lang) {
 
     String nombre = bloque.getNombre();
     if (bloque.getFormulario() != null) {
@@ -119,7 +119,7 @@ public class BaseApartadosRespuestasReportService {
       .apartados(new ArrayList<>())
       .build();
     // @formatter:on
-    List<ApartadoDto> apartados = apartadoService.findByBloqueId(bloque.getId());
+    List<ApartadoDto> apartados = apartadoService.findByBloqueId(bloque.getId(), lang);
 
     for (ApartadoDto apartado : apartados) {
       boolean parseApartado = true;
@@ -128,7 +128,7 @@ public class BaseApartadosRespuestasReportService {
       }
 
       if (parseApartado) {
-        ApartadoOutput apartadoOutput = parseApartadoAndHijos(input, apartado);
+        ApartadoOutput apartadoOutput = parseApartadoAndHijos(input, apartado, lang);
         bloqueOutput.getApartados().add(apartadoOutput);
       }
     }
@@ -138,16 +138,16 @@ public class BaseApartadosRespuestasReportService {
     }
   }
 
-  private ApartadoOutput parseApartadoAndHijos(BloquesReportInput input, ApartadoDto apartado) {
+  private ApartadoOutput parseApartadoAndHijos(BloquesReportInput input, ApartadoDto apartado, String lang) {
     ApartadoOutput apartadoOutput = parseApartadoOutput(input, apartado);
-    apartadoOutput.setApartadosHijos(findApartadosHijosAndRespuestas(input, apartado.getId()));
+    apartadoOutput.setApartadosHijos(findApartadosHijosAndRespuestas(input, apartado.getId(), lang));
     return apartadoOutput;
   }
 
-  public List<ApartadoOutput> findApartadosHijosAndRespuestas(BloquesReportInput input, Long idPadre) {
+  public List<ApartadoOutput> findApartadosHijosAndRespuestas(BloquesReportInput input, Long idPadre, String lang) {
     List<ApartadoOutput> apartadosHijosResult = new ArrayList<>();
 
-    List<ApartadoDto> apartados = apartadoService.findByPadreId(idPadre);
+    List<ApartadoDto> apartados = apartadoService.findByPadreId(idPadre, lang);
 
     if (CollectionUtils.isNotEmpty(apartados)) {
       for (ApartadoDto apartado : apartados) {
@@ -157,7 +157,7 @@ public class BaseApartadosRespuestasReportService {
         }
 
         if (parseApartado) {
-          ApartadoOutput apartadoOutput = parseApartadoAndHijos(input, apartado);
+          ApartadoOutput apartadoOutput = parseApartadoAndHijos(input, apartado, lang);
           apartadosHijosResult.add(apartadoOutput);
         }
       }

@@ -30,7 +30,7 @@ class BloqueServiceTest extends BaseReportEtiServiceTest {
   void findByFormularioId_ReturnsException() throws Exception {
     Long idBloque = 1L;
 
-    Assertions.assertThatThrownBy(() -> bloqueService.findByFormularioId(idBloque))
+    Assertions.assertThatThrownBy(() -> bloqueService.findByFormularioId(idBloque, "es"))
         .isInstanceOf(GetDataReportException.class);
   }
 

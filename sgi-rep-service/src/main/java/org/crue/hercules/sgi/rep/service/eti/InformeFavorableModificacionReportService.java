@@ -34,7 +34,8 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
     this.evaluacionService = evaluacionService;
   }
 
-  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path) {
+  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
+      String lang) {
 
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), dataReport);
 
@@ -78,8 +79,9 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
     return compileReportData(path, dataReport);
   }
 
-  public byte[] getReportInformeFavorableModificacion(ReportInformeFavorableModificacion sgiReport, Long idEvaluacion) {
-    getReportFromEvaluacionId(sgiReport, idEvaluacion);
+  public byte[] getReportInformeFavorableModificacion(ReportInformeFavorableModificacion sgiReport, Long idEvaluacion,
+      String lang) {
+    getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }
 

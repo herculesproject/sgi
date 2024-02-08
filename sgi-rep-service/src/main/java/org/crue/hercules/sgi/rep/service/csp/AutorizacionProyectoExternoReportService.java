@@ -161,7 +161,9 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
     }
   }
 
-  private XWPFDocument getReportFromAutorizacionProyectoExterno(SgiReportDto sgiReport, Long idAutorizacion) {
+  private XWPFDocument getReportFromAutorizacionProyectoExterno(SgiReportDto sgiReport, Long idAutorizacion,
+      String lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang;
     try {
       HashMap<String, Object> dataReport = new HashMap<>();
       AutorizacionDto autorizacionProyectoExterno = autorizacionProyectoExternoService
@@ -170,7 +172,7 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
       dataReport.put("headerImg", getImageHeaderLogo());
 
       XWPFDocument document = getDocument(autorizacionProyectoExterno, dataReport,
-          getReportDefinitionStream(sgiReport.getPath()));
+          getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = PdfOptions.create();
@@ -187,8 +189,8 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
   }
 
   public byte[] getReportAutorizacionProyectoExterno(AutorizacionReport sgiReport,
-      Long idAutorizacion) {
-    getReportFromAutorizacionProyectoExterno(sgiReport, idAutorizacion);
+      Long idAutorizacion, String lang) {
+    getReportFromAutorizacionProyectoExterno(sgiReport, idAutorizacion, lang);
     return sgiReport.getContent();
   }
 }

@@ -44,7 +44,8 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
     this.configuracionService = configuracionService;
   }
 
-  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path) {
+  protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
+      String lang) {
 
     AssertHelper.entityNotNull(evaluacion, EvaluacionDto.class, EvaluacionDto.class);
 
@@ -131,13 +132,13 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
 
     dataReport.put("bloqueApartados",
         generarBloqueApartados(evaluacion.getDictamen().getId(),
-            getInformeEvaluacion(evaluacion.getId()), "rep-eti-bloque-apartado-docx"));
+            getInformeEvaluacion(evaluacion.getId(), lang), "rep-eti-bloque-apartado-docx", lang));
 
     return compileReportData(path, dataReport);
   }
 
-  public byte[] getReportInformeEvaluacion(ReportInformeEvaluacion sgiReport, Long idEvaluacion) {
-    getReportFromEvaluacionId(sgiReport, idEvaluacion);
+  public byte[] getReportInformeEvaluacion(ReportInformeEvaluacion sgiReport, Long idEvaluacion, String lang) {
+    getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }
 
