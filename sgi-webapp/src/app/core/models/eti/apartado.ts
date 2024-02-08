@@ -1,15 +1,12 @@
-import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
+import { IApartadoNombre } from './apartado-nombre';
 import { IBloque } from './bloque';
 
 export interface IApartado {
   /** Id */
   id: number;
 
-  /** Bloque del formulario */
+  /** Bloque del apartado */
   bloque: IBloque;
-
-  /** Nombre */
-  nombre: string;
 
   /** Apartado padre del formulario */
   padre: IApartado;
@@ -17,6 +14,5 @@ export interface IApartado {
   /** Orden */
   orden: number;
 
-  /** Esquema */
-  esquema: SgiFormlyFieldConfig[];
+  apartadoNombres: IApartadoNombre[]
 }

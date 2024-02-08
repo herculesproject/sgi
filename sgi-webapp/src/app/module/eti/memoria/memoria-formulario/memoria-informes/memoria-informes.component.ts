@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NavigationEnd, Router } from '@angular/router';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IInforme } from '@core/models/eti/informe';
@@ -12,12 +13,15 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaInformesFragment } from './memoria-informes.fragment';
+import { IInformeDocumento } from '@core/models/eti/informe-documento';
 
 @Component({
   selector: 'sgi-memoria-informes',
@@ -49,11 +53,13 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
     protected matDialog: MatDialog,
     protected memoriaService: MemoriaService,
     protected documentoService: DocumentoService,
-    actionService: MemoriaActionService
+    actionService: MemoriaActionService,
+    private router: Router,
+    private translateService: TranslateService,
+    private languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.VERSIONES, actionService);
     this.formPart = this.fragment as MemoriaInformesFragment;
-
   }
 
   ngOnInit(): void {
@@ -82,7 +88,8 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
    * Visualiza el informe seleccionado.
    * @param documentoRef Referencia del informe..
    */
-  visualizarInforme(documentoRef: string) {
+  visualizarInforme(documentos: IInformeDocumento[]) {
+    const documentoRef = documentos.find(doc => doc.lang.toLowerCase() === this.languageService.getLanguage().code).documentoRef;
     const documento: IDocumento = {} as IDocumento;
     this.documentoService.getInfoFichero(documentoRef).pipe(
       switchMap((documentoInfo: IDocumento) => {

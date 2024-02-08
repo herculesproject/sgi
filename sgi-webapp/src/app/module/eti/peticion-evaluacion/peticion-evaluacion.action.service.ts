@@ -1,6 +1,6 @@
 import { ComponentFactoryResolver, Injectable, Injector } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IChecklist } from '@core/models/eti/checklist';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
@@ -33,6 +33,9 @@ import { PeticionEvaluacionDatosGeneralesFragment } from './peticion-evaluacion-
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.fragment';
 import { ConfiguracionService } from '@core/services/eti/configuracion.service';
 import { Module } from '@core/module';
+import { TranslateService } from '@ngx-translate/core';
+import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 
 @Injectable()
 export class PeticionEvaluacionActionService extends ActionService {
@@ -81,6 +84,10 @@ export class PeticionEvaluacionActionService extends ActionService {
     componentFactoryResolver: ComponentFactoryResolver,
     injector: Injector,
     protected readonly configuracionService: ConfiguracionService,
+    protected readonly translateService: TranslateService,
+    protected readonly dialogService: DialogService,
+    protected readonly router: Router,
+    protected readonly languageService: LanguageService
   ) {
     super();
 
@@ -229,7 +236,11 @@ export class PeticionEvaluacionActionService extends ActionService {
               this.datosAcademicosService,
               this.personaService,
               this.memoriaService,
-              this.evaluacionService
+              this.evaluacionService,
+              this.translateService,
+              this.dialogService,
+              this.router,
+              this.languageService
             );
             fragment.initialize();
             return fragment.initialized$.pipe(filter((value) => value), take(1), map((v) => fragment));

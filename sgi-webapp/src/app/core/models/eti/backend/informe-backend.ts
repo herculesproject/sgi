@@ -1,4 +1,6 @@
+import { IInformeDocumento } from '../informe-documento';
 import { TipoEvaluacion } from '../tipo-evaluacion';
+import { IActaBackend } from './acta-backend';
 import { IMemoriaBackend } from './memoria-backend';
 
 export interface IInformeBackend {
@@ -7,7 +9,7 @@ export interface IInformeBackend {
   /** Memoria */
   memoria: IMemoriaBackend;
   /** referencia */
-  documentoRef: string;
+  informeDocumentos: IInformeDocumento[];
   /** Version */
   version: number;
   /** Tipo Evaluación */

@@ -1,8 +1,7 @@
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { IFormlyNombre } from './formly-nombre';
 
 export interface IFormly {
   id: number;
-  nombre: string;
   version: number;
-  esquema: FormlyFieldConfig[];
+  formlyNombres: IFormlyNombre[];
 }

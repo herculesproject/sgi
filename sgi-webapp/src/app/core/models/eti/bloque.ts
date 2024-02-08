@@ -1,3 +1,4 @@
+import { IBloqueNombre } from './bloque-nombre';
 import { IFormulario } from './formulario';
 
 export interface IBloque {
@@ -7,9 +8,9 @@ export interface IBloque {
   /** Formulario */
   formulario: IFormulario;
 
-  /** Nombre */
-  nombre: string;
-
-  /** Orden */
+  /** orden */
   orden: number;
+
+  /** bloque language */
+  bloqueNombres: IBloqueNombre[];
 }

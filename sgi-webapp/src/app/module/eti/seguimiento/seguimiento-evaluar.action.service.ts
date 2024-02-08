@@ -11,6 +11,8 @@ import { SeguimientoDatosMemoriaFragment } from '../seguimiento-formulario/segui
 import { SeguimientoDocumentacionFragment } from '../seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.fragment';
 import { Rol, SeguimientoFormularioActionService } from '../seguimiento-formulario/seguimiento-formulario.action.service';
 import { IEvaluacionWithComentariosEnviados } from '../evaluacion-evaluador/evaluacion-evaluador-listado/evaluacion-evaluador-listado.component';
+import { ApartadoService } from '@core/services/eti/apartado.service';
+import { BloqueService } from '@core/services/eti/bloque.service';
 
 
 @Injectable()
@@ -24,7 +26,9 @@ export class SeguimientoEvaluarActionService extends SeguimientoFormularioAction
     route: ActivatedRoute,
     service: EvaluacionService,
     personaService: PersonaService,
-    authService: SgiAuthService
+    authService: SgiAuthService,
+    private readonly apartadoService: ApartadoService,
+    private readonly bloqueService: BloqueService
   ) {
     super();
     this.evaluacion = {} as IEvaluacionWithComentariosEnviados;
@@ -32,7 +36,7 @@ export class SeguimientoEvaluarActionService extends SeguimientoFormularioAction
       this.evaluacion = route.snapshot.data.evaluacion;
       this.enableEdit();
     }
-    this.comentarios = new SeguimientoComentarioFragment(this.evaluacion?.id, Rol.EVALUADOR, service, personaService, authService);
+    this.comentarios = new SeguimientoComentarioFragment(this.evaluacion?.id, Rol.EVALUADOR, service, personaService, authService, this.apartadoService, this.bloqueService);
     this.datosMemoria = new SeguimientoDatosMemoriaFragment(this.logger, fb, this.evaluacion?.id, service, personaService);
     this.documentacion = new SeguimientoDocumentacionFragment(this.evaluacion?.id);
 

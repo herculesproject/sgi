@@ -1,3 +1,4 @@
+import { IActaDocumento } from '../acta-documento';
 import { TipoEstadoActa } from '../tipo-estado-acta';
 
 export interface IActaWithNumEvaluacionesBackend {
@@ -21,8 +22,6 @@ export interface IActaWithNumEvaluacionesBackend {
   estadoActa: TipoEstadoActa;
   /** Número de evaluacines no evaluadas. */
   numEvaluacionesNoEvaluadas: number;
-  /** Referencia al documento */
-  documentoRef: string;
-  /** Referencia a la transacción blockchain */
-  transaccionRef: string;
+  /** referencia documentos */
+  documentos: IActaDocumento[];
 }

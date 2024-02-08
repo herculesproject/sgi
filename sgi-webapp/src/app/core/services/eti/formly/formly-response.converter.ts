@@ -9,9 +9,8 @@ class FormlyResponseConverter extends SgiBaseConverter<IFormlyResponse, IFormly>
     }
     return {
       id: value.id,
-      nombre: value.nombre,
       version: value.version,
-      esquema: value.esquema
+      formlyNombres: value.formlyNombres
     };
   }
   fromTarget(value: IFormly): IFormlyResponse {
@@ -20,9 +19,8 @@ class FormlyResponseConverter extends SgiBaseConverter<IFormlyResponse, IFormly>
     }
     return {
       id: value.id,
-      nombre: value.nombre,
       version: value.version,
-      esquema: value.esquema
+      formlyNombres: value.formlyNombres
     };
   }
 }

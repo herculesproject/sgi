@@ -1,6 +1,6 @@
 import { ComponentFactoryResolver, Injectable, Injector } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { COMITE, IComite } from '@core/models/eti/comite';
@@ -34,6 +34,9 @@ import { MemoriaRetrospectivaFragment } from './memoria-formulario/memoria-retro
 import { MemoriaSeguimientoAnualFragment } from './memoria-formulario/memoria-seguimiento-anual/memoria-seguimiento-anual.fragment';
 import { MemoriaSeguimientoFinalFragment } from './memoria-formulario/memoria-seguimiento-final/memoria-seguimiento-final.fragment';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { DialogService } from '@core/services/dialog.service';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_PETICIONES_EVALUACION = marker('eti.peticion-evaluacion-link');
 const MSG_ERROR_FORMULARIO = marker('eti.memoria.formulario.error');
@@ -87,6 +90,10 @@ export class MemoriaActionService extends ActionService {
     componentFactoryResolver: ComponentFactoryResolver,
     injector: Injector,
     protected readonly snackBarService: SnackBarService,
+    translateService: TranslateService,
+    dialogService: DialogService,
+    router: Router,
+    languageService: LanguageService
   ) {
     super();
     this.formlyFormBuilder = new FormlyFormBuilder(formlyConfig, componentFactoryResolver, injector);
@@ -127,7 +134,11 @@ export class MemoriaActionService extends ActionService {
       datosAcademicosService,
       personaService,
       service,
-      evaluacionService
+      evaluacionService,
+      translateService,
+      dialogService,
+      router,
+      languageService
     );
     this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, this.isInvestigador, service, documentoService);
     this.seguimientoAnual = new MemoriaSeguimientoAnualFragment(
@@ -145,7 +156,11 @@ export class MemoriaActionService extends ActionService {
       datosAcademicosService,
       personaService,
       service,
-      evaluacionService
+      evaluacionService,
+      translateService,
+      dialogService,
+      router,
+      languageService
     );
     this.seguimientoFinal = new MemoriaSeguimientoFinalFragment(
       logger,
@@ -162,7 +177,11 @@ export class MemoriaActionService extends ActionService {
       datosAcademicosService,
       personaService,
       service,
-      evaluacionService
+      evaluacionService,
+      translateService,
+      dialogService,
+      router,
+      languageService
     );
     this.retrospectiva = new MemoriaRetrospectivaFragment(
       logger,
@@ -179,7 +198,11 @@ export class MemoriaActionService extends ActionService {
       datosAcademicosService,
       personaService,
       service,
-      evaluacionService
+      evaluacionService,
+      translateService,
+      dialogService,
+      router,
+      languageService
     );
     this.evaluaciones = new MemoriaEvaluacionesFragment(this.memoria?.id, service);
     this.versiones = new MemoriaInformesFragment(this.memoria?.id, service);

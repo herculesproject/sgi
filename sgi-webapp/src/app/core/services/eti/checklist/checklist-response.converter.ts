@@ -13,7 +13,7 @@ class ChecklistResponseConverter extends SgiBaseConverter<IChecklistResponse, IC
     return {
       id: value.id,
       persona: { id: value.personaRef } as IPersona,
-      formly: value.formly as IFormly,
+      formly: value.formly as unknown as IFormly,
       respuesta: value.respuesta,
       fechaCreacion: LuxonUtils.fromBackend(value.fechaCreacion)
     };
@@ -27,7 +27,7 @@ class ChecklistResponseConverter extends SgiBaseConverter<IChecklistResponse, IC
       personaRef: value.persona?.id,
       formly: {
         id: value.formly?.id,
-        esquema: value.formly?.esquema
+        formlyNombres: value.formly?.formlyNombres
       },
       fechaCreacion: LuxonUtils.toBackend(value.fechaCreacion),
       respuesta: value.respuesta

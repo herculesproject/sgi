@@ -5,6 +5,7 @@ import { AbstractMenuContentComponent } from '@core/component/abstract-menu-cont
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { LANGUAGE_MAP, Language } from '@core/services/language.service';
 import { Observable, of } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 
@@ -21,15 +22,21 @@ export enum ConfigGlobal {
   WEB_HEADER_LOGO_UE = 'web-header-logo-ue',
   WEB_HEADER_LOGO_UE_2X = 'web-header-logo-ue2x',
   WEB_HEADER_LOGO_UE_3X = 'web-header-logo-ue3x',
+  WEB_HEADER_LOGO_IDIOMA_ES = 'web-logo-sgi-es',
+  WEB_HEADER_LOGO_IDIOMA_EU = 'web-logo-sgi-eu',
+  WEB_HEADER_LOGO_IDIOMA_EN = 'web-logo-sgi-en',
   WEB_I18N_ES = 'web-i18n-es',
+  WEB_I18N_EU = 'web-i18n-eu',
+  WEB_I18N_EN = 'web-i18n-en',
   WEB_NUM_LOGOS_HEADER = 'web-numero-logos-header',
   EXP_MAX_NUM_REGISTROS_EXCEL = 'exp-max-num-registros-excel',
   SGP_ALTA = 'sgp-alta',
   SGP_MODIFICACION = 'sgp-modificacion',
   SGEMP_ALTA = 'sgemp-alta',
   SGEMP_MODIFICACION = 'sgemp-modificacion',
+  WEB_LANGUAGES_HEADER = 'web-languages-header',
   //TITLES
-  TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS = 'title-integracion-sistemas-corporativos',
+  TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS = 'title-integracion-sistemas-corporativos'
 }
 
 @Component({
@@ -42,6 +49,8 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
   private readonly _CONFIG_MAP: Map<ConfigGlobal, IConfigOptions> = new Map([
     [ConfigGlobal.ENTIDAD_IMPLANTACION, { type: ConfigType.TEXT, label: marker(`adm.config.global.ENTIDAD_IMPLANTACION`), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.ID_ENTIDAD_SGEMP, { type: ConfigType.TEXT, label: marker(`adm.config.global.ID_ENTIDAD_SGEMP`), required: true, module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true, module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_LANGUAGES_HEADER, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.global.WEB_LANGUAGES_HEADER`), options: of([{ key: Language.ES.code, value: LANGUAGE_MAP.get(Language.ES) }, { key: Language.EN.code, value: LANGUAGE_MAP.get(Language.EN) }, { key: Language.EU.code, value: LANGUAGE_MAP.get(Language.EU) }]), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.EXP_MAX_NUM_REGISTROS_EXCEL, { type: ConfigType.TEXT, label: marker(`adm.config.global.EXP_MAX_NUM_REGISTROS_EXCEL`), required: false, info: marker(`adm.config.global.EXP_MAX_NUM_REGISTROS_EXCEL_INFO`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO`), module: ConfigModule.CNF }],
@@ -53,13 +62,18 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.WEB_HEADER_LOGO_UE, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_UE_2X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE_2X`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_UE_3X, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_UE_3X`), module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_HEADER_LOGO_IDIOMA_ES, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_IDIOMA_ES`), module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_HEADER_LOGO_IDIOMA_EU, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_IDIOMA_EU`), module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_HEADER_LOGO_IDIOMA_EN, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_IDIOMA_EN`), module: ConfigModule.CNF }],
     [ConfigGlobal.REP_COMMON_HEADER_LOGO, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_HEADER_LOGO`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_I18N_ES, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_ES`), module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_I18N_EU, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_EU`), module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_I18N_EN, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_EN`), module: ConfigModule.CNF }],
     [ConfigGlobal.TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.integracion-sistemas-corporativos`), module: ConfigModule.NONE }],
     [ConfigGlobal.SGP_ALTA, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGP_ALTA`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.SGP_MODIFICACION, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGP_MODIFICACION`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.SGEMP_ALTA, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGEMP_ALTA`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
-    [ConfigGlobal.SGEMP_MODIFICACION, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGEMP_MODIFICACION`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }],
+    [ConfigGlobal.SGEMP_MODIFICACION, { type: ConfigType.SELECT, label: marker(`adm.config.global.SGEMP_MODIFICACION`), options: this.getBooleanValues(), required: true, module: ConfigModule.CNF }]
   ]);
 
   get ConfigType() {

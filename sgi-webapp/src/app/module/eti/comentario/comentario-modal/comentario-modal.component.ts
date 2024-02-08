@@ -16,6 +16,7 @@ import { ActionService } from '@core/services/action-service';
 import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
 import { FormularioService } from '@core/services/eti/formulario.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
@@ -127,7 +128,8 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
     private apartadoService: ApartadoService,
     matDialogRef: MatDialogRef<ComentarioModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ComentarioModalData,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private languageService: LanguageService
   ) {
     super(matDialogRef, !!data.comentario);
     if (this.data?.comentario) {
@@ -208,7 +210,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
    */
   private loadBloques(evaluacion: IEvaluacion): void {
     this.bloques$ = forkJoin({
-      bloquesFormulario: this.formularioService.getBloques(resolveFormularioByTipoEvaluacionAndComite
+      bloquesFormulario: this.formularioService.getBloquesAllLanguages(resolveFormularioByTipoEvaluacionAndComite
         (evaluacion?.tipoEvaluacion?.id, evaluacion?.memoria?.comite)),
       bloqueComentariosGenerales: this.bloqueService.getBloqueComentariosGenerales()
     }).pipe(
@@ -227,7 +229,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
     this.nodeMap.clear();
     this.dataSource.data = [];
     if (id) {
-      const susbcription = this.bloqueService.getApartados(id).pipe(
+      const susbcription = this.bloqueService.getApartadosAllLanguages(id).pipe(
         switchMap(response => {
           return from(response.items).pipe(
             mergeMap((apartado) => {
@@ -262,7 +264,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
    * Carga todos los subapartados del apartado seleccionado en el formulario
    */
   private getChilds(parent: NodeApartado): Observable<NodeApartado[]> {
-    return this.apartadoService.getHijos(parent.apartado.value.id).pipe(
+    return this.apartadoService.getHijosAllLanguages(parent.apartado.value.id).pipe(
       map((result) => {
         const childs: NodeApartado[] = result.items.map(
           (apartado) => {
@@ -309,7 +311,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
   }
 
   getNombreBloque(bloque: IBloque): string {
-    return bloque?.nombre;
+    return bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre;
   }
 
   protected buildFormGroup(): FormGroup {
@@ -348,8 +350,8 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
     return evaluacion.memoria?.numReferencia;
   }
 
-  displayerBloque(bloque: IBloque): string {
-    return bloque.orden + ' ' + bloque.nombre;
+  readonly displayerBloque = (bloque: IBloque): string => {
+    return bloque.orden + ' ' + bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre;
   }
 
 }

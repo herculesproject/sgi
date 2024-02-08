@@ -1,11 +1,11 @@
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { IFormlyNombre } from '@core/models/eti/formly-nombre';
 
 export interface IChecklistResponse {
   id: number;
   personaRef: string;
   formly: {
     id: number;
-    esquema: FormlyFieldConfig[];
+    formlyNombres: IFormlyNombre[]
   };
   fechaCreacion: string;
   respuesta: {

@@ -23,6 +23,9 @@ export interface IConfigOptions {
   module: ConfigModule,
   options?: Observable<KeyValue<string, string>[]>,
   disabled?: boolean,
-  info?: string
-  description?: string
+  info?: string,
+  description?: string,
+  required?: boolean,
+  labelParamas?: any,
+  filterLanguage?: boolean
 }

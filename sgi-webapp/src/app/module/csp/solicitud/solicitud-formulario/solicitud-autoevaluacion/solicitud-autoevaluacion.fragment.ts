@@ -1,14 +1,21 @@
+import { ThisReceiver } from '@angular/compiler';
 import { FormGroup } from '@angular/forms';
+import { NavigationEnd, Router } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { DIALOG_BUTTON_STYLE } from '@block/dialog/dialog.component';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { IChecklist } from '@core/models/eti/checklist';
 import { IFormly } from '@core/models/eti/formly';
 import { IPersona } from '@core/models/sgp/persona';
 import { Fragment, Group } from '@core/services/action-service';
+import { DialogService } from '@core/services/dialog.service';
 import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
 import { FormlyService } from '@core/services/eti/formly/formly.service';
+import { LanguageService } from '@core/services/language.service';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, of } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 
 export interface FormlyData {
@@ -27,7 +34,7 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
 
   public readonly data: FormlyData = {
     formGroup: new FormGroup({}),
-    formly: { esquema: [] } as IFormly,
+    formly: { formlyNombres: [] } as IFormly,
     model: {},
     options: {}
   };
@@ -41,7 +48,8 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
     solicitud: ISolicitud,
     private readonly formlyService: FormlyService,
     private readonly checklistService: ChecklistService,
-    private readonly authService: SgiAuthService
+    private readonly authService: SgiAuthService,
+    private readonly languageService: LanguageService
   ) {
     super(null);
     this.solicitud = solicitud;
@@ -69,6 +77,7 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
         }
       }
     ));
+
   }
 
   protected onInitialize(): Observable<any> {
@@ -89,10 +98,10 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
             tap((checklist: IChecklist) => {
               this.data.formly = checklist.formly;
               this.data.model = checklist.respuesta;
-              this.isFormFullFilled = this.checkIsFormFullFilled(this.data.formly.esquema, this.data.model);
+              this.isFormFullFilled = this.checkIsFormFullFilled(this.getEsquema(this.data.formly), this.data.model);
 
               if (value.readonly) {
-                this.switchToReadonly(this.data.formly.esquema);
+                this.switchToReadonly(this.getEsquema(this.data.formly));
               }
             })
           );
@@ -102,7 +111,7 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
             tap((formly: IFormly) => {
               this.data.formly = formly;
               if (value.readonly) {
-                this.switchToReadonly(this.data.formly.esquema);
+                this.switchToReadonly(this.getEsquema(this.data.formly));
               }
             })
           );
@@ -134,7 +143,7 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
     if (this.getKey()) {
       return this.checklistService.updateRespuesta(Number.parseInt(this.getKey() as string, 10), this.data.model).pipe(
         tap(() => {
-          this.isFormFullFilled = this.checkIsFormFullFilled(this.data.formly.esquema, this.data.model);
+          this.isFormFullFilled = this.checkIsFormFullFilled(this.getEsquema(this.data.formly), this.data.model);
           this.refreshInitialState(true);
           this.group.refreshInitialState(true);
         }),
@@ -151,7 +160,7 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
       }).pipe(
         map(checklist => checklist.id.toString()),
         tap(id => {
-          this.isFormFullFilled = this.checkIsFormFullFilled(this.data.formly.esquema, this.data.model);
+          this.isFormFullFilled = this.checkIsFormFullFilled(this.getEsquema(this.data.formly), this.data.model);
           this.setKey(id);
           this.refreshInitialState(true);
           this.group.refreshInitialState(true);
@@ -170,6 +179,10 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
     return fieldConfig
       .filter(field => field.key)
       .every(field => typeof model[field.key as string] === 'boolean');
+  }
+
+  public getEsquema(formly: IFormly): FormlyFieldConfig[] {
+    return formly?.formlyNombres?.find(f => f.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema;
   }
 
 }

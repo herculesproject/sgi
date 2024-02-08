@@ -2,6 +2,7 @@ import { IInformeBackend } from '@core/models/eti/backend/informe-backend';
 import { IInforme } from '@core/models/eti/informe';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { MEMORIA_CONVERTER } from './memoria.converter';
+import { ACTA_CONVERTER } from './acta.converter';
 
 class InformeConverter extends SgiBaseConverter<IInformeBackend, IInforme> {
   toTarget(value: IInformeBackend): IInforme {
@@ -11,7 +12,7 @@ class InformeConverter extends SgiBaseConverter<IInformeBackend, IInforme> {
     return {
       id: value.id,
       memoria: MEMORIA_CONVERTER.toTarget(value.memoria),
-      documentoRef: value.documentoRef,
+      documentos: value.informeDocumentos,
       version: value.version,
       tipoEvaluacion: value.tipoEvaluacion
     };
@@ -24,7 +25,7 @@ class InformeConverter extends SgiBaseConverter<IInformeBackend, IInforme> {
     return {
       id: value.id,
       memoria: MEMORIA_CONVERTER.fromTarget(value.memoria),
-      documentoRef: value.documentoRef,
+      informeDocumentos: value.documentos,
       version: value.version,
       tipoEvaluacion: value.tipoEvaluacion
     };

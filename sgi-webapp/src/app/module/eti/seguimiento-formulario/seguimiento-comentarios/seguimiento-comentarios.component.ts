@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -10,6 +11,7 @@ import { IComentario, TipoEstadoComentario } from '@core/models/eti/comentario';
 import { TIPO_COMENTARIO, TipoComentario } from '@core/models/eti/tipo-comentario';
 import { DialogService } from '@core/services/dialog.service';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -61,7 +63,9 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     private matDialog: MatDialog,
     private actionService: SeguimientoFormularioActionService,
     private readonly translate: TranslateService,
-    private readonly authService: SgiAuthService
+    private readonly authService: SgiAuthService,
+    private readonly languageService: LanguageService,
+    private readonly router: Router
   ) {
     super(actionService.FRAGMENT.COMENTARIOS, actionService);
     this.dataSource = new MatTableDataSource<StatusWrapper<IComentario>>();
@@ -88,7 +92,7 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
       (wrapper: StatusWrapper<IComentario>, property: string) => {
         switch (property) {
           case 'apartado.bloque':
-            return wrapper.value.apartado?.bloque.nombre;
+            return this.getBloqueNombre(wrapper.value);
           case 'apartado.padre':
             return this.getApartadoNombre(wrapper.value);
           case 'apartado':
@@ -124,11 +128,17 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
   }
 
   getApartadoNombre(comentario: IComentario): string {
-    return getApartadoNombre(comentario.apartado);
+    return getApartadoNombre(comentario.apartado, this.languageService.getLanguage().code);
   }
 
   getSubApartadoNombre(comentario: IComentario): string {
-    return getSubApartadoNombre(comentario.apartado);
+    return getSubApartadoNombre(comentario.apartado, this.languageService.getLanguage().code);
+  }
+
+  getBloqueNombre(comentario: IComentario): string {
+    return comentario.apartado?.bloque.orden === 0 ?
+      comentario.apartado?.bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre : (comentario.apartado?.bloque?.orden
+        + ' ' + comentario.apartado?.bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre)
   }
 
   /**

@@ -1,6 +1,8 @@
 import { IComentario } from '@core/models/eti/comentario';
 import { IDictamen } from '@core/models/eti/dictamen';
 import { Fragment } from '@core/services/action-service';
+import { ApartadoService } from '@core/services/eti/apartado.service';
+import { BloqueService } from '@core/services/eti/bloque.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -20,6 +22,8 @@ export class SeguimientoComentarioFragment extends Fragment {
     private service: EvaluacionService,
     private readonly personaService: PersonaService,
     private readonly authService: SgiAuthService,
+    private readonly apartadoService: ApartadoService,
+    private readonly bloqueService: BloqueService
   ) {
     super(key);
   }

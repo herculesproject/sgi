@@ -19,8 +19,7 @@ class ActaWithNumEvaluacionesConverter extends SgiBaseConverter<IActaWithNumEval
       numTotal: value.numTotal,
       estadoActa: value.estadoActa,
       numEvaluacionesNoEvaluadas: value.numEvaluacionesNoEvaluadas,
-      documentoRef: value.documentoRef,
-      transaccionRef: value.transaccionRef
+      documentos: value.documentos,
     };
   }
 
@@ -39,8 +38,7 @@ class ActaWithNumEvaluacionesConverter extends SgiBaseConverter<IActaWithNumEval
       numTotal: value.numTotal,
       estadoActa: value.estadoActa,
       numEvaluacionesNoEvaluadas: value.numEvaluacionesNoEvaluadas,
-      documentoRef: value.documentoRef,
-      transaccionRef: value.transaccionRef
+      documentos: value.documentos
     };
   }
 }

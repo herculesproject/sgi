@@ -30,6 +30,9 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { ActaListadoExportModalComponent } from '../modals/acta-listado-export-modal/acta-listado-export-modal.component';
+import { IInforme } from '@core/models/eti/informe';
+import { LanguageService } from '@core/services/language.service';
+import { IActaDocumento } from '@core/models/eti/acta-documento';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_FINALIZAR_ERROR = marker('error.eti.acta.finalizar');
@@ -104,7 +107,8 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     private readonly route: ActivatedRoute,
     private readonly evaluacionService: EvaluacionService,
     private readonly dialogService: DialogService,
-    private readonly authService: SgiAuthService
+    private readonly authService: SgiAuthService,
+    private readonly languageService: LanguageService
   ) {
     super();
 
@@ -317,28 +321,17 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
    */
   visualizarInforme(acta: IActaWithNumEvaluaciones): void {
     const documento: IDocumento = {} as IDocumento;
-    if (this.isFinalizada(acta)) {
-      this.suscripciones.push(this.documentoService.getInfoFichero(acta.documentoRef).pipe(
-        switchMap((documentoInfo: IDocumento) => {
-          documento.nombre = documentoInfo.nombre;
-          return this.documentoService.downloadFichero(acta.documentoRef);
-        })
-      ).subscribe(response => {
+    this.suscripciones.push(this.actasService.getDocumentoActa(acta.id).pipe(
+      switchMap((documentoInfo: IDocumento) => {
+        documento.nombre = documentoInfo.nombre;
+        return this.documentoService.downloadFichero(documentoInfo.documentoRef);
+      })
+    ).subscribe(
+      (response) => {
         triggerDownloadToUser(response, documento.nombre);
-      }));
-    } else {
-      this.suscripciones.push(this.actasService.getDocumentoActa(acta.id).pipe(
-        switchMap((documentoInfo: IDocumento) => {
-          documento.nombre = documentoInfo.nombre;
-          return this.documentoService.downloadFichero(documentoInfo.documentoRef);
-        })
-      ).subscribe(
-        (response) => {
-          triggerDownloadToUser(response, documento.nombre);
-        },
-        this.processError
-      ));
-    }
+      },
+      this.processError
+    ));
   }
 
   openExportModal(): void {

@@ -1,3 +1,4 @@
+
 import { IApartado } from '../apartado';
 import { TipoEstadoComentario } from '../comentario';
 import { TipoComentario } from '../tipo-comentario';

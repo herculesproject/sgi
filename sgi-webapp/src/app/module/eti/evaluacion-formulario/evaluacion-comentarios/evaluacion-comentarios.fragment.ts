@@ -1,6 +1,8 @@
 import { IComentario } from '@core/models/eti/comentario';
 import { DICTAMEN, IDictamen } from '@core/models/eti/dictamen';
 import { Fragment } from '@core/services/action-service';
+import { ApartadoService } from '@core/services/eti/apartado.service';
+import { BloqueService } from '@core/services/eti/bloque.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -21,7 +23,9 @@ export class EvaluacionComentarioFragment extends Fragment {
     private rol: Rol,
     private service: EvaluacionService,
     private readonly personaService: PersonaService,
-    private readonly authService: SgiAuthService
+    private readonly authService: SgiAuthService,
+    private readonly apartadoService: ApartadoService,
+    private readonly bloqueService: BloqueService
   ) {
     super(key);
   }
@@ -48,7 +52,7 @@ export class EvaluacionComentarioFragment extends Fragment {
             }),
             map(() => results)
           );
-        }),
+        })
       ).subscribe((comentarios) => {
         this.comentarios$.next(comentarios.map(comentario => new StatusWrapper<IComentario>(comentario)));
       }));
@@ -194,8 +198,8 @@ export class EvaluacionComentarioFragment extends Fragment {
         return this.service.createComentarioGestor(this.getKey() as number, wrappedComentario.value).pipe(
           map((savedComentario) => {
             const currentComentarios = this.comentarios$.value.filter((currentComentario) => currentComentario !== wrappedComentario);
-            savedComentario.evaluador = wrappedComentario.value.evaluador;
-            currentComentarios.push(new StatusWrapper<IComentario>(savedComentario));
+            wrappedComentario.value.id = savedComentario.id;
+            currentComentarios.push(new StatusWrapper<IComentario>(wrappedComentario.value));
             this.comentarios$.next(currentComentarios);
           })
         );
@@ -216,8 +220,8 @@ export class EvaluacionComentarioFragment extends Fragment {
         return this.service.createComentarioEvaluador(this.getKey() as number, wrappedComentario.value).pipe(
           map((savedComentario) => {
             const currentComentarios = this.comentarios$.value.filter((currentComentario) => currentComentario !== wrappedComentario);
-            savedComentario.evaluador = wrappedComentario.value.evaluador;
-            currentComentarios.push(new StatusWrapper<IComentario>(savedComentario));
+            wrappedComentario.value.id = savedComentario.id;
+            currentComentarios.push(new StatusWrapper<IComentario>(wrappedComentario.value));
             this.comentarios$.next(currentComentarios);
           })
         );
@@ -238,4 +242,5 @@ export class EvaluacionComentarioFragment extends Fragment {
       DICTAMEN.DESFAVORABLE
     ].includes(this.dictamen?.id)
   }
+
 }

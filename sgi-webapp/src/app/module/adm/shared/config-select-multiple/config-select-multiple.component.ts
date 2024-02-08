@@ -84,7 +84,7 @@ export abstract class ConfigSelectMultipleComponent implements OnInit, OnDestroy
   @Output()
   readonly selectionChange: EventEmitter<any> = new EventEmitter<any>();
 
-  displayer = (keyValue: KeyValue<string, string>): string => keyValue.value ?? null;
+  displayer = (keyValue: KeyValue<string, string>): string => keyValue.value ? this.translate.instant(keyValue.value) : null;
   comparer = (keyValue1: KeyValue<string, string>, keyValue2: KeyValue<string, string>): boolean => keyValue1?.key === keyValue2?.key;
   sorter = (keyValue1: SelectValue<KeyValue<string, string>>, keyValue2: SelectValue<KeyValue<string, string>>): number => keyValue1?.displayText.localeCompare(keyValue2?.displayText);
 

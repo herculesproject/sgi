@@ -4,6 +4,9 @@ import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { Fragment } from '@core/services/action-service';
+import { ActaService } from '@core/services/eti/acta.service';
+import { ApartadoService } from '@core/services/eti/apartado.service';
+import { BloqueService } from '@core/services/eti/bloque.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -12,7 +15,6 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { Rol } from '../../acta-rol';
-import { ActaService } from '@core/services/eti/acta.service';
 
 export class ActaComentariosFragment extends Fragment {
 
@@ -36,7 +38,9 @@ export class ActaComentariosFragment extends Fragment {
     private convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly personaService: PersonaService,
     private readonly authService: SgiAuthService,
-    private rol: Rol
+    private rol: Rol,
+    private readonly apartadoService: ApartadoService,
+    private readonly bloqueService: BloqueService
   ) {
     super(key);
   }
@@ -52,7 +56,7 @@ export class ActaComentariosFragment extends Fragment {
   }
 
   loadEvaluaciones(idConvocatoria: number): void {
-    if (!this.isInitialized() || this.selectedIdConvocatoria !== idConvocatoria) {
+    if (!this.isInitialized() || this.selectedIdConvocatoria !== idConvocatoria || this.evaluaciones$.value.length === 0) {
       this.selectedIdConvocatoria = idConvocatoria;
       this.subscriptions.push(this.convocatoriaReunionService.findEvaluacionesActivas(this.selectedIdConvocatoria).pipe(
         map((response) => response.items),
@@ -89,6 +93,7 @@ export class ActaComentariosFragment extends Fragment {
                     } else {
                       this.evaluaciones$.next([...evaluacionesComentario]);
                     }
+                    return comentarios;
                   }));
               } else {
                 this.showAddComentarios = false;

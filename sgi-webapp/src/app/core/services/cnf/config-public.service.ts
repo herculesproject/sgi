@@ -34,4 +34,8 @@ export class ConfigPublicService extends _ConfigServiceMixinBase {
     return this.findById('web-numero-logos-header').pipe(map(value => value?.value ?? null));
   }
 
+  getLenguajesCabecera(): Observable<string[]> {
+    return this.findById('web-languages-header').pipe(map(value => value?.value ? value.value.split(',') : null));
+  }
+
 }

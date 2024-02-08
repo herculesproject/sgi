@@ -1,6 +1,7 @@
 import { registerLocaleData } from '@angular/common';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es';
+import localeEu from '@angular/common/locales/eu';
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { CoreModule } from '@angular/flex-layout';
 import { MatPaginatorIntl } from '@angular/material/paginator';
@@ -27,6 +28,8 @@ import { AppComponent } from './app.component';
 import { BlockModule } from './block/block.module';
 import { ConfigService } from './core/services/config.service';
 import { HomeComponent } from './home/home.component';
+import { Language, LanguageService, LocaleId } from '@core/services/language.service';
+import { CookieService } from 'ngx-cookie-service';
 
 export class SgiTranslateLoader implements TranslateLoader {
   constructor(
@@ -62,6 +65,7 @@ export class SgiTranslateLoader implements TranslateLoader {
 
 // Load supported locales
 registerLocaleData(localeEs);
+registerLocaleData(localeEu);
 
 const appInitializerFn = (appConfig: ConfigService) => {
   return () => {
@@ -93,7 +97,7 @@ const appInitializerFn = (appConfig: ConfigService) => {
         provide: TranslateCompiler,
         useClass: TranslateMessageFormatCompiler
       },
-      defaultLanguage: 'es'
+      defaultLanguage: Language.ES.code
     }),
     BlockModule,
     HttpClientModule,
@@ -103,6 +107,7 @@ const appInitializerFn = (appConfig: ConfigService) => {
   providers: [
     Meta,
     ConfigService,
+    CookieService,
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializerFn,
@@ -123,7 +128,8 @@ const appInitializerFn = (appConfig: ConfigService) => {
     },
     {
       provide: LOCALE_ID,
-      useValue: 'es'
+      useClass: LocaleId,
+      deps: [LanguageService]
     },
     {
       provide: HTTP_INTERCEPTORS,

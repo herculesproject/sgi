@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import { TipoEstadoActa } from './tipo-estado-acta';
+import { IActaDocumento } from './acta-documento';
 
 export interface IActaWithNumEvaluaciones {
   /** ID */
@@ -22,8 +23,6 @@ export interface IActaWithNumEvaluaciones {
   estadoActa: TipoEstadoActa;
   /** Número de evaluacines no evaluadas. */
   numEvaluacionesNoEvaluadas: number;
-  /** Referencia al documento */
-  documentoRef: string;
-  /** Referencia a la transacción blockchain */
-  transaccionRef: string;
+  /** referencia documentos */
+  documentos: IActaDocumento[];
 }

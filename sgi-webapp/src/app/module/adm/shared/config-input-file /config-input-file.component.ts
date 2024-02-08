@@ -4,6 +4,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { IResourceInfo } from '@core/models/cnf/resource-info';
 import { ResourceService, triggerDownloadToUser } from '@core/services/cnf/resource.service';
+import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiFileUploadComponent } from '@shared/file-upload/file-upload.component';
@@ -91,7 +92,8 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
   constructor(
     private readonly translate: TranslateService,
     private readonly snackBarService: SnackBarService,
-    private readonly resourceService: ResourceService
+    private readonly resourceService: ResourceService,
+    private readonly languageService: LanguageService
   ) { }
 
   ngOnInit(): void {
@@ -118,7 +120,7 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
 
   downloadResource(): void {
     this.subscriptions.push(
-      this.resourceService.download(this.key).subscribe(
+      this.resourceService.download(this.key + this.getCodeIdioma()).subscribe(
         (resource) => triggerDownloadToUser(resource, this.key),
         (error) => this.error.next(error)
       )
@@ -162,7 +164,7 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
 
   private loadResourceInfo(key: string): void {
     this.subscriptions.push(
-      this.resourceService.getResourceInfo(key).subscribe(
+      this.resourceService.getResourceInfo(key + this.getCodeIdioma()).subscribe(
         (resourceInfo) => {
           this.resourceInfo = resourceInfo;
         },
@@ -176,6 +178,14 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
       this.formGroup.disable();
     } else if (this.formGroup.disabled) {
       this.formGroup.enable();
+    }
+  }
+
+  private getCodeIdioma(): string {
+    if (this.key.includes('docx')) {
+      return '-' + this.languageService.getLanguage().code;
+    } else {
+      return '';
     }
   }
 

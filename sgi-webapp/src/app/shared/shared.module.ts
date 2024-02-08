@@ -137,6 +137,7 @@ import { SelectComponent } from './select/select.component';
     InfoMessageComponent,
     InputEmailsComponent,
     LuxonDatePipe,
+    SelectMultipleComponent,
     MenuContentComponent,
     MenuContentFooter,
     MenuGroupComponent,

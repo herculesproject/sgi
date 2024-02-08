@@ -17,6 +17,8 @@ import { ActaComentariosFragment } from './acta-formulario/acta-comentarios/acta
 import { ActaDatosGeneralesFragment } from './acta-formulario/acta-datos-generales/acta-datos-generales.fragment';
 import { ActaMemoriasFragment } from './acta-formulario/acta-memorias/acta-memorias.fragment';
 import { Rol } from './acta-rol';
+import { BloqueService } from '@core/services/eti/bloque.service';
+import { ApartadoService } from '@core/services/eti/apartado.service';
 
 @Injectable()
 export class ActaActionService extends ActionService {
@@ -46,6 +48,8 @@ export class ActaActionService extends ActionService {
     personaService: PersonaService,
     asistenteService: AsistenteService,
     authService: SgiAuthService,
+    bloqueService: BloqueService,
+    apartadoService: ApartadoService
   ) {
     super();
     this.acta = {} as IActa;
@@ -61,7 +65,7 @@ export class ActaActionService extends ActionService {
     this.memorias = new ActaMemoriasFragment(this.acta?.convocatoriaReunion?.id, convocatoriaReunionService);
     this.asistentes = new ActaAsistentesFragment(
       this.acta?.convocatoriaReunion?.id, convocatoriaReunionService, personaService, asistenteService);
-    this.comentarios = new ActaComentariosFragment(this.acta?.id, service, evaluacionService, convocatoriaReunionService, personaService, authService, this.rol);
+    this.comentarios = new ActaComentariosFragment(this.acta?.id, service, evaluacionService, convocatoriaReunionService, personaService, authService, this.rol, apartadoService, bloqueService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.MEMORIAS, this.memorias);

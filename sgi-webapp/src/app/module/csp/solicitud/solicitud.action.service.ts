@@ -80,6 +80,7 @@ import { SolicitudRrhhMemoriaFragment } from './solicitud-formulario/solicitud-r
 import { SolicitudRrhhRequisitosConvocatoriaFragment } from './solicitud-formulario/solicitud-rrhh-requisitos-convocatoria/solicitud-rrhh-requisitos-convocatoria.fragment';
 import { SolicitudRrhhSolitanteFragment } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.fragment';
 import { SolicitudRrhhTutorFragment } from './solicitud-formulario/solicitud-rrhh-tutor/solicitud-rrhh-tutor.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 const MSG_SAVE_REQUISITOS_INVESTIGADOR = marker('msg.save.solicitud.requisitos-investigador');
@@ -278,7 +279,8 @@ export class SolicitudActionService extends ActionService {
     solicitudRrhhRequisitoCategoriaService: SolicitudRrhhRequisitoCategoriaService,
     solicitudRrhhRequisitoNivelAcademicoService: SolicitudRrhhRequisitoNivelAcademicoService,
     documentoService: DocumentoService,
-    rolSocioService: RolSocioService
+    rolSocioService: RolSocioService,
+    languageService: LanguageService
   ) {
     super();
 
@@ -393,7 +395,7 @@ export class SolicitudActionService extends ActionService {
       personaService,
       this.readonly
     );
-    this.autoevaluacion = new SolicitudAutoevaluacionFragment(this.data?.solicitud, formlyService, checklistService, authService);
+    this.autoevaluacion = new SolicitudAutoevaluacionFragment(this.data?.solicitud, formlyService, checklistService, authService, languageService);
 
     // Fragments Socitudes Rrhh
     this.solicitanteRrhh = new SolicitudRrhhSolitanteFragment(
