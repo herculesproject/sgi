@@ -77,4 +77,36 @@
       tableName="proyecto_partida" />
   </changeSet>
 
+  <changeSet author="master" id="0.5.0-9">
+    <renameColumn tableName="solicitud_rrhh" newColumnName="observaciones_old"
+      oldColumnName="observaciones" />
+    <renameColumn tableName="solicitud_rrhh" newColumnName="resumen_old" oldColumnName="resumen" />
+
+    <addColumn tableName="solicitud_rrhh">
+      <column name="observaciones" type="CLOB" />
+      <column name="resumen" type="CLOB" />
+    </addColumn>
+
+    <sql>
+      UPDATE ${schemaPrefix}solicitud_rrhh SET resumen=resumen_old, observaciones=observaciones_old
+    </sql>
+
+    <dropColumn columnName="observaciones_old" tableName="solicitud_rrhh" />
+    <dropColumn columnName="resumen_old" tableName="solicitud_rrhh" />
+  </changeSet>
+
+  <changeSet author="master" id="0.5.0-10">
+    <renameColumn tableName="programa" newColumnName="descripcion_old" oldColumnName="descripcion" />
+
+    <addColumn tableName="programa">
+      <column name="descripcion" type="CLOB" />
+    </addColumn>
+
+    <sql> 
+      UPDATE ${schemaPrefix}programa SET descripcion=descripcion_old
+    </sql>
+
+    <dropColumn columnName="descripcion_old" tableName="programa" />
+  </changeSet>
+
 </databaseChangeLog>
