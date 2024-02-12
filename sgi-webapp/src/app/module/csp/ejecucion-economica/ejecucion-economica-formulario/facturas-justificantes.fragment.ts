@@ -104,7 +104,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
         const root: RowTreeDesglose<IDesglose>[] = [];
         const mapTree = new Map<string, RowTreeDesglose<IDesglose>>();
         values.forEach(element => {
-          const keyAnualidad = `${element.anualidad}-${element.proyecto?.id ?? 0}`;
+          const keyAnualidad = `${element.anualidad}-${this.disableProyectoSgi ? 0 : (element.proyecto?.id ?? 0)}`;
           const keyConcepto = `${keyAnualidad}-${element.conceptoGasto?.id ?? 0}`;
           const keyClasificacionSGE = `${keyConcepto}-${element.clasificacionSGE?.id ?? 0}`;
 
@@ -379,12 +379,12 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
   }
 
   protected compareConceptoGastoNombreRowTree(itemA: RowTreeDesglose<IDesglose>, itemB: RowTreeDesglose<IDesglose>): number {
-    if (!itemA || !itemB || itemA.level < 2 || itemB.level < 2) {
+    if (!itemA || !itemB || itemA.level < 1 || itemB.level < 1) {
       return 0;
     }
 
-    const nombreConceptoGastoItemA = this.getItemLevel(itemA, 2)?.item?.conceptoGasto?.nombre ?? '';
-    const nombreConceptoGastoItemB = this.getItemLevel(itemB, 2)?.item?.conceptoGasto?.nombre ?? '';
+    const nombreConceptoGastoItemA = this.getItemLevel(itemA, 1)?.item?.conceptoGasto?.nombre ?? '';
+    const nombreConceptoGastoItemB = this.getItemLevel(itemB, 1)?.item?.conceptoGasto?.nombre ?? '';
     return nombreConceptoGastoItemA.localeCompare(nombreConceptoGastoItemB);
   }
 

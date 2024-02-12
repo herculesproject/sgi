@@ -87,7 +87,7 @@ export class FacturasGastosFragment extends FacturasJustificantesFragment {
   protected sortRowsTree(rows: RowTreeDesglose<IDesglose>[]): void {
     rows.sort((a, b) => {
       return this.compareAnualidadRowTree(b, a)
-        || this.compareProyectoTituloRowTree(a, b)
+        || (this.disableProyectoSgi ? 0 : this.compareProyectoTituloRowTree(a, b))
         || this.compareConceptoGastoNombreRowTree(a, b)
         || this.compareClasificacionSGENombreRowTree(a, b)
         || this.comparePartidaPresupuestariaRowTree(a, b)
@@ -99,7 +99,7 @@ export class FacturasGastosFragment extends FacturasJustificantesFragment {
   protected sortRowsDesglose(rows: IDesglose[]): void {
     rows.sort((a, b) => {
       return this.compareAnualidadDesglose(b, a)
-        || this.compareProyectoTituloDesglose(a, b)
+        || (this.disableProyectoSgi ? 0 : this.compareProyectoTituloDesglose(a, b))
         || this.compareConceptoGastoNombreDesglose(a, b)
         || this.compareClasificacionSGENombreDesglose(a, b)
         || this.comparePartidaPresupuestariaDesglose(a, b)
