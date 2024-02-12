@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,8 +28,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "proyecto_partida", uniqueConstraints = { @UniqueConstraint(columnNames = { "proyecto_id", "codigo",
-    "tipo_partida" }, name = "UK_PROYECTOPARTIDA_PROYECTO_CODIGO_TIPO") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
