@@ -218,16 +218,16 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
             proyectoSgeRef);
         break;
       case SGI_1_SGE_N:
-        if (relaciones.stream().map(ProyectoProyectoSge::getProyectoId)
-            .anyMatch(id -> id.equals(proyectoSgiId))) {
+        if (relaciones.stream().map(ProyectoProyectoSge::getProyectoSgeRef)
+            .anyMatch(ref -> ref.equals(proyectoSgeRef))) {
           throw new CardinalidadRelacionSgiSgeException();
         }
         log.debug("validateCardinalidadRelacionSgiSge({}, {}) - Cardinalidad (1:n) validada", proyectoSgiId,
             proyectoSgeRef);
         break;
       case SGI_N_SGE_1:
-        if (relaciones.stream().map(ProyectoProyectoSge::getProyectoSgeRef)
-            .anyMatch(ref -> ref.equals(proyectoSgeRef))) {
+        if (relaciones.stream().map(ProyectoProyectoSge::getProyectoId)
+            .anyMatch(id -> id.equals(proyectoSgiId))) {
           throw new CardinalidadRelacionSgiSgeException();
         }
         log.debug("validateCardinalidadRelacionSgiSge({}, {}) - Cardinalidad (n:1) validada", proyectoSgiId,
