@@ -15,4 +15,5 @@
 # limitations under the License.
 #
 
+org.crue.hercules.sgi.auth.broker.saml.mappers.ScriptToAttributeMapper
 org.crue.hercules.sgi.auth.broker.saml.mappers.ScriptToGroupMapper
