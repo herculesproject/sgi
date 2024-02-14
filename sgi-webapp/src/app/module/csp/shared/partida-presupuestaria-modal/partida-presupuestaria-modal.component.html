@@ -76,6 +76,14 @@
     <div fxFlex="50" fxLayout="column" fxLayoutGap="10px" *ngIf="showDatosPartidaPresupuestaria">
       <h3>{{'info.csp.datos-convocatoria' | translate}}</h3>
 
+      <!-- Tipo convocatoria-->
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-partida-presupuestaria.tipo-partida' | translate}}</mat-label>
+          <sgi-select-enum formControlName="tipoConvocatoria" [enumMap]="TIPO_PARTIDA_MAP" required></sgi-select-enum>
+        </mat-form-field>
+      </div>
+
       <!-- Codigo convocatoria-->
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <ng-container *ngIf="this.data.partidasPresupuestariasSgeEnabled else partidaSgiConvocatoria">
@@ -102,14 +110,6 @@
               placeholder="{{'csp.proyecto-partida-presupuestaria.codigo' | translate}}">
           </mat-form-field>
         </ng-template>
-      </div>
-
-      <!-- Tipo convocatoria-->
-      <div fxFlex fxLayout="row" fxLayoutGap="10px">
-        <mat-form-field>
-          <mat-label>{{'csp.proyecto-partida-presupuestaria.tipo-partida' | translate}}</mat-label>
-          <sgi-select-enum formControlName="tipoConvocatoria" [enumMap]="TIPO_PARTIDA_MAP" required></sgi-select-enum>
-        </mat-form-field>
       </div>
 
       <!-- Descripcion convocatoria-->
