@@ -123,8 +123,9 @@ export class GrupoListadoInvComponent extends AbstractTablePaginationComponent<I
 
   private fillInvestigadorPrincipal(grupo: IGrupoListado): Observable<IGrupoListado> {
     let idsInvestigadoresPrincipales: string[];
-    return this.grupoService.findPersonaRefInvestigadoresPrincipales(grupo.id).pipe(
+    return this.grupoService.findInvestigadoresPrincipales(grupo.id).pipe(
       filter(investigadoresPrincipales => !!investigadoresPrincipales),
+      map(investigadoresPrincipales => investigadoresPrincipales.map(investigador => investigador.persona.id)),
       tap(investigadoresPrincipales => idsInvestigadoresPrincipales = [...investigadoresPrincipales]),
       switchMap(investigadoresPrincipales => this.personaService.findAllByIdIn(investigadoresPrincipales)),
       map(investigadoresPrincipales => {

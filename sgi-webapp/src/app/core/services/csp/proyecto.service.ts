@@ -841,11 +841,12 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * true. En caso de que varios coincidan se devuelven todos los que coincidan.
    *
    * @param id identificador del proyecto.
-   * @return la lista de personaRef de los investigadores principales del
-   *         proyecto en el momento actual.
+   * @return la lista de investigadores principales del proyecto en el momento actual.
    */
-  findPersonaRefInvestigadoresPrincipales(id: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.endpointUrl}/${id}/investigadoresprincipales`);
+  findInvestigadoresPrincipales(id: number): Observable<IProyectoEquipo[]> {
+    return this.http.get<IProyectoEquipoBackend[]>(`${this.endpointUrl}/${id}/investigadoresprincipales`).pipe(
+      map((response => PROYECTO_EQUIPO_CONVERTER.toTargetArray(response)))
+    );
   }
 
   /**
