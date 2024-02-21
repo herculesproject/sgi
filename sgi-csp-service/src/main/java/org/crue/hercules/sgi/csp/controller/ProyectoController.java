@@ -1465,15 +1465,15 @@ public class ProyectoController {
    * <code>true</code>.
    * 
    * @param id Identificador del {@link Proyecto}.
-   * @return la lista de personaRef de los investigadores principales del
-   *         {@link Proyecto} en el momento actual.
+   * @return la lista investigadores principales del {@link Proyecto} en el
+   *         momento actual.
    */
   @GetMapping(PATH_INVESTIGADORES_PRINCIPALES)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-EJEC-V', 'CSP-EJEC-E', 'CSP-EJEC-INV-VR')")
-  public ResponseEntity<List<String>> findPersonaRefInvestigadoresPrincipales(@PathVariable Long id) {
-    log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - start");
-    List<String> returnValue = proyectoEquipoService.findPersonaRefInvestigadoresPrincipales(id);
-    log.debug("findPersonaRefInvestigadoresPrincipales(Long id) - end");
+  public ResponseEntity<List<ProyectoEquipo>> findInvestigadoresPrincipales(@PathVariable Long id) {
+    log.debug("findInvestigadoresPrincipales(Long id) - start");
+    List<ProyectoEquipo> returnValue = proyectoEquipoService.findInvestigadoresPrincipales(id);
+    log.debug("findInvestigadoresPrincipales(Long id) - end");
     return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
         : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
