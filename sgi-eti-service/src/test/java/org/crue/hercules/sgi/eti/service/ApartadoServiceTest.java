@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.converter.ApartadoConverter;
 import org.crue.hercules.sgi.eti.converter.ApartadoTreeConverter;
 import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
@@ -36,14 +35,11 @@ public class ApartadoServiceTest extends BaseServiceTest {
   @Mock
   private ApartadoTreeConverter apartadoTreeConverter;
 
-  @Mock
-  private ApartadoConverter apartadoConverter;
-
   private ApartadoService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ApartadoServiceImpl(repository, apartadoTreeConverter, apartadoConverter);
+    service = new ApartadoServiceImpl(repository, apartadoTreeConverter);
   }
 
   @Test
@@ -190,7 +186,7 @@ public class ApartadoServiceTest extends BaseServiceTest {
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Id no puede ser null para buscar un apartado por el Id de su Bloque");
+          .isEqualTo("Identificador de Bloque no puede ser nulo");
     }
   }
 
@@ -225,7 +221,7 @@ public class ApartadoServiceTest extends BaseServiceTest {
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Id no puede ser null para buscar un apartado por el Id de su padre");
+          .isEqualTo("Identificador de Apartado no puede ser nulo");
     }
   }
 

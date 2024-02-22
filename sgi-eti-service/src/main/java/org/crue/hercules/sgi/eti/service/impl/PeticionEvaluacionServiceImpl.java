@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
@@ -19,6 +20,7 @@ import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.repository.specification.PeticionEvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +39,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService {
+  private static final String MSG_FIELD_FUENTE_FINANCIACION = "fuenteFinanciacion";
+  private static final String MSG_FIELD_OTRO_VALOR_SOCIAL = "otroValorSocial";
+  private static final String MSG_FIELD_TITULO = "titulo";
+  private static final String MSG_FIELD_IMPORTE_FINANCIACION = "importeFinanciacion";
+
   private final SgiConfigProperties sgiConfigProperties;
   private final PeticionEvaluacionRepository peticionEvaluacionRepository;
   private final MemoriaService memoriaService;
@@ -57,8 +64,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
   @Transactional
   public PeticionEvaluacion create(PeticionEvaluacion peticionEvaluacion) {
     log.debug("Petición a create PeticionEvaluacion : {} - start", peticionEvaluacion);
-    Assert.isNull(peticionEvaluacion.getId(),
-        "PeticionEvaluacion id tiene que ser null para crear un nuevo peticionEvaluacion");
+    AssertHelper.idIsNull(peticionEvaluacion.getId(), PeticionEvaluacion.class);
     // Inicialización de campos no especificados a sus valores por defecto
     if (peticionEvaluacion.getActivo() == null) {
       peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -90,16 +96,16 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     peticionEvaluacion.setCodigo(codigoPeticionEvaluacion.toString());
 
     if (peticionEvaluacion.getExisteFinanciacion().booleanValue()) {
-      Assert.notNull(peticionEvaluacion.getFuenteFinanciacion(),
-          "PeticionEvaluacion fuenteFinanciacion no puede ser null si existeFinanciacion");
-      Assert.notNull(peticionEvaluacion.getEstadoFinanciacion(),
-          "PeticionEvaluacion estadoFinanciacion no puede ser null si existeFinanciacion");
+      AssertHelper.fieldNotNull(peticionEvaluacion.getFuenteFinanciacion(), PeticionEvaluacion.class,
+          MSG_FIELD_FUENTE_FINANCIACION);
+      AssertHelper.entityNotNull(peticionEvaluacion.getEstadoFinanciacion(), PeticionEvaluacion.class,
+          EstadoFinanciacion.class);
     }
 
     if (peticionEvaluacion.getValorSocial() != null
         && peticionEvaluacion.getValorSocial().equals(TipoValorSocial.OTRA_FINALIDAD)) {
-      Assert.notNull(peticionEvaluacion.getOtroValorSocial(),
-          "PeticionEvaluacion otroValorSocial no puede ser null si TipoValorSocial.OTRA_FINALIDAD");
+      AssertHelper.fieldNotNull(peticionEvaluacion.getOtroValorSocial(), PeticionEvaluacion.class,
+          MSG_FIELD_OTRO_VALOR_SOCIAL);
     }
 
     return peticionEvaluacionRepository.save(peticionEvaluacion);
@@ -150,7 +156,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
   public void delete(Long id) throws PeticionEvaluacionNotFoundException {
     log.debug("Petición a delete PeticionEvaluacion : {}  - start", id);
 
-    Assert.notNull(id, "El id de PeticionEvaluacion no puede ser null.");
+    AssertHelper.idNotNull(id, PeticionEvaluacion.class);
     if (!peticionEvaluacionRepository.existsById(id)) {
       throw new PeticionEvaluacionNotFoundException(id);
     }
@@ -214,24 +220,22 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
   public PeticionEvaluacion update(final PeticionEvaluacion peticionEvaluacionActualizar) {
     log.debug("update(PeticionEvaluacion peticionEvaluacionActualizar) - start");
 
-    Assert.notNull(peticionEvaluacionActualizar.getId(),
-        "PeticionEvaluacion id no puede ser null para actualizar una petición de evaluación");
-    Assert.notNull(peticionEvaluacionActualizar.getTitulo(),
-        "PeticionEvaluacion titulo no puede ser null para actualizar una petición de evaluación");
+    AssertHelper.idNotNull(peticionEvaluacionActualizar.getId(), PeticionEvaluacion.class);
+    AssertHelper.fieldNotNull(peticionEvaluacionActualizar.getTitulo(), PeticionEvaluacion.class, MSG_FIELD_TITULO);
 
     if (peticionEvaluacionActualizar.getExisteFinanciacion().booleanValue()) {
-      Assert.notNull(peticionEvaluacionActualizar.getFuenteFinanciacion(),
-          "PeticionEvaluacion fuenteFinanciacion no puede ser null si existeFinanciacion");
-      Assert.notNull(peticionEvaluacionActualizar.getEstadoFinanciacion(),
-          "PeticionEvaluacion estadoFinanciacion no puede ser null si existeFinanciacion");
-      Assert.notNull(peticionEvaluacionActualizar.getImporteFinanciacion(),
-          "PeticionEvaluacion importeFinanciacion no puede ser null si existeFinanciacion");
+      AssertHelper.fieldNotNull(peticionEvaluacionActualizar.getFuenteFinanciacion(), PeticionEvaluacion.class,
+          MSG_FIELD_FUENTE_FINANCIACION);
+      AssertHelper.entityNotNull(peticionEvaluacionActualizar.getEstadoFinanciacion(), PeticionEvaluacion.class,
+          EstadoFinanciacion.class);
+      AssertHelper.fieldNotNull(peticionEvaluacionActualizar.getImporteFinanciacion(), PeticionEvaluacion.class,
+          MSG_FIELD_IMPORTE_FINANCIACION);
     }
 
     if (peticionEvaluacionActualizar.getValorSocial() != null
         && peticionEvaluacionActualizar.getValorSocial().equals(TipoValorSocial.OTRA_FINALIDAD)) {
-      Assert.notNull(peticionEvaluacionActualizar.getOtroValorSocial(),
-          "PeticionEvaluacion otroValorSocial no puede ser null si TipoValorSocial.OTRA_FINALIDAD");
+      AssertHelper.fieldNotNull(peticionEvaluacionActualizar.getOtroValorSocial(), PeticionEvaluacion.class,
+          MSG_FIELD_OTRO_VALOR_SOCIAL);
     }
 
     return peticionEvaluacionRepository.findById(peticionEvaluacionActualizar.getId()).map(peticionEvaluacion -> {

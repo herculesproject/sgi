@@ -77,7 +77,7 @@ public class EvaluacionConverterTest extends BaseServiceTest {
 
   @Test
   public void evalucionIsEliminable_FechaConvocatoriaInferiorActual_ReturnFalse() {
-    // La fecha de la convocatoria es anterior a la actual
+    // Fecha Actual debe ser anterior Fecha Convocatoria
     Evaluacion evaluacion = generarMockEvaluacion(1L, "Eva1", 1L, 1L);
 
     evaluacionConverter.isEliminable(evaluacion);

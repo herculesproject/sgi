@@ -40,8 +40,11 @@ import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -61,6 +64,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class EvaluacionServiceImpl implements EvaluacionService {
+  private static final String MSG_FIELD_PERSONA_REF = "personaRef";
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_KEY_ACTION = "action";
+  private static final String MSG_KEY_ANOTHER_ENTITY = "anotherEntity";
+  private static final String MSG_FIELD_ACTION_ELIMINAR = "action.eliminar";
+  private static final String MSG_FIELD_FECHA_ACTUAL = "fechaActual";
+  private static final String MSG_FIELD_FECHA_CONVOCATORIA = "fechaConvocatoria";
+  private static final String MSG_FIELD_COMENTARIOS_ASOCIADOS = "comentariosAsociados";
+  private static final String MSG_MODEL_EVALUACION = "org.crue.hercules.sgi.eti.model.Evaluacion.message";
+  private static final String MSG_MODEL_CONVOCATORIA_REUNION = "org.crue.hercules.sgi.eti.model.ConvocatoriaReunion.message";
+  private static final String MSG_NO_PERTENECE = "org.crue.hercules.sgi.eti.exceptions.entity.noPertenece.anotherEntity";
+  private static final String MSG_PROBLEM_ACCION_DENEGADA = "org.springframework.util.Assert.accion.denegada.message";
 
   private static final String TITULO_INFORME_EVALUACION = "informeEvaluacionPdf";
   private static final String TITULO_INFORME_EVALUACION_RETROSPECTIVA = "informeEvaluacionRetrospectivaPdf";
@@ -141,8 +157,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   @Transactional
   public Evaluacion create(Evaluacion evaluacion) {
     log.debug("Petición a create Evaluacion : {} - start", evaluacion);
-    Assert.isNull(evaluacion.getId(), "Evaluacion id tiene que ser null para crear una nueva evaluacion");
-    Assert.notNull(evaluacion.getConvocatoriaReunion().getId(), "La convocatoria de reunión no puede ser nula");
+    AssertHelper.idIsNull(evaluacion.getId(), Evaluacion.class);
+    AssertHelper.idNotNull(evaluacion.getConvocatoriaReunion().getId(), ConvocatoriaReunion.class);
 
     if (!convocatoriaReunionRepository.existsById(evaluacion.getConvocatoriaReunion().getId())) {
       throw new ConvocatoriaReunionNotFoundException(evaluacion.getConvocatoriaReunion().getId());
@@ -347,8 +363,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
       Long idTipoComentario, Pageable pageable) {
     log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - start");
-    Assert.notNull(idMemoria, "El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
-    Assert.notNull(idEvaluacion, "El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
+    AssertHelper.idNotNull(idMemoria, Memoria.class);
+    AssertHelper.idNotNull(idEvaluacion, Evaluacion.class);
     Optional<Evaluacion> evaluacion = evaluacionRepository.findById(idEvaluacion);
     Long idTipoEvaluacion = null;
     if (evaluacion.isPresent()) {
@@ -372,7 +388,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   @Override
   public Page<Evaluacion> findByEvaluador(String personaRef, String query, Pageable pageable) {
     log.debug("findByEvaluador(String personaRef, String query, Pageable pageable) - start");
-    Assert.notNull(personaRef, "El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones");
+    AssertHelper.fieldNotNull(personaRef, Evaluacion.class, MSG_FIELD_PERSONA_REF);
     Page<Evaluacion> returnValue = evaluacionRepository.findByEvaluador(personaRef, query, pageable);
     log.debug("findByEvaluador(String personaRef, String query, Pageable pageable) - end");
     return returnValue;
@@ -411,8 +427,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Page<Evaluacion> findEvaluacionesEnSeguimientosByEvaluador(String personaRef, String query,
       Pageable pageable) {
     log.debug("findEvaluacionesEnSeguimientosByEvaluador(String personaRef, String query, Pageable pageable) - start");
-    Assert.notNull(personaRef,
-        "El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones en seguimiento");
+    AssertHelper.fieldNotNull(personaRef, Evaluacion.class, MSG_FIELD_PERSONA_REF);
     Page<Evaluacion> evaluaciones = evaluacionRepository.findEvaluacionesEnSeguimientosByEvaluador(personaRef, query,
         pageable);
     log.debug("findEvaluacionesEnSeguimientosByEvaluador(String personaRef, String query, Pageable pageable) - end");
@@ -440,7 +455,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   @Transactional
   public void delete(Long id) throws EvaluacionNotFoundException {
     log.debug("Petición a delete Evaluacion : {}  - start", id);
-    Assert.notNull(id, "El id de Evaluacion no puede ser null.");
+    AssertHelper.idNotNull(id, Evaluacion.class);
     if (!evaluacionRepository.existsById(id)) {
       throw new EvaluacionNotFoundException(id);
     }
@@ -473,7 +488,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Evaluacion update(final Evaluacion evaluacionActualizar) {
     log.debug("update(Evaluacion evaluacionActualizar) - start");
 
-    Assert.notNull(evaluacionActualizar.getId(), "Evaluacion id no puede ser null para actualizar una evaluacion");
+    AssertHelper.idNotNull(evaluacionActualizar.getId(), Evaluacion.class);
 
     // Si la Evaluación es de Revisión Mínima
     // se actualiza la fechaDictamen con la fecha actual
@@ -700,15 +715,26 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         .orElseThrow(() -> new EvaluacionNotFoundException(idEvaluacion));
 
     Assert.isTrue(evaluacion.getConvocatoriaReunion().getId().compareTo(idConvocatoriaReunion) == 0,
-        "La evaluación no pertenece a esta convocatoria de reunión");
+        () -> ProblemMessage.builder()
+            .key(MSG_NO_PERTENECE)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_EVALUACION))
+            .parameter(MSG_KEY_ANOTHER_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_CONVOCATORIA_REUNION))
+            .build());
 
-    Assert.isTrue(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
-        "La fecha de la convocatoria es anterior a la actual");
+    AssertHelper.fieldBefore(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
+        MSG_FIELD_FECHA_ACTUAL, MSG_FIELD_FECHA_CONVOCATORIA);
 
-    Assert.isNull(evaluacion.getDictamen(), "No se pueden eliminar memorias que ya contengan un dictamen");
+    AssertHelper.entityIsNull(evaluacion.getDictamen(), Evaluacion.class, Dictamen.class);
 
     Assert.isTrue(comentarioRepository.countByEvaluacionId(evaluacion.getId()) == 0L,
-        "No se puede eliminar una memoria que tenga comentarios asociados");
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_ACCION_DENEGADA)
+            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(
+                MSG_FIELD_COMENTARIOS_ASOCIADOS))
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_MODEL_EVALUACION))
+            .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_ELIMINAR))
+            .build());
 
     // Volvemos la memoria a su estado anterior
     Memoria memoria = memoriaService.getMemoriaWithEstadoAnterior(evaluacion.getMemoria());
@@ -724,7 +750,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Page<Evaluacion> findAllByMemoriaId(Long id, Pageable pageable) {
     log.debug("findAllByMemoriaId(Long id,Pageable paging) - start");
 
-    Assert.notNull(id, "El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+    AssertHelper.idNotNull(id, Memoria.class);
 
     return memoriaRepository.findByIdAndActivoTrue(id).map(memoria -> {
 

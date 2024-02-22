@@ -579,11 +579,11 @@ class EvaluacionServiceTest extends BaseServiceTest {
       // when: se listar sus evaluaciones
       evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId, evaluacionId, tipoComentarioId,
           Pageable.unpaged());
-      Assertions.fail("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+      Assertions.fail("Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+          .isEqualTo("Identificador de Memoria no puede ser nulo");
     }
   }
 
@@ -597,11 +597,11 @@ class EvaluacionServiceTest extends BaseServiceTest {
       // when: se listar sus evaluaciones
       evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId, evaluacionId, tipoComentarioId,
           Pageable.unpaged());
-      Assertions.fail("El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
+          .isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -711,11 +711,11 @@ class EvaluacionServiceTest extends BaseServiceTest {
     try {
       // when: se quiere listar sus evaluaciones
       evaluacionService.findByEvaluador(personaRef, null, Pageable.unpaged());
-      Assertions.fail("El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones");
+      Assertions.fail("Referencia Persona de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones");
+          .isEqualTo("Referencia Persona de Evaluación no puede ser nulo");
     }
   }
 
@@ -747,11 +747,11 @@ class EvaluacionServiceTest extends BaseServiceTest {
     try {
       // when: se quiere listar sus evaluaciones
       evaluacionService.findEvaluacionesEnSeguimientosByEvaluador(personaRef, null, Pageable.unpaged());
-      Assertions.fail("El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones en seguimiento");
+      Assertions.fail("Referencia Persona de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones en seguimiento");
+          .isEqualTo("Referencia Persona de Evaluación no puede ser nulo");
     }
   }
 
@@ -818,7 +818,7 @@ class EvaluacionServiceTest extends BaseServiceTest {
     } catch (
 
     IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("La fecha de la convocatoria es anterior a la actual");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Fecha Actual debe ser anterior Fecha Convocatoria");
     }
 
   }
@@ -837,7 +837,7 @@ class EvaluacionServiceTest extends BaseServiceTest {
     } catch (
 
     final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("La evaluación no pertenece a esta convocatoria de reunión");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación no pertenece a Convocatoria Reunión");
     }
 
   }
@@ -900,11 +900,11 @@ class EvaluacionServiceTest extends BaseServiceTest {
     try {
       // when: se quiere listar sus evaluaciones
       evaluacionService.findAllByMemoriaId(memoriaId, Pageable.unpaged());
-      Assertions.fail("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+      Assertions.fail("Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+          .isEqualTo("Identificador de Memoria no puede ser nulo");
     }
   }
 

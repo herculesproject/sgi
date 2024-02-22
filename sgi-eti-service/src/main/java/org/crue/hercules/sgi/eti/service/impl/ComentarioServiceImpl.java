@@ -27,10 +27,11 @@ import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluadorSpecifications;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
-import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -48,11 +49,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class ComentarioServiceImpl implements ComentarioService {
-  private static final String MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS = "El id de la evaluación no puede ser nulo para listar sus comentarios";
-  private static final String MSG_COMENTARIO_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO = "Comentario id no puede ser null para eliminar un comentario.";
-  private static final String MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO = "Evaluación id no puede ser null para eliminar un comentario.";
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_KEY_ACTION = "action";
+  private static final String MSG_KEY_ANOTHER_ENTITY = "anotherEntity";
+  private static final String MSG_FIELD_ACTION_MODIFICAR = "action.modificar";
+  private static final String MSG_FIELD_ACTION_ELIMINAR = "action.eliminar";
+  private static final String MSG_FIELD_TIPO_COMENTARIO_TIPO_GESTOR = "tipoComentario.tipoGestor";
+  private static final String MSG_FIELD_TIPO_COMENTARIO_TIPO_EVALUADOR = "tipoComentario.tipoEvaluador";
+  private static final String MSG_MODEL_COMENTARIO = "org.crue.hercules.sgi.eti.model.Comentario.message";
+  private static final String MSG_MODEL_EVALUACION = "org.crue.hercules.sgi.eti.model.Evaluacion.message";
+  private static final String MSG_MODEL_TIPO_COMENTARIO = "org.crue.hercules.sgi.eti.model.TipoComentario.message";
+  private static final String MSG_NO_PERTENECE = "org.crue.hercules.sgi.eti.exceptions.entity.noPertenece.anotherEntity";
   private static final String MSG_EL_USUARIO_NO_COINCIDE_CON_NINGUNO_DE_LOS_EVALUADORES_DE_LA_EVALUACION = "El usuario no coincide con ninguno de los Evaluadores de la Evaluación.";
-  private static final String MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_CREAR_UN_NUEVO_COMENTARIO = "Evaluación id no puede ser null para crear un nuevo comentario.";
+  private static final String MSG_PROBLEM_ACCION_DENEGADA = "org.springframework.util.Assert.accion.denegada.message";
 
   private final ComentarioRepository comentarioRepository;
   private final EvaluacionRepository evaluacionRepository;
@@ -80,7 +90,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   public Comentario createComentarioGestor(Long evaluacionId, Comentario comentario) {
     log.debug("createComentarioGestor(Long evaluacionId, Comentario comentario) - start");
 
-    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_CREAR_UN_NUEVO_COMENTARIO);
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
 
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
@@ -111,7 +121,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   public Comentario createComentarioEvaluador(Long evaluacionId, Comentario comentario, String personaRef) {
     log.debug("createComentarioEvaluador(Long evaluacionId, Comentario comentario) - start");
 
-    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_CREAR_UN_NUEVO_COMENTARIO);
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
 
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
@@ -167,7 +177,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   public Comentario createComentarioActaGestor(Long evaluacionId, Comentario comentario) {
     log.debug("createComentarioActaGestor(Long evaluacionId, Comentario comentario) - start");
 
-    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_CREAR_UN_NUEVO_COMENTARIO);
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
 
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
@@ -199,7 +209,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   public Comentario createComentarioActaEvaluador(Long evaluacionId, Comentario comentario, String personaRef) {
     log.debug("createComentarioActa(Long evaluacionId, Comentario comentario) - start");
 
-    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_CREAR_UN_NUEVO_COMENTARIO);
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
 
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
@@ -248,8 +258,8 @@ public class ComentarioServiceImpl implements ComentarioService {
   public void deleteComentarioGestor(Long evaluacionId, Long comentarioId) throws ComentarioNotFoundException {
     log.debug("deleteComentarioGestor(Long evaluacionId, Long comentarioId) - start");
 
-    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
-    Assert.notNull(comentarioId, MSG_COMENTARIO_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
+    AssertHelper.idNotNull(comentarioId, Comentario.class);
 
     Evaluacion evaluacion = evaluacionRepository.findById(evaluacionId)
         .orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
@@ -274,8 +284,8 @@ public class ComentarioServiceImpl implements ComentarioService {
       throws ComentarioNotFoundException {
     log.debug("deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) - start");
 
-    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
-    Assert.notNull(comentarioId, MSG_COMENTARIO_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
+    AssertHelper.idNotNull(comentarioId, Comentario.class);
 
     Evaluacion evaluacion = evaluacionRepository.findById(evaluacionId)
         .orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
@@ -304,8 +314,8 @@ public class ComentarioServiceImpl implements ComentarioService {
   public void deleteComentarioActaGestor(Long evaluacionId, Long comentarioId) throws ComentarioNotFoundException {
     log.debug("deleteComentarioActaGestor(Long evaluacionId, Long comentarioId) - start");
 
-    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
-    Assert.notNull(comentarioId, MSG_COMENTARIO_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
+    AssertHelper.idNotNull(comentarioId, Comentario.class);
 
     if (!evaluacionRepository.existsById(evaluacionId)) {
       throw new EvaluacionNotFoundException(evaluacionId);
@@ -329,8 +339,8 @@ public class ComentarioServiceImpl implements ComentarioService {
       throws ComentarioNotFoundException {
     log.debug("deleteComentarioActaEvaluador(Long evaluacionId, Long comentarioId) - start");
 
-    Assert.notNull(evaluacionId, MSG_EVALUACION_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
-    Assert.notNull(comentarioId, MSG_COMENTARIO_ID_NO_PUEDE_SER_NULL_PARA_ELIMINAR_UN_COMENTARIO);
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
+    AssertHelper.idNotNull(comentarioId, Comentario.class);
 
     if (!evaluacionRepository.existsById(evaluacionId)) {
       throw new EvaluacionNotFoundException(evaluacionId);
@@ -353,9 +363,16 @@ public class ComentarioServiceImpl implements ComentarioService {
   public Comentario updateComentarioGestor(Long evaluacionId, Comentario comentarioActualizar) {
     log.debug("updateComentarioGestor(Long evaluacionId, Comentario comentarioActualizar) - start");
 
-    Assert.notNull(evaluacionId, "Evaluación id no puede ser null  para actualizar un comentario.");
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
     Assert.isTrue(comentarioActualizar.getTipoComentario().getTipo().equals(TipoComentario.Tipo.GESTOR),
-        "No se puede actualizar un tipo de comentario que no sea del tipo Gestor.");
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_ACCION_DENEGADA)
+            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(
+                MSG_FIELD_TIPO_COMENTARIO_TIPO_GESTOR))
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_MODEL_TIPO_COMENTARIO))
+            .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_MODIFICAR))
+            .build());
 
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
@@ -385,9 +402,16 @@ public class ComentarioServiceImpl implements ComentarioService {
   public Comentario updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar, String personaRef) {
     log.debug("updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) - start");
 
-    Assert.notNull(evaluacionId, "Evaluación id no puede ser null  para actualizar un comentario.");
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
     Assert.isTrue(comentarioActualizar.getTipoComentario().getTipo().equals(TipoComentario.Tipo.EVALUADOR),
-        "No se puede actualizar un tipo de comentario que no sea del tipo Evaluador.");
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_ACCION_DENEGADA)
+            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(
+                MSG_FIELD_TIPO_COMENTARIO_TIPO_EVALUADOR))
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_MODEL_TIPO_COMENTARIO))
+            .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_MODIFICAR))
+            .build());
 
     log.debug("updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) - end");
 
@@ -419,7 +443,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   @Override
   public List<Comentario> findByEvaluacionIdGestor(Long id) {
     log.debug("findByEvaluacionIdGestor(Long id) - start");
-    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    AssertHelper.idNotNull(id, Evaluacion.class);
 
     return evaluacionRepository.findById(id).map(evaluacion -> {
       List<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id,
@@ -471,7 +495,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   @Override
   public List<Comentario> findByEvaluacionIdActaGestor(Long id) {
     log.debug("findByEvaluacionIdActaGestor(Long id) - start");
-    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    AssertHelper.idNotNull(id, Evaluacion.class);
 
     return evaluacionRepository.findById(id).map(evaluacion -> {
       List<Comentario> comentarios = new ArrayList<Comentario>();
@@ -504,7 +528,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   @Override
   public List<Comentario> findByEvaluacionIdActaEvaluador(Long id, String personaRef) {
     log.debug("findByEvaluacionIdActaEvaluador(Long id, String personaRef) - start");
-    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    AssertHelper.idNotNull(id, Evaluacion.class);
 
     return evaluacionRepository.findById(id).map(evaluacion -> {
       List<Comentario> comentarios = new ArrayList<Comentario>();
@@ -555,9 +579,9 @@ public class ComentarioServiceImpl implements ComentarioService {
   private Comentario createComentarioEvaluacion(Long evaluacionId, Comentario comentario, Long tipoComentarioId) {
     log.debug("createComentarioEvaluacion(Long evaluacionId, Comentario comentario, Long tipoComentarioId) - start");
 
-    Assert.notNull(evaluacionId, "Evaluación id no puede ser null para crear un nuevo comentario");
-    Assert.isNull(comentario.getId(), "Comentario id  tiene que ser null para crear un nuevo comentario");
-    Assert.isNull(comentario.getEvaluacion(), "La evaluación no debe estar rellena para crear un nuevo comentario");
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
+    AssertHelper.idIsNull(comentario.getId(), Comentario.class);
+    AssertHelper.entityIsNull(comentario.getEvaluacion(), Evaluacion.class, Comentario.class);
 
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
       comentario.setEvaluacion(evaluacion);
@@ -583,7 +607,11 @@ public class ComentarioServiceImpl implements ComentarioService {
     return comentarioRepository.findById(comentarioActualizar.getId()).map(comentario -> {
 
       Assert.isTrue(comentario.getEvaluacion().getId().equals(evaluacionId),
-          "El comentario no pertenece a la evaluación recibida.");
+          () -> ProblemMessage.builder()
+              .key(MSG_NO_PERTENECE)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_COMENTARIO))
+              .parameter(MSG_KEY_ANOTHER_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_EVALUACION))
+              .build());
 
       comentario.setApartado(comentarioActualizar.getApartado());
       comentario.setEvaluacion(comentarioActualizar.getEvaluacion());
@@ -600,8 +628,8 @@ public class ComentarioServiceImpl implements ComentarioService {
 
   private void deleteComentarioEvaluacion(Long evaluacionId, Long comentarioId, Long tipoComentarioId) {
 
-    Assert.notNull(evaluacionId, "Evaluación id no puede ser null para eliminar un comentario");
-    Assert.notNull(comentarioId, "Comentario id no puede ser null para eliminar un comentario");
+    AssertHelper.idNotNull(evaluacionId, Evaluacion.class);
+    AssertHelper.idNotNull(comentarioId, Comentario.class);
 
     Optional<Comentario> comentario = comentarioRepository.findById(comentarioId);
 
@@ -610,11 +638,22 @@ public class ComentarioServiceImpl implements ComentarioService {
     }
 
     Assert.isTrue(comentario.get().getEvaluacion().getId().equals(evaluacionId),
-        "El comentario no pertenece a la evaluación recibida");
+        () -> ProblemMessage.builder()
+            .key(MSG_NO_PERTENECE)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_COMENTARIO))
+            .parameter(MSG_KEY_ANOTHER_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_EVALUACION))
+            .build());
 
     // TODO Refactorizar texto cuando se tengan enumerados.
     Assert.isTrue(comentario.get().getTipoComentario().getId().equals(tipoComentarioId),
-        "No se puede eliminar el comentario debido a su tipo");
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_ACCION_DENEGADA)
+            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(
+                MSG_MODEL_TIPO_COMENTARIO))
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_MODEL_COMENTARIO))
+            .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_ELIMINAR))
+            .build());
 
     comentarioRepository.deleteById(comentarioId);
 
@@ -794,7 +833,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   @Override
   public List<Comentario> findComentariosEvaluadorByPersonaRef(Long id, String personaRef) {
     log.debug("findComentariosEvaluadorByPersonaRef(Long id, String personaRef) - start");
-    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    AssertHelper.idNotNull(id, Evaluacion.class);
     return evaluacionRepository.findById(id).map(evaluacion -> {
       List<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(id,
           TipoComentario.Tipo.EVALUADOR.getId(), personaRef);
@@ -806,7 +845,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   @Override
   public Page<Comentario> findByEvaluacionEvaluadorAndEstadoCerrado(Long id, Pageable pageable) {
     log.debug("findByEvaluacionEvaluadorAndEstadoCerrado(Long id, Pageable pageable) - start");
-    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    AssertHelper.idNotNull(id, Evaluacion.class);
     return evaluacionRepository.findById(id).map(evaluacion -> {
       Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndEstado(id,
           TipoComentario.Tipo.EVALUADOR.getId(), TipoEstadoComentario.CERRADO, pageable);
@@ -847,7 +886,7 @@ public class ComentarioServiceImpl implements ComentarioService {
   @Override
   public List<Comentario> findComentariosActaByPersonaRef(Long id, String personaRef) {
     log.debug("findComentariosEvaluadorByPersonaRef(Long id, Pageable pageable, String personaRef) - start");
-    Assert.notNull(id, MSG_EL_ID_DE_LA_EVALUACION_NO_PUEDE_SER_NULO_PARA_LISTAR_SUS_COMENTARIOS);
+    AssertHelper.idNotNull(id, Acta.class);
     return actaRepository.findById(id).map(acta -> {
       List<Comentario> returnValue = new ArrayList();
       Page<Evaluacion> evaluaciones = evaluacionRepository

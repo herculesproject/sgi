@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +42,7 @@ public class RetrospectivaServiceImpl implements RetrospectivaService {
   @Transactional
   public Retrospectiva create(Retrospectiva retrospectiva) {
     log.debug("create(Retrospectiva retrospectiva) - start");
-    Assert.isNull(retrospectiva.getId(), "Retrospectiva id debe ser null para crear un nuevo Retrospectiva");
+    AssertHelper.idIsNull(retrospectiva.getId(), Retrospectiva.class);
     Retrospectiva returnValue = repository.save(retrospectiva);
     log.debug("create(Retrospectiva retrospectiva) - end");
     return returnValue;
@@ -62,8 +63,7 @@ public class RetrospectivaServiceImpl implements RetrospectivaService {
   public Retrospectiva update(final Retrospectiva retrospectivaActualizar) {
     log.debug("update(Retrospectiva retrospectivaActualizar) - start");
 
-    Assert.notNull(retrospectivaActualizar.getId(),
-        "Retrospectiva id no puede ser null para actualizar un retrospectiva");
+    AssertHelper.idNotNull(retrospectivaActualizar.getId(), Retrospectiva.class);
 
     return repository.findById(retrospectivaActualizar.getId()).map(retrospectiva -> {
       retrospectiva.setEstadoRetrospectiva(retrospectivaActualizar.getEstadoRetrospectiva());
@@ -99,7 +99,7 @@ public class RetrospectivaServiceImpl implements RetrospectivaService {
   @Transactional
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
-    Assert.notNull(id, "Retrospectiva id no puede ser null para eliminar una retrospectiva");
+    AssertHelper.idNotNull(id, Retrospectiva.class);
     if (!repository.existsById(id)) {
       throw new RetrospectivaNotFoundException(id);
     }
@@ -139,7 +139,7 @@ public class RetrospectivaServiceImpl implements RetrospectivaService {
   @Override
   public Retrospectiva findById(final Long id) {
     log.debug("findById(final Long id) - start");
-    Assert.notNull(id, "Retrospectiva id no puede ser null para buscar una retrospectiva por Id");
+    AssertHelper.idNotNull(id, Retrospectiva.class);
     final Retrospectiva retrospectiva = repository.findById(id)
         .orElseThrow(() -> new RetrospectivaNotFoundException(id));
     log.debug("findById(final Long id) - end");

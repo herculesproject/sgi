@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.repository.FormularioRepository;
 import org.crue.hercules.sgi.eti.service.FormularioService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
@@ -52,7 +53,7 @@ public class FormularioServiceImpl implements FormularioService {
   @Transactional
   public Formulario create(Formulario formulario) {
     log.debug("Petición a create Formulario : {} - start", formulario);
-    Assert.notNull(formulario.getId(), "Formulario id no puede ser null para crear un nuevo formulario");
+    AssertHelper.idNotNull(formulario.getId(), Formulario.class);
 
     return formularioRepository.save(formulario);
   }
@@ -112,7 +113,7 @@ public class FormularioServiceImpl implements FormularioService {
   @Transactional
   public void delete(Long id) throws FormularioNotFoundException {
     log.debug("Petición a delete Formulario : {}  - start", id);
-    Assert.notNull(id, "El id de Formulario no puede ser null.");
+    AssertHelper.idNotNull(id, Formulario.class);
     if (!formularioRepository.existsById(id)) {
       throw new FormularioNotFoundException(id);
     }
@@ -145,7 +146,7 @@ public class FormularioServiceImpl implements FormularioService {
   public Formulario update(final Formulario formularioActualizar) {
     log.debug("update(Formulario FormularioActualizar) - start");
 
-    Assert.notNull(formularioActualizar.getId(), "Formulario id no puede ser null para actualizar un formulario");
+    AssertHelper.idNotNull(formularioActualizar.getId(), Formulario.class);
 
     return formularioRepository.findById(formularioActualizar.getId()).map(formulario -> {
       formulario.setNombre(formularioActualizar.getNombre());

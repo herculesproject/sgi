@@ -47,8 +47,10 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiBlockchainService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -70,6 +72,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class ActaServiceImpl implements ActaService {
+  private static final String MSG_ACTA_NO_SE_PUEDE_ESTABLECER = "acta.tipoActa.invalido";
 
   private static final String TITULO_INFORME_ACTA = "informeActaPdf";
 
@@ -177,17 +180,17 @@ public class ActaServiceImpl implements ActaService {
   public Acta create(Acta acta) {
     log.debug("Acta create (Acta acta) - start");
 
-    Assert.isNull(acta.getId(), "Acta id tiene que ser null para crear un nuevo acta");
+    AssertHelper.idIsNull(acta.getId(), Acta.class);
 
     Optional<TipoEstadoActa> tipoEstadoActa = tipoEstadoActaRepository.findById(1L);
-    Assert.isTrue(tipoEstadoActa.isPresent(), "No se puede establecer el TipoEstadoActa inicial (1: 'En elaboración')");
+    Assert.isTrue(tipoEstadoActa.isPresent(), ApplicationContextSupport.getMessage(MSG_ACTA_NO_SE_PUEDE_ESTABLECER));
 
     acta.setEstadoActual(tipoEstadoActa.get());
     Acta returnValue = actaRepository.save(acta);
 
     EstadoActa estadoActa = estadoActaRepository
         .save(new EstadoActa(null, returnValue, tipoEstadoActa.get(), Instant.now()));
-    Assert.notNull(estadoActa, "No se ha podido crear el EstadoActa inicial");
+    AssertHelper.entityNotNull(estadoActa, Acta.class, EstadoActa.class);
 
     try {
       this.comunicadosService.enviarComunicadoRevisionActa(acta,
@@ -274,7 +277,7 @@ public class ActaServiceImpl implements ActaService {
   @Transactional
   public void delete(Long id) throws TareaNotFoundException {
     log.debug("Petición a delete Acta : {}  - start", id);
-    Assert.notNull(id, "El id de Acta no puede ser null.");
+    AssertHelper.idNotNull(id, Acta.class);
     if (!actaRepository.existsById(id)) {
       throw new ActaNotFoundException(id);
     }
@@ -294,7 +297,7 @@ public class ActaServiceImpl implements ActaService {
   public Acta update(final Acta actaActualizar) {
     log.debug("update(Acta actaActualizar) - start");
 
-    Assert.notNull(actaActualizar.getId(), "Acta id no puede ser null para actualizar un acta");
+    AssertHelper.idNotNull(actaActualizar.getId(), Acta.class);
 
     return actaRepository.findById(actaActualizar.getId()).map(acta -> {
       acta.setConvocatoriaReunion(actaActualizar.getConvocatoriaReunion());
@@ -335,7 +338,7 @@ public class ActaServiceImpl implements ActaService {
 
     log.debug("finishActa(Long id) - start");
 
-    Assert.notNull(id, "El id de acta recibido no puede ser null.");
+    AssertHelper.idNotNull(id, Acta.class);
 
     Acta acta = actaRepository.findById(id).orElseThrow(() -> new ActaNotFoundException(id));
 

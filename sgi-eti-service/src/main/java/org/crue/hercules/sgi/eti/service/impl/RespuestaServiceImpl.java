@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RespuestaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
@@ -60,7 +61,7 @@ public class RespuestaServiceImpl implements RespuestaService {
   @Transactional
   public Respuesta create(Respuesta respuesta) {
     log.debug("Petición a create Respuesta : {} - start", respuesta);
-    Assert.isNull(respuesta.getId(), "Respuesta id tiene que ser null para crear un nuevo Respuesta");
+    AssertHelper.idIsNull(respuesta.getId(), Respuesta.class);
 
     Respuesta respuestaNew = respuestaRepository.save(respuesta);
 
@@ -112,7 +113,7 @@ public class RespuestaServiceImpl implements RespuestaService {
   @Transactional
   public void delete(Long id) throws RespuestaNotFoundException {
     log.debug("Petición a delete Respuesta : {}  - start", id);
-    Assert.notNull(id, "El id de Respuesta no puede ser null.");
+    AssertHelper.idNotNull(id, Respuesta.class);
     if (!respuestaRepository.existsById(id)) {
       throw new RespuestaNotFoundException(id);
     }
@@ -146,7 +147,7 @@ public class RespuestaServiceImpl implements RespuestaService {
   public Respuesta update(final Respuesta respuestaActualizar) {
     log.debug("update(Respuesta RespuestaActualizar) - start");
 
-    Assert.notNull(respuestaActualizar.getId(), "Respuesta id no puede ser null para actualizar un Respuesta");
+    AssertHelper.idNotNull(respuestaActualizar.getId(), Respuesta.class);
 
     return respuestaRepository.findById(respuestaActualizar.getId()).map(respuesta -> {
       respuesta.setMemoria(respuestaActualizar.getMemoria());

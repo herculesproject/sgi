@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.AsistentesRepository;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,7 @@ public class AsistentesServiceImpl implements AsistentesService {
   @Transactional
   public Asistentes create(Asistentes asistentes) {
     log.debug("Petición a create Asistentes : {} - start", asistentes);
-    Assert.isNull(asistentes.getId(), "Asistentes id tiene que ser null para crear un nuevo asistente");
+    AssertHelper.idIsNull(asistentes.getId(), Asistentes.class);
 
     return asistentesRepository.save(asistentes);
   }
@@ -100,7 +101,7 @@ public class AsistentesServiceImpl implements AsistentesService {
   @Transactional
   public void delete(Long id) throws AsistentesNotFoundException {
     log.debug("Petición a delete Asistentes : {}  - start", id);
-    Assert.notNull(id, "El id de Asistentes no puede ser null.");
+    AssertHelper.idNotNull(id, Asistentes.class);
     if (!asistentesRepository.existsById(id)) {
       throw new AsistentesNotFoundException(id);
     }
@@ -133,7 +134,7 @@ public class AsistentesServiceImpl implements AsistentesService {
   public Asistentes update(final Asistentes asistentesActualizar) {
     log.debug("update(Asistentes AsistentesActualizar) - start");
 
-    Assert.notNull(asistentesActualizar.getId(), "Asistentes id no puede ser null para actualizar un asistente");
+    AssertHelper.idNotNull(asistentesActualizar.getId(), Asistentes.class);
 
     return asistentesRepository.findById(asistentesActualizar.getId()).map(asistentes -> {
       asistentes.setEvaluador(asistentesActualizar.getEvaluador());

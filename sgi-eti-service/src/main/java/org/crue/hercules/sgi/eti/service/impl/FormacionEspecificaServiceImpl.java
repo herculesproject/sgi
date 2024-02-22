@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.repository.FormacionEspecificaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.FormacionEspecificaSpecifications;
 import org.crue.hercules.sgi.eti.service.FormacionEspecificaService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,8 +38,7 @@ public class FormacionEspecificaServiceImpl implements FormacionEspecificaServic
   @Transactional
   public FormacionEspecifica create(FormacionEspecifica formacionEspecifica) {
     log.debug("Petición a create FormacionEspecifica : {} - start", formacionEspecifica);
-    Assert.notNull(formacionEspecifica.getId(),
-        "FormacionEspecifica id no puede ser null para crear un nuevo formacionEspecifica");
+    AssertHelper.idNotNull(formacionEspecifica.getId(), FormacionEspecifica.class);
 
     return formacionEspecificaRepository.save(formacionEspecifica);
   }
@@ -87,7 +87,7 @@ public class FormacionEspecificaServiceImpl implements FormacionEspecificaServic
   @Transactional
   public void delete(Long id) throws FormacionEspecificaNotFoundException {
     log.debug("Petición a delete FormacionEspecifica : {}  - start", id);
-    Assert.notNull(id, "El id de FormacionEspecifica no puede ser null.");
+    AssertHelper.idNotNull(id, FormacionEspecifica.class);
     if (!formacionEspecificaRepository.existsById(id)) {
       throw new FormacionEspecificaNotFoundException(id);
     }
@@ -124,8 +124,7 @@ public class FormacionEspecificaServiceImpl implements FormacionEspecificaServic
   public FormacionEspecifica update(final FormacionEspecifica formacionEspecificaActualizar) {
     log.debug("update(FormacionEspecifica FormacionEspecificaActualizar) - start");
 
-    Assert.notNull(formacionEspecificaActualizar.getId(),
-        "FormacionEspecifica id no puede ser null para actualizar una formacion específica");
+    AssertHelper.idNotNull(formacionEspecificaActualizar.getId(), FormacionEspecifica.class);
 
     return formacionEspecificaRepository.findById(formacionEspecificaActualizar.getId()).map(formacionEspecifica -> {
       formacionEspecifica.setNombre(formacionEspecificaActualizar.getNombre());

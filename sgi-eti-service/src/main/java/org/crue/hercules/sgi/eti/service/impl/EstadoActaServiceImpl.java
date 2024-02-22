@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
 import org.crue.hercules.sgi.eti.service.EstadoActaService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class EstadoActaServiceImpl implements EstadoActaService {
   @Transactional
   public EstadoActa create(EstadoActa estadoActa) {
     log.debug("Petición a create EstadoActa : {} - start", estadoActa);
-    Assert.isNull(estadoActa.getId(), "EstadoActa id tiene que ser null para crear un nuevo estadoActa");
+    AssertHelper.idIsNull(estadoActa.getId(), EstadoActa.class);
 
     return estadoActaRepository.save(estadoActa);
   }
@@ -85,7 +86,7 @@ public class EstadoActaServiceImpl implements EstadoActaService {
   @Transactional
   public void delete(Long id) throws TareaNotFoundException {
     log.debug("Petición a delete EstadoActa : {}  - start", id);
-    Assert.notNull(id, "El id de EstadoActa no puede ser null.");
+    AssertHelper.idNotNull(id, EstadoActa.class);
     if (!estadoActaRepository.existsById(id)) {
       throw new EstadoActaNotFoundException(id);
     }
@@ -106,7 +107,7 @@ public class EstadoActaServiceImpl implements EstadoActaService {
   public EstadoActa update(final EstadoActa estadoActaActualizar) {
     log.debug("update(EstadoActa estadoActaActualizar) - start");
 
-    Assert.notNull(estadoActaActualizar.getId(), "EstadoActa id no puede ser null para actualizar un estado acta");
+    AssertHelper.idNotNull(estadoActaActualizar.getId(), EstadoActa.class);
 
     return estadoActaRepository.findById(estadoActaActualizar.getId()).map(estadoActa -> {
       estadoActa.setActa(estadoActaActualizar.getActa());

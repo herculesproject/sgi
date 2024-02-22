@@ -204,11 +204,11 @@ class MemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la memoria
       memoriaService.findAllMemoriasPeticionEvaluacionModificables(null, 1L, null);
-      Assertions.fail("El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+      Assertions.fail("Identificador de Comité no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+          .isEqualTo("Identificador de Comité no puede ser nulo");
     }
   }
 
@@ -219,11 +219,11 @@ class MemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la memoria
       memoriaService.findAllMemoriasPeticionEvaluacionModificables(1L, null, null);
       Assertions.fail(
-          "El identificador de la petición de evaluación no puede ser null para recuperar sus tipos de memoria asociados.");
+          "Identificador de Petición Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "El identificador de la petición de evaluación no puede ser null para recuperar sus tipos de memoria asociados.");
+          "Identificador de Petición Evaluación no puede ser nulo");
     }
   }
 
@@ -300,10 +300,10 @@ class MemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la memoria
       memoriaService.create(memoriaNew);
-      Assertions.fail("Memoria id tiene que ser null para crear una nueva memoria");
+      Assertions.fail("Identificador de Memoria debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Memoria id tiene que ser null para crear una nueva memoria");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Identificador de Memoria debe ser nulo");
     }
 
   }
@@ -316,11 +316,11 @@ class MemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la memoria
       memoriaService.create(memoriaNew);
-      Assertions.fail("Petición evaluación id no puede ser null para crear una nueva memoria");
+      Assertions.fail("Identificador de Petición Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Petición evaluación id no puede ser null para crear una nueva memoria");
+          .isEqualTo("Identificador de Petición Evaluación no puede ser nulo");
     }
 
   }
@@ -377,11 +377,11 @@ class MemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la memoria
       memoriaService.create(memoriaNew);
-      Assertions.fail("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+      Assertions.fail("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+          .isEqualTo("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria");
     }
 
   }
@@ -450,10 +450,10 @@ class MemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la memoria
       memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode());
-      Assertions.fail("Memoria id tiene que ser null para crear una nueva memoria");
+      Assertions.fail("Identificador de Memoria debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Memoria id tiene que ser null para crear una nueva memoria");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Identificador de Memoria debe ser nulo");
     }
 
   }
@@ -466,11 +466,11 @@ class MemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la memoria
       memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode());
-      Assertions.fail("Petición evaluación id no puede ser null para crear una nueva memoria");
+      Assertions.fail("Identificador de Petición Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Petición evaluación id no puede ser null para crear una nueva memoria");
+          .isEqualTo("Identificador de Petición Evaluación no puede ser nulo");
     }
 
   }
@@ -528,11 +528,11 @@ class MemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la memoria
       memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode());
-      Assertions.fail("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+      Assertions.fail("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+          .isEqualTo("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria");
     }
 
   }

@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.repository.TipoTareaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.TipoTareaSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoTareaService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class TipoTareaServiceImpl implements TipoTareaService {
   @Transactional
   public TipoTarea create(TipoTarea tipoTarea) {
     log.debug("create(create(TipoTarea tipoTarea) - start");
-    Assert.notNull(tipoTarea.getId(), "TipoTarea id no puede ser null para crear un nuevo tipoTarea");
+    AssertHelper.idNotNull(tipoTarea.getId(), TipoTarea.class);
     TipoTarea returnValue = tipoTareaRepository.save(tipoTarea);
     log.debug("create(create(TipoTarea tipoTarea) - end");
     return returnValue;
@@ -83,7 +84,7 @@ public class TipoTareaServiceImpl implements TipoTareaService {
   @Transactional
   public void delete(Long id) throws TipoTareaNotFoundException {
     log.debug("Petición a delete TipoTarea : {}  - start", id);
-    Assert.notNull(id, "El id de TipoTarea no puede ser null.");
+    AssertHelper.idNotNull(id, TipoTarea.class);
     if (!tipoTareaRepository.existsById(id)) {
       throw new TipoTareaNotFoundException(id);
     }
@@ -104,7 +105,7 @@ public class TipoTareaServiceImpl implements TipoTareaService {
   public TipoTarea update(final TipoTarea tipoTareaActualizar) {
     log.debug("update(TipoTarea tipoTareaActualizar) - start");
 
-    Assert.notNull(tipoTareaActualizar.getId(), "TipoTarea id no puede ser null para actualizar un tipo tarea");
+    AssertHelper.idNotNull(tipoTareaActualizar.getId(), TipoTarea.class);
 
     return tipoTareaRepository.findById(tipoTareaActualizar.getId()).map(tipoTarea -> {
       tipoTarea.setNombre(tipoTareaActualizar.getNombre());

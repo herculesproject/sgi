@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
 import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.repository.TipoMemoriaComiteRepository;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaComiteService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +44,7 @@ public class TipoMemoriaComiteServiceImpl implements TipoMemoriaComiteService {
   public Page<TipoMemoria> findByComite(Long id, Pageable paging) {
     log.debug("findByComite(Long id, Pageable paging) - start");
 
-    Assert.notNull(id, "El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+    AssertHelper.idNotNull(id, Comite.class);
 
     return comiteRepository.findByIdAndActivoTrue(id).map(comite -> {
       Page<TipoMemoriaComite> tiposMemoriaComite = tipoMemoriaComiteRepository.findByComiteIdAndComiteActivoTrue(id,

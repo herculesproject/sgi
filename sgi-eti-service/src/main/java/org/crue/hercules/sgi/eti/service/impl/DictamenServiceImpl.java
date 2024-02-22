@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.repository.DictamenRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.DictamenSpecifications;
 import org.crue.hercules.sgi.eti.service.DictamenService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +45,7 @@ public class DictamenServiceImpl implements DictamenService {
   @Transactional
   public Dictamen create(Dictamen dictamen) {
     log.debug("Petición a create Dictamen : {} - start", dictamen);
-    Assert.notNull(dictamen.getId(), "Dictamen id no puede ser null para crear un nuevo dictamen");
+    AssertHelper.idNotNull(dictamen.getId(), Dictamen.class);
 
     return dictamenRepository.save(dictamen);
   }
@@ -89,7 +90,7 @@ public class DictamenServiceImpl implements DictamenService {
   @Transactional
   public void delete(Long id) throws DictamenNotFoundException {
     log.debug("Petición a delete Dictamen : {}  - start", id);
-    Assert.notNull(id, "El id de Dictamen no puede ser null.");
+    AssertHelper.idNotNull(id, Dictamen.class);
     if (!dictamenRepository.existsById(id)) {
       throw new DictamenNotFoundException(id);
     }
@@ -122,7 +123,7 @@ public class DictamenServiceImpl implements DictamenService {
   public Dictamen update(final Dictamen dictamenActualizar) {
     log.debug("update(Dictamen dictamenActualizar) - start");
 
-    Assert.notNull(dictamenActualizar.getId(), "Dictamen id no puede ser null para actualizar un dictamen");
+    AssertHelper.idNotNull(dictamenActualizar.getId(), Dictamen.class);
 
     return dictamenRepository.findById(dictamenActualizar.getId()).map(dictamen -> {
       dictamen.setNombre(dictamenActualizar.getNombre());

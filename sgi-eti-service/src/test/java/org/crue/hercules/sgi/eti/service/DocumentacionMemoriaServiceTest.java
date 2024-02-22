@@ -131,11 +131,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     try {
       // when: se listar sus evaluaciones
       documentacionMemoriaService.findDocumentacionMemoria(memoriaId, Pageable.unpaged());
-      Assertions.fail("El id de la memoria no puede ser nulo para mostrar su documentación");
+      Assertions.fail("Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la memoria no puede ser nulo para mostrar su documentación");
+          .isEqualTo("Identificador de Memoria no puede ser nulo");
     }
   }
 
@@ -180,11 +180,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     try {
       // when: se listar sus evaluaciones
       documentacionMemoriaService.findDocumentacionSeguimientoAnual(memoriaId, Pageable.unpaged());
-      Assertions.fail("El id de la memoria no puede ser nulo para mostrar su documentación");
+      Assertions.fail("Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la memoria no puede ser nulo para mostrar su documentación");
+          .isEqualTo("Identificador de Memoria no puede ser nulo");
     }
   }
 
@@ -229,11 +229,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     try {
       // when: se listar sus evaluaciones
       documentacionMemoriaService.findDocumentacionSeguimientoFinal(memoriaId, Pageable.unpaged());
-      Assertions.fail("El id de la memoria no puede ser nulo para mostrar su documentación");
+      Assertions.fail("Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la memoria no puede ser nulo para mostrar su documentación");
+          .isEqualTo("Identificador de Memoria no puede ser nulo");
     }
   }
 
@@ -277,11 +277,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     try {
       // when: se listar sus evaluaciones
       documentacionMemoriaService.findDocumentacionRetrospectiva(memoriaId, Pageable.unpaged());
-      Assertions.fail("El id de la memoria no puede ser nulo para mostrar su documentación");
+      Assertions.fail("Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la memoria no puede ser nulo para mostrar su documentación");
+          .isEqualTo("Identificador de Memoria no puede ser nulo");
     }
   }
 
@@ -345,11 +345,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de documentación memoria
       // distinto de null
       documentacionMemoriaService.createDocumentacionInicial(1L, documentacionMemoriaNew);
-      Assertions.fail("DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+      Assertions.fail("Identificador de Documentación Memoria debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+          .isEqualTo("Identificador de Documentación Memoria debe ser nulo");
     }
 
   }
@@ -364,11 +364,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la documentación memoria con id de memoria null
       documentacionMemoriaService.createDocumentacionInicial(null, documentacionMemoriaNew);
-      Assertions.fail("El identificador de la memoria no puede ser null para crear un nuevo documento asociado a esta");
+      Assertions.fail("Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El identificador de la memoria no puede ser null para crear un nuevo documento asociado a esta");
+          .isEqualTo("Identificador de Memoria no puede ser nulo");
     }
 
   }
@@ -398,11 +398,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la documentación memoria con id de memoria null
       documentacionMemoriaService.createDocumentacionInicial(1L, documentacionMemoriaNew);
-      Assertions.fail("La memoria no se encuentra en un estado adecuado para añadir documentación.");
+      Assertions.fail("La memoria no se encuentra en un estado adecuado para realizar la acción");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La memoria no se encuentra en un estado adecuado para añadir documentación.");
+          .isEqualTo("La memoria no se encuentra en un estado adecuado para realizar la acción");
     }
 
   }
@@ -444,11 +444,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de documentación memoria
       // distinto de null
       documentacionMemoriaService.createSeguimientoAnual(1L, documentacionMemoriaNew);
-      Assertions.fail("DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+      Assertions.fail("Identificador de Documentación Memoria debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+          .isEqualTo("Identificador de Documentación Memoria debe ser nulo");
     }
 
   }
@@ -464,11 +464,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de memoria null
       documentacionMemoriaService.createSeguimientoAnual(null, documentacionMemoriaNew);
       Assertions.fail(
-          "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo seguimiento anual asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo seguimiento anual asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     }
 
   }
@@ -498,11 +498,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de memoria null
       documentacionMemoriaService.createSeguimientoAnual(1L, documentacionMemoriaNew);
       Assertions
-          .fail("La memoria no se encuentra en un estado adecuado para añadir documentación de seguimiento anual");
+          .fail("La memoria no se encuentra en un estado adecuado para realizar la acción");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La memoria no se encuentra en un estado adecuado para añadir documentación de seguimiento anual");
+          .isEqualTo("La memoria no se encuentra en un estado adecuado para realizar la acción");
     }
 
   }
@@ -544,11 +544,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de documentación memoria
       // distinto de null
       documentacionMemoriaService.createSeguimientoFinal(1L, documentacionMemoriaNew);
-      Assertions.fail("DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+      Assertions.fail("Identificador de Documentación Memoria debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+          .isEqualTo("Identificador de Documentación Memoria debe ser nulo");
     }
 
   }
@@ -564,11 +564,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de memoria null
       documentacionMemoriaService.createSeguimientoFinal(null, documentacionMemoriaNew);
       Assertions.fail(
-          "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo seguimiento final asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo seguimiento final asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     }
 
   }
@@ -598,11 +598,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de memoria null
       documentacionMemoriaService.createSeguimientoFinal(1L, documentacionMemoriaNew);
       Assertions
-          .fail("La memoria no se encuentra en un estado adecuado para añadir documentación de seguimiento final");
+          .fail("La memoria no se encuentra en un estado adecuado para realizar la acción");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La memoria no se encuentra en un estado adecuado para añadir documentación de seguimiento final");
+          .isEqualTo("La memoria no se encuentra en un estado adecuado para realizar la acción");
     }
 
   }
@@ -644,11 +644,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de documentación memoria
       // distinto de null
       documentacionMemoriaService.createRetrospectiva(1L, documentacionMemoriaNew);
-      Assertions.fail("DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+      Assertions.fail("Identificador de Documentación Memoria debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+          .isEqualTo("Identificador de Documentación Memoria debe ser nulo");
     }
 
   }
@@ -664,11 +664,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de memoria null
       documentacionMemoriaService.createRetrospectiva(null, documentacionMemoriaNew);
       Assertions.fail(
-          "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo retrospectiva asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo retrospectiva asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     }
 
   }
@@ -701,11 +701,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Creamos la documentación memoria con id de memoria null
       documentacionMemoriaService.createRetrospectiva(1L, documentacionMemoriaNew);
       Assertions.fail(
-          "La retrospectiva no se encuentra en un estado adecuado para crear documentación de tipo retrospectiva");
+          "La retrospectiva no se encuentra en un estado adecuado para realizar la acción");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "La retrospectiva no se encuentra en un estado adecuado para crear documentación de tipo retrospectiva");
+          "La retrospectiva no se encuentra en un estado adecuado para realizar la acción");
     }
 
   }
@@ -718,12 +718,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: borramos con id documentación memoria a null
       documentacionMemoriaService.deleteDocumentacionSeguimientoAnual(1L, null);
       Assertions.fail(
-          "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo seguimiento anual");
+          "Identificador de Documentación Memoria no puede ser nulo");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo seguimiento anual");
+          "Identificador de Documentación Memoria no puede ser nulo");
     }
 
   }
@@ -735,12 +735,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Se elimina la documentación enviando id memoria a null
       documentacionMemoriaService.deleteDocumentacionSeguimientoAnual(null, 1L);
       Assertions.fail(
-          "El identificador de la memoria no puede ser null para eliminar un documento de tipo seguimiento anual asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "El identificador de la memoria no puede ser null para eliminar un documento de tipo seguimiento anual asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     }
 
   }
@@ -782,12 +782,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: se elimina la documentación
       documentacionMemoriaService.deleteDocumentacionSeguimientoAnual(1L, 1L);
       Assertions
-          .fail("La memoria no se encuentra en un estado adecuado para eliminar documentación de seguimiento anual");
+          .fail("La memoria no se encuentra en un estado adecuado para realizar la acción");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "La memoria no se encuentra en un estado adecuado para eliminar documentación de seguimiento anual");
+          "La memoria no se encuentra en un estado adecuado para realizar la acción");
     }
 
   }
@@ -800,12 +800,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: borramos con id documentación memoria a null
       documentacionMemoriaService.deleteDocumentacionSeguimientoFinal(1L, null);
       Assertions.fail(
-          "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo seguimiento final");
+          "Identificador de Documentación Memoria no puede ser nulo");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo seguimiento final");
+          "Identificador de Documentación Memoria no puede ser nulo");
     }
 
   }
@@ -817,12 +817,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Se elimina la documentación enviando id memoria a null
       documentacionMemoriaService.deleteDocumentacionSeguimientoFinal(null, 1L);
       Assertions.fail(
-          "El identificador de la memoria no puede ser null para eliminar un documento de tipo seguimiento final asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "El identificador de la memoria no puede ser null para eliminar un documento de tipo seguimiento final asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     }
 
   }
@@ -864,12 +864,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: se elimina la documentación
       documentacionMemoriaService.deleteDocumentacionSeguimientoFinal(1L, 1L);
       Assertions
-          .fail("La memoria no se encuentra en un estado adecuado para eliminar documentación de seguimiento final");
+          .fail("La memoria no se encuentra en un estado adecuado para realizar la acción");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "La memoria no se encuentra en un estado adecuado para eliminar documentación de seguimiento final");
+          "La memoria no se encuentra en un estado adecuado para realizar la acción");
     }
 
   }
@@ -882,12 +882,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: borramos con id documentación memoria a null
       documentacionMemoriaService.deleteDocumentacionRetrospectiva(1L, null);
       Assertions
-          .fail("DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo retrospectiva");
+          .fail("Identificador de Documentación Memoria no puede ser nulo");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo retrospectiva");
+          "Identificador de Documentación Memoria no puede ser nulo");
     }
 
   }
@@ -899,12 +899,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Se elimina la documentación enviando id memoria a null
       documentacionMemoriaService.deleteDocumentacionRetrospectiva(null, 1L);
       Assertions.fail(
-          "El identificador de la memoria no puede ser null para eliminar un documento de tipo retrospectiva asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "El identificador de la memoria no puede ser null para eliminar un documento de tipo retrospectiva asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     }
 
   }
@@ -950,12 +950,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: se elimina la documentación
       documentacionMemoriaService.deleteDocumentacionRetrospectiva(1L, 1L);
       Assertions
-          .fail("La retrospectiva no se encuentra en un estado adecuado para eliminar documentación de retrospectiva");
+          .fail("La retrospectiva no se encuentra en un estado adecuado para realizar la acción");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "La retrospectiva no se encuentra en un estado adecuado para eliminar documentación de retrospectiva");
+          "La retrospectiva no se encuentra en un estado adecuado para realizar la acción");
     }
 
   }
@@ -967,12 +967,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       // when: borramos con id documentación memoria a null
       documentacionMemoriaService.deleteDocumentacionInicial(1L, null, authentication);
-      Assertions.fail("DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo inicial");
+      Assertions.fail("Identificador de Documentación Memoria no puede ser nulo");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo inicial");
+          .isEqualTo("Identificador de Documentación Memoria no puede ser nulo");
     }
 
   }
@@ -984,12 +984,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       // when: Se elimina la documentación enviando id memoria a null
       documentacionMemoriaService.deleteDocumentacionInicial(null, 1L, authentication);
       Assertions.fail(
-          "El identificador de la memoria no puede ser null para eliminar un documento de tipo inicial asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo(
-          "El identificador de la memoria no puede ser null para eliminar un documento de tipo inicial asociado a esta");
+          "Identificador de Memoria no puede ser nulo");
     }
 
   }
@@ -1031,12 +1031,12 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       // when: se elimina la documentación
       documentacionMemoriaService.deleteDocumentacionInicial(1L, 1L, authentication);
-      Assertions.fail("La memoria no se encuentra en un estado adecuado para eliminar documentación inicial");
+      Assertions.fail("La memoria no se encuentra en un estado adecuado para realizar la acción");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La memoria no se encuentra en un estado adecuado para eliminar documentación inicial");
+          .isEqualTo("La memoria no se encuentra en un estado adecuado para realizar la acción");
     }
 
   }

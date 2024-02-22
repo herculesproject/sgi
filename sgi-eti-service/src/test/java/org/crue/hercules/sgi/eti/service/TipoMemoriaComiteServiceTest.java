@@ -81,11 +81,11 @@ public class TipoMemoriaComiteServiceTest extends BaseServiceTest {
     try {
       // when: Creamos la memoria
       tipoMemoriaComiteService.findByComite(null, null);
-      Assertions.fail("El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+      Assertions.fail("Identificador de Comité no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+          .isEqualTo("Identificador de Comité no puede ser nulo");
     }
   }
 

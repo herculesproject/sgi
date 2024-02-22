@@ -29,6 +29,7 @@ import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -92,6 +93,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class MemoriaServiceImpl implements MemoriaService {
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_KEY_ACTION = "action";
+  private static final String MSG_FIELD_FECHA_ACTUAL = "fechaActual";
+  private static final String MSG_FIELD_FECHA_CONVOCATORIA = "fechaConvocatoria";
+  private static final String MSG_FIELD_ACTION_ELIMINAR = "action.eliminar";
+  private static final String MSG_FIELD_COMENTARIOS_ASOCIADOS = "comentariosAsociados";
+  private static final String MSG_MEMORIA_TIPO_INVALIDO = "memoria.tipo.invalido";
+  private static final String MSG_MEMORIA_ESTADO_INCORRECTO_RECUPERAR_ESTADO = "memoria.estado.incorrecto.recuperarEstado";
+  private static final String MSG_MEMORIA_ESTADO_INCORRECTO_PASAR_SECRETARIA = "memoria.estado.incorrecto.pasarSecretaria";
+  private static final String MSG_MEMORIA_NO_SE_PUEDE_RECUPERAR_ESTADO_ANTERIOR = "memoria.estadoAnterior.error";
+  private static final String MSG_MEMORIA_ENVIADA_A_SECRETARIA = "memoria.enviadaAsecretaria";
+  private static final String MSG_USUARIO_NO_PROPIETARIO_PETICION_EVALUACION = "usuario.noPropietario.peticionEvaluacion";
+  private static final String MSG_MODEL_MEMORIA = "org.crue.hercules.sgi.eti.model.Memoria.message";
+  private static final String MSG_PROBLEM_ACCION_DENEGADA = "org.springframework.util.Assert.accion.denegada.message";
 
   private static final String TITULO_INFORME_MXX = "informeMemoriaPdf";
   private static final String TITULO_INFORME_RETROSPECTIVA = "informeRetrospectivaPdf";
@@ -200,7 +216,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     validacionesCreateMemoria(memoria);
 
     Assert.isTrue(memoria.getTipoMemoria().getId().equals(1L) || memoria.getTipoMemoria().getId().equals(3L),
-        "La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+        ApplicationContextSupport.getMessage(MSG_MEMORIA_TIPO_INVALIDO));
 
     // La memoria se crea con tipo estado memoria "En elaboración".
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
@@ -230,7 +246,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     validacionesCreateMemoria(nuevaMemoria);
 
     Assert.isTrue(nuevaMemoria.getTipoMemoria().getTipo().equals(TipoMemoria.Tipo.MODIFICACION),
-        "La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+        ApplicationContextSupport.getMessage(MSG_MEMORIA_TIPO_INVALIDO));
 
     Memoria memoria = memoriaRepository.findByIdAndActivoTrue(id).orElseThrow(() -> new MemoriaNotFoundException(id));
 
@@ -443,7 +459,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   public Memoria update(final Memoria memoriaActualizar) {
     log.debug("update(Memoria MemoriaActualizar) - start");
 
-    Assert.notNull(memoriaActualizar.getId(), "Memoria id no puede ser null para actualizar un tipo memoria");
+    AssertHelper.idNotNull(memoriaActualizar.getId(), Memoria.class);
 
     return memoriaRepository.findById(memoriaActualizar.getId()).map(memoria -> {
       memoria.setTitulo(memoriaActualizar.getTitulo());
@@ -613,7 +629,7 @@ public class MemoriaServiceImpl implements MemoriaService {
         || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.ARCHIVADA)
         || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_EVALUACION)
         || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_EVALUACION_REVISION_MINIMA),
-        "El estado actual de la memoria no es el correcto para recuperar el estado anterior");
+        ApplicationContextSupport.getMessage(MSG_MEMORIA_ESTADO_INCORRECTO_RECUPERAR_ESTADO));
 
     // Si la memoria se cambió al estado anterior estando en evaluación, se
     // eliminará la evaluación.
@@ -622,15 +638,20 @@ public class MemoriaServiceImpl implements MemoriaService {
       Evaluacion evaluacion = evaluacionRepository
           .findFirstByMemoriaIdAndActivoTrueOrderByVersionDescCreationDateDesc(memoria.getId()).orElse(null);
 
-      Assert.notNull(evaluacion, "La memoria no tiene evaluacion");
+      AssertHelper.entityNotNull(evaluacion, Memoria.class, Evaluacion.class);
+      AssertHelper.fieldBefore(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
+          MSG_FIELD_FECHA_ACTUAL, MSG_FIELD_FECHA_CONVOCATORIA);
 
-      Assert.isTrue(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(Instant.now()),
-          "La fecha de la convocatoria es anterior a la actual");
-
-      Assert.isNull(evaluacion.getDictamen(), "No se pueden eliminar memorias que ya contengan un dictamen");
-
+      AssertHelper.entityIsNull(evaluacion.getDictamen(), Evaluacion.class, Dictamen.class);
       Assert.isTrue(comentarioRepository.countByEvaluacionId(evaluacion.getId()) == 0L,
-          "No se puede eliminar una memoria que tenga comentarios asociados");
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_ACCION_DENEGADA)
+              .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(
+                  MSG_FIELD_COMENTARIOS_ASOCIADOS))
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                  MSG_MODEL_MEMORIA))
+              .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_ELIMINAR))
+              .build());
 
       evaluacion.setActivo(Boolean.FALSE);
       evaluacionRepository.save(evaluacion);
@@ -689,7 +710,8 @@ public class MemoriaServiceImpl implements MemoriaService {
     List<EstadoMemoria> estadosMemoria = estadoMemoriaRepository
         .findAllByMemoriaIdOrderByFechaEstadoDesc(memoria.getId());
 
-    Assert.isTrue(estadosMemoria.size() > 1, "No se puede recuperar el estado anterior de la memoria");
+    Assert.isTrue(estadosMemoria.size() > 1,
+        ApplicationContextSupport.getMessage(MSG_MEMORIA_NO_SE_PUEDE_RECUPERAR_ESTADO_ANTERIOR));
 
     EstadoMemoria estadoMemoriaActual = estadosMemoria.remove(0);
     EstadoMemoria estadoMemoriaAnterior = estadosMemoria.remove(0);
@@ -782,7 +804,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Override
   public void enviarSecretaria(Long idMemoria, String personaRef) {
     log.debug("enviarSecretaria(memoriaId: {}, personaRef: {}) - start", idMemoria, personaRef);
-    Assert.notNull(idMemoria, "Memoria id no puede ser null para actualizar la memoria");
+    AssertHelper.idNotNull(idMemoria, Memoria.class);
 
     Memoria memoria = memoriaRepository.findById(idMemoria).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
     Evaluacion lastEvaluacion = evaluacionRepository
@@ -807,10 +829,10 @@ public class MemoriaServiceImpl implements MemoriaService {
             || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.SOLICITUD_MODIFICACION_SEGUIMIENTO_ANUAL)
             || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_FINAL)
             || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_ACLARACION_SEGUIMIENTO_FINAL),
-        "No se puede realizar la acción porque la memoria ya ha sido enviada a secretaría");
+        ApplicationContextSupport.getMessage(MSG_MEMORIA_ENVIADA_A_SECRETARIA));
 
     Assert.isTrue(memoria.getPeticionEvaluacion().getPersonaRef().equals(personaRef),
-        "El usuario no es el propietario de la petición evaluación.");
+        ApplicationContextSupport.getMessage(MSG_USUARIO_NO_PROPIETARIO_PETICION_EVALUACION));
 
     boolean crearEvaluacionRevMinima = false;
 
@@ -959,7 +981,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Override
   public void enviarSecretariaRetrospectiva(Long idMemoria, String personaRef) {
     log.debug("enviarSecretariaRetrospectiva(memoriaId: {}, personaRef: {}) - start", idMemoria, personaRef);
-    Assert.notNull(idMemoria, "Memoria id no puede ser null para actualizar la memoria");
+    AssertHelper.idNotNull(idMemoria, Memoria.class);
 
     Memoria memoria = memoriaRepository.findById(idMemoria)
         .orElseThrow(() -> new EstadoRetrospectivaNotFoundException(3L));
@@ -969,10 +991,10 @@ public class MemoriaServiceImpl implements MemoriaService {
             && memoria.getComite().getTipo().equals(Comite.Tipo.CEEA)
             && memoria.getRetrospectiva().getEstadoRetrospectiva()
                 .getTipo().equals(EstadoRetrospectiva.Tipo.COMPLETADA)),
-        "La memoria no está en un estado correcto para pasar al estado 'En secretaría'");
+        ApplicationContextSupport.getMessage(MSG_MEMORIA_ESTADO_INCORRECTO_PASAR_SECRETARIA));
 
     Assert.isTrue(memoria.getPeticionEvaluacion().getPersonaRef().equals(personaRef),
-        "El usuario no es el propietario de la petición evaluación.");
+        ApplicationContextSupport.getMessage(MSG_USUARIO_NO_PROPIETARIO_PETICION_EVALUACION));
 
     memoria.getRetrospectiva().setEstadoRetrospectiva(
         EstadoRetrospectiva.builder().id(EstadoRetrospectiva.Tipo.EN_SECRETARIA.getId()).build());
@@ -990,11 +1012,8 @@ public class MemoriaServiceImpl implements MemoriaService {
     log.debug(
         "findAllMemoriasPeticionEvaluacionModificables(Long idComite, Long idPeticionEvaluacion, Pageable paging) - start");
 
-    Assert.notNull(idComite,
-        "El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
-
-    Assert.notNull(idPeticionEvaluacion,
-        "El identificador de la petición de evaluación no puede ser null para recuperar sus tipos de memoria asociados.");
+    AssertHelper.idNotNull(idComite, Comite.class);
+    AssertHelper.idNotNull(idPeticionEvaluacion, PeticionEvaluacion.class);
 
     return comiteRepository.findByIdAndActivoTrue(idComite).map(comite -> {
       log.debug(
@@ -1141,9 +1160,8 @@ public class MemoriaServiceImpl implements MemoriaService {
   private void validacionesCreateMemoria(Memoria memoria) {
     log.debug("validacionesCreateMemoria(Memoria memoria) - start");
 
-    Assert.isNull(memoria.getId(), "Memoria id tiene que ser null para crear una nueva memoria");
-    Assert.notNull(memoria.getPeticionEvaluacion().getId(),
-        "Petición evaluación id no puede ser null para crear una nueva memoria");
+    AssertHelper.idIsNull(memoria.getId(), Memoria.class);
+    AssertHelper.idNotNull(memoria.getPeticionEvaluacion().getId(), PeticionEvaluacion.class);
 
     if (!peticionEvaluacionRepository.findByIdAndActivoTrue(memoria.getPeticionEvaluacion().getId()).isPresent()) {
       throw new PeticionEvaluacionNotFoundException(memoria.getPeticionEvaluacion().getId());

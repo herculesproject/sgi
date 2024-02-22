@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.repository.EquipoTrabajoRepository;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
   @Transactional
   public EquipoTrabajo create(EquipoTrabajo equipoTrabajo) {
     log.debug("Petición a create EquipoTrabajo : {} - start", equipoTrabajo);
-    Assert.isNull(equipoTrabajo.getId(), "EquipoTrabajo id tiene que ser null para crear un nuevo equipoTrabajo");
+    AssertHelper.idIsNull(equipoTrabajo.getId(), EquipoTrabajo.class);
 
     return equipoTrabajoRepository.save(equipoTrabajo);
   }
@@ -88,7 +89,7 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
   @Transactional
   public void delete(Long id) throws EquipoTrabajoNotFoundException {
     log.debug("Petición a delete EquipoTrabajo : {}  - start", id);
-    Assert.notNull(id, "El id de EquipoTrabajo no puede ser null.");
+    AssertHelper.idNotNull(id, EquipoTrabajo.class);
     if (!equipoTrabajoRepository.existsById(id)) {
       throw new EquipoTrabajoNotFoundException(id);
     }
@@ -112,8 +113,7 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
   public EquipoTrabajo update(final EquipoTrabajo equipoTrabajoActualizar) {
     log.debug("update(EquipoTrabajo equipoTrabajoActualizar) - start");
 
-    Assert.notNull(equipoTrabajoActualizar.getId(),
-        "EquipoTrabajo id no puede ser null para actualizar un equipo de trabajo");
+    AssertHelper.idNotNull(equipoTrabajoActualizar.getId(), EquipoTrabajo.class);
 
     return equipoTrabajoRepository.findById(equipoTrabajoActualizar.getId()).map(equipoTrabajo -> {
       equipoTrabajo.setPeticionEvaluacion(equipoTrabajoActualizar.getPeticionEvaluacion());
@@ -141,7 +141,7 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
   @Override
   public List<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long id) {
     log.debug("findAllByPeticionEvaluacionId(Long id, Pageable pageable) - start");
-    Assert.notNull(id, "PeticionEvaluacion id no puede ser null para buscar su equipo de trabajo");
+    AssertHelper.idNotNull(id, PeticionEvaluacion.class);
 
     List<EquipoTrabajoWithIsEliminable> returnValue = equipoTrabajoRepository.findAllByPeticionEvaluacionId(id);
     log.debug("findAllByPeticionEvaluacionId(Long id, Pageable pageable) - end");

@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.repository.specification.ComiteSpecifications;
 import org.crue.hercules.sgi.eti.service.ComiteService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +39,7 @@ public class ComiteServiceImpl implements ComiteService {
   @Transactional
   public Comite create(Comite comite) {
     log.debug("Petición a create Comite : {} - start", comite);
-    Assert.isNull(comite.getId(), "Comite id tiene que ser null para crear un nuevo comité");
+    AssertHelper.idIsNull(comite.getId(), Comite.class);
 
     return comiteRepository.save(comite);
   }
@@ -82,7 +83,7 @@ public class ComiteServiceImpl implements ComiteService {
   @Transactional
   public void deleteById(Long id) throws ComiteNotFoundException {
     log.debug("Petición a delete Comite : {}  - start", id);
-    Assert.notNull(id, "El id de Comite no puede ser null.");
+    AssertHelper.idNotNull(id, Comite.class);
     if (!comiteRepository.existsById(id)) {
       throw new ComiteNotFoundException(id);
     }
@@ -115,7 +116,7 @@ public class ComiteServiceImpl implements ComiteService {
   public Comite update(final Comite comiteActualizar) {
     log.debug("update(Comite comiteActualizar) - start");
 
-    Assert.notNull(comiteActualizar.getId(), "Comite id no puede ser null para actualizar un comité");
+    AssertHelper.idNotNull(comiteActualizar.getId(), Comite.class);
 
     return comiteRepository.findById(comiteActualizar.getId()).map(comite -> {
       comite.setComite(comiteActualizar.getComite());

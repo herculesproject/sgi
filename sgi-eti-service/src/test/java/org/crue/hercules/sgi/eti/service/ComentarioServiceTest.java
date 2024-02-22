@@ -153,11 +153,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera listar sus comentarios
       comentarioService.findByEvaluacionIdGestor(evaluacionId);
-      Assertions.fail("El id no puede ser nulo");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la evaluación no puede ser nulo para listar sus comentarios");
+          .isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -255,7 +255,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
       Assertions.fail("El id no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluacion " + evaluacionId + " does not exist.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación " + evaluacionId + " no existe");
     }
   }
 
@@ -314,11 +314,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera listar sus comentarios
       comentarioService.findByEvaluacionIdActaGestor(evaluacionId);
-      Assertions.fail("El id no puede ser nulo");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El id de la evaluación no puede ser nulo para listar sus comentarios");
+          .isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -330,11 +330,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera añadir comentario
       comentarioService.createComentarioGestor(evaluacionId, new Comentario());
-      Assertions.fail("Evaluación id no puede ser null para crear un nuevo comentario.");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Evaluación id no puede ser null para crear un nuevo comentario.");
+          .isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -351,10 +351,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera añadir comentarios
       comentarioService.createComentarioGestor(evaluacionId, comentario);
-      Assertions.fail("El id de la evaluación no puede ser nulo");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluacion " + evaluacionId + " does not exist.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación " + evaluacionId + " no existe");
     }
   }
 
@@ -370,11 +370,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     try {
       comentarioService.createComentarioGestor(evaluacionId, comentario);
-      Assertions.fail("La evaluación no debe estar rellena para crear un nuevo comentario");
+      Assertions.fail("Comentario de Evaluación debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La evaluación no debe estar rellena para crear un nuevo comentario");
+          .isEqualTo("Comentario de Evaluación debe ser nulo");
     }
   }
 
@@ -626,11 +626,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera añadir comentario
       comentarioService.createComentarioEvaluador(evaluacionId, new Comentario(), personaRef);
-      Assertions.fail("Evaluación id no puede ser null para crear un nuevo comentario.");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Evaluación id no puede ser null para crear un nuevo comentario.");
+          .isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -646,10 +646,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiere añadir comentario
       comentarioService.createComentarioEvaluador(evaluacionId, comentario, personaRef);
-      Assertions.fail("El id de la evaluación no puede ser nulo");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluacion " + evaluacionId + " does not exist.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación " + evaluacionId + " no existe");
     }
   }
 
@@ -666,11 +666,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // id indicado
     try {
       comentarioService.createComentarioEvaluador(evaluacionId, comentario, personaRef);
-      Assertions.fail("La evaluación no debe estar rellena para crear un nuevo comentario");
+      Assertions.fail("Comentario de Evaluación debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La evaluación no debe estar rellena para crear un nuevo comentario");
+          .isEqualTo("Comentario de Evaluación debe ser nulo");
     }
   }
 
@@ -702,11 +702,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera añadir comentario
       comentarioService.createComentarioActaGestor(evaluacionId, new Comentario());
-      Assertions.fail("Evaluación id no puede ser null para crear un nuevo comentario.");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Evaluación id no puede ser null para crear un nuevo comentario.");
+          .isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -724,10 +724,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera añadir comentarios
       comentarioService.createComentarioActaGestor(evaluacionId, comentario);
-      Assertions.fail("El id de la evaluación no puede ser nulo");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluacion " + evaluacionId + " does not exist.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación " + evaluacionId + " no existe");
     }
   }
 
@@ -744,11 +744,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     try {
       comentarioService.createComentarioActaGestor(evaluacionId, comentario);
-      Assertions.fail("La evaluación no debe estar rellena para crear un nuevo comentario");
+      Assertions.fail("Comentario de Evaluación debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("La evaluación no debe estar rellena para crear un nuevo comentario");
+          .isEqualTo("Comentario de Evaluación debe ser nulo");
     }
   }
 
@@ -975,11 +975,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera añadir comentarios
       comentarioService.updateComentarioGestor(evaluacionId, generarMockComentario(1L, "comentario1", 1L));
-      Assertions.fail("Evaluación id no puede ser null  para actualizar un comentario.");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Evaluación id no puede ser null  para actualizar un comentario.");
+          .isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -1013,11 +1013,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
       comentarioService.updateComentarioGestor(evaluacionId, comentarioActualizado);
 
-      Assertions.fail("El comentario no pertenece a la evaluación recibida.");
+      Assertions.fail("Comentario no pertenece a Evaluación");
     } catch (
 
     final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1040,7 +1040,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
       comentarioService.updateComentarioGestor(evaluacionId, comentarioActualizado);
     } catch (final NoRelatedEntitiesException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Not all provided Comment are related with Evaluation Type");
+          .isEqualTo("No todos/as los/as Comentario proporcionados/as están relacionados/as con el/la Tipo Evaluación");
     }
   }
 
@@ -1056,11 +1056,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // coincide con el id indicado
     try {
       comentarioService.updateComentarioGestor(evaluacionId, comentario);
-      Assertions.fail("No se puede actualizar un tipo de comentario que no sea del tipo Gestor.");
+      Assertions.fail("No se puede Modificar Tipo Comentario Tipo Gestor para Tipo Comentario");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("No se puede actualizar un tipo de comentario que no sea del tipo Gestor.");
+          .isEqualTo("No se puede Modificar Tipo Comentario Tipo Gestor para Tipo Comentario");
     }
   }
 
@@ -1258,11 +1258,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
       // when: se quiera añadir comentarios
       comentarioService.updateComentarioEvaluador(evaluacionId, generarMockComentario(1L, "comentario1", 2L),
           personaRef);
-      Assertions.fail("Evaluación id no puede ser null  para actualizar un comentario.");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("Evaluación id no puede ser null  para actualizar un comentario.");
+          .isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -1296,11 +1296,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
       // la recibida
       comentarioService.updateComentarioEvaluador(evaluacionId, comentarioActualizado, personaRef);
 
-      Assertions.fail("El comentario no pertenece a la evaluación recibida.");
+      Assertions.fail("Comentario no pertenece a Evaluación");
     } catch (
 
     final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1317,11 +1317,11 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // coincide con el id indicado
     try {
       comentarioService.updateComentarioEvaluador(evaluacionId, comentario, personaRef);
-      Assertions.fail("No se puede actualizar un tipo de comentario que no sea del tipo Evaluador.");
+      Assertions.fail("No se puede Modificar Tipo Comentario Tipo Evaluador para Tipo Comentario");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("No se puede actualizar un tipo de comentario que no sea del tipo Evaluador.");
+          .isEqualTo("No se puede Modificar Tipo Comentario Tipo Evaluador para Tipo Comentario");
     }
   }
 
@@ -1409,10 +1409,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera eliminar comentario
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("Evaluación id no puede ser null para eliminar un comentario.");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para eliminar un comentario.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -1428,7 +1428,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
       Assertions.fail("El id de la Evaluación debe existir para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluacion " + evaluacionId + " does not exist.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación " + evaluacionId + " no existe");
     }
   }
 
@@ -1439,10 +1439,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera eliminar comentario
       comentarioService.deleteComentarioGestor(evaluacionId, null);
-      Assertions.fail("Comentario id no puede ser null para eliminar un comentario.");
+      Assertions.fail("Identificador de Comentario no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario id no puede ser null para eliminar un comentario.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Identificador de Comentario no puede ser nulo");
     }
   }
 
@@ -1460,10 +1460,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // con el id indicado
     try {
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1482,10 +1482,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // con el id indicado
     try {
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1521,10 +1521,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     try {
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1546,10 +1546,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     try {
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1571,10 +1571,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     try {
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1596,10 +1596,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     try {
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1621,10 +1621,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     try {
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1638,10 +1638,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera eliminar comentario
       comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId, personaRef);
-      Assertions.fail("Evaluación id no puede ser null para eliminar un comentario.");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para eliminar un comentario.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -1658,7 +1658,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
       Assertions.fail("El id de la Evaluación debe existir para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluacion " + evaluacionId + " does not exist.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación " + evaluacionId + " no existe");
     }
   }
 
@@ -1671,10 +1671,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera eliminar comentario
       comentarioService.deleteComentarioEvaluador(evaluacionId, null, personaRef);
-      Assertions.fail("Comentario id no puede ser null para eliminar un comentario.");
+      Assertions.fail("Identificador de Comentario no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario id no puede ser null para eliminar un comentario.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Identificador de Comentario no puede ser nulo");
     }
   }
 
@@ -1694,10 +1694,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // con el id indicado
     try {
       comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId, personaRef);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1717,10 +1717,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // con el id indicado
     try {
       comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId, personaRef);
-      Assertions.fail("No se puede eliminar el comentario debido a su tipo");
+      Assertions.fail("No se puede Eliminar Tipo Comentario para Comentario");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("No se puede eliminar el comentario debido a su tipo");
+      Assertions.assertThat(e.getMessage()).isEqualTo("No se puede Eliminar Tipo Comentario para Comentario");
     }
   }
 
@@ -1781,10 +1781,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera eliminar comentario
       comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
-      Assertions.fail("Evaluación id no puede ser null para eliminar un comentario.");
+      Assertions.fail("Identificador de Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para eliminar un comentario.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Identificador de Evaluación no puede ser nulo");
     }
   }
 
@@ -1800,7 +1800,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
       Assertions.fail("El id de la Evaluación debe existir para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluacion " + evaluacionId + " does not exist.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación " + evaluacionId + " no existe");
     }
   }
 
@@ -1813,10 +1813,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     try {
       // when: se quiera eliminar comentario
       comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
-      Assertions.fail("Comentario id no puede ser null para eliminar un comentario.");
+      Assertions.fail("Identificador de Comentario no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario id no puede ser null para eliminar un comentario.");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Identificador de Comentario no puede ser nulo");
     }
   }
 
@@ -1835,10 +1835,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // con el id indicado
     try {
       comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
-      Assertions.fail("El comentario no pertenece a la evaluación recibida");
+      Assertions.fail("Comentario no pertenece a Evaluación");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario no pertenece a Evaluación");
     }
   }
 
@@ -1856,10 +1856,10 @@ public class ComentarioServiceTest extends BaseServiceTest {
     // when: se quiera eliminar un comentario
     try {
       comentarioService.deleteComentarioActaGestor(evaluacionId, comentarioId);
-      Assertions.fail("No se puede eliminar el comentario debido a su tipo");
+      Assertions.fail("No se puede Eliminar Tipo Comentario para Comentario");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("No se puede eliminar el comentario debido a su tipo");
+      Assertions.assertThat(e.getMessage()).isEqualTo("No se puede Eliminar Tipo Comentario para Comentario");
     }
   }
 

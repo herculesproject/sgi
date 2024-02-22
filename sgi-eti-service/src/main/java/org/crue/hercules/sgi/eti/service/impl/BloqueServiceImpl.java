@@ -7,13 +7,13 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.BloqueRepository;
 import org.crue.hercules.sgi.eti.repository.specification.BloqueSpecifications;
 import org.crue.hercules.sgi.eti.service.BloqueService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,7 +83,7 @@ public class BloqueServiceImpl implements BloqueService {
   @Override
   public Page<BloqueOutput> findByFormularioId(Long id, String lang, Pageable pageable) {
     log.debug("update(Bloque bloqueActualizar) - start");
-    Assert.notNull(id, "El id del formulario no puede ser null para listar sus bloques");
+    AssertHelper.idNotNull(id, Formulario.class);
     Page<BloqueOutput> bloque = bloqueRepository.findByFormularioIdAndLanguage(id, lang, pageable);
     log.debug("update(Bloque bloqueActualizar) - start");
     return bloque;
@@ -119,6 +119,7 @@ public class BloqueServiceImpl implements BloqueService {
 
   @Override
   public Page<Bloque> findByFormularioIdAllLanguages(Long id, Pageable pageable) {
+    AssertHelper.idNotNull(id, Formulario.class);
     Page<Bloque> bloques = bloqueRepository.findByFormularioId(id, pageable);
     return bloques;
   }

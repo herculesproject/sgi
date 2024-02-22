@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.TipoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.TipoMemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class TipoMemoriaServiceImpl implements TipoMemoriaService {
   @Transactional
   public TipoMemoria create(TipoMemoria tipoMemoria) {
     log.debug("Petición a create TipoMemoria : {} - start", tipoMemoria);
-    Assert.notNull(tipoMemoria.getId(), "TipoMemoria id no puede ser null para crear un nuevo tipoMemoria");
+    AssertHelper.idNotNull(tipoMemoria.getId(), TipoMemoria.class);
 
     return tipoMemoriaRepository.save(tipoMemoria);
   }
@@ -84,7 +85,7 @@ public class TipoMemoriaServiceImpl implements TipoMemoriaService {
   @Transactional
   public void delete(Long id) throws TipoMemoriaNotFoundException {
     log.debug("Petición a delete TipoMemoria : {}  - start", id);
-    Assert.notNull(id, "El id de TipoMemoria no puede ser null.");
+    AssertHelper.idNotNull(id, TipoMemoria.class);
     if (!tipoMemoriaRepository.existsById(id)) {
       throw new TipoMemoriaNotFoundException(id);
     }
@@ -117,7 +118,7 @@ public class TipoMemoriaServiceImpl implements TipoMemoriaService {
   public TipoMemoria update(final TipoMemoria tipoMemoriaActualizar) {
     log.debug("update(TipoMemoria TipoMemoriaActualizar) - start");
 
-    Assert.notNull(tipoMemoriaActualizar.getId(), "TipoMemoria id no puede ser null para actualizar un tipo memoria");
+    AssertHelper.idNotNull(tipoMemoriaActualizar.getId(), TipoMemoria.class);
 
     return tipoMemoriaRepository.findById(tipoMemoriaActualizar.getId()).map(tipoMemoria -> {
       tipoMemoria.setNombre(tipoMemoriaActualizar.getNombre());

@@ -3,23 +3,21 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.eti.converter.ApartadoConverter;
 import org.crue.hercules.sgi.eti.converter.ApartadoTreeConverter;
 import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.dto.ApartadoTreeOutput;
-import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.repository.ApartadoRepository;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,13 +31,10 @@ public class ApartadoServiceImpl implements ApartadoService {
 
   private final ApartadoRepository repository;
   private final ApartadoTreeConverter apartadoTreeConverter;
-  private final ApartadoConverter apartadoConverter;
 
-  public ApartadoServiceImpl(ApartadoRepository repository, ApartadoTreeConverter apartadoTreeConverter,
-      ApartadoConverter apartadoConverter) {
+  public ApartadoServiceImpl(ApartadoRepository repository, ApartadoTreeConverter apartadoTreeConverter) {
     this.repository = repository;
     this.apartadoTreeConverter = apartadoTreeConverter;
-    this.apartadoConverter = apartadoConverter;
   }
 
   /**
@@ -75,7 +70,7 @@ public class ApartadoServiceImpl implements ApartadoService {
   @Override
   public ApartadoOutput findByIdAndLanguage(final Long id, String lang) {
     log.debug("findById(final Long id) - start");
-    Assert.notNull(id, "Apartado id no puede ser null para buscar un apartado por Id");
+    AssertHelper.idNotNull(id, Apartado.class);
     repository.findById(id).orElseThrow(() -> new ApartadoNotFoundException(id));
     final ApartadoOutput apartado = repository.findByApartadoIdAndLanguage(id, lang);
     log.debug("findById(final Long id) - end");
@@ -94,7 +89,7 @@ public class ApartadoServiceImpl implements ApartadoService {
   @Override
   public ApartadoOutput findByIdAndPadreIdAndLanguage(final Long id, Long idPadre, String lang) {
     log.debug("findById(final Long id) - start");
-    Assert.notNull(id, "Apartado id no puede ser null para buscar un apartado por Id");
+    AssertHelper.idNotNull(id, Apartado.class);
     final ApartadoOutput apartado = repository.findByApartadoIdAndPadreIdAndLanguage(id, idPadre, lang);
     log.debug("findById(final Long id) - end");
     return apartado;
@@ -112,10 +107,8 @@ public class ApartadoServiceImpl implements ApartadoService {
   @Override
   public Page<ApartadoOutput> findByBloqueId(Long id, String lang, Pageable pageable) {
     log.debug("findByBloqueId(Long id, Pageable pageable) - start");
-    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su Bloque");
+    AssertHelper.idNotNull(id, Bloque.class);
     final Page<ApartadoOutput> apartado = repository.findByBloqueIdAndPadreIsNullAndLanguage(id, lang, pageable);
-    // Page<ApartadoOutput> resultado = apartadoConverter.convertPage(apartado,
-    // lang);
     log.debug("findByBloqueId(Long id, Pageable pageable) - end");
     return apartado;
   }
@@ -132,10 +125,8 @@ public class ApartadoServiceImpl implements ApartadoService {
   @Override
   public Page<ApartadoOutput> findByPadreId(Long id, String lang, Pageable pageable) {
     log.debug("findByPadreId(Long id, Pageable pageable) - start");
-    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
+    AssertHelper.idNotNull(id, Apartado.class);
     final Page<ApartadoOutput> apartado = repository.findByPadreIdAndLanguage(id, lang, pageable);
-    // Page<ApartadoOutput> resultado = apartadoConverter.convertPage(apartado,
-    // lang);
     log.debug("findByPadreId(Long id, Pageable pageable) - end");
     return apartado;
   }
@@ -151,7 +142,7 @@ public class ApartadoServiceImpl implements ApartadoService {
    */
   public Page<ApartadoTreeOutput> findApartadosTreeByBloqueId(Long id, String lang, Pageable pageable) {
     log.debug("findByPadreId(Long id, Pageable pageable) - start");
-    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
+    AssertHelper.idNotNull(id, Bloque.class);
     final Page<ApartadoTreeOutput> apartados = repository.findByBloqueIdAndPadreIsNullAndLanguage(id, lang, pageable)
         .map(apartadoTreeConverter::convert)
         .map(this::fillApartadoTreeHijosRecursive);
@@ -180,7 +171,7 @@ public class ApartadoServiceImpl implements ApartadoService {
   @Override
   public Apartado findByApartadoAllLanguages(Long id) {
     log.debug("findByApartadoAllLanguages(Long id) - start");
-    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
+    AssertHelper.idNotNull(id, Apartado.class);
     final Apartado apartado = repository.findById(id).orElseThrow(() -> new ApartadoNotFoundException(id));
     log.debug("findByApartadoAllLanguages(Long id) - end");
     return apartado;
@@ -197,7 +188,7 @@ public class ApartadoServiceImpl implements ApartadoService {
   @Override
   public List<Apartado> findByApartadoAndPadreAllLanguages(Long id, Long idPadre) {
     log.debug("findByApartadoAndPadreAllLanguages(Long id, Long idPadre) - start");
-    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
+    AssertHelper.idNotNull(id, Apartado.class);
     final List<Apartado> apartados = repository.findByIdAndPadreId(id, idPadre);
     log.debug("findByApartadoAndPadreAllLanguages(Long id, Long idPadre) - end");
     return apartados;
@@ -214,7 +205,7 @@ public class ApartadoServiceImpl implements ApartadoService {
   @Override
   public Page<Apartado> findByPadreIdAllLanguages(Long id, Pageable pageable) {
     log.debug("findByPadreId(Long id, Pageable pageable) - start");
-    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su padre");
+    AssertHelper.idNotNull(id, Apartado.class);
     final Page<Apartado> apartado = repository.findByPadreId(id, pageable);
     log.debug("findByPadreId(Long id, Pageable pageable) - end");
     return apartado;
@@ -232,7 +223,7 @@ public class ApartadoServiceImpl implements ApartadoService {
   @Override
   public Page<Apartado> findByBloqueIdAllLanguages(Long id, Pageable pageable) {
     log.debug("findByBloqueId(Long id, Pageable pageable) - start");
-    Assert.notNull(id, "Id no puede ser null para buscar un apartado por el Id de su Bloque");
+    AssertHelper.idNotNull(id, Bloque.class);
     final Page<Apartado> apartado = repository.findByBloqueIdAndPadreIsNull(id, pageable);
     log.debug("findByBloqueId(Long id, Pageable pageable) - end");
     return apartado;

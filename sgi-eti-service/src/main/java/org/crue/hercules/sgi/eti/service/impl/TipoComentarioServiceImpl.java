@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.repository.TipoComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.specification.TipoComentarioSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoComentarioService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class TipoComentarioServiceImpl implements TipoComentarioService {
   @Transactional
   public TipoComentario create(TipoComentario tipoComentario) {
     log.debug("Petición a create TipoComentario : {} - start", tipoComentario);
-    Assert.notNull(tipoComentario.getId(), "TipoComentario id no puede ser null para crear un nuevo tipoComentario");
+    AssertHelper.idNotNull(tipoComentario.getId(), TipoComentario.class);
 
     return tipoComentarioRepository.save(tipoComentario);
   }
@@ -84,7 +85,7 @@ public class TipoComentarioServiceImpl implements TipoComentarioService {
   @Transactional
   public void delete(Long id) throws TipoComentarioNotFoundException {
     log.debug("Petición a delete TipoComentario : {}  - start", id);
-    Assert.notNull(id, "El id de TipoComentario no puede ser null.");
+    AssertHelper.idNotNull(id, TipoComentario.class);
     if (!tipoComentarioRepository.existsById(id)) {
       throw new TipoComentarioNotFoundException(id);
     }
@@ -119,8 +120,7 @@ public class TipoComentarioServiceImpl implements TipoComentarioService {
   public TipoComentario update(final TipoComentario tipoComentarioActualizar) {
     log.debug("update(TipoComentario tipoComentarioActualizar) - start");
 
-    Assert.notNull(tipoComentarioActualizar.getId(),
-        "TipoComentario id no puede ser null para actualizar un tipo comentario");
+    AssertHelper.idNotNull(tipoComentarioActualizar.getId(), TipoComentario.class);
 
     return tipoComentarioRepository.findById(tipoComentarioActualizar.getId()).map(tipoComentario -> {
       tipoComentario.setNombre(tipoComentarioActualizar.getNombre());

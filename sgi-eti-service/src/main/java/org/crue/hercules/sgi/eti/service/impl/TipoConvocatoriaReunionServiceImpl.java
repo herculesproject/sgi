@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.TipoConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.TipoConvocatoriaReunionSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoConvocatoriaReunionService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +39,7 @@ public class TipoConvocatoriaReunionServiceImpl implements TipoConvocatoriaReuni
   @Transactional
   public TipoConvocatoriaReunion create(TipoConvocatoriaReunion tipoConvocatoriaReunion) {
     log.debug("Petición a create TipoConvocatoriaReunion : {} - start", tipoConvocatoriaReunion);
-    Assert.notNull(tipoConvocatoriaReunion.getId(),
-        "TipoConvocatoriaReunion id no puede ser null para crear un nuevo tipoConvocatoriaReunion");
+    AssertHelper.idNotNull(tipoConvocatoriaReunion.getId(), TipoConvocatoriaReunion.class);
 
     return tipoConvocatoriaReunionRepository.save(tipoConvocatoriaReunion);
   }
@@ -89,7 +89,7 @@ public class TipoConvocatoriaReunionServiceImpl implements TipoConvocatoriaReuni
   @Transactional
   public void delete(Long id) throws TipoConvocatoriaReunionNotFoundException {
     log.debug("Petición a delete TipoConvocatoriaReunion : {}  - start", id);
-    Assert.notNull(id, "El id de TipoConvocatoriaReunion no puede ser null.");
+    AssertHelper.idNotNull(id, TipoConvocatoriaReunion.class);
     if (!tipoConvocatoriaReunionRepository.existsById(id)) {
       throw new TipoConvocatoriaReunionNotFoundException(id);
     }
@@ -126,8 +126,7 @@ public class TipoConvocatoriaReunionServiceImpl implements TipoConvocatoriaReuni
   public TipoConvocatoriaReunion update(final TipoConvocatoriaReunion tipoConvocatoriaReunionActualizar) {
     log.debug("update(TipoConvocatoriaReunion tipoConvocatoriaReunionActualizar) - start");
 
-    Assert.notNull(tipoConvocatoriaReunionActualizar.getId(),
-        "TipoConvocatoriaReunion id no puede ser null para actualizar un tipo comentario");
+    AssertHelper.idNotNull(tipoConvocatoriaReunionActualizar.getId(), TipoConvocatoriaReunion.class);
 
     return tipoConvocatoriaReunionRepository.findById(tipoConvocatoriaReunionActualizar.getId())
         .map(tipoConvocatoriaReunion -> {

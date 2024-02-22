@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.InformeRepository;
 import org.crue.hercules.sgi.eti.service.InformeService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,7 @@ public class InformeServiceImpl implements InformeService {
   @Transactional
   public Informe create(Informe informe) {
     log.debug("Petición a create Informe : {} - start", informe);
-    Assert.isNull(informe.getId(), "Informe id tiene que ser null para crear un nuevo informe");
+    AssertHelper.idIsNull(informe.getId(), Informe.class);
 
     return informeRepository.save(informe);
   }
@@ -85,7 +86,7 @@ public class InformeServiceImpl implements InformeService {
   @Transactional
   public void delete(Long id) throws InformeNotFoundException {
     log.debug("Petición a delete Informe : {}  - start", id);
-    Assert.notNull(id, "El id de Informe no puede ser null.");
+    AssertHelper.idNotNull(id, Informe.class);
     if (!informeRepository.existsById(id)) {
       throw new InformeNotFoundException(id);
     }
@@ -118,7 +119,7 @@ public class InformeServiceImpl implements InformeService {
   public Informe update(final Informe informeActualizar) {
     log.debug("update(Informe informeActualizar) - start");
 
-    Assert.notNull(informeActualizar.getId(), "Informe id no puede ser null para actualizar un informe");
+    AssertHelper.idNotNull(informeActualizar.getId(), Informe.class);
 
     return informeRepository.findById(informeActualizar.getId()).map(informe -> {
       informe.setMemoria(informeActualizar.getMemoria());
@@ -153,7 +154,7 @@ public class InformeServiceImpl implements InformeService {
    */
   @Override
   public Page<Informe> findByMemoria(Long id, Pageable pageable) {
-    Assert.notNull(id, "Memoria id no puede ser null para actualizar un informe");
+    AssertHelper.idNotNull(id, Memoria.class);
     Page<Informe> returnValue = informeRepository.findByMemoriaId(id, pageable);
     return returnValue;
   }
@@ -167,7 +168,7 @@ public class InformeServiceImpl implements InformeService {
    */
   @Override
   public Optional<Informe> findFirstByMemoriaOrderByVersionDesc(Long id) {
-    Assert.notNull(id, "Memoria id no puede ser null para buscar un informe");
+    AssertHelper.idNotNull(id, Memoria.class);
     return informeRepository.findFirstByMemoriaIdOrderByVersionDesc(id);
   }
 
@@ -181,9 +182,8 @@ public class InformeServiceImpl implements InformeService {
    */
   @Override
   public Optional<Informe> findByMemoriaAndTipoEvaluacion(Long id, Long idTipoEvaluacion) {
-    Assert.notNull(id, "Memoria id no puede ser null para buscar un informe");
-    Assert.notNull(idTipoEvaluacion,
-        "El id TipoEvaluacion no puede ser null para buscar un informe por su tipo de evaluación");
+    AssertHelper.idNotNull(id, Memoria.class);
+    AssertHelper.idNotNull(idTipoEvaluacion, TipoEvaluacion.class);
     return informeRepository.findFirstByMemoriaIdAndTipoEvaluacionIdOrderByVersionDesc(id, idTipoEvaluacion);
   }
 

@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.ConvocatoriaReunionSpecifications;
 import org.crue.hercules.sgi.eti.service.ComunicadosService;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
@@ -65,8 +66,7 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
   @Transactional
   public ConvocatoriaReunion create(ConvocatoriaReunion convocatoriaReunion) {
     log.debug("create(ConvocatoriaReunion convocatoriaReunion) - start");
-    Assert.isNull(convocatoriaReunion.getId(),
-        "ConvocatoriaReunion id debe ser null para crear una nueva ConvocatoriaReunion");
+    AssertHelper.idIsNull(convocatoriaReunion.getId(), ConvocatoriaReunion.class);
 
     ConvocatoriaReunion ultimaConvocatoriaReunionComite = repository
         .findFirstByComiteIdOrderByNumeroActaDesc(convocatoriaReunion.getComite().getId());
@@ -100,8 +100,7 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
   public ConvocatoriaReunion update(final ConvocatoriaReunion convocatoriaReunionActualizar) {
     log.debug("update(ConvocatoriaReunion convocatoriaReunionActualizar) - start");
 
-    Assert.notNull(convocatoriaReunionActualizar.getId(),
-        "ConvocatoriaReunion id id no puede ser null para actualizar una convocatoriaReunion");
+    AssertHelper.idNotNull(convocatoriaReunionActualizar.getId(), ConvocatoriaReunion.class);
 
     return repository.findById(convocatoriaReunionActualizar.getId()).map(convocatoriaReunion -> {
       convocatoriaReunion.setComite(convocatoriaReunionActualizar.getComite());
@@ -151,7 +150,7 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
   @Transactional
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
-    Assert.notNull(id, "ConvocatoriaReunion id no puede ser null para eliminar una convocatoriaReunion");
+    AssertHelper.idNotNull(id, ConvocatoriaReunion.class);
     if (!repository.existsById(id)) {
       throw new ConvocatoriaReunionNotFoundException(id);
     }
@@ -195,7 +194,7 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
   @Override
   public ConvocatoriaReunion findById(final Long id) {
     log.debug("findById(final Long id) - start");
-    Assert.notNull(id, "ConvocatoriaReunion id no puede ser null para buscar una convocatoriaReunion por Id");
+    AssertHelper.idNotNull(id, ConvocatoriaReunion.class);
     final ConvocatoriaReunion convocatoriaReunion = repository.findById(id)
         .orElseThrow(() -> new ConvocatoriaReunionNotFoundException(id));
     log.debug("findById(final Long id) - end");
@@ -216,7 +215,7 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
   @Override
   public ConvocatoriaReunionDatosGenerales findByIdWithDatosGenerales(final Long id) {
     log.debug("findByIdWithDatosGenerales(final Long id) - start");
-    Assert.notNull(id, "ConvocatoriaReunion id no puede ser null para buscar una ConvocatoriaReunion por Id");
+    AssertHelper.idNotNull(id, ConvocatoriaReunion.class);
     final ConvocatoriaReunionDatosGenerales convocatoriaReunion = repository.findByIdWithDatosGenerales(id)
         .orElseThrow(() -> new ConvocatoriaReunionNotFoundException(id));
     log.debug("findByIdWithDatosGenerales(final Long id) - end");

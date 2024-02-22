@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.TipoEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.TipoEvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoEvaluacionService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +42,7 @@ public class TipoEvaluacionServiceImpl implements TipoEvaluacionService {
   @Transactional
   public TipoEvaluacion create(TipoEvaluacion tipoEvaluacion) {
     log.debug("Petición a create TipoEvaluacion : {} - start", tipoEvaluacion);
-    Assert.notNull(tipoEvaluacion.getId(), "TipoEvaluacion id no puede ser null para crear un nuevo tipoEvaluacion");
+    AssertHelper.idNotNull(tipoEvaluacion.getId(), TipoEvaluacion.class);
 
     return tipoEvaluacionRepository.save(tipoEvaluacion);
   }
@@ -88,7 +89,7 @@ public class TipoEvaluacionServiceImpl implements TipoEvaluacionService {
   @Transactional
   public void delete(Long id) throws TipoEvaluacionNotFoundException {
     log.debug("Petición a delete TipoEvaluacion : {}  - start", id);
-    Assert.notNull(id, "El id de TipoEvaluacion no puede ser null.");
+    AssertHelper.idNotNull(id, TipoEvaluacion.class);
     if (!tipoEvaluacionRepository.existsById(id)) {
       throw new TipoEvaluacionNotFoundException(id);
     }
@@ -123,8 +124,7 @@ public class TipoEvaluacionServiceImpl implements TipoEvaluacionService {
   public TipoEvaluacion update(final TipoEvaluacion tipoEvaluacionActualizar) {
     log.debug("update(TipoEvaluacion TipoEvaluacionActualizar) - start");
 
-    Assert.notNull(tipoEvaluacionActualizar.getId(),
-        "TipoEvaluacion id no puede ser null para actualizar un tipo Evaluacion");
+    AssertHelper.idNotNull(tipoEvaluacionActualizar.getId(), TipoEvaluacion.class);
 
     return tipoEvaluacionRepository.findById(tipoEvaluacionActualizar.getId()).map(tipoEvaluacion -> {
       tipoEvaluacion.setNombre(tipoEvaluacionActualizar.getNombre());

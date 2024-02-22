@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.TipoEstadoMemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoEstadoMemoriaService;
+import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,8 +38,7 @@ public class TipoEstadoMemoriaServiceImpl implements TipoEstadoMemoriaService {
   @Transactional
   public TipoEstadoMemoria create(TipoEstadoMemoria tipoEstadoMemoria) {
     log.debug("Petición a create TipoEstadoMemoria : {} - start", tipoEstadoMemoria);
-    Assert.notNull(tipoEstadoMemoria.getId(),
-        "TipoEstadoMemoria id no puede ser null para crear un nuevo tipoEstadoMemoria");
+    AssertHelper.idNotNull(tipoEstadoMemoria.getId(), TipoEstadoMemoria.class);
 
     return tipoEstadoMemoriaRepository.save(tipoEstadoMemoria);
   }
@@ -87,7 +87,7 @@ public class TipoEstadoMemoriaServiceImpl implements TipoEstadoMemoriaService {
   @Transactional
   public void delete(Long id) throws TipoEstadoMemoriaNotFoundException {
     log.debug("Petición a delete TipoEstadoMemoria : {}  - start", id);
-    Assert.notNull(id, "El id de TipoEstadoMemoria no puede ser null.");
+    AssertHelper.idNotNull(id, TipoEstadoMemoria.class);
     if (!tipoEstadoMemoriaRepository.existsById(id)) {
       throw new TipoEstadoMemoriaNotFoundException(id);
     }
@@ -123,8 +123,7 @@ public class TipoEstadoMemoriaServiceImpl implements TipoEstadoMemoriaService {
   public TipoEstadoMemoria update(final TipoEstadoMemoria tipoEstadoMemoriaActualizar) {
     log.debug("update(TipoEstadoMemoria TipoEstadoMemoriaActualizar) - start");
 
-    Assert.notNull(tipoEstadoMemoriaActualizar.getId(),
-        "TipoEstadoMemoria id no puede ser null para actualizar un tipo estado memoria");
+    AssertHelper.idNotNull(tipoEstadoMemoriaActualizar.getId(), TipoEstadoMemoria.class);
 
     return tipoEstadoMemoriaRepository.findById(tipoEstadoMemoriaActualizar.getId()).map(tipoEstadoMemoria -> {
       tipoEstadoMemoria.setNombre(tipoEstadoMemoriaActualizar.getNombre());
