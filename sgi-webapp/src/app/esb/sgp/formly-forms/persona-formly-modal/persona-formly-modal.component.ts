@@ -92,14 +92,14 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
             return this.fillPersonaFormlyModelById(id, formlyData);
           }),
           switchMap((formlyData) => {
-            if (formlyData.model.empresaId) {
+            if (formlyData.model.empresaId || formlyData.model.entidadRef) {
               return this.fillEmpresaFormlyModelById(formlyData);
             } else {
               return of(formlyData);
             }
           }),
           switchMap((formlyData) => {
-            if (formlyData.model.areaConocimientoId) {
+            if (formlyData.model.areaConocimientoId || formlyData.model.areaConocimientoRef) {
               return this.fillAreaConocimiento(formlyData);
             } else {
               return of(formlyData);
@@ -121,22 +121,22 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
   }
 
   private fillAreaConocimiento(formlyData: IFormlyData): Observable<IFormlyData> {
-    return this.areaConocimientoService.findById(formlyData.model.areaConocimientoId).pipe(
+    return this.areaConocimientoService.findById(formlyData.model.areaConocimientoId ?? formlyData.model.areaConocimientoRef).pipe(
       map(areaConocimiento => {
         formlyData.model.areaConocimiento = [];
         formlyData.model.areaConocimiento.push({
-          niveles: areaConocimiento.nombre,
-          nivelSeleccionado: areaConocimiento.padreId
+          niveles: areaConocimiento.padreId,
+          nivelSeleccionado: areaConocimiento.nombre
         });
 
         return formlyData;
 
       }),
       switchMap((result) => {
-        if (result.model.areaConocimiento[0].nivelSeleccionado) {
-          return this.areaConocimientoService.findById(result.model.areaConocimiento[0].nivelSeleccionado).pipe(
+        if (result.model.areaConocimiento[0].niveles) {
+          return this.areaConocimientoService.findById(result.model.areaConocimiento[0].niveles).pipe(
             map(areaConocimiento => {
-              formlyData.model.areaConocimiento[0].nivelSeleccionado = areaConocimiento.nombre;
+              formlyData.model.areaConocimiento[0].niveles = areaConocimiento.nombre;
               return formlyData;
 
             })
@@ -159,9 +159,14 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
   }
 
   private fillEmpresaFormlyModelById(formlyData: IFormlyData): Observable<IFormlyData> {
-    return this.empresaService.findById(formlyData.model.empresaId).pipe(
+    return this.empresaService.findById(formlyData.model.empresaId ?? formlyData.model.entidadRef).pipe(
       map((empresa) => {
-        formlyData.model.empresaId = empresa;
+        if (formlyData.model.empresaId) {
+          formlyData.model.empresaId = empresa;
+        } else {
+          formlyData.model.entidadRef = empresa;
+        }
+
         return formlyData;
       })
     );
@@ -206,6 +211,9 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
     delete this.formlyData.model.areaConocimiento;
     if (this.formlyData.model.empresaId) {
       this.formlyData.model.empresaId = this.formlyData.model.empresaId.id;
+    }
+    if (this.formlyData.model.entidadRef) {
+      this.formlyData.model.entidadRef = this.formlyData.model.entidadRef.id;
     }
   }
 }

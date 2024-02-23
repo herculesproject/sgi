@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IEmpresa } from '@core/models/sgemp/empresa';
-import { EmpresaPublicService } from '@core/services/sgemp/empresa-public.service';
+import { IColectivo } from '@core/models/sgp/colectivo';
+import { ColectivoPublicService } from '@core/services/sgp/colectivo-public.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FieldType } from '@ngx-formly/material/form-field';
 import { NGXLogger } from 'ngx-logger';
@@ -27,7 +27,7 @@ const MSG_ERROR_INIT = marker('error.load');
       [aria-labelledby]="_getAriaLabelledby()"
       [disableOptionCentering]="to.disableOptionCentering"
     >
-      <ng-container *ngIf="empresas$ | formlySelectOptions: field | async as selectOptions">
+      <ng-container *ngIf="colectivos$ | formlySelectOptions: field | async as selectOptions">
         <ng-container *ngFor="let item of selectOptions">
           <mat-option [value]="item.value" [disabled]="item.disabled">{{ item.label }}</mat-option>
         </ng-container>
@@ -36,7 +36,7 @@ const MSG_ERROR_INIT = marker('error.load');
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectEmpresaPublicTypeComponent extends FieldType implements OnInit {
+export class SelectColectivosPublicTypeComponent extends FieldType implements OnInit {
 
   defaultOptions = {
     templateOptions: {
@@ -47,27 +47,23 @@ export class SelectEmpresaPublicTypeComponent extends FieldType implements OnIni
     },
   };
 
-  empresas$: Observable<IEmpresa[]> = of([]);
+  colectivos$: Observable<IColectivo[]> = of([]);
 
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly empresaService: EmpresaPublicService
+    private readonly colectivoService: ColectivoPublicService
   ) {
     super();
   }
 
   ngOnInit(): void {
     if (!this.value) {
-      this.empresas$ = of([]);
+      this.colectivos$ = of([]);
       return;
     }
 
-    if (this.value.id) {
-      this.formControl.setValue(this.value.id);
-    }
-
-    this.empresas$ = this.empresaService.findById(this.value).pipe(
+    this.colectivos$ = this.colectivoService.findById(this.value).pipe(
       map(response => [response]),
       catchError((error) => {
         this.logger.error(error);
@@ -89,4 +85,3 @@ export class SelectEmpresaPublicTypeComponent extends FieldType implements OnIni
   }
 
 }
-

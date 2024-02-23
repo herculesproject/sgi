@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IEmpresa } from '@core/models/sgemp/empresa';
-import { EmpresaPublicService } from '@core/services/sgemp/empresa-public.service';
+import { IColectivo } from '@core/models/sgp/colectivo';
+import { ColectivoService } from '@core/services/sgp/colectivo.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FieldType } from '@ngx-formly/material/form-field';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -27,7 +28,7 @@ const MSG_ERROR_INIT = marker('error.load');
       [aria-labelledby]="_getAriaLabelledby()"
       [disableOptionCentering]="to.disableOptionCentering"
     >
-      <ng-container *ngIf="empresas$ | formlySelectOptions: field | async as selectOptions">
+      <ng-container *ngIf="colecetivos$ | formlySelectOptions: field | async as selectOptions">
         <ng-container *ngFor="let item of selectOptions">
           <mat-option [value]="item.value" [disabled]="item.disabled">{{ item.label }}</mat-option>
         </ng-container>
@@ -36,7 +37,7 @@ const MSG_ERROR_INIT = marker('error.load');
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectEmpresaPublicTypeComponent extends FieldType implements OnInit {
+export class SelectColectivosTypeComponent extends FieldType {
 
   defaultOptions = {
     templateOptions: {
@@ -47,28 +48,20 @@ export class SelectEmpresaPublicTypeComponent extends FieldType implements OnIni
     },
   };
 
-  empresas$: Observable<IEmpresa[]> = of([]);
+  colecetivos$: Observable<IColectivo[]> = of([]);
 
   constructor(
     private readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly empresaService: EmpresaPublicService
+    private readonly colectivoService: ColectivoService
   ) {
     super();
-  }
 
-  ngOnInit(): void {
-    if (!this.value) {
-      this.empresas$ = of([]);
-      return;
-    }
-
-    if (this.value.id) {
-      this.formControl.setValue(this.value.id);
-    }
-
-    this.empresas$ = this.empresaService.findById(this.value).pipe(
-      map(response => [response]),
+    const findOptions: SgiRestFindOptions = {
+      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+    };
+    this.colecetivos$ = this.colectivoService.findAll(findOptions).pipe(
+      map(response => response.items),
       catchError((error) => {
         this.logger.error(error);
         this.snackBarService.showError(MSG_ERROR_INIT);
@@ -89,4 +82,3 @@ export class SelectEmpresaPublicTypeComponent extends FieldType implements OnIni
   }
 
 }
-
