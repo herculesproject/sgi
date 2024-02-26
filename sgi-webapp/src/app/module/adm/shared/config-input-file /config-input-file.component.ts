@@ -121,7 +121,7 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
   downloadResource(): void {
     this.subscriptions.push(
       this.resourceService.download(this.key + this.getCodeIdioma()).subscribe(
-        (resource) => triggerDownloadToUser(resource, this.key),
+        (resource) => triggerDownloadToUser(resource, this.key + this.getCodeIdioma()),
         (error) => this.error.next(error)
       )
     );

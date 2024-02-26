@@ -61,6 +61,8 @@ export class HeaderComponent implements OnDestroy, AfterViewChecked {
       } else {
         this.defaultLanguage();
       }
+      this.translateService.use(languageService.getLanguage().code);
+      this.translateService.setDefaultLang(languageService.getLanguage().code);
     },
       (error) => {
         this.defaultLanguage();

@@ -133,7 +133,7 @@
   "adm.config.global.WEB_I18N_EN": "Mensajes personalizados internacionalización idioma inglés",
   "adm.config.global.WEB_I18N_ES": "Mensajes personalizados internacionalización idioma español",
   "adm.config.global.WEB_I18N_EU": "Mensajes personalizados internacionalización idioma euskera",
-  "adm.config.global.WEB_LANGUAGES_HEADER": "Lenguajes a mostrar en la cabecera",
+  "adm.config.global.WEB_LANGUAGES_HEADER": "Idiomas habilitados",
   "adm.config.global.WEB_NUM_LOGOS_HEADER": "Número logos cabecera",
   "adm.config.group-title.comunicados": "Comunicados",
   "adm.config.group-title.convocatoria": "Comunicados de convocatorias",
