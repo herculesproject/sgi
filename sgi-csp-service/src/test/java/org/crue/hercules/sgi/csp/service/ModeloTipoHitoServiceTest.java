@@ -646,7 +646,7 @@ class ModeloTipoHitoServiceTest extends BaseServiceTest {
     ModeloTipoHito modeloTipoHito = new ModeloTipoHito();
     modeloTipoHito.setId(modeloTipoHitoId);
     modeloTipoHito.setModeloEjecucion(ModeloEjecucion.builder().id(modeloEjecucionId).activo(Boolean.TRUE).build());
-    modeloTipoHito.setTipoHito(TipoHito.builder().id(tipoHitoId).activo(Boolean.TRUE).build());
+    modeloTipoHito.setTipoHito(TipoHito.builder().id(tipoHitoId).nombre("nombreTipoHito").activo(Boolean.TRUE).build());
     modeloTipoHito.setSolicitud(Boolean.TRUE);
     modeloTipoHito.setProyecto(Boolean.TRUE);
     modeloTipoHito.setConvocatoria(Boolean.TRUE);

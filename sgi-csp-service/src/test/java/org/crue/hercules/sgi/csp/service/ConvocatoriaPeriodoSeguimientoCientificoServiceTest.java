@@ -264,7 +264,7 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
             Arrays.asList(convocatoriaPeriodoSeguimientoCientifico)))
         // then: throw exception
         .isInstanceOf(PeriodoLongerThanConvocatoriaException.class)
-        .hasMessage("The Period goes beyond the duration of the Call");
+        .hasMessage("El Periodo se extiende más allá de la duración de la Convocatoria");
   }
 
   @Test
@@ -289,7 +289,7 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
             Arrays.asList(convocatoriaPeriodoSeguimientoCientifico1, convocatoriaPeriodoSeguimientoCientifico2)))
         // then: throw exception
         .isInstanceOf(PeriodoWrongOrderException.class).hasMessageContaining(
-            "The first Period must start in month 1 and all Periods must be consecutive, with no gaps");
+            "El primer Periodo debe comenzar en el mes 1 y todos los Periodos deben ser consecutivos, sin huecos");
   }
 
   @Test

@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.repository.TipoEnlaceRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoEnlaceSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoEnlaceService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,9 +42,10 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
   public TipoEnlace create(TipoEnlace tipoEnlace) {
     log.debug("create(TipoEnlace tipoEnlace) - start");
 
-    Assert.isNull(tipoEnlace.getId(), "Id tiene que ser null para crear TipoEnlace");
-    Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(tipoEnlace.getNombre()).isPresent()),
-        "Ya existe un TipoEnlace activo con el nombre '" + tipoEnlace.getNombre() + "'");
+    AssertHelper.idIsNull(tipoEnlace.getId(), TipoEnlace.class);
+    AssertHelper.entityExists(
+        !(repository.findByNombreAndActivoIsTrue(tipoEnlace.getNombre()).isPresent()), TipoEnlace.class,
+        TipoEnlace.class);
 
     tipoEnlace.setActivo(Boolean.TRUE);
     TipoEnlace returnValue = repository.save(tipoEnlace);
@@ -64,10 +66,11 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
   public TipoEnlace update(TipoEnlace tipoEnlace) {
     log.debug("update(TipoEnlace tipoEnlace) - start");
 
-    Assert.notNull(tipoEnlace.getId(), "Id no puede ser null para actualizar TipoEnlace");
+    AssertHelper.idNotNull(tipoEnlace.getId(), TipoEnlace.class);
     repository.findByNombreAndActivoIsTrue(tipoEnlace.getNombre())
-        .ifPresent(tipoEnlaceExistente -> Assert.isTrue(Objects.equals(tipoEnlace.getId(), tipoEnlaceExistente.getId()),
-            "Ya existe un TipoEnlace activo con el nombre '" + tipoEnlaceExistente.getNombre() + "'"));
+        .ifPresent(tipoEnlaceExistente -> AssertHelper.entityExists(
+            Objects.equals(tipoEnlace.getId(), tipoEnlaceExistente.getId()),
+            TipoEnlace.class, TipoEnlace.class));
 
     return repository.findById(tipoEnlace.getId()).map(data -> {
       data.setNombre(tipoEnlace.getNombre());
@@ -90,15 +93,16 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
   public TipoEnlace enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "TipoEnlace id no puede ser null para reactivar un TipoEnlace");
+    AssertHelper.idNotNull(id, TipoEnlace.class);
 
     return repository.findById(id).map(tipoEnlace -> {
       if (Boolean.TRUE.equals(tipoEnlace.getActivo())) {
         return tipoEnlace;
       }
 
-      Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(tipoEnlace.getNombre()).isPresent()),
-          "Ya existe un TipoEnlace activo con el nombre '" + tipoEnlace.getNombre() + "'");
+      AssertHelper.entityExists(
+          !(repository.findByNombreAndActivoIsTrue(tipoEnlace.getNombre()).isPresent()), TipoEnlace.class,
+          TipoEnlace.class);
 
       tipoEnlace.setActivo(true);
       TipoEnlace returnValue = repository.save(tipoEnlace);
@@ -118,7 +122,7 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
   public TipoEnlace disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "TipoEnlace id no puede ser null para desactivar un TipoEnlace");
+    AssertHelper.idNotNull(id, TipoEnlace.class);
 
     return repository.findById(id).map(tipoEnlace -> {
       if (Boolean.FALSE.equals(tipoEnlace.getActivo())) {

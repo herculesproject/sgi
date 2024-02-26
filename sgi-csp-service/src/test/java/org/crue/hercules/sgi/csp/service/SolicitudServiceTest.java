@@ -281,7 +281,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque el Solicitud ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Solicitud id tiene que ser null para crear una Solicitud");
+        .hasMessage("Identificador de Solicitud debe ser nulo");
   }
 
   @Test
@@ -294,7 +294,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
     Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("CreadorRef no puede ser null para crear una Solicitud");
+        .hasMessage("Referencia creador solicitud de Solicitud no puede ser nulo");
   }
 
   @Test
@@ -307,7 +307,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque no tiene convocatoria ni convocatoria
     // externa
     Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Convocatoria o Convocatoria externa tienen que ser distinto de null para crear una Solicitud");
+        .hasMessage("Convocatoria o Convocatoria Externa de Gasto de Requerimiento de Justificación no puede ser nulo");
   }
 
   @Test
@@ -343,7 +343,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // no
     // permitida para el usuario
     Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+        .hasMessage("Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
   }
 
   @Test
@@ -356,7 +356,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque no tiene convocatoria ni convocatoria
     // externa
     Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La Unidad de Gestión no es gestionable por el usuario");
+        .hasMessage("Solicitud pertenece a una Unidad de Gestión no gestionable por el usuario");
   }
 
   @Test
@@ -474,7 +474,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
     Assertions.assertThatThrownBy(() -> service.update(solicitud)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El solicitante no puede ser null para actualizar Solicitud");
+        .hasMessage("Referencia solicitante solicitud de Solicitud no puede ser nulo");
   }
 
   @Test
@@ -551,7 +551,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
 
     Assertions.assertThatThrownBy(() -> service.disable(solicitud.getId())).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La Solicitud pertenece a una Unidad de Gestión no gestionable por el usuario");
+        .hasMessage("Solicitud pertenece a una Unidad de Gestión no gestionable por el usuario");
 
   }
 

@@ -68,7 +68,7 @@ class ConceptoGastoServiceTest extends BaseServiceTest {
     // when: Creamos el ConceptoGasto
     // then: Lanza una excepcion porque el ConceptoGasto ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(conceptoGasto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("The Identifier from Spend Concept must be null");
+        .hasMessage("Identificador de Concepto de Gasto debe ser nulo");
   }
 
   @Test
@@ -83,7 +83,7 @@ class ConceptoGastoServiceTest extends BaseServiceTest {
     // when: Creamos el ConceptoGasto
     // then: Lanza una excepcion porque hay otro ConceptoGasto con ese nombre
     Assertions.assertThatThrownBy(() -> service.create(conceptoGastoNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ConceptoGasto con el nombre " + conceptoGastoNew.getNombre());
+        .hasMessage("Ya existe Concepto de Gasto con el valor " + conceptoGastoNew.getNombre());
   }
 
   @Test
@@ -136,7 +136,7 @@ class ConceptoGastoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque hay otro ConceptoGasto con ese nombre
     Assertions.assertThatThrownBy(() -> service.update(conceptoGastoActualizado))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ConceptoGasto con el nombre " + conceptoGastoActualizado.getNombre());
+        .hasMessage("Ya existe Concepto de Gasto con el valor " + conceptoGastoActualizado.getNombre());
   }
 
   @Test
@@ -173,7 +173,7 @@ class ConceptoGastoServiceTest extends BaseServiceTest {
     // when: Activamos el ConceptoGasto
     // then: Lanza una excepcion porque hay otro ConceptoGasto con ese nombre
     Assertions.assertThatThrownBy(() -> service.update(conceptoGasto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ConceptoGasto con el nombre %s", conceptoGasto.getNombre());
+        .hasMessage("Ya existe Concepto de Gasto con el valor %s", conceptoGasto.getNombre());
   }
 
   @Test

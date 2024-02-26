@@ -222,7 +222,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: create Convocatoria
         () -> service.create(convocatoria))
         // then: throw exception as id can't be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id tiene que ser null para crear la Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Convocatoria debe ser nulo");
   }
 
   @Test
@@ -237,7 +237,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as UnidadRef is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
+        .hasMessage("Referencia Unidad Gestión de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -271,7 +271,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloEjecucion is not asigned to given
         // UnidadGestion
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion '%s' no disponible para la UnidadGestion %s",
+        .hasMessage("Modelo Ejecución %s no disponible para la Unidad Gestión %s",
             convocatoria.getModeloEjecucion().getNombre(), convocatoria.getUnidadGestionRef());
   }
 
@@ -293,7 +293,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as ModeloUnidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion '%s' no está activo para la UnidadGestion %s",
+        .hasMessage("%s de Modelo Unidad no está activo",
             convocatoria.getModeloEjecucion().getNombre(), convocatoria.getUnidadGestionRef());
   }
 
@@ -316,7 +316,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as ModeloEjecucion is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion '%s' no está activo", convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("%s de Modelo Ejecución no está activo", convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -331,7 +331,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: create Convocatoria
         () -> service.create(convocatoria))
         // then: throw exception as Titulo is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Título de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -346,7 +346,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as ModeloEjecucion is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion requerido para obtener TipoFinalidad");
+        .hasMessage("Modelo Ejecución de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -371,8 +371,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as TipoFinalidad is not asigned to given
         // ModeloEjecucion
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFinalidad '%s' no disponible para el ModeloEjecucion %s",
-            convocatoria.getFinalidad().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Finalidad no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -397,7 +397,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as ModeloTipoFinalidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFinalidad '%s' no está activo para el ModeloEjecucion %s",
+        .hasMessage("%s de Modelo Tipo Finalidad no está activo para el modelo ejecución %s",
             convocatoria.getFinalidad().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -425,7 +425,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as TipoFinalidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFinalidad '%s' no está activo", convocatoria.getFinalidad().getNombre());
+        .hasMessage("%s de Tipo Finalidad no está activo", convocatoria.getFinalidad().getNombre());
   }
 
   @Test
@@ -454,7 +454,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as TipoRegimenConcurrencia does not exist
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("RegimenConcurrencia '%s' no disponible", convocatoria.getRegimenConcurrencia().getNombre());
+        .hasMessage("Ya existe Tipo de régimen de concurrencia con el valor %s",
+            convocatoria.getRegimenConcurrencia().getNombre());
   }
 
   @Test
@@ -484,7 +485,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as TipoRegimenConcurrencia is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("RegimenConcurrencia '%s' no está activo", convocatoria.getRegimenConcurrencia().getNombre());
+        .hasMessage("%s de Tipo de régimen de concurrencia no está activo",
+            convocatoria.getRegimenConcurrencia().getNombre());
   }
 
   @Test
@@ -515,7 +517,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as TipoAmbitoGeografico does not exist
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AmbitoGeografico '%s' no disponible", convocatoria.getAmbitoGeografico().getNombre());
+        .hasMessage("Tipo de Ámbito Geográfico de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -548,7 +550,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.create(convocatoria))
         // then: throw exception as TipoAmbitoGeografico is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AmbitoGeografico '%s' no está activo", convocatoria.getAmbitoGeografico().getNombre());
+        .hasMessage("%s de Tipo de Ámbito Geográfico no está activo", convocatoria.getAmbitoGeografico().getNombre());
   }
 
   @Test
@@ -683,7 +685,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: update Convocatoria
         () -> service.update(convocatoria))
         // then: throw exception as id must be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id no puede ser null para actualizar Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -701,7 +703,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as UnidadRef is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
+        .hasMessage("Referencia Unidad Gestión de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -721,7 +723,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as UnidadRef is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
+        .hasMessage("Referencia Unidad Gestión de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -745,7 +747,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar la unidad de gestión al existir registros dependientes en las pantallas Enlaces, Plazos y fases, Hitos o Documentos");
+            "No se puede Modificar Unidad Gestión para Convocatoria");
   }
 
   @Test
@@ -769,7 +771,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar el modelo de ejecución al existir registros dependientes en las pantallas Enlaces, Plazos y fases, Hitos o Documentos");
+            "No se puede Modificar Unidad Gestión para Convocatoria");
   }
 
   @Test
@@ -787,7 +789,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as ModeloEjecucion is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion no puede ser null en la Convocatoria");
+        .hasMessage("Modelo Ejecución de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -813,7 +815,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloEjecucion is not asigned to given
         // UnidadGestion
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion '%s' no disponible para la UnidadGestion %s",
+        .hasMessage("Modelo Ejecución %s no disponible para la Unidad Gestión %s",
             convocatoriaExistente.getModeloEjecucion().getNombre(), convocatoria.getUnidadGestionRef());
   }
 
@@ -883,7 +885,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as ModeloUnidad with updated ModeloEjecucion is
         // disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion '%s' no está activo para la UnidadGestion %s",
+        .hasMessage("%s de Modelo Unidad no está activo",
             convocatoria.getModeloEjecucion().getNombre(), convocatoria.getUnidadGestionRef());
   }
 
@@ -954,7 +956,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as updated ModeloEjecucion is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion '%s' no está activo", convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("%s de Modelo Ejecución no está activo", convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -971,7 +973,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: update Convocatoria
         () -> service.update(convocatoria))
         // then: throw exception as Titulo is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Título de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -991,7 +993,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: update Convocatoria
         () -> service.update(convocatoria))
         // then: throw exception as Titulo is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Título de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -1008,7 +1010,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: update Convocatoria
         () -> service.update(convocatoria))
         // then: throw exception as ModeloTipoFinalidad is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Finalidad no puede ser null en la Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Tipo Finalidad de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -1028,7 +1030,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as ModeloEjecucion is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion requerido para obtener TipoFinalidad");
+        .hasMessage("Modelo Ejecución de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -1060,8 +1062,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as TipoFinalidad is not asigned to given
         // ModeloEjecucion
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFinalidad '%s' no disponible para el ModeloEjecucion %s",
-            convocatoria.getFinalidad().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Finalidad no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -1136,7 +1138,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as updated ModeloTipoFinalidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFinalidad '%s' no está activo para el ModeloEjecucion %s",
+        .hasMessage("%s de Modelo Tipo Finalidad no está activo para el modelo ejecución %s",
             convocatoria.getFinalidad().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -1212,7 +1214,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as updated TipoFinalidad is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFinalidad '%s' no está activo", convocatoria.getFinalidad().getNombre());
+        .hasMessage("%s de Tipo Finalidad no está activo", convocatoria.getFinalidad().getNombre());
   }
 
   @Test
@@ -1248,7 +1250,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as TipoRegimenConcurrencia does not exist
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("RegimenConcurrencia '%s' no disponible", convocatoria.getRegimenConcurrencia().getNombre());
+        .hasMessage("Ya existe Tipo de régimen de concurrencia con el valor %s",
+            convocatoria.getRegimenConcurrencia().getNombre());
   }
 
   @Test
@@ -1331,7 +1334,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as TipoRegimenConcurrencia is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("RegimenConcurrencia '%s' no está activo", convocatoria.getRegimenConcurrencia().getNombre());
+        .hasMessage("%s de Tipo de régimen de concurrencia no está activo",
+            convocatoria.getRegimenConcurrencia().getNombre());
   }
 
   @Test
@@ -1349,7 +1353,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as TipoAmbitoGeografico is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AmbitoGeografico no puede ser null en la Convocatoria");
+        .hasMessage("Tipo de Ámbito Geográfico de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -1387,7 +1391,8 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as TipoAmbitoGeografico does not exist
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AmbitoGeografico '%s' no disponible", convocatoria.getAmbitoGeografico().getNombre());
+        .hasMessage("Tipo de Ámbito Geográfico de Convocatoria no puede ser nulo",
+            convocatoria.getAmbitoGeografico().getNombre());
   }
 
   @Test
@@ -1468,7 +1473,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as updated TipoAmbitoGeografico is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AmbitoGeografico '%s' no está activo", convocatoria.getAmbitoGeografico().getNombre());
+        .hasMessage("%s de Tipo de Ámbito Geográfico no está activo", convocatoria.getAmbitoGeografico().getNombre());
   }
 
   @Test
@@ -1623,7 +1628,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as TramitacionSGI is not present
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
+            "Tramitación SGI de Configuración solicitud no puede ser nulo");
   }
 
   @Test
@@ -1649,7 +1654,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as FasePresentacionSolicitudes is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Plazo presentación solicitudes no puede ser null cuando se establece presentacion SGI");
+        .hasMessage("Presentación SGI de Convocatoria Fase no puede ser nulo");
   }
 
   @Test
@@ -1716,7 +1721,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.update(convocatoria))
         // then: throw exception as FormularioSolicitud is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FormularioSolicitud no puede ser null para actualizar Convocatoria");
+        .hasMessage("Formulario Solicitud de Convocatoria no puede ser nulo");
   }
 
   /**
@@ -1858,7 +1863,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.disable(convocatoria.getId()))
         // then:Exception is thrown
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede eliminar Convocatoria. No tiene los permisos necesarios o está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede Eliminar Convocatoria. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -1934,7 +1939,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: registrar Convocatoria
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as id must be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id no puede ser null para registrar Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -1967,7 +1972,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as UnidadGestion is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
+        .hasMessage("Referencia Unidad Gestión de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -1983,7 +1988,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as ModeloEjecucion is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion no puede ser null en la Convocatoria");
+        .hasMessage("Modelo Ejecución de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -1999,7 +2004,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: registrar Convocatoria
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as Titulo is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Título de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -2014,7 +2019,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         // when: registrar Convocatoria
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as TipoFinalidad is not present
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Finalidad no puede ser null en la Convocatoria");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Tipo Finalidad de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -2030,7 +2035,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as TipoAmbitoGeografico is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AmbitoGeografico no puede ser null en la Convocatoria");
+        .hasMessage("Tipo de Ámbito Geográfico de Convocatoria no puede ser nulo");
   }
 
   /**
@@ -2074,7 +2079,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as TramitacionSGI is not present
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
+            "Tramitación SGI de Configuración solicitud no puede ser nulo");
   }
 
   @Test
@@ -2097,7 +2102,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as FasePresentacionSolicitudes is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Plazo presentación solicitudes no puede ser null cuando se establece presentacion SGI");
+        .hasMessage("Presentación SGI de Convocatoria Fase no puede ser nulo");
   }
 
   @Test
@@ -2145,7 +2150,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         () -> service.registrar(convocatoria.getId()))
         // then: throw exception as FormularioSolicitud is not present
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FormularioSolicitud no puede ser null en la Convocatoria");
+        .hasMessage("Formulario Solicitud de Convocatoria no puede ser nulo");
   }
 
   /**

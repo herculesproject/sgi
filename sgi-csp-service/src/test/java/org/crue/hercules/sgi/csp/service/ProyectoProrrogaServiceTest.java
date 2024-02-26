@@ -109,7 +109,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // when: Creamos el ProyectoProrroga
     // then: Lanza una excepcion porque el ProyectoProrroga ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(proyectoProrroga)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ProyectoProrroga id tiene que ser null para crear un nuevo ProyectoProrroga");
+        .hasMessage("Identificador de Proyecto Prórroga debe ser nulo");
   }
 
   @Test
@@ -124,7 +124,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -139,7 +139,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: throw exception as NumProrroga is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Número de prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Número prórroga de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -154,7 +154,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: throw exception as TipoProrroga is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Tipo de Grupo Tipo de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -169,7 +169,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: throw exception as FechaConcesion is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha concesión no puede ser null para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Fecha de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -185,7 +185,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: throw exception as FechaFin is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Nueva fecha fin proyecto no puede ser null para  para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Fecha fin de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -201,7 +201,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: throw exception as Importe is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Importe debe tener un valor para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Importe debe tener un valor para realizar la acción sobre Proyecto Prórroga");
   }
 
   @Test
@@ -235,7 +235,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: throw exception as Proyecto is not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha de concesión debe ser posterior a la de la última prórroga");
+        .hasMessage("Fecha útima prórroga debe ser anterior Fecha concesión");
   }
 
   @Test
@@ -256,7 +256,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.create(proyectoProrroga))
         // then: IllegalArgumentException is thrown
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha de fin debe ser posterior a la fecha de fin del proyecto");
+        .hasMessage("Fecha Fin Proyecto debe ser anterior Fecha fin");
   }
 
   @Test
@@ -323,7 +323,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -338,7 +338,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: throw exception as NumProrroga is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Número de prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Número prórroga de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -353,7 +353,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: throw exception as TipoProrroga is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo prórroga no puede ser null para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Tipo de Grupo Tipo de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -368,7 +368,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: throw exception as FechaConcesion is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha concesión no puede ser null para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Fecha de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -384,7 +384,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: throw exception as FechaFin is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Nueva fecha fin proyecto no puede ser null para  para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Fecha fin de Proyecto Prórroga no puede ser nulo");
   }
 
   @Test
@@ -400,7 +400,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: throw exception as FechaFin is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Importe debe tener un valor para realizar la acción sobre ProyectoProrroga");
+        .hasMessage("Importe debe tener un valor para realizar la acción sobre Proyecto Prórroga");
   }
 
   @Test
@@ -464,7 +464,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: IllegalArgumentException is thrown
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha de concesión debe ser posterior a la de la última prórroga");
+        .hasMessage("Fecha útima prórroga debe ser anterior Fecha concesión");
   }
 
   @Test
@@ -486,7 +486,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         () -> service.update(proyectoProrroga))
         // then: IllegalArgumentException is thrown
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha de fin debe ser posterior a la fecha de fin del proyecto");
+        .hasMessage("Fecha Fin Proyecto debe ser anterior Fecha fin");
   }
 
   @Test

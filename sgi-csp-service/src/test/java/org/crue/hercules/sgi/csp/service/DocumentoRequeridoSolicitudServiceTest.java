@@ -127,7 +127,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear DocumentoRequeridoSolicitud");
+        .hasMessage("Identificador de Documento Requerido Solicitud debe ser nulo");
   }
 
   @Test
@@ -141,7 +141,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as ConfigracionId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConfiguracionSolicitud no puede ser null en la DocumentoRequeridoSolicitud");
+        .hasMessage("Identificador de Configuración solicitud no puede ser nulo");
   }
 
   @Test
@@ -156,7 +156,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as TipoDocumento is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento no puede ser null en la DocumentoRequeridoSolicitud");
+        .hasMessage("Tipo Documento Persona de Documento Requerido Solicitud no puede ser nulo");
   }
 
   @Test
@@ -222,8 +222,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            configuracionSolicitud.getFasePresentacionSolicitudes().getTipoFase().getNombre(),
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución %s",
             convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -252,7 +251,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Fase no está activo para el modelo ejecución %s",
             modeloTipoFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -281,7 +280,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", modeloTipoFase.getTipoFase().getNombre());
+        .hasMessage("%s de Tipo Fase no está activo", modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -312,8 +311,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as ModeloTipoDocumento not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento '%s' no disponible para el ModeloEjecucion '%s' y TipoFase '%s'",
-            newDocumentoRequeridoSolicitud.getTipoDocumento().getNombre(),
+        .hasMessage("Tipo Documento no disponible para el Modelo Ejecución %s",
             convocatoria.getModeloEjecucion().getNombre(), modeloTipoFase.getTipoFase().getNombre());
   }
 
@@ -348,7 +346,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as ModeloTipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoDocumento '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Documento no está activo para el modelo ejecución %s",
             modeloTipoDocumento.getTipoDocumento().getNombre(), convocatoria.getModeloEjecucion().getNombre());
 
   }
@@ -384,7 +382,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as TipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento '%s' no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
+        .hasMessage("%s de Tipo Documento no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
   }
 
   @Test
@@ -406,7 +404,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(newDocumentoRequeridoSolicitud))
         // then: throw exception as Convocatoria is not modificable
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede crear DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede Crear Documento Requerido Solicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -463,7 +461,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("DocumentoRequeridoSolicitud id no puede ser null para actualizar un DocumentoRequeridoSolicitud");
+        .hasMessage("Identificador de Documento Requerido Solicitud no puede ser nulo");
   }
 
   @Test
@@ -495,7 +493,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as ConfigracionId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConfiguracionSolicitud no puede ser null en la DocumentoRequeridoSolicitud");
+        .hasMessage("Identificador de Configuración solicitud no puede ser nulo");
   }
 
   @Test
@@ -513,7 +511,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as TipoDocumento is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento no puede ser null en la DocumentoRequeridoSolicitud");
+        .hasMessage("Tipo Documento Persona de Documento Requerido Solicitud no puede ser nulo");
   }
 
   @Test
@@ -584,8 +582,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            configuracionSolicitud.getFasePresentacionSolicitudes().getTipoFase().getNombre(),
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución %s",
             convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -617,7 +614,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Fase no está activo para el modelo ejecución %s",
             modeloTipoFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -649,7 +646,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", modeloTipoFase.getTipoFase().getNombre());
+        .hasMessage("%s de Tipo Fase no está activo", modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -683,8 +680,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as ModeloTipoDocumento not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento '%s' no disponible para el ModeloEjecucion '%s' y TipoFase '%s'",
-            updatedDocumentoRequeridoSolicitud.getTipoDocumento().getNombre(),
+        .hasMessage("Tipo Documento no disponible para el Modelo Ejecución %s",
             convocatoria.getModeloEjecucion().getNombre(), modeloTipoFase.getTipoFase().getNombre());
   }
 
@@ -723,7 +719,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as ModeloTipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoDocumento '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Documento no está activo para el modelo ejecución %s",
             modeloTipoDocumento.getTipoDocumento().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -800,7 +796,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedDocumentoRequeridoSolicitud))
         // then: throw exception as TipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento '%s' no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
+        .hasMessage("%s de Tipo Documento no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
   }
 
   @Test
@@ -862,7 +858,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(documentoRequeridoSolicitud))
         // then: throw exception as Convocatoria is not modificable
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar DocumentoRequeridoSolicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede Modificar Documento Requerido Solicitud. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -897,7 +893,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
         () -> service.delete(id))
         // then: IllegalArgumentException is thrown
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("DocumentoRequeridoSolicitud id no puede ser null para eliminar un DocumentoRequeridoSolicitud");
+        .hasMessage("Identificador de Documento Requerido Solicitud no puede ser nulo");
   }
 
   @Test

@@ -209,7 +209,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
         () -> service.update(proyectoSocioId, Arrays.asList(proyectoSocioPeriodoJustificacionDocumento)))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("No se puede modificar el proyecto socio del ProyectoSocioPeriodoJustificacionDocumento");
+        .hasMessage("No se puede Modificar Proyecto Socio para Proyecto Socio Periodo Justificación Documento");
   }
 
   @Test

@@ -4,11 +4,13 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoClasificacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessSolicitudException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoClasificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoClasificacionSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
@@ -54,11 +56,8 @@ public class SolicitudProyectoClasificacionServiceImpl implements SolicitudProye
   public SolicitudProyectoClasificacion create(SolicitudProyectoClasificacion solicitudProyectoClasificacion) {
     log.debug("create(SolicitudProyectoClasificacion solicitudProyectoClasificacion) - start");
 
-    Assert.isNull(solicitudProyectoClasificacion.getId(),
-        "SolicitudProyectoClasificacion id tiene que ser null para crear un nuevo SolicitudProyectoClasificacion");
-
-    Assert.notNull(solicitudProyectoClasificacion.getSolicitudProyectoId(),
-        "Id SolicitudProyecto no puede ser null para crear SolicitudProyectoClasificacion");
+    AssertHelper.idIsNull(solicitudProyectoClasificacion.getId(), SolicitudProyectoClasificacion.class);
+    AssertHelper.idNotNull(solicitudProyectoClasificacion.getSolicitudProyectoId(), SolicitudProyecto.class);
 
     SolicitudProyectoClasificacion returnValue = repository.save(solicitudProyectoClasificacion);
 
@@ -76,8 +75,7 @@ public class SolicitudProyectoClasificacionServiceImpl implements SolicitudProye
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    Assert.notNull(id,
-        "SolicitudProyectoClasificacion id no puede ser null para desactivar un SolicitudProyectoClasificacion");
+    AssertHelper.idNotNull(id, SolicitudProyectoClasificacion.class);
 
     if (!repository.existsById(id)) {
       throw new SolicitudProyectoClasificacionNotFoundException(id);

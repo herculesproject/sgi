@@ -124,7 +124,7 @@ public class SolicitudRrhhRequisitoNivelAcademicoService {
   public Page<SolicitudRrhhRequisitoNivelAcademico> findAllBySolicitudPublicId(String solicitudPublicId, String query,
       Pageable paging) {
     log.debug("findAllBySolicitudPublicId(String solicitudPublicId, String query, Pageable paging) - start");
-    Assert.notNull(solicitudPublicId, "Solicitud Id null");
+    AssertHelper.fieldNotNull(solicitudPublicId, Solicitud.class, AssertHelper.MESSAGE_KEY_ID);
     Long solicitudId = authorityHelper.getSolicitudIdByPublicId(solicitudPublicId);
     Specification<SolicitudRrhhRequisitoNivelAcademico> specs = SolicitudRrhhRequisitoNivelAcademicoSpecifications
         .bySolicitudRrhhId(solicitudId)

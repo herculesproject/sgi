@@ -10,7 +10,9 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProgramaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,8 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ProgramaServiceImpl implements ProgramaService {
 
-  private static final String MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE = "Ya existe un plan con el mismo nombre";
-  private static final String MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN = "Ya existe un programa con el mismo nombre en el plan";
+  private static final String MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE = "plan.exists";
+  private static final String MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN = "programa.exists";
   private final ProgramaRepository repository;
 
   public ProgramaServiceImpl(ProgramaRepository programaRepository) {
@@ -47,7 +49,7 @@ public class ProgramaServiceImpl implements ProgramaService {
   public Programa create(Programa programa) {
     log.debug("create(Programa programa) - start");
 
-    Assert.isNull(programa.getId(), "Programa id tiene que ser null para crear un nuevo Programa");
+    AssertHelper.idIsNull(programa.getId(), Programa.class);
 
     if (programa.getPadre() != null) {
       if (programa.getPadre().getId() == null) {
@@ -59,10 +61,11 @@ public class ProgramaServiceImpl implements ProgramaService {
     }
 
     if (programa.getPadre() == null) {
-      Assert.isTrue(!existPlanWithNombre(programa.getNombre(), null), MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE);
+      Assert.isTrue(!existPlanWithNombre(programa.getNombre(), null),
+          ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE));
     } else {
       Assert.isTrue(!existProgramaNombre(programa.getPadre().getId(), programa.getNombre(), null),
-          MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN);
+          ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN));
     }
 
     programa.setActivo(true);
@@ -84,7 +87,7 @@ public class ProgramaServiceImpl implements ProgramaService {
   public Programa update(Programa programaActualizar) {
     log.debug("update(Programa programaActualizar) - start");
 
-    Assert.notNull(programaActualizar.getId(), "Programa id no puede ser null para actualizar un Programa");
+    AssertHelper.idNotNull(programaActualizar.getId(), Programa.class);
 
     if (programaActualizar.getPadre() != null) {
       if (programaActualizar.getPadre().getId() == null) {
@@ -98,10 +101,11 @@ public class ProgramaServiceImpl implements ProgramaService {
     return repository.findById(programaActualizar.getId()).map(programa -> {
       if (programa.getPadre() == null) {
         Assert.isTrue(!existPlanWithNombre(programaActualizar.getNombre(), programaActualizar.getId()),
-            MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE);
+            ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE));
       } else {
         Assert.isTrue(!existProgramaNombre(programaActualizar.getPadre().getId(), programaActualizar.getNombre(),
-            programa.getId()), MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN);
+            programa.getId()),
+            ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN));
       }
 
       programa.setNombre(programaActualizar.getNombre());
@@ -125,7 +129,7 @@ public class ProgramaServiceImpl implements ProgramaService {
   public Programa enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "Programa id no puede ser null para reactivar un Programa");
+    AssertHelper.idNotNull(id, Programa.class);
 
     return repository.findById(id).map(programa -> {
       if (programa.getActivo().booleanValue()) {
@@ -135,10 +139,10 @@ public class ProgramaServiceImpl implements ProgramaService {
 
       if (programa.getPadre() == null) {
         Assert.isTrue(!existPlanWithNombre(programa.getNombre(), programa.getId()),
-            MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE);
+            ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE));
       } else {
         Assert.isTrue(!existProgramaNombre(programa.getPadre().getId(), programa.getNombre(), programa.getId()),
-            MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN);
+            ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN));
       }
 
       programa.setActivo(true);
@@ -160,7 +164,7 @@ public class ProgramaServiceImpl implements ProgramaService {
   public Programa disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "Programa id no puede ser null para desactivar un Programa");
+    AssertHelper.idNotNull(id, Programa.class);
 
     return repository.findById(id).map(programa -> {
       if (!programa.getActivo().booleanValue()) {

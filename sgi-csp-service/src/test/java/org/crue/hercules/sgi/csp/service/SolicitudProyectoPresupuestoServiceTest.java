@@ -93,7 +93,7 @@ class SolicitudProyectoPresupuestoServiceTest {
     // then: Lanza una excepcion porque el SolicitudProyectoPresupuesto ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyectoPresupuesto))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear la SolicitudProyectoPresupuesto");
+        .hasMessage("Identificador de Solicitud Proyecto Presupuesto debe ser nulo");
   }
 
   @Test

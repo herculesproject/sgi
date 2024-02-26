@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFinanciacionSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFinanciacionService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,10 +40,10 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   public TipoFinanciacion create(TipoFinanciacion tipoFinanciacion) {
     log.debug("create(TipoFinanciacion tipoFinanciacion) - start");
 
-    Assert.isNull(tipoFinanciacion.getId(),
-        "tipoFinanciacion id tiene que ser null para crear un nuevo tipoFinanciacion");
-    Assert.isTrue(!(tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacion.getNombre()).isPresent()),
-        "Ya existe TipoFinanciacion con el nombre " + tipoFinanciacion.getNombre());
+    AssertHelper.idIsNull(tipoFinanciacion.getId(), TipoFinanciacion.class);
+    AssertHelper.entityExists(
+        !(tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacion.getNombre()).isPresent()),
+        TipoFinanciacion.class, TipoFinanciacion.class);
 
     tipoFinanciacion.setActivo(Boolean.TRUE);
     TipoFinanciacion returnValue = tipoFinanciacionRepository.save(tipoFinanciacion);
@@ -64,11 +65,11 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   public TipoFinanciacion update(TipoFinanciacion tipoFinanciacionActualizar) {
     log.debug("update(TipoFinanciacion tipoFinanciacionActualizar) - start");
 
-    Assert.notNull(tipoFinanciacionActualizar.getId(), "TipoFinanciacion id no puede ser null para actualizar");
+    AssertHelper.idNotNull(tipoFinanciacionActualizar.getId(), TipoFinanciacion.class);
     tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacionActualizar.getNombre())
-        .ifPresent((tipoFinanciacionExistente) -> Assert.isTrue(
+        .ifPresent((tipoFinanciacionExistente) -> AssertHelper.entityExists(
             Objects.equals(tipoFinanciacionActualizar.getId(), tipoFinanciacionExistente.getId()),
-            "Ya existe un TipoFinanciacion con el nombre " + tipoFinanciacionExistente.getNombre()));
+            TipoFinanciacion.class, TipoFinanciacion.class));
 
     return tipoFinanciacionRepository.findById(tipoFinanciacionActualizar.getId()).map(tipoFinanciacion -> {
       tipoFinanciacion.setNombre(tipoFinanciacionActualizar.getNombre());
@@ -148,7 +149,7 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   public TipoFinanciacion enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "TipoFinanciacion id no puede ser null para reactivar un TipoFinanciacion");
+    AssertHelper.idNotNull(id, TipoFinanciacion.class);
 
     return tipoFinanciacionRepository.findById(id).map(tipoFinanciacion -> {
       if (Boolean.TRUE.equals(tipoFinanciacion.getActivo())) {
@@ -157,9 +158,9 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
       }
 
       tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacion.getNombre())
-          .ifPresent((tipoFinanciacionExistente) -> Assert.isTrue(
+          .ifPresent((tipoFinanciacionExistente) -> AssertHelper.entityExists(
               Objects.equals(tipoFinanciacion.getId(), tipoFinanciacionExistente.getId()),
-              "Ya existe un TipoFinanciacion con el nombre " + tipoFinanciacion.getNombre()));
+              TipoFinanciacion.class, TipoFinanciacion.class));
 
       tipoFinanciacion.setActivo(true);
 
@@ -179,7 +180,7 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   @Transactional
   public TipoFinanciacion disable(Long id) throws TipoFinanciacionNotFoundException {
     log.debug("disable(Long id) - start");
-    Assert.notNull(id, "TipoFinanciacion id no puede ser null para reactivar un TipoFinanciacion");
+    AssertHelper.idNotNull(id, TipoFinanciacion.class);
 
     return tipoFinanciacionRepository.findById(id).map(tipoFinanciacion -> {
       if (Boolean.FALSE.equals(tipoFinanciacion.getActivo())) {

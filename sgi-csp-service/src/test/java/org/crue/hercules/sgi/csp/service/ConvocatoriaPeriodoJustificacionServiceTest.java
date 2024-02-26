@@ -263,7 +263,7 @@ class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest {
             Arrays.asList(convocatoriaPeriodoJustificacion)))
         // then: throw exception
         .isInstanceOf(PeriodoLongerThanConvocatoriaException.class)
-        .hasMessage("The Period goes beyond the duration of the Call");
+        .hasMessage("El Periodo se extiende más allá de la duración de la Convocatoria");
   }
 
   @Test
@@ -288,7 +288,8 @@ class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest {
             Arrays.asList(convocatoriaPeriodoJustificacion1, convocatoriaPeriodoJustificacion2)))
         // then: throw exception
         .isInstanceOf(PeriodoWrongOrderException.class)
-        .hasMessage("The first Period must start in month 1 and all Periods must be consecutive, with no gaps");
+        .hasMessage(
+            "El primer Periodo debe comenzar en el mes 1 y todos los Periodos deben ser consecutivos, sin huecos");
   }
 
   @Test
@@ -313,7 +314,7 @@ class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest {
             Arrays.asList(convocatoriaPeriodoJustificacion1, convocatoriaPeriodoJustificacion2)))
         // then: throw exception
         .isInstanceOf(TipoFinalException.class)
-        .hasMessage("There must not be more than one final period, and it must be the last one");
+        .hasMessage("No puede haber más de un periodo final y este ha de ser el último");
   }
 
   @Test

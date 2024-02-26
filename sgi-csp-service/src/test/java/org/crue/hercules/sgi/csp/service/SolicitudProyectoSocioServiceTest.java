@@ -110,7 +110,7 @@ class SolicitudProyectoSocioServiceTest {
     // then: Lanza una excepcion porque el SolicitudProyectoSocio ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear la SolicitudProyectoSocio");
+        .hasMessage("Identificador de Solicitud Proyecto Socio debe ser nulo");
   }
 
   @Test
@@ -124,7 +124,7 @@ class SolicitudProyectoSocioServiceTest {
     // then: Lanza una excepcion porque no tiene solicitud de proyecto
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Proyecto datos no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
+        .hasMessage("Identificador de Datos de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -138,7 +138,7 @@ class SolicitudProyectoSocioServiceTest {
     // then: Lanza una excepcion porque no tiene rol socio
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Rol socio no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
+        .hasMessage("Rol de socio de proyecto de Solicitud Proyecto Socio no puede ser nulo");
   }
 
   @Test
@@ -164,7 +164,7 @@ class SolicitudProyectoSocioServiceTest {
     // then: Lanza una excepcion porque no tiene empresa ref
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Empresa ref no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
+        .hasMessage("Referencia Empresa de Solicitud Proyecto Socio no puede ser nulo");
   }
 
   @Test
@@ -239,7 +239,7 @@ class SolicitudProyectoSocioServiceTest {
     // then: Lanza una excepcion porque no tiene solicitud de proyecto
     Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Proyecto datos no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
+        .hasMessage("Identificador de Datos de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -254,7 +254,7 @@ class SolicitudProyectoSocioServiceTest {
     // then: Lanza una excepcion porque no tiene rol socio
     Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Rol socio no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
+        .hasMessage("Rol de socio de proyecto de Solicitud Proyecto Socio no puede ser nulo");
   }
 
   @Test
@@ -281,7 +281,7 @@ class SolicitudProyectoSocioServiceTest {
     // then: Lanza una excepcion porque no tiene empresa ref
     Assertions.assertThatThrownBy(() -> service.update(solicitudProyectoSocio))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Empresa ref no puede ser null para realizar la acción sobre SolicitudProyectoSocio");
+        .hasMessage("Referencia Empresa de Solicitud Proyecto Socio no puede ser nulo");
   }
 
   @Test

@@ -76,7 +76,7 @@ class ModeloEjecucionServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ModeloEjecucion ya tiene id
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.create(modeloEjecucion))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion id tiene que ser null para crear un nuevo ModeloEjecucion");
+        .hasMessage("Identificador de Modelo Ejecución debe ser nulo");
   }
 
   @Test
@@ -92,7 +92,7 @@ class ModeloEjecucionServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque hay otro ModeloEjecucion con ese nombre
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.create(modeloEjecucionNew))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre '%s'", modeloEjecucionNew.getNombre());
+        .hasMessage("Ya existe Modelo Ejecución con el valor %s", modeloEjecucionNew.getNombre());
   }
 
   @Test
@@ -191,7 +191,7 @@ class ModeloEjecucionServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ModeloEjecucion no existe
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.enable(modeloEjecucion.getId()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre '%s'", modeloEjecucion.getNombre());
+        .hasMessage("Modelo Ejecución de Modelo Ejecución ya existe", modeloEjecucion.getNombre());
 
   }
 
@@ -251,7 +251,7 @@ class ModeloEjecucionServiceTest extends BaseServiceTest {
     // nombre
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.update(modeloEjecucionUpdated))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre '%s'", modeloEjecucionUpdated.getNombre());
+        .hasMessage("Ya existe Modelo Ejecución con el valor %s", modeloEjecucionUpdated.getNombre());
   }
 
   @Test

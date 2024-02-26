@@ -71,7 +71,7 @@ class TipoEnlaceServiceTest extends BaseServiceTest {
         // when: create TipoEnlace
         () -> service.create(data))
         // then: throw exception as id can't be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id tiene que ser null para crear TipoEnlace");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Tipo Enlace debe ser nulo");
   }
 
   @Test
@@ -91,7 +91,7 @@ class TipoEnlaceServiceTest extends BaseServiceTest {
         () -> service.create(newData))
         // then: throw exception as Nombre already exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoEnlace activo con el nombre '%s'", newData.getNombre());
+        .hasMessage("Tipo Enlace de Tipo Enlace ya existe", newData.getNombre());
   }
 
   @Test
@@ -145,7 +145,7 @@ class TipoEnlaceServiceTest extends BaseServiceTest {
         // when: update TipoEnlace
         () -> service.update(data))
         // then: throw exception as id must be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id no puede ser null para actualizar TipoEnlace");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Tipo Enlace no puede ser nulo");
   }
 
   @Test
@@ -164,7 +164,7 @@ class TipoEnlaceServiceTest extends BaseServiceTest {
         () -> service.update(data))
         // then: throw exception as Nombre already exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoEnlace activo con el nombre '%s'", data.getNombre());
+        .hasMessage("Tipo Enlace de Tipo Enlace ya existe", data.getNombre());
   }
 
   @Test
@@ -218,7 +218,7 @@ class TipoEnlaceServiceTest extends BaseServiceTest {
     // when: activamos el TipoEnlace
     // then: Lanza una excepcion porque el TipoEnlace no existe
     Assertions.assertThatThrownBy(() -> service.enable(tipoEnlace.getId())).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoEnlace activo con el nombre '%s'", tipoEnlace.getNombre());
+        .hasMessage("Tipo Enlace de Tipo Enlace ya existe", tipoEnlace.getNombre());
 
   }
 

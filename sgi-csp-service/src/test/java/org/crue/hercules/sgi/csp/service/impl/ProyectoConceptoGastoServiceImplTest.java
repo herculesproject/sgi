@@ -80,7 +80,7 @@ class ProyectoConceptoGastoServiceImplTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(() -> this.service.create(proyectoConceptoGasto)).isInstanceOf(
         IllegalArgumentException.class)
-        .hasMessage("La fecha de inicio no puede ser posterior a la fecha de fin del proyecto");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test
@@ -109,7 +109,7 @@ class ProyectoConceptoGastoServiceImplTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(() -> this.service.update(proyectoConceptoGasto)).isInstanceOf(
         IllegalArgumentException.class)
-        .hasMessage("La fecha de inicio no puede ser posterior a la fecha de fin del proyecto");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test

@@ -197,7 +197,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.create(input))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoFase");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -211,7 +211,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.create(input))
         // then: throw exception as TipoFaseId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Tipo Fase no puede ser null para realizar la acción sobre ProyectoFase");
+        .hasMessage("Identificador de Tipo Fase no puede ser nulo");
   }
 
   @Test
@@ -237,7 +237,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
     // when: create ProyectoFase
     // then: throw exception as Inicio > fechaFin
     Assertions.assertThatThrownBy(() -> service.create(input)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test
@@ -270,8 +270,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.create(input))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
-            "Proyecto sin modelo asignado");
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución Proyecto sin modelo asignado");
   }
 
   @Test
@@ -288,8 +287,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.create(input))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
-            "Proyecto sin modelo asignado");
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución Proyecto sin modelo asignado");
   }
 
   @Test
@@ -314,7 +312,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.create(input))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Fase no está activo para el modelo ejecución %s",
             modeloTipoFase.getTipoFase().getNombre(), proyecto.getModeloEjecucion().getNombre());
   }
 
@@ -341,7 +339,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.create(input))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", proyectoFase.getTipoFase().getNombre());
+        .hasMessage("%s de Tipo Fase no está activo", proyectoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -381,7 +379,8 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.create(input))
         // then: throw exception as date overlaps
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un registro para la misma Fase en ese rango de fechas");
+        .hasMessage(
+            "Proyecto Fase Tipo Fase ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
   }
 
   @Test
@@ -518,7 +517,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, input))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoFase");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -536,7 +535,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, input))
         // then: throw exception as TipoFaseId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Tipo Fase no puede ser null para realizar la acción sobre ProyectoFase");
+        .hasMessage("Identificador de Tipo Fase no puede ser nulo");
   }
 
   @Test
@@ -569,7 +568,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, input))
         // then: throw exception as Inicio > fechaFin
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test
@@ -608,8 +607,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, input))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
-            "Proyecto sin modelo asignado");
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución Proyecto sin modelo asignado");
   }
 
   @Test
@@ -629,8 +627,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, input))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
-            "Proyecto sin modelo asignado");
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución Proyecto sin modelo asignado");
   }
 
   @Test
@@ -658,7 +655,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, input))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Fase no está activo para el modelo ejecución %s",
             proyectoFase.getTipoFase().getNombre(), proyecto.getModeloEjecucion().getNombre());
   }
 
@@ -691,7 +688,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, input))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", proyectoFase.getTipoFase().getNombre());
+        .hasMessage("%s de Tipo Fase no está activo", proyectoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -731,7 +728,8 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, input))
         // then: throw exception as date overlaps
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un registro para la misma Fase en ese rango de fechas");
+        .hasMessage(
+            "Proyecto Fase Tipo Fase ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
   }
 
   @Test

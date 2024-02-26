@@ -34,6 +34,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
+import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
@@ -64,8 +65,10 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -88,8 +91,20 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class SolicitudService {
 
-  private static final String MESSAGE_KEY_CONVOCATORIA = "org.crue.hercules.sgi.csp.model.Convocatoria.message";
-  public static final String MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO = "La Solicitud pertenece a una Unidad de Gestión no gestionable por el usuario";
+  private static final String MSG_MODEL_CONVOCATORIA = "org.crue.hercules.sgi.csp.model.Convocatoria.message";
+  private static final String MSG_KEY_CREADOR_REF = "solicitud.creadorRef";
+  private static final String MSG_KEY_SOLICITANTE_REF = "solicitud.solicitanteRef";
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_MSG = "msg";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_ENTITY_MODIFICABLE = "org.springframework.util.Assert.entity.modificable.message";
+  private static final String MSG_MODEL_SOLICITUD = "org.crue.hercules.sgi.csp.model.Solicitud.message";
+  private static final String MESSAGE_KEY_CONVOCATORIA_O_CONVOCATORIA_EXTERNA = "convocatoriaOconvocatoriaExterna";
+  private static final String MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE = "org.springframework.util.Assert.entity.unidadGestion.noGestionable.message";
+  private static final String MSG_KEY_CONVOCATORIA = "convocatoriaId";
+  private static final String MSG_SOLICITUD_SIN_CONVOCATORIA = "solicitud.sinConvocatoria";
+  private static final String MSG_USUARIO_NO_CREADOR_SOLICITUD = "solicitud.usuario.noCreador";
+  private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
 
   private final SgiConfigProperties sgiConfigProperties;
   private final SgiApiEtiService sgiApiEtiService;
@@ -164,12 +179,14 @@ public class SolicitudService {
   @Transactional
   public Solicitud create(Solicitud solicitud) {
     log.debug("create(Solicitud solicitud) - start");
+    AssertHelper.idIsNull(solicitud.getId(), Solicitud.class);
+    Assert.notNull(solicitud.getCreadorRef(),
+        () -> ProblemMessage.builder().key(Assert.class, "notNull")
+            .parameter("field", ApplicationContextSupport.getMessage(MSG_KEY_CREADOR_REF))
+            .parameter("entity", ApplicationContextSupport.getMessage(Solicitud.class)).build());
 
-    Assert.isNull(solicitud.getId(), "Solicitud id tiene que ser null para crear una Solicitud");
-    Assert.notNull(solicitud.getCreadorRef(), "CreadorRef no puede ser null para crear una Solicitud");
-
-    Assert.isTrue((solicitud.getConvocatoriaId() != null) || solicitud.getConvocatoriaExterna() != null,
-        "Convocatoria o Convocatoria externa tienen que ser distinto de null para crear una Solicitud");
+    AssertHelper.fieldNotNull((solicitud.getConvocatoriaId() != null || solicitud.getConvocatoriaExterna() != null),
+        GastoRequerimientoJustificacion.class, MESSAGE_KEY_CONVOCATORIA_O_CONVOCATORIA_EXTERNA);
 
     String authority = "CSP-SOL-C";
     if (solicitud.getConvocatoriaId() != null) {
@@ -183,14 +200,22 @@ public class SolicitudService {
       Assert.isTrue(
           SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C") || (SgiSecurityContextHolder.hasAuthority(authority)
               || SgiSecurityContextHolder.hasAuthorityForUO(authority, convocatoria.getUnidadGestionRef())),
-          "La Convocatoria pertenece a una Unidad de Gestión no gestionable por el usuario");
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                  MSG_MODEL_CONVOCATORIA))
+              .build());
 
       solicitud.setUnidadGestionRef(convocatoria.getUnidadGestionRef());
     } else {
       Assert.isTrue(
           SgiSecurityContextHolder.hasAuthority(authority)
               || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
-          "La Unidad de Gestión no es gestionable por el usuario");
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                  MSG_MODEL_SOLICITUD))
+              .build());
     }
 
     solicitud.setActivo(Boolean.TRUE);
@@ -221,7 +246,7 @@ public class SolicitudService {
     log.debug("createByExternalUser(Solicitud solicitud) - start");
 
     AssertHelper.idIsNull(solicitud.getId(), Solicitud.class);
-    AssertHelper.fieldNotNull(solicitud.getConvocatoriaId(), Solicitud.class, MESSAGE_KEY_CONVOCATORIA);
+    AssertHelper.fieldNotNull(solicitud.getConvocatoriaId(), Solicitud.class, MSG_KEY_CONVOCATORIA);
 
     solicitud.setActivo(Boolean.TRUE);
 
@@ -253,27 +278,46 @@ public class SolicitudService {
   public Solicitud update(Solicitud solicitud) {
     log.debug("update(Solicitud solicitud) - start");
 
-    Assert.notNull(solicitud.getId(), "Id no puede ser null para actualizar Solicitud");
+    AssertHelper.idNotNull(solicitud.getId(), Solicitud.class);
 
     if (solicitud.getFormularioSolicitud() != null
         && !solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH)) {
-      Assert.notNull(solicitud.getSolicitanteRef(), "El solicitante no puede ser null para actualizar Solicitud");
+      Assert.notNull(solicitud.getSolicitanteRef(),
+          () -> ProblemMessage.builder().key(Assert.class, "notNull")
+              .parameter("field", ApplicationContextSupport.getMessage(MSG_KEY_SOLICITANTE_REF))
+              .parameter("entity", ApplicationContextSupport.getMessage(Solicitud.class)).build());
     }
 
     Assert.isTrue(
         solicitud.getConvocatoriaId() != null
             || (solicitud.getConvocatoriaExterna() != null && !solicitud.getConvocatoriaExterna().isEmpty()),
-        "Se debe seleccionar una convocatoria del SGI o convocatoria externa para actualizar Solicitud");
+        ApplicationContextSupport.getMessage(MSG_SOLICITUD_SIN_CONVOCATORIA));
 
     // comprobar si la solicitud es modificable
-    Assert.isTrue(modificable(solicitud.getId()), "No se puede modificar la Solicitud");
+    Assert.isTrue(modificable(solicitud
+        .getId()),
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_MODIFICABLE)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
+            .parameter(MSG_KEY_MSG, null)
+            .build());
 
     return repository.findById(solicitud.getId()).map(data -> {
 
-      Assert.isTrue(solicitud.getActivo(), "Solicitud tiene que estar activo para actualizarse");
+      Assert.isTrue(solicitud.getActivo(),
+          () -> ProblemMessage.builder()
+              .key(MSG_ENTITY_INACTIVO)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
+              .parameter(MSG_KEY_FIELD, solicitud.getTitulo())
+              .build());
 
-      Assert.isTrue(solicitudAuthorityHelper.hasPermisosEdicion(solicitud),
-          MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO);
+      Assert.isTrue(
+          solicitudAuthorityHelper.hasPermisosEdicion(solicitud),
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                  MSG_MODEL_SOLICITUD))
+              .build());
 
       data.setSolicitanteRef(solicitud.getSolicitanteRef());
       data.setCodigoExterno(solicitud.getCodigoExterno());
@@ -308,7 +352,7 @@ public class SolicitudService {
     log.debug("updateByExternalUser(String solicitudPublicId, Solicitud solicitud) - start");
 
     AssertHelper.idNotNull(solicitud.getId(), Solicitud.class);
-    AssertHelper.fieldNotNull(solicitud.getConvocatoriaId(), Solicitud.class, MESSAGE_KEY_CONVOCATORIA);
+    AssertHelper.fieldNotNull(solicitud.getConvocatoriaId(), Solicitud.class, MSG_KEY_CONVOCATORIA);
 
     Solicitud data = solicitudAuthorityHelper.getSolicitudByPublicId(solicitudPublicId);
     solicitudAuthorityHelper.checkExternalUserHasAuthorityModifySolicitud(data);
@@ -330,12 +374,17 @@ public class SolicitudService {
   public Solicitud enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "Solicitud id no puede ser null para reactivar un Solicitud");
+    AssertHelper.idNotNull(id, Solicitud.class);
 
     return repository.findById(id).map(solicitud -> {
 
-      Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-R", solicitud.getUnidadGestionRef()),
-          MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO);
+      Assert.isTrue(
+          SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-R", solicitud.getUnidadGestionRef()),
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                  MSG_MODEL_SOLICITUD))
+              .build());
 
       if (Boolean.TRUE.equals(solicitud.getActivo())) {
         // Si esta activo no se hace nada
@@ -360,7 +409,7 @@ public class SolicitudService {
   public Solicitud disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "Solicitud id no puede ser null para desactivar un Solicitud");
+    AssertHelper.idNotNull(id, Solicitud.class);
 
     return repository.findById(id).map(solicitud -> {
       String authorityInv = "CSP-SOL-INV-BR";
@@ -369,13 +418,17 @@ public class SolicitudService {
       if (hasAuthorityInv) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Assert.isTrue(solicitud.getCreadorRef().equals(authentication.getName()),
-            "El usuario no es el creador de la Solicitud");
+            ApplicationContextSupport.getMessage(MSG_USUARIO_NO_CREADOR_SOLICITUD));
       } else {
         String authority = "CSP-SOL-B";
         Assert.isTrue(
             SgiSecurityContextHolder.hasAuthority(authority)
                 || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
-            MESSAGE_UNIDAD_GESTION_NO_PERTENECE_AL_USUARIO);
+            () -> ProblemMessage.builder()
+                .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
+                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                    MSG_MODEL_SOLICITUD))
+                .build());
       }
 
       if (Boolean.FALSE.equals(solicitud.getActivo())) {
@@ -521,7 +574,7 @@ public class SolicitudService {
    */
   public boolean hasConvocatoriaSgi(Long id) {
     log.debug("hasConvocatoriaSgi(Long id) - start");
-    Assert.notNull(id, "Solicitud id no puede ser null para comprobar su convocatoria");
+    AssertHelper.idNotNull(id, Solicitud.class);
 
     return repository.findById(id).map(solicitud -> {
 

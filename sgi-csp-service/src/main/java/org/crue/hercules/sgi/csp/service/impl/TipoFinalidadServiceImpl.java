@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Objects;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
+import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad_;
 import org.crue.hercules.sgi.csp.repository.TipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFinalidadSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFinalidadService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,9 +47,10 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
   public TipoFinalidad create(TipoFinalidad tipoFinalidad) {
     log.debug("create(TipoFinalidad tipoFinalidad) - start");
 
-    Assert.isNull(tipoFinalidad.getId(), "Id tiene que ser null para crear TipoFinalidad");
-    Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(tipoFinalidad.getNombre()).isPresent()),
-        "Ya existe un TipoFinalidad activo con el nombre '" + tipoFinalidad.getNombre() + "'");
+    AssertHelper.idIsNull(tipoFinalidad.getId(), TipoFinalidad.class);
+    AssertHelper.entityExists(
+        !(repository.findByNombreAndActivoIsTrue(tipoFinalidad.getNombre()).isPresent()),
+        TipoFinalidad.class, TipoFinalidad.class);
 
     tipoFinalidad.setActivo(Boolean.TRUE);
     TipoFinalidad returnValue = repository.save(tipoFinalidad);
@@ -68,11 +71,11 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
   public TipoFinalidad update(TipoFinalidad tipoFinalidad) {
     log.debug("update(TipoFinalidad tipoFinalidad) - start");
 
-    Assert.notNull(tipoFinalidad.getId(), "Id no puede ser null para actualizar TipoFinalidad");
+    AssertHelper.idNotNull(tipoFinalidad.getId(), TipoFinalidad.class);
     repository.findByNombreAndActivoIsTrue(tipoFinalidad.getNombre())
-        .ifPresent(tipoFinalidadExistente -> Assert.isTrue(
+        .ifPresent(tipoFinalidadExistente -> AssertHelper.entityExists(
             Objects.equals(tipoFinalidad.getId(), tipoFinalidadExistente.getId()),
-            "Ya existe un TipoFinalidad activo con el nombre '" + tipoFinalidadExistente.getNombre() + "'"));
+            TipoFinalidad.class, TipoFinalidad.class));
 
     return repository.findById(tipoFinalidad.getId()).map(data -> {
       data.setNombre(tipoFinalidad.getNombre());
@@ -95,15 +98,16 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
   public TipoFinalidad enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "TipoFinalidad id no puede ser null para reactivar un TipoFinalidad");
+    AssertHelper.idNotNull(id, TipoFinalidad.class);
 
     return repository.findById(id).map(tipoFinalidad -> {
       if (Boolean.TRUE.equals(tipoFinalidad.getActivo())) {
         return tipoFinalidad;
       }
 
-      Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(tipoFinalidad.getNombre()).isPresent()),
-          "Ya existe un TipoFinalidad activo con el nombre '" + tipoFinalidad.getNombre() + "'");
+      AssertHelper.entityExists(
+          !(repository.findByNombreAndActivoIsTrue(tipoFinalidad.getNombre()).isPresent()),
+          TipoFinalidad.class, TipoFinalidad.class);
 
       tipoFinalidad.setActivo(true);
       TipoFinalidad returnValue = repository.save(tipoFinalidad);
@@ -123,7 +127,7 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
   public TipoFinalidad disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "TipoFinalidad id no puede ser null para desactivar un TipoFinalidad");
+    AssertHelper.idNotNull(id, TipoFinalidad.class);
 
     return repository.findById(id).map(tipoFinalidad -> {
       if (Boolean.FALSE.equals(tipoFinalidad.getActivo())) {

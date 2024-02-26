@@ -90,7 +90,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ProyectoPeriodoSeguimiento ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(proyectoPeriodoSeguimiento))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ProyectoPeriodoSeguimiento id tiene que ser null para crear un nuevo ProyectoPeriodoSeguimiento");
+        .hasMessage("Identificador de Proyecto Periodo Seguimiento debe ser nulo");
   }
 
   @Test
@@ -105,7 +105,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPeriodoSeguimiento))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para crear ProyectoPeriodoSeguimiento");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -120,7 +120,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPeriodoSeguimiento))
         // then: throw exception as FechaInicio is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FechaInicio no puede ser null para crear ProyectoPeriodoSeguimiento");
+        .hasMessage("Fecha inicio de Proyecto Periodo Seguimiento no puede ser nulo");
   }
 
   @Test
@@ -135,7 +135,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPeriodoSeguimiento))
         // then: throw exception as FechaFin is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FechaFin no puede ser null para crear ProyectoPeriodoSeguimiento");
+        .hasMessage("Fecha fin de Proyecto Periodo Seguimiento no puede ser nulo");
   }
 
   @Test
@@ -163,7 +163,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPeriodoSeguimiento))
         // then: throw exception as FechaInicioPresentacion is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FechaInicioPresentacion no puede ser null para crear ProyectoPeriodoSeguimiento");
+        .hasMessage("Fecha inicio de Proyecto Periodo Seguimiento no puede ser nulo");
   }
 
   @Test
@@ -191,7 +191,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPeriodoSeguimiento))
         // then: throw exception as FechaFinPresentacion is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FechaFinPresentacion no puede ser null para crear ProyectoPeriodoSeguimiento");
+        .hasMessage("Fecha fin de Proyecto Periodo Seguimiento no puede ser nulo");
   }
 
   @Test
@@ -223,7 +223,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPeriodoSeguimiento))
         // then: throw exception WithInvalidFechas
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
 
   }
 
@@ -243,7 +243,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPeriodoSeguimiento))
         // then: throw exception WithInvalidFechas
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin de presentación debe ser posterior a la fecha de inicio de presentación");
+        .hasMessage("Fecha Inicio Presentación debe ser anterior Fecha Fin Presentación");
 
   }
 
@@ -305,7 +305,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPeriodoSeguimiento))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para actualizar ProyectoPeriodoSeguimiento");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -324,7 +324,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPeriodoSeguimiento))
         // then: throw exception as FechaInicio is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FechaInicio no puede ser null para actualizar ProyectoPeriodoSeguimiento");
+        .hasMessage("Fecha inicio de Proyecto Periodo Seguimiento no puede ser nulo");
   }
 
   @Test
@@ -343,7 +343,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPeriodoSeguimiento))
         // then: throw exception as FechaFin is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FechaFin no puede ser null para actualizar ProyectoPeriodoSeguimiento");
+        .hasMessage("Fecha fin de Proyecto Periodo Seguimiento no puede ser nulo");
   }
 
   @Test
@@ -375,7 +375,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPeriodoSeguimiento))
         // then: throw exception as FechaInicioPresentacion is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FechaInicioPresentacion no puede ser null para actualizar ProyectoPeriodoSeguimiento");
+        .hasMessage("Fecha inicio de Proyecto Periodo Seguimiento no puede ser nulo");
   }
 
   @Test
@@ -407,7 +407,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPeriodoSeguimiento))
         // then: throw exception as FechaFinPresentacion is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("FechaFinPresentacion no puede ser null para actualizar ProyectoPeriodoSeguimiento");
+        .hasMessage("Fecha fin de Proyecto Periodo Seguimiento no puede ser nulo");
   }
 
   @Test
@@ -447,7 +447,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPeriodoSeguimiento))
         // then: throw exception WithInvalidFechas
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
 
   }
 
@@ -471,7 +471,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPeriodoSeguimiento))
         // then: throw exception WithInvalidFechas
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin de presentación debe ser posterior a la fecha de inicio de presentación");
+        .hasMessage("Fecha Inicio Presentación debe ser anterior Fecha Fin Presentación");
 
   }
 

@@ -109,7 +109,7 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ModeloTipoDocumento ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear un modeloTipoDocumento");
+        .hasMessage("Identificador de Modelo Tipo Documento debe ser nulo");
   }
 
   @Test
@@ -123,7 +123,7 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id ModeloEjecucion no puede ser null para crear un modeloTipoDocumento");
+        .hasMessage("Modelo Ejecución de Modelo Tipo Documento no puede ser nulo");
   }
 
   @Test
@@ -137,7 +137,7 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id TipoDocumento no puede ser null para crear un modeloTipoDocumento");
+        .hasMessage("Tipo Documento Persona de Modelo Tipo Documento no puede ser nulo");
   }
 
   @Test
@@ -167,7 +167,8 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion porque el ModeleoEjecucion está inactivo
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El ModeloEjecucion debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("%s de Modelo Ejecución no está activo", modeloTipoDocumento.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -203,7 +204,8 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // when: Creamos el modeloTipoDocumento
     // then: Lanza una excepcion porque el TipoDocumento está inactivo
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoDocumento debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("%s de Tipo Documento no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
   }
 
   @Test
@@ -300,7 +302,8 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion porque el ModeloTipoFase no esta activo
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El ModeloTipoFase debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Modelo Tipo Fase no está activo",
+            modeloTipoDocumento.getModeloTipoFase().getTipoFase().getNombre());
   }
 
   @Test
@@ -322,7 +325,8 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion porque el ModeloTipoFase no esta activo
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoFase debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Tipo Fase no está activo",
+            modeloTipoDocumento.getModeloTipoFase().getTipoFase().getNombre());
   }
 
   @Test
@@ -352,7 +356,7 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque ya existe esa relacion activa
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Ya existe una asociación activa para el ModeloEjecucion '%s' y el TipoDocumento '%s' con ModeloTipoFase de '%s'",
+            "Ya existe una asociación activa para ese ModeloEjecucion y Tipo Documento",
             modeloTipoDocumento.getModeloEjecucion().getNombre(), modeloTipoDocumento.getTipoDocumento().getNombre(),
             modeloTipoDocumento.getModeloTipoFase().getTipoFase().getNombre());
   }
@@ -383,7 +387,7 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque ya existe esa relacion activa
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Ya existe una asociación activa para el ModeloEjecucion '%s' y el TipoDocumento '%s' con ModeloTipoFase de '%s'",
+            "Ya existe una asociación activa para ese ModeloEjecucion y Tipo Documento",
             modeloTipoDocumento.getModeloEjecucion().getNombre(), modeloTipoDocumento.getTipoDocumento().getNombre(),
             "Sin fase asignada");
   }

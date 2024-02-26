@@ -68,7 +68,7 @@ class RequisitoEquipoServiceTest extends BaseServiceTest {
     // when: Creamos el RequisitoEquipo
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(requisitoEquipo)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("The Identifier from Team Requirement can't be null");
+        .hasMessage("Identificador de Requisito Equipo no puede ser nulo");
   }
 
   @Test
@@ -83,7 +83,7 @@ class RequisitoEquipoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque la convocatoria ya tiene un RequisitoEquipo
     Assertions.assertThatThrownBy(() -> service.create(requisitoEquipoExistente))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("There is already a Team Requirement related with the Call");
+        .hasMessage("Ya existe un/a Requisito Equipo relacionado/a con el/la Convocatoria");
   }
 
   @Test
@@ -119,7 +119,7 @@ class RequisitoEquipoServiceTest extends BaseServiceTest {
     // when: Actualizamos el RequisitoEquipo
     // then: Lanza una excepcion porque el RequisitoEquipo no existe
     Assertions.assertThatThrownBy(() -> service.update(requisitoEquipo, null))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("The Identifier from Team Requirement can't be null");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Requisito Equipo no puede ser nulo");
   }
 
   @Test

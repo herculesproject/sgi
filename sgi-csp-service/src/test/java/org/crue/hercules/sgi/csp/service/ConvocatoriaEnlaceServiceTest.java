@@ -94,7 +94,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // when: Creamos el ConvocatoriaEnlace
     // then: Lanza una excepcion porque el ConvocatoriaEnlace ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(convocatoriaEnlace)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConvocatoriaEnlace id tiene que ser null para crear un nuevo ConvocatoriaEnlace");
+        .hasMessage("Identificador de Convocatoria Enlace debe ser nulo");
   }
 
   @Test
@@ -107,7 +107,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // when: Creamos el ConvocatoriaEnlace
     // then: Lanza una excepcion porque la url es null
     Assertions.assertThatThrownBy(() -> service.create(convocatoriaEnlace)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConvocatoriaEnlace url no puede ser null para crear una nueva ConvocatoriaEnlace");
+        .hasMessage("URL de Convocatoria Enlace no puede ser nulo");
   }
 
   @Test
@@ -118,7 +118,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // when: Creamos el ConvocatoriaEnlace
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(convocatoriaEnlace)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null para crear ConvocatoriaEnlace");
+        .hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -137,8 +137,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.create(convocatoriaEnlace))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoEnlace '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaEnlace.getTipoEnlace().getNombre(), "Convocatoria sin modelo asignado");
+        .hasMessage("Tipo Enlace no disponible para el Modelo Ejecución Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -159,8 +158,8 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.create(convocatoriaEnlace))
         // then: throw exception as ModeloTipoEnlace not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoEnlace '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaEnlace.getTipoEnlace().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Enlace no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -183,7 +182,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.create(convocatoriaEnlace))
         // then: throw exception as ModeloTipoEnlace is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoEnlace '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Enlace no está activo",
             convocatoriaEnlace.getTipoEnlace().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -206,7 +205,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.create(convocatoriaEnlace))
         // then: throw exception as TipoEnlace is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoEnlace '%s' no está activo", convocatoriaEnlace.getTipoEnlace().getNombre());
+        .hasMessage("%s de Tipo Enlace no está activo", convocatoriaEnlace.getTipoEnlace().getNombre());
   }
 
   @Test
@@ -269,7 +268,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // when: Actualizamos el ConvocatoriaEnlace
     // then: Lanza una excepcion porque el ConvocatoriaEnlace no existe
     Assertions.assertThatThrownBy(() -> service.update(convocatoriaEnlace)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConvocatoriaEnlace url no puede ser null para actualizar un nuevo ConvocatoriaEnlace");
+        .hasMessage("URL de Convocatoria Enlace no puede ser nulo");
   }
 
   @Test
@@ -322,8 +321,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.update(convocatoriaEnlaceActualizado))
         // then: throw exception as ModeloTipoEnlace not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoEnlace '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaEnlaceActualizado.getTipoEnlace().getNombre(), "Convocatoria sin modelo asignado");
+        .hasMessage("Tipo Enlace no disponible para el Modelo Ejecución Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -348,8 +346,8 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.update(convocatoriaEnlaceActualizado))
         // then: throw exception as ModeloTipoEnlace not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoEnlace '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaEnlaceActualizado.getTipoEnlace().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Enlace no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -377,7 +375,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.update(convocatoriaEnlaceActualizado))
         // then: throw exception as ModeloTipoEnlace is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoEnlace '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Enlace no está activo para el modelo ejecución %s",
             convocatoriaEnlaceActualizado.getTipoEnlace().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -404,7 +402,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.update(convocatoriaEnlaceActualizado))
         // then: throw exception as TipoEnlace is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoEnlace '%s' no está activo", convocatoriaEnlaceActualizado.getTipoEnlace().getNombre());
+        .hasMessage("%s de Tipo Enlace no está activo", convocatoriaEnlaceActualizado.getTipoEnlace().getNombre());
   }
 
   @Test

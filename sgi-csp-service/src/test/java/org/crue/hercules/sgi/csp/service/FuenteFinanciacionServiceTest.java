@@ -329,7 +329,7 @@ class FuenteFinanciacionServiceTest extends BaseServiceTest {
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion)).isInstanceOf(ValidationException.class)
-        .hasMessageContaining("No Financial Source active with identifier '1' exists");
+        .hasMessageContaining("No Fuente de Financiación active with identifier '1' exists");
   }
 
   @Test
@@ -378,7 +378,7 @@ class FuenteFinanciacionServiceTest extends BaseServiceTest {
     // when: Activamos el FuenteFinanciacion
     // then: Lanza una excepcion porque hay otro FuenteFinanciacion con ese nombre
     Assertions.assertThatThrownBy(() -> service.activar(id)).isInstanceOf(ConstraintViolationException.class)
-        .hasMessageContaining("A Financial Source with name 'nombreRepetido' already exists");
+        .hasMessageContaining("A Fuente de Financiación with name 'nombreRepetido' already exists");
   }
 
   @Test

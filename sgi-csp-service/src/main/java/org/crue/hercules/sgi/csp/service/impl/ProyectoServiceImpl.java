@@ -46,6 +46,7 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.Proyecto.CausaExencion;
 import org.crue.hercules.sgi.csp.model.ProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
@@ -67,6 +68,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
@@ -79,6 +81,8 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
@@ -136,8 +140,10 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -164,6 +170,20 @@ public class ProyectoServiceImpl implements ProyectoService {
    * Valor por defecto del atributo ajena en la copia de entidades financiadoras
    */
   private static final Boolean DEFAULT_COPY_ENTIDAD_FINANCIADORA_AJENA_VALUE = Boolean.FALSE;
+  private static final String MSG_MODEL_PROYECTO = "org.crue.hercules.sgi.csp.model.Proyecto.message";
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_MODELO = "modelo";
+  private static final String MSG_KEY_TIPO = "tipo";
+  private static final String MSG_KEY_UNIDAD_GESTION = "unidadGestion";
+  private static final String MSG_FIELD_CONFIDENCIAL = "confidencial";
+  private static final String MSG_FIELD_COORDINADO = "coordinado";
+  private static final String MSG_FIELD_PERMITE_PAQUETES_TRABAJO = "permitePaquetesTrabajo";
+  private static final String MSG_FIELD_FECHA_FIN_ULTIMA_PRORROGA = "fechaFinUltimaProrroga";
+  private static final String MSG_FIELD_FECHA_FIN_DEFINITIVA = "fechaFinDefinitiva";
+  private static final String MSG_CAMPOS_NO_ELIMINABLES = "proyecto.camposNoEliminables";
+  private static final String MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE = "org.springframework.util.Assert.entity.unidadGestion.noGestionable.message";
+  private static final String MSG_NO_DISPONIBLE_UNIDAD_GESTION = "org.crue.hercules.sgi.csp.exceptions.ModeloEjecucion.noDisponible.unidadGestion.message";
+  private static final String MSG_PROBLEM_PROYECTO_FORMULARIO_SOLICITUD_TIPO = "org.crue.hercules.sgi.csp.exceptions.Proyecto.FormularioSolicitud.tipo.message";
 
   private static final String MSG_FIELD_FECHA_INICIO = "fechaInicio";
   private static final String MSG_FIELD_FECHA_FIN = "fechaFin";
@@ -230,10 +250,15 @@ public class ProyectoServiceImpl implements ProyectoService {
   @Transactional
   public Proyecto create(Proyecto proyecto) {
     log.debug("create(Proyecto proyecto) - start");
-    Assert.isNull(proyecto.getId(), "Proyecto id tiene que ser null para crear un Proyecto");
+    AssertHelper.idIsNull(proyecto.getId(), Proyecto.class);
 
-    Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
-        "La Unidad de Gestión no es gestionable por el usuario");
+    Assert.isTrue(
+        SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-C", proyecto.getUnidadGestionRef()),
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_MODEL_PROYECTO))
+            .build());
 
     proyecto.setFechaInicioStarted(proyecto.getFechaInicio() != null);
     proyecto.setActivo(Boolean.TRUE);
@@ -337,7 +362,7 @@ public class ProyectoServiceImpl implements ProyectoService {
               && ((proyectoActualizar.getSolicitudId() == null && data.getSolicitudId() == null)
                   || (proyectoActualizar.getSolicitudId() != null && data.getSolicitudId() != null
                       && proyectoActualizar.getSolicitudId().equals(data.getSolicitudId()))),
-          "Existen campos del proyecto modificados que no se pueden modificar");
+          ApplicationContextSupport.getMessage(MSG_CAMPOS_NO_ELIMINABLES));
 
       data.setAcronimo(proyectoActualizar.getAcronimo());
       data.setAmbitoGeografico(proyectoActualizar.getAmbitoGeografico());
@@ -462,11 +487,15 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Proyecto enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "Proyecto id no puede ser null para reactivar un Proyecto");
+    AssertHelper.idNotNull(id, Proyecto.class);
 
     return repository.findById(id).map(proyecto -> {
       Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-R", proyecto.getUnidadGestionRef()),
-          "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                  MSG_MODEL_PROYECTO))
+              .build());
 
       if (proyecto.getActivo().booleanValue()) {
         // Si esta activo no se hace nada
@@ -492,11 +521,15 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Proyecto disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "Proyecto id no puede ser null para desactivar un Proyecto");
+    AssertHelper.idNotNull(id, Proyecto.class);
 
     return repository.findById(id).map(proyecto -> {
       Assert.isTrue(SgiSecurityContextHolder.hasAuthorityForUO("CSP-PRO-B", proyecto.getUnidadGestionRef()),
-          "El proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                  MSG_MODEL_PROYECTO))
+              .build());
 
       if (!proyecto.getActivo().booleanValue()) {
         // Si no esta activo no se hace nada
@@ -747,21 +780,24 @@ public class ProyectoServiceImpl implements ProyectoService {
    */
   private void validarDatos(Proyecto proyecto, Estado estado) {
     if (proyecto.getConvocatoriaId() != null) {
-      Assert.isTrue(convocatoriaRepository.existsById(proyecto.getConvocatoriaId()),
-          "La convocatoria con id '" + proyecto.getConvocatoriaId() + "' no existe");
+      AssertHelper.entityNotExists(convocatoriaRepository.existsById(proyecto.getConvocatoriaId()), Proyecto.class,
+          Convocatoria.class);
     }
 
     if (proyecto.getFechaInicio() != null && proyecto.getFechaFin() != null) {
-      Assert.isTrue(proyecto.getFechaFin().isAfter(proyecto.getFechaInicio()),
-          "La fecha de fin debe ser posterior a la fecha de inicio");
+      AssertHelper.isBefore(proyecto.getFechaFin().isAfter(proyecto.getFechaInicio()));
     }
 
     // ModeloEjecucion correcto
     Optional<ModeloUnidad> modeloUnidad = modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(
         proyecto.getModeloEjecucion().getId(), proyecto.getUnidadGestionRef());
 
-    Assert.isTrue(modeloUnidad.isPresent(), "ModeloEjecucion '" + proyecto.getModeloEjecucion().getNombre()
-        + "' no disponible para la UnidadGestion " + proyecto.getUnidadGestionRef());
+    Assert.isTrue(modeloUnidad.isPresent(),
+        () -> ProblemMessage.builder()
+            .key(MSG_NO_DISPONIBLE_UNIDAD_GESTION)
+            .parameter(MSG_KEY_MODELO, proyecto.getModeloEjecucion().getNombre())
+            .parameter(MSG_KEY_UNIDAD_GESTION, proyecto.getUnidadGestionRef())
+            .build());
 
     // FechasFin after than última prórroga
     Optional<ProyectoProrroga> prorroga = proyectoProrrogaRepository
@@ -769,10 +805,10 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     if (prorroga.isPresent() && !Tipo.IMPORTE.equals(prorroga.get().getTipo())
         && proyecto.getFechaFinDefinitiva() != null && prorroga.get().getFechaFin() != null) {
-      Assert.isTrue(
+      AssertHelper.fieldBefore(
           proyecto.getFechaFinDefinitiva().isAfter(prorroga.get().getFechaFin())
               || proyecto.getFechaFinDefinitiva().equals(prorroga.get().getFechaFin()),
-          "La fecha de fin definitiva debe ser posterior a la fecha de fin de la última prórroga");
+          MSG_FIELD_FECHA_FIN_ULTIMA_PRORROGA, MSG_FIELD_FECHA_FIN_DEFINITIVA);
     }
 
     // Validación de campos obligatorios según estados. Solo aplicaría en el
@@ -781,8 +817,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     // Validación de datos IVA
     if (proyecto.getIva() != null && proyecto.getIva().getIva() != null && proyecto.getCausaExencion() != null) {
-      Assert.isTrue(proyecto.getCausaExencion() != null,
-          "El campo causa exención no puede tener valor si el porcentaje de IVA no es '0'");
+      AssertHelper.entityNotNull(proyecto.getCausaExencion(), Proyecto.class, CausaExencion.class);
     }
   }
 
@@ -1848,8 +1883,10 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     Assert.isTrue(solicitud.getFormularioSolicitud().equals(FormularioSolicitud.PROYECTO)
         || solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH),
-        "El formulario de la solicitud debe ser de tipo " + FormularioSolicitud.PROYECTO + " o "
-            + FormularioSolicitud.RRHH);
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_PROYECTO_FORMULARIO_SOLICITUD_TIPO)
+            .parameter(MSG_KEY_TIPO, FormularioSolicitud.PROYECTO + ", " + FormularioSolicitud.RRHH)
+            .build());
   }
 
   /**
@@ -2240,26 +2277,17 @@ public class ProyectoServiceImpl implements ProyectoService {
 
       AssertHelper.fieldNotNull(proyecto.getFechaInicio(), Proyecto.class, MSG_FIELD_FECHA_INICIO);
       AssertHelper.fieldNotNull(proyecto.getFechaFin(), Proyecto.class, MSG_FIELD_FECHA_FIN);
-
-      Assert.isTrue(proyecto.getFinalidad() != null,
-          "El campo finalidad debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getAmbitoGeografico() != null,
-          "El campo ambitoGeografico debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getConfidencial() != null,
-          "El campo confidencial debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
-
-      Assert.isTrue(proyecto.getCoordinado() != null,
-          "El campo Proyecto coordinado debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+      AssertHelper.entityNotNull(proyecto.getFinalidad(), Proyecto.class, TipoFinalidad.class);
+      AssertHelper.entityNotNull(proyecto.getAmbitoGeografico(), Proyecto.class, TipoAmbitoGeografico.class);
+      AssertHelper.fieldNotNull(proyecto.getConfidencial(), Proyecto.class, MSG_FIELD_CONFIDENCIAL);
+      AssertHelper.fieldNotNull(proyecto.getCoordinado(), Proyecto.class, MSG_FIELD_COORDINADO);
 
       if (proyecto.getCoordinado() != null && proyecto.getCoordinado().booleanValue()) {
-        Assert.isTrue(proyecto.getRolUniversidadId() != null,
-            "El campo rolUniversidad debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+        AssertHelper.idNotNull(proyecto.getRolUniversidadId(), RolSocio.class);
       }
 
-      Assert.isTrue(proyecto.getPermitePaquetesTrabajo() != null,
-          "El campo permitePaquetesTrabajo debe ser obligatorio para el proyecto en estado 'CONCEDIDO'");
+      AssertHelper.fieldNotNull(proyecto.getPermitePaquetesTrabajo(), Proyecto.class,
+          MSG_FIELD_PERMITE_PAQUETES_TRABAJO);
 
       if (proyecto.getSolicitudId() != null) {
         Solicitud solicitud = solicitudRepository.findById(proyecto.getSolicitudId())

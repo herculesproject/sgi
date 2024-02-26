@@ -17,7 +17,10 @@ import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEntid
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEntidadSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,6 +40,14 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
     implements SolicitudProyectoEntidadFinanciadoraAjenaService {
+
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_MSG = "msg";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_MODEL_SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA = "org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena.message";
+  private static final String MSG_ENTITY_MODIFICABLE = "org.springframework.util.Assert.entity.modificable.message";
+  private static final String MSG_MODEL_FUENTE_FINANCIACION = "org.crue.hercules.sgi.csp.model.FuenteFinanciacion.message";
+  private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
 
   private final SolicitudProyectoEntidadFinanciadoraAjenaRepository repository;
   private final FuenteFinanciacionRepository fuenteFinanciacionRepository;
@@ -74,11 +85,9 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
       SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena) {
     log.debug("create(SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena) - start");
 
-    Assert.isNull(solicitudProyectoEntidadFinanciadoraAjena.getId(),
-        "SolicitudProyectoEntidadFinanciadoraAjena id tiene que ser null para crear un nuevo SolicitudProyectoEntidadFinanciadoraAjena");
-
-    Assert.notNull(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoId(),
-        "Id SolicitudProyecto no puede ser null para crear SolicitudProyectoEntidadFinanciadoraAjena");
+    AssertHelper.idIsNull(solicitudProyectoEntidadFinanciadoraAjena.getId(),
+        SolicitudProyectoEntidadFinanciadoraAjena.class);
+    AssertHelper.idNotNull(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoId(), SolicitudProyecto.class);
 
     validateData(solicitudProyectoEntidadFinanciadoraAjena, null);
 
@@ -112,12 +121,18 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
         .findById(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoId())
         .orElseThrow(() -> new SolicitudProyectoNotFoundException(
             solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoId()));
-    Assert.notNull(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getId(),
-        "SolicitudProyectoEntidadFinanciadoraAjena id no puede ser null para actualizar un SolicitudProyectoEntidadFinanciadoraAjena");
+    AssertHelper.idNotNull(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getId(),
+        SolicitudProyectoEntidadFinanciadoraAjena.class);
 
     // comprobar si la solicitud es modificable
-    Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()),
-        "No se puede modificar SolicitudProyectoEntidadFinanciadoraAjena");
+    Assert.isTrue(solicitudService.modificable(solicitudProyecto
+        .getId()),
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_MODIFICABLE)
+            .parameter(MSG_KEY_ENTITY,
+                ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA))
+            .parameter(MSG_KEY_MSG, null)
+            .build());
 
     return repository.findById(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getId())
         .map(solicitudProyectoEntidadFinanciadoraAjena -> {
@@ -152,8 +167,7 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    Assert.notNull(id,
-        "SolicitudProyectoEntidadFinanciadoraAjena id no puede ser null para desactivar un SolicitudProyectoEntidadFinanciadoraAjena");
+    AssertHelper.idNotNull(id, SolicitudProyectoEntidadFinanciadoraAjena.class);
 
     if (!repository.existsById(id)) {
       throw new SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException(id);
@@ -231,7 +245,13 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
           Assert.isTrue((currentData != null && currentData.getFuenteFinanciacion() != null
               && Objects.equals(currentData.getFuenteFinanciacion().getId(),
                   updateData.getFuenteFinanciacion().getId()))
-              || updateData.getFuenteFinanciacion().getActivo(), "La FuenteFinanciacion debe estar Activo");
+              || updateData.getFuenteFinanciacion().getActivo(),
+              () -> ProblemMessage.builder()
+                  .key(MSG_ENTITY_INACTIVO)
+                  .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_FUENTE_FINANCIACION))
+                  .parameter(MSG_KEY_FIELD, updateData.getFuenteFinanciacion().getNombre())
+                  .build());
+
         }
       }
     }

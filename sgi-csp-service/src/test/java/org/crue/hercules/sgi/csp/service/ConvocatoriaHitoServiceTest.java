@@ -152,7 +152,8 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         () -> service.create(
             convocatoriaHitoInput))
         // then: throw exception as fecha is null
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe un Hito con el mismo tipo en esa fecha");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "Tipo Hito con el identificador %s ya existe para esa fecha", convocatoriaHitoInput.getTipoHitoId());
   }
 
   @Test
@@ -186,8 +187,7 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         () -> service.create(convocatoriaHito))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ID TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaHito.getTipoHitoId(), "Convocatoria sin modelo asignado");
+        .hasMessage("Tipo Hito no disponible para el Modelo Ejecución Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -207,8 +207,8 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         () -> service.create(convocatoriaHito))
         // then: throw exception as ModeloTipoHito not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ID TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaHito.getTipoHitoId(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Hito no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -232,7 +232,7 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
             convocatoriaHitoInput))
         // then: throw exception as ModeloTipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoHito '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Tipo Hito no está activo para el modelo ejecución %s",
             convocatoriaHito.getTipoHito().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -257,7 +257,7 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
             convocatoriaHitoInput))
         // then: throw exception as TipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito '%s' no está activo", convocatoriaHito.getTipoHito().getNombre());
+        .hasMessage("%s de Tipo Hito no está activo", convocatoriaHito.getTipoHito().getNombre());
   }
 
   @Test
@@ -319,7 +319,9 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
     // when: Actualizamos el ConvocatoriaHito
     // then: Lanza una excepcion porque la fecha no existe
     Assertions.assertThatThrownBy(() -> service.update(1L, convocatoriaHitoActualizadoInput))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe un Hito con el mismo tipo en esa fecha");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Tipo Hito con el identificador 1 ya existe para esa fecha",
+            convocatoriaHitoActualizadoInput.getTipoHitoId());
   }
 
   @Test
@@ -356,8 +358,7 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, convocatoriaHitoActualizado))
         // then: throw exception as ModeloTipoHito not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ID TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaHitoActualizado.getTipoHitoId(), "Convocatoria sin modelo asignado");
+        .hasMessage("Tipo Hito no disponible para el Modelo Ejecución Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -381,8 +382,8 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, convocatoriaHitoActualizado))
         // then: throw exception as ModeloTipoHito not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ID TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
-            convocatoriaHitoActualizado.getTipoHitoId(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Hito no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -410,7 +411,7 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, convocatoriaHitoActualizadoInput))
         // then: throw exception as ModeloTipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoHito '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Tipo Hito no está activo para el modelo ejecución %s",
             convocatoriaHitoActualizado.getTipoHito().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -437,7 +438,7 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, convocatoriaHitoActualizadoInput))
         // then: throw exception as TipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito '%s' no está activo", convocatoriaHitoActualizado.getTipoHito().getNombre());
+        .hasMessage("%s de Tipo Hito no está activo", convocatoriaHitoActualizado.getTipoHito().getNombre());
   }
 
   @Test

@@ -109,7 +109,7 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ConvocatoriaEntidadConvocante ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(convocatoriaEntidadConvocante))
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "ConvocatoriaEntidadConvocante id tiene que ser null para crear un nuevo ConvocatoriaEntidadConvocante");
+            "Identificador de Convocatoria Entidad Convocante debe ser nulo");
   }
 
   @Test
@@ -122,7 +122,7 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         () -> service.create(convocatoriaEntidadConvocante))
         // then: throw exception as ConvocatoriaId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null para crear ConvocatoriaEntidadGestora");
+        .hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -166,7 +166,7 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         // then: throw exception as assigned with same Convocatoria And EntidadRef
         // exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe una asociación activa para esa Convocatoria y Entidad");
+        .hasMessage("Referencia Entidad de Convocatoria Entidad Convocante ya existe");
   }
 
   @Test
@@ -216,7 +216,8 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         // when: create ConvocatoriaEntidadGestora
         () -> service.create(convocatoriaEntidadConvocante))
         // then: throw exception as Programa is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El Programa debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("%s de Programa no está activo", convocatoriaEntidadConvocante.getPrograma().getNombre());
   }
 
   @Test
@@ -239,7 +240,7 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaEntidadConvocante))
         // then: throw exception as modificable return false
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede crear ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede Crear Convocatoria Entidad Convocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -324,7 +325,7 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         // then: throw exception as assigned with same Convocatoria And EntidadRef
         // exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe una asociación activa para esa Convocatoria y Entidad");
+        .hasMessage("Referencia Entidad de Convocatoria ya existe");
   }
 
   @Test
@@ -381,7 +382,8 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         // when: update ConvocatoriaEntidadConvocante
         () -> service.update(convocatoriaEntidadConvocanteActualizado))
         // then: throw exception as Programa is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El Programa debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Programa no está activo",
+            convocatoriaEntidadConvocanteActualizado.getPrograma().getNombre());
   }
 
   @Test
@@ -405,7 +407,7 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         // then: throw exception as Convocatoria is registrada and has Solicitudes or
         // Proyectos
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede Modificar Convocatoria Entidad Convocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -457,7 +459,7 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
         () -> service.delete(id))
         // then: throw exception as modificable returns false
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede eliminar ConvocatoriaEntidadConvocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede Eliminar Convocatoria Entidad Convocante. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -550,6 +552,7 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
   private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id, Long convocatoriaId) {
     Programa programa = new Programa();
     programa.setId(id == null ? 1 : id);
+    programa.setNombre("nombrePrograma");
     programa.setActivo(true);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = new ConvocatoriaEntidadConvocante();

@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpe
 import org.crue.hercules.sgi.csp.service.ConfiguracionService;
 import org.crue.hercules.sgi.csp.service.ProyectoAnualidadService;
 import org.crue.hercules.sgi.csp.service.ProyectoProyectoSgeService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -42,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeService {
+  private static final String MSG_KEY_PROYECTO_SGE_REF = "proyectoSgeRef";
 
   private final ProyectoProyectoSgeRepository repository;
   private final ProyectoRepository proyectoRepository;
@@ -61,11 +63,10 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
   @Transactional
   public ProyectoProyectoSge create(ProyectoProyectoSge proyectoProyectoSge) {
     log.debug("create(ProyectoProyectoSge proyectoProyectoSge) - start");
-    Assert.isNull(proyectoProyectoSge.getId(),
-        "ProyectoProyectoSge id tiene que ser null para crear un nuevo ProyectoProyectoSge");
-    Assert.notNull(proyectoProyectoSge.getProyectoId(), "Id Proyecto no puede ser null para crear ProyectoProyectoSge");
-    Assert.notNull(proyectoProyectoSge.getProyectoSgeRef(),
-        "Ref ProyectoSge no puede ser null para crear ProyectoProyectoSge");
+    AssertHelper.idIsNull(proyectoProyectoSge.getId(), ProyectoProyectoSge.class);
+    AssertHelper.idNotNull(proyectoProyectoSge.getProyectoId(), Proyecto.class);
+    AssertHelper.fieldNotNull(proyectoProyectoSge.getProyectoSgeRef(), ProyectoProyectoSge.class,
+        MSG_KEY_PROYECTO_SGE_REF);
 
     if (!proyectoRepository.existsById(proyectoProyectoSge.getProyectoId())) {
       throw new ProyectoNotFoundException(proyectoProyectoSge.getProyectoId());
@@ -125,7 +126,7 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    Assert.notNull(id, "ProyectoProyectoSge id no puede ser null para desactivar un ProyectoProyectoSge");
+    AssertHelper.idNotNull(id, ProyectoProyectoSge.class);
 
     if (!repository.existsById(id)) {
       throw new ProyectoProyectoSgeNotFoundException(id);

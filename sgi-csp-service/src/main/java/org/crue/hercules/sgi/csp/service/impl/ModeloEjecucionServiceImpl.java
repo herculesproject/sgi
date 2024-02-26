@@ -11,7 +11,10 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ModeloEjecucionSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,8 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_MODEL_MODELO_EJECUCION = "org.crue.hercules.sgi.csp.model.ModeloEjecucion.message";
+  private static final String MSG_ENTITY_EXISTS = "org.springframework.util.Assert.entity.exists.message";
 
-  private static final String MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX = "Ya existe un ModeloEjecucion activo con el nombre '";
   private final ModeloEjecucionRepository modeloEjecucionRepository;
   private final ProyectoRepository proyectoRepository;
 
@@ -51,9 +57,14 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
   public ModeloEjecucion create(ModeloEjecucion modeloEjecucion) {
     log.debug("create(ModeloEjecucion modeloEjecucion) - start");
 
-    Assert.isNull(modeloEjecucion.getId(), "ModeloEjecucion id tiene que ser null para crear un nuevo ModeloEjecucion");
+    AssertHelper.idIsNull(modeloEjecucion.getId(), ModeloEjecucion.class);
     Assert.isTrue(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()).isPresent()),
-        MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX + modeloEjecucion.getNombre() + "'");
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_EXISTS)
+            .parameter(MSG_KEY_ENTITY,
+                ApplicationContextSupport.getMessage(MSG_MODEL_MODELO_EJECUCION))
+            .parameter(MSG_KEY_FIELD, modeloEjecucion.getNombre())
+            .build());
 
     modeloEjecucion.setActivo(true);
 
@@ -75,14 +86,16 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
   public ModeloEjecucion update(ModeloEjecucion modeloEjecucionActualizar) {
     log.debug("update(ModeloEjecucion modeloEjecucionActualizar) - start");
 
-    Assert.notNull(modeloEjecucionActualizar.getId(),
-        "ModeloEjecucion id no puede ser null para actualizar un ModeloEjecucion");
+    AssertHelper.idNotNull(modeloEjecucionActualizar.getId(), ModeloEjecucion.class);
     modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucionActualizar.getNombre())
         .ifPresent(modeloEjecucionExistente -> Assert
             .isTrue(modeloEjecucionActualizar.getId().equals(modeloEjecucionExistente.getId()),
-                MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX
-                    + modeloEjecucionExistente.getNombre()
-                    + "'"));
+                () -> ProblemMessage.builder()
+                    .key(MSG_ENTITY_EXISTS)
+                    .parameter(MSG_KEY_ENTITY,
+                        ApplicationContextSupport.getMessage(MSG_MODEL_MODELO_EJECUCION))
+                    .parameter(MSG_KEY_FIELD, modeloEjecucionExistente.getNombre())
+                    .build()));
 
     return modeloEjecucionRepository.findById(modeloEjecucionActualizar.getId()).map(modeloEjecucion -> {
       modeloEjecucion.setNombre(modeloEjecucionActualizar.getNombre());
@@ -107,15 +120,15 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
   public ModeloEjecucion enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "ModeloEjecucion id no puede ser null para reactivar un ModeloEjecucion");
+    AssertHelper.idNotNull(id, ModeloEjecucion.class);
 
     return modeloEjecucionRepository.findById(id).map(modeloEjecucion -> {
       if (modeloEjecucion.getActivo()) {
         return modeloEjecucion;
       }
 
-      Assert.isTrue(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()).isPresent()),
-          MESSAGE_YA_EXISTE_UN_MODELO_EJECUCION_ACTIVO_CON_EL_NOMBRE_PREFFIX + modeloEjecucion.getNombre() + "'");
+      AssertHelper.entityExists(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre())
+          .isPresent()), ModeloEjecucion.class, ModeloEjecucion.class);
 
       modeloEjecucion.setActivo(true);
       ModeloEjecucion returnValue = modeloEjecucionRepository.save(modeloEjecucion);
@@ -135,7 +148,7 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
   public ModeloEjecucion disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "ModeloEjecucion id no puede ser null para desactivar un ModeloEjecucion");
+    AssertHelper.idNotNull(id, ModeloEjecucion.class);
 
     return modeloEjecucionRepository.findById(id).map(modeloEjecucion -> {
       if (!modeloEjecucion.getActivo()) {

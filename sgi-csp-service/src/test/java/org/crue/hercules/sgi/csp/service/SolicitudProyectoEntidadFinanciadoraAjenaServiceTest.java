@@ -111,7 +111,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
     // ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(solicitudProyectoEntidadFinanciadoraAjena))
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "SolicitudProyectoEntidadFinanciadoraAjena id tiene que ser null para crear un nuevo SolicitudProyectoEntidadFinanciadoraAjena");
+            "Identificador de Solicitud Proyecto Entidad Financiadora Ajena debe ser nulo");
   }
 
   @Test
@@ -127,7 +127,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
         () -> service.create(solicitudProyectoEntidadFinanciadoraAjena))
         // then: throw exception as SolicitudProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id SolicitudProyecto no puede ser null para crear SolicitudProyectoEntidadFinanciadoraAjena");
+        .hasMessage("Identificador de Datos de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -145,7 +145,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
         // when: create SolicitudProyectoEntidadFinanciadoraAjena
         () -> service.create(solicitudProyectoEntidadFinanciadoraAjena))
         // then: throw exception as FuenteFinanciacion is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("La FuenteFinanciacion debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Fuente de Financiación no está activo",
+            solicitudProyectoEntidadFinanciadoraAjena.getFuenteFinanciacion().getNombre());
   }
 
   @Test
@@ -262,7 +263,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
         // when: update SolicitudProyectoEntidadFinanciadoraAjena
         () -> service.update(solicitudProyectoEntidadFinanciadoraAjenaActualizada))
         // then: throw exception as FuenteFinanciacion is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("La FuenteFinanciacion debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Fuente de Financiación no está activo",
+            solicitudProyectoEntidadFinanciadoraAjenaActualizada.getFuenteFinanciacion().getNombre());
   }
 
   @Test
@@ -416,11 +418,13 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
     // @formatter:off
     FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()
         .id(id == null ? 1 : id)
+        .nombre("nombreFuenteFinanciacion")
         .activo(true)
         .build();
 
     TipoFinanciacion tipoFinanciacion = TipoFinanciacion.builder()
         .id(id == null ? 1 : id)
+        .nombre("nombreTipoFinanciacion")
         .activo(true)
         .build();
 

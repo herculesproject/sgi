@@ -226,7 +226,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
         .assertThatThrownBy(
             () -> service.update(solicitudProyectoSocioId, Arrays.asList(solicitudProyectoSocioPeriodoPago)))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("No se puede modificar la solicitud proyecto socio del SolicitudProyectoSocioPeriodoPago");
+        .hasMessage("No se puede Modificar Solicitud Proyecto Socio para Solicitud Proyecto Socio Periodo Pago");
   }
 
   @Test
@@ -299,7 +299,9 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     Assertions
         .assertThatThrownBy(() -> service.update(solicitudProyectoSocioId,
             Arrays.asList(solicitudProyectoSocioPeriodoPago1, solicitudProyectoSocioPeriodoPago2)))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "Solicitud Proyecto Socio %s ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
+            solicitudProyectoSocioPeriodoPago2.getId());
   }
 
   @Test
@@ -332,7 +334,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
         .assertThatThrownBy(
             () -> service.update(solicitudProyectoSocioId, Arrays.asList(solicitudProyectoSocioPeriodoPago)))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Mes no puede ser null para realizar la acción sobre SolicitudProyectoSocioPeriodoPago");
+        .hasMessage("mes de Solicitud Proyecto Socio Periodo Pago no puede ser nulo");
   }
 
   @Test

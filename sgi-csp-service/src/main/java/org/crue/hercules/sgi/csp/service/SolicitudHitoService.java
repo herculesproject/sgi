@@ -26,7 +26,10 @@ import org.crue.hercules.sgi.csp.repository.specification.SolicitudHitoSpecifica
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -44,6 +47,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class SolicitudHitoService {
+
+  private static final String MSG_KEY_DATE = "date";
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_ID = "id";
+  private static final String MSG_KEY_MSG = "msg";
+  private static final String MSG_MODEL_TIPO_HITO = "org.crue.hercules.sgi.csp.model.TipoHito.message";
+  private static final String MSG_MODEL_SOLICITUD_HITO = "org.crue.hercules.sgi.csp.model.SolicitudHito.message";
+  private static final String MSG_ENTITY_IN_FECHA_EXISTS = "org.springframework.util.Assert.fecha.exists.message";
+  private static final String MSG_ENTITY_MODIFICABLE = "org.springframework.util.Assert.entity.modificable.message";
+  private static final String MSG_MODEL_FECHA_ENVIO = "org.crue.hercules.sgi.csp.model.FechaEnvio.message";
+  private static final String MSG_ENTITY_FECHA_ANTERIOR = "org.springframework.util.Assert.entity.fecha.anterior.message";
+  private static final String MSG_AVISO_ENVIADO = "avisoEnviado.message";
 
   private final SolicitudHitoRepository repository;
 
@@ -85,13 +100,18 @@ public class SolicitudHitoService {
   public SolicitudHito create(SolicitudHitoInput solicitudHitoInput) {
     log.debug("create(SolicitudHito solicitudHito) - start");
 
-    Assert.notNull(solicitudHitoInput.getSolicitudId(), "La solicitud no puede ser null para crear la SolicitudHito");
-    Assert.notNull(solicitudHitoInput.getFecha(), "La fecha no puede ser null para crear la SolicitudHito");
-    Assert.notNull(solicitudHitoInput.getTipoHitoId(), "El tipo hito no puede ser null para crear la SolicitudHito");
+    AssertHelper.idNotNull(solicitudHitoInput.getSolicitudId(), Solicitud.class);
+    AssertHelper.idNotNull(solicitudHitoInput.getTipoHitoId(), TipoHito.class);
+    AssertHelper.fieldNotNull(solicitudHitoInput.getFecha(), SolicitudHito.class, AssertHelper.MESSAGE_KEY_DATE);
 
-    Assert.isTrue(!repository.findBySolicitudIdAndFechaAndTipoHitoId(solicitudHitoInput.getSolicitudId(),
-        solicitudHitoInput.getFecha(), solicitudHitoInput.getTipoHitoId()).isPresent(),
-        "Ya existe un Hito con el mismo tipo en esa fecha");
+    Assert.isTrue(
+        !repository.findBySolicitudIdAndFechaAndTipoHitoId(solicitudHitoInput.getSolicitudId(),
+            solicitudHitoInput.getFecha(), solicitudHitoInput.getTipoHitoId()).isPresent(),
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_IN_FECHA_EXISTS)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+            .parameter(MSG_KEY_ID, solicitudHitoInput.getTipoHitoId())
+            .build());
 
     if (!solicitudRepository.existsById(solicitudHitoInput.getSolicitudId())) {
       throw new SolicitudNotFoundException(solicitudHitoInput.getSolicitudId());
@@ -133,20 +153,18 @@ public class SolicitudHitoService {
   public SolicitudHito update(Long id, SolicitudHitoInput solicitudHitoInput) {
     log.debug("update(SolicitudHito solicitudHito) - start");
 
-    Assert.notNull(solicitudHitoInput.getSolicitudId(),
-        "La solicitud no puede ser null para actualizar la SolicitudHito");
-    Assert.notNull(solicitudHitoInput.getFecha(),
-        "Nombre documento no puede ser null para actualizar la SolicitudHito");
-    Assert.notNull(solicitudHitoInput.getTipoHitoId(),
-        "La referencia del documento no puede ser null para actualizar la SolicitudHito");
+    AssertHelper.idNotNull(solicitudHitoInput.getSolicitudId(), Solicitud.class);
+    AssertHelper.idNotNull(solicitudHitoInput.getTipoHitoId(), TipoHito.class);
+    AssertHelper.fieldNotNull(solicitudHitoInput.getFecha(), SolicitudHito.class, AssertHelper.MESSAGE_KEY_DATE);
 
-    repository
-        .findBySolicitudIdAndFechaAndTipoHitoId(solicitudHitoInput.getSolicitudId(), solicitudHitoInput.getFecha(),
-            solicitudHitoInput.getTipoHitoId())
-        .ifPresent((solicitudHitoExistente) -> {
-          Assert.isTrue(id.equals(solicitudHitoExistente.getId()),
-              "Ya existe un Hito con el mismo tipo en esa fecha");
-        });
+    Assert.isTrue(
+        !repository.findBySolicitudIdAndFechaAndTipoHitoId(solicitudHitoInput.getSolicitudId(),
+            solicitudHitoInput.getFecha(), solicitudHitoInput.getTipoHitoId()).isPresent(),
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_IN_FECHA_EXISTS)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+            .parameter(MSG_KEY_ID, solicitudHitoInput.getTipoHitoId())
+            .build());
 
     if (!solicitudRepository.existsById(solicitudHitoInput.getSolicitudId())) {
       throw new SolicitudNotFoundException(solicitudHitoInput.getSolicitudId());
@@ -157,7 +175,11 @@ public class SolicitudHitoService {
 
     // comprobar si la solicitud es modificable
     Assert.isTrue(solicitudService.modificable(solicitudHitoInput.getSolicitudId()),
-        "No se puede modificar SolicitudHito");
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_MODIFICABLE)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD_HITO))
+            .parameter(MSG_KEY_MSG, null)
+            .build());
 
     return repository.findById(id).map((solicitudHito) -> {
 
@@ -177,7 +199,8 @@ public class SolicitudHitoService {
         SgiApiInstantTaskOutput task = sgiApiTaskService
             .findInstantTaskById(Long.parseLong(solicitudHito.getSolicitudHitoAviso().getTareaProgramadaRef()));
 
-        Assert.isTrue(task.getInstant().isAfter(Instant.now()), "El aviso ya se ha enviado.");
+        Assert.isTrue(task.getInstant().isAfter(Instant.now()),
+            ApplicationContextSupport.getMessage(MSG_AVISO_ENVIADO));
 
         sgiApiTaskService
             .deleteTask(Long.parseLong(solicitudHito.getSolicitudHitoAviso().getTareaProgramadaRef()));
@@ -217,8 +240,12 @@ public class SolicitudHitoService {
 
   private SolicitudHitoAviso createAviso(Long solicitudHitoId, SolicitudHitoAvisoInput avisoInput) {
     Instant now = Instant.now();
+
     Assert.isTrue(avisoInput.getFechaEnvio().isAfter(now),
-        "La fecha de envio debe ser anterior a " + now.toString());
+        () -> ProblemMessage.builder().key(MSG_ENTITY_FECHA_ANTERIOR)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_FECHA_ENVIO))
+            .parameter(MSG_KEY_DATE, now.toString())
+            .build());
 
     Long emailId = this.emailService.createSolicitudHitoEmail(
         solicitudHitoId,
@@ -266,7 +293,7 @@ public class SolicitudHitoService {
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    Assert.notNull(id, "SolicitudHito id no puede ser null para eliminar un SolicitudHito");
+    AssertHelper.idNotNull(id, SolicitudHito.class);
     if (!repository.existsById(id)) {
       throw new SolicitudHitoNotFoundException(id);
     }

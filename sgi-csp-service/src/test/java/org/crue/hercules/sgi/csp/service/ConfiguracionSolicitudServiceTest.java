@@ -146,7 +146,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(configuracionSolicitud))
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear la ConfiguracionSolicitud");
+        .hasMessage("Identificador de Configuración solicitud debe ser nulo");
   }
 
   @Test
@@ -160,7 +160,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(configuracionSolicitud))
         // then: throw exception as convocatoria can't be provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Convocatoria no puede ser null en ConfiguracionSolicitud");
+        .hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -191,7 +191,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(configuracionSolicitud))
         // then: throw exception as Convocatoria already asigned
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Ya existe ConfiguracionSolicitud para la convocatoria %s", configuracionSolicitud.getConvocatoriaId());
+            "Configuración solicitud de Convocatoria ya existe");
   }
 
   @Test
@@ -210,7 +210,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(configuracionSolicitud))
         // then: throw exception as Tramitacion SGI can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
+            "Tramitación SGI de Configuración solicitud no puede ser nulo");
   }
 
   @Test
@@ -230,7 +230,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         () -> service.create(configuracionSolicitud))
         // then: throw exception as FasePresentacion can't be provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Plazo presentación solicitudes no puede ser null cuando se establece presentacion SGI");
+        .hasMessage("Plazo Presentación de Configuración solicitud no puede ser nulo");
   }
 
   @Test
@@ -356,7 +356,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedConfiguracionSolicitud, null))
         // then: throw exception as convocatoria can't be provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Convocatoria no puede ser null en ConfiguracionSolicitud");
+        .hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -394,7 +394,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: throw exception as Tramitacion SGI can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
+            "Tramitación SGI de Configuración solicitud no puede ser nulo");
   }
 
   @Test
@@ -510,7 +510,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         () -> service.update(updatedConfiguracionSolicitud, originalConfiguracionSolicitud.getConvocatoriaId()))
         // then: throw exception as FasePresentacion has documents
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "Si ya existen documentos requeridos solicitud asociados a la configuración, no se puede cambiar la fase");
+            "Documento Requerido Solicitud de Configuración solicitud ya existe");
   }
 
   @Test

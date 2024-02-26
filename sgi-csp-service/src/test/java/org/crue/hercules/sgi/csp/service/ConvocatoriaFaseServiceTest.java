@@ -159,7 +159,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as ConvocatoriaId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null para crear ConvocatoriaFase");
+        .hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -187,7 +187,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as tipoFaseId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Fase no puede ser null para crear ConvocatoriaFase");
+        .hasMessage("Identificador de Tipo Fase no puede ser nulo");
   }
 
   @Test
@@ -205,8 +205,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
-            "Convocatoria sin modelo asignado");
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -225,7 +224,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución %s",
             convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -247,7 +246,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Fase no está activo",
             convocatoriaFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -269,7 +268,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", modeloTipoFase.getTipoFase().getNombre());
+        .hasMessage("%s de Tipo Fase no está activo", modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -298,7 +297,9 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         // when: create ConvocatoriaFase
         () -> service.create(modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as TipoFase is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe una convocatoria en ese rango de fechas");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Convocatoria %s ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
+            convocatoriaFase.getConvocatoriaId());
   }
 
   @Test
@@ -373,8 +374,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
-            "Convocatoria sin modelo asignado");
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -396,7 +396,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Fase no disponible para el ModeloEjecucion '%s'",
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución %s",
             convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -422,7 +422,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Fase no está activo para el modelo ejecución %s",
             modeloTipoFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -445,7 +445,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", convocatoriaFaseActualizado.getTipoFase().getNombre());
+        .hasMessage("%s de Tipo Fase no está activo", convocatoriaFaseActualizado.getTipoFase().getNombre());
   }
 
   @Test
@@ -475,7 +475,9 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         // when: update ConvocatoriaFase
         () -> service.update(1L, modelMapper.map(convocatoriaFaseActualizado, ConvocatoriaFaseInput.class)))
         // then: throw exception as Programa is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe una convocatoria en ese rango de fechas");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Convocatoria %s ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
+            convocatoriaFaseActualizado.getConvocatoriaId());
   }
 
   @Test
@@ -497,7 +499,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.update(1L, modelMapper.map(convocatoriaFase, ConvocatoriaFaseInput.class)))
         // then: throw exception as Convocatoria is not modificable
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede modificar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede Crear Convocatoria Fase. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test
@@ -554,7 +556,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         () -> service.delete(id))
         // then: throw exception as Convocatoria is not modificable
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "No se puede eliminar ConvocatoriaFase. No tiene los permisos necesarios o se encuentra asignada a la ConfiguracionSolicitud de una convocatoria que está registrada y cuenta con solicitudes o proyectos asociados");
+            "No se puede Eliminar Convocatoria Fase. No tiene los permisos necesarios o la convocatoria está registrada y cuenta con solicitudes o proyectos asociados");
   }
 
   @Test

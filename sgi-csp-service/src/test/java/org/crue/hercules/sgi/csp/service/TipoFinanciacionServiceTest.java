@@ -149,7 +149,7 @@ class TipoFinanciacionServiceTest extends BaseServiceTest {
     // when: Activamos el TipoFinanciacion
     // then: Lanza una excepcion porque hay otro TipoFinanciacion con ese nombre
     Assertions.assertThatThrownBy(() -> service.update(tipoFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoFinanciacion con el nombre %s", tipoFinanciacion.getNombre());
+        .hasMessage("Tipo Financiación de Tipo Financiación ya existe", tipoFinanciacion.getNombre());
   }
 
   @Test

@@ -1,10 +1,12 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
+import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFaseSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFaseService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,9 +40,9 @@ public class TipoFaseServiceImpl implements TipoFaseService {
   public TipoFase create(TipoFase tipoFase) {
     log.debug("create (TipoFase tipoFase) - start");
 
-    Assert.isNull(tipoFase.getId(), "tipoFase id no puede ser null para crear un nuevo tipoFase");
-    Assert.isTrue(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
-        "Ya existe un TipoFase activo con el nombre '" + tipoFase.getNombre() + "'");
+    AssertHelper.idIsNull(tipoFase.getId(), TipoFase.class);
+    AssertHelper.entityExists(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
+        TipoFase.class, TipoFase.class);
 
     tipoFase.setActivo(Boolean.TRUE);
     TipoFase returnValue = tipoFaseRepository.save(tipoFase);
@@ -60,10 +62,11 @@ public class TipoFaseServiceImpl implements TipoFaseService {
   public TipoFase update(TipoFase tipoFaseActualizar) {
     log.debug("update(TipoFase tipoFaseActualizar) - start");
 
-    Assert.notNull(tipoFaseActualizar.getId(), "TipoFase id no puede ser null para actualizar");
+    AssertHelper.idNotNull(tipoFaseActualizar.getId(), TipoFase.class);
     tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFaseActualizar.getNombre()).ifPresent(
-        tipoFaseExistente -> Assert.isTrue(Objects.equals(tipoFaseActualizar.getId(), tipoFaseExistente.getId()),
-            "Ya existe un TipoFase activo con el nombre '" + tipoFaseExistente.getNombre() + "'"));
+        tipoFaseExistente -> AssertHelper.entityExists(
+            Objects.equals(tipoFaseActualizar.getId(), tipoFaseExistente.getId()),
+            TipoFase.class, TipoFase.class));
 
     return tipoFaseRepository.findById(tipoFaseActualizar.getId()).map(tipoFase -> {
       tipoFase.setNombre(tipoFaseActualizar.getNombre());
@@ -138,15 +141,15 @@ public class TipoFaseServiceImpl implements TipoFaseService {
   public TipoFase enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "TipoFase id no puede ser null para reactivar un TipoFase");
+    AssertHelper.idNotNull(id, TipoFase.class);
 
     return tipoFaseRepository.findById(id).map(tipoFase -> {
       if (Boolean.TRUE.equals(tipoFase.getActivo())) {
         return tipoFase;
       }
 
-      Assert.isTrue(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
-          "Ya existe un TipoFase activo con el nombre '" + tipoFase.getNombre() + "'");
+      AssertHelper.entityExists(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
+          TipoFase.class, TipoFase.class);
 
       tipoFase.setActivo(true);
       TipoFase returnValue = tipoFaseRepository.save(tipoFase);
@@ -166,7 +169,7 @@ public class TipoFaseServiceImpl implements TipoFaseService {
   public TipoFase disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "TipoFase id no puede ser null para desactivar un TipoFase");
+    AssertHelper.idNotNull(id, TipoFase.class);
 
     return tipoFaseRepository.findById(id).map(tipoFase -> {
       if (Boolean.FALSE.equals(tipoFase.getActivo())) {

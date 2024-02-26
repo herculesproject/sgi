@@ -62,7 +62,7 @@ class ContextoProyectoServiceTest extends BaseServiceTest {
     // when: Creamos el ContextoProyecto
     // then: Lanza una excepcion porque el ContextoProyecto ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(contextoProyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear ContextoProyecto");
+        .hasMessage("Identificador de Contexto Proyecto debe ser nulo");
   }
 
   @Test
@@ -74,7 +74,7 @@ class ContextoProyectoServiceTest extends BaseServiceTest {
     // when: Creamos el ContextoProyecto
     // then: Lanza una excepcion porque la proyecto es null
     Assertions.assertThatThrownBy(() -> service.create(contextoProyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Proyecto no puede ser null para crear ContextoProyecto");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -88,7 +88,7 @@ class ContextoProyectoServiceTest extends BaseServiceTest {
     // when: Creamos el ContextoProyecto
     // then: Lanza una excepcion porque la proyecto ya tiene un ContextoProyecto
     Assertions.assertThatThrownBy(() -> service.create(contextoProyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe ContextoProyecto para el proyecto " + proyectoId);
+        .hasMessage("Contexto Proyecto de Proyecto ya existe");
   }
 
   @Test

@@ -124,7 +124,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConvocatoriaDocumento id tiene que ser null para crear un nuevo ConvocatoriaDocumento");
+        .hasMessage("Identificador de Convocatoria Documento debe ser nulo");
   }
 
   @Test
@@ -139,7 +139,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as Convocatoria is not provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null en ConvocatoriaDocumento");
+        .hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -153,7 +153,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         // when: Create ConvocatoriaDocumento
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as Nombre is not provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Es necesario indicar el nombre del documento");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Nombre de Convocatoria Documento no puede ser nulo");
   }
 
   @Test
@@ -167,7 +167,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         // when: Create ConvocatoriaDocumento
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as Publico is not provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Es necesario indicar si el documento es público");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Convocatoria Documento público de Convocatoria Documento no puede ser nulo");
   }
 
   @Test
@@ -181,7 +182,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         // when: Create ConvocatoriaDocumento
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as DocumentoRef is not provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Es necesario indicar la referencia al documento");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Referencia documento convocatoria de Convocatoria Documento no puede ser nulo");
   }
 
   @Test
@@ -248,8 +250,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            newConvocatoriaDocumento.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -274,7 +276,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Fase no está activo",
             modeloTipoFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -300,7 +302,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", modeloTipoFase.getTipoFase().getNombre());
+        .hasMessage("%s de Tipo Fase no está activo", modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -329,9 +331,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as TipoDocumento not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento '%s' no disponible para el ModeloEjecucion '%s' y TipoFase '%s'",
-            newConvocatoriaDocumento.getTipoDocumento().getNombre(), convocatoria.getModeloEjecucion().getNombre(),
-            modeloTipoFase.getTipoFase().getNombre());
+        .hasMessage("Tipo Documento no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -362,8 +363,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as ModeloTipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoDocumento '%s' no está activo para el ModeloEjecucion '%s'",
-            modeloTipoDocumento.getTipoDocumento().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("%s de Modelo Tipo Documento no está activo",
+            modeloTipoDocumento.getTipoDocumento().getNombre());
   }
 
   @Test
@@ -394,7 +395,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.create(newConvocatoriaDocumento))
         // then: throw exception as TipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento '%s' no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
+        .hasMessage("%s de Tipo Documento no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
   }
 
   @Test
@@ -460,7 +461,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ConvocatoriaDocumento id no puede ser null para actualizar un ConvocatoriaDocumento");
+        .hasMessage("Identificador de Convocatoria Documento no puede ser nulo");
   }
 
   @Test
@@ -474,7 +475,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as Convocatoria is not provided
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null en ConvocatoriaDocumento");
+        .hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -487,7 +488,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         // when: update ConvocatoriaDocumento
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as Publico is not provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Es necesario indicar el nombre del documento");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Nombre de Convocatoria Documento no puede ser nulo");
   }
 
   @Test
@@ -500,7 +501,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         // when: update ConvocatoriaDocumento
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as Publico is not provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Es necesario indicar si el documento es público");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Convocatoria Documento público de Convocatoria Documento no puede ser nulo");
   }
 
   @Test
@@ -513,7 +515,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         // when: update ConvocatoriaDocumento
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as DocumentoRef is not provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Es necesario indicar la referencia al documento");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Referencia documento convocatoria de Convocatoria Documento no puede ser nulo");
   }
 
   @Test
@@ -603,8 +606,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as ModeloTipoFase not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
-            updatedConvocatoriaDocumento.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("Tipo Fase no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -713,8 +716,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as ModeloTipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoFase '%s' no está activo para el ModeloEjecucion '%s'",
-            modeloTipoFase.getTipoFase().getNombre(), convocatoria.getModeloEjecucion().getNombre());
+        .hasMessage("%s de Modelo Tipo Fase no está activo",
+            modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -745,7 +748,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as TipoFase is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoFase '%s' no está activo", modeloTipoFase.getTipoFase().getNombre());
+        .hasMessage("%s de Tipo Fase no está activo", modeloTipoFase.getTipoFase().getNombre());
   }
 
   @Test
@@ -779,9 +782,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as ModeloTipoDocumento not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento '%s' no disponible para el ModeloEjecucion '%s' y TipoFase '%s'",
-            updatedConvocatoriaDocumento.getTipoDocumento().getNombre(), convocatoria.getModeloEjecucion().getNombre(),
-            modeloTipoFase.getTipoFase().getNombre());
+        .hasMessage("Tipo Documento no disponible para el Modelo Ejecución %s",
+            convocatoria.getModeloEjecucion().getNombre());
   }
 
   @Test
@@ -898,7 +900,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as ModeloTipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoDocumento '%s' no está activo para el ModeloEjecucion '%s'",
+        .hasMessage("%s de Modelo Tipo Documento no está activo",
             modeloTipoDocumento.getTipoDocumento().getNombre(), convocatoria.getModeloEjecucion().getNombre());
   }
 
@@ -937,7 +939,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         () -> service.update(updatedConvocatoriaDocumento))
         // then: throw exception as TipoDocumento is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento '%s' no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
+        .hasMessage("%s de Tipo Documento no está activo", modeloTipoDocumento.getTipoDocumento().getNombre());
   }
 
   @Test

@@ -153,7 +153,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
         () -> service.update(proyectoSocioPeriodoJustificacion, proyectoSocioPeriodoJustificacionId))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("No se puede modificar el proyecto socio del ProyectoSocioPeriodoJustificacion");
+        .hasMessage("No se puede Modificar Proyecto Socio para Proyecto Socio Periodo Justificación Documento");
   }
 
   @Test
@@ -181,7 +181,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
         () -> service.update(proyectoSocioPeriodoJustificacion, proyectoSocioPeriodoJustificacionId))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha final tiene que ser posterior a la fecha inicial");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test
@@ -240,7 +240,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
         () -> service.update(proyectoSocioPeriodoJustificacion, proyectoSocioPeriodoJustificacionId))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin de presentación tiene que ser posterior a la fecha de inicio de presentación");
+        .hasMessage("Fecha Inicio Presentación debe ser anterior Fecha Fin Presentación");
   }
 
   @Test
@@ -268,7 +268,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
         () -> service.update(proyectoSocioPeriodoJustificacion, proyectoSocioPeriodoJustificacionId))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha fin no puede ser superior a la fecha fin indicada en Proyecto socio");
+        .hasMessage("Fecha Fin Proyecto Socio  debe ser anterior Fecha Fin Proyecto Socio Periodo Justificación");
   }
 
   @Test
@@ -343,7 +343,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
         () -> service.create(proyectoSocioPeriodoJustificacion))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El id de proyecto socio periodo justificación debe ser null");
+        .hasMessage("Identificador de Proyecto Socio Periodo Justificación Documento debe ser nulo");
   }
 
   @Test
@@ -367,7 +367,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
         () -> service.create(proyectoSocioPeriodoJustificacion))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha final tiene que ser posterior a la fecha inicial");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test
@@ -418,7 +418,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
         () -> service.create(proyectoSocioPeriodoJustificacion))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin de presentación tiene que ser posterior a la fecha de inicio de presentación");
+        .hasMessage("Fecha Inicio Presentación debe ser anterior Fecha Fin Presentación");
   }
 
   @Test
@@ -442,7 +442,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
         () -> service.create(proyectoSocioPeriodoJustificacion))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha fin no puede ser superior a la fecha fin indicada en Proyecto socio");
+        .hasMessage("Fecha Fin Proyecto Socio  debe ser anterior Fecha Fin Proyecto Socio Periodo Justificación");
   }
 
   @Test

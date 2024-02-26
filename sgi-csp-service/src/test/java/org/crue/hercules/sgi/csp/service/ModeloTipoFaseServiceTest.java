@@ -104,7 +104,7 @@ class ModeloTipoFaseServiceTest extends BaseServiceTest {
     // when: Creamos el ModeloTipoEnlace
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoFase)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id ModeloEjecución no puede ser null");
+        .hasMessage("Identificador de Modelo Ejecución no puede ser nulo");
   }
 
   @Test
@@ -116,7 +116,7 @@ class ModeloTipoFaseServiceTest extends BaseServiceTest {
     // when: Creamos el ModeloTipoEnlace
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoFase)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id TipoFase no puede ser null");
+        .hasMessage("Identificador de Tipo Fase no puede ser nulo");
   }
 
   @Test
@@ -162,7 +162,8 @@ class ModeloTipoFaseServiceTest extends BaseServiceTest {
         // when: Udpate con Activo false
         () -> service.update(modeloTipoFase))
         // then: Lanza una excepción
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El ModeloTipoFase tiene que estar activo");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("%s de Modelo Tipo Fase no está activo", modeloTipoFase.getTipoFase().getNombre());
 
   }
 

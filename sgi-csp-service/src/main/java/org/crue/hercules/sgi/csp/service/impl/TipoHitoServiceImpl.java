@@ -1,10 +1,12 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
+import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoHitoSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,9 +40,10 @@ public class TipoHitoServiceImpl implements TipoHitoService {
   public TipoHito create(TipoHito tipoHito) {
     log.debug("create(TipoHito tipoHito) - start");
 
-    Assert.isNull(tipoHito.getId(), "TipoHito id tiene que ser null para crear un nuevo tipoHito");
-    Assert.isTrue(!(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
-        "Ya existe un TipoHito activo con el nombre '" + tipoHito.getNombre() + "'");
+    AssertHelper.idIsNull(tipoHito.getId(), TipoHito.class);
+    AssertHelper.entityExists(
+        !(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
+        TipoHito.class, TipoHito.class);
 
     tipoHito.setActivo(Boolean.TRUE);
     TipoHito returnValue = tipoHitoRepository.save(tipoHito);
@@ -60,10 +63,11 @@ public class TipoHitoServiceImpl implements TipoHitoService {
   public TipoHito update(TipoHito tipoHitoActualizar) {
     log.debug("update(TipoHito tipoHitoActualizar) - start");
 
-    Assert.notNull(tipoHitoActualizar.getId(), "TipoHito id no puede ser null para actualizar");
+    AssertHelper.idNotNull(tipoHitoActualizar.getId(), TipoHito.class);
     tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHitoActualizar.getNombre()).ifPresent(
-        tipoHitoExistente -> Assert.isTrue(Objects.equals(tipoHitoActualizar.getId(), tipoHitoExistente.getId()),
-            "Ya existe un TipoHito activo con el nombre '" + tipoHitoExistente.getNombre() + "'"));
+        tipoHitoExistente -> AssertHelper.entityExists(
+            Objects.equals(tipoHitoActualizar.getId(), tipoHitoExistente.getId()),
+            TipoHito.class, TipoHito.class));
 
     return tipoHitoRepository.findById(tipoHitoActualizar.getId()).map(tipoHito -> {
       tipoHito.setNombre(tipoHitoActualizar.getNombre());
@@ -137,15 +141,16 @@ public class TipoHitoServiceImpl implements TipoHitoService {
   public TipoHito enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "TipoHito id no puede ser null para reactivar un TipoHito");
+    AssertHelper.idNotNull(id, TipoHito.class);
 
     return tipoHitoRepository.findById(id).map(tipoHito -> {
       if (Boolean.TRUE.equals(tipoHito.getActivo())) {
         return tipoHito;
       }
 
-      Assert.isTrue(!(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
-          "Ya existe un TipoHito activo con el nombre '" + tipoHito.getNombre() + "'");
+      AssertHelper.entityExists(
+          !(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
+          TipoHito.class, TipoHito.class);
 
       tipoHito.setActivo(true);
       TipoHito returnValue = tipoHitoRepository.save(tipoHito);
@@ -165,7 +170,7 @@ public class TipoHitoServiceImpl implements TipoHitoService {
   public TipoHito disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "TipoHito id no puede ser null para desactivar un TipoHito");
+    AssertHelper.idNotNull(id, TipoHito.class);
 
     return tipoHitoRepository.findById(id).map(tipoHito -> {
       if (Boolean.FALSE.equals(tipoHito.getActivo())) {

@@ -6,7 +6,10 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,6 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class TipoDocumentoServiceImpl implements TipoDocumentoService {
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_MODEL_TIPO_DOCUMENTO = "org.crue.hercules.sgi.csp.model.TipoDocumento.message";
+  private static final String MSG_ENTITY_EXISTS = "org.springframework.util.Assert.entity.exists.message";
 
   private final TipoDocumentoRepository tipoDocumentoRepository;
 
@@ -42,9 +49,14 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
   public TipoDocumento create(TipoDocumento tipoDocumento) {
     log.debug("create(TipoDocumento tipoDocumento) - start");
 
-    Assert.isNull(tipoDocumento.getId(), "TipoDocumento id tiene que ser null para crear un nuevo TipoDocumento");
+    AssertHelper.idIsNull(tipoDocumento.getId(), TipoDocumento.class);
     Assert.isTrue(!(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumento.getNombre()).isPresent()),
-        "Ya existe un TipoDocumento activo con el nombre '" + tipoDocumento.getNombre() + "'");
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_EXISTS)
+            .parameter(MSG_KEY_ENTITY,
+                ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_DOCUMENTO))
+            .parameter(MSG_KEY_FIELD, tipoDocumento.getNombre())
+            .build());
 
     tipoDocumento.setActivo(Boolean.TRUE);
     TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);
@@ -64,12 +76,11 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
   public TipoDocumento update(TipoDocumento tipoDocumentoActualizar) {
     log.debug("update(TipoDocumento tipoDocumento) - start");
 
-    Assert.notNull(tipoDocumentoActualizar.getId(),
-        "TipoDocumento id no puede ser null para actualizar un TipoDocumento");
+    AssertHelper.idNotNull(tipoDocumentoActualizar.getId(), TipoDocumento.class);
     tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoActualizar.getNombre())
-        .ifPresent(tipoDocumentoExistente -> Assert.isTrue(
+        .ifPresent(tipoDocumentoExistente -> AssertHelper.entityExists(
             Objects.equals(tipoDocumentoActualizar.getId(), tipoDocumentoExistente.getId()),
-            "Ya existe un TipoDocumento activo con el nombre '" + tipoDocumentoExistente.getNombre() + "'"));
+            TipoDocumento.class, TipoDocumento.class));
 
     return tipoDocumentoRepository.findById(tipoDocumentoActualizar.getId()).map(tipoDocumento -> {
       tipoDocumento.setNombre(tipoDocumentoActualizar.getNombre());
@@ -92,7 +103,7 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
   public TipoDocumento enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "TipoDocumento id no puede ser null para reactivar un TipoDocumento");
+    AssertHelper.idNotNull(id, TipoDocumento.class);
 
     return tipoDocumentoRepository.findById(id).map(tipoDocumento -> {
       if (Boolean.TRUE.equals(tipoDocumento.getActivo())) {
@@ -100,7 +111,12 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
       }
 
       Assert.isTrue(!(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumento.getNombre()).isPresent()),
-          "Ya existe un TipoDocumento activo con el nombre '" + tipoDocumento.getNombre() + "'");
+          () -> ProblemMessage.builder()
+              .key(MSG_ENTITY_EXISTS)
+              .parameter(MSG_KEY_ENTITY,
+                  ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_DOCUMENTO))
+              .parameter(MSG_KEY_FIELD, tipoDocumento.getNombre())
+              .build());
 
       tipoDocumento.setActivo(true);
       TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);
@@ -120,7 +136,7 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
   public TipoDocumento disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "TipoDocumento id no puede ser null para desactivar un TipoDocumento");
+    AssertHelper.idNotNull(id, TipoDocumento.class);
 
     return tipoDocumentoRepository.findById(id).map(tipoDocumento -> {
       if (Boolean.FALSE.equals(tipoDocumento.getActivo())) {

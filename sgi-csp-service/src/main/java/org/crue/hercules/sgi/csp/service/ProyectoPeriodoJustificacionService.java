@@ -203,8 +203,7 @@ public class ProyectoPeriodoJustificacionService {
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    Assert.notNull(id,
-        "ProyectoPeriodoJustificacion id no puede ser null para eliminar un ProyectoPeriodoJustificacion");
+    AssertHelper.idNotNull(id, ProyectoPeriodoJustificacion.class);
     if (!repository.existsById(id)) {
       throw new ProyectoPeriodoJustificacionNotFoundException(id);
     }

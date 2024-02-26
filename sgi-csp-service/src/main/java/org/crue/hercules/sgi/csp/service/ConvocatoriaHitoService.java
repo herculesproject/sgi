@@ -30,8 +30,11 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoEquipoSpecific
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -49,9 +52,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class ConvocatoriaHitoService {
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_KEY_MODELO = "modelo";
+  private static final String MSG_KEY_ID = "id";
+  private static final String MSG_KEY_MSG = "msg";
+  private static final String MSG_KEY_DATE = "date";
+  private static final String MSG_MODEL_TIPO_HITO = "org.crue.hercules.sgi.csp.model.TipoHito.message";
+  private static final String MSG_MODEL_FECHA_ENVIO = "org.crue.hercules.sgi.csp.model.FechaEnvio.message";
+  private static final String MSG_NO_DISPONIBLE_MODELO_EJECUCION = "org.crue.hercules.sgi.csp.model.ModeloEjecucion.noDisponible.message";
+  private static final String MSG_CONVOCATORIA_SIN_MODELO_ASIGNADO = "org.crue.hercules.sgi.csp.model.Convocatoria.sinModeloEjecucion.message";
+  private static final String MSG_CONVOCATORIA_ASSIGN_MODELO_EJECUCION = "org.crue.hercules.sgi.csp.exceptions.AssignModeloEjecucion.message";
+  private static final String MSG_MODELO_EJECUCION_INACTIVO = "org.springframework.util.Assert.entity.modeloEjecucion.inactivo.message";
+  private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
+  private static final String MSG_ENTITY_IN_FECHA_EXISTS = "org.springframework.util.Assert.fecha.exists.message";
+  private static final String MSG_ENTITY_FECHA_ANTERIOR = "org.springframework.util.Assert.entity.fecha.anterior.message";
+  private static final String MSG_AVISO_ENVIADO = "avisoEnviado.message";
 
-  private static final String TIPO_HITO_TEMPLATE = "TipoHito '";
-  private static final String TIPO_HITO_ID_TEMPLATE = "ID TipoHito '";
   private final ConvocatoriaHitoRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ModeloTipoHitoRepository modeloTipoHitoRepository;
@@ -108,26 +125,39 @@ public class ConvocatoriaHitoService {
 
     // Está asignado al ModeloEjecucion
     Assert.isTrue(modeloTipoHito.isPresent(),
-        TIPO_HITO_ID_TEMPLATE + convocatoriaHitoInput.getTipoHitoId()
-            + "' no disponible para el ModeloEjecucion '"
-            + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
-                : "Convocatoria sin modelo asignado")
-            + "'");
+        () -> ProblemMessage.builder()
+            .key(MSG_CONVOCATORIA_ASSIGN_MODELO_EJECUCION)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+            .parameter(MSG_KEY_MSG, ApplicationContextSupport.getMessage(MSG_NO_DISPONIBLE_MODELO_EJECUCION))
+            .parameter(MSG_KEY_MODELO, ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
+                : ApplicationContextSupport.getMessage(MSG_CONVOCATORIA_SIN_MODELO_ASIGNADO)))
+            .build());
 
     // La asignación al ModeloEjecucion está activa
-    Assert.isTrue(modeloTipoHito.get().getActivo(), "ModeloTipoHito '" + modeloTipoHito.get().getTipoHito().getNombre()
-        + "' no está activo para el ModeloEjecucion '" + modeloTipoHito.get().getModeloEjecucion().getNombre() + "'");
+    Assert.isTrue(modeloTipoHito.get().getActivo(),
+        () -> ProblemMessage.builder()
+            .key(MSG_MODELO_EJECUCION_INACTIVO)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+            .parameter(MSG_KEY_FIELD, modeloTipoHito.get().getTipoHito().getNombre())
+            .parameter(MSG_KEY_MODELO, modeloTipoHito.get().getModeloEjecucion().getNombre())
+            .build());
 
     // El TipoHito está activo
     Assert.isTrue(modeloTipoHito.get().getTipoHito().getActivo(),
-        TIPO_HITO_TEMPLATE + modeloTipoHito.get().getTipoHito().getNombre() + "' no está activo");
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_INACTIVO)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+            .parameter(MSG_KEY_FIELD, modeloTipoHito.get().getTipoHito().getNombre())
+            .build());
 
     Assert.isTrue(
         !repository.findByConvocatoriaIdAndFechaAndTipoHitoId(convocatoriaHitoInput.getConvocatoriaId(),
             convocatoriaHitoInput.getFecha(), convocatoriaHitoInput.getTipoHitoId()).isPresent(),
-        "Ya existe un Hito con el mismo tipo en esa fecha");
-
-    Assert.isTrue(modeloTipoHito.get().getTipoHito().getActivo(), "El TipoHito debe estar activo");
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_IN_FECHA_EXISTS)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+            .parameter(MSG_KEY_ID, convocatoriaHitoInput.getTipoHitoId())
+            .build());
 
     ConvocatoriaHito convocatoriaHito = new ConvocatoriaHito();
     convocatoriaHito.setConvocatoriaId(convocatoriaHitoInput.getConvocatoriaId());
@@ -176,32 +206,39 @@ public class ConvocatoriaHitoService {
 
       // Está asignado al ModeloEjecucion
       Assert.isTrue(modeloTipoHito.isPresent(),
-          TIPO_HITO_ID_TEMPLATE + convocatoriaHitoActualizar.getTipoHitoId()
-              + "' no disponible para el ModeloEjecucion '"
-              + ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
-                  : "Convocatoria sin modelo asignado")
-              + "'");
+          () -> ProblemMessage.builder()
+              .key(MSG_CONVOCATORIA_ASSIGN_MODELO_EJECUCION)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+              .parameter(MSG_KEY_MSG, ApplicationContextSupport.getMessage(MSG_NO_DISPONIBLE_MODELO_EJECUCION))
+              .parameter(MSG_KEY_MODELO, ((modeloEjecucionId != null) ? convocatoria.getModeloEjecucion().getNombre()
+                  : ApplicationContextSupport.getMessage(MSG_CONVOCATORIA_SIN_MODELO_ASIGNADO)))
+              .build());
 
       // La asignación al ModeloEjecucion está activa
-      Assert.isTrue(
-          modeloTipoHito.get().getTipoHito().getId().equals(convocatoriaHito.getTipoHito().getId())
-              || modeloTipoHito.get().getActivo(),
-          "ModeloTipoHito '" + modeloTipoHito.get().getTipoHito().getNombre()
-              + "' no está activo para el ModeloEjecucion '" + modeloTipoHito.get().getModeloEjecucion().getNombre()
-              + "'");
+      Assert.isTrue(modeloTipoHito.get().getActivo(),
+          () -> ProblemMessage.builder()
+              .key(MSG_MODELO_EJECUCION_INACTIVO)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+              .parameter(MSG_KEY_FIELD, modeloTipoHito.get().getTipoHito().getNombre())
+              .parameter(MSG_KEY_MODELO, modeloTipoHito.get().getModeloEjecucion().getNombre())
+              .build());
 
       // El TipoHito está activo
-      Assert.isTrue(
-          modeloTipoHito.get().getTipoHito().getId().equals(convocatoriaHito.getTipoHito().getId())
-              || modeloTipoHito.get().getTipoHito().getActivo(),
-          TIPO_HITO_TEMPLATE + modeloTipoHito.get().getTipoHito().getNombre() + "' no está activo");
+      Assert.isTrue(modeloTipoHito.get().getTipoHito().getActivo(),
+          () -> ProblemMessage.builder()
+              .key(MSG_ENTITY_INACTIVO)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+              .parameter(MSG_KEY_FIELD, modeloTipoHito.get().getTipoHito().getNombre())
+              .build());
 
       repository
           .findByConvocatoriaIdAndFechaAndTipoHitoId(convocatoriaHitoActualizar.getConvocatoriaId(),
               convocatoriaHitoActualizar.getFecha(), convocatoriaHitoActualizar.getTipoHitoId())
-          .ifPresent(convocatoriaHitoExistente -> Assert.isTrue(
-              id.equals(convocatoriaHitoExistente.getId()),
-              "Ya existe un Hito con el mismo tipo en esa fecha"));
+          .ifPresent(convocatoriaHitoExistente -> Assert.isTrue(id.equals(convocatoriaHitoExistente.getId()),
+              () -> ProblemMessage.builder().key(MSG_ENTITY_IN_FECHA_EXISTS)
+                  .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_HITO))
+                  .parameter(MSG_KEY_ID, convocatoriaHitoActualizar.getTipoHitoId())
+                  .build()));
 
       convocatoriaHito.setFecha(convocatoriaHitoActualizar.getFecha());
       convocatoriaHito.setComentario(convocatoriaHitoActualizar.getComentario());
@@ -219,7 +256,8 @@ public class ConvocatoriaHitoService {
         SgiApiInstantTaskOutput task = sgiApiTaskService
             .findInstantTaskById(Long.parseLong(convocatoriaHito.getConvocatoriaHitoAviso().getTareaProgramadaRef()));
 
-        Assert.isTrue(task.getInstant().isAfter(Instant.now()), "El aviso ya se ha enviado.");
+        Assert.isTrue(task.getInstant().isAfter(Instant.now()),
+            ApplicationContextSupport.getMessage(MSG_AVISO_ENVIADO));
 
         sgiApiTaskService
             .deleteTask(Long.parseLong(convocatoriaHito.getConvocatoriaHitoAviso().getTareaProgramadaRef()));
@@ -262,8 +300,12 @@ public class ConvocatoriaHitoService {
 
   private ConvocatoriaHitoAviso createAviso(Long convocatoriaHitoId, ConvocatoriaHitoAvisoInput avisoInput) {
     Instant now = Instant.now();
+
     Assert.isTrue(avisoInput.getFechaEnvio().isAfter(now),
-        "La fecha de envio debe ser anterior a " + now.toString());
+        () -> ProblemMessage.builder().key(MSG_ENTITY_FECHA_ANTERIOR)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_FECHA_ENVIO))
+            .parameter(MSG_KEY_DATE, now.toString())
+            .build());
 
     Long emailId = this.emailService.createConvocatoriaHitoEmail(
         convocatoriaHitoId,
@@ -298,8 +340,7 @@ public class ConvocatoriaHitoService {
   @Transactional
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
-
-    Assert.notNull(id, "ConvocatoriaHito id no puede ser null para eliminar un ConvocatoriaHito");
+    AssertHelper.idNotNull(id, ConvocatoriaHito.class);
     if (!repository.existsById(id)) {
       throw new ConvocatoriaHitoNotFoundException(id);
     }

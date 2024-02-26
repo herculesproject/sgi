@@ -196,7 +196,7 @@ class SolicitudProyectoSocioEquipoServiceTest {
     Assertions
         .assertThatThrownBy(() -> service.update(solicitudProyectoSocioId, solicitudProyectoEquipoSocioActualizar))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("No se puede modificar la solicitud proyecto socio del SolicitudProyectoSocioEquipo");
+        .hasMessage("No se puede Modificar Solicitud Proyecto Socio para Solicitud Proyecto Socio Equipo");
   }
 
   @Test
@@ -225,7 +225,7 @@ class SolicitudProyectoSocioEquipoServiceTest {
     Assertions
         .assertThatThrownBy(() -> service.update(solicitudProyectoSocioId, solicitudProyectoEquipoSocioActualizar))
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "El rol de participación no puede ser null para realizar la acción sobre SolicitudProyectoSocioEquipo");
+            "Rol Proyecto de Solicitud Proyecto Socio Equipo no puede ser nulo");
   }
 
   @Test
@@ -254,7 +254,7 @@ class SolicitudProyectoSocioEquipoServiceTest {
     Assertions
         .assertThatThrownBy(() -> service.update(solicitudProyectoSocioId, solicitudProyectoEquipoSocioActualizar))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La persona ref no puede ser null para realizar la acción sobre SolicitudProyectoSocioEquipo");
+        .hasMessage("Referencia persona de Solicitud Proyecto Socio Equipo no puede ser nulo");
   }
 
   @Test
@@ -292,7 +292,9 @@ class SolicitudProyectoSocioEquipoServiceTest {
     // dentro del mismo rango de meses
     Assertions
         .assertThatThrownBy(() -> service.update(solicitudProyectoSocioId, solicitudProyectoEquipoSocioActualizar))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "Solicitud Proyecto Socio Equipo %s ya está presente y tiene un periodo de vigencia que se solapa con el indicado",
+            solicitudProyectoEquipoSocioActualizar.get(0).getPersonaRef());
 
   }
 

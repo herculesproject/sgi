@@ -192,7 +192,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as TipoHitoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Tipo Hito no puede ser null para realizar la acción sobre ProyectoHito");
+        .hasMessage("Identificador de Tipo Hito no puede ser nulo");
   }
 
   @Test
@@ -206,7 +206,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as Fecha is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha no puede ser null para realizar la acción sobre ProyectoHito");
+        .hasMessage("Fecha de Proyecto Hito no puede ser nulo");
   }
 
   @Test
@@ -238,9 +238,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
-            proyectoHito.getTipoHitoId(),
-            "Proyecto sin modelo asignado");
+        .hasMessage("Tipo Hito no disponible para el Modelo Ejecución Proyecto sin modelo asignado");
   }
 
   @Test
@@ -258,9 +256,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as ModeloTipoHito not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
-            proyectoHito.getTipoHitoId(),
-            "Proyecto sin modelo asignado");
+        .hasMessage("Tipo Hito no disponible para el Modelo Ejecución Proyecto sin modelo asignado");
   }
 
   @Test
@@ -285,8 +281,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as ModeloTipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoHito '%s' no está activo para el ModeloEjecucion '%s'",
-            null,
+        .hasMessage("%s de Modelo Tipo Hito no está activo para el modelo ejecución %s", "nombreTipoHito",
             proyecto.getModeloEjecucion().getNombre());
   }
 
@@ -313,7 +308,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as TipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito '%s' no está activo", modeloTipoHito.getTipoHito().getNombre());
+        .hasMessage("%s de Tipo Hito no está activo", modeloTipoHito.getTipoHito().getNombre());
   }
 
   @Test
@@ -344,7 +339,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoHito))
         // then: throw exception as fecha is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un Hito con el mismo tipo en esa fecha");
+        .hasMessage("Proyecto Hito de Proyecto ya existe");
   }
 
   @Test
@@ -467,7 +462,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, proyectoHito))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoHito");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -482,7 +477,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, proyectoHito))
         // then: throw exception as TipoHitoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Tipo Hito no puede ser null para realizar la acción sobre ProyectoHito");
+        .hasMessage("Identificador de Tipo Hito no puede ser nulo");
   }
 
   @Test
@@ -497,7 +492,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, proyectoHito))
         // then: throw exception as Fecha is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha no puede ser null para realizar la acción sobre ProyectoHito");
+        .hasMessage("Fecha de Proyecto Hito no puede ser nulo");
   }
 
   @Test
@@ -541,9 +536,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, proyectoHito))
         // then: throw exception as ModeloEjecucion not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
-            proyectoHito.getTipoHitoId(),
-            "Proyecto sin modelo asignado");
+        .hasMessage("Tipo Hito no disponible para el Modelo Ejecución Proyecto sin modelo asignado");
   }
 
   @Test
@@ -567,9 +560,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, proyectoHito))
         // then: throw exception as ModeloTipoHito not found
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
-            proyectoHito.getTipoHitoId(),
-            "Proyecto sin modelo asignado");
+        .hasMessage("Tipo Hito no disponible para el Modelo Ejecución Proyecto sin modelo asignado");
   }
 
   @Test
@@ -600,8 +591,8 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, proyectoHito))
         // then: throw exception as ModeloTipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloTipoHito '%s' no está activo para el ModeloEjecucion '%s'",
-            null,
+        .hasMessage("%s de Modelo Tipo Hito no está activo para el modelo ejecución %s",
+            "nombreTipoHito",
             proyecto.getModeloEjecucion().getNombre());
   }
 
@@ -634,7 +625,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         () -> service.update(1L, proyectoHito))
         // then: throw exception as TipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito '%s' no está activo", modeloTipoHito.getTipoHito().getNombre());
+        .hasMessage("%s de Tipo Hito no está activo", modeloTipoHito.getTipoHito().getNombre());
   }
 
   @Test
@@ -670,7 +661,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque la fecha ya existe para ese tipo
     Assertions.assertThatThrownBy(() -> service.update(1L, proyectoHito))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un Hito con el mismo tipo en esa fecha");
+        .hasMessage("Proyecto Hito de Proyecto ya existe");
   }
 
   @Test
@@ -876,6 +867,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         .id(id)
         .modeloEjecucion(generarMockProyecto(proyectoHito.getProyectoId()).getModeloEjecucion())
         .tipoHito(TipoHito.builder()
+          .nombre("nombreTipoHito")
             .id(proyectoHito.getTipoHitoId())
             .build())
         .activo(activo)

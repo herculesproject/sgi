@@ -72,7 +72,7 @@ class TipoFinalidadServiceTest extends BaseServiceTest {
         // when: create TipoFinalidad
         () -> service.create(data))
         // then: throw exception as id can't be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id tiene que ser null para crear TipoFinalidad");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Tipo Finalidad debe ser nulo");
   }
 
   @Test
@@ -92,7 +92,7 @@ class TipoFinalidadServiceTest extends BaseServiceTest {
         () -> service.create(newData))
         // then: throw exception as Nombre already exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoFinalidad activo con el nombre '%s'", newData.getNombre());
+        .hasMessage("Tipo Finalidad de Tipo Finalidad ya existe", newData.getNombre());
   }
 
   @Test
@@ -146,7 +146,7 @@ class TipoFinalidadServiceTest extends BaseServiceTest {
         // when: update TipoFinalidad
         () -> service.update(data))
         // then: throw exception as id must be provided
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id no puede ser null para actualizar TipoFinalidad");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Tipo Finalidad no puede ser nulo");
   }
 
   @Test
@@ -165,7 +165,7 @@ class TipoFinalidadServiceTest extends BaseServiceTest {
         () -> service.update(data))
         // then: throw exception as Nombre already exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoFinalidad activo con el nombre '%s'", data.getNombre());
+        .hasMessage("Tipo Finalidad de Tipo Finalidad ya existe", data.getNombre());
   }
 
   @Test
@@ -220,7 +220,7 @@ class TipoFinalidadServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el TipoFinalidad no existe
     Assertions.assertThatThrownBy(() -> service.enable(tipoFinalidad.getId()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoFinalidad activo con el nombre '%s'", tipoFinalidad.getNombre());
+        .hasMessage("Tipo Finalidad de Tipo Finalidad ya existe", tipoFinalidad.getNombre());
 
   }
 

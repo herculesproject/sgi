@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFacturacionRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoFacturacionPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoFacturacionSpecifications;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.ProyectoFacturacionAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
@@ -69,7 +70,7 @@ public class ProyectoFacturacionService {
   @Transactional
   public ProyectoFacturacion create(ProyectoFacturacion toCreate) {
 
-    Assert.isNull(toCreate.getId(), "ProyectoFacturacion id tiene que ser null para crear un item de facturación");
+    AssertHelper.idIsNull(toCreate.getId(), ProyectoFacturacion.class);
 
     authorityHelper.checkUserHasAuthorityModifyProyecto(toCreate.getProyectoId());
 

@@ -102,7 +102,7 @@ class ProgramaServiceTest extends BaseServiceTest {
     // when: Creamos el Programa
     // then: Lanza una excepcion porque el Programa ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(programa)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Programa id tiene que ser null para crear un nuevo Programa");
+        .hasMessage("Identificador de Programa debe ser nulo");
   }
 
   @Test

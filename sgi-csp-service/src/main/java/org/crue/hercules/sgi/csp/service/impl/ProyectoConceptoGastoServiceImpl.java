@@ -23,7 +23,10 @@ import org.crue.hercules.sgi.csp.repository.predicate.ProyectoConceptoGastoPredi
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoCodigoEcSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,6 +43,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoService {
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_OTHER_ENTITY = "otherEntity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_FIELD_FECHA_FIN = "fechaFin";
+  private static final String MSG_FIELD_FECHA_FIN_PROYECTO = "fechaFinProyecto";
+  private static final String MSG_FIELD_CODIGO_ECONOMICO = "codigoEconomico";
+  private static final String MSG_MODEL_CONCEPTO_GASTO = "org.crue.hercules.sgi.csp.model.ConceptoGasto.message";
+  private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
+  private static final String MSG_PROBLEM_DATE_OVERLOAP = "org.springframework.util.Assert.date.overloap.message";
+  private static final String MSG_PROBLEM_DATE_OVERLOAP_OTHER_ENTITY = "org.springframework.util.Assert.date.overloap.other.entity.message";
 
   private final ProyectoConceptoGastoRepository repository;
   private final ProyectoRepository proyectoRepository;
@@ -70,15 +83,19 @@ public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoSe
   public ProyectoConceptoGasto create(ProyectoConceptoGasto proyectoConceptoGasto) {
     log.debug("create(ProyectoConceptoGasto proyectoConceptoGasto) - start");
 
-    Assert.isNull(proyectoConceptoGasto.getId(), "Id tiene que ser null para crear ProyectoConceptoGasto");
+    AssertHelper.idIsNull(proyectoConceptoGasto.getId(), ProyectoConceptoGasto.class);
 
-    Assert.notNull(proyectoConceptoGasto.getProyectoId(),
-        "Id Proyecto no puede ser null para crear ProyectoConceptoGasto");
+    AssertHelper.idNotNull(proyectoConceptoGasto.getProyectoId(), Proyecto.class);
 
     proyectoConceptoGasto.setConceptoGasto(
         conceptoGastoRepository.findById(proyectoConceptoGasto.getConceptoGasto().getId()).orElseThrow(
             () -> new ConceptoGastoNotFoundException(proyectoConceptoGasto.getConceptoGasto().getId())));
-    Assert.isTrue(proyectoConceptoGasto.getConceptoGasto().getActivo(), "El ConceptoGasto debe estar activo");
+    Assert.isTrue(proyectoConceptoGasto.getConceptoGasto().getActivo(),
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_INACTIVO)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_CONCEPTO_GASTO))
+            .parameter(MSG_KEY_FIELD, proyectoConceptoGasto.getConceptoGasto().getNombre())
+            .build());
 
     Proyecto proyecto = proyectoRepository.findById(proyectoConceptoGasto.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoConceptoGasto.getProyectoId()));
@@ -88,24 +105,28 @@ public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoSe
 
     if (proyectoConceptoGasto.getFechaInicio() != null && proyecto.getFechaInicio() != null) {
       if (proyectoConceptoGasto.getFechaFin() != null && proyectoFechaFin != null) {
-        Assert.isTrue(!proyectoConceptoGasto.getFechaFin().isAfter(proyectoFechaFin),
-            "La fecha de fin no puede ser posterior a la fecha de fin del proyecto");
+        AssertHelper.fieldBefore(!proyectoConceptoGasto.getFechaFin().isAfter(proyectoFechaFin),
+            MSG_FIELD_FECHA_FIN, MSG_FIELD_FECHA_FIN_PROYECTO);
 
         if (proyectoConceptoGasto.getFechaInicio() != null) {
-          Assert.isTrue(proyectoConceptoGasto.getFechaInicio().isBefore(proyectoConceptoGasto.getFechaFin()),
-              "La fecha de inicio debe ser anterior a la fecha de fin");
+          AssertHelper.isBefore(proyectoConceptoGasto.getFechaInicio().isBefore(proyectoConceptoGasto.getFechaFin()));
         }
       } else if (proyectoConceptoGasto.getFechaInicio() != null) {
-        Assert.isTrue(proyectoFechaFin == null || proyectoConceptoGasto.getFechaInicio().isBefore(proyectoFechaFin),
-            "La fecha de inicio no puede ser posterior a la fecha de fin del proyecto");
+        AssertHelper
+            .isBefore(proyectoFechaFin == null || proyectoConceptoGasto.getFechaInicio().isBefore(proyectoFechaFin));
       }
     }
 
     // se comprueba que no exista el proyecto concepto gasto en el mismo rango
     // de meses que las que ya hay en bd
     Assert.isTrue(!existsProyectoConceptoGastoConMesesSolapados(proyectoConceptoGasto),
-        "El concepto de gasto '" + proyectoConceptoGasto.getConceptoGasto()
-            + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_DATE_OVERLOAP)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_MODEL_CONCEPTO_GASTO))
+            .parameter(MSG_KEY_FIELD,
+                proyectoConceptoGasto.getConceptoGasto().getNombre())
+            .build());
 
     ProyectoConceptoGasto returnValue = repository.save(proyectoConceptoGasto);
 
@@ -127,11 +148,8 @@ public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoSe
   public ProyectoConceptoGasto update(ProyectoConceptoGasto proyectoConceptoGastoActualizar) {
     log.debug("update(ProyectoConceptoGasto proyectoConceptoGastoActualizar) - start");
 
-    Assert.notNull(proyectoConceptoGastoActualizar.getId(),
-        "ProyectoConceptoGasto id no puede ser null para actualizar un ProyectoConceptoGasto");
-
-    Assert.notNull(proyectoConceptoGastoActualizar.getProyectoId(),
-        "Id Proyecto no puede ser null para actualizar ProyectoConceptoGasto");
+    AssertHelper.idNotNull(proyectoConceptoGastoActualizar.getId(), ProyectoConceptoGasto.class);
+    AssertHelper.idNotNull(proyectoConceptoGastoActualizar.getProyectoId(), Proyecto.class);
 
     proyectoConceptoGastoActualizar.setConceptoGasto(
         conceptoGastoRepository.findById(proyectoConceptoGastoActualizar.getConceptoGasto().getId()).orElseThrow(
@@ -145,31 +163,41 @@ public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoSe
 
     if (proyectoConceptoGastoActualizar.getFechaInicio() != null && proyecto.getFechaInicio() != null) {
       if (proyectoConceptoGastoActualizar.getFechaFin() != null && proyectoFechaFin != null) {
-        Assert.isTrue(!proyectoConceptoGastoActualizar.getFechaFin().isAfter(proyectoFechaFin),
-            "La fecha de fin no puede ser posterior a la fecha de fin del proyecto");
+        AssertHelper.fieldBefore(!proyectoConceptoGastoActualizar.getFechaFin().isAfter(proyectoFechaFin),
+            MSG_FIELD_FECHA_FIN, MSG_FIELD_FECHA_FIN_PROYECTO);
 
         if (proyectoConceptoGastoActualizar.getFechaInicio() != null) {
-          Assert.isTrue(
+          AssertHelper.isBefore(
               proyectoConceptoGastoActualizar.getFechaInicio()
-                  .isBefore(proyectoConceptoGastoActualizar.getFechaFin()),
-              "La fecha de inicio debe ser anterior a la fecha de fin");
+                  .isBefore(proyectoConceptoGastoActualizar.getFechaFin()));
         }
       } else if (proyectoConceptoGastoActualizar.getFechaInicio() != null) {
-        Assert.isTrue(
-            proyectoFechaFin == null || proyectoConceptoGastoActualizar.getFechaInicio().isBefore(proyectoFechaFin),
-            "La fecha de inicio no puede ser posterior a la fecha de fin del proyecto");
+        AssertHelper.isBefore(
+            proyectoFechaFin == null || proyectoConceptoGastoActualizar.getFechaInicio().isBefore(proyectoFechaFin));
       }
     }
 
     // se comprueba que no exista el proyecto concepto gasto en el mismo rango
     // de meses que las que ya hay en bd
     Assert.isTrue(!existsProyectoConceptoGastoConMesesSolapados(proyectoConceptoGastoActualizar),
-        "El concepto de gasto '" + proyectoConceptoGastoActualizar.getConceptoGasto()
-            + "' ya está presente y tiene un periodo de vigencia que se solapa con el indicado");
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_DATE_OVERLOAP)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_MODEL_CONCEPTO_GASTO))
+            .parameter(MSG_KEY_FIELD,
+                proyectoConceptoGastoActualizar.getConceptoGasto().getNombre())
+            .build());
 
     Assert.isTrue(!existsProyectoConceptoGastoAndCodigoEconomicoConMesesSolapados(proyectoConceptoGastoActualizar),
-        "El concepto gasto '" + proyectoConceptoGastoActualizar.getConceptoGasto()
-            + "' tiene códigos económicos que se solapan con otros códigos económicos del proyecto");
+        () -> ProblemMessage.builder()
+            .key(MSG_PROBLEM_DATE_OVERLOAP_OTHER_ENTITY)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_MODEL_CONCEPTO_GASTO))
+            .parameter(MSG_KEY_FIELD,
+                proyectoConceptoGastoActualizar.getConceptoGasto().getNombre())
+            .parameter(MSG_KEY_OTHER_ENTITY, ApplicationContextSupport.getMessage(
+                MSG_FIELD_CODIGO_ECONOMICO))
+            .build());
 
     return repository.findById(proyectoConceptoGastoActualizar.getId()).map(proyectoConceptoGasto -> {
 
@@ -198,7 +226,7 @@ public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoSe
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    Assert.notNull(id, "ProyectoConceptoGasto id no puede ser null para eliminar un ProyectoConceptoGasto");
+    AssertHelper.idNotNull(id, ProyectoConceptoGasto.class);
 
     if (!repository.existsById(id)) {
       throw new ProyectoConceptoGastoNotFoundException(id);

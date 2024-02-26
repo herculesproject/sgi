@@ -11,7 +11,10 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ModeloTipoFaseSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFaseService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,6 +31,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_KEY_MODELO = "modelo";
+  private static final String MSG_MODELO_TIPO_FASE_SELECCIONAR_CONVOCATORIA_O_PROYECTO = "modeloTipoFase.seleccionar.convocatoriaOproyecto";
+  private static final String MSG_MODEL_TIPO_FASE = "org.crue.hercules.sgi.csp.model.TipoFase.message";
+  private static final String MSG_MODEL_MODELO_TIPO_FASE = "org.crue.hercules.sgi.csp.model.ModeloTipoFase.message";
+  private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
+  private static final String MSG_MODELO_EJECUCION_INACTIVO = "org.springframework.util.Assert.entity.modeloEjecucion.inactivo.message";
+  private static final String MSG_MODELO_EJECUCION_EXISTS = "org.springframework.util.Assert.entity.modeloEjecucion.exists.message";
 
   private final ModeloTipoFaseRepository modeloTipoFaseRepository;
 
@@ -53,18 +65,27 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
   public ModeloTipoFase create(ModeloTipoFase modeloTipoFase) {
     log.debug("create(ModeloTipoFase modeloTipoFase) - start");
 
-    Assert.isNull(modeloTipoFase.getId(), "ModeloTipoFase id no puede ser null para crear un nuevo modeloTipoFase");
-    Assert.notNull(modeloTipoFase.getModeloEjecucion().getId(), "Id ModeloEjecución no puede ser null");
-    Assert.notNull(modeloTipoFase.getTipoFase().getId(), "Id TipoFase no puede ser null");
+    AssertHelper.idIsNull(modeloTipoFase.getId(), ModeloTipoFase.class);
+    AssertHelper.idNotNull(modeloTipoFase.getModeloEjecucion().getId(), ModeloEjecucion.class);
+    AssertHelper.idNotNull(modeloTipoFase.getTipoFase().getId(), TipoFase.class);
     modeloTipoFase.setTipoFase(tipoFaseRepository.findById(modeloTipoFase.getTipoFase().getId())
         .orElseThrow(() -> new TipoFaseNotFoundException(modeloTipoFase.getTipoFase().getId())));
     modeloTipoFase.setModeloEjecucion(modeloEjecucionRepository.findById(modeloTipoFase.getModeloEjecucion().getId())
         .orElseThrow(() -> new ModeloEjecucionNotFoundException(modeloTipoFase.getModeloEjecucion().getId())));
-    Assert.isTrue(modeloTipoFase.getTipoFase().getActivo(), "El tipo Fase debe estar activo");
+    Assert.isTrue(modeloTipoFase.getTipoFase().getActivo(),
+        () -> ProblemMessage.builder()
+            .key(MSG_MODELO_EJECUCION_INACTIVO)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_FASE))
+            .parameter(MSG_KEY_FIELD, modeloTipoFase.getTipoFase().getNombre())
+            .parameter(MSG_KEY_MODELO, modeloTipoFase.getModeloEjecucion().getNombre())
+            .build());
     modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(modeloTipoFase.getModeloEjecucion().getId(),
         modeloTipoFase.getTipoFase().getId()).ifPresent(modeloTipoFaseExistente -> {
           Assert.isTrue(!modeloTipoFaseExistente.getActivo(),
-              "Ya existe una asociación activa para ese ModeloEjecucion y ese TipoFase");
+              () -> ProblemMessage.builder()
+                  .key(MSG_MODELO_EJECUCION_EXISTS)
+                  .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_TIPO_FASE))
+                  .build());
           modeloTipoFase.setId(modeloTipoFaseExistente.getId());
         });
     Assert.isTrue(modeloTipoFase.getConvocatoria() || modeloTipoFase.getProyecto(),
@@ -87,9 +108,16 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
   public ModeloTipoFase update(ModeloTipoFase modeloTipoFaseActualizar) {
     log.debug("update(ModeloTipoFase modeloTipoFaseActualizar) - start");
     return modeloTipoFaseRepository.findById(modeloTipoFaseActualizar.getId()).map(modeloTipoFase -> {
-      Assert.isTrue(modeloTipoFase.getActivo(), "El ModeloTipoFase tiene que estar activo");
+      Assert.isTrue(modeloTipoFase.getActivo(),
+          () -> ProblemMessage.builder()
+              .key(MSG_ENTITY_INACTIVO)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_MODELO_TIPO_FASE))
+              .parameter(MSG_KEY_FIELD, modeloTipoFase.getTipoFase().getNombre())
+              .build());
+
       Assert.isTrue(modeloTipoFase.getConvocatoria() || modeloTipoFase.getProyecto(),
-          "Debe seleccionarse si la fase está disponible para proyectos o convocatorias");
+          ApplicationContextSupport.getMessage(MSG_MODELO_TIPO_FASE_SELECCIONAR_CONVOCATORIA_O_PROYECTO));
+
       modeloTipoFase.setConvocatoria(modeloTipoFaseActualizar.getConvocatoria());
       modeloTipoFase.setProyecto(modeloTipoFaseActualizar.getProyecto());
       ModeloTipoFase returnValue = modeloTipoFaseRepository.save(modeloTipoFase);
@@ -125,7 +153,7 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
   @Transactional
   public ModeloTipoFase disable(Long id) throws ModeloTipoFaseNotFoundException {
     log.debug("disable(Long id) - start");
-    Assert.notNull(id, "El id no puede ser nulo");
+    AssertHelper.idNotNull(id, ModeloTipoFase.class);
     return modeloTipoFaseRepository.findById(id).map(modeloTipoFase -> {
       modeloTipoFase.setActivo(false);
       ModeloTipoFase returnValue = modeloTipoFaseRepository.save(modeloTipoFase);

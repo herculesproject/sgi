@@ -9,11 +9,15 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.AreaTematicaPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.AreaTematicaSpecifications;
 import org.crue.hercules.sgi.csp.service.AreaTematicaService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -31,7 +35,17 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class AreaTematicaServiceImpl implements AreaTematicaService {
 
-  private static final String MESSAGE_GRUPO_DUPLICADO = "Ya existe un grupo con el mismo nombre";
+  private static final String MESSAGE_GRUPO_DUPLICADO = "grupo.exists";
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_KEY_LENGTH = "length";
+  private static final String MSG_FIELD_ABREVIATURA = "abbreviation";
+  private static final String MSG_FIELD_DESCRIPCION = "descripcion";
+  private static final String MSG_FIELD_PADRE = "padre";
+  private static final String MSG_MODEL_AREA_TEMATICA = "org.crue.hercules.sgi.csp.model.AreaTematica.message";
+  private static final String MSG_MODEL_AREA_TEMATICA_PADRE = "org.crue.hercules.sgi.csp.model.AreaTematica.padre.message";
+  private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
+  private static final String MSG_PROBLEM_MAX_LENGTH = "org.springframework.util.Assert.maxLength.message";
 
   private final AreaTematicaRepository repository;
 
@@ -53,7 +67,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   public AreaTematica create(AreaTematica areaTematica) {
     log.debug("create(AreaTematica areaTematica) - start");
 
-    Assert.isNull(areaTematica.getId(), "AreaTematica id tiene que ser null para crear un nuevo AreaTematica");
+    AssertHelper.idIsNull(areaTematica.getId(), AreaTematica.class);
 
     if (areaTematica.getPadre() != null) {
       if (areaTematica.getPadre().getId() == null) {
@@ -65,27 +79,45 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
     }
 
     if (areaTematica.getPadre() == null) {
-      Assert.isTrue(!existGrupoWithNombre(areaTematica.getNombre(), null), MESSAGE_GRUPO_DUPLICADO);
+      Assert.isTrue(!existGrupoWithNombre(areaTematica.getNombre(), null),
+          ApplicationContextSupport.getMessage(MESSAGE_GRUPO_DUPLICADO));
     } else {
       // nombre(back) ==> abreviatura(front)
       // descripcion(back) ==> nombre(front)
       Assert.isTrue(areaTematica.getPadre().getActivo(),
-          "AreaTematica padre '" + areaTematica.getPadre().getNombre() + "' está desactivada");
+          () -> ProblemMessage.builder()
+              .key(MSG_ENTITY_INACTIVO)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA_PADRE))
+              .parameter(MSG_KEY_FIELD, areaTematica.getPadre().getNombre())
+              .build());
 
       Assert.isTrue(areaTematica.getNombre().length() <= 5,
-          "Se ha superado la longitud máxima permitida para la abreviatura de AreaTematica (5)");
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_MAX_LENGTH)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
+              .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_ABREVIATURA))
+              .parameter(MSG_KEY_LENGTH, "5")
+              .build());
 
-      Assert.isTrue(StringUtils.isNotBlank(areaTematica.getDescripcion()),
-          "El nombre de AreaTematica es un campo obligatorio");
+      AssertHelper.fieldNotNull(areaTematica.getDescripcion(), AreaTematica.class, MSG_FIELD_DESCRIPCION);
 
       Assert.isTrue(areaTematica.getDescripcion().length() <= 50,
-          "Se ha superado la longitud máxima permitida para el nombre de AreaTematica (50)");
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_MAX_LENGTH)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
+              .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_DESCRIPCION))
+              .parameter(MSG_KEY_LENGTH, "50")
+              .build());
 
-      Assert.isTrue(!existAreaTematicaNombreDescripcion(areaTematica.getPadre().getId(), areaTematica.getNombre(), null,
-          BUSCAR_NOMBRE), "Ya existe un AreaTematica con la misma abreviatura en el grupo");
+      AssertHelper.entityExists(
+          !existAreaTematicaNombreDescripcion(areaTematica.getPadre().getId(), areaTematica.getNombre(), null,
+              BUSCAR_NOMBRE),
+          Grupo.class, AreaTematica.class);
 
-      Assert.isTrue(!existAreaTematicaNombreDescripcion(areaTematica.getPadre().getId(), areaTematica.getDescripcion(),
-          null, BUSCAR_DESCRIPCION), "Ya existe un AreaTematica con el mismo nombre en el grupo");
+      AssertHelper.entityExists(
+          !existAreaTematicaNombreDescripcion(areaTematica.getPadre().getId(), areaTematica.getDescripcion(),
+              null, BUSCAR_DESCRIPCION),
+          Grupo.class, AreaTematica.class);
     }
 
     areaTematica.setActivo(true);
@@ -107,7 +139,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   public AreaTematica update(AreaTematica areaTematicaActualizar) {
     log.debug("update(AreaTematica areaTematicaActualizar) - start");
 
-    Assert.notNull(areaTematicaActualizar.getId(), "AreaTematica id no puede ser null para actualizar un AreaTematica");
+    AssertHelper.idNotNull(areaTematicaActualizar.getId(), AreaTematica.class);
 
     if (areaTematicaActualizar.getPadre() != null) {
       if (areaTematicaActualizar.getPadre().getId() == null) {
@@ -121,33 +153,47 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
     return repository.findById(areaTematicaActualizar.getId()).map(areaTematica -> {
       if (areaTematica.getPadre() == null) {
         Assert.isTrue(!existGrupoWithNombre(areaTematicaActualizar.getNombre(), areaTematicaActualizar.getId()),
-            MESSAGE_GRUPO_DUPLICADO);
+            ApplicationContextSupport.getMessage(MESSAGE_GRUPO_DUPLICADO));
       } else {
         // nombre(back) ==> abreviatura(front)
         // descripcion(back) ==> nombre(front)
         if (!Objects.equals(areaTematica.getPadre().getId(), areaTematicaActualizar.getPadre().getId())) {
           Assert.isTrue(areaTematicaActualizar.getPadre().getActivo(),
-              "AreaTematica padre '" + areaTematicaActualizar.getPadre().getNombre() + "' está desactivada");
+              () -> ProblemMessage.builder()
+                  .key(MSG_ENTITY_INACTIVO)
+                  .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA_PADRE))
+                  .parameter(MSG_KEY_FIELD, areaTematica.getPadre().getNombre())
+                  .build());
         }
 
         Assert.isTrue(areaTematicaActualizar.getNombre().length() <= 5,
-            "Se ha superado la longitud máxima permitida para la abreviatura de AreaTematica (5)");
+            () -> ProblemMessage.builder()
+                .key(MSG_PROBLEM_MAX_LENGTH)
+                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
+                .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_ABREVIATURA))
+                .parameter(MSG_KEY_LENGTH, "5")
+                .build());
 
-        Assert.isTrue(StringUtils.isNotBlank(areaTematicaActualizar.getDescripcion()),
-            "El nombre de AreaTematica es un campo obligatorio");
+        AssertHelper.fieldNotBlank(StringUtils.isNotBlank(areaTematicaActualizar.getDescripcion()), AreaTematica.class,
+            MSG_FIELD_DESCRIPCION);
 
         Assert.isTrue(areaTematicaActualizar.getDescripcion().length() <= 50,
-            "Se ha superado la longitud máxima permitida para el nombre de AreaTematica (50)");
+            () -> ProblemMessage.builder()
+                .key(MSG_PROBLEM_MAX_LENGTH)
+                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
+                .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_DESCRIPCION))
+                .parameter(MSG_KEY_LENGTH, "50")
+                .build());
 
-        Assert.isTrue(
+        AssertHelper.entityExists(
             !existAreaTematicaNombreDescripcion(areaTematicaActualizar.getPadre().getId(),
                 areaTematicaActualizar.getNombre(), areaTematicaActualizar.getId(), BUSCAR_NOMBRE),
-            "Ya existe un AreaTematica con la misma abreviatura en el grupo");
+            Grupo.class, AreaTematica.class);
 
-        Assert.isTrue(
+        AssertHelper.entityExists(
             !existAreaTematicaNombreDescripcion(areaTematicaActualizar.getPadre().getId(),
                 areaTematicaActualizar.getDescripcion(), areaTematicaActualizar.getId(), BUSCAR_DESCRIPCION),
-            "Ya existe un AreaTematica con el mismo nombre en el grupo");
+            Grupo.class, AreaTematica.class);
       }
 
       areaTematica.setNombre(areaTematicaActualizar.getNombre());
@@ -171,7 +217,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   public AreaTematica enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "AreaTematica id no puede ser null para reactivar un AreaTematica");
+    AssertHelper.idNotNull(id, AreaTematica.class);
 
     return repository.findById(id).map(areaTematica -> {
       if (Boolean.TRUE.equals(areaTematica.getActivo())) {
@@ -179,9 +225,10 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
         return areaTematica;
       }
 
-      Assert.isTrue(areaTematica.getPadre() == null, "Solo se puede reactivar si es un grupo (AreaTematica sin padre)");
+      AssertHelper.fieldIsNull(areaTematica.getPadre(), AreaTematica.class, MSG_FIELD_PADRE);
 
-      Assert.isTrue(!existGrupoWithNombre(areaTematica.getNombre(), areaTematica.getId()), MESSAGE_GRUPO_DUPLICADO);
+      Assert.isTrue(!existGrupoWithNombre(areaTematica.getNombre(), areaTematica.getId()),
+          ApplicationContextSupport.getMessage(MESSAGE_GRUPO_DUPLICADO));
 
       areaTematica.setActivo(true);
 
@@ -202,7 +249,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   public AreaTematica disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "AreaTematica id no puede ser null para desactivar un AreaTematica");
+    AssertHelper.idNotNull(id, AreaTematica.class);
 
     return repository.findById(id).map(areaTematica -> {
       if (Boolean.FALSE.equals(areaTematica.getActivo())) {

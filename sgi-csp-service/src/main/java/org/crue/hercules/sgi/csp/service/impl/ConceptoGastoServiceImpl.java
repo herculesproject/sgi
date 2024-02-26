@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.csp.repository.ConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ConceptoGastoPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ConceptoGastoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConceptoGastoService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ConceptoGastoServiceImpl implements ConceptoGastoService {
 
-  private static final String MESSAGE_CONCEPTO_GASTO_EXISTE = "Ya existe un ConceptoGasto con el nombre ";
+  private static final String MSG_ENTITY_EXISTS = "org.springframework.util.Assert.entity.exists.message";
+  private static final String MSG_MODEL_CONCEPTO_GASTO = "org.crue.hercules.sgi.csp.model.ConceptoGasto.message";
   private static final String PROBLEM_MESSAGE_KEY_NOT_NULL = "notNull";
   private static final String PROBLEM_MESSAGE_PARAMETER_KEY_ENTITY = "entity";
   private static final String PROBLEM_MESSAGE_PARAMETER_KEY_FIELD = "field";
@@ -63,7 +65,12 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
             .build());
 
     Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(conceptoGasto.getNombre()).isPresent()),
-        MESSAGE_CONCEPTO_GASTO_EXISTE + conceptoGasto.getNombre());
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_EXISTS)
+            .parameter(PROBLEM_MESSAGE_PARAMETER_KEY_ENTITY,
+                ApplicationContextSupport.getMessage(MSG_MODEL_CONCEPTO_GASTO))
+            .parameter(PROBLEM_MESSAGE_PARAMETER_KEY_FIELD, conceptoGasto.getNombre())
+            .build());
 
     conceptoGasto.setActivo(true);
     ConceptoGasto returnValue = repository.save(conceptoGasto);
@@ -99,7 +106,12 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
     repository.findByNombreAndActivoIsTrue(conceptoGastoActualizar.getNombre()).ifPresent(
         conceptoGastoExistente -> Assert.isTrue(
             Objects.equals(conceptoGastoActualizar.getId(), conceptoGastoExistente.getId()),
-            MESSAGE_CONCEPTO_GASTO_EXISTE + conceptoGastoExistente.getNombre()));
+            () -> ProblemMessage.builder()
+                .key(MSG_ENTITY_EXISTS)
+                .parameter(PROBLEM_MESSAGE_PARAMETER_KEY_ENTITY,
+                    ApplicationContextSupport.getMessage(MSG_MODEL_CONCEPTO_GASTO))
+                .parameter(PROBLEM_MESSAGE_PARAMETER_KEY_FIELD, conceptoGastoExistente.getNombre())
+                .build()));
 
     return repository.findById(conceptoGastoActualizar.getId()).map(conceptoGasto -> {
       conceptoGasto.setNombre(conceptoGastoActualizar.getNombre());
@@ -123,7 +135,7 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
   public ConceptoGasto enable(Long id) {
     log.debug("enable(Long id) - start");
 
-    Assert.notNull(id, "ConceptoGasto id no puede ser null para reactivar un ConceptoGasto");
+    AssertHelper.idNotNull(id, ConceptoGasto.class);
 
     return repository.findById(id).map(conceptoGasto -> {
       if (Boolean.TRUE.equals(conceptoGasto.getActivo())) {
@@ -134,7 +146,12 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
       repository.findByNombreAndActivoIsTrue(conceptoGasto.getNombre())
           .ifPresent(conceptoGastoExistente -> Assert.isTrue(
               Objects.equals(conceptoGasto.getId(), conceptoGastoExistente.getId()),
-              MESSAGE_CONCEPTO_GASTO_EXISTE + conceptoGastoExistente.getNombre()));
+              () -> ProblemMessage.builder()
+                  .key(MSG_ENTITY_EXISTS)
+                  .parameter(PROBLEM_MESSAGE_PARAMETER_KEY_ENTITY,
+                      ApplicationContextSupport.getMessage(MSG_MODEL_CONCEPTO_GASTO))
+                  .parameter(PROBLEM_MESSAGE_PARAMETER_KEY_FIELD, conceptoGastoExistente.getNombre())
+                  .build()));
 
       conceptoGasto.setActivo(true);
 
@@ -155,7 +172,7 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
   public ConceptoGasto disable(Long id) {
     log.debug("disable(Long id) - start");
 
-    Assert.notNull(id, "ConceptoGasto id no puede ser null para desactivar un ConceptoGasto");
+    AssertHelper.idNotNull(id, ConceptoGasto.class);
 
     return repository.findById(id).map(conceptoGasto -> {
       if (Boolean.FALSE.equals(conceptoGasto.getActivo())) {

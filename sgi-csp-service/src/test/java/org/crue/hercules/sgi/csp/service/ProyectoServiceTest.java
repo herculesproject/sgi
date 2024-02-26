@@ -414,7 +414,7 @@ class ProyectoServiceTest extends BaseServiceTest {
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La convocatoria con id '" + proyecto.getConvocatoriaId() + "' no existe");
+        .hasMessage("Convocatoria de Proyecto no existe");
   }
 
   @Test
@@ -426,7 +426,7 @@ class ProyectoServiceTest extends BaseServiceTest {
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Proyecto id tiene que ser null para crear un Proyecto");
+        .hasMessage("Identificador de Proyecto debe ser nulo");
   }
 
   @Test
@@ -439,7 +439,7 @@ class ProyectoServiceTest extends BaseServiceTest {
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La Unidad de Gestión no es gestionable por el usuario");
+        .hasMessage("Proyecto pertenece a una Unidad de Gestión no gestionable por el usuario");
   }
 
   @Test
@@ -454,8 +454,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     // when: Creamos el Proyecto
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion '" + proyecto.getModeloEjecucion().getNombre()
-            + "' no disponible para la UnidadGestion " + proyecto.getUnidadGestionRef());
+        .hasMessage("Modelo Ejecución %s no disponible para la Unidad Gestión %s",
+            proyecto.getModeloEjecucion().getNombre(), proyecto.getUnidadGestionRef());
   }
 
   @Test
@@ -652,7 +652,7 @@ class ProyectoServiceTest extends BaseServiceTest {
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La convocatoria con id '" + proyecto.getConvocatoriaId() + "' no existe");
+        .hasMessage("Convocatoria de Proyecto no existe");
   }
 
   @Test
@@ -682,8 +682,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     // when: Actualizamos el Proyecto
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(proyecto)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ModeloEjecucion '" + proyecto.getModeloEjecucion().getNombre()
-            + "' no disponible para la UnidadGestion " + proyecto.getUnidadGestionRef());
+        .hasMessage("Modelo Ejecución %s no disponible para la Unidad Gestión %s",
+            proyecto.getModeloEjecucion().getNombre(), proyecto.getUnidadGestionRef());
   }
 
   @Test
@@ -963,12 +963,15 @@ class ProyectoServiceTest extends BaseServiceTest {
 
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
+    modeloEjecucion.setNombre("nombreModeloEjecucion");
 
     TipoFinalidad tipoFinalidad = new TipoFinalidad();
     tipoFinalidad.setId(1L);
+    tipoFinalidad.setNombre("nombreTipoFinalidad");
 
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
     tipoAmbitoGeografico.setId(1L);
+    tipoAmbitoGeografico.setNombre("nombreTipoAmbitoGeografico");
 
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);

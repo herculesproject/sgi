@@ -243,7 +243,8 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
         .assertThatThrownBy(
             () -> service.update(solicitudProyectoSocioId, Arrays.asList(solicitudProyectoSocioPeriodoJustificacion)))
         .isInstanceOf(NoRelatedEntitiesException.class)
-        .hasMessage("Not all provided Justification Period are related with Partner");
+        .hasMessage(
+            "No todos/as los/as Periodo de Justificación proporcionados/as están relacionados/as con el/la Solicitud Proyecto Socio");
   }
 
   @Test
@@ -280,7 +281,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
         .assertThatThrownBy(() -> service.update(solicitudProyectoSocioId,
             Arrays.asList(solicitudProyectoSocioPeriodoJustificacion1, solicitudProyectoSocioPeriodoJustificacion2)))
         .isInstanceOf(PeriodoWrongOrderException.class).hasMessageContaining(
-            "The first Period must start in month 1 and all Periods must be consecutive, with no gaps");
+            "El primer Periodo debe comenzar en el mes 1 y todos los Periodos deben ser consecutivos, sin huecos");
   }
 
   @Test
@@ -394,7 +395,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
         .assertThatThrownBy(
             () -> service.update(solicitudProyectoSocioId, Arrays.asList(solicitudProyectoSocioPeriodoJustificacion1)))
         .isInstanceOf(PeriodoLongerThanSolicitudProyectoException.class)
-        .hasMessage("The Period goes beyond the duration of the Project Data");
+        .hasMessage("El Periodo se extiende más allá de la duración de los Datos de Proyecto");
   }
 
   @Test
@@ -431,7 +432,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
         .assertThatThrownBy(() -> service.update(solicitudProyectoSocioId,
             Arrays.asList(solicitudProyectoSocioPeriodoJustificacion1, solicitudProyectoSocioPeriodoJustificacion2)))
         .isInstanceOf(PeriodoWrongOrderException.class).hasMessageContaining(
-            "The first Period must start in month 1 and all Periods must be consecutive, with no gaps");
+            "El primer Periodo debe comenzar en el mes 1 y todos los Periodos deben ser consecutivos, sin huecos");
   }
 
   @Test

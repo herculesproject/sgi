@@ -356,7 +356,8 @@ class ModeloTipoFinalidadServiceTest extends BaseServiceTest {
     modeloTipoFinalidad.setId(modeloTipoFinalidadId);
     modeloTipoFinalidad
         .setModeloEjecucion(ModeloEjecucion.builder().id(modeloEjecucionId).activo(Boolean.TRUE).build());
-    modeloTipoFinalidad.setTipoFinalidad(TipoFinalidad.builder().id(tipoFinalidadId).activo(Boolean.TRUE).build());
+    modeloTipoFinalidad.setTipoFinalidad(
+        TipoFinalidad.builder().id(tipoFinalidadId).nombre("nombreTipoFinalidad").activo(Boolean.TRUE).build());
     modeloTipoFinalidad.setActivo(Boolean.TRUE);
 
     return modeloTipoFinalidad;

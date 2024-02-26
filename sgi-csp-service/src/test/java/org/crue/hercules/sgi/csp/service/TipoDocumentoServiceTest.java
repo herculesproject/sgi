@@ -70,7 +70,7 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el TipoDocumento ya tiene id
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.create(tipoDocumentoNew))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoDocumento id tiene que ser null para crear un nuevo TipoDocumento");
+        .hasMessage("Identificador de Tipo Documento debe ser nulo");
   }
 
   @Test
@@ -86,7 +86,7 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque hay otro TipoDocumento con ese nombre
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.create(tipoDocumentoNew))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoDocumento activo con el nombre '%s'", tipoDocumentoNew.getNombre());
+        .hasMessage("Ya existe Tipo Documento con el valor %s", tipoDocumentoNew.getNombre());
   }
 
   @Test
@@ -183,7 +183,7 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el TipoDocumento no existe
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.enable(tipoDocumento.getId()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoDocumento activo con el nombre '%s'", tipoDocumento.getNombre());
+        .hasMessage("Ya existe Tipo Documento con el valor %s", tipoDocumento.getNombre());
 
   }
 
@@ -241,7 +241,7 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque ya existe otro TipoDocumento con ese nombre
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.update(tipoDocumentoUpdated))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoDocumento activo con el nombre '%s'", tipoDocumentoUpdated.getNombre());
+        .hasMessage("Tipo Documento de Tipo Documento ya existe", tipoDocumentoUpdated.getNombre());
   }
 
   @Test

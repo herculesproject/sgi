@@ -1,10 +1,12 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoAreaConocimientoNotFoundException;
+import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.repository.ProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoAreaConocimientoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoAreaConocimientoService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.modelmapper.internal.util.Assert;
 import org.springframework.data.domain.Page;
@@ -34,9 +36,8 @@ public class ProyectoAreaConocimientoServiceImpl implements ProyectoAreaConocimi
   public ProyectoAreaConocimiento create(ProyectoAreaConocimiento proyectoAreaConocimiento) {
     log.debug("create(ProyectoAreaConocimiento proyectoAreaConocimiento) - start");
 
-    Assert.isNull(proyectoAreaConocimiento.getId(), "Id tiene que ser null para crear ProyectoAreaConocimiento");
-    Assert.notNull(proyectoAreaConocimiento.getProyectoId(),
-        "Id Proyecto no puede ser null para crear ProyectoAreaConocimiento");
+    AssertHelper.idIsNull(proyectoAreaConocimiento.getId(), ProyectoAreaConocimiento.class);
+    AssertHelper.idNotNull(proyectoAreaConocimiento.getProyectoId(), Proyecto.class);
 
     ProyectoAreaConocimiento returnValue = repository.save(proyectoAreaConocimiento);
 
@@ -49,7 +50,7 @@ public class ProyectoAreaConocimientoServiceImpl implements ProyectoAreaConocimi
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    Assert.notNull(id, "ProyectoAreaConocimiento id no puede ser null para desactivar un ProyectoAreaConocimiento");
+    AssertHelper.idNotNull(id, ProyectoAreaConocimiento.class);
 
     if (!repository.existsById(id)) {
       throw new ProyectoAreaConocimientoNotFoundException(id);

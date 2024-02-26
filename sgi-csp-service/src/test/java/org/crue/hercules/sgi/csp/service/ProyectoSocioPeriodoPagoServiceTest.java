@@ -185,7 +185,7 @@ class ProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     // ProyectoSocio
     Assertions.assertThatThrownBy(() -> service.update(proyectoSocioId, Arrays.asList(proyectoPeriodoPago)))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("No se puede modificar el proyecto socio del ProyectoSocioPeriodoPago");
+        .hasMessage("No se puede Modificar Proyecto Socio para Proyecto Socio Periodo Pago");
   }
 
   @Test

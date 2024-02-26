@@ -61,7 +61,7 @@ class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ConvocatoriaConceptoGasto ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(newConvocatoriaConceptoGasto))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear ConvocatoriaConceptoGasto");
+        .hasMessage("Identificador de Convocatoria Concepto Gasto debe ser nulo");
   }
 
   @Test
@@ -74,7 +74,7 @@ class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(convocatoriaConceptoGasto))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null para crear ConvocatoriaConceptoGasto");
+        .hasMessage("Identificador de Convocatoria no puede ser nulo");
   }
 
   @Test
@@ -89,7 +89,8 @@ class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     // when: Creamos el ConvocatoriaEnlace
     // then: Lanza una excepcion porque el enlace está inactivo
     Assertions.assertThatThrownBy(() -> service.create(convocatoriaConceptoGasto))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El ConceptoGasto debe estar activo");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage(convocatoriaConceptoGasto.getConceptoGasto().getNombre() + " de Concepto de Gasto no está activo");
   }
 
   @Test
@@ -101,7 +102,7 @@ class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     // when: Creamos el ConvocatoriaConceptoGasto
     // then: Lanza una excepcion porque el concepto gasto es null
     Assertions.assertThatThrownBy(() -> service.update(convocatoriaConceptoGastoActualizar))
-        .isInstanceOf(ConceptoGastoNotFoundException.class).hasMessage("ConceptoGasto 1 does not exist.");
+        .isInstanceOf(ConceptoGastoNotFoundException.class).hasMessage("Concepto de Gasto 1 no existe");
   }
 
   @Test
@@ -208,7 +209,7 @@ class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
   private ConvocatoriaConceptoGasto generarMockConvocatoriaConceptoGasto(Long id) {
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id == null ? 1 : id);
-
+    conceptoGasto.setNombre("conceptoGasto");
     conceptoGasto.setActivo(true);
 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();

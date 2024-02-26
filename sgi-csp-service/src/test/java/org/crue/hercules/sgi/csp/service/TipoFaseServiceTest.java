@@ -164,7 +164,7 @@ class TipoFaseServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el TipoFase no existe
     Assertions.assertThatThrownBy(() -> tipoFaseService.enable(tipoFase.getId()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoFase activo con el nombre '%s'", tipoFase.getNombre());
+        .hasMessage("Tipo Fase de Tipo Fase ya existe", tipoFase.getNombre());
 
   }
 
@@ -304,7 +304,7 @@ class TipoFaseServiceTest extends BaseServiceTest {
         () -> tipoFaseService.create(newTFase))
         // then: throw exception as Nombre already exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoFase activo con el nombre '%s'", newTFase.getNombre());
+        .hasMessage("Tipo Fase de Tipo Fase ya existe", newTFase.getNombre());
   }
 
   @Test
@@ -320,7 +320,7 @@ class TipoFaseServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque ya existe otro TipoFase con ese nombre
     Assertions.assertThatThrownBy(() -> tipoFaseService.update(tipoFaseUpdated))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoFase activo con el nombre '%s'", tipoFaseUpdated.getNombre());
+        .hasMessage("Tipo Fase de Tipo Fase ya existe", tipoFaseUpdated.getNombre());
   }
 
   /**

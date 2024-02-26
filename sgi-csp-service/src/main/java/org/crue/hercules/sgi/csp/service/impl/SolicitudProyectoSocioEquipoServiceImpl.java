@@ -6,19 +6,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocioEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,6 +39,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class SolicitudProyectoSocioEquipoServiceImpl implements SolicitudProyectoSocioEquipoService {
+
+  private static final String MSG_KEY_ENTITY = "entity";
+  private static final String MSG_KEY_MSG = "msg";
+  private static final String MSG_KEY_FIELD = "field";
+  private static final String MSG_KEY_ACTION = "action";
+  private static final String MSG_FIELD_ACTION_MODIFICAR = "action.modificar";
+  private static final String MSG_FIELD_PERSONA_REF = "personaRef";
+  private static final String MSG_MODEL_SOLICITUD_PROYECTO_SOCIO = "org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio.message";
+  private static final String MSG_MODEL_SOLICITUD_PROYECTO_SOCIO_EQUIPO = "org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo.message";
+  private static final String MSG_ENTITY_MODIFICABLE = "org.springframework.util.Assert.entity.modificable.message";
+  private static final String MSG_PROBLEM_ACCION_DENEGADA = "org.springframework.util.Assert.accion.denegada.message";
+  private static final String MSG_PROBLEM_DATE_OVERLOAP = "org.springframework.util.Assert.date.overloap.message";
 
   /** Solicitud service */
   private final SolicitudService solicitudService;
@@ -81,8 +97,13 @@ public class SolicitudProyectoSocioEquipoServiceImpl implements SolicitudProyect
     SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
         .findById(solicitudProyectoSocio.getSolicitudProyectoId())
         .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyectoSocio.getSolicitudProyectoId()));
+
     Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()),
-        "No se puede modificar SolicitudProyectoSocioEquipo");
+        () -> ProblemMessage.builder()
+            .key(MSG_ENTITY_MODIFICABLE)
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD_PROYECTO_SOCIO_EQUIPO))
+            .parameter(MSG_KEY_MSG, null)
+            .build());
 
     List<SolicitudProyectoSocioEquipo> existentes = repository
         .findAllBySolicitudProyectoSocioId(solicitudProyectoSocioId);
@@ -130,18 +151,24 @@ public class SolicitudProyectoSocioEquipoServiceImpl implements SolicitudProyect
         Assert.isTrue(
             Objects.equals(existente.getSolicitudProyectoSocioId(),
                 solicitudProyectoSocioEquipo.getSolicitudProyectoSocioId()),
-            "No se puede modificar la solicitud proyecto socio del SolicitudProyectoSocioEquipo");
+            () -> ProblemMessage.builder()
+                .key(MSG_PROBLEM_ACCION_DENEGADA)
+                .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(
+                    MSG_MODEL_SOLICITUD_PROYECTO_SOCIO))
+                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                    MSG_MODEL_SOLICITUD_PROYECTO_SOCIO_EQUIPO))
+                .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_MODIFICAR))
+                .build());
       }
 
       // Setea la solicitud proyecto socio recuperada del solicitudProyectoSocioId
       solicitudProyectoSocioEquipo.setSolicitudProyectoSocioId(solicitudProyectoSocio.getId());
 
       // Validaciones
-      Assert.notNull(solicitudProyectoSocioEquipo.getRolProyecto(),
-          "El rol de participación no puede ser null para realizar la acción sobre SolicitudProyectoSocioEquipo");
-
-      Assert.notNull(solicitudProyectoSocioEquipo.getPersonaRef(),
-          "La persona ref no puede ser null para realizar la acción sobre SolicitudProyectoSocioEquipo");
+      AssertHelper.entityNotNull(solicitudProyectoSocioEquipo.getRolProyecto(), SolicitudProyectoSocioEquipo.class,
+          RolProyecto.class);
+      AssertHelper.fieldNotNull(solicitudProyectoSocioEquipo.getPersonaRef(), SolicitudProyectoSocioEquipo.class,
+          MSG_FIELD_PERSONA_REF);
 
       Assert.isTrue(
           solicitudProyectoEquipoSocioAnterior == null || (!solicitudProyectoEquipoSocioAnterior.getPersonaRef()
@@ -150,7 +177,12 @@ public class SolicitudProyectoSocioEquipoServiceImpl implements SolicitudProyect
                   .equals(solicitudProyectoSocioEquipo.getPersonaRef())
                   && (solicitudProyectoSocioEquipo.getMesInicio() > solicitudProyectoEquipoSocioAnterior
                       .getMesFin()))),
-          "El periodo se solapa con otro existente");
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_DATE_OVERLOAP)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
+                  MSG_MODEL_SOLICITUD_PROYECTO_SOCIO_EQUIPO))
+              .parameter(MSG_KEY_FIELD, solicitudProyectoSocioEquipo.getPersonaRef())
+              .build());
 
       solicitudProyectoEquipoSocioAnterior = solicitudProyectoSocioEquipo;
     }

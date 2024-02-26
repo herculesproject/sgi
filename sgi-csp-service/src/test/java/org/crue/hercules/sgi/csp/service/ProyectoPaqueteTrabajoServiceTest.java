@@ -92,7 +92,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ProyectoPaqueteTrabajo ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(proyectoPaqueteTrabajo))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("ProyectoPaqueteTrabajo id tiene que ser null para crear un nuevo ProyectoPaqueteTrabajo");
+        .hasMessage("Identificador de Proyecto Paquete Trabajo debe ser nulo");
   }
 
   @Test
@@ -107,7 +107,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPaqueteTrabajo))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -122,7 +122,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPaqueteTrabajo))
         // then: throw exception as Nombre is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Nombre PaqueteTrabajo no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Nombre de Proyecto Paquete Trabajo no puede ser nulo");
   }
 
   @Test
@@ -137,7 +137,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPaqueteTrabajo))
         // then: throw exception as FechaInicio is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha inicio no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Fecha inicio de Proyecto Paquete Trabajo no puede ser nulo");
   }
 
   @Test
@@ -152,7 +152,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPaqueteTrabajo))
         // then: throw exception as FechaFin is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha fin no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Fecha fin de Proyecto Paquete Trabajo no puede ser nulo");
   }
 
   @Test
@@ -167,7 +167,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPaqueteTrabajo))
         // then: throw exception as PersonaMes is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Persona/Mes debe tener un valor para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Persona/Mes debe tener un valor para realizar la acción sobre Proyecto Paquete Trabajo");
   }
 
   @Test
@@ -181,7 +181,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
     Assertions.assertThatThrownBy(() -> service.create(proyectoPaqueteTrabajo))
         // then: throw exception as Inicio > fechaFin
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test
@@ -238,7 +238,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.create(proyectoPaqueteTrabajo))
         // then: throw exception as nombre is duplicated
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ProyectoPaqueteTrabajo en el proyecto con el nombre '%s'",
+        .hasMessage("Proyecto Paquete Trabajo de Proyecto ya existe",
             proyectoPaqueteTrabajo.getNombre());
   }
 
@@ -326,7 +326,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPaqueteTrabajo))
         // then: throw exception as ProyectoId is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Proyecto no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -341,7 +341,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPaqueteTrabajo))
         // then: throw exception as Nombre is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Nombre PaqueteTrabajo no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Nombre de Proyecto Paquete Trabajo no puede ser nulo");
   }
 
   @Test
@@ -356,7 +356,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPaqueteTrabajo))
         // then: throw exception as FechaInicio is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha inicio no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Fecha inicio de Proyecto Paquete Trabajo no puede ser nulo");
   }
 
   @Test
@@ -371,7 +371,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPaqueteTrabajo))
         // then: throw exception as FechaFin is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Fecha fin no puede ser null para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Fecha fin de Proyecto Paquete Trabajo no puede ser nulo");
   }
 
   @Test
@@ -386,7 +386,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPaqueteTrabajo))
         // then: throw exception as PersonaMes is null
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Persona/Mes debe tener un valor para realizar la acción sobre ProyectoPaqueteTrabajo");
+        .hasMessage("Persona/Mes debe tener un valor para realizar la acción sobre Proyecto Paquete Trabajo");
   }
 
   @Test
@@ -405,7 +405,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPaqueteTrabajo))
         // then: throw exception as Inicio > fechaFin
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin debe ser posterior a la fecha de inicio");
+        .hasMessage("La fecha de inicio no puede ser superior a la fecha de fin");
   }
 
   @Test
@@ -469,7 +469,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         () -> service.update(proyectoPaqueteTrabajo))
         // then: throw exception as nombre is duplicated
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ProyectoPaqueteTrabajo en el proyecto con el nombre '%s'",
+        .hasMessage("Proyecto Paquete Trabajo de Proyecto ya existe",
             proyectoPaqueteTrabajo.getNombre());
   }
 

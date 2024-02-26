@@ -55,8 +55,7 @@ public class ConfiguracionService {
   public Configuracion update(final Configuracion configuracionActualizar) {
     log.debug("update(Configuracion configuracionActualizar) - start");
 
-    Assert.notNull(configuracionActualizar.getId(),
-        "Configuracion id no puede ser null para actualizar una configuracion");
+    AssertHelper.idNotNull(configuracionActualizar.getId(), Configuracion.class);
 
     return repository.findById(configuracionActualizar.getId()).map(configuracion -> {
       configuracion.setFormatoPartidaPresupuestaria(configuracionActualizar.getFormatoPartidaPresupuestaria());

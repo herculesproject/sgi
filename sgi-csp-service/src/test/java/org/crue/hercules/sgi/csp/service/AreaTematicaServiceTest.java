@@ -106,7 +106,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque el AreaTematica ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(areaTematica)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AreaTematica id tiene que ser null para crear un nuevo AreaTematica");
+        .hasMessage("Identificador de Área Temática debe ser nulo");
   }
 
   @Test
@@ -156,7 +156,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque el padre no está activo
     Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AreaTematica padre '%s' está desactivada", areaTematica.getNombre());
+        .hasMessage("%s de Área Temática padre no está activo", areaTematica.getNombre());
   }
 
   @Test
@@ -171,7 +171,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque excede la longitud máxima permitida
     Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Se ha superado la longitud máxima permitida para la abreviatura de AreaTematica (5)");
+        .hasMessage("Se ha superado la longitud máxima permitida para Abreviatura de Área Temática (5)");
   }
 
   @Test
@@ -187,7 +187,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque excede la longitud máxima permitida
     Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Se ha superado la longitud máxima permitida para el nombre de AreaTematica (50)");
+        .hasMessage("Se ha superado la longitud máxima permitida para Descripción de Área Temática (50)");
   }
 
   @Test
@@ -202,7 +202,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque descripcion es obligatoria
     Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El nombre de AreaTematica es un campo obligatorio");
+        .hasMessage("Descripción de Área Temática no puede ser nulo");
   }
 
   @Test
@@ -219,7 +219,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque hay otro AreaTematica con ese nombre
     Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un AreaTematica con la misma abreviatura en el grupo");
+        .hasMessage("Área Temática de Grupo ya existe");
   }
 
   @Test
@@ -237,7 +237,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque hay otro AreaTematica con ese nombre
     Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un AreaTematica con el mismo nombre en el grupo");
+        .hasMessage("Área Temática de Grupo ya existe");
   }
 
   @Test
@@ -328,7 +328,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // given: AreaTematica modificada cuyo padre está desactivado
     // nombre(back) ==> abreviatura(front)
     AreaTematica areaTematicaOriginal = generarMockAreaTematica(3L, "A-003", "descripcion-3", 1L);
-    AreaTematica areaTematicaPadreActualizado = generarMockAreaTematica(2L, "nombrePadre2", "descripcionPadre2", null);
+    AreaTematica areaTematicaPadreActualizado = generarMockAreaTematica(2L, "nombre-1", "descripcionPadre2", null);
     AreaTematica areaTematicaActualizado = generarMockAreaTematica(3L, "A-003", "descripcion-3", 2L);
     areaTematicaPadreActualizado.setActivo(Boolean.FALSE);
 
@@ -339,7 +339,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el padre no está activo
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AreaTematica padre '%s' está desactivada", areaTematicaPadreActualizado.getNombre());
+        .hasMessage("%s de Área Temática padre no está activo", areaTematicaPadreActualizado.getNombre());
   }
 
   @Test
@@ -356,7 +356,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque excede la longitud máxima permitida
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Se ha superado la longitud máxima permitida para la abreviatura de AreaTematica (5)");
+        .hasMessage("Se ha superado la longitud máxima permitida para Abreviatura de Área Temática (5)");
   }
 
   @Test
@@ -374,7 +374,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque excede la longitud máxima permitida
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Se ha superado la longitud máxima permitida para el nombre de AreaTematica (50)");
+        .hasMessage("Se ha superado la longitud máxima permitida para Descripción de Área Temática (50)");
   }
 
   @Test
@@ -390,7 +390,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Actualizamos el AreaTematica
     // then: Lanza una excepcion porque descripcion es obligatoria
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El nombre de AreaTematica es un campo obligatorio");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Descripción de Área Temática no puede ser nulo");
   }
 
   @Test
@@ -410,7 +410,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque hay otro AreaTematica con ese nombre
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un AreaTematica con la misma abreviatura en el grupo");
+        .hasMessage("Área Temática de Grupo ya existe");
   }
 
   @Test
@@ -430,7 +430,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque hay otro AreaTematica con esa descripcion
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un AreaTematica con el mismo nombre en el grupo");
+        .hasMessage("Área Temática de Grupo ya existe");
   }
 
   @Test
@@ -530,7 +530,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el AreaTematica tiene padre (no es grupo)
     Assertions.assertThatThrownBy(() -> service.enable(areaTematica.getId()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Solo se puede reactivar si es un grupo (AreaTematica sin padre)");
+        .hasMessage("Padre de Área Temática debe ser nulo");
   }
 
   @Test

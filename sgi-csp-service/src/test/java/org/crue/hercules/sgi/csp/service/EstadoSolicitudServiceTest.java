@@ -79,7 +79,7 @@ class EstadoSolicitudServiceTest extends BaseServiceTest {
     // when: Creamos el EstadoSolicitud
     // then: Lanza una excepcion porque el EstadoSolicitud ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(solicitudModalidad)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("EstadoSolicitud id tiene que ser null para crear un EstadoSolicitud");
+        .hasMessage("Identificador de Estado Solicitud debe ser nulo");
   }
 
   @Test
@@ -91,7 +91,7 @@ class EstadoSolicitudServiceTest extends BaseServiceTest {
     // when: Creamos el EstadoSolicitud
     // then: Lanza una excepcion porque no tiene solicitud
     Assertions.assertThatThrownBy(() -> service.create(estadoSolicitud)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("idSolicitud no puede ser null para crear un EstadoSolicitud");
+        .hasMessage("Identificador de Solicitud no puede ser nulo");
   }
 
   @Test

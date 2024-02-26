@@ -88,7 +88,7 @@ class TipoHitoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el TipoHito ya tiene id
     Assertions.assertThatThrownBy(() -> tipoHitoService.create(tipoHitoNew))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("TipoHito id tiene que ser null para crear un nuevo tipoHito");
+        .hasMessage("Identificador de Tipo Hito debe ser nulo");
   }
 
   @Test
@@ -137,7 +137,7 @@ class TipoHitoServiceTest extends BaseServiceTest {
         () -> tipoHitoService.create(newTHito))
         // then: throw exception as Nombre already exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoHito activo con el nombre '%s'", newTHito.getNombre());
+        .hasMessage("Tipo Hito de Tipo Hito ya existe", newTHito.getNombre());
   }
 
   @Test
@@ -153,7 +153,7 @@ class TipoHitoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque ya existe otro TipoHito con ese nombre
     Assertions.assertThatThrownBy(() -> tipoHitoService.update(tipoHitoUpdated))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoHito activo con el nombre '%s'", tipoHito.getNombre());
+        .hasMessage("Tipo Hito de Tipo Hito ya existe", tipoHito.getNombre());
   }
 
   @Test
@@ -291,7 +291,7 @@ class TipoHitoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el TipoHito no existe
     Assertions.assertThatThrownBy(() -> tipoHitoService.enable(tipoHito.getId()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoHito activo con el nombre '%s'", tipoHito.getNombre());
+        .hasMessage("Tipo Hito de Tipo Hito ya existe", tipoHito.getNombre());
 
   }
 

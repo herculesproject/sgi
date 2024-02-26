@@ -115,7 +115,7 @@ class SolicitudHitoServiceTest {
     // when: Creamos el SolicitudHito
     // then: Lanza una excepcion porque no tiene solicitud
     Assertions.assertThatThrownBy(() -> service.create(solicitudHito)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La solicitud no puede ser null para crear la SolicitudHito");
+        .hasMessage("Identificador de Solicitud no puede ser nulo");
   }
 
   @Test
@@ -128,7 +128,7 @@ class SolicitudHitoServiceTest {
     // when: Creamos el SolicitudHito
     // then: Lanza una excepcion porque no tiene programa
     Assertions.assertThatThrownBy(() -> service.create(solicitudHito)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El tipo hito no puede ser null para crear la SolicitudHito");
+        .hasMessage("Identificador de Tipo Hito no puede ser nulo");
   }
 
   @Test
@@ -172,7 +172,8 @@ class SolicitudHitoServiceTest {
         // when: create SolicitudHito
         () -> service.create(solicitudHito))
         // then: throw exception as fecha is null
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe un Hito con el mismo tipo en esa fecha");
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Tipo Hito con el identificador %s ya existe para esa fecha", solicitudHito.getTipoHitoId());
   }
 
   @Test
@@ -264,7 +265,8 @@ class SolicitudHitoServiceTest {
     // when: Actualizamos el SolicitudHito
     // then: Lanza una excepcion porque la fecha ya existe para ese tipo
     Assertions.assertThatThrownBy(() -> service.update(1L, solicitudHito))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe un Hito con el mismo tipo en esa fecha");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "Tipo Hito con el identificador %s ya existe para esa fecha", solicitudHito.getTipoHitoId());
   }
 
   @Test

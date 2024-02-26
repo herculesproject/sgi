@@ -4,11 +4,13 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoAreaConocimientoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessSolicitudException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoAreaConocimientoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoAreaConocimientoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoAreaConocimientoService;
+import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.modelmapper.internal.util.Assert;
@@ -44,10 +46,8 @@ public class SolicitudProyectoAreaConocimientoServiceImpl implements SolicitudPr
   public SolicitudProyectoAreaConocimiento create(SolicitudProyectoAreaConocimiento solicitudProyectoAreaConocimiento) {
     log.debug("create(SolicitudProyectoAreaConocimiento solicitudProyectoAreaConocimiento) - start");
 
-    Assert.isNull(solicitudProyectoAreaConocimiento.getId(),
-        "Id tiene que ser null para crear SolicitudProyectoAreaConocimiento");
-    Assert.notNull(solicitudProyectoAreaConocimiento.getSolicitudProyectoId(),
-        "Id SolicitudProyecto no puede ser null para crear SolicitudProyectoAreaConocimiento");
+    AssertHelper.idIsNull(solicitudProyectoAreaConocimiento.getId(), SolicitudProyectoAreaConocimiento.class);
+    AssertHelper.idNotNull(solicitudProyectoAreaConocimiento.getSolicitudProyectoId(), SolicitudProyecto.class);
 
     SolicitudProyectoAreaConocimiento returnValue = repository.save(solicitudProyectoAreaConocimiento);
 
@@ -60,8 +60,7 @@ public class SolicitudProyectoAreaConocimientoServiceImpl implements SolicitudPr
   public void delete(Long id) {
     log.debug("delete(Long id) - start");
 
-    Assert.notNull(id,
-        "SolicitudProyectoAreaConocimiento id no puede ser null para desactivar un SolicitudProyectoAreaConocimiento");
+    AssertHelper.idNotNull(id, SolicitudProyectoAreaConocimiento.class);
 
     if (!repository.existsById(id)) {
       throw new SolicitudProyectoAreaConocimientoNotFoundException(id);

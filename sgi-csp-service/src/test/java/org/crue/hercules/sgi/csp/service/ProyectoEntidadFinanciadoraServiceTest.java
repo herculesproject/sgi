@@ -107,7 +107,7 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ProyectoEntidadFinanciadora ya tiene id
     Assertions.assertThatThrownBy(() -> service.create(proyectoEntidadFinanciadora))
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "ProyectoEntidadFinanciadora id tiene que ser null para crear un nuevo ProyectoEntidadFinanciadora");
+            "Identificador de Proyecto Entidad Financiadora debe ser nulo");
   }
 
   @Test
@@ -124,7 +124,7 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     // when: Creamos el ProyectoEntidadFinanciadora
     // then: Lanza una excepcion porque el PorcentajeFinanciacion es negativo
     Assertions.assertThatThrownBy(() -> service.create(convocatoriaEntidadFinanciadora))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("PorcentajeFinanciacion no puede ser negativo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Porcentaje Financiación no puede ser negativo");
   }
 
   @Test
@@ -138,7 +138,7 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
         // when: create ProyectoEntidadFinanciadora
         () -> service.create(proyectoEntidadFinanciadora))
         // then: throw exception as proyectoId is null
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El id de proyecto no puede ser nulo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -190,7 +190,8 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
         // when: create ProyectoEntidadFinanciadora
         () -> service.create(convocatoriaEntidadFinanciadora))
         // then: throw exception as FuenteFinanciacion is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("La FuenteFinanciacion debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Fuente de Financiación no está activo",
+            convocatoriaEntidadFinanciadora.getFuenteFinanciacion().getNombre());
   }
 
   @Test
@@ -230,7 +231,8 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
         // when: create ProyectoEntidadFinanciadora
         () -> service.create(proyectoEntidadFinanciadora))
         // then: throw exception as TipoFinanciacion is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoFinanciacion debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Tipo Financiación no está activo",
+            proyectoEntidadFinanciadora.getTipoFinanciacion().getNombre());
   }
 
   @Test
@@ -295,7 +297,7 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     // when: Actualizamos el ProyectoEntidadFinanciadora
     // then: Lanza una excepcion porque el PorcentajeFinanciacion es negativo
     Assertions.assertThatThrownBy(() -> service.update(proyectoEntidadFinanciadora))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("PorcentajeFinanciacion no puede ser negativo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Porcentaje Financiación no puede ser negativo");
   }
 
   @Test
@@ -373,7 +375,8 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
         // when: update ProyectoEntidadFinanciadora
         () -> service.update(convocatoriaEntidadFinanciadoraActualizada))
         // then: throw exception as FuenteFinanciacion is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("La FuenteFinanciacion debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Fuente de Financiación no está activo",
+            convocatoriaEntidadFinanciadoraActualizada.getFuenteFinanciacion().getNombre());
   }
 
   @Test
@@ -399,7 +402,8 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
         // when: update ProyectoEntidadFinanciadora
         () -> service.update(proyectoEntidadFinanciadoraActualizada))
         // then: throw exception as TipoFinanciacion is not activo
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoFinanciacion debe estar Activo");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("%s de Tipo Financiación no está activo",
+            proyectoEntidadFinanciadoraActualizada.getTipoFinanciacion().getNombre());
   }
 
   @Test
@@ -518,12 +522,14 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
     // @formatter:off
       .id(id == null ? 1 : id)
       .activo(true)
+      .nombre("nombreFuenteFinanciacion")
       .build();
     // @formatter:on
 
     TipoFinanciacion tipoFinanciacion = TipoFinanciacion.builder()
     // @formatter:off
       .id(id == null ? 1 : id)
+      .nombre("nombreTipoFinanciacion")
       .activo(true)
       .build();
     // @formatter:on
