@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.rep.controller;
 
 import java.util.Locale;
 
+import org.crue.hercules.sgi.rep.util.SgiLocaleHelper;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleGrupo;
 import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleProduccionInvestigador;
@@ -53,7 +54,7 @@ public class PrcReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeDetalleGrupoReportService.getReportDetalleGrupo(report, anio, grupoRef,
-        locale.getLanguage());
+        SgiLocaleHelper.getLang(locale));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -79,7 +80,7 @@ public class PrcReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeDetalleGrupoReportService.getReportResumenPuntuacionGrupos(report, anio,
-        locale.getLanguage());
+        SgiLocaleHelper.getLang(locale));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -108,7 +109,7 @@ public class PrcReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeDetalleGrupoReportService.getReportDetalleProduccionInvestigador(report, anio,
-        personaRef, locale.getLanguage());
+        personaRef, SgiLocaleHelper.getLang(locale));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
