@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.eti.util.SgiLocaleHelper;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -570,7 +571,7 @@ public class EvaluacionController {
   public ResponseEntity<DocumentoOutput> documentoEvaluador(@PathVariable Long idEvaluacion) {
     log.debug("documentoEvaluador(@PathVariable Long idEvaluacion) - start");
     Locale locale = LocaleContextHolder.getLocale();
-    DocumentoOutput documento = service.generarDocumentoEvaluador(idEvaluacion, locale.getLanguage());
+    DocumentoOutput documento = service.generarDocumentoEvaluador(idEvaluacion, SgiLocaleHelper.getLang(locale));
     log.debug("documentoEvaluador(@PathVariable Long idEvaluacion) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
   }
@@ -586,7 +587,7 @@ public class EvaluacionController {
   public ResponseEntity<DocumentoOutput> documentoEvaluacion(@PathVariable Long idEvaluacion) {
     log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - start");
     Locale locale = LocaleContextHolder.getLocale();
-    DocumentoOutput documento = service.generarDocumentoEvaluacion(idEvaluacion, locale.getLanguage());
+    DocumentoOutput documento = service.generarDocumentoEvaluacion(idEvaluacion, SgiLocaleHelper.getLang(locale));
     log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
   }

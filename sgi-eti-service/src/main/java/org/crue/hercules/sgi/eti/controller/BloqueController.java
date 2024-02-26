@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
 import org.crue.hercules.sgi.eti.service.BloqueService;
+import org.crue.hercules.sgi.eti.util.SgiLocaleHelper;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -94,7 +95,7 @@ public class BloqueController {
   public BloqueOutput one(@PathVariable Long id) {
     log.debug("Bloque one(Long id) - start");
     Locale locale = LocaleContextHolder.getLocale();
-    BloqueOutput returnValue = service.findByIdAndLanguage(id, locale.getLanguage());
+    BloqueOutput returnValue = service.findByIdAndLanguage(id, SgiLocaleHelper.getLang(locale));
     log.debug("Bloque one(Long id) - end");
     return returnValue;
   }

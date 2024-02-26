@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
+import org.crue.hercules.sgi.eti.util.SgiLocaleHelper;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -78,7 +79,7 @@ public class ApartadoController {
   ApartadoOutput one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     Locale locale = LocaleContextHolder.getLocale();
-    ApartadoOutput returnValue = service.findByIdAndLanguage(id, locale.getLanguage());
+    ApartadoOutput returnValue = service.findByIdAndLanguage(id, SgiLocaleHelper.getLang(locale));
     log.debug("one(Long id) - end");
     return returnValue;
   }
@@ -96,7 +97,7 @@ public class ApartadoController {
   ApartadoOutput apartadoByPadre(@PathVariable Long id, @PathVariable Long idPadre) {
     log.debug("one(Long id) - start");
     Locale locale = LocaleContextHolder.getLocale();
-    ApartadoOutput returnValue = service.findByIdAndPadreIdAndLanguage(id, idPadre, locale.getLanguage());
+    ApartadoOutput returnValue = service.findByIdAndPadreIdAndLanguage(id, idPadre, SgiLocaleHelper.getLang(locale));
     log.debug("one(Long id) - end");
     return returnValue;
   }

@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.service.BloqueService;
 import org.crue.hercules.sgi.eti.service.FormularioService;
+import org.crue.hercules.sgi.eti.util.SgiLocaleHelper;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -106,7 +107,7 @@ public class FormularioController {
     log.debug("getBloques(Long id, Pageable paging - start");
     Locale locale = LocaleContextHolder.getLocale();
     bloqueService.findByFormularioIdAllLanguages(id, paging);
-    Page<BloqueOutput> page = bloqueService.findByFormularioId(id, locale.getLanguage(), paging);
+    Page<BloqueOutput> page = bloqueService.findByFormularioId(id, SgiLocaleHelper.getLang(locale), paging);
     log.debug("getBloques(Long id, Pageable paging - end");
     if (page.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);

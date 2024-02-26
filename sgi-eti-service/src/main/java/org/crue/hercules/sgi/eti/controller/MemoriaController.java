@@ -35,6 +35,7 @@ import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RespuestaService;
+import org.crue.hercules.sgi.eti.util.SgiLocaleHelper;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -238,7 +239,7 @@ public class MemoriaController {
       @Validated({ BaseEntity.Create.class, Default.class }) @RequestBody Memoria nuevaMemoria, @PathVariable Long id) {
     log.debug("newMemoriaModificada(Memoria nuevaMemoria,  Long id) - start");
     Locale locale = LocaleContextHolder.getLocale();
-    Memoria returnValue = service.createModificada(nuevaMemoria, id, locale.getLanguage());
+    Memoria returnValue = service.createModificada(nuevaMemoria, id, SgiLocaleHelper.getLang(locale));
     log.debug("newMemoriaModificada(Memoria nuevaMemoria,  Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
