@@ -184,13 +184,10 @@ public class EvaluacionServiceImpl implements EvaluacionService {
           fechaEvaluacionAnterior = evaluacionAnterior.get().getConvocatoriaReunion().getFechaEvaluacion();
         }
       }
-      List<Evaluador> evaluadoresComite = this.evaluadorService.findAllByComiteSinconflictoInteresesMemoria(
-          evaluacion.getConvocatoriaReunion().getComite().getId(), evaluacion.getMemoria().getId(),
-          Instant.now());
-      this.comunicadosService.enviarComunicadoAsignacionEvaluacion(evaluacion, evaluadoresComite,
-          fechaEvaluacionAnterior);
+
+      this.comunicadosService.enviarComunicadoAsignacionEvaluacion(evaluacion, fechaEvaluacionAnterior);
     } catch (Exception e) {
-      log.debug("enviarComunicadoAsignacionEvaluacion(evaluacionId: {}) - Error al enviar el comunicado",
+      log.error("create(evaluacionId: {}) - Error al enviar el comunicado de asignacion",
           evaluacion.getId(), e);
     }
 
