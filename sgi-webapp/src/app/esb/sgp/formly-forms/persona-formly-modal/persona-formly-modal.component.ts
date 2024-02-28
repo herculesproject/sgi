@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { IPersona } from '@core/models/sgp/persona';
+import { ConfigService } from '@core/services/cnf/config.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -26,6 +27,11 @@ export interface IPersonaFormlyData {
   styleUrls: ['./persona-formly-modal.component.scss']
 })
 export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPersonaFormlyData, IPersona> implements OnInit {
+  private sgpModificacion: boolean = true;
+
+  get sgpModificacionDisabled(): boolean {
+    return !this.sgpModificacion;
+  }
 
   constructor(
     protected readonly snackBarService: SnackBarService,
@@ -34,10 +40,13 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
     protected readonly translate: TranslateService,
     private readonly personaService: PersonaService,
     private readonly empresaService: EmpresaService,
-    private readonly areaConocimientoService: AreaConocimientoService
-
+    private readonly areaConocimientoService: AreaConocimientoService,
+    private configService: ConfigService
   ) {
     super(matDialogRef, personaData?.action === ACTION_MODAL_MODE.EDIT, translate);
+    this.subscriptions.push(this.configService.isModificacionSgpEnabled().subscribe(value => {
+      this.sgpModificacion = value;
+    }));
   }
 
   protected initializer = (): Observable<void> => this.loadFormlyData(this.personaData?.action, this.personaData?.personaId);

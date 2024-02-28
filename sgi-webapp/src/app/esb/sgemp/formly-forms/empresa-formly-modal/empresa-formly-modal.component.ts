@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEmpresa } from '@core/models/sgemp/empresa';
+import { ConfigService } from '@core/services/cnf/config.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormlyUtils } from '@core/utils/formly-utils';
@@ -25,15 +26,24 @@ export interface IEmpresaFormlyData {
   styleUrls: ['./empresa-formly-modal.component.scss']
 })
 export class EmpresaFormlyModalComponent extends BaseFormlyModalComponent<IEmpresaFormlyData, IEmpresa> implements OnInit {
+  private sgempModificacion: boolean = true;
+
+  get sgempModificacionDisabled(): boolean {
+    return !this.sgempModificacion;
+  }
 
   constructor(
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<EmpresaFormlyModalComponent>,
     @Inject(MAT_DIALOG_DATA) public empresaData: IEmpresaFormlyData,
     protected readonly translate: TranslateService,
-    private readonly empresaService: EmpresaService
+    private readonly empresaService: EmpresaService,
+    private configService: ConfigService
   ) {
     super(matDialogRef, empresaData?.action === ACTION_MODAL_MODE.EDIT, translate);
+    this.subscriptions.push(this.configService.isModificacionSgempEnabled().subscribe(value => {
+      this.sgempModificacion = value;
+    }));
   }
 
   protected initializer = (): Observable<void> => this.loadFormlyData(this.empresaData?.action, this.empresaData?.empresaId);
