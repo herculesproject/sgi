@@ -35,6 +35,7 @@ export interface IProyectoPeriodoAmortizacionModalData {
   entidadesFinanciadoras: IEntidadFinanciadora[];
   proyectosSGE: IProyectoProyectoSge[];
   anualidadGenerica: boolean;
+  amortizacionFondosSgeDisabled: boolean;
 }
 
 @Component({
@@ -144,14 +145,14 @@ export class ProyectoPeriodoAmortizacionModalComponent
 
     return new FormGroup(
       {
-        identificadorSge: new FormControl(identificadorSge, Validators.required),
-        entidadFinanciadora: new FormControl(entidadFinanciadora, Validators.required),
-        anualidad: new FormControl({ value: anualidad, disabled: this.data.anualidadGenerica }, Validators.required),
+        identificadorSge: new FormControl({ value: identificadorSge, disabled: this.data.amortizacionFondosSgeDisabled }, Validators.required),
+        entidadFinanciadora: new FormControl({ value: entidadFinanciadora, disabled: this.data.amortizacionFondosSgeDisabled }, Validators.required),
+        anualidad: new FormControl({ value: anualidad, disabled: this.data.anualidadGenerica || this.data.amortizacionFondosSgeDisabled }, Validators.required),
         fechaInicioAnualidad: new FormControl({ value: fechaInicioAnualidad, disabled: true }),
         fechaFinAnualidad: new FormControl({ value: fechaFinAnualidad, disabled: true }),
-        fechaLimiteAmortizacion: new FormControl(fechaLimiteAmortizacion, Validators.required
+        fechaLimiteAmortizacion: new FormControl({ value: fechaLimiteAmortizacion, disabled: this.data.amortizacionFondosSgeDisabled }, Validators.required
         ),
-        importe: new FormControl(importe,
+        importe: new FormControl({ value: importe, disabled: this.data.amortizacionFondosSgeDisabled },
           [
             Validators.min(0),
             Validators.max(2_147_483_647),

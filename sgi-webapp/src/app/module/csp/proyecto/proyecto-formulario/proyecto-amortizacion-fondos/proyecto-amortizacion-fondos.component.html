@@ -178,10 +178,14 @@
     </div>
     <ng-container *sgiHasAuthorityForAnyUO="'CSP-PRO-E'">
       <div *ngIf="formPart.hasProyectoSGE" class="separation-button">
-        <button color="three" mat-button mat-raised-button (click)="openModal()">
+        <button color="three" mat-button mat-raised-button (click)="openModal()"
+          [disabled]="amortizacionFondosSgeDisabled">
           <mat-icon color="accent">add_circle</mat-icon>
           {{ 'btn.add.entity' | translate:msgParamEntityPeriodoAmortizacion }}
         </button>
+        <sgi-field-info matSuffix [visible]="amortizacionFondosSgeDisabled"
+          message="{{'msg.sge.alta-amortizacion-fondos-disabled' | translate}}">
+        </sgi-field-info>
       </div>
     </ng-container>
   </div>

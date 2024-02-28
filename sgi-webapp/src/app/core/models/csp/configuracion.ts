@@ -50,4 +50,6 @@ export interface IConfiguracion {
   cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
   /** Habilitar creación de Partidas presupuestarias en el SGE */
   partidasPresupuestariasSgeEnabled: boolean;
+  /** Habilitar creación de Periodos de amortización en el SGE */
+  amortizacionFondosSgeEnabled: boolean;
 }
