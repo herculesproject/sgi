@@ -36,6 +36,7 @@
       <column name="gin_ejecucion_economica" defaultValueBoolean="true" type="boolean" />
       <column name="cardinalidad_relacion_sgi_sge" type="varchar(50)" />
       <column name="partidas_presupuestarias_sge" defaultValueBoolean="false" type="boolean" />
+      <column name="sge_amortizacion_fondos" defaultValueBoolean="false" type="boolean" />
     </addColumn>
   </changeSet>
 
@@ -89,8 +90,8 @@
       <column name="resumen" type="CLOB" />
     </addColumn>
 
-    <sql>
-      UPDATE ${schemaPrefix}solicitud_rrhh SET resumen=resumen_old, observaciones=observaciones_old
+    <sql> 
+      UPDATE ${schemaPrefix}solicitud_rrhh SET resumen=resumen_old, observaciones=observaciones_old 
     </sql>
 
     <dropColumn columnName="observaciones_old" tableName="solicitud_rrhh" />
@@ -105,7 +106,7 @@
     </addColumn>
 
     <sql> 
-      UPDATE ${schemaPrefix}programa SET descripcion=descripcion_old
+      UPDATE ${schemaPrefix}programa SET descripcion=descripcion_old 
     </sql>
 
     <dropColumn columnName="descripcion_old" tableName="programa" />

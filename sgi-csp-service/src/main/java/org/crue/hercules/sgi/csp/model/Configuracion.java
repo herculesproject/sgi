@@ -91,7 +91,12 @@ public class Configuracion extends BaseEntity {
      * Habilitar creación de Partidas presupuestarias en el SGE
      * <code>partidasPresupuestariasSGE</code>
      */
-    PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED("partidasPresupuestariasSgeEnabled");
+    PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED("partidasPresupuestariasSgeEnabled"),
+    /**
+     * Habilitar creación de Periodos de amortización en el SGE
+     * <code>amortizacionFondosSGE</code>
+     */
+    AMORTIZACION_FONDOS_SGE_ENABLED("amortizacionFondosSgeEnabled");
 
     private final String key;
 
@@ -173,6 +178,10 @@ public class Configuracion extends BaseEntity {
   @Column(name = "partidas_presupuestarias_sge", columnDefinition = "boolean default false", nullable = true, unique = true)
   private Boolean partidasPresupuestariasSGE;
 
+  /** Habilitar creación de periodos de amortización de fondos en el SGE */
+  @Column(name = "sge_amortizacion_fondos", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean amortizacionFondosSGE;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -197,6 +206,8 @@ public class Configuracion extends BaseEntity {
         return this.getCardinalidadRelacionSgiSge();
       case PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED:
         return this.getPartidasPresupuestariasSGE();
+      case AMORTIZACION_FONDOS_SGE_ENABLED:
+        return this.getAmortizacionFondosSGE();
       default:
         return null;
     }
@@ -236,6 +247,9 @@ public class Configuracion extends BaseEntity {
         break;
       case PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED:
         this.setPartidasPresupuestariasSGE(new Boolean(newValue));
+        break;
+      case AMORTIZACION_FONDOS_SGE_ENABLED:
+        this.setAmortizacionFondosSGE(new Boolean(newValue));
         break;
     }
   }
