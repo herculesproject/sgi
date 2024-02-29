@@ -253,7 +253,7 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
       {
         identificadorSge: new FormControl({ value: identificadorSge, disabled: !!identificadorSge && this.data.disableIndentificadorSge }, Validators.required),
         conceptoGastoFiltro: new FormControl(conceptoGastoFiltro),
-        conceptoGasto: new FormControl(conceptoGasto, Validators.required),
+        conceptoGasto: new FormControl(conceptoGasto),
         codigoEconomicoFiltro: new FormControl(codigoEconomicoFiltro),
         codigoEconomico: new FormControl(this.data.anualidadGasto?.codigoEconomico),
         proyectoPartida: new FormControl(proyectoPartida, Validators.required),
@@ -416,7 +416,7 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
     codigoEconomicoTipo: CodigoEconomicoTipo,
   ) {
     const queryOptionsConceptoGastoCodigoEcPermitidos: SgiRestFindOptions = {
-      filter: this.buildFilterCodigosEconomicos(conceptoGasto.id, true)
+      filter: this.buildFilterCodigosEconomicos(conceptoGasto?.id, true)
     };
 
     this.conceptosGastoCodigoEcPermitidos.paginator = this.paginatorCodigoEcPermitidos;
@@ -463,7 +463,7 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
     }
 
     const queryOptionsConceptoGastoCodigoEcNoPermitidos: SgiRestFindOptions = {
-      filter: this.buildFilterCodigosEconomicos(conceptoGasto.id, false)
+      filter: this.buildFilterCodigosEconomicos(conceptoGasto?.id, false)
     };
 
     this.conceptosGastoCodigoEcNoPermitidos.paginator = this.paginatorCodigoEcNoPermitidos;
@@ -533,8 +533,11 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
 
   private buildFilterCodigosEconomicos(conceptoGastoId: number, permitido: boolean): SgiRestFilter {
     const filter = new RSQLSgiRestFilter('proyectoConceptoGasto.permitido', SgiRestFilterOperator.EQUALS, permitido.toString())
-      .and('proyectoConceptoGasto.conceptoGasto.id', SgiRestFilterOperator.EQUALS, conceptoGastoId.toString())
       .and('proyectoConceptoGasto.proyectoId', SgiRestFilterOperator.EQUALS, this.data.proyectoId.toString());
+
+    if (conceptoGastoId) {
+      filter.and('proyectoConceptoGasto.conceptoGasto.id', SgiRestFilterOperator.EQUALS, conceptoGastoId.toString());
+    }
 
     if (this.data.fechaInicioAnualidad && this.data.fechaFinAnualidad) {
       filter.and(

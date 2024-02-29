@@ -32,11 +32,8 @@
       <mat-form-field fxFlex="50">
         <mat-label>{{'csp.proyecto-anualidad.partida-gasto.concepto-gasto' | translate}}</mat-label>
         <sgi-select-entity formControlName="conceptoGasto" [options]="conceptosGasto$ | async"
-          (selectionChange)="loadCodigosEconomicos($event)" required>
+          (selectionChange)="loadCodigosEconomicos($event)">
         </sgi-select-entity>
-        <mat-error *ngIf="formGroup.controls.conceptoGasto.errors?.required">
-          {{'error.required.entity' | translate:msgParamConceptoGastoEntity}}
-        </mat-error>
       </mat-form-field>
     </div>
 
