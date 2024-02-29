@@ -96,7 +96,14 @@ public class Configuracion extends BaseEntity {
      * Habilitar creación de Periodos de amortización en el SGE
      * <code>amortizacionFondosSGE</code>
      */
-    AMORTIZACION_FONDOS_SGE_ENABLED("amortizacionFondosSgeEnabled");
+    AMORTIZACION_FONDOS_SGE_ENABLED("amortizacionFondosSgeEnabled"),
+
+    /**
+     * Habilitar buscador proyectos económicos pantalla Configuración Económica -
+     * Identificación
+     * <code>altaBuscadorSge</code>
+     */
+    ALTA_BUSCADOR_SGE_ENABLED("altaBuscadorSgeEnabled");
 
     private final String key;
 
@@ -182,6 +189,14 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_amortizacion_fondos", columnDefinition = "boolean default false", nullable = false, unique = true)
   private Boolean amortizacionFondosSGE;
 
+  /**
+   * Habilitar que se muestre el buscador de proyectos económicos al pulsar el
+   * botón de "Añadir identificador SGE" en la pantalla de
+   * "Configuración económica - Identificación"
+   */
+  @Column(name = "sge_alta_buscador", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean altaBuscadorSGE;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -208,6 +223,8 @@ public class Configuracion extends BaseEntity {
         return this.getPartidasPresupuestariasSGE();
       case AMORTIZACION_FONDOS_SGE_ENABLED:
         return this.getAmortizacionFondosSGE();
+      case ALTA_BUSCADOR_SGE_ENABLED:
+        return this.getAltaBuscadorSGE();
       default:
         return null;
     }
@@ -250,6 +267,9 @@ public class Configuracion extends BaseEntity {
         break;
       case AMORTIZACION_FONDOS_SGE_ENABLED:
         this.setAmortizacionFondosSGE(new Boolean(newValue));
+        break;
+      case ALTA_BUSCADOR_SGE_ENABLED:
+        this.setAltaBuscadorSGE(new Boolean(newValue));
         break;
     }
   }
