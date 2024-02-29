@@ -68,7 +68,8 @@ export enum ConfigCsp {
   CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED = 'ejecucionEconomicaGruposEnabled',
   CSP_CARDINALIDAD_RELACION_SGI_SGE = 'cardinalidadRelacionSgiSge',
   CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED = "partidasPresupuestariasSgeEnabled",
-  CSP_AMORTIZACION_FONDOS_SGE_ENABLED = "amortizacionFondosSgeEnabled"
+  CSP_AMORTIZACION_FONDOS_SGE_ENABLED = "amortizacionFondosSgeEnabled",
+  CSP_ALTA_BUSCADOR_SGE_ENABLED = "altaBuscadorSgeEnabled"
 }
 
 @Component({
@@ -94,6 +95,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_CARDINALIDAD_RELACION_SGI_SGE, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE`), options: this.getCardinalidadRelacionSgiSgeValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE.description`) }],
     [ConfigCsp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED.description`) }],
     [ConfigCsp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED.description`) }],
+    [ConfigCsp.CSP_ALTA_BUSCADOR_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_ALTA_BUSCADOR_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_ALTA_BUSCADOR_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED.description`) }],
     [ConfigCsp.TITLE_CONVONCATORIA, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.convocatoria`), module: ConfigModule.NONE }],
     [ConfigCsp.CSP_COM_CONVOCATORIA_FASES_DESTINATARIOS_UO, { type: ConfigType.EMAILS_UO, label: marker(`adm.config.csp.CSP_COM_CONVOCATORIA_FASES_DESTINATARIOS_UO`), required: true, module: ConfigModule.CNF }],

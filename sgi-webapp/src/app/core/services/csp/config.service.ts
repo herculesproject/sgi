@@ -76,4 +76,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isAltaBuscadorSgeEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_ALTA_BUSCADOR_SGE_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
 }
