@@ -9,6 +9,7 @@ import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
 import { SelectAreasConocimientoTypeComponent } from './types/select-areas-conocimiento.type';
+import { SelectCentrosTypeComponent } from './types/select-centros.type';
 import { SelectComunidadesTypeComponent } from './types/select-comunidades.type';
 import { SelectDepartamentosTypeComponent } from './types/select-departamentos.type';
 import { SelectPaisesTypeComponent } from './types/select-paises.type';
@@ -18,6 +19,7 @@ import { TableCRUDClasificacionesTypeComponent } from './types/table-crud-clasif
 @NgModule({
   declarations: [
     SelectAreasConocimientoTypeComponent,
+    SelectCentrosTypeComponent,
     SelectComunidadesTypeComponent,
     SelectDepartamentosTypeComponent,
     SelectPaisesTypeComponent,
@@ -39,6 +41,11 @@ import { TableCRUDClasificacionesTypeComponent } from './types/table-crud-clasif
         {
           name: 'select-areas-conocimiento',
           component: SelectAreasConocimientoTypeComponent,
+          wrappers: ['form-field']
+        },
+        {
+          name: 'select-centros',
+          component: SelectCentrosTypeComponent,
           wrappers: ['form-field']
         },
         {
@@ -71,6 +78,7 @@ import { TableCRUDClasificacionesTypeComponent } from './types/table-crud-clasif
   ],
   exports: [
     SelectAreasConocimientoTypeComponent,
+    SelectCentrosTypeComponent,
     SelectComunidadesTypeComponent,
     SelectDepartamentosTypeComponent,
     SelectPaisesTypeComponent,

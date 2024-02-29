@@ -46,6 +46,10 @@
             {{getOptionSelected(model[i][currentField.key], currentField.options)}}
           </p>
 
+          <p *ngSwitchCase="'select-categorias-profesionales'">
+            {{model[i][currentField.key]['nombre']}}
+          </p>
+
           <p *ngSwitchDefault>{{model[i][currentField.key]}}</p>
         </td>
       </ng-container>

@@ -17,5 +17,8 @@
   formly-validation-message {
     color: map-get($palette-warn, $warn-color);
     font-size: 75%;
+    display: block;
+    margin-bottom: 1em;
+    margin-top: -1em;
   }
 }
