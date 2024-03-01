@@ -33,8 +33,7 @@
       </ng-container>
       <ng-container *ngSwitchCase="ConfigType.SELECT_MULTIPLE">
         <sgi-config-select-multiple-cnf [key]="config.key" [label]="config.value.label"
-          [required]="config.value.required" [options$]="config.value.options" (error)="handleErrors($event)"
-          (selectionChange)="selectChange(config.key,$event)" multiple>
+          [required]="config.value.required" [options$]="config.value.options" (error)="handleErrors($event)">
         </sgi-config-select-multiple-cnf>
       </ng-container>
       <ng-container *ngSwitchCase="ConfigType.CONFIG_GROUP_TITLE">

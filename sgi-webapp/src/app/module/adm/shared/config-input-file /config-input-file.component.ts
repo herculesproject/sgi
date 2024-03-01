@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiFileUploadComponent } from '@shared/file-upload/file-upload.component';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ResourceUploadComponent } from '../resource-upload/resource-upload.component';
 
 const MSG_SUCCESS = marker('msg.adm.resource.update.success');
 
@@ -30,7 +31,7 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
   msgParamLabel = {};
   textoUpdateSuccess: string;
 
-  @ViewChild('uploader') private uploader: SgiFileUploadComponent;
+  @ViewChild('uploader') private uploader: ResourceUploadComponent;
 
   @Input()
   set key(key: string) {
@@ -107,7 +108,7 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
 
   save(): void {
     this.subscriptions.push(
-      this.uploader.uploadSelection()
+      this.uploader.uploadSelection(this.key + this.getCodeIdioma())
         .subscribe(
           () => {
             this.snackBarService.showSuccess(this.textoUpdateSuccess);

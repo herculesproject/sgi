@@ -1,6 +1,5 @@
 import { AfterViewChecked, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
-import { Router } from '@angular/router';
 import { Module } from '@core/module';
 import { ConfigPublicService } from '@core/services/cnf/config-public.service';
 import { ResourcePublicService } from '@core/services/cnf/resource-public.service';
@@ -36,7 +35,15 @@ export class HeaderComponent implements OnDestroy, AfterViewChecked {
   ] as LanguageSelect[];
 
   get selectedLanguage(): LanguageSelect {
-    return this.languages.find(lang => lang.value === this.languageService.getLanguage().code);
+    let languageSelected = null;
+    if (this.languages.length > 0) {
+      languageSelected = this.languages.find(lang => lang.value === this.languageService.getLanguage().code);
+      if (!languageSelected) {
+        languageSelected = this.languages[0].value;
+        this.selectLanguage(this.languages[0].value)
+      }
+    }
+    return languageSelected;
   }
 
   @ViewChild('select') select?: MatSelect;
@@ -46,8 +53,7 @@ export class HeaderComponent implements OnDestroy, AfterViewChecked {
     private readonly resourceService: ResourcePublicService,
     private readonly configService: ConfigPublicService,
     private readonly languageService: LanguageService,
-    private readonly translateService: TranslateService,
-    private readonly router: Router
+    private readonly translateService: TranslateService
   ) {
     this.anchoPantalla = window.innerWidth;
     this.subscriptions.push(this.layout.activeModule$.subscribe((res) => this.module = res));
@@ -88,7 +94,6 @@ export class HeaderComponent implements OnDestroy, AfterViewChecked {
   }
 
   selectLanguage(code?: string) {
-    this.router.getCurrentNavigation();
     this.languageService.switchLanguage(this.languageService.getLanguage(code));
     this.translateService.use(code);
     this.translateService.setDefaultLang(code);

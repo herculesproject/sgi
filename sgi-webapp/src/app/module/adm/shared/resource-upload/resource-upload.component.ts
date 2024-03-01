@@ -389,10 +389,10 @@ export class ResourceUploadComponent implements
     }
   }
 
-  uploadSelection(): Observable<void> {
+  uploadSelection(key?: string): Observable<void> {
     if (this.selection && !this.disabled) {
       this.uploading = true;
-      return this.resourceService.updateWithStatus(this.key, this.selection).pipe(
+      return this.resourceService.updateWithStatus(key ?? this.key, this.selection).pipe(
         map(event => {
           switch (event.type) {
             case HttpEventType.Sent:
