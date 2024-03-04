@@ -89,6 +89,7 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
 
     let load$ = formly$.pipe(
       map(fields => {
+        this.setDisableFields(fields);
         return { fields, data: {}, model: {} } as IFormlyData;
       })
     );
@@ -223,6 +224,20 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
     }
     if (this.formlyData.model.entidadRef) {
       this.formlyData.model.entidadRef = this.formlyData.model.entidadRef.id;
+    }
+  }
+
+  setDisableFields(fields: FormlyFieldConfig[]): void {
+    if (this.sgpModificacionDisabled) {
+      fields.forEach(field => {
+        if (field.fieldGroup) {
+          this.setDisableFields(field.fieldGroup);
+        } else {
+          if (field.templateOptions) {
+            field.templateOptions.disabled = true;
+          }
+        }
+      });
     }
   }
 }

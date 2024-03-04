@@ -15,7 +15,7 @@
     type="submit" [disabled]="actionDisabled || sgempModificacionDisabled">
     <mat-icon class="save-icon">save</mat-icon>{{'btn.request.edit' | translate}}
   </button>
-  <sgi-field-info matSuffix [visible]="sgempModificacionDisabled"
+  <sgi-field-info matSuffix *ngIf="empresaData.action === ACTION_MODAL_MODE.EDIT" [visible]="sgempModificacionDisabled"
     message="{{'msg.sgemp.modificacion-empresa-disabled' | translate}}">
   </sgi-field-info>
   <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' | translate}}</button>

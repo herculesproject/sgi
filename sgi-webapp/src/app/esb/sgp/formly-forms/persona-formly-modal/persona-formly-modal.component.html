@@ -15,7 +15,7 @@
     type="submit" [disabled]="actionDisabled || sgpModificacionDisabled">
     <mat-icon class="save-icon">save</mat-icon>{{'btn.request.edit' | translate}}
   </button>
-  <sgi-field-info matSuffix [visible]="sgpModificacionDisabled"
+  <sgi-field-info *ngIf="personaData.action === ACTION_MODAL_MODE.EDIT" matSuffix [visible]="sgpModificacionDisabled"
     message="{{'msg.sgp.modificacion-persona-disabled' | translate}}">
   </sgi-field-info>
   <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' | translate}}</button>

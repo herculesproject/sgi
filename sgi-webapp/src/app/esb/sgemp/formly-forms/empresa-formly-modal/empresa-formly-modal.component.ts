@@ -74,6 +74,7 @@ export class EmpresaFormlyModalComponent extends BaseFormlyModalComponent<IEmpre
       case ACTION_MODAL_MODE.EDIT:
         load$ = this.empresaService.getFormlyUpdate().pipe(
           map(fields => {
+            this.setDisableFields(fields);
             return this.initFormlyData(fields);
           }),
           switchMap((formlyData): Observable<IFormlyData> => {
@@ -144,6 +145,20 @@ export class EmpresaFormlyModalComponent extends BaseFormlyModalComponent<IEmpre
     return this.empresaService.updateEmpresa(empresaId, formlyData.model).pipe(
       switchMap(() => this.empresaService.findById(empresaId))
     );
+  }
+
+  setDisableFields(fields: FormlyFieldConfig[]): void {
+    if (this.sgempModificacionDisabled) {
+      fields.forEach(field => {
+        if (field.fieldGroup) {
+          this.setDisableFields(field.fieldGroup);
+        } else {
+          if (field.templateOptions) {
+            field.templateOptions.disabled = true;
+          }
+        }
+      });
+    }
   }
 
 }
