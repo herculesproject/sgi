@@ -289,11 +289,6 @@ export class ProyectoAnualidadGastoModalComponent extends DialogFormComponent<Pr
     });
 
     this.conceptosGasto$.subscribe(conceptosGasto => {
-      if (conceptosGasto.length === 0) {
-        formGroup.controls.conceptoGasto.disable();
-      } else {
-        formGroup.controls.conceptoGasto.enable();
-      }
       formGroup.controls.conceptoGasto.setValue(null);
     });
 

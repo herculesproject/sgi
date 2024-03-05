@@ -1009,6 +1009,7 @@
   "csp.proyecto-concepto-gasto.fecha-inicio": "Fecha Inicio",
   "csp.proyecto-concepto-gasto.importe-maximo": "Importe máximo",
   "csp.proyecto-concepto-gasto.observaciones": "Observaciones",
+  "csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar": "Sin clasificar",
   "csp.proyecto-consulta-presupuesto.export.title": "Exportación de presupuesto de proyecto",
   "csp.proyecto-consulta-presupuesto.label.anualidad": "Anualidad",
   "csp.proyecto-consulta-presupuesto.label.aplicacion-presupuestaria": "Aplicación presupuestaria",
