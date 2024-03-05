@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { SelectValue } from '@core/component/select-common/select-common.component';
@@ -35,7 +35,6 @@ export interface IProyectoPeriodoAmortizacionModalData {
   entidadesFinanciadoras: IEntidadFinanciadora[];
   proyectosSGE: IProyectoProyectoSge[];
   anualidadGenerica: boolean;
-  amortizacionFondosSgeDisabled: boolean;
 }
 
 @Component({
@@ -145,14 +144,14 @@ export class ProyectoPeriodoAmortizacionModalComponent
 
     return new FormGroup(
       {
-        identificadorSge: new FormControl({ value: identificadorSge, disabled: this.data.amortizacionFondosSgeDisabled }, Validators.required),
-        entidadFinanciadora: new FormControl({ value: entidadFinanciadora, disabled: this.data.amortizacionFondosSgeDisabled }, Validators.required),
-        anualidad: new FormControl({ value: anualidad, disabled: this.data.anualidadGenerica || this.data.amortizacionFondosSgeDisabled }, Validators.required),
+        identificadorSge: new FormControl(identificadorSge, Validators.required),
+        entidadFinanciadora: new FormControl(entidadFinanciadora, Validators.required),
+        anualidad: new FormControl({ value: anualidad, disabled: this.data.anualidadGenerica }, Validators.required),
         fechaInicioAnualidad: new FormControl({ value: fechaInicioAnualidad, disabled: true }),
         fechaFinAnualidad: new FormControl({ value: fechaFinAnualidad, disabled: true }),
-        fechaLimiteAmortizacion: new FormControl({ value: fechaLimiteAmortizacion, disabled: this.data.amortizacionFondosSgeDisabled }, Validators.required
+        fechaLimiteAmortizacion: new FormControl(fechaLimiteAmortizacion, Validators.required
         ),
-        importe: new FormControl({ value: importe, disabled: this.data.amortizacionFondosSgeDisabled },
+        importe: new FormControl(importe,
           [
             Validators.min(0),
             Validators.max(2_147_483_647),

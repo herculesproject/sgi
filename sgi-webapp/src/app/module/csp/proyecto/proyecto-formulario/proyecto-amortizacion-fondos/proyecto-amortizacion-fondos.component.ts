@@ -26,7 +26,6 @@ const MSG_NUEVO = marker('title.new.entity');
 const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_ENTIDAD_FINANCIADORA_KEY = marker('csp.proyecto-amortizacion-fondos.entidad-financiadora');
 const PROYECTO_PERIODO_AMORTIZACION_KEY = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacion');
-const MSG_DELETE_AMORTIZACION_FONDOS_DISABLED = marker('msg.sge.delete-amortizacion-fondos-disabled');
 
 @Component({
   selector: 'sgi-proyecto-amortizacion-fondos',
@@ -70,17 +69,11 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
   @ViewChild('paginatorPeriodos', { static: true }) paginatorPeriodos: MatPaginator;
   @ViewChild('sortPeriodos', { static: true }) sortPeriodos: MatSort;
 
-  private _amortizacionFondosSgeEnabled: boolean;
-  get amortizacionFondosSgeDisabled(): boolean {
-    return !this._amortizacionFondosSgeEnabled;
-  }
-
   constructor(
     protected actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService,
-    private readonly cspConfigService: ConfigService
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.AMORTIZACION_FONDOS, actionService);
     this.formPart = this.fragment as ProyectoAmortizacionFondosFragment;
@@ -95,12 +88,6 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.subscriptions.push(
-      this.cspConfigService.isAmortizacionFondosSgeEnabled().subscribe(amortizacionFondosSgeEnabled => {
-        this._amortizacionFondosSgeEnabled = amortizacionFondosSgeEnabled;
-      })
-    );
   }
 
   ngOnInit(): void {
@@ -169,7 +156,6 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
       entidadesFinanciadoras: this.formPart.entidadesFinanciadoras$.value.map(entidad => entidad.value),
       proyectosSGE: this.formPart.proyectosSGE$.value,
       anualidadGenerica: !this.formPart.anualidades,
-      amortizacionFondosSgeDisabled: this.amortizacionFondosSgeDisabled
     };
     const config = {
       data
@@ -190,21 +176,16 @@ export class ProyectoAmortizacionFondosComponent extends FragmentComponent imple
 
 
   deletePeriodoAmortizacion(wrapper: StatusWrapper<IProyectoPeriodoAmortizacion>) {
-    if (this.amortizacionFondosSgeDisabled) {
-      this.subscriptions.push(
-        this.dialogService.showInfoDialog(MSG_DELETE_AMORTIZACION_FONDOS_DISABLED).subscribe());
-    } else {
-      this.subscriptions.push(
-        this.dialogService.showConfirmation(this.textoDeletePeriodosAmortizacion).subscribe(
-          (aceptado) => {
-            if (aceptado) {
-              this.formPart.deletePeriodoAmortizacion(wrapper);
-              this.formPart.recalcularNumPeriodos();
-            }
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(this.textoDeletePeriodosAmortizacion).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            this.formPart.deletePeriodoAmortizacion(wrapper);
+            this.formPart.recalcularNumPeriodos();
           }
-        )
-      );
-    }
+        }
+      )
+    );
   }
 
   ngOnDestroy(): void {

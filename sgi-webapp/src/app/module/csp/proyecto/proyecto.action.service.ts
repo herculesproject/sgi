@@ -467,7 +467,7 @@ export class ProyectoActionService extends ActionService {
           this.readonly, proyectoService, proyectoPeriodoJustificacionService, convocatoriaService);
         this.amortizacionFondos = new ProyectoAmortizacionFondosFragment(this.data?.proyecto?.id, this.data?.proyecto?.anualidades,
           this.data.proyecto?.solicitudId, proyectoPeriodoAmortizacionService, proyectoEntidadFinanciadoraService, empresaService,
-          proyectoAnualidadService, periodoAmortizacionService);
+          proyectoAnualidadService, periodoAmortizacionService, configService);
         this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(this.data?.proyecto?.id, this.proyectoService);
         this.relaciones = new ProyectoRelacionFragment(
           id, this.data.proyecto, this.readonly, relacionService, convocatoriaService, invencionService, proyectoService, sgiAuthService);
