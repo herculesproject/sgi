@@ -89,7 +89,7 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
 
     let load$ = formly$.pipe(
       map(fields => {
-        this.setDisableFields(fields);
+        this.setDisableFields(fields, action);
         return { fields, data: {}, model: {} } as IFormlyData;
       })
     );
@@ -227,11 +227,11 @@ export class PersonaFormlyModalComponent extends BaseFormlyModalComponent<IPerso
     }
   }
 
-  setDisableFields(fields: FormlyFieldConfig[]): void {
-    if (this.sgpModificacionDisabled) {
+  setDisableFields(fields: FormlyFieldConfig[], action: ACTION_MODAL_MODE): void {
+    if (this.sgpModificacionDisabled && action == ACTION_MODAL_MODE.EDIT) {
       fields.forEach(field => {
         if (field.fieldGroup) {
-          this.setDisableFields(field.fieldGroup);
+          this.setDisableFields(field.fieldGroup, action);
         } else {
           if (field.templateOptions) {
             field.templateOptions.disabled = true;
