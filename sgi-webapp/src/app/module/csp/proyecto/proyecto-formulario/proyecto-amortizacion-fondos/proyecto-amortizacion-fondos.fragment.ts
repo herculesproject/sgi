@@ -178,7 +178,7 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
           .pipe(
             switchMap(() => {
               if (this._amortizacionFondosSgeEnabled) {
-                this.periodoAmortizacionService.deleteById(wrapped.value.id).pipe(
+                return this.periodoAmortizacionService.deleteById(wrapped.value.id).pipe(
                   switchMap(() => of(void 0))
                 );
               } else {
@@ -203,7 +203,7 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
         return this.proyectoPeriodoAmortizacionService.update(wrapped.value.id, wrapped.value).pipe(
           switchMap(() => {
             if (this._amortizacionFondosSgeEnabled) {
-              this.periodoAmortizacionService.update(wrapped.value.id, wrapped.value).pipe(
+              return this.periodoAmortizacionService.update(wrapped.value.id, wrapped.value).pipe(
                 switchMap(() => of(void 0))
               )
             } else {
@@ -236,7 +236,7 @@ export class ProyectoAmortizacionFondosFragment extends Fragment {
           }),
           switchMap((proyectoPeriodoAmortizacionListado) => {
             if (this._amortizacionFondosSgeEnabled) {
-              this.periodoAmortizacionService.create(proyectoPeriodoAmortizacionListado).pipe(
+              return this.periodoAmortizacionService.create(proyectoPeriodoAmortizacionListado).pipe(
                 switchMap(() => of(void 0))
               )
             } else {
