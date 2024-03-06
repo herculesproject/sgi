@@ -38,6 +38,7 @@
       <column name="partidas_presupuestarias_sge" defaultValueBoolean="false" type="boolean" />
       <column name="sge_amortizacion_fondos" defaultValueBoolean="true" type="boolean" />
       <column name="sge_alta_buscador" defaultValueBoolean="true" type="boolean" />
+      <column name="sge_gastos_justificados" defaultValueBoolean="true" type="boolean" />
     </addColumn>
   </changeSet>
 

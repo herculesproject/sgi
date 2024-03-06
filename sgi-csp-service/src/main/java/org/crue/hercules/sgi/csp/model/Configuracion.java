@@ -103,7 +103,13 @@ public class Configuracion extends BaseEntity {
      * Identificación
      * <code>altaBuscadorSge</code>
      */
-    ALTA_BUSCADOR_SGE_ENABLED("altaBuscadorSgeEnabled");
+    ALTA_BUSCADOR_SGE_ENABLED("altaBuscadorSgeEnabled"),
+
+    /**
+     * Habilitar la integración de gastos justificados (apartado seguimiento de
+     * justificación).
+     */
+    GASTOS_JUSTIFICADOS_SGE_ENABLED("gastosJustificadosSgeEnabled");
 
     private final String key;
 
@@ -197,6 +203,13 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_alta_buscador", columnDefinition = "boolean default false", nullable = false, unique = true)
   private Boolean altaBuscadorSGE;
 
+  /**
+   * Habilitar la integración de gastos justificados (apartado seguimiento de
+   * justificación).
+   */
+  @Column(name = "sge_gastos_justificados", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean gastosJustificadosSGE;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -225,6 +238,8 @@ public class Configuracion extends BaseEntity {
         return this.getAmortizacionFondosSGE();
       case ALTA_BUSCADOR_SGE_ENABLED:
         return this.getAltaBuscadorSGE();
+      case GASTOS_JUSTIFICADOS_SGE_ENABLED:
+        return this.getGastosJustificadosSGE();
       default:
         return null;
     }
@@ -270,6 +285,9 @@ public class Configuracion extends BaseEntity {
         break;
       case ALTA_BUSCADOR_SGE_ENABLED:
         this.setAltaBuscadorSGE(new Boolean(newValue));
+        break;
+      case GASTOS_JUSTIFICADOS_SGE_ENABLED:
+        this.setGastosJustificadosSGE(new Boolean(newValue));
         break;
     }
   }
