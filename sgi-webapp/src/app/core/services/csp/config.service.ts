@@ -82,4 +82,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isGastosJustificadosSgeEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
 }

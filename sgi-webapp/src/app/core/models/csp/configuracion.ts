@@ -52,4 +52,6 @@ export interface IConfiguracion {
   partidasPresupuestariasSgeEnabled: boolean;
   /** Habilitar creación de Periodos de amortización en el SGE */
   amortizacionFondosSgeEnabled: boolean;
+  /** Habilitar la integración de gastos justificados (apartado seguimiento de justificación) SGE */
+  gastosJustificadosSgeEnabled: boolean;
 }
