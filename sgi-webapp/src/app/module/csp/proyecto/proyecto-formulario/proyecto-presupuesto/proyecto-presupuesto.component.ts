@@ -78,7 +78,7 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
     private router: Router,
     private route: ActivatedRoute,
     private dialogService: DialogService) {
-    super(actionService.FRAGMENT.PRESUPUESTO, actionService);
+    super(actionService.FRAGMENT.PRESUPUESTO, actionService, translate);
 
     this.formPart = this.fragment as ProyectoPresupuestoFragment;
 
@@ -107,7 +107,7 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.setupI18N();
+
 
     this.anualidades.paginator = this.paginator;
     this.anualidades.sort = this.sort;
@@ -162,7 +162,7 @@ export class ProyectoPresupuestoComponent extends FormFragmentComponent<IProyect
 
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       ANUALIDADES_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL

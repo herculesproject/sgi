@@ -70,4 +70,5 @@ export class ConvocatoriaSeguimientoCientificoPublicComponent extends FragmentCo
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

@@ -59,13 +59,13 @@ export class SolicitudProyectoSocioComponent extends FragmentComponent implement
     private snackBarService: SnackBarService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.SOCIOS, actionService);
+    super(actionService.FRAGMENT.SOCIOS, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoSocioFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.actionService.datosProyectoComplete$.pipe(
       take(1)
     ).subscribe(
@@ -96,7 +96,7 @@ export class SolicitudProyectoSocioComponent extends FragmentComponent implement
 
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_PROYECTO_SOCIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

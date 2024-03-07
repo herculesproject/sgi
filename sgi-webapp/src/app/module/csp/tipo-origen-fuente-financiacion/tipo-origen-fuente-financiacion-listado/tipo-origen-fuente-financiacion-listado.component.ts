@@ -59,7 +59,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
     private readonly translate: TranslateService,
     private readonly authService: SgiAuthService
   ) {
-    super();
+    super(translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -74,7 +74,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.formGroup = new FormGroup({
       nombre: new FormControl(''),
       activo: new FormControl('true')
@@ -82,7 +82,7 @@ export class TipoOrigenFuenteFinanciacionListadoComponent extends AbstractTableP
     this.filter = this.createFilter();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       TIPO_ORIGEN_FUENTE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

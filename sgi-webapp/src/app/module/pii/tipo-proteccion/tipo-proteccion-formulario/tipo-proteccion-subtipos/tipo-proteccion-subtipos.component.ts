@@ -70,14 +70,14 @@ export class TipoProteccionSubtiposComponent extends FragmentComponent implement
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.SUBTIPOS, actionService);
+    super(actionService.FRAGMENT.SUBTIPOS, actionService, translate);
 
     this.formPart = this.fragment as TipoProteccionSubtiposFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -87,7 +87,7 @@ export class TipoProteccionSubtiposComponent extends FragmentComponent implement
 
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SUBTIPO_PROTECCION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

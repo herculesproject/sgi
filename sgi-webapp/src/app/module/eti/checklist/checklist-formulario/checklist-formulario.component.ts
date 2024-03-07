@@ -73,10 +73,10 @@ export class ChecklistFormularioComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.formlyService.findByNombre('CHECKLIST').subscribe((formlyByNombre: IFormly) => {
       this.data.formly = formlyByNombre;
     }));
-    this.setupI18N();
+
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CHECKLIST_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

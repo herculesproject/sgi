@@ -54,13 +54,13 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
     private proyectoProrrogaService: ProyectoProrrogaService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PRORROGAS, actionService);
+    super(actionService.FRAGMENT.PRORROGAS, actionService, translate);
     this.formPart = this.fragment as ProyectoProrrogasFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     const subscription = this.formPart.prorrogas$.subscribe(
       (proyectoProrrogas) => {
         this.dataSource.data = proyectoProrrogas;
@@ -88,7 +88,7 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
   }
 
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_PRORROGA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

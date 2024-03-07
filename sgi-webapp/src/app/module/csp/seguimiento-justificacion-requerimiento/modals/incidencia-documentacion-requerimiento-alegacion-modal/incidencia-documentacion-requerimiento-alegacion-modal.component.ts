@@ -31,7 +31,7 @@ export class IncidenciaDocumentacionRequerimientoAlegacionModalComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
   }
 
   protected buildFormGroup(): FormGroup {

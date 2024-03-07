@@ -49,13 +49,13 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     public actionService: MemoriaActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.datosGeneralesFragment = this.fragment as MemoriaDatosGeneralesFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.subscriptions.push(this.formGroup.controls.comite.valueChanges.subscribe(
       (comite) => {
         this.datosGeneralesFragment.onComiteChange(comite);
@@ -88,7 +88,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     ));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       MEMORIA_COMITE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

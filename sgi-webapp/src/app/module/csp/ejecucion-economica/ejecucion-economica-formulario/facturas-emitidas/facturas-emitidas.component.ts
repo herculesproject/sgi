@@ -119,4 +119,5 @@ export class FacturasEmitidasComponent extends FragmentComponent implements OnIn
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

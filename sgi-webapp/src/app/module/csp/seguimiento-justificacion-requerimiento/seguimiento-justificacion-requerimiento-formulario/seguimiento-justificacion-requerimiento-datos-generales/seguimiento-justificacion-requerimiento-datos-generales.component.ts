@@ -57,14 +57,14 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesComponent
     private matDialog: MatDialog,
     private dialogService: DialogService,
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as SeguimientoJustificacionRequerimientoDatosGeneralesFragment;
     this.initFlexProperties();
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.initIncidenciaDocumentacionTable();
   }
 
@@ -132,7 +132,7 @@ export class SeguimientoJustificacionRequerimientoDatosGeneralesComponent
     this.fxLayoutProperties.xs = 'column';
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       REQUERIMIENTO_PROYECTO_SGI_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

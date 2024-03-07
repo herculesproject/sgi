@@ -60,7 +60,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
     private readonly translate: TranslateService,
     private authService: SgiAuthService
   ) {
-    super();
+    super(translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -75,7 +75,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.formGroup = new FormGroup({
       nombre: new FormControl(''),
       activo: new FormControl('true')
@@ -83,7 +83,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
     this.filter = this.createFilter();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       TIPO_HITO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

@@ -58,13 +58,13 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, actionService);
+    super(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, actionService, translate);
     this.formPart = this.fragment as ProyectoPartidasPresupuestariasFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -84,7 +84,7 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
 
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_PARTIDA_PRESUPUESTARIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

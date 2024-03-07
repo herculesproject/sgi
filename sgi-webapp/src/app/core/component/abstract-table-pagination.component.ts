@@ -13,6 +13,7 @@ import {
 import { EMPTY, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AbstractMenuContentComponent } from './abstract-menu-content.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Directive()
 // tslint:disable-next-line: directive-class-suffix
@@ -21,26 +22,26 @@ export abstract class AbstractTablePaginationComponent<T> extends AbstractMenuCo
   elementosPagina: number[];
   totalElementos: number;
   filter: SgiRestFilter;
-  suscripciones: Subscription[];
   formGroup: FormGroup;
   findOptions: SgiRestFindOptions;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  protected constructor(
-  ) {
-    super();
+  protected constructor(translateService?: TranslateService) {
+    super(translateService);
     this.elementosPagina = [5, 10, 25, 100];
   }
 
   ngOnInit(): void {
     this.totalElementos = 0;
     this.suscripciones = [];
+    super.ngOnInit();
     this.initColumns();
   }
 
   ngOnDestroy(): void {
+    super.ngOnDestroy();
     this.suscripciones.forEach(x => x.unsubscribe());
   }
 

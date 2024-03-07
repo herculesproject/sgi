@@ -55,7 +55,7 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     private readonly evaluacionService: EvaluacionService,
     private readonly documentoService: DocumentoService
   ) {
-    super(actionService.FRAGMENT.EVALUACIONES, actionService);
+    super(actionService.FRAGMENT.EVALUACIONES, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -91,13 +91,13 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
     this.suscriptions.push(this.formGroup.controls.dictamen.valueChanges.subscribe((dictamen) => {
       this.actionService.setDictamen(dictamen);
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       EVALUACION_DICTAMEN_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

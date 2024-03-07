@@ -43,7 +43,7 @@ export class ProyectosComponent extends FragmentComponent implements OnInit, OnD
     private actionService: EjecucionEconomicaActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PROYECTOS, actionService);
+    super(actionService.FRAGMENT.PROYECTOS, actionService, translate);
 
     this.formPart = this.fragment as ProyectosFragment;
   }
@@ -63,6 +63,8 @@ export class ProyectosComponent extends FragmentComponent implements OnInit, OnD
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected setupI18N(): void { }
 
   private initDisplayedColumns(): void {
     this.displayedColumns = [

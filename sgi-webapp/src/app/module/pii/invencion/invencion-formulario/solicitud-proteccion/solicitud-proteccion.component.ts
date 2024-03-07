@@ -112,7 +112,7 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
     private readonly cnfService: ConfigService,
     private solicitudProteccionService: SolicitudProteccionService
   ) {
-    super(actionService.FRAGMENT.SOLICITUDES_PROTECCION, actionService);
+    super(actionService.FRAGMENT.SOLICITUDES_PROTECCION, actionService, translate);
     this.formPart = this.fragment as SolicitudProteccionFragment;
     this.elementosPagina = [5, 10, 25, 100];
     this.setupLayout();
@@ -124,7 +124,7 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     const subscription = this.formPart.solicitudesProteccion$.subscribe(
       (solicitudesProteccion) => {
@@ -152,7 +152,7 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
     this.dataSource.sort = this.sort;
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       SOLICITUD_PROTECCION_KEY,

@@ -61,13 +61,13 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
     private documentoService: DocumentoService,
     private snackBar: SnackBarService
   ) {
-    super(actionService.FRAGMENT.CERTIFICADOS, actionService);
+    super(actionService.FRAGMENT.CERTIFICADOS, actionService, translate);
     this.formPart = this.fragment as AutorizacionCertificadosFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -87,7 +87,7 @@ export class AutorizacionCertificadosComponent extends FragmentComponent impleme
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CERTIFICADO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

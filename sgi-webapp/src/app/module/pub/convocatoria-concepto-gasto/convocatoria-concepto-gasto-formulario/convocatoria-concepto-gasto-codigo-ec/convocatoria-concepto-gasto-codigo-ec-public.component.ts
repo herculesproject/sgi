@@ -36,7 +36,7 @@ export class ConvocatoriaConceptoGastoCodigoEcPublicComponent extends FragmentCo
 
   constructor(
     protected readonly logger: NGXLogger,
-    public readonly actionService: ConvocatoriaConceptoGastoPublicActionService
+    public readonly actionService: ConvocatoriaConceptoGastoPublicActionService,
   ) {
     super(actionService.FRAGMENT.CODIGOS_ECONOMICOS, actionService);
     this.formPart = this.fragment as ConvocatoriaConceptoGastoCodigoEcPublicFragment;
@@ -76,4 +76,5 @@ export class ConvocatoriaConceptoGastoCodigoEcPublicComponent extends FragmentCo
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

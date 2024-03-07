@@ -81,7 +81,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
     private matDialog: MatDialog,
     private readonly cnfService: ConfigService,
   ) {
-    super();
+    super(translate);
 
     this.totalElementos = 0;
 
@@ -102,7 +102,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.formGroup = new FormGroup({
       comite: new FormControl(null, []),
@@ -119,7 +119,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
       }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PETICION_EVALUACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

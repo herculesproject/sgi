@@ -59,7 +59,7 @@ export class SolicitudProyectoPresupuestoPartidasGastoComponent extends Fragment
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PARTIDAS_GASTO, actionService);
+    super(actionService.FRAGMENT.PARTIDAS_GASTO, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoPresupuestoPartidasGastoFragment;
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(36%-10px)';
@@ -76,7 +76,7 @@ export class SolicitudProyectoPresupuestoPartidasGastoComponent extends Fragment
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -109,7 +109,7 @@ export class SolicitudProyectoPresupuestoPartidasGastoComponent extends Fragment
     this.subscriptions.push(subcription);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_PROYECTO_PRESUPUESTP_PARTIDA_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

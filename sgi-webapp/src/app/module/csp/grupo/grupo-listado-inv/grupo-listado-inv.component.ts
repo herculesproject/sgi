@@ -150,4 +150,5 @@ export class GrupoListadoInvComponent extends AbstractTablePaginationComponent<I
     );
   }
 
+  protected setupI18N(): void { }
 }

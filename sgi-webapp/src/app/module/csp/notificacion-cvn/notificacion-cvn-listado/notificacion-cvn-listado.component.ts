@@ -66,17 +66,17 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
     private readonly translate: TranslateService,
     private dialogService: DialogService,
   ) {
-    super();
+    super(translate);
     this.initFlexProperties();
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.initFormGroup();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       AUTORIZACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

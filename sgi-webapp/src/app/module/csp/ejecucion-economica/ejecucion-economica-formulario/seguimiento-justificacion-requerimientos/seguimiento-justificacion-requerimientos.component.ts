@@ -54,13 +54,13 @@ export class SeguimientoJustificacionRequerimientosComponent extends FragmentCom
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS, actionService);
+    super(actionService.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS, actionService, translate);
     this.formPart = this.fragment as SeguimientoJustificacionRequerimientosFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.subscriptions.push(this.formPart?.getRequerimientosJustificacion$().subscribe(
       (requerimientosJustificacion) => {
         this.dataSource.data = requerimientosJustificacion;
@@ -105,7 +105,7 @@ export class SeguimientoJustificacionRequerimientosComponent extends FragmentCom
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       REQUERIMIENTO_JUSTIFICACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

@@ -61,13 +61,13 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.EQUIPO_PROYECTO, actionService);
+    super(actionService.FRAGMENT.EQUIPO_PROYECTO, actionService, translate);
     this.formPart = this.fragment as SolicitudEquipoProyectoFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -113,7 +113,7 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
     this.subscriptions.push(subcription);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_EQUIPO_PROYECTO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

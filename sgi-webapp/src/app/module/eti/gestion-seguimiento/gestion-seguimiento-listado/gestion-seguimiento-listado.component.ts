@@ -170,4 +170,5 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
     this.matDialog.open(SeguimientoListadoExportModalComponent, config);
   }
 
+  protected setupI18N(): void { }
 }

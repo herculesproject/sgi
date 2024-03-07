@@ -57,10 +57,10 @@ export class TipoProcedimientoListadoComponent extends AbstractTablePaginationCo
     private dialogService: DialogService,
     private translate: TranslateService
   ) {
-    super();
+    super(translate);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       TIPO_PROCEDIMIENTO_KEY,
@@ -192,7 +192,7 @@ export class TipoProcedimientoListadoComponent extends AbstractTablePaginationCo
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
   }
 
   /**

@@ -58,7 +58,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     private matDialog: MatDialog,
     private readonly cnfService: ConfigService
   ) {
-    super();
+    super(translate);
 
     this.totalElementos = 0;
 
@@ -94,6 +94,8 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
         this.limiteRegistrosExportacionExcel = value;
       }));
   }
+
+  protected setupI18N(): void { }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IEvaluacion>> {
     return this.evaluacionesService.findAllByMemoriaAndRetrospectivaEnEvaluacion(this.getFindOptions(reset));

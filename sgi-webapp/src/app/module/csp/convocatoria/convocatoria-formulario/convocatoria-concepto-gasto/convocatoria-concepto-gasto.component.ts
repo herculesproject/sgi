@@ -72,7 +72,7 @@ export class ConvocatoriaConceptoGastoComponent extends FragmentComponent implem
     private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.ELEGIBILIDAD, actionService);
+    super(actionService.FRAGMENT.ELEGIBILIDAD, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaConceptoGastoFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -89,7 +89,7 @@ export class ConvocatoriaConceptoGastoComponent extends FragmentComponent implem
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSourcePermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
     this.dataSourcePermitidos.paginator = this.paginatorPermitidos;
     this.dataSourcePermitidos.sort = this.sortPermitidos;
@@ -121,7 +121,7 @@ export class ConvocatoriaConceptoGastoComponent extends FragmentComponent implem
       };
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_CONCEPTO_GASTO_PERMITIDO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

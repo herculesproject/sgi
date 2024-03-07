@@ -72,7 +72,7 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FormFragmentCom
     private readonly translate: TranslateService,
     private solicitudService: SolicitudService
   ) {
-    super(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, actionService);
+    super(actionService.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoPresupuestoGlobalFragment;
 
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -86,7 +86,7 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FormFragmentCom
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.actionService.datosProyectoComplete$.pipe(
       take(1)
     ).subscribe(
@@ -123,7 +123,7 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FormFragmentCom
     this.subscriptions.push(subcription);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_PROYECTO_PRESUPUESTO_GLOBAL_PARTIDA_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

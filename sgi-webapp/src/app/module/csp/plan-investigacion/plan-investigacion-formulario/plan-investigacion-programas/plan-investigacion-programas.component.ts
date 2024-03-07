@@ -63,7 +63,7 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
     public actionService: PlanInvestigacionActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PROGRAMAS, actionService);
+    super(actionService.FRAGMENT.PROGRAMAS, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -80,7 +80,7 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
     this.formPart.programas$.subscribe((programas) => {
       this.dataSource.data = programas;
     });
@@ -91,7 +91,7 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
     this.switchToNone();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PLAN_INVESTIGACION_PROGRAMA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

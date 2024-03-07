@@ -14,6 +14,7 @@ import { EjecucionEconomicaActionService } from '../../ejecucion-economica.actio
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { EjecucionPresupuestariaIngresosFragment } from './ejecucion-presupuestaria-ingresos.fragment';
 import { EjecucionPresupuestariaIngresosExportModalComponent } from './export/ejecucion-presupuestaria-ingresos-export-modal.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-ejecucion-presupuestaria-ingresos',
@@ -94,4 +95,5 @@ export class EjecucionPresupuestariaIngresosComponent extends FragmentComponent 
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

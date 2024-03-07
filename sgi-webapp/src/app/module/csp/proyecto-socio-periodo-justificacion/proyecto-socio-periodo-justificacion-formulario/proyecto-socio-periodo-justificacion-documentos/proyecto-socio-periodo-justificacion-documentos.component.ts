@@ -105,7 +105,7 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DOCUMENTOS, actionService);
+    super(actionService.FRAGMENT.DOCUMENTOS, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -127,7 +127,7 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     const subcription = this.formPart.documentos$.subscribe(
       (documentos) => {
         this.dataSource.data = documentos;
@@ -155,7 +155,7 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
   }
 
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_SOCIO_PERIODO_JUSTIFICACION_DOCUMENTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

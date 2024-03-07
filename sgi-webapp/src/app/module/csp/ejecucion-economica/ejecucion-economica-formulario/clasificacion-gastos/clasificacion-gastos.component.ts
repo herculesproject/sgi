@@ -19,6 +19,7 @@ import { EjecucionEconomicaActionService } from '../../ejecucion-economica.actio
 import { DatoEconomicoDetalleClasificacionModalData, FacturasJustificantesClasificacionModal } from '../../modals/facturas-justificantes-clasificacion-modal/facturas-justificantes-clasificacion-modal.component';
 import { GastosClasficadosSgiEnum } from '../facturas-justificantes.fragment';
 import { ClasificacionGasto, ClasificacionGastosFragment } from './clasificacion-gastos.fragment';
+import { TranslateService } from '@ngx-translate/core';
 
 const MODAL_CLASIFICACION_TITLE_KEY = marker('title.csp.ejecucion-economica.clasificacion.detalle-gasto');
 const MSG_ACCEPT_CLASIFICACION = marker('csp.ejecucion-economica.clasificacion-gastos.aceptar');
@@ -55,9 +56,10 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
     private dialogService: DialogService,
     private ejecucionEconomicaService: EjecucionEconomicaService,
     private gastoProyectoService: GastoProyectoService,
-    private proyectoProyectoSgeService: ProyectoProyectoSgeService
+    private proyectoProyectoSgeService: ProyectoProyectoSgeService,
+    private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.CLASIFICACION_GASTOS, actionService);
+    super(actionService.FRAGMENT.CLASIFICACION_GASTOS, actionService, translate);
     this.formPart = this.fragment as ClasificacionGastosFragment;
   }
 
@@ -219,4 +221,5 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
     });
   }
 
+  protected setupI18N(): void { }
 }

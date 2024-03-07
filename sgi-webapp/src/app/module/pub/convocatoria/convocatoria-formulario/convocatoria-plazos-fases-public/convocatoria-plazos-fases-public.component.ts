@@ -59,4 +59,5 @@ export class ConvocatoriaPlazosFasesPublicComponent extends FragmentComponent im
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

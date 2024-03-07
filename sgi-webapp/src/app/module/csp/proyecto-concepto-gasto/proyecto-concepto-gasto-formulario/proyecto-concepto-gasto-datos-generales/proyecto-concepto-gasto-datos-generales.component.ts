@@ -42,7 +42,7 @@ export class ProyectoConceptoGastoDatosGeneralesComponent
     public readonly actionService: ProyectoConceptoGastoActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as ProyectoConceptoGastoDatosGeneralesFragment;
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.layout = 'row';
@@ -56,7 +56,7 @@ export class ProyectoConceptoGastoDatosGeneralesComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.textSaveOrUpdate = this.fragment.getKey() ? MSG_ACEPTAR : MSG_ANADIR;
   }
 
@@ -76,7 +76,7 @@ export class ProyectoConceptoGastoDatosGeneralesComponent
       this.formPart.getFormGroup().controls.costesIndirectosConvocatoria.value);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_CONCEPTO_GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

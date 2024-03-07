@@ -74,13 +74,13 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     private readonly translate: TranslateService,
     private readonly logger: NGXLogger
   ) {
-    super(actionService.FRAGMENT.EQUIPO_INVESTIGACION, actionService);
+    super(actionService.FRAGMENT.EQUIPO_INVESTIGACION, actionService, translate);
     this.formPart = this.fragment as GrupoEquipoInvestigacionFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.buildFormGroup();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -126,7 +126,7 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     });
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       GRUPO_EQUIPO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

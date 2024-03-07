@@ -192,4 +192,5 @@ export class ValidacionTutorListadoInvComponent extends AbstractTablePaginationC
     this.formGroup.controls.pendientes.setValue(true);
   }
 
+  protected setupI18N(): void { }
 }

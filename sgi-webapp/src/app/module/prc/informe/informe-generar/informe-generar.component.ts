@@ -93,11 +93,11 @@ export class InformeGenerarComponent extends AbstractMenuContentComponent implem
     private readonly personaService: PersonaService,
     private readonly personaNombreCompletoPipe: PersonaNombreCompletoPipe
   ) {
-    super();
+    super(translate);
   }
 
   ngOnInit(): void {
-    this.setupI18N();
+
     this.initFormGroup();
     this.anios$ = this.convocatoriaBaremacionService.findAniosWithConvocatoriasBaremacion();
     this.subscribeTipoInformeValueChanges();
@@ -229,7 +229,7 @@ export class InformeGenerarComponent extends AbstractMenuContentComponent implem
     });
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

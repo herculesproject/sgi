@@ -85,7 +85,7 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
     private snackBar: SnackBarService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DOCUMENTOS, actionService);
+    super(actionService.FRAGMENT.DOCUMENTOS, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -106,7 +106,7 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
     this.subscriptions.push(this.formPart.documentos$.subscribe((documentos) => {
       this.dataSource.data = documentos;
     }));
@@ -122,7 +122,7 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
     this.switchToNone();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

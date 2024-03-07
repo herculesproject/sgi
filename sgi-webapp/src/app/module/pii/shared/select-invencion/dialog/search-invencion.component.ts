@@ -70,10 +70,10 @@ export class SearchInvencionModalComponent extends DialogCommonComponent impleme
       titulo: new FormControl(this.data.searchTerm),
       tipoProteccion: new FormControl(),
     });
-    this.setupI18N();
+
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       ENTITY_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

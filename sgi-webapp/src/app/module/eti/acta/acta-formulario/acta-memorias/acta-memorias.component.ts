@@ -70,4 +70,6 @@ export class ActaMemoriasComponent extends FragmentComponent implements OnInit {
       triggerDownloadToUser(response, documento.nombre);
     });
   }
+
+  protected setupI18N(): void { }
 }

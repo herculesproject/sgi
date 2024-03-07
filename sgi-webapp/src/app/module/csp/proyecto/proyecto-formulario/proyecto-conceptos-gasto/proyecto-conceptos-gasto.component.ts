@@ -74,7 +74,7 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.ELEGIBILIDAD, actionService);
+    super(actionService.FRAGMENT.ELEGIBILIDAD, actionService, translate);
     this.formPart = this.fragment as ProyectoConceptosGastoFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -91,7 +91,7 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSourcePermitidos = new MatTableDataSource<ConceptoGastoListado>();
     this.dataSourcePermitidos.paginator = this.paginatorPermitidos;
     this.dataSourcePermitidos.sort = this.sortPermitidos;
@@ -124,7 +124,7 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
       };
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_CONCEPTO_GASTO_PERMITIDO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

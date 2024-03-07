@@ -80,7 +80,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     private readonly comiteService: ComiteService,
     private readonly memoriaService: MemoriaService
   ) {
-    super();
+    super(translate);
 
     this.totalElementos = 0;
 
@@ -99,7 +99,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
 
     const findOptions: SgiRestFindOptions = {
@@ -128,7 +128,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
       }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PETICION_EVALUACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

@@ -64,7 +64,7 @@ export class PeticionEvaluacionListadoInvComponent
     private matDialog: MatDialog,
     private readonly cnfService: ConfigService,
   ) {
-    super();
+    super(translate);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -85,7 +85,7 @@ export class PeticionEvaluacionListadoInvComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.formGroup = new FormGroup({
       comite: new FormControl(null, []),
@@ -99,7 +99,7 @@ export class PeticionEvaluacionListadoInvComponent
       }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PETICION_EVALUACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

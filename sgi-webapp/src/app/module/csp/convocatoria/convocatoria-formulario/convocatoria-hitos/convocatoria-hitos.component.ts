@@ -55,13 +55,13 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
     private dialogService: DialogService,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.HITOS, actionService);
+    super(actionService.FRAGMENT.HITOS, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaHitosFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaHito>, property: string) => {
@@ -82,7 +82,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_HITO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

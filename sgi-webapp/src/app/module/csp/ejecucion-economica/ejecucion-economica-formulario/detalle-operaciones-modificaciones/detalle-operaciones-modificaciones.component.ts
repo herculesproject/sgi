@@ -14,6 +14,7 @@ import { EjecucionEconomicaActionService } from '../../ejecucion-economica.actio
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { DetalleOperacionesModificacionesFragment } from './detalle-operaciones-modificaciones.fragment';
 import { DetalleOperacionesModificacionesExportModalComponent } from './export/detalle-operaciones-modificaciones-export-modal.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-detalle-operaciones-modificaciones',
@@ -93,4 +94,5 @@ export class DetalleOperacionesModificacionesComponent extends FragmentComponent
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

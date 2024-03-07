@@ -107,7 +107,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     private activatedRoute: ActivatedRoute,
     private readonly cnfService: ConfigService
   ) {
-    super();
+    super(translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -122,7 +122,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.formGroup = new FormGroup({
       codigo: new FormControl(''),
@@ -153,7 +153,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       AREA_TENATICA_KEY,

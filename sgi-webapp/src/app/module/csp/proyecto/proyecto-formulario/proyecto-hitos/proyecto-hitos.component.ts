@@ -51,14 +51,14 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.HITOS, actionService);
+    super(actionService.FRAGMENT.HITOS, actionService, translate);
     this.formPart = this.fragment as ProyectoHitosFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -80,7 +80,7 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_HITO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

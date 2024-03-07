@@ -103,14 +103,14 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
     private configService: ConfigService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.FICHA_GENERAL, actionService);
+    super(actionService.FRAGMENT.FICHA_GENERAL, actionService, translate);
     this.formPart = this.fragment as ProyectoFichaGeneralFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -173,7 +173,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
       ));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       PROYECTO_TITULO_KEY,

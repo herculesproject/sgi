@@ -63,12 +63,12 @@ export class EmpresaExplotacionResultadosListadoComponent
     private readonly translate: TranslateService,
     private empresaService: EmpresaService
   ) {
-    super();
+    super(translate);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.buildFormGroup();
     this.filter = this.createFilter();
     this.isInvestigador = this.authService.hasAnyAuthority(['EER-AUT-INV-VR']);
@@ -177,7 +177,7 @@ export class EmpresaExplotacionResultadosListadoComponent
     });
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       EMPRESA_ENTIDAD_KEY,

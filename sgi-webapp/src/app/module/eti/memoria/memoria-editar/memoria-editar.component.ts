@@ -63,17 +63,17 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
-    super(router, route, actionService, dialogService);
+    super(router, route, actionService, dialogService, translate);
     this.from = history.state.from;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.showIndicarSubsanacionBtn = this.estadosEnableIndicarSubsanacion.includes(this.actionService.getEstadoMemoria().id) && !this.actionService.isModuleInv();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       MEMORIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

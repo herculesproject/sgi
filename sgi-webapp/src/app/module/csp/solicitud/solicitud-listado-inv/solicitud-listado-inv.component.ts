@@ -68,7 +68,7 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
     private readonly translate: TranslateService,
     private sgiAuthService: SgiAuthService
   ) {
-    super();
+    super(translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -83,7 +83,7 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.formGroup = new FormGroup({
       convocatoria: new FormControl(undefined),
@@ -200,7 +200,7 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
     this.suscripciones.push(subcription);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

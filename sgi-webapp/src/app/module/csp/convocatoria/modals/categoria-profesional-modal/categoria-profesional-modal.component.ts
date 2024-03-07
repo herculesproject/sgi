@@ -51,7 +51,7 @@ export class CategoriaProfesionalModalComponent extends DialogFormComponent<ICat
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
   }
 
   protected setupI18N(): void {

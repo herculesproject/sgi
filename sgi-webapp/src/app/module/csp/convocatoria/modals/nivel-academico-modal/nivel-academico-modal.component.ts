@@ -50,7 +50,7 @@ export class NivelAcademicoModalComponent extends DialogFormComponent<INivelAcad
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
   }
 
   protected setupI18N(): void {

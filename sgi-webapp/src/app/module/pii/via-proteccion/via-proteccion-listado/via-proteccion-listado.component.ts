@@ -56,7 +56,7 @@ export class ViaProteccionListadoComponent extends AbstractTablePaginationCompon
     private dialogService: DialogService,
     private translate: TranslateService
   ) {
-    super();
+    super(translate);
   }
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IViaProteccion>> {
@@ -77,10 +77,10 @@ export class ViaProteccionListadoComponent extends AbstractTablePaginationCompon
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       VIA_PROTECCION_KEY,

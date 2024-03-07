@@ -75,7 +75,7 @@ export class ConvocatoriaReunionListadoComponent
     private matDialog: MatDialog,
     private readonly cnfService: ConfigService
   ) {
-    super();
+    super(translate);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(25%-10px)';
@@ -130,7 +130,7 @@ export class ConvocatoriaReunionListadoComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     // Inicializa el formulario de busqueda
     this.formGroup = this.formBuilder.group({
@@ -146,7 +146,7 @@ export class ConvocatoriaReunionListadoComponent
       }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_REUNION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

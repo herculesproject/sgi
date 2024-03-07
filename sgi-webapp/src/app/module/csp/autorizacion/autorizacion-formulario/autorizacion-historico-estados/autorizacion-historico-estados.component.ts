@@ -63,4 +63,6 @@ export class AutorizacionHistoricoEstadosComponent extends FragmentComponent imp
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected setupI18N(): void {}
 }

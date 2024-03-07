@@ -114,14 +114,14 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     private readonly translate: TranslateService,
     private readonly authService: SgiAuthService) {
 
-    super(actionService.FRAGMENT.DOCUMENTACION, actionService);
+    super(actionService.FRAGMENT.DOCUMENTACION, actionService, translate);
 
     this.formPart = this.fragment as MemoriaDocumentacionFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSourceDocumentoMemoria.paginator = this.paginatorDocumentacionMemoria;
     this.dataSourceDocumentoMemoria.sort = this.sortDocumentacionMemoria;
@@ -156,7 +156,7 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     this.dataSourceRetrospectiva.sortingDataAccessor = this.sortingDataAccesor;
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       DOCUMENTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

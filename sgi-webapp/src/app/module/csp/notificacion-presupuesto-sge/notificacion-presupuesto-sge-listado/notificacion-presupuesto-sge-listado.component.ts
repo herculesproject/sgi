@@ -335,4 +335,5 @@ export class NotificacionPresupuestoSgeListadoComponent extends AbstractTablePag
     );
   }
 
+  protected setupI18N(): void { }
 }

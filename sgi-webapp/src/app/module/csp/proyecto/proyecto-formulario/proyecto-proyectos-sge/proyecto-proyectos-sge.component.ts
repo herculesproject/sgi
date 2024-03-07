@@ -68,7 +68,7 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     private readonly snackBarService: SnackBarService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PROYECTOS_SGE, actionService);
+    super(actionService.FRAGMENT.PROYECTOS_SGE, actionService, translate);
 
     this.formPart = this.fragment as ProyectoProyectosSgeFragment;
 
@@ -89,7 +89,7 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -116,7 +116,7 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
 
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       IDENTIFICADOR_SGE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

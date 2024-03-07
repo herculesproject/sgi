@@ -49,13 +49,13 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
     private dialogService: DialogService,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO, actionService);
+    super(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaSeguimientoCientificoFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaPeriodoSeguimientoCientifico>, property: string) => {
@@ -83,7 +83,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

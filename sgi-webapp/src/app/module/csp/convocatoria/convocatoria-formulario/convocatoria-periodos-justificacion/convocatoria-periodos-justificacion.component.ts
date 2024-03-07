@@ -50,13 +50,13 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
     private matDialog: MatDialog,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService);
+    super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaPeriodosJustificacionFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaPeriodoJustificacion>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -75,7 +75,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
   }
 
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_PERIODO_JUSTIFICACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

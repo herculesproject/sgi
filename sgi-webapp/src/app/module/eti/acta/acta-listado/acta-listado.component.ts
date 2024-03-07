@@ -110,7 +110,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     private readonly authService: SgiAuthService,
     private readonly languageService: LanguageService
   ) {
-    super();
+    super(translate);
 
     this.isModuleInv = route.snapshot.data.module === Module.INV;
     this.usuarioRef = this.authService.authStatus$.value.userRefId;
@@ -130,7 +130,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.formGroup = new FormGroup({
       comite: new FormControl(null),
@@ -147,7 +147,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
 
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.suscripciones.push(this.translate.get(
       ACTA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

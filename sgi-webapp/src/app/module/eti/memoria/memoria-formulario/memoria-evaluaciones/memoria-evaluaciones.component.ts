@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaEvaluacionesFragment } from './memoria-evaluaciones.fragment';
+import { TranslateService } from '@ngx-translate/core';
 
 interface IActaConvocatoriaReunion {
   idConvocatoriaReunion: number;
@@ -169,4 +170,5 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
     this.subscriptions?.forEach(x => x.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

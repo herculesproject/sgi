@@ -198,4 +198,5 @@ export class FacturasGastosComponent extends FragmentComponent implements OnInit
     this.formPart.clearDesglose();
   }
 
+  protected setupI18N(): void { }
 }

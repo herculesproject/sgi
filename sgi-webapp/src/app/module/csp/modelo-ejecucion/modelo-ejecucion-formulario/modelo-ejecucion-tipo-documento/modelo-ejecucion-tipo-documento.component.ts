@@ -54,7 +54,7 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
     actionService: ModeloEjecucionActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.TIPO_DOCUMENTOS, actionService);
+    super(actionService.FRAGMENT.TIPO_DOCUMENTOS, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -71,7 +71,7 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     const subscription = this.formPart.modeloTipoDocumento$.subscribe(
       (wrappers: StatusWrapper<IModeloTipoDocumento>[]) => {
         this.modelosTipoDocumentos.data = wrappers;
@@ -95,7 +95,7 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
     this.subscriptions.push(subscription);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       MODELO_EJECUCION_TIPO_DOCUMENTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

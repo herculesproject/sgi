@@ -64,7 +64,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super();
+    super(translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -79,7 +79,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.formGroup = new FormGroup({
       nombre: new FormControl(''),
       ambitoGeografico: new FormControl(''),
@@ -89,7 +89,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
     this.filter = this.createFilter();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       FUENTE_FINANCIACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

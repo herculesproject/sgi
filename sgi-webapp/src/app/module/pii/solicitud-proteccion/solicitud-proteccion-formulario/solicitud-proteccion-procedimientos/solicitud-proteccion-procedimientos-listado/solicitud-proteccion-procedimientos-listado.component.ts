@@ -52,7 +52,7 @@ export class SolicitudProteccionProcedimientosListadoComponent extends FragmentC
     private readonly translate: TranslateService,
 
   ) {
-    super(actionService.FRAGMENT.PROCEDIMIENTOS, actionService);
+    super(actionService.FRAGMENT.PROCEDIMIENTOS, actionService, translate);
     this.formPart = this.fragment as SolicitudProteccionProcedimientosFragment;
   }
 
@@ -62,7 +62,7 @@ export class SolicitudProteccionProcedimientosListadoComponent extends FragmentC
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
 
     this.dataSource.paginator = this.paginator;
@@ -77,7 +77,7 @@ export class SolicitudProteccionProcedimientosListadoComponent extends FragmentC
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_PROTECCION_PROCEDIMIENTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

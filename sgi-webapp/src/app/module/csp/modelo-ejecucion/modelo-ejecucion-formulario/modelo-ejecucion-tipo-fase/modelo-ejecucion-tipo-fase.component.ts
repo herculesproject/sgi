@@ -50,7 +50,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
     actionService: ModeloEjecucionActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.TIPO_FASES, actionService);
+    super(actionService.FRAGMENT.TIPO_FASES, actionService, translate);
     this.formPart = this.fragment as ModeloEjecucionTipoFaseFragment;
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -66,7 +66,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     const subscription = this.formPart.modeloTipoFase$.subscribe(
       wrappers => this.modelosTipoFases.data = wrappers);
     this.subscriptions.push(subscription);
@@ -89,7 +89,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
     this.modelosTipoFases.sort = this.sort;
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       MODELO_EJECUCION_TIPO_FASE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

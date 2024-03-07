@@ -51,13 +51,13 @@ export class GrupoLineaEquipoInstrumentalComponent extends FragmentComponent imp
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.EQUIPO_INSTRUMENTAL, actionService);
+    super(actionService.FRAGMENT.EQUIPO_INSTRUMENTAL, actionService, translate);
     this.formPart = this.fragment as GrupoLineaEquipoInstrumentalFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IGrupoLineaEquipoInstrumental>, property: string) => {
@@ -72,7 +72,7 @@ export class GrupoLineaEquipoInstrumentalComponent extends FragmentComponent imp
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       GRUPO_EQUIPO_INSTRUMENTAL_KEY,

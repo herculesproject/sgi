@@ -72,13 +72,13 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     private convocatoriaReunionService: ConvocatoriaReunionService,
     private translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formFragment = this.fragment as ConvocatoriaReunionDatosGeneralesFragment;
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
 
     if (this.actionService.hasMemoriasAssigned()) {
       this.formGroup.controls.comite.disable({ onlySelf: true });
@@ -90,7 +90,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     }
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_COMITE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

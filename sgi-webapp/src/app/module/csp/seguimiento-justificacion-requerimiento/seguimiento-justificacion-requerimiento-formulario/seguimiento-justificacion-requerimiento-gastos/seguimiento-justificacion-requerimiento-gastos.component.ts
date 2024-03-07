@@ -49,9 +49,9 @@ export class SeguimientoJustificacionRequerimientoGastosComponent extends Fragme
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.GASTOS, actionService);
+    super(actionService.FRAGMENT.GASTOS, actionService, translate);
     this.formPart = this.fragment as SeguimientoJustificacionRequerimientoGastosFragment;
-    this.setupI18N();
+
   }
 
   ngOnInit(): void {
@@ -137,7 +137,7 @@ export class SeguimientoJustificacionRequerimientoGastosComponent extends Fragme
     return (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       GASTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

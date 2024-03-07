@@ -3,10 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { NavigationEnd, Router } from '@angular/router';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IInforme } from '@core/models/eti/informe';
+import { IInformeDocumento } from '@core/models/eti/informe-documento';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -16,12 +16,10 @@ import { MemoriaService } from '@core/services/eti/memoria.service';
 import { LanguageService } from '@core/services/language.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaInformesFragment } from './memoria-informes.fragment';
-import { IInformeDocumento } from '@core/models/eti/informe-documento';
 
 @Component({
   selector: 'sgi-memoria-informes',
@@ -54,8 +52,6 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
     protected memoriaService: MemoriaService,
     protected documentoService: DocumentoService,
     actionService: MemoriaActionService,
-    private router: Router,
-    private translateService: TranslateService,
     private languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.VERSIONES, actionService);
@@ -119,4 +115,7 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
   ngOnDestroy(): void {
     this.subscriptions?.forEach(x => x.unsubscribe());
   }
+
+  protected setupI18N(): void { }
+
 }

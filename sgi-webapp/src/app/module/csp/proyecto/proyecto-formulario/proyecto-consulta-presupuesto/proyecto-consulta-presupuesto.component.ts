@@ -104,13 +104,13 @@ export class ProyectoConsultaPresupuestoComponent extends FragmentComponent impl
     private codigoEconomicoGastoService: CodigoEconomicoGastoService,
     private readonly cnfService: ConfigService
   ) {
-    super(actionService.FRAGMENT.CONSULTA_PRESUPUESTO, actionService);
+    super(actionService.FRAGMENT.CONSULTA_PRESUPUESTO, actionService, translate);
     this.formPart = this.fragment as ProyectoConsultaPresupuestoFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.initFilterForm();
 
     this.subscriptions.push(this.formPart.anualidades$.subscribe(anualidades => {
@@ -149,7 +149,7 @@ export class ProyectoConsultaPresupuestoComponent extends FragmentComponent impl
       }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       ANUALIDAD_GENERICA_KEY,

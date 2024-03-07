@@ -43,13 +43,13 @@ export class SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent
     private readonly translate: TranslateService,
     private matDialog: MatDialog,
   ) {
-    super(actionService.FRAGMENT.RESPUESTA_ALEGACION, actionService);
+    super(actionService.FRAGMENT.RESPUESTA_ALEGACION, actionService, translate);
     this.formPart = this.fragment as SeguimientoJustificacionRequerimientoRespuestaAlegacionFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.initIncidenciaDocumentacionTable();
   }
 
@@ -88,7 +88,7 @@ export class SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent
     return (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       REQUERIMIENTO_JUSTIFICANTE_REINTEGRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

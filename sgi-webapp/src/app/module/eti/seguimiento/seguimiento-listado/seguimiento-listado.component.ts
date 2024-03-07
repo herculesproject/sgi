@@ -54,7 +54,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
     private readonly translate: TranslateService,
     private readonly authService: SgiAuthService
   ) {
-    super();
+    super(translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -69,7 +69,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
     this.formGroup = new FormGroup({
       comite: new FormControl(null),
       fechaEvaluacionInicio: new FormControl(null),
@@ -85,7 +85,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
       }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       MSG_ENVIAR_COMENTARIO
     ).subscribe((value) => this.textoEnviarComentario = value);

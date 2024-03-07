@@ -92,7 +92,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as SolicitudDatosGeneralesFragment;
 
     this.elementosPagina = [5, 10, 25, 100];
@@ -101,7 +101,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSourceEntidadesConvocantes = new MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>();
 
@@ -133,7 +133,7 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_CODIGO_EXTERNO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

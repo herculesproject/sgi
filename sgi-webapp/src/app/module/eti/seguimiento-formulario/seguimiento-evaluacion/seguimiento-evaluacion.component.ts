@@ -15,6 +15,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
 import { SeguimientoEvaluacionFragment } from './seguimiento-evaluacion.fragment';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-seguimiento-evaluacion',
@@ -41,9 +42,10 @@ export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemor
   constructor(
     public actionService: SeguimientoFormularioActionService,
     private readonly evaluacionService: EvaluacionService,
-    private readonly documentoService: DocumentoService
+    private readonly documentoService: DocumentoService,
+    private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.EVALUACIONES, actionService);
+    super(actionService.FRAGMENT.EVALUACIONES, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -124,4 +126,5 @@ export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemor
     return false;
   }
 
+  protected setupI18N(): void { }
 }

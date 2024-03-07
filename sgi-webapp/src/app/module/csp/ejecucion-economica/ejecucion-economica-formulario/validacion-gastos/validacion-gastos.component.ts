@@ -15,7 +15,7 @@ import { EjecucionEconomicaActionService } from '../../ejecucion-economica.actio
 import { GastoDetalleModalData as GastoDetalleEditarModalData, ValidacionGastosEditarModalComponent } from '../../modals/validacion-gastos-editar-modal/validacion-gastos-editar-modal.component';
 import { ValidacionGastosHistoricoModalComponent } from '../../modals/validacion-gastos-historico-modal/validacion-gastos-historico-modal.component';
 import { GastoDetalleModalData, ValidacionGastosModalComponent } from '../../modals/validacion-gastos-modal/validacion-gastos-modal.component';
-import { EstadoTipo, ESTADO_TIPO_MAP, ValidacionGasto, ValidacionGastosFragment } from './validacion-gastos.fragment';
+import { ESTADO_TIPO_MAP, EstadoTipo, ValidacionGasto, ValidacionGastosFragment } from './validacion-gastos.fragment';
 
 @Component({
   selector: 'sgi-validacion-gastos',
@@ -162,5 +162,7 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
       fechaHasta: new FormControl()
     });
   }
+
+  protected setupI18N(): void { }
 
 }

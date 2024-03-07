@@ -66,7 +66,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
     private matDialog: MatDialog,
     private dialogService: DialogService
   ) {
-    super(actionService.FRAGMENT.CONFIGURACION_SOLICITUDES, actionService);
+    super(actionService.FRAGMENT.CONFIGURACION_SOLICITUDES, actionService, translate);
 
     this.formPart = this.fragment as ConvocatoriaConfiguracionSolicitudesFragment;
 
@@ -90,7 +90,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IDocumentoRequeridoSolicitud>, property: string) => {
@@ -118,7 +118,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_CONFIGURACION_SOLICITUD_DOCUMENTO_REQUERIDO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

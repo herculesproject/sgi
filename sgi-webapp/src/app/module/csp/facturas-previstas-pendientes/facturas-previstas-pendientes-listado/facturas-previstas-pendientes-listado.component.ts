@@ -75,7 +75,7 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super();
+    super(translate);
     this.elementosPagina = [5, 10, 25, 100];
   }
 
@@ -218,6 +218,8 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
   private isTotalRegistosGreatherThanLimite(totalRegistrosExportacion: number): boolean {
     return totalRegistrosExportacion && this.limiteRegistrosExportacionExcel && totalRegistrosExportacion > this.limiteRegistrosExportacionExcel;
   }
+
+  protected setupI18N(): void { }
 
   private initColumns(): void {
     this.columnas = [

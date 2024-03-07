@@ -89,13 +89,13 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
     private empresaService: EmpresaService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService);
+    super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoEntidadesFinanciadorasFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.actionService.datosProyectoComplete$.pipe(
       take(1)
     ).subscribe(
@@ -189,7 +189,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
     this.subscriptions.push(subscriptionEntidadesFinanciadorasAjenas);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

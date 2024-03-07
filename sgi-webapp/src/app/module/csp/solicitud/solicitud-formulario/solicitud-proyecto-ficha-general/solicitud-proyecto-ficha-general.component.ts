@@ -68,7 +68,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PROYECTO_DATOS, actionService);
+    super(actionService.FRAGMENT.PROYECTO_DATOS, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoFichaGeneralFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -95,14 +95,14 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
       this.router.navigate(['../', SOLICITUD_ROUTE_NAMES.DATOS_GENERALES], { relativeTo: this.route });
     }
     this.loadAreaTematicas();
-    this.setupI18N();
+
   }
 
   get TIPO_PRESUPUESTO_MAP() {
     return TIPO_PRESUPUESTO_MAP;
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       AREA_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL

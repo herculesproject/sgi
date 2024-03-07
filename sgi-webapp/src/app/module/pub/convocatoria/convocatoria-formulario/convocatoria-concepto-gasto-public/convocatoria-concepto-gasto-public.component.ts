@@ -121,4 +121,5 @@ export class ConvocatoriaConceptoGastoPublicComponent extends FragmentComponent 
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

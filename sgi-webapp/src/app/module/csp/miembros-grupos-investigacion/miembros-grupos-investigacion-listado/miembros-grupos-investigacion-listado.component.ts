@@ -298,4 +298,5 @@ export class MiembrosGruposInvestigacionListadoComponent extends AbstractMenuCon
     this.formGroup.controls.miembrosActivos.setValue('todos');
   }
 
+  protected setupI18N(): void { }
 }

@@ -187,7 +187,7 @@ export class ProyectoDocumentosFragment extends Fragment {
   }
 
   protected onInitialize(): void {
-    this.setupI18N();
+
     this.subscriptions.push(
       merge(
         this.loadProyectoDocumentos(),

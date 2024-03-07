@@ -84,13 +84,13 @@ export class InvencionContratosComponent extends FragmentComponent implements On
     private readonly dialogService: DialogService,
     private readonly matDialog: MatDialog,
   ) {
-    super(actionService.FRAGMENT.CONTRATOS, actionService);
+    super(actionService.FRAGMENT.CONTRATOS, actionService, translate);
     this.formPart = this.fragment as InvencionContratosFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.initContratosAsociadosTable();
     this.initSectoresLicenciadosTable();
     this.initSelectedContratoAsociado();
@@ -218,7 +218,7 @@ export class InvencionContratosComponent extends FragmentComponent implements On
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SECTOR_LICENCIADO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

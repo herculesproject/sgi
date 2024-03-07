@@ -94,12 +94,12 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
     private readonly cnfService: ConfigService,
     private readonly configCspService: ConfigCspService
   ) {
-    super();
+    super(translate);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.buildFormGroup();
     this.loadColectivosBusqueda();
     this.getLineasInvestigacion();
@@ -295,7 +295,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       GRUPO_KEY,

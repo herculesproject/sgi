@@ -69,13 +69,13 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.EQUIPO_PROYECTO, actionService);
+    super(actionService.FRAGMENT.EQUIPO_PROYECTO, actionService, translate);
     this.formPart = this.fragment as ProyectoEquipoFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IProyectoEquipoListado>, property: string) => {
@@ -102,7 +102,7 @@ export class ProyectoEquipoComponent extends FragmentComponent implements OnInit
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_EQUIPO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

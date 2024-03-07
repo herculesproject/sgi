@@ -53,19 +53,19 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     private dialogService: DialogService,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService);
+    super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaEntidadesFinanciadorasFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.getDataSource();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_ENTIDAD_FINANCIADORA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

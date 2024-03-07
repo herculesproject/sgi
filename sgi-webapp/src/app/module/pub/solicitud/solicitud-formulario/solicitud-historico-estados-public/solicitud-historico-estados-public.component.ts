@@ -63,4 +63,6 @@ export class SolicitudHistoricoEstadosPublicComponent extends FragmentComponent 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected setupI18N(): void { }
 }

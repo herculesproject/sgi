@@ -51,13 +51,13 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.PAQUETE_TRABAJO, actionService);
+    super(actionService.FRAGMENT.PAQUETE_TRABAJO, actionService, translate);
     this.formPart = this.fragment as ProyectoPaqueteTrabajoFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IProyectoPaqueteTrabajo>, property: string) => {
@@ -82,7 +82,7 @@ export class ProyectoPaqueteTrabajoComponent extends FragmentComponent implement
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_PAQUETE_TRABAJO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

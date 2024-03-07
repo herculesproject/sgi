@@ -46,16 +46,16 @@ export class EjecucionEconomicaEditarComponent extends ActionComponent implement
     dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(router, route, actionService, dialogService);
+    super(router, route, actionService, dialogService, translate);
     this.data = route.snapshot.data[EJECUCION_ECONOMICA_DATA_KEY];
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       EJECUCION_ECONOMICA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

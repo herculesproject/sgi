@@ -48,13 +48,13 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
     private dialogService: DialogService,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.ENLACES, actionService);
+    super(actionService.FRAGMENT.ENLACES, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaEnlaceFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaEnlace>, property: string) => {
@@ -75,7 +75,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_ENLACE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

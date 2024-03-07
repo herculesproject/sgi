@@ -248,4 +248,5 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     return of([{ key: 'true', value: marker('label.si') }, { key: 'false', value: marker('label.no') }]);
   }
 
+  protected setupI18N(): void { }
 }

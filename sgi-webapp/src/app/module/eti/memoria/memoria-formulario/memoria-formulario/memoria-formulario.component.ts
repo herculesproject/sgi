@@ -4,13 +4,13 @@ import { MatStepper } from '@angular/material/stepper';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IBloque } from '@core/models/eti/bloque';
 import { IComentario } from '@core/models/eti/comentario';
+import { Group } from '@core/services/action-service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { IBlock } from '../../memoria-formly-form.fragment';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaFormularioFragment } from './memoria-formulario.fragment';
-import { Group } from '@core/services/action-service';
 
 @Component({
   selector: 'sgi-memoria-formulario',
@@ -43,7 +43,7 @@ export class MemoriaFormularioComponent extends FragmentComponent implements OnI
     private readonly languageService: LanguageService,
     private readonly translateService: TranslateService
   ) {
-    super(actionService.FRAGMENT.FORMULARIO, actionService);
+    super(actionService.FRAGMENT.FORMULARIO, actionService, translateService);
     this.memoriaFormularioFragment = (this.fragment as MemoriaFormularioFragment);
 
     this.subscriptions.push(this.translateService.onLangChange.subscribe((value) => {
@@ -101,4 +101,6 @@ export class MemoriaFormularioComponent extends FragmentComponent implements OnI
     const keyArray = keyString.split("_");
     return Number(keyArray[0]);
   }
+
+  protected setupI18N(): void { }
 }

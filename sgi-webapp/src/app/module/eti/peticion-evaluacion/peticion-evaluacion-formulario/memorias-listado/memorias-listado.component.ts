@@ -89,13 +89,13 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
     private readonly translate: TranslateService,
     private authService: SgiAuthService
   ) {
-    super(actionService.FRAGMENT.MEMORIAS, actionService);
+    super(actionService.FRAGMENT.MEMORIAS, actionService, translate);
     this.listadoFragment = this.fragment as MemoriasListadoFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.datasource.paginator = this.paginator;
     this.datasource.sort = this.sort;
     this.subscriptions.push(this.listadoFragment.memorias$.subscribe((memorias) => {
@@ -120,7 +120,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
       };
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       MEMORIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

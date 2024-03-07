@@ -62,7 +62,7 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.CODIGOS_ECONOMICOS, actionService);
+    super(actionService.FRAGMENT.CODIGOS_ECONOMICOS, actionService, translate);
     this.formPart = this.fragment as ProyectoConceptoGastoCodigoEcFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -79,7 +79,7 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource = new MatTableDataSource<CodigoEconomicoListado>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -97,7 +97,7 @@ export class ProyectoConceptoGastoCodigoEcComponent extends FragmentComponent im
       };
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_CONCEPTO_GASTO_ECONOMICO_PERMITIDO,
       MSG_PARAMS.CARDINALIRY.SINGULAR

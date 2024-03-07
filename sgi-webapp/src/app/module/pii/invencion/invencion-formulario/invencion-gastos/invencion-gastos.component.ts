@@ -92,4 +92,6 @@ export class InvencionGastosComponent extends FragmentComponent implements OnIni
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected setupI18N(): void { }
 }

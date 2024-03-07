@@ -37,7 +37,7 @@ export class ProyectoAnualidadDatosGeneralesComponent extends FormFragmentCompon
     private snackBarService: SnackBarService,
     private readonly translate: TranslateService) {
 
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as ProyectoAnualidadDatosGeneralesFragment;
   }
 
@@ -60,7 +60,7 @@ export class ProyectoAnualidadDatosGeneralesComponent extends FormFragmentCompon
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.setupI18N();
+
 
     if (!this.formPart.isAnualidadGenerica && !this.formPart.isEdit()) {
       this.formGroup.controls.anualidad.setValidators(
@@ -74,7 +74,7 @@ export class ProyectoAnualidadDatosGeneralesComponent extends FormFragmentCompon
     }
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_ANUALIDAD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

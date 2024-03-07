@@ -14,6 +14,7 @@ import { EjecucionEconomicaActionService } from '../../ejecucion-economica.actio
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { EjecucionPresupuestariaGastosFragment } from './ejecucion-presupuestaria-gastos.fragment';
 import { EjecucionPresupuestariaGastosExportModalComponent } from './export/ejecucion-presupuestaria-gastos-export-modal.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-ejecucion-presupuestaria-gastos',
@@ -92,5 +93,7 @@ export class EjecucionPresupuestariaGastosComponent extends FragmentComponent im
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected setupI18N(): void { }
 
 }

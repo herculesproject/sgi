@@ -82,7 +82,7 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
     private readonly router: Router,
     private readonly languageService: LanguageService
   ) {
-    super(actionService.FRAGMENT.COMENTARIOS, actionService);
+    super(actionService.FRAGMENT.COMENTARIOS, actionService, translate);
     this.personaId = this.authService.authStatus$.value.userRefId;
     this.formPart = this.fragment as ActaComentariosFragment;
     this.elementosPagina = [5, 10, 25, 100];
@@ -93,7 +93,7 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
     this.actionService.initializeMemorias();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -120,7 +120,7 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
       };
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       COMENTARIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

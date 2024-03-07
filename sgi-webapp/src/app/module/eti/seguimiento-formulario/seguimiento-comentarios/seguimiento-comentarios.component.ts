@@ -67,7 +67,7 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     private readonly languageService: LanguageService,
     private readonly router: Router
   ) {
-    super(actionService.FRAGMENT.COMENTARIOS, actionService);
+    super(actionService.FRAGMENT.COMENTARIOS, actionService, translate);
     this.dataSource = new MatTableDataSource<StatusWrapper<IComentario>>();
     this.formPart = this.fragment as SeguimientoComentarioFragment;
     this.elementosPagina = [5, 10, 25, 100];
@@ -78,7 +78,7 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.comentarios$.subscribe(elements => {
@@ -104,7 +104,7 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
 
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       COMENTARIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

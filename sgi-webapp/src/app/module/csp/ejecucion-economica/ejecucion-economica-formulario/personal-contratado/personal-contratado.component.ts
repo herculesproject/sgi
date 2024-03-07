@@ -198,4 +198,5 @@ export class PersonalContratadoComponent extends FragmentComponent implements On
     this.formPart.clearDesglose();
   }
 
+  protected setupI18N(): void { }
 }

@@ -57,7 +57,7 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
     public router: Router,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -80,7 +80,7 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.readonly = this.actionService.readonly;
 
@@ -103,7 +103,7 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
     });
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       ACTA_CONVOCATORIA_REUNION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

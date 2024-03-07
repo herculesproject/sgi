@@ -66,4 +66,5 @@ export class ConvocatoriaEnlacePublicComponent extends FragmentComponent impleme
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

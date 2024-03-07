@@ -51,7 +51,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
     actionService: ModeloEjecucionActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.TIPO_FINALIDADES, actionService);
+    super(actionService.FRAGMENT.TIPO_FINALIDADES, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -68,7 +68,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     const subscription = this.formPart.modeloTipoFinalidad$.subscribe(
       (wrappers: StatusWrapper<IModeloTipoFinalidad>[]) => {
         this.modelosTipoFinalidades.data = wrappers;
@@ -92,7 +92,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
     this.subscriptions.push(subscription);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       MODELO_EJECUCION_TIPO_FINALIDAD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

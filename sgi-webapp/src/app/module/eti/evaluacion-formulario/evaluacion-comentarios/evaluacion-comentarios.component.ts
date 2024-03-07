@@ -68,7 +68,7 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     private readonly languageService: LanguageService,
     private readonly router: Router
   ) {
-    super(actionService.FRAGMENT.COMENTARIOS, actionService);
+    super(actionService.FRAGMENT.COMENTARIOS, actionService, translate);
     this.formPart = this.fragment as EvaluacionComentarioFragment;
     this.elementosPagina = [5, 10, 25, 100];
     this.personaId = this.authService.authStatus$.value.userRefId;
@@ -78,7 +78,7 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.comentarios$.subscribe(elements => {
@@ -103,7 +103,7 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
       };
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       COMENTARIO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

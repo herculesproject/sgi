@@ -72,14 +72,13 @@ export class ConvocatoriaReunionDocumentacionComponent extends FragmentComponent
     private readonly documentoService: DocumentoService,
     private readonly translate: TranslateService) {
 
-    super(actionService.FRAGMENT.DOCUMENTACION, actionService);
+    super(actionService.FRAGMENT.DOCUMENTACION, actionService, translate);
 
     this.formPart = this.fragment as ConvocatoriaReunionDocumentacionFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
 
     this.dataSourceDocumentoConvocatoriaReunion.paginator = this.paginatorDocumentacionConvocatoriaReunion;
     this.dataSourceDocumentoConvocatoriaReunion.sort = this.sortDocumentacionConvocatoriaReunion;
@@ -90,7 +89,7 @@ export class ConvocatoriaReunionDocumentacionComponent extends FragmentComponent
     this.dataSourceDocumentoConvocatoriaReunion.sortingDataAccessor = this.sortingDataAccesor;
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       DOCUMENTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

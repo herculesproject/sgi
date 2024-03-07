@@ -74,14 +74,14 @@ export class SolicitudProteccionProcedimientosDocumentosComponent extends Fragme
     private documentoService: DocumentoService,
     private dialogService: DialogService
   ) {
-    super(actionService.FRAGMENT.PROCEDIMIENTOS, actionService);
+    super(actionService.FRAGMENT.PROCEDIMIENTOS, actionService, translate);
     this.formPart = this.fragment as SolicitudProteccionProcedimientosFragment;
     this.elementosPagina = [5, 10, 25, 100];
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -112,7 +112,7 @@ export class SolicitudProteccionProcedimientosDocumentosComponent extends Fragme
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       SOLICITUD_PROTECCION_PROCEDIMIENTO_DOCUMENTO_KEY,

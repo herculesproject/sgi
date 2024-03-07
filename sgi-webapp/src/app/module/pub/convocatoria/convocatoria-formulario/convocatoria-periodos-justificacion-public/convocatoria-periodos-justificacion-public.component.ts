@@ -60,4 +60,5 @@ export class ConvocatoriaPeriodosJustificacionPublicComponent extends FragmentCo
     return MSG_PARAMS;
   }
 
+  protected setupI18N(): void { }
 }

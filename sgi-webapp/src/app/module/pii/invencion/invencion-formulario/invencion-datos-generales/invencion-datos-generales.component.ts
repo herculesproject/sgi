@@ -91,14 +91,14 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
     private dialogService: DialogService,
     private readonly snackBar: SnackBarService,
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as InvencionDatosGeneralesFragment;
     this.initFlexProperties();
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.configSectorAplicacionSort();
     this.configAreaConocimientoSort();
     this.configDocumentoSort();
@@ -297,7 +297,7 @@ export class InvencionDatosGeneralesComponent extends FormFragmentComponent<IInv
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       INVENCION_TITULO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

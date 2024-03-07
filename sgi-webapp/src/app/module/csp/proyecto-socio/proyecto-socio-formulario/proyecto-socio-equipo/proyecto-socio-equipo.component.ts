@@ -50,13 +50,13 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.EQUIPO, actionService);
+    super(actionService.FRAGMENT.EQUIPO, actionService, translate);
     this.formPart = this.fragment as ProyectoSocioEquipoFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -84,7 +84,7 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
     this.subscriptions.push(subcription);
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_EQUIPO_SOCIO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

@@ -14,6 +14,7 @@ import { EjecucionEconomicaActionService } from '../../ejecucion-economica.actio
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { DetalleOperacionesGastosFragment } from './detalle-operaciones-gastos.fragment';
 import { DetalleOperacionesGastosExportModalComponent } from './export/detalle-operaciones-gastos-export-modal.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-detalle-operaciones-gastos',
@@ -101,4 +102,6 @@ export class DetalleOperacionesGastosComponent extends FragmentComponent impleme
     }
     return (codigoEconomico.id ?? '') + (codigoEconomico.nombre ? ' - ' + codigoEconomico.nombre : '');
   }
+
+  protected setupI18N(): void { }
 }

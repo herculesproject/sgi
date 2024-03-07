@@ -56,13 +56,13 @@ export class InvencionInformesPatentabilidadComponent extends FragmentComponent 
     private readonly documentoService: DocumentoService,
     private readonly logger: NGXLogger,
   ) {
-    super(actionService.FRAGMENT.INFORME_PATENTABILIDAD, actionService);
+    super(actionService.FRAGMENT.INFORME_PATENTABILIDAD, actionService, translate);
     this.formPart = this.fragment as InvencionInformesPatentabilidadFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.initInformesPatentabilidadTable();
   }
 
@@ -157,7 +157,7 @@ export class InvencionInformesPatentabilidadComponent extends FragmentComponent 
       .subscribe(elements => this.dataSource.data = elements));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       INVENCION_INFORME_PATENTABILIDAD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

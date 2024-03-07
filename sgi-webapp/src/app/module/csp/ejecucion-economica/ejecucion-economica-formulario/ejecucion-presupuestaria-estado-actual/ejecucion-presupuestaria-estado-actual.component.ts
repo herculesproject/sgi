@@ -21,6 +21,7 @@ import { EjecucionPresupuestariaEstadoActualExportModalComponent } from './expor
   styleUrls: ['./ejecucion-presupuestaria-estado-actual.component.scss']
 })
 export class EjecucionPresupuestariaEstadoActualComponent extends FragmentComponent implements OnInit, OnDestroy {
+
   private subscriptions: Subscription[] = [];
   formPart: EjecucionPresupuestariaEstadoActualFragment;
 
@@ -92,5 +93,7 @@ export class EjecucionPresupuestariaEstadoActualComponent extends FragmentCompon
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected setupI18N(): void { }
 
 }

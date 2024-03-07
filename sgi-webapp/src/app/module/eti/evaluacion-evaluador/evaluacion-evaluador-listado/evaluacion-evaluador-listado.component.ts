@@ -70,7 +70,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     private readonly translate: TranslateService,
     private readonly authService: SgiAuthService
   ) {
-    super();
+    super(translate);
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -86,7 +86,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
     this.formGroup = new FormGroup({
       comite: new FormControl(null),
       fechaEvaluacionInicio: new FormControl(null),
@@ -105,7 +105,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
       }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       MSG_ENVIAR_COMENTARIO
     ).subscribe((value) => this.textoEnviarComentario = value);

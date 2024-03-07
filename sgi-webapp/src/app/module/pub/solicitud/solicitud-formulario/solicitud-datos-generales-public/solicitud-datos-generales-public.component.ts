@@ -94,7 +94,7 @@ export class SolicitudDatosGeneralesPublicComponent extends FormFragmentComponen
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as SolicitudDatosGeneralesPublicFragment;
 
     this.elementosPagina = [5, 10, 25, 100];
@@ -103,7 +103,7 @@ export class SolicitudDatosGeneralesPublicComponent extends FormFragmentComponen
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.loadAreasAnep();
     this.dataSourceEntidadesConvocantes = new MatTableDataSource<SolicitudModalidadEntidadConvocantePublicListado>();
 
@@ -135,7 +135,7 @@ export class SolicitudDatosGeneralesPublicComponent extends FormFragmentComponen
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_CODIGO_EXTERNO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

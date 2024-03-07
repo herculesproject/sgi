@@ -375,4 +375,6 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
     };
     this.matDialog.open(SeguimientoGastosJustificadosResumenExportModalComponent, config);
   }
+
+  protected setupI18N(): void { }
 }

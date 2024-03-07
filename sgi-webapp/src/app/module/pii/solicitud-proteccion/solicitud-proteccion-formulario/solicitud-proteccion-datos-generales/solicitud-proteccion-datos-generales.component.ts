@@ -78,7 +78,7 @@ export class SolicitudProteccionDatosGeneralesComponent extends FormFragmentComp
     protected actionService: SolicitudProteccionActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as SolicitudProteccionDatosGeneralesFragment;
   }
 
@@ -88,14 +88,14 @@ export class SolicitudProteccionDatosGeneralesComponent extends FormFragmentComp
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
   }
 
   public displayTextTipoCaducidad(tipoCaducidad: ITipoCaducidad) {
     return tipoCaducidad?.descripcion ?? '';
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       SOLICITUD_PROTECCION_TITULO_KEY,

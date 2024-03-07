@@ -60,13 +60,13 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
     private rolProyectoColectivoService: RolProyectoColectivoService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as GrupoDatosGeneralesFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.loadColectivosBusqueda();
     this.loadHistoricoTipos();
     this.loadHistoricoEspecialesInvestigacion();
@@ -80,7 +80,7 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       GRUPO_NOMBRE_KEY,

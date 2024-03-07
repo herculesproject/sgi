@@ -49,13 +49,13 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.EQUIPO, actionService);
+    super(actionService.FRAGMENT.EQUIPO, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoSocioEquipoFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     const subcription = this.formPart.solicitudProyectoSocioEquipos$.subscribe(
       (proyectoEquipos) => {
         this.dataSource.data = proyectoEquipos;
@@ -79,7 +79,7 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
     };
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_PROYECTO_SOCIO_EQUIPO_MIEMBRO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

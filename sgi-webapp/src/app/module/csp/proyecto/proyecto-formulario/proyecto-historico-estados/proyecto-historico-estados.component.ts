@@ -41,13 +41,13 @@ export class ProyectoHistoricoEstadosComponent extends FragmentComponent impleme
     private actionService: ProyectoActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.HISTORICO_ESTADOS, actionService);
+    super(actionService.FRAGMENT.HISTORICO_ESTADOS, actionService, translate);
     this.formPart = this.fragment as ProyectoHistoricoEstadosFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.historicoEstado$.subscribe(elements => {
@@ -55,7 +55,7 @@ export class ProyectoHistoricoEstadosComponent extends FragmentComponent impleme
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_HISTORICO_ESTADO_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL

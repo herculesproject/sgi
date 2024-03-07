@@ -90,13 +90,13 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaDatosGeneralesFragment;
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
     this.convocatoriaAreaTematicas.paginator = this.paginator;
     this.convocatoriaAreaTematicas.sort = this.sort;
     this.subscriptions.push(this.formPart.areasTematicas$.subscribe((data) => {
@@ -113,7 +113,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     ));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       AREA_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL

@@ -56,13 +56,13 @@ export class ProyectoRelacionesComponent extends FragmentComponent implements On
     private readonly dialogService: DialogService,
     private readonly matDialog: MatDialog,
   ) {
-    super(actionService.FRAGMENT.RELACIONES, actionService);
+    super(actionService.FRAGMENT.RELACIONES, actionService, translate);
     this.formPart = this.fragment as ProyectoRelacionFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.initProyectoRelacionesTable();
   }
 
@@ -156,7 +156,7 @@ export class ProyectoRelacionesComponent extends FragmentComponent implements On
     return (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_RELACION_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

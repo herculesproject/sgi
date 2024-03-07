@@ -52,13 +52,13 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.FASES, actionService);
+    super(actionService.FRAGMENT.FASES, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaPlazosFasesFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaFase>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (wrapper, property) => {
@@ -74,7 +74,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_FASE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

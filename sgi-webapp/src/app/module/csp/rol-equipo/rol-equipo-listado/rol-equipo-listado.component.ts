@@ -66,7 +66,7 @@ export class RolEquipoListadoComponent extends AbstractTablePaginationComponent<
     private readonly translate: TranslateService,
     private readonly authService: SgiAuthService
   ) {
-    super();
+    super(translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -81,7 +81,7 @@ export class RolEquipoListadoComponent extends AbstractTablePaginationComponent<
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.formGroup = new FormGroup({
       nombre: new FormControl(''),
       equipo: new FormControl(''),
@@ -90,7 +90,7 @@ export class RolEquipoListadoComponent extends AbstractTablePaginationComponent<
     this.filter = this.createFilter();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       ROL_EQUIPO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

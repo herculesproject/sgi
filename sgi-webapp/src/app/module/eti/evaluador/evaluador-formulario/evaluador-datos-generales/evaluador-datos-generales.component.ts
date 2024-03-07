@@ -55,7 +55,7 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
     actionService: EvaluadorActionService,
     private translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.datosGeneralesFragment = this.fragment as EvaluadorDatosGeneralesFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -79,14 +79,14 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
 
   ngOnInit() {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.cargosComite$ = this.cargoComiteService.findAll().pipe(
       map(response => response.items)
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       EVALUDADOR_COMITE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

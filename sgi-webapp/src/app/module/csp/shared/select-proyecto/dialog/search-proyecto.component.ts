@@ -92,11 +92,11 @@ export class SearchProyectoModalComponent extends DialogCommonComponent implemen
       miembroEquipo: new FormControl(),
       miembrosParticipantes: new FormControl()
     });
-    this.setupI18N();
+
     this.setNombresMiembrosParticipantes();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       ENTITY_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

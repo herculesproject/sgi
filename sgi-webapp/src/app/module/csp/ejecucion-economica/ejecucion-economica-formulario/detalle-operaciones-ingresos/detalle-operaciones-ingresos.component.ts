@@ -14,6 +14,7 @@ import { EjecucionEconomicaActionService } from '../../ejecucion-economica.actio
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { DetalleOperacionesIngresosFragment } from './detalle-operaciones-ingresos.fragment';
 import { DetalleOperacionesIngresosExportModalComponent } from './export/detalle-operaciones-ingresos-export-modal.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-detalle-operaciones-ingresos',
@@ -43,9 +44,10 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
   constructor(
     actionService: EjecucionEconomicaActionService,
     private matDialog: MatDialog,
-    private readonly cnfService: ConfigService
+    private readonly cnfService: ConfigService,
+    private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DETALLE_OPERACIONES_INGRESOS, actionService);
+    super(actionService.FRAGMENT.DETALLE_OPERACIONES_INGRESOS, actionService, translate);
 
     this.formPart = this.fragment as DetalleOperacionesIngresosFragment;
   }
@@ -94,4 +96,5 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

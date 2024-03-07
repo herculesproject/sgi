@@ -52,14 +52,14 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
     private dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.FASES, actionService);
+    super(actionService.FRAGMENT.FASES, actionService, translate);
     this.formPart = this.fragment as ProyectoPlazosFragment;
     this.plazos$ = (this.fragment as ProyectoPlazosFragment).plazos$;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource = new MatTableDataSource<StatusWrapper<IProyectoFase>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (wrapper, property) => {
@@ -75,7 +75,7 @@ export class ProyectoPlazosComponent extends FragmentComponent implements OnInit
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_FASE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

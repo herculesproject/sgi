@@ -42,13 +42,13 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
     private dialogService: DialogService,
     private readonly translate: TranslateService,
   ) {
-    super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService);
+    super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaEntidadesConvocantesFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.data$.subscribe(
@@ -58,7 +58,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_ENTIDAD_CONVOCANTE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

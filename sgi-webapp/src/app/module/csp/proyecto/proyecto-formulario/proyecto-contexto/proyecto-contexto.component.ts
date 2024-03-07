@@ -69,7 +69,7 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
     private readonly translate: TranslateService
 
   ) {
-    super(actionService.FRAGMENT.CONTEXTO_PROYECTO, actionService);
+    super(actionService.FRAGMENT.CONTEXTO_PROYECTO, actionService, translate);
     this.formPart = this.fragment as ProyectoContextoFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -87,12 +87,12 @@ export class ProyectoContextoComponent extends FormFragmentComponent<IProyectoCo
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.setupI18N();
+
 
     this.loadAreaTematicas();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       AREA_KEY,

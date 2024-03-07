@@ -46,13 +46,13 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
     private readonly translate: TranslateService,
     private proyectoEntidadConvocantePlanPipe: ProyectoEntidadConvocantePlanPipe
   ) {
-    super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService);
+    super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService, translate);
     this.proyectoEntidadesConvocantesFragment = this.fragment as ProyectoEntidadesConvocantesFragment;
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (proyectoEntidadConvocante: IProyectoEntidadConvocante, property: string) => {
       switch (property) {
@@ -72,7 +72,7 @@ export class ProyectoEntidadesConvocantesComponent extends FragmentComponent imp
     );
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_ENTIDAD_CONVOCANTE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

@@ -118,7 +118,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     private readonly cnfService: ConfigService,
     private readonly cspConfigService: CspConfigService
   ) {
-    super();
+    super(translate);
     if (route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY)) {
       this.convocatoriaId = Number(route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY));
     }
@@ -129,7 +129,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.loadForm();
 
@@ -199,7 +199,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     this.filter = this.createFilter();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

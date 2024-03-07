@@ -222,4 +222,5 @@ export class ViajesDietasComponent extends FragmentComponent implements OnInit, 
     this.formPart.clearDesglose();
   }
 
+  protected setupI18N(): void { }
 }

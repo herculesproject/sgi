@@ -349,4 +349,5 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     this.matDialog.open(RequerimientoJustificacionListadoExportModalComponent, config);
   }
 
+  protected setupI18N(): void { }
 }

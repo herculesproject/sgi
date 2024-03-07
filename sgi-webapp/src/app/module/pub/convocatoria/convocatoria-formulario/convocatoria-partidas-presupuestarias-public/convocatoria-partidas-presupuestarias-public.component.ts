@@ -36,7 +36,7 @@ export class ConvocatoriaPartidaPresupuestariaPublicComponent extends FragmentCo
   }
 
   constructor(
-    public actionService: ConvocatoriaPublicActionService
+    public actionService: ConvocatoriaPublicActionService,
   ) {
     super(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, actionService);
     this.formPart = this.fragment as ConvocatoriaPartidaPresupuestariaPublicFragment;
@@ -67,4 +67,6 @@ export class ConvocatoriaPartidaPresupuestariaPublicComponent extends FragmentCo
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
+  protected setupI18N(): void { }
 }

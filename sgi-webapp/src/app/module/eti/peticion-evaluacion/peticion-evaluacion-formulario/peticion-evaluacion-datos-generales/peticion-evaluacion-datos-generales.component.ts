@@ -100,7 +100,7 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     private actionService: PeticionEvaluacionActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
@@ -129,7 +129,6 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
     this.actionService.initializeEquiposInvestigador();
 
     this.suscripciones.push(this.formGroup.controls.tipoActividad.valueChanges.subscribe(value => {
@@ -137,7 +136,7 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     }));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.suscripciones.push(this.translate.get(
       PETICION_EVALUACION_CODIGO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

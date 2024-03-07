@@ -63,7 +63,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     actionService: PeticionEvaluacionActionService,
     private readonly translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.TAREAS, actionService);
+    super(actionService.FRAGMENT.TAREAS, actionService, translate);
     this.tareas$ = (this.fragment as PeticionEvaluacionTareasFragment).tareas$;
     this.listadoFragment = this.fragment as PeticionEvaluacionTareasFragment;
 
@@ -74,7 +74,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.datasource.paginator = this.paginator;
     this.datasource.sort = this.sort;
     this.listadoFragment.tareas$.subscribe((tarea) => {
@@ -99,7 +99,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
       };
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       TAREA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

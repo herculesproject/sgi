@@ -171,4 +171,6 @@ export class InvencionRepartoDatosGeneralesComponent extends FragmentComponent i
         }
       });
   }
+
+  protected setupI18N(): void { }
 }

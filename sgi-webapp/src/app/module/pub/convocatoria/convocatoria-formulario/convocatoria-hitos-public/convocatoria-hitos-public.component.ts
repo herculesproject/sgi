@@ -39,7 +39,7 @@ export class ConvocatoriaHitosPublicComponent extends FragmentComponent implemen
   }
 
   constructor(
-    public actionService: ConvocatoriaPublicActionService
+    public actionService: ConvocatoriaPublicActionService,
   ) {
     super(actionService.FRAGMENT.HITOS, actionService);
     this.formPart = this.fragment as ConvocatoriaHitosPublicFragment;
@@ -71,4 +71,5 @@ export class ConvocatoriaHitosPublicComponent extends FragmentComponent implemen
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  protected setupI18N(): void { }
 }

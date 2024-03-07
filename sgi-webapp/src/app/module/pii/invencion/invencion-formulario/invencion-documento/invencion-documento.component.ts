@@ -82,14 +82,14 @@ export class InvencionDocumentoComponent extends FragmentComponent implements On
     private dialogService: DialogService
   ) {
 
-    super(actionService.FRAGMENT.DOCUMENTOS, actionService);
+    super(actionService.FRAGMENT.DOCUMENTOS, actionService, translate);
     this.formPart = this.fragment as InvencionDocumentoFragment;
     this.elementosPagina = [5, 10, 25, 100];
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.subscriptions.push(this.subscribeToInvencionDocumentosChanges());
     this.dataSource.paginator = this.paginator;
@@ -100,7 +100,7 @@ export class InvencionDocumentoComponent extends FragmentComponent implements On
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
 
     this.translate.get(
       INVENCION_DOCUMENTO_KEY,

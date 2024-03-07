@@ -104,7 +104,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
     private readonly translate: TranslateService,
     private readonly matDialog: MatDialog,
   ) {
-    super(actionService.FRAGMENT.REPARTO_EQUIPO_INVENTOR, actionService);
+    super(actionService.FRAGMENT.REPARTO_EQUIPO_INVENTOR, actionService, translate);
     this.formPart = this.fragment as InvencionRepartoEquipoInventorFragment;
   }
 
@@ -115,7 +115,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
     this.initFlexProperties();
     this.initializeGastosDataSource();
     this.initializeIngresosDataSource();
-    this.setupI18N();
+
   }
 
   ngOnDestroy(): void {
@@ -334,7 +334,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
     this.fxLayoutProperties.xs = 'column';
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       REPARTO_IMPORTE_REPARTO_EQUIPO_INVENTOR_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

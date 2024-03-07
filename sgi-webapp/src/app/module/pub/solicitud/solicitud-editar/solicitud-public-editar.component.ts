@@ -68,12 +68,12 @@ export class SolicitudPublicEditarComponent extends ActionComponent implements O
     private matDialog: MatDialog,
     private readonly translate: TranslateService
   ) {
-    super(router, route, actionService, dialogService);
+    super(router, route, actionService, dialogService, translate);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
 
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
@@ -85,7 +85,7 @@ export class SolicitudPublicEditarComponent extends ActionComponent implements O
     ));
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       SOLICITUD_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

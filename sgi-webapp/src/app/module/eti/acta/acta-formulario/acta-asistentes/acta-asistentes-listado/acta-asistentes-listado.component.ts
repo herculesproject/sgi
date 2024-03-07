@@ -69,4 +69,6 @@ export class ActaAsistentesListadoComponent extends FragmentComponent implements
       }
     );
   }
+
+  protected setupI18N(): void { }
 }

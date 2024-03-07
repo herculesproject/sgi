@@ -80,7 +80,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
     private dialogService: DialogService,
     private readonly translate: TranslateService) {
 
-    super(actionService.FRAGMENT.CALENDARIO_FACTURACION, actionService);
+    super(actionService.FRAGMENT.CALENDARIO_FACTURACION, actionService, translate);
     this.formPart = this.fragment as ProyectoCalendarioFacturacionFragment;
   }
 
@@ -90,11 +90,11 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.setupI18N();
+
     this.initDataTable();
   }
 
-  private setupI18N(): void {
+  protected setupI18N(): void {
     this.translate.get(
       PROYECTO_CALENDARIO_FACTURACION_ITEM_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
