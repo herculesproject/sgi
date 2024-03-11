@@ -97,19 +97,21 @@ public class Configuracion extends BaseEntity {
      * <code>amortizacionFondosSGE</code>
      */
     AMORTIZACION_FONDOS_SGE_ENABLED("amortizacionFondosSgeEnabled"),
-
     /**
      * Habilitar buscador proyectos económicos pantalla Configuración Económica -
      * Identificación
      * <code>altaBuscadorSge</code>
      */
     ALTA_BUSCADOR_SGE_ENABLED("altaBuscadorSgeEnabled"),
-
     /**
      * Habilitar la integración de gastos justificados (apartado seguimiento de
      * justificación).
      */
-    GASTOS_JUSTIFICADOS_SGE_ENABLED("gastosJustificadosSgeEnabled");
+    GASTOS_JUSTIFICADOS_SGE_ENABLED("gastosJustificadosSgeEnabled"),
+    /**
+     * Habilitar la acción de solicitar modificación de los datos del proyecto SGE
+     */
+    MODIFICACION_PROYECTO_SGE_ENABLED("modificacionProyectoSgeEnabled");
 
     private final String key;
 
@@ -210,6 +212,12 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_gastos_justificados", columnDefinition = "boolean default false", nullable = false, unique = true)
   private Boolean gastosJustificadosSGE;
 
+  /**
+   * Habilitar la acción de solicitar modificación de los datos del proyecto SGE
+   */
+  @Column(name = "sge_modificacion", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean modificacionProyectoSge;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -240,6 +248,8 @@ public class Configuracion extends BaseEntity {
         return this.getAltaBuscadorSGE();
       case GASTOS_JUSTIFICADOS_SGE_ENABLED:
         return this.getGastosJustificadosSGE();
+      case MODIFICACION_PROYECTO_SGE_ENABLED:
+        return this.getModificacionProyectoSge();
       default:
         return null;
     }
@@ -288,6 +298,9 @@ public class Configuracion extends BaseEntity {
         break;
       case GASTOS_JUSTIFICADOS_SGE_ENABLED:
         this.setGastosJustificadosSGE(new Boolean(newValue));
+        break;
+      case MODIFICACION_PROYECTO_SGE_ENABLED:
+        this.setModificacionProyectoSge(new Boolean(newValue));
         break;
     }
   }

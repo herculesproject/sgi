@@ -72,6 +72,36 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
   }
 
   /**
+   * Actualiza el {@link ProyectoProyectoSge#proyectoSgeRef} al que esta asociado
+   * el {@link ProyectoProyectoSge#proyectoId}.
+   * 
+   * @param proyectoProyectoSge la entidad {@link ProyectoProyectoSge} a guardar.
+   * @return la entidad {@link ProyectoProyectoSge} actualizada.
+   */
+  @Override
+  @Transactional
+  public ProyectoProyectoSge reasignar(ProyectoProyectoSge proyectoProyectoSge) {
+    log.debug("reasignar(ProyectoProyectoSge proyectoProyectoSge) - start");
+
+    Assert.notNull(proyectoProyectoSge.getId(),
+        "ProyectoProyectoSge id no puede ser null para reasignar un ProyectoProyectoSge");
+    Assert.notNull(proyectoProyectoSge.getProyectoId(), "Id Proyecto no puede ser null para crear ProyectoProyectoSge");
+    Assert.notNull(proyectoProyectoSge.getProyectoSgeRef(),
+        "Ref ProyectoSge no puede ser null para crear ProyectoProyectoSge");
+
+    validateCardinalidadRelacionSgiSge(proyectoProyectoSge.getId(), proyectoProyectoSge.getProyectoId(),
+        proyectoProyectoSge.getProyectoSgeRef());
+
+    return repository.findById(proyectoProyectoSge.getId()).map(data -> {
+      data.setProyectoSgeRef(proyectoProyectoSge.getProyectoSgeRef());
+      ProyectoProyectoSge returnValue = repository.save(proyectoProyectoSge);
+
+      log.debug("reasignar(ProyectoProyectoSge proyectoProyectoSge) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ProyectoProyectoSgeNotFoundException(proyectoProyectoSge.getId()));
+  }
+
+  /**
    * Elimina el {@link ProyectoProyectoSge}.
    *
    * @param id Id del {@link ProyectoProyectoSge}.
@@ -201,10 +231,26 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
    * @param proyectoSgeRef Identificador del proyecto del SGE
    */
   private void validateCardinalidadRelacionSgiSge(Long proyectoSgiId, String proyectoSgeRef) {
+    validateCardinalidadRelacionSgiSge(null, proyectoSgiId, proyectoSgeRef);
+  }
+
+  /**
+   * Comprueba si con la cardinalidad definida en la configuracion es posible
+   * actualizar una relacion entre los proyectos
+   * 
+   * @param id             Identificador del {@link ProyectoProyectoSge}
+   * @param proyectoSgiId  Identificador del {@link Proyecto} del SGI
+   * @param proyectoSgeRef Identificador del proyecto del SGE
+   */
+  private void validateCardinalidadRelacionSgiSge(Long id, Long proyectoSgiId, String proyectoSgeRef) {
     log.debug("validateCardinalidadRelacionSgiSge({}, {}) - start", proyectoSgiId, proyectoSgeRef);
 
     Specification<ProyectoProyectoSge> specs = ProyectoProyectoSgeSpecifications.byProyectoId(proyectoSgiId).or(
         ProyectoProyectoSgeSpecifications.byProyectoSgeRef(proyectoSgeRef));
+
+    if (id != null) {
+      specs = specs.and(ProyectoProyectoSgeSpecifications.notId(id));
+    }
 
     List<ProyectoProyectoSge> relaciones = repository.findAll(specs);
 
@@ -227,7 +273,7 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
         break;
       case SGI_N_SGE_1:
         if (relaciones.stream().map(ProyectoProyectoSge::getProyectoId)
-            .anyMatch(id -> id.equals(proyectoSgiId))) {
+            .anyMatch(proyectoId -> proyectoId.equals(proyectoSgiId))) {
           throw new CardinalidadRelacionSgiSgeException();
         }
         log.debug("validateCardinalidadRelacionSgiSge({}, {}) - Cardinalidad (n:1) validada", proyectoSgiId,
