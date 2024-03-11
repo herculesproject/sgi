@@ -88,4 +88,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isModificacionProyectoSgeEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_MODIFICACION_PROYECTO_SGE_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
 }

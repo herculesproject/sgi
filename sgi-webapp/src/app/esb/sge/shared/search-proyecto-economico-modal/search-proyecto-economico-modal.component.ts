@@ -227,11 +227,11 @@ export class SearchProyectoEconomicoModalComponent extends DialogCommonComponent
     );
   }
 
-  openProyectoUpdateModal(proyectoSeleccionado: IProyectoSge): void {
+  openProyectoSgeSelectAndNotifyModal(proyectoSeleccionado: IProyectoSge): void {
     const proyectoData: IProyectoEconomicoFormlyData = {
       proyectoSgiId: this.data.proyectoSgiId,
       proyectoSge: proyectoSeleccionado,
-      action: ACTION_MODAL_MODE.EDIT,
+      action: ACTION_MODAL_MODE.SELECT_AND_NOTIFY,
       grupoInvestigacion: this.data.grupoInvestigacion
     };
 

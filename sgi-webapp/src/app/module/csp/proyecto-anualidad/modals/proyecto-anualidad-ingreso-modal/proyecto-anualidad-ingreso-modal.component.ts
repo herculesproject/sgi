@@ -12,7 +12,7 @@ import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { ICodigoEconomicoGasto } from '@core/models/sge/codigo-economico-gasto';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
+import { CodigoEconomicoIngresoService } from '@core/services/sge/codigo-economico-ingreso.service';
 import { SelectValidator } from '@core/validators/select-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -60,7 +60,7 @@ export class ProyectoAnualidadIngresoModalComponent extends DialogFormComponent<
   constructor(
     matDialogRef: MatDialogRef<ProyectoAnualidadIngresoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoAnualidadIngresoModalData,
-    private readonly codigoEconomicoGastoService: CodigoEconomicoGastoService,
+    private readonly codigoEconomicoIngresoService: CodigoEconomicoIngresoService,
     private readonly proyectoService: ProyectoService,
     private readonly translate: TranslateService
   ) {
@@ -73,7 +73,7 @@ export class ProyectoAnualidadIngresoModalComponent extends DialogFormComponent<
         .subscribe(response => this.proyectosSge$.next(response.items))
     );
 
-    this.codigosEconomicos$ = codigoEconomicoGastoService.findAll().pipe(
+    this.codigosEconomicos$ = codigoEconomicoIngresoService.findAll().pipe(
       map(response => response.items)
     );
   }

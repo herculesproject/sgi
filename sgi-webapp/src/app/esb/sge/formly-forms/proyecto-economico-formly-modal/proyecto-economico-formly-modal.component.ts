@@ -50,9 +50,10 @@ enum FormlyFields {
   FINALIDAD = 'finalidad',
   IMPORTE_TOTAL_GASTOS = 'importeTotalGastos',
   IMPORTE_TOTAL_INGRESOS = 'importeTotalIngresos',
+  IVA_DEDUCIBLE = 'ivaDeducible',
   NUMERO_DOCUMENTO_RESPONSABLE = 'numeroDocumentoResponsable',
   POR_IVA = 'porIva',
-  RESPONSABLE_REF = 'responsableRef',
+  RESPONSABLE_REF = 'responsableRef'
 }
 
 @Component({
@@ -111,10 +112,14 @@ export class ProyectoEconomicoFormlyModalComponent
     let formly$: Observable<FormlyFieldConfig[]>;
     switch (action) {
       case ACTION_MODAL_MODE.EDIT:
+      case ACTION_MODAL_MODE.SELECT_AND_NOTIFY:
         formly$ = this.proyectoSgeService.getFormlyUpdate();
         break;
       case ACTION_MODAL_MODE.NEW:
         formly$ = this.proyectoSgeService.getFormlyCreate();
+        break;
+      case ACTION_MODAL_MODE.VIEW:
+        formly$ = this.proyectoSgeService.getFormlyView();
         break;
       default:
         formly$ = of([]);
@@ -128,10 +133,23 @@ export class ProyectoEconomicoFormlyModalComponent
       load$ = this.fillGrupoData(formly$, grupo);
     }
 
+    switch (action) {
+      case ACTION_MODAL_MODE.EDIT:
+      case ACTION_MODAL_MODE.VIEW:
+        load$ = load$.pipe(
+          switchMap((formlyData) => {
+            return this.fillProyectoSgeFormlyModelById(proyectoSgeId, formlyData);
+          })
+        );
+        break;
+      case ACTION_MODAL_MODE.NEW:
+      case ACTION_MODAL_MODE.SELECT_AND_NOTIFY:
+        break;
+    }
+
     return load$.pipe(
       tap(formlyData => {
         this.options.formState.mainModel = formlyData.data;
-        this.formlyData.model = {};
         this.formlyData = formlyData;
       }),
       switchMap(() => of(void 0))
@@ -145,6 +163,16 @@ export class ProyectoEconomicoFormlyModalComponent
     return this.proyectoData.action === ACTION_MODAL_MODE.NEW
       ? this.createProyectoSge(this.formlyData)
       : this.updateProyectoSge(this.proyectoData.proyectoSge, this.formlyData);
+  }
+
+  private fillProyectoSgeFormlyModelById(id: string, formlyData: IFormlyData): Observable<IFormlyData> {
+    return this.proyectoSgeService.getFormlyModelById(id).pipe(
+      map((model) => {
+        FormlyUtils.convertJSONToFormly(model, formlyData.fields);
+        formlyData.data.proyectoSge = model;
+        return formlyData;
+      })
+    );
   }
 
   private fillProyectoData(
@@ -167,14 +195,6 @@ export class ProyectoEconomicoFormlyModalComponent
           map((proyecto) => {
             formlyData.data.proyecto = proyecto;
 
-            if (this.formlyContainsField(FormlyFields.POR_IVA)) {
-              formlyData.data.porIva = proyecto.iva?.iva;
-            }
-
-            if (this.formlyContainsField(FormlyFields.IMPORTE_TOTAL_GASTOS)) {
-              formlyData.data.importeTotalGastos = proyecto.importePresupuesto;
-            }
-
             if (this.formlyContainsField(FormlyFields.CAUSA_EXENCION)) {
               formlyData.data.causaExencion = proyecto.causaExencion;
 
@@ -185,12 +205,24 @@ export class ProyectoEconomicoFormlyModalComponent
               }
             }
 
+            if (this.formlyContainsField(FormlyFields.CODIGO_INTERNO)) {
+              formlyData.data.codigoInterno = proyecto.codigoInterno;
+            }
+
             if (this.formlyContainsField(FormlyFields.FINALIDAD)) {
               formlyData.data.tipoFinalidad = proyecto.finalidad;
             }
 
-            if (this.formlyContainsField(FormlyFields.CODIGO_INTERNO)) {
-              formlyData.data.codigoInterno = proyecto.codigoInterno;
+            if (this.formlyContainsField(FormlyFields.IVA_DEDUCIBLE)) {
+              formlyData.data.ivaDeducible = proyecto.ivaDeducible;
+            }
+
+            if (this.formlyContainsField(FormlyFields.IMPORTE_TOTAL_GASTOS)) {
+              formlyData.data.importeTotalGastos = proyecto.importePresupuesto;
+            }
+
+            if (this.formlyContainsField(FormlyFields.POR_IVA)) {
+              formlyData.data.porIva = proyecto.iva?.iva;
             }
 
             if (action === ACTION_MODAL_MODE.EDIT) {

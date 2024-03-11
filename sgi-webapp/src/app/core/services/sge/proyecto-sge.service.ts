@@ -41,6 +41,14 @@ export class ProyectoSgeService extends SgiMutableRestService<string, IProyectoS
     return this.http.get<FormlyFieldConfig[]>(`${this.endpointUrl}/formly/update`);
   }
 
+  getFormlyView(): Observable<FormlyFieldConfig[]> {
+    return this.http.get<FormlyFieldConfig[]>(`${this.endpointUrl}/formly/view`);
+  }
+
+  getFormlyModelById(id: string): Observable<any> {
+    return this.http.get<any[]>(`${this.endpointUrl}/formly/${id}`);
+  }
+
   createProyectoAnualidadesPartidas(proyectoAnualidadesPartidas: IProyectoAnualidadPartida[]): Observable<void> {
     return this.http.post<void>(`${this.endpointUrl}/anualidades`,
       proyectoAnualidadesPartidas.map(p => PROYECTO_ANUALIDAD_PARTIDA_REQUEST_CONVERTER.fromTarget(p)));

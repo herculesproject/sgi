@@ -16,9 +16,14 @@ export class ProyectoProyectosSgeFragment extends Fragment {
 
   private _cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
   private _disableAddIdentificadorSge: boolean;
+  private _isModificacionProyectoSgeEnabled: boolean;
 
   get disableAddIdentificadorSge(): boolean {
     return this._disableAddIdentificadorSge;
+  }
+
+  get isModificacionProyectoSgeEnabled(): boolean {
+    return this._isModificacionProyectoSgeEnabled;
   }
 
   constructor(
@@ -56,9 +61,11 @@ export class ProyectoProyectosSgeFragment extends Fragment {
               );
             })
           ),
-          cardinalidadRelacionSgiSge: this.configService.getCardinalidadRelacionSgiSge()
-        }).subscribe(({ cardinalidadRelacionSgiSge, proyectosSge }) => {
+          cardinalidadRelacionSgiSge: this.configService.getCardinalidadRelacionSgiSge(),
+          isModificacionProyectoSgeEnabled: this.configService.isModificacionProyectoSgeEnabled()
+        }).subscribe(({ cardinalidadRelacionSgiSge, isModificacionProyectoSgeEnabled, proyectosSge }) => {
           this._cardinalidadRelacionSgiSge = cardinalidadRelacionSgiSge;
+          this._isModificacionProyectoSgeEnabled = isModificacionProyectoSgeEnabled;
           this.proyectosSge$.next(proyectosSge);
         })
       );

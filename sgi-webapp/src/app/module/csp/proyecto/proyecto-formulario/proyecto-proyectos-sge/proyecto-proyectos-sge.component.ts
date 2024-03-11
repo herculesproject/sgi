@@ -7,21 +7,25 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
+import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { DialogService } from '@core/services/dialog.service';
+import { ConfigService } from '@core/services/csp/config.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { IProyectoEconomicoFormlyData, IProyectoEconomicoFormlyResponse, ProyectoEconomicoFormlyModalComponent } from 'src/app/esb/sge/formly-forms/proyecto-economico-formly-modal/proyecto-economico-formly-modal.component';
 import { SearchProyectoEconomicoModalComponent, SearchProyectoEconomicoModalData } from 'src/app/esb/sge/shared/search-proyecto-economico-modal/search-proyecto-economico-modal.component';
+import { ACTION_MODAL_MODE } from 'src/app/esb/shared/formly-forms/core/base-formly-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoProyectosSgeFragment } from './proyecto-proyectos-sge.fragment';
-import { ConfigCsp } from 'src/app/module/adm/config-csp/config-csp.component';
-import { ConfigService } from '@core/services/csp/config.service';
-import { IProyectoEconomicoFormlyData, ProyectoEconomicoFormlyModalComponent, IProyectoEconomicoFormlyResponse } from 'src/app/esb/sge/formly-forms/proyecto-economico-formly-modal/proyecto-economico-formly-modal.component';
-import { ACTION_MODAL_MODE } from 'src/app/esb/shared/formly-forms/core/base-formly-modal.component';
 
 const IDENTIFICADOR_SGE_KEY = marker('csp.proyecto-proyecto-sge.identificador-sge');
+const TIPO_PROYECTO_KEY = marker('sge.proyecto');
+const MSG_SAVE_SUCCESS = marker('msg.save.request.entity.success');
+const MSG_UPDATE_SUCCESS = marker('msg.update.request.entity.success');
 
 @Component({
   selector: 'sgi-proyecto-proyectos-sge',
@@ -36,9 +40,11 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
   fxLayoutProperties: FxLayoutProperties;
 
   elementosPagina = [5, 10, 25, 100];
-  displayedColumns = ['proyectoSgeRef', 'sectorIva'];
+  displayedColumns = ['proyectoSgeRef', 'sectorIva', 'acciones'];
 
   msgParamEntity = {};
+  private textoCrearSuccess: string;
+  private textoUpdateSuccess: string;
 
   dataSource = new MatTableDataSource<StatusWrapper<IProyectoProyectoSge>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -51,12 +57,16 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     return MSG_PARAMS;
   }
 
+  get isBuscadorSgeEnabled(): boolean {
+    return this._altaBuscadorSgeEnabled;
+  }
+
   constructor(
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,
-    private dialogService: DialogService,
-    private readonly translate: TranslateService,
-    private readonly cspConfigService: ConfigService
+    private readonly cspConfigService: ConfigService,
+    private readonly snackBarService: SnackBarService,
+    private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.PROYECTOS_SGE, actionService);
 
@@ -97,52 +107,91 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
       IDENTIFICADOR_SGE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      TIPO_PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_SAVE_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoCrearSuccess = value);
+
+    this.translate.get(
+      TIPO_PROYECTO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).pipe(
+      switchMap((value) => {
+        return this.translate.get(
+          MSG_UPDATE_SUCCESS,
+          { entity: value, ...MSG_PARAMS.GENDER.MALE }
+        );
+      })
+    ).subscribe((value) => this.textoUpdateSuccess = value);
   }
 
-  openModal(): void {
-    if (!this._altaBuscadorSgeEnabled) {
-      const proyectoData: IProyectoEconomicoFormlyData = {
-        proyectoSgiId: this.formPart.getKey() as number,
-        action: ACTION_MODAL_MODE.NEW,
-        proyectoSge: null,
-        grupoInvestigacion: null
-      };
+  openProyectoSgeCreateModal(): void {
+    this.openProyectoSgeFormlyModal(ACTION_MODAL_MODE.NEW, null, this.textoCrearSuccess);
+  }
 
-      const config = {
-        panelClass: 'sgi-dialog-container',
-        data: proyectoData
-      };
-      const dialogRef = this.matDialog.open(ProyectoEconomicoFormlyModalComponent, config);
+  openProyectoSgeEditModal(proyectoSge: IProyectoSge): void {
+    this.openProyectoSgeFormlyModal(ACTION_MODAL_MODE.EDIT, proyectoSge, this.textoUpdateSuccess);
+  }
 
-      dialogRef.afterClosed().subscribe(
-        (response: IProyectoEconomicoFormlyResponse) => {
-          if (response) {
-            this.formPart.addProyectoSge(response.proyectoSge);
-          }
+  openProyectoSgeViewModal(proyectoSge: IProyectoSge): void {
+    this.openProyectoSgeFormlyModal(ACTION_MODAL_MODE.VIEW, proyectoSge);
+  }
+
+  openProyectoSgeSearchModal(): void {
+    const data: SearchProyectoEconomicoModalData = {
+      searchTerm: null,
+      extended: true,
+      selectedProyectos: this.dataSource.data.map((proyectoProyectoSge) => proyectoProyectoSge.value.proyectoSge),
+      proyectoSgiId: this.formPart.getKey() as number,
+      selectAndNotify: true,
+      grupoInvestigacion: null
+    };
+
+    const config = {
+      data
+    };
+    const dialogRef = this.matDialog.open(SearchProyectoEconomicoModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (proyectoSge) => {
+        if (proyectoSge) {
+          this.formPart.addProyectoSge(proyectoSge);
         }
-      );
-    } else {
-      const data: SearchProyectoEconomicoModalData = {
-        searchTerm: null,
-        extended: true,
-        selectedProyectos: this.dataSource.data.map((proyectoProyectoSge) => proyectoProyectoSge.value.proyectoSge),
-        proyectoSgiId: this.formPart.getKey() as number,
-        selectAndNotify: true,
-        grupoInvestigacion: null
-      };
+      }
+    );
+  }
 
-      const config = {
-        data
-      };
-      const dialogRef = this.matDialog.open(SearchProyectoEconomicoModalComponent, config);
-      dialogRef.afterClosed().subscribe(
-        (proyectoSge) => {
-          if (proyectoSge) {
+  private openProyectoSgeFormlyModal(modalAction: ACTION_MODAL_MODE, proyectoSge?: IProyectoSge, textoActionSuccess?: string): void {
+    const proyectoSgeData: IProyectoEconomicoFormlyData = {
+      proyectoSge,
+      proyectoSgiId: this.formPart.getKey() as number,
+      grupoInvestigacion: null,
+      action: modalAction
+    };
+
+    const config = {
+      panelClass: 'sgi-dialog-container',
+      data: proyectoSgeData
+    };
+    const dialogRef = this.matDialog.open(ProyectoEconomicoFormlyModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (response: IProyectoEconomicoFormlyResponse) => {
+        if (response?.createdOrUpdated) {
+          this.snackBarService.showSuccess(textoActionSuccess);
+
+          if (response.proyectoSge && ACTION_MODAL_MODE.NEW === modalAction) {
             this.formPart.addProyectoSge(proyectoSge);
           }
         }
-      );
-    }
+      }
+    );
   }
 
   ngOnDestroy(): void {
