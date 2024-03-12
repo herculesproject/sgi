@@ -3,10 +3,10 @@
   "version": "0.5.0-SNAPSHOT",
   "scripts": {
     "ng": "ng",
-    "start": "node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=2048 ng serve --disable-host-check",
+    "start": "node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=6048 ng serve --disable-host-check",
     "build": "node ./generate-config.js && ng build",
     "build-prod": "node ./generate-config.js && ng build --prod",
-    "test": "node ./generate-config.js && ng test",
+    "test": "node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=6048 ng test -- --include='src/app/module/csp'",
     "test-ci": "node ./generate-config.js && ng test --watch=false --browsers=ChromeHeadlessCI",
     "lint": "node ./generate-config.js && ng lint",
     "e2e": "node ./generate-config.js && ng e2e",

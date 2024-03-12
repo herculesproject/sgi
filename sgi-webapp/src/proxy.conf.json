@@ -18,28 +18,19 @@
     "logLevel": "debug"
   },
   "/api/usr": {
-    "target": "http://sgi-usr-service:4282",
-    "pathRewrite": {
-      "^/api/usr": ""
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
   "/api/pii": {
-    "target": "http://sgi-pii-service:4283",
-    "pathRewrite": {
-      "^/api/pii": ""
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
   "/api/rel": {
-    "target": "http://sgi-rel-service:4284",
-    "pathRewrite": {
-      "^/api/rel": ""
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
@@ -60,7 +51,10 @@
     "logLevel": "debug"
   },
   "/api/sge/": {
-    "target": "http://sgi-esb:8080",
+    "target": "http://wso-mi-service:8290",
+    "pathRewrite": {
+      "^/api/sge": "/sge"
+    },
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
@@ -90,46 +84,31 @@
     "logLevel": "debug"
   },
   "/api/prc": {
-    "target": "http://sgi-prc-service:4289",
-    "pathRewrite": {
-      "^/api/prc": ""
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
   "/api/cnf": {
-    "target": "http://sgi-cnf-service:4288",
-    "pathRewrite": {
-      "^/api/cnf": ""
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
   "/api/com": {
-    "target": "http://sgi-com-service:4286",
-    "pathRewrite": {
-      "^/api/com": ""
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
   "/api/tp": {
-    "target": "http://sgi-tp-service:4285",
-    "pathRewrite": {
-      "^/api/tp": ""
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
   "/api/eer": {
-    "target": "http://sgi-eer-service:4290",
-    "pathRewrite": {
-      "^/api/eer": ""
-    },
+    "target": "http://sgi-esb:8080",
     "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
