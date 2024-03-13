@@ -54,4 +54,8 @@ export interface IConfiguracion {
   amortizacionFondosSgeEnabled: boolean;
   /** Habilitar la integración de gastos justificados (apartado seguimiento de justificación) SGE */
   gastosJustificadosSgeEnabled: boolean;
+  /** Habilitar la acción de solicitar modificación de los datos del proyecto SGE */
+  modificacionProyectoSgeEnabled: boolean;
+  /** Habilitar la visualización del campo Sector IVA proveniente de la integración con el SGE */
+  sectorIvaSgeEnabled: boolean;
 }

@@ -22,6 +22,10 @@ export class ProyectosFragment extends Fragment {
     return this.config.ejecucionEconomicaGruposEnabled ?? false;
   }
 
+  get isSectorIvaSgeEnabled(): boolean {
+    return this.config.sectorIvaSgeEnabled ?? false;
+  }
+
   constructor(
     key: number,
     private proyectoSge: IProyectoSge,

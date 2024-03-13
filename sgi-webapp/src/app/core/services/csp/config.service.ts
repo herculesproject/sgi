@@ -94,4 +94,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isSectorIvaSgeEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_SECTOR_IVA_SGE_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
 }

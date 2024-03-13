@@ -79,6 +79,14 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     );
   }
 
+  private initColumns(isSectorIvaSgeEnabled: boolean): void {
+    this.displayedColumns = ['proyectoSgeRef', 'acciones'];
+
+    if (isSectorIvaSgeEnabled) {
+      this.displayedColumns.splice(1, 0, 'sectorIva');
+    }
+  }
+
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
@@ -99,6 +107,12 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     this.subscriptions.push(this.formPart.proyectosSge$.subscribe(elements => {
       this.dataSource.data = elements;
     }));
+
+    this.subscriptions.push(
+      this.formPart.isSectorIvaSgeEnabled$.subscribe(isSectorIvaSgeEnabled => {
+        this.initColumns(isSectorIvaSgeEnabled);
+      })
+    );
 
   }
 

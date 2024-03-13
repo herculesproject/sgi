@@ -65,6 +65,8 @@
   "adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED": "Obtener partidas SGE",
   "adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED.description": "Habilitar creación de Partidas presupuestarias en el SGE",
   "adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_PRPT": "Plantilla informe de autorización de participación en proyecto externo",
+  "adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED": "Habilitar campo Sector IVA del SGE",
+  "adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED.description": "Habilitar la visualización del campo Sector IVA proveniente de la integración con el SGE",
   "adm.config.csp.CSP_URL_SISTEMA_GESTION_EXTERNO": "URL sistema corporativo secundario de gestión de la investigación",
   "adm.config.csp.CSP_VALIDACION_CLASIFICACION_GASTOS": "Activación validación/clasificación de gastos",
   "adm.config.csp.CSP_VALIDACION_CLASIFICACION_GASTOS.description": "Activación del apartado Validación de gastos en Ejecución económica",

@@ -13,6 +13,7 @@ import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoProyectosSgeFragment extends Fragment {
   proyectosSge$ = new BehaviorSubject<StatusWrapper<IProyectoProyectoSge>[]>([]);
+  isSectorIvaSgeEnabled$ = new BehaviorSubject<boolean>(false);
 
   private _cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
   private _disableAddIdentificadorSge: boolean;
@@ -43,27 +44,38 @@ export class ProyectoProyectosSgeFragment extends Fragment {
     if (this.getKey()) {
 
       this.subscriptions.push(
-        forkJoin({
-          proyectosSge: this.proyectoService.findAllProyectosSgeProyecto(this.getKey() as number).pipe(
-            map(response => response.items.map(proyectoProyectoSge => new StatusWrapper<IProyectoProyectoSge>(proyectoProyectoSge))),
-            switchMap(response => {
-              const requestsProyectoSge: Observable<StatusWrapper<IProyectoProyectoSge>>[] = [];
-              response.forEach(proyectoProyectoSge => {
-                requestsProyectoSge.push(this.proyectoSgeService.findById(proyectoProyectoSge.value.proyectoSge.id).pipe(
-                  map((proyectoSge) => {
-                    proyectoProyectoSge.value.proyectoSge = proyectoSge;
-                    return proyectoProyectoSge;
-                  })
-                ));
-              });
-              return of(response).pipe(
-                tap(() => merge(...requestsProyectoSge).subscribe())
-              );
+        this.configService.isSectorIvaSgeEnabled().pipe(
+          tap(isSectorIvaSgeEnabled => {
+            this.isSectorIvaSgeEnabled$.next(isSectorIvaSgeEnabled);
+          }),
+          switchMap(() =>
+            forkJoin({
+              proyectosSge: this.proyectoService.findAllProyectosSgeProyecto(this.getKey() as number).pipe(
+                map(response => response.items.map(proyectoProyectoSge => new StatusWrapper<IProyectoProyectoSge>(proyectoProyectoSge))),
+                switchMap(response => {
+                  if (!this.isSectorIvaSgeEnabled$.value) {
+                    return of(response);
+                  }
+
+                  const requestsProyectoSge: Observable<StatusWrapper<IProyectoProyectoSge>>[] = [];
+                  response.forEach(proyectoProyectoSge => {
+                    requestsProyectoSge.push(this.proyectoSgeService.findById(proyectoProyectoSge.value.proyectoSge.id).pipe(
+                      map((proyectoSge) => {
+                        proyectoProyectoSge.value.proyectoSge = proyectoSge;
+                        return proyectoProyectoSge;
+                      })
+                    ));
+                  });
+                  return of(response).pipe(
+                    tap(() => merge(...requestsProyectoSge).subscribe())
+                  );
+                })
+              ),
+              cardinalidadRelacionSgiSge: this.configService.getCardinalidadRelacionSgiSge(),
+              isModificacionProyectoSgeEnabled: this.configService.isModificacionProyectoSgeEnabled()
             })
-          ),
-          cardinalidadRelacionSgiSge: this.configService.getCardinalidadRelacionSgiSge(),
-          isModificacionProyectoSgeEnabled: this.configService.isModificacionProyectoSgeEnabled()
-        }).subscribe(({ cardinalidadRelacionSgiSge, isModificacionProyectoSgeEnabled, proyectosSge }) => {
+          )
+        ).subscribe(({ cardinalidadRelacionSgiSge, isModificacionProyectoSgeEnabled, proyectosSge }) => {
           this._cardinalidadRelacionSgiSge = cardinalidadRelacionSgiSge;
           this._isModificacionProyectoSgeEnabled = isModificacionProyectoSgeEnabled;
           this.proyectosSge$.next(proyectosSge);
