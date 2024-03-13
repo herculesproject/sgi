@@ -40,6 +40,7 @@
       <column name="sge_alta_buscador" defaultValueBoolean="true" type="boolean" />
       <column name="sge_gastos_justificados" defaultValueBoolean="true" type="boolean" />
       <column name="sge_modificacion" defaultValueBoolean="false" type="boolean" />
+      <column name="sge_sector_iva" defaultValueBoolean="true" type="boolean" />
     </addColumn>
   </changeSet>
 
