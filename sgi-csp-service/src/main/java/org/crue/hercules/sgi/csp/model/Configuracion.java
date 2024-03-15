@@ -116,7 +116,12 @@ public class Configuracion extends BaseEntity {
      * Habilitar la visualización del campo Sector IVA proveniente de la integración
      * con el SGE
      */
-    SECTOR_IVA_SGE_ENABLED("sectorIvaSgeEnabled");
+    SECTOR_IVA_SGE_ENABLED("sectorIvaSgeEnabled"),
+    /**
+     * Habilitar la visualización de la la opción de menú "Modificaciones" dentro de
+     * "Ejecución económica - Detalle de operaciones"
+     */
+    DETALLE_OPERACIONES_MODIFICACIONES_ENABLED("detalleOperacionesModificacionesEnabled");
 
     private final String key;
 
@@ -230,6 +235,13 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_sector_iva", columnDefinition = "boolean default true", nullable = false, unique = true)
   private Boolean sectorIvaSgeEnabled;
 
+  /**
+   * Habilitar la visualización de la la opción de menú "Modificaciones" dentro de
+   * "Ejecución económica - Detalle de operaciones"
+   */
+  @Column(name = "sge_modificaciones", columnDefinition = "boolean default true", nullable = false, unique = true)
+  private Boolean detalleOperacionesModificacionesEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -264,6 +276,8 @@ public class Configuracion extends BaseEntity {
         return this.getModificacionProyectoSge();
       case SECTOR_IVA_SGE_ENABLED:
         return this.getSectorIvaSgeEnabled();
+      case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
+        return this.getDetalleOperacionesModificacionesEnabled();
       default:
         return null;
     }
@@ -319,6 +333,8 @@ public class Configuracion extends BaseEntity {
       case SECTOR_IVA_SGE_ENABLED:
         this.setSectorIvaSgeEnabled(new Boolean(newValue));
         break;
+      case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
+        this.setDetalleOperacionesModificacionesEnabled(new Boolean(newValue));
     }
   }
 }
