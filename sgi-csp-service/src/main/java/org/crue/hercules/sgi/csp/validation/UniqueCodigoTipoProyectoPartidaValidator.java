@@ -38,7 +38,8 @@ public class UniqueCodigoTipoProyectoPartidaValidator
     boolean isValid = true;
     if (Boolean.TRUE.equals(config.getPartidasPresupuestariasSGE())) {
       isValid = !this.proyectoPartidaRepository.existsByProyectoIdAndPartidaRefAndTipoPartidaAndIdNot(
-          value.getProyectoId(), value.getCodigo(), value.getTipoPartida(), value.getId() != null ? value.getId() : 0);
+          value.getProyectoId(), value.getPartidaRef(), value.getTipoPartida(),
+          value.getId() != null ? value.getId() : 0);
     } else {
       isValid = !this.proyectoPartidaRepository.existsByProyectoIdAndCodigoAndTipoPartidaAndIdNot(
           value.getProyectoId(), value.getCodigo(), value.getTipoPartida(), value.getId() != null ? value.getId() : 0);
