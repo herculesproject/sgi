@@ -58,4 +58,6 @@ export interface IConfiguracion {
   modificacionProyectoSgeEnabled: boolean;
   /** Habilitar la visualización del campo Sector IVA proveniente de la integración con el SGE */
   sectorIvaSgeEnabled: boolean;
+  /** Habilitar la visualización de la la opción de menú "Modificaciones" dentro de "Ejecución económica - Detalle de operaciones" */
+  detalleOperacionesModificacionesEnabled: boolean;
 }

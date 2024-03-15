@@ -125,6 +125,10 @@ export class EjecucionEconomicaEditarComponent extends ActionComponent implement
     return this.data?.configuracion?.validacionClasificacionGastos === ValidacionClasificacionGastos.VALIDACION;
   }
 
+  get isDetalleOperacionesModificacionesEnabled(): boolean {
+    return this.data?.configuracion?.detalleOperacionesModificacionesEnabled;
+  }
+
   private returnUrl() {
     this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }

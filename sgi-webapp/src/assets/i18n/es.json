@@ -26,6 +26,8 @@
   "adm.config.csp.CSP_COM_VENCIMIENTO_PERIODO_PAGO_SOCIO_DESTINATARIOS_UO": "Destinatarios defecto CSP Vencimiento Periodo Pago Socio de la unidad de gestión {unidadGestion}",
   "adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO": "Dedicación mínima sobre Grupo de investigación",
   "adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO.description": "El valor porcentaje de dedicación de los miembros de los Grupos de investigación debe de superar este valor",
+  "adm.config.csp.CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED": "Integración de modificaciones (ejecución económica - detalle de operaciones)",
+  "adm.config.csp.CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED.description": "Habilitar la visualización de la la opción de menú 'Modificaciones' dentro de 'Ejecución económica - Detalle de operaciones'",
   "adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED": "Ejecución económica de Grupos de investigación",
   "adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED.description": "Habilitar Ejecución económica de Grupos de investigación",
   "adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_CONVOCATORIA_LISTADO": "Convocatorias - Número máximo de registros en la exportación del listado",
