@@ -252,7 +252,7 @@ export class NotificacionPresupuestoSgeListadoComponent extends AbstractTablePag
                       anualidad: proyectoAnualidad.anio ?? proyectoAnualidad.proyectoFechaInicio.year,
                       importe: anualidadGasto.importeConcedido,
                       tipoDatoEconomico: TipoPartida.GASTO,
-                      partidaPresupuestaria: anualidadGasto.proyectoPartida.codigo,
+                      partidaPresupuestaria: anualidadGasto.proyectoPartida.codigo ?? anualidadGasto.proyectoPartida.partidaSge?.id,
                       proyecto: { id: anualidadGasto.proyectoSgeRef } as IProyectoSge
                     };
                     return proyectoAnualidadPartida;
@@ -269,13 +269,13 @@ export class NotificacionPresupuestoSgeListadoComponent extends AbstractTablePag
               .pipe(
                 tap(anualidadesIngreso => {
 
-                  const proyectoAnualidadPartidasGasto = anualidadesIngreso.items.map(anualidadGasto => {
+                  const proyectoAnualidadPartidasGasto = anualidadesIngreso.items.map(anualidadIngreso => {
                     const proyectoAnualidadPartida: IProyectoAnualidadPartida = {
                       anualidad: proyectoAnualidad.anio ?? proyectoAnualidad.proyectoFechaInicio.year,
-                      importe: anualidadGasto.importeConcedido,
+                      importe: anualidadIngreso.importeConcedido,
                       tipoDatoEconomico: TipoPartida.INGRESO,
-                      partidaPresupuestaria: anualidadGasto.proyectoPartida.codigo,
-                      proyecto: { id: anualidadGasto.proyectoSgeRef } as IProyectoSge
+                      partidaPresupuestaria: anualidadIngreso.proyectoPartida.codigo ?? anualidadIngreso.proyectoPartida.partidaSge?.id,
+                      proyecto: { id: anualidadIngreso.proyectoSgeRef } as IProyectoSge
                     };
                     return proyectoAnualidadPartida;
                   });
