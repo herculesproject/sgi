@@ -93,7 +93,7 @@ export class SelectEmpresaComponent extends SelectDialogComponent<SearchEmpresaM
       return this.getErrorMsg(empresa.id);
     }
 
-    return empresa.nombre;
+    return empresa.nombre ?? empresa.razonSocial;
   }
 
   private getErrorMsg(id: string): string {
