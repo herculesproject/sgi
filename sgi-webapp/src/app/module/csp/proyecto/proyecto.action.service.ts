@@ -67,6 +67,7 @@ import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.s
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of, Subject, throwError } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -86,7 +87,7 @@ import { ProyectoDocumentosFragment } from './proyecto-formulario/proyecto-docum
 import { ProyectoEntidadGestoraFragment } from './proyecto-formulario/proyecto-entidad-gestora/proyecto-entidad-gestora.fragment';
 import { ProyectoEntidadesConvocantesFragment } from './proyecto-formulario/proyecto-entidades-convocantes/proyecto-entidades-convocantes.fragment';
 import { ProyectoEntidadesFinanciadorasFragment } from './proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
-import { ProyectoEquipoFragment } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.fragment';
+import { IFechaFinMaxUpdate, ProyectoEquipoFragment } from './proyecto-formulario/proyecto-equipo/proyecto-equipo.fragment';
 import { ProyectoHistoricoEstadosFragment } from './proyecto-formulario/proyecto-historico-estados/proyecto-historico-estados.fragment';
 import { ProyectoHitosFragment } from './proyecto-formulario/proyecto-hitos/proyecto-hitos.fragment';
 import { ProyectoPaqueteTrabajoFragment } from './proyecto-formulario/proyecto-paquete-trabajo/proyecto-paquete-trabajo.fragment';
@@ -237,6 +238,10 @@ export class ProyectoActionService extends ActionService {
 
   get titulo(): string {
     return this.fichaGeneral.getValue().titulo;
+  }
+
+  get fechaFinDefinitivaProyecto(): DateTime {
+    return this.fichaGeneral.getValue().fechaFinDefinitiva ?? this.fichaGeneral.getValue().fechaFin;
   }
 
   get isInvestigador(): boolean {
@@ -562,6 +567,18 @@ export class ProyectoActionService extends ActionService {
               (value) => this.fichaGeneral.ultimaProrroga$.next(value)
             )
           );
+          this.subscriptions.push(
+            this.prorrogas.ultimaFechaFinProrrogas$.subscribe(value => {
+              const fechaFinCurrent = this.fechaFinDefinitivaProyecto;
+              this.fichaGeneral.ultimaFechaFinProrrogas$.next(value);
+              const fechaFinMaxUpdate: IFechaFinMaxUpdate = {
+                fechaFinMaxCurrent: fechaFinCurrent,
+                fechaFinMaxNew: this.fechaFinDefinitivaProyecto
+              };
+              this.proyectoEquipo.fechaFinMaxUpdate$.next(fechaFinMaxUpdate);
+            })
+          );
+
 
           // Propagate changes
           this.subscriptions.push(
@@ -714,6 +731,12 @@ export class ProyectoActionService extends ActionService {
 
     if (this.isEdit()) {
       if (this.prorrogas?.hasChanges()) {
+        if (this.proyectoEquipo?.hasChanges()) {
+          cascade = cascade.pipe(
+            switchMap(() => this.proyectoEquipo.saveOrUpdate().pipe(tap(() => this.proyectoEquipo.refreshInitialState(true))))
+          );
+        }
+
         cascade = cascade.pipe(
           switchMap(() => this.prorrogas.saveOrUpdate().pipe(tap(() => this.prorrogas.refreshInitialState(true))))
         );

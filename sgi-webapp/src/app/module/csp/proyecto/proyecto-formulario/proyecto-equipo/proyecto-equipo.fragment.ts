@@ -21,7 +21,7 @@ import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.s
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
+import { BehaviorSubject, forkJoin, from, Observable, of, Subject } from 'rxjs';
 import { concatMap, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export enum HelpIconClass {
@@ -51,14 +51,14 @@ interface HelpIcon {
   tooltip: string;
 }
 
-interface ErrorResponse {
-  isValid: boolean;
-  msgError: ErroresRequisitos;
-}
-
 export interface IProyectoEquipoListado {
   proyectoEquipo: IProyectoEquipo;
   help: HelpIcon;
+}
+
+export interface IFechaFinMaxUpdate {
+  fechaFinMaxCurrent: DateTime,
+  fechaFinMaxNew: DateTime
 }
 
 interface RequisitosConvocatoria {
@@ -72,6 +72,8 @@ interface RequisitosConvocatoria {
 
 export class ProyectoEquipoFragment extends Fragment {
   equipos$ = new BehaviorSubject<StatusWrapper<IProyectoEquipoListado>[]>([]);
+  readonly fechaFinMaxUpdate$ = new Subject<IFechaFinMaxUpdate>();
+
   msgToolTip: string;
   msgToolTipFechaObtencion: string;
   msgToolTipFechaMax: string;
@@ -166,6 +168,23 @@ export class ProyectoEquipoFragment extends Fragment {
             this.logger.error(error);
           }
         )
+      );
+
+      this.subscriptions.push(
+        this.fechaFinMaxUpdate$.subscribe(fechaFinMaxUpdate => {
+          this.equipos$.value.forEach(miembro => {
+            if (fechaFinMaxUpdate.fechaFinMaxCurrent === fechaFinMaxUpdate.fechaFinMaxNew) {
+              return;
+            }
+
+            if (miembro.value.proyectoEquipo.fechaFin
+              && (fechaFinMaxUpdate.fechaFinMaxCurrent?.toMillis() === miembro.value.proyectoEquipo.fechaFin?.toMillis()
+                || fechaFinMaxUpdate.fechaFinMaxCurrent < miembro.value.proyectoEquipo.fechaFin)) {
+              miembro.value.proyectoEquipo.fechaFin = fechaFinMaxUpdate.fechaFinMaxNew;
+              this.setChanges(true);
+            }
+          })
+        })
       );
     }
   }

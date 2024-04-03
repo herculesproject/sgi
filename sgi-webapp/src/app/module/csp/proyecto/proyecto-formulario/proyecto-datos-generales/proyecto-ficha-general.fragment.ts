@@ -29,6 +29,7 @@ import { DateValidator } from '@core/validators/date-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, from, merge, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
@@ -47,6 +48,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   solicitud: ISolicitud;
 
   readonly ultimaProrroga$: Subject<IProyectoProrroga> = new BehaviorSubject<IProyectoProrroga>(null);
+  readonly ultimaFechaFinProrrogas$ = new Subject<DateTime>();
 
   abiertoRequired: boolean;
   mostrarSolicitud = false;
@@ -119,9 +121,16 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.ultimaProrroga$.subscribe(
         (value) => {
           this.ultimaProrroga = value;
-          this.getFormGroup().controls.fechaFinDefinitiva.updateValueAndValidity();
         }
       )
+    );
+    this.subscriptions.push(
+      this.ultimaFechaFinProrrogas$.subscribe(fechaFin => {
+        if (this.getFormGroup().controls.fechaFinDefinitiva.value !== fechaFin) {
+          this.getFormGroup().controls.fechaFinDefinitiva.setValue(fechaFin);
+          this.getFormGroup().controls.fechaFinDefinitiva.updateValueAndValidity();
+        }
+      })
     );
     this.loadHistoricoProyectoIVA(key);
     return this.service.findById(key).pipe(
