@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,7 +72,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
     // Actualizar nueva fecha de fin
     if (proyectoProrroga.getFechaFin() != null) {
-      this.actualizarFechaFin(returnValue);
+      this.actualizarFechaFin(returnValue.getProyectoId(), returnValue.getFechaFin());
     }
 
     // Se recalcula el número de prórroga en función de la ordenación de la fecha de
@@ -120,7 +121,7 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
 
       // Actualizar nueva fecha de fin
       if (actualizarFechaFin) {
-        this.actualizarFechaFin(returnValue);
+        this.actualizarFechaFin(returnValue.getProyectoId(), returnValue.getFechaFin());
       }
 
       log.debug("update(ProyectoProrroga ProyectoProrrogaActualizar) - end");
@@ -169,8 +170,18 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     // concesión
     this.recalcularNumProrroga(proyectoProrrogaToDelete.getProyectoId());
 
-    log.debug("delete(Long id) - end");
+    if (proyectoProrrogaToDelete.getFechaFin() != null) {
+      Instant fechaFinNew = repository
+          .findAllByProyectoIdOrderByFechaConcesion(proyectoProrrogaToDelete.getProyectoId()).stream()
+          .map(ProyectoProrroga::getFechaFin)
+          .filter(fechaFin -> fechaFin != null)
+          .max(Comparator.naturalOrder())
+          .orElse(null);
 
+      this.actualizarFechaFin(proyectoProrrogaToDelete.getProyectoId(), fechaFinNew);
+    }
+
+    log.debug("delete(Long id) - end");
   }
 
   /**
@@ -234,16 +245,17 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
    * automáticamente la actualización de la fecha de fin al nuevo valor de fecha
    * de fin del proyecto.
    * 
-   * @param proyectoProrroga
+   * @param proyectoId  identificador del {@link Proyecto}
+   * @param fechaFinNew nueva fecha de fin
    */
-  private void actualizarFechaFin(ProyectoProrroga proyectoProrroga) {
-    log.debug("actualizarFechaFin(ProyectoProrroga proyectoProrroga) - start");
+  private void actualizarFechaFin(Long proyectoId, Instant fechaFinNew) {
+    log.debug("actualizarFechaFin(Long proyectoId, Instant fechaFinNew) - start");
 
-    Optional<Proyecto> proyecto = repository.getProyecto(proyectoProrroga.getId());
+    Optional<Proyecto> proyecto = proyectoRepository.findById(proyectoId);
 
     Assert.isTrue(
-        proyecto.isPresent() && proyectoProrroga.getFechaFin() != null
-            && proyectoProrroga.getFechaFin().compareTo(proyecto.get().getFechaInicio()) >= 0,
+        proyecto.isPresent() && ((fechaFinNew != null
+            && fechaFinNew.compareTo(proyecto.get().getFechaInicio()) >= 0) || fechaFinNew == null),
         "La fecha de fin debe ser posterior a la fecha de inicio del proyecto");
 
     // Se actualizan los miembros de equipo cuya fecha de fin coincida con la fecha
@@ -265,16 +277,17 @@ public class ProyectoProrrogaServiceImpl implements ProyectoProrrogaService {
     }
 
     if (CollectionUtils.isNotEmpty(miembros)) {
+      Instant fechaFinMiembrosNew = fechaFinNew != null ? fechaFinNew : fechaFin;
       miembros.stream().forEach(miembro -> {
-        miembro.setFechaFin(proyectoProrroga.getFechaFin());
+        miembro.setFechaFin(fechaFinMiembrosNew);
         proyectoEquipoRepository.save(miembro);
       });
     }
 
-    proyecto.get().setFechaFinDefinitiva(proyectoProrroga.getFechaFin());
+    proyecto.get().setFechaFinDefinitiva(fechaFinNew);
 
     proyectoRepository.save(proyecto.get());
-    log.debug("actualizarFechaFin(ProyectoProrroga proyectoProrroga) - end");
+    log.debug("actualizarFechaFin(Long proyectoId, Instant fechaFinNew) - end");
   }
 
   /**

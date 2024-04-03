@@ -74,8 +74,6 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(generarMockProyecto(1L)));
     BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaAnterior));
-    BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     BDDMockito.given(repository.save(proyectoProrroga)).will((InvocationOnMock invocation) -> {
       ProyectoProrroga proyectoProrrogaCreado = invocation.getArgument(0);
@@ -279,8 +277,6 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(proyectoProrroga));
     BDDMockito.given(repository.findFirstByIdNotAndProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any(),
         ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrrogaAnterior));
-    BDDMockito.given(repository.getProyecto(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoProrroga>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -502,6 +498,8 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrroga));
     BDDMockito.given(repository.findFirstByProyectoIdOrderByFechaConcesionDesc(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrroga));
+    BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockProyecto(1L)));
 
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.<Long>any());
 

@@ -114,6 +114,7 @@ public class ProyectoProyectoSgeController {
    * Reasigna {@link ProyectoProyectoSge#proyectoId} al nuevo
    * {@link ProyectoProyectoSge#proyectoSgeRef}.
    * 
+   * @param id                  Identificador del {@link ProyectoProyectoSge}
    * @param proyectoProyectoSge {@link ProyectoProyectoSge} con el
    *                            {@link ProyectoProyectoSge#proyectoSgeRef}
    *                            actualizado
