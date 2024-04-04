@@ -19,6 +19,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Comite_;
@@ -32,6 +33,8 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
+import org.crue.hercules.sgi.eti.model.Respuesta;
+import org.crue.hercules.sgi.eti.model.Respuesta_;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -332,7 +335,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     List<Predicate> predicates = new ArrayList<>();
     List<Predicate> predicatesCount = new ArrayList<>();
 
-    if (personaRefConsulta != null) {
+    if (ObjectUtils.isNotEmpty(personaRefConsulta)) {
       Predicate predicateMemoria = cb.in(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id))
           .value(getIdsPeticionEvaluacionMemoria(cb, cq, personaRefConsulta));
       Predicate predicateMemoriaCount = cb.in(rootCount.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id))
@@ -352,7 +355,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     }
 
     // Where
-    if (specs != null) {
+    if (ObjectUtils.isNotEmpty(specs)) {
       Predicate predicateSpecs = specs.toPredicate(root, cq, cb);
       predicates.add(predicateSpecs);
       Predicate predicateSpecsCount = specs.toPredicate(rootCount, cq, cb);

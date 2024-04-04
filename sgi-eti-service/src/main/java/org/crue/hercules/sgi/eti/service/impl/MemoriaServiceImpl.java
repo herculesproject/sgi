@@ -54,6 +54,7 @@ import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
+import org.crue.hercules.sgi.eti.repository.predicate.MemoriaPredicateResolver;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.ComunicadosService;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
@@ -307,7 +308,8 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Override
   public Page<MemoriaPeticionEvaluacion> findAll(String query, Pageable paging) {
     log.debug("findAll(String query,Pageable paging) - start");
-    Specification<Memoria> specs = MemoriaSpecifications.activos().and(SgiRSQLJPASupport.toSpecification(query));
+    Specification<Memoria> specs = MemoriaSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query, MemoriaPredicateResolver.getInstance()));
 
     Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findAllMemoriasEvaluaciones(specs, paging, null);
     log.debug("findAll(String query,Pageable paging) - end");
