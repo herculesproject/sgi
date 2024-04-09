@@ -110,6 +110,8 @@ public class InformeActaReportService extends SgiReportDocxService {
 
     dataReport.put("lugar", acta.getConvocatoriaReunion().getLugar());
 
+    dataReport.put("isVideoconferencia", acta.getConvocatoriaReunion().getVideoconferencia());
+
     LocalDateTime fechaInicio = LocalDateTime.now().withHour(acta.getHoraInicio()).withMinute(acta.getMinutoInicio());
     LocalDateTime fechaFin = LocalDateTime.now().withHour(acta.getHoraFin()).withMinute(acta.getMinutoFin());
 
