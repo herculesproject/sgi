@@ -42,6 +42,8 @@
       <column name="sge_modificacion" defaultValueBoolean="false" type="boolean" />
       <column name="sge_sector_iva" defaultValueBoolean="true" type="boolean" />
       <column name="sge_modificaciones" defaultValueBoolean="true" type="boolean" />
+      <column name="sge_sincronizacion_alta_proyecto" type="varchar(50)" />
+      <column name="sge_sincronizacion_modificacion_proyecto" type="varchar(50)" />
     </addColumn>
   </changeSet>
 

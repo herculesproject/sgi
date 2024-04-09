@@ -38,6 +38,11 @@ public class Configuracion extends BaseEntity {
     ELEGIBILIDAD;
   }
 
+  public enum ModoEjecucion {
+    SINCRONA,
+    ASINCRONA;
+  }
+
   public enum CardinalidadRelacionSgiSge {
     SGI_1_SGE_1,
     SGI_1_SGE_N,
@@ -121,7 +126,18 @@ public class Configuracion extends BaseEntity {
      * Habilitar la visualización de la la opción de menú "Modificaciones" dentro de
      * "Ejecución económica - Detalle de operaciones"
      */
-    DETALLE_OPERACIONES_MODIFICACIONES_ENABLED("detalleOperacionesModificacionesEnabled");
+    DETALLE_OPERACIONES_MODIFICACIONES_ENABLED("detalleOperacionesModificacionesEnabled"),
+    /**
+     * Determina si el alta del proyecto económico en el SGE se realiza de forma
+     * sincrona o de forma asíncrona
+     */
+    PROYECTO_SGE_ALTA_MODO_EJECUCION("proyectoSgeAltaModoEjecucion"),
+    /**
+     * Determina si la modificacion del proyecto económico en el SGE se realiza de
+     * forma
+     * sincrona o de forma asíncrona
+     */
+    PROYECTO_SGE_MODIFICACION_MODO_EJECUCION("proyectoSgeModificacionModoEjecucion");
 
     private final String key;
 
@@ -242,6 +258,23 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_modificaciones", columnDefinition = "boolean default true", nullable = false, unique = true)
   private Boolean detalleOperacionesModificacionesEnabled;
 
+  /**
+   * Determina si el alta del proyecto económico en el SGE se realiza de forma
+   * sincrona o de forma asíncrona
+   */
+  @Column(name = "sge_sincronizacion_alta_proyecto", nullable = false, unique = true)
+  @Enumerated(EnumType.STRING)
+  private ModoEjecucion proyectoSgeAltaModoEjecucion;
+
+  /**
+   * Determina si la modificacion del proyecto económico en el SGE se realiza de
+   * forma
+   * sincrona o de forma asíncrona
+   */
+  @Column(name = "sge_sincronizacion_modificacion_proyecto", nullable = false, unique = true)
+  @Enumerated(EnumType.STRING)
+  private ModoEjecucion proyectoSgeModificacionModoEjecucion;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -278,6 +311,10 @@ public class Configuracion extends BaseEntity {
         return this.getSectorIvaSgeEnabled();
       case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
         return this.getDetalleOperacionesModificacionesEnabled();
+      case PROYECTO_SGE_ALTA_MODO_EJECUCION:
+        return this.getProyectoSgeAltaModoEjecucion();
+      case PROYECTO_SGE_MODIFICACION_MODO_EJECUCION:
+        return this.getProyectoSgeModificacionModoEjecucion();
       default:
         return null;
     }
@@ -335,6 +372,10 @@ public class Configuracion extends BaseEntity {
         break;
       case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
         this.setDetalleOperacionesModificacionesEnabled(new Boolean(newValue));
+      case PROYECTO_SGE_ALTA_MODO_EJECUCION:
+        this.setProyectoSgeAltaModoEjecucion(ModoEjecucion.valueOf(newValue));
+      case PROYECTO_SGE_MODIFICACION_MODO_EJECUCION:
+        this.setProyectoSgeModificacionModoEjecucion(ModoEjecucion.valueOf(newValue));
     }
   }
 }
