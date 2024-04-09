@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
-import { CARDINALIDAD_RELACION_SGI_SGE_MAP, VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
+import { CARDINALIDAD_RELACION_SGI_SGE_MAP, MODO_EJECUCION_MAP, VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { Observable, of } from 'rxjs';
@@ -72,6 +72,8 @@ export enum ConfigCsp {
   CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED = "gastosJustificadosSgeEnabled",
   CSP_MODIFICACION_PROYECTO_SGE_ENABLED = "modificacionProyectoSgeEnabled",
   CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED = "partidasPresupuestariasSgeEnabled",
+  CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION = "proyectoSgeAltaModoEjecucion",
+  CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION = "proyectoSgeModificacionModoEjecucion",
   CSP_SECTOR_IVA_SGE_ENABLED = "sectorIvaSgeEnabled",
   CSP_VALIDACION_CLASIFICACION_GASTOS = 'validacionClasificacionGastos'
 }
@@ -97,6 +99,8 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_PRPT, { type: ConfigType.FILE, label: marker(`adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_PRPT`), module: ConfigModule.CNF }],
     [ConfigCsp.TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.integracion-sistemas-corporativos`), module: ConfigModule.NONE }],
     [ConfigCsp.CSP_CARDINALIDAD_RELACION_SGI_SGE, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE`), options: this.getCardinalidadRelacionSgiSgeValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE.description`) }],
+    [ConfigCsp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION`), options: this.getModosEjecucionValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION.description`) }],
+    [ConfigCsp.CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION`), options: this.getModosEjecucionValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION.description`) }],
     [ConfigCsp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED.description`) }],
     [ConfigCsp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_MODIFICACION_PROYECTO_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_MODIFICACION_PROYECTO_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_MODIFICACION_PROYECTO_SGE_ENABLED.description`) }],
@@ -190,6 +194,16 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     const keyValueList: KeyValue<string, string>[] = [];
 
     for (const [key, value] of CARDINALIDAD_RELACION_SGI_SGE_MAP.entries()) {
+      keyValueList.push({ key, value });
+    }
+
+    return of(keyValueList);
+  }
+
+  private getModosEjecucionValues(): Observable<KeyValue<string, string>[]> {
+    const keyValueList: KeyValue<string, string>[] = [];
+
+    for (const [key, value] of MODO_EJECUCION_MAP.entries()) {
       keyValueList.push({ key, value });
     }
 

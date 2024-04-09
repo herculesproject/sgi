@@ -13,11 +13,21 @@ export enum CardinalidadRelacionSgiSge {
   SGI_N_SGE_N = 'SGI_N_SGE_N'
 }
 
+export enum ModoEjecucion {
+  ASINCRONA = 'ASINCRONA',
+  SINCRONA = 'SINCRONA'
+}
+
 export const CARDINALIDAD_RELACION_SGI_SGE_MAP: Map<CardinalidadRelacionSgiSge, string> = new Map([
   [CardinalidadRelacionSgiSge.SGI_1_SGE_1, marker(`csp.cardinalidad-relacion-sgi-sge.SGI_1_SGE_1`)],
   [CardinalidadRelacionSgiSge.SGI_1_SGE_N, marker(`csp.cardinalidad-relacion-sgi-sge.SGI_1_SGE_N`)],
   [CardinalidadRelacionSgiSge.SGI_N_SGE_1, marker(`csp.cardinalidad-relacion-sgi-sge.SGI_N_SGE_1`)],
   [CardinalidadRelacionSgiSge.SGI_N_SGE_N, marker(`csp.cardinalidad-relacion-sgi-sge.SGI_N_SGE_N`)]
+]);
+
+export const MODO_EJECUCION_MAP: Map<ModoEjecucion, string> = new Map([
+  [ModoEjecucion.ASINCRONA, marker(`csp.modo-ejecucion.ASINCRONA`)],
+  [ModoEjecucion.SINCRONA, marker(`csp.modo-ejecucion.SINCRONA`)]
 ]);
 
 export const VALIDACION_CLASIFICACION_GASTOS_MAP: Map<ValidacionClasificacionGastos, string> = new Map([
@@ -60,4 +70,8 @@ export interface IConfiguracion {
   sectorIvaSgeEnabled: boolean;
   /** Habilitar la visualización de la la opción de menú "Modificaciones" dentro de "Ejecución económica - Detalle de operaciones" */
   detalleOperacionesModificacionesEnabled: boolean;
+  /** Determina si el alta del proyecto económico en el SGE se realiza de forma sincrona o de forma asíncrona */
+  proyectoSgeAltaModoEjecucion: ModoEjecucion;
+  /** Determina si la modificacion del proyecto económico en el SGE se realiza de forma sincrona o de forma asíncrona */
+  proyectoSgeModificacionModoEjecucion: ModoEjecucion;
 }

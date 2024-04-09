@@ -61,6 +61,14 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     return this._altaBuscadorSgeEnabled;
   }
 
+  get idsSolicitudesProyectoAltaPendientesAsString(): string {
+    return this.formPart.solicitudesProyectoAltaPendientes.map(s => s.id).join(', ');
+  }
+
+  get idsSgeSolicitudesProyectoModificacionPendientesAsString(): string {
+    return this.formPart.solicitudesProyectoModificacionPendientes.map(s => s.proyectoSgeRef).join(', ');
+  }
+
   constructor(
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,

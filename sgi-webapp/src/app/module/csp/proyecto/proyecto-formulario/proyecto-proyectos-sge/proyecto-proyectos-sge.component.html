@@ -1,6 +1,13 @@
 <sgi-fragment
   title="{{'menu.csp.proyectos.configuracion-economica' | translate}} - {{'title.csp.proyecto-proyecto-sge' | translate}}">
 
+  <sgi-info-message *ngIf="formPart.showInfoSolicitudProyectoAltaPendiente"
+    message="{{'info.csp.proyecto-proyecto-sge.alta-pendiente' | translate:{count: formPart.solicitudesProyectoAltaPendientes.length, ids: idsSolicitudesProyectoAltaPendientesAsString} }}">
+  </sgi-info-message>
+  <sgi-info-message *ngIf="formPart.showInfoSolicitudProyectoModificacionPendiente"
+    message="{{'info.csp.proyecto-proyecto-sge.modificacion-pendiente' | translate:{count: formPart.solicitudesProyectoModificacionPendientes.length, idsSge: idsSgeSolicitudesProyectoModificacionPendientesAsString} }}">
+  </sgi-info-message>
+
   <div class="mat-elevation-z4">
     <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
 

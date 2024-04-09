@@ -2,13 +2,15 @@ import { CardinalidadRelacionSgiSge } from '@core/models/csp/configuracion';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
+import { Estado, ISolicitudProyectoSge } from '@core/models/sge/solicitud-proyecto-sge';
 import { Fragment } from '@core/services/action-service';
 import { ConfigService } from '@core/services/csp/config.service';
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
+import { SolicitudProyectoSgeService } from '@core/services/sge/solicitud-proyecto-sge/solicitud-proyecto-sge.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, concat, forkJoin, from, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, concat, forkJoin, from, merge, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export class ProyectoProyectosSgeFragment extends Fragment {
@@ -18,6 +20,8 @@ export class ProyectoProyectosSgeFragment extends Fragment {
   private _cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
   private _disableAddIdentificadorSge: boolean;
   private _isModificacionProyectoSgeEnabled: boolean;
+  private _isSolicitudProyectoAltaPendiente: boolean;
+  private _solicitudesProyectoPendientes: ISolicitudProyectoSge[];
 
   get disableAddIdentificadorSge(): boolean {
     return this._disableAddIdentificadorSge;
@@ -27,11 +31,30 @@ export class ProyectoProyectosSgeFragment extends Fragment {
     return this._isModificacionProyectoSgeEnabled;
   }
 
+  get showInfoSolicitudProyectoAltaPendiente(): boolean {
+    return this._isSolicitudProyectoAltaPendiente
+      && (this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
+        || this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1);
+  }
+
+  get showInfoSolicitudProyectoModificacionPendiente(): boolean {
+    return !!this._solicitudesProyectoPendientes?.length;
+  }
+
+  get solicitudesProyectoAltaPendientes(): ISolicitudProyectoSge[] {
+    return this._solicitudesProyectoPendientes?.filter(solicitud => this.isSolicitudProyectoAltaPendiente(solicitud)) ?? [];
+  }
+
+  get solicitudesProyectoModificacionPendientes(): ISolicitudProyectoSge[] {
+    return this._solicitudesProyectoPendientes?.filter(solicitud => this.isSolicitudProyectoModificacionPendiente(solicitud)) ?? [];
+  }
+
   constructor(
     key: number,
     private service: ProyectoProyectoSgeService,
     private proyectoService: ProyectoService,
     private proyectoSgeService: ProyectoSgeService,
+    private solicitudProyectoSgeService: SolicitudProyectoSgeService,
     private configService: ConfigService,
     public readonly: boolean,
     public isVisor: boolean
@@ -72,19 +95,22 @@ export class ProyectoProyectosSgeFragment extends Fragment {
                 })
               ),
               cardinalidadRelacionSgiSge: this.configService.getCardinalidadRelacionSgiSge(),
-              isModificacionProyectoSgeEnabled: this.configService.isModificacionProyectoSgeEnabled()
+              isModificacionProyectoSgeEnabled: this.configService.isModificacionProyectoSgeEnabled(),
+              solicitudesPendientes: this.getSolicitudesProyectoPendientes(this.getKey() as number)
             })
           )
-        ).subscribe(({ cardinalidadRelacionSgiSge, isModificacionProyectoSgeEnabled, proyectosSge }) => {
+        ).subscribe(({ cardinalidadRelacionSgiSge, isModificacionProyectoSgeEnabled, proyectosSge, solicitudesPendientes }) => {
           this._cardinalidadRelacionSgiSge = cardinalidadRelacionSgiSge;
           this._isModificacionProyectoSgeEnabled = isModificacionProyectoSgeEnabled;
+          this._solicitudesProyectoPendientes = solicitudesPendientes;
+          this._isSolicitudProyectoAltaPendiente = this.containsSolicitudProyectoAltaPendiente(solicitudesPendientes);
           this.proyectosSge$.next(proyectosSge);
         })
       );
 
       this.subscriptions.push(
         this.proyectosSge$.subscribe(proyectosSge => {
-          this._disableAddIdentificadorSge = (proyectosSge?.length ?? 0) > 0
+          this._disableAddIdentificadorSge = ((proyectosSge?.length ?? 0) > 0 || this._isSolicitudProyectoAltaPendiente)
             && (this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
               || this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1);
         })
@@ -145,6 +171,45 @@ export class ProyectoProyectosSgeFragment extends Fragment {
   private isSaveOrUpdateComplete(): boolean {
     const touched: boolean = this.proyectosSge$.value.some((wrapper) => wrapper.touched);
     return !(touched);
+  }
+
+  private getSolicitudesProyectoPendientes(proyectoId: number): Observable<ISolicitudProyectoSge[]> {
+    return forkJoin({
+      altaAsync: this.configService.isProyectoSgeAltaModoEjecucionAsync(),
+      modificacionAsync: this.configService.isProyectoSgeModificacionModoEjecucionAsync()
+    }).pipe(
+      switchMap(({ altaAsync, modificacionAsync }) => {
+        if (!altaAsync && !modificacionAsync) {
+          return of([]);
+        }
+
+        return this.solicitudProyectoSgeService.findPendientes(proyectoId);
+      })
+    );
+  }
+
+  private isSolicitudProyectoAltaPendiente(solicitud: ISolicitudProyectoSge): boolean {
+    return [
+      Estado.ALTA_ACEPTADA_SGE,
+      Estado.ALTA_ERROR_SGI,
+      Estado.ALTA_RECHAZADA_SGE,
+      Estado.ALTA_SOLICITUD_SGI
+    ].includes(solicitud.estado);
+  }
+
+  private isSolicitudProyectoModificacionPendiente(solicitud: ISolicitudProyectoSge): boolean {
+    return [
+      Estado.MODIFICACION_ACEPTADA_SGE,
+      Estado.MODIFICACION_RECHAZADA_SGE,
+      Estado.MODIFICACION_SOLICITUD_SGI,
+      Estado.ALTA_SOLICITUD_SGI,
+      Estado.REASIGNACION_ACEPTADA_SGE,
+      Estado.REASIGNACION_ERROR_SGI
+    ].includes(solicitud.estado);
+  }
+
+  private containsSolicitudProyectoAltaPendiente(solicitudes: ISolicitudProyectoSge[]): boolean {
+    return solicitudes?.some(solicitud => this.isSolicitudProyectoAltaPendiente(solicitud));
   }
 
 }

@@ -55,6 +55,7 @@ import { PartidaPresupuestariaGastoSgeService } from '@core/services/sge/partida
 import { PartidaPresupuestariaIngresoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-ingreso-sge.service';
 import { PeriodoAmortizacionService } from '@core/services/sge/periodo-amortizacion/periodo-amortizacion.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
+import { SolicitudProyectoSgeService } from '@core/services/sge/solicitud-proyecto-sge/solicitud-proyecto-sge.service';
 import { DatosContactoService } from '@core/services/sgemp/datos-contacto/datos-contacto.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
@@ -301,6 +302,7 @@ export class ProyectoActionService extends ActionService {
     private readonly relacionService: RelacionService,
     private readonly rolSocioService: RolSocioService,
     private readonly sgiAuthService: SgiAuthService,
+    private readonly solicitudProyectoSgeService: SolicitudProyectoSgeService,
     private readonly solicitudService: SolicitudService,
     private readonly tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private readonly tipoFinalidadService: TipoFinalidadService,
@@ -354,6 +356,7 @@ export class ProyectoActionService extends ActionService {
         proyectoProyectoSgeService,
         proyectoService,
         proyectoSgeService,
+        solicitudProyectoSgeService,
         configService,
         this.readonly,
         this.data?.isVisor
@@ -445,6 +448,7 @@ export class ProyectoActionService extends ActionService {
           proyectoProyectoSgeService,
           proyectoService,
           proyectoSgeService,
+          solicitudProyectoSgeService,
           configService,
           this.readonly,
           this.data?.isVisor

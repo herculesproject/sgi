@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConfigValue } from '@core/models/cnf/config-value';
-import { CardinalidadRelacionSgiSge, IConfiguracion } from '@core/models/csp/configuracion';
+import { CardinalidadRelacionSgiSge, IConfiguracion, ModoEjecucion } from '@core/models/csp/configuracion';
 import { environment } from '@env';
 import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -97,6 +97,18 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
   isSectorIvaSgeEnabled(): Observable<boolean> {
     return this.findById(ConfigCsp.CSP_SECTOR_IVA_SGE_ENABLED).pipe(
       map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
+  isProyectoSgeAltaModoEjecucionAsync(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION).pipe(
+      map(configValue => configValue?.value && configValue.value === ModoEjecucion.ASINCRONA)
+    );
+  }
+
+  isProyectoSgeModificacionModoEjecucionAsync(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION).pipe(
+      map(configValue => configValue?.value && configValue.value === ModoEjecucion.ASINCRONA)
     );
   }
 
