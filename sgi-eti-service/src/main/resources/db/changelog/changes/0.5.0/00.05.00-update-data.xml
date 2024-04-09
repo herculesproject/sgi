@@ -81,4 +81,10 @@
       3 and padre.orden = 7 and a.orden = 15 )</sql>
   </changeSet>
 
+  <changeSet context="!test" author="master" id="00.05.00-convocatoria-reunion">
+    <update tableName="convocatoria_reunion">
+      <column name="videoconferencia" valueBoolean="false"></column>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>

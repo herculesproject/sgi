@@ -1369,6 +1369,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     convocatoriaReunion.setComite(comite);
     convocatoriaReunion.setFechaEvaluacion(Instant.now().plus(5, ChronoUnit.DAYS));
     convocatoriaReunion.setFechaLimite(Instant.now().plus(4, ChronoUnit.DAYS));
+    convocatoriaReunion.setVideoconferencia(false);
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);

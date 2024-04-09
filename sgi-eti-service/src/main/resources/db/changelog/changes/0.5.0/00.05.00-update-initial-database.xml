@@ -30,17 +30,18 @@
       <column name="resumen" type="CLOB" />
     </addColumn>
 
-    <sql> 
-      UPDATE ${schemaPrefix}evaluador SET resumen=resumen_old 
-    </sql>
+    <sql> UPDATE ${schemaPrefix}evaluador SET resumen=resumen_old </sql>
 
     <dropColumn columnName="resumen_old" tableName="evaluador" />
   </changeSet>
 
   <changeSet author="user (generated)" id="00.05.00-3">
-    <renameColumn tableName="peticion_evaluacion" newColumnName="dis_metodologico_old" oldColumnName="dis_metodologico" />
-    <renameColumn tableName="peticion_evaluacion" newColumnName="objetivos_old" oldColumnName="objetivos" />
-    <renameColumn tableName="peticion_evaluacion" newColumnName="resumen_old" oldColumnName="resumen" />
+    <renameColumn tableName="peticion_evaluacion" newColumnName="dis_metodologico_old"
+      oldColumnName="dis_metodologico" />
+    <renameColumn tableName="peticion_evaluacion" newColumnName="objetivos_old"
+      oldColumnName="objetivos" />
+    <renameColumn tableName="peticion_evaluacion" newColumnName="resumen_old"
+      oldColumnName="resumen" />
 
     <addColumn tableName="peticion_evaluacion">
       <column name="dis_metodologico" type="CLOB" />
@@ -48,17 +49,18 @@
       <column name="resumen" type="CLOB" />
     </addColumn>
 
-    <sql>
-      UPDATE ${schemaPrefix}peticion_evaluacion SET
-        dis_metodologico=dis_metodologico_old,
-        objetivos=objetivos_old,
-        resumen=resumen_old
-    </sql>
+    <sql> UPDATE ${schemaPrefix}peticion_evaluacion SET dis_metodologico=dis_metodologico_old,
+      objetivos=objetivos_old, resumen=resumen_old </sql>
 
     <dropColumn columnName="dis_metodologico_old" tableName="peticion_evaluacion" />
     <dropColumn columnName="objetivos_old" tableName="peticion_evaluacion" />
     <dropColumn columnName="resumen_old" tableName="peticion_evaluacion" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="00.05.00-4">
+    <addColumn tableName="convocatoria_reunion">
+      <column name="videoconferencia" type="BOOLEAN" />
+    </addColumn>
+  </changeSet>
 
 </databaseChangeLog>

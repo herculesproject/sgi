@@ -59,6 +59,8 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_HORA_INICIO_SEGUNDA = "ETI_CONVOCATORIA_REUNION_HORA_INICIO_SEGUNDA";
   private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_MINUTO_INICIO_SEGUNDA = "ETI_CONVOCATORIA_REUNION_MINUTO_INICIO_SEGUNDA";
   private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_ORDEN_DEL_DIA = "ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA";
+  private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_LUGAR = "ETI_CONVOCATORIA_REUNION_LUGAR";
+  private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_VIDEOCONFERENCIA = "ETI_CONVOCATORIA_REUNION_VIDEOCONFERENCIA";
 
   private static final String TEMPLATE_ETI_COM_ACTA_SIN_REV_MINIMA = "ETI_COM_ACTA_SIN_REV_MINIMA";
   private static final String TEMPLATE_ETI_COM_ACTA_SIN_REV_MINIMA_PARAM = TEMPLATE_ETI_COM_ACTA_SIN_REV_MINIMA
@@ -278,7 +280,13 @@ public class SgiApiComService extends SgiApiBaseService {
             minutoSegunda),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_ORDEN_DEL_DIA,
-            convocatoriaReunion.getOrdenDia())));
+            convocatoriaReunion.getOrdenDia()),
+        new EmailParam(
+            TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_LUGAR,
+            convocatoriaReunion.getLugar()),
+        new EmailParam(
+            TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_VIDEOCONFERENCIA,
+            convocatoriaReunion.getVideoconferencia().toString())));
 
     final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL,
         httpMethod, request,
