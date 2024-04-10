@@ -10,6 +10,7 @@
 
   <changeSet author="user (generated)" id="00.05.00-1">
     <addNotNullConstraint tableName="convocatoria_reunion" columnName="videoconferencia" columnDataType="BOOLEAN" />
+    <dropNotNullConstraint tableName="convocatoria_reunion" columnName="lugar" columnDataType="VARCHAR(250)" />
   </changeSet>
 
 </databaseChangeLog>
