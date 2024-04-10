@@ -333,4 +333,13 @@ public interface MemoriaService {
    */
   List<Memoria> findAllMemoriasAsignablesPeticionEvaluacion(Long idPeticionEvaluacion);
 
+  /**
+   * Procesa la notificacion de revision minima y actualiza el estado de la
+   * {@link Memoria} a EN_EVALUACION_REVISION_MINIMA, crea la evaluacion de
+   * revision minima y envia un comunicado para notificar el cambio
+   * 
+   * @param memoriaId Identificador de la memoria
+   */
+  void notificarRevisionMinima(Long memoriaId);
+
 }

@@ -33,8 +33,6 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
-import org.crue.hercules.sgi.eti.model.Respuesta;
-import org.crue.hercules.sgi.eti.model.Respuesta_;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -231,15 +229,15 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Join<Memoria, Retrospectiva> joinMemoriaRetrospectiva = root.join(Memoria_.retrospectiva, JoinType.LEFT);
 
     Predicate memoriasSecretaria = cb.equal(joinMemoriaTipoEstado.get(TipoEstadoMemoria_.id),
-        Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA);
+        TipoEstadoMemoria.Tipo.EN_SECRETARIA);
     Predicate retrospectivaSecretaria = cb.equal(
         joinMemoriaRetrospectiva.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id),
-        Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA);
+        EstadoRetrospectiva.Tipo.EN_SECRETARIA);
     Predicate revMinima = cb.equal(joinMemoriaTipoEstado.get(TipoEstadoMemoria_.id),
-        Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA);
+        TipoEstadoMemoria.Tipo.EN_SECRETARIA_REVISION_MINIMA);
     Predicate memoriasSecretariaSeguimientoAnualYFinal = joinMemoriaTipoEstado.get(TipoEstadoMemoria_.id)
-        .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL,
-            Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL));
+        .in(Arrays.asList(TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_ANUAL,
+            TipoEstadoMemoria.Tipo.EN_SECRETARIA_SEGUIMIENTO_FINAL));
     Predicate memoriasPredicate = cb.or(memoriasSecretaria, retrospectivaSecretaria, revMinima,
         memoriasSecretariaSeguimientoAnualYFinal);
 
@@ -416,11 +414,9 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     MemoriaPredicateBuilder memoriaPredicateBuilder = MemoriaPredicateBuilder.builder();
 
-    final int estadoMemoria = memoria.getEstadoActual().getId().intValue();
-
-    switch (estadoMemoria) {
-      case Constantes.ESTADO_MEMORIA_COMPLETADA:
-      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA:
+    switch (memoria.getEstadoActual().getTipo()) {
+      case COMPLETADA:
+      case EN_SECRETARIA:
         if (!memoria.isActivo()) {
           return new FechasMemoria();
         }
@@ -434,35 +430,35 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
             rootConvocatoriaReunion, cq);
         prepareCriteriaWithConvocatoriaReunionUnlinked(cb, cq, rootConvocatoriaReunion, memoriaPredicateBuilder);
         break;
-      case Constantes.ESTADO_MEMORIA_EN_EVALUACION:
-      case Constantes.ESTADO_MEMORIA_PENDIENTE_CORRECCIONES:
-      case Constantes.ESTADO_MEMORIA_NO_PROCEDE_EVALUAR:
-      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA:
-      case Constantes.ESTADO_MEMORIA_FAVORABLE_PENDIENTE_MOD_MINIMAS:
-      case Constantes.ESTADO_MEMORIA_FIN_EVALUACION:
+      case EN_EVALUACION:
+      case PENDIENTE_CORRECCIONES:
+      case NO_PROCEDE_EVALUAR:
+      case EN_EVALUACION_REVISION_MINIMA:
+      case FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS:
+      case FIN_EVALUACION:
         memoriaPredicateBuilder.filterWithTipoEvaluacionEqualsTo(cb, root, TipoEvaluacion.Tipo.MEMORIA.getId());
         memoriaPredicateBuilder.filterWithLastVersion(cb, root, memoria.getId(), cq);
         prepareCriteriaWithConvocatoriaReunionLinked(cb, cq, root, memoriaPredicateBuilder, memoria.getId());
         break;
-      case Constantes.ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_FINAL:
-      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL:
-      case Constantes.ESTADO_MEMORIA_COMPLETADA_SEGUIMIENTO_ANUAL:
-      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL:
+      case COMPLETADA_SEGUIMIENTO_FINAL:
+      case EN_SECRETARIA_SEGUIMIENTO_FINAL:
+      case COMPLETADA_SEGUIMIENTO_ANUAL:
+      case EN_SECRETARIA_SEGUIMIENTO_ANUAL:
         this.resolveNextEvaluationPredicatesWhereConvocatoriaReunionIsOfTypeSeguimiento(memoria, cb,
             rootConvocatoriaReunion, memoriaPredicateBuilder, cq);
         prepareCriteriaWithConvocatoriaReunionUnlinked(cb, cq, rootConvocatoriaReunion, memoriaPredicateBuilder);
         break;
-      case Constantes.ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL:
-      case Constantes.ESTADO_MEMORIA_SOLICITUD_MODIFICACION:
-      case Constantes.ESTADO_MEMORIA_FIN_EVALUACION_SEGUIMIENTO_ANUAL:
+      case EN_EVALUACION_SEGUIMIENTO_ANUAL:
+      case SOLICITUD_MODIFICACION:
+      case FIN_EVALUACION_SEGUIMIENTO_ANUAL:
         resolveNextEvaluationPredicatesForAnyConvocatoriaReunionType(memoria, cb, root, memoriaPredicateBuilder,
             TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL.getId(), cq);
         prepareCriteriaWithConvocatoriaReunionLinked(cb, cq, root, memoriaPredicateBuilder, memoria.getId());
         break;
-      case Constantes.ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL:
-      case Constantes.ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES:
-      case Constantes.ESTADO_MEMORIA_EN_ACLARACION_SEGUIMIENTO_FINAL:
-      case Constantes.ESTADO_MEMORIA_FIN_EVALUACION_SEGUIMIENTO_FINAL:
+      case EN_EVALUACION_SEGUIMIENTO_FINAL:
+      case EN_SECRETARIA_SEGUIMIENTO_FINAL_ACLARACIONES:
+      case EN_ACLARACION_SEGUIMIENTO_FINAL:
+      case FIN_EVALUACION_SEGUIMIENTO_FINAL:
         resolveNextEvaluationPredicatesForAnyConvocatoriaReunionType(memoria, cb, root, memoriaPredicateBuilder,
             TipoEvaluacion.Tipo.SEGUIMIENTO_FINAL.getId(), cq);
         prepareCriteriaWithConvocatoriaReunionLinked(cb, cq, root, memoriaPredicateBuilder, memoria.getId());

@@ -603,12 +603,14 @@ public class MemoriaServiceImpl implements MemoriaService {
     Assert.isTrue(Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_SECRETARIA)
         || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_SECRETARIA_REVISION_MINIMA)
         || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.ARCHIVADA)
-        || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_EVALUACION),
+        || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_EVALUACION)
+        || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_EVALUACION_REVISION_MINIMA),
         "El estado actual de la memoria no es el correcto para recuperar el estado anterior");
 
     // Si la memoria se cambió al estado anterior estando en evaluación, se
     // eliminará la evaluación.
-    if (Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_EVALUACION)) {
+    if (Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_EVALUACION)
+        || Objects.equals(tipoEstadoMemoriaActual, TipoEstadoMemoria.Tipo.EN_EVALUACION_REVISION_MINIMA)) {
       Evaluacion evaluacion = evaluacionRepository
           .findFirstByMemoriaIdAndActivoTrueOrderByVersionDescCreationDateDesc(memoria.getId()).orElse(null);
 
@@ -727,6 +729,34 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   /**
+   * Procesa la notificacion de revision minima y actualiza el estado de la
+   * {@link Memoria} a EN_EVALUACION_REVISION_MINIMA, crea la evaluacion de
+   * revision minima y envia un comunicado para notificar el cambio
+   * 
+   * @param memoriaId Identificador de la memoria
+   */
+  @Transactional
+  @Override
+  public void notificarRevisionMinima(Long memoriaId) {
+    log.debug("notificarRevisionMinima({}) - start", memoriaId);
+
+    Memoria memoria = memoriaRepository.findById(memoriaId).orElseThrow(() -> new MemoriaNotFoundException(memoriaId));
+
+    updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_EVALUACION_REVISION_MINIMA.getId());
+    Evaluacion evaluacion = this.crearEvaluacionRevMinima(memoria, TipoEvaluacion.Tipo.MEMORIA);
+
+    try {
+      this.comunicadosService.enviarComunicadoCambiosEvaluacionEti(evaluacion.getEvaluador1().getPersonaRef(),
+          evaluacion.getEvaluador2().getPersonaRef(),
+          evaluacion.getMemoria().getComite().getNombreInvestigacion(), evaluacion.getMemoria().getNumReferencia(),
+          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
+      log.debug("notificarRevisionMinima({})  - end", memoriaId);
+    } catch (Exception e) {
+      log.debug("notificarRevisionMinima({}) - error al enviar comunicado", memoriaId, e);
+    }
+  }
+
+  /**
    * Actualiza el estado de la {@link Memoria} al estado en secretaria
    * correspondiente al {@link TipoEvaluacion} y {@link TipoEstadoMemoria}
    * actuales de la {@link Memoria}.
@@ -780,7 +810,6 @@ public class MemoriaServiceImpl implements MemoriaService {
         updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA.getId());
         break;
       case FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS:
-        crearEvaluacionRevMinima = true;
         updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.EN_SECRETARIA_REVISION_MINIMA.getId());
         break;
       case COMPLETADA_SEGUIMIENTO_ANUAL:
@@ -829,7 +858,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    * @param memoria        la {@link Memoria} para la que se crea la evaluacion
    * @param tipoEvaluacion el tipo de {@link Evaluacion}
    */
-  private void crearEvaluacionRevMinima(Memoria memoria, TipoEvaluacion.Tipo tipoEvaluacion) {
+  private Evaluacion crearEvaluacionRevMinima(Memoria memoria, TipoEvaluacion.Tipo tipoEvaluacion) {
     log.debug("crearEvaluacionRevMinima(Memoria memoria, TipoEvaluacion.Tipo tipoEvaluacion) - start");
     Evaluacion evaluacion = evaluacionRepository
         .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), tipoEvaluacion.getId())
@@ -843,9 +872,10 @@ public class MemoriaServiceImpl implements MemoriaService {
     evaluacionNueva.setDictamen(null);
     evaluacionNueva.setTipoEvaluacion(TipoEvaluacion.builder().id(tipoEvaluacion.getId()).build());
     evaluacionNueva.setActivo(true);
-    evaluacionRepository.save(evaluacionNueva);
+    Evaluacion evaluacionCreated = evaluacionRepository.save(evaluacionNueva);
 
     log.debug("crearEvaluacionRevMinima(Memoria memoria, TipoEvaluacion.Tipo tipoEvaluacion) - end");
+    return evaluacionCreated;
   }
 
   private void crearInforme(Memoria memoria, Long tipoEvaluacion) {

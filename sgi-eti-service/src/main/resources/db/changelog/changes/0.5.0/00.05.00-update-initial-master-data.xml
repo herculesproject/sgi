@@ -279,4 +279,12 @@
     </update>
   </changeSet>
 
+  <changeSet context="!test" author="master" id="00.05.00-tipo-estado-memoria">
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" valueNumeric="26" />
+      <column name="nombre" value="En evaluación revisión mínima" />
+      <column name="activo" valueBoolean="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

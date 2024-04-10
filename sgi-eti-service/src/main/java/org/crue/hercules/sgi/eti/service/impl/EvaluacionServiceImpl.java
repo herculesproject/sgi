@@ -52,8 +52,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -495,7 +493,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
           switch (evaluacionActualizar.getMemoria().getEstadoActual().getTipo()) {
             // memoria
             case EN_EVALUACION:
-            case EN_SECRETARIA_REVISION_MINIMA:
+            case EN_EVALUACION_REVISION_MINIMA:
               memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(),
                   TipoEstadoMemoria.Tipo.FIN_EVALUACION.getId());
               break;
@@ -863,30 +861,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       log.error(
           "sendComunicadoDictamenEvaluacionSeguimientoRevMin(evaluacionId: {}) - Error al enviar el comunicado",
           evaluacion.getId(), e);
-    }
-  }
-
-  /**
-   * Permite enviar el comunicado de {@link Evaluacion}
-   *
-   * @param idEvaluacion Id del {@link Evaluacion}.
-   * @return true si puede ser enviado / false si no puede ser enviado
-   */
-  @Override
-  @Transactional
-  public Boolean enviarComunicado(Long idEvaluacion) {
-    log.debug("enviarComunicado(Long idEvaluacion) - start");
-    Evaluacion evaluacion = this.findById(idEvaluacion);
-    try {
-      this.comunicadosService.enviarComunicadoCambiosEvaluacionEti(evaluacion.getEvaluador1().getPersonaRef(),
-          evaluacion.getEvaluador2().getPersonaRef(),
-          evaluacion.getMemoria().getComite().getNombreInvestigacion(), evaluacion.getMemoria().getNumReferencia(),
-          evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
-      log.debug("enviarComunicado(Long idEvaluacion) - end");
-      return true;
-    } catch (JsonProcessingException e) {
-      log.debug("Error - enviarComunicado(Long idEvaluacion)", e);
-      return false;
     }
   }
 

@@ -80,6 +80,7 @@ public class MemoriaController {
   public static final String PATH_LAST_EVALUACION_PENDIENTE_CORRECCIONES = PATH_ID + PATH_DELIMITER
       + "last-evaluacion-pendiente-correcciones";
   public static final String PATH_RESPUESTAS = PATH_ID + PATH_DELIMITER + "respuestas";
+  public static final String PATH_NOTIFICAR_REV_MINIMA = PATH_ID + PATH_DELIMITER + "notificar-revision-minima";
 
   /** Memoria service */
   private final MemoriaService service;
@@ -957,6 +958,21 @@ public class MemoriaController {
     List<RespuestaOutput> result = respuestaConverter.convert(respuestaService.findByMemoriaId(id));
     log.debug("getRespuestasMemoria({}) - end", id);
     return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  /**
+   * Procesa la notificacion de revision minima y actualiza el estado de la
+   * {@link Memoria} a EN_EVALUACION_REVISION_MINIMA, crea la evaluacion de
+   * revision minima y envia un comunicado para notificar el cambio
+   * 
+   * @param id Identificador de la memoria
+   */
+  @PatchMapping(PATH_NOTIFICAR_REV_MINIMA)
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-MEM-CEST')")
+  public void notificarRevisionMinima(@PathVariable Long id) {
+    log.debug("notificarRevisionMinima(Long id) - start");
+    service.notificarRevisionMinima(id);
+    log.debug("notificarRevisionMinima(Long id) - end");
   }
 
 }
