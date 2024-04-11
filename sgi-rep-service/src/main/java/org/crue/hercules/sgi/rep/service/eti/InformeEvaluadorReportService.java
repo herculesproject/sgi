@@ -56,7 +56,8 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
 
     Long dictamenId = evaluacion.getDictamen() != null ? evaluacion.getDictamen().getId() : null;
 
-    dataReport.put("bloqueApartados", generarBloqueApartados(dictamenId, getInformeEvaluador(evaluacion.getId())));
+    dataReport.put("bloqueApartados", generarBloqueApartados(dictamenId, getInformeEvaluador(evaluacion.getId()),
+        "rep-eti-bloque-apartado-ficha-evaluador-docx"));
 
     return compileReportData(path, dataReport);
   }

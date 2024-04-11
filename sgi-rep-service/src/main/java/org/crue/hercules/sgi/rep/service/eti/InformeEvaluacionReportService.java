@@ -131,7 +131,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
 
     dataReport.put("bloqueApartados",
         generarBloqueApartados(evaluacion.getDictamen().getId(),
-            getInformeEvaluacion(evaluacion.getId())));
+            getInformeEvaluacion(evaluacion.getId()), "rep-eti-bloque-apartado-docx"));
 
     return compileReportData(path, dataReport);
   }
