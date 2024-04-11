@@ -102,6 +102,10 @@ export class ConvocatoriaReunionDocumentacionConvocatoriaReunionModalComponent e
       this.getFichero(this.data?.documentacion?.documento?.documentoRef, formGroup);
     }
 
+    if (this.data?.documentacion?.id) {
+      formGroup.controls.fichero.disable();
+    }
+
     return formGroup;
   }
 
