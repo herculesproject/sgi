@@ -31,6 +31,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SgiApiComService extends SgiApiBaseService {
 
+  private static final String EMPTY = "";
   private static final String PATH_SEPARATOR = "/";
   private static final String DATA = "_DATA";
   private static final String PATH_EMAILS = PATH_SEPARATOR + "emails";
@@ -283,7 +285,7 @@ public class SgiApiComService extends SgiApiBaseService {
             convocatoriaReunion.getOrdenDia()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_LUGAR,
-            convocatoriaReunion.getLugar()),
+            ObjectUtils.isEmpty(convocatoriaReunion.getLugar()) ? EMPTY : convocatoriaReunion.getLugar()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_VIDEOCONFERENCIA,
             convocatoriaReunion.getVideoconferencia().toString())));
