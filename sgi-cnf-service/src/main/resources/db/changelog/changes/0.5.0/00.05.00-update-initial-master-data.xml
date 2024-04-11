@@ -68,6 +68,17 @@
       <column name="public_access" valueBoolean="false" />
     </insert>
 
+    <insert tableName="resources">
+      <column name="name" value="rep-eti-bloque-apartado-ficha-evaluador-docx" />
+      <column name="description"
+        value="Informe con los bloques y apartados del formulario para los comentarios del informe ficha evaluador" />
+      <column name="value"
+        valueBlobFile="blob/rep/rep-eti-bloque-apartado-ficha-evaluador.docx" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/rep-eti-bloque-apartado-ficha-evaluador.docx" />
+      <column name="public_access" valueBoolean="false" />
+    </insert>
+
     <delete tableName="resources">
       <where>:name=:value</where>
       <whereParams>
