@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SgiApiComService extends SgiApiBaseService {
 
-  private static final String EMPTY = "";
+  private static final String EMPTY_LUGAR = "videoconferencia";
   private static final String PATH_SEPARATOR = "/";
   private static final String DATA = "_DATA";
   private static final String PATH_EMAILS = PATH_SEPARATOR + "emails";
@@ -285,7 +285,7 @@ public class SgiApiComService extends SgiApiBaseService {
             convocatoriaReunion.getOrdenDia()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_LUGAR,
-            ObjectUtils.isEmpty(convocatoriaReunion.getLugar()) ? EMPTY : convocatoriaReunion.getLugar()),
+            ObjectUtils.isEmpty(convocatoriaReunion.getLugar()) ? EMPTY_LUGAR : convocatoriaReunion.getLugar()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_VIDEOCONFERENCIA,
             convocatoriaReunion.getVideoconferencia().toString())));
