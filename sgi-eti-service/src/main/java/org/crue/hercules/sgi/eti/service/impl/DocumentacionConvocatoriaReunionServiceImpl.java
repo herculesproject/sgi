@@ -79,13 +79,13 @@ public class DocumentacionConvocatoriaReunionServiceImpl implements Documentacio
    * convocatoriaReunion (aquella
    * documentación que no es de seguimiento anual, final o retrospectiva).
    *
-   * @param idConvocatoriaReunion              Id de la
-   *                                           {@link ConvocatoriaReunion}
-   * @param idDocumentacionConvocatoriaReunion id de la
-   *                                           {@link DocumentacionConvocatoriaReunion}
-   * @param documentacionConvocatoriaReunion   la entidad
-   *                                           {@link DocumentacionConvocatoriaReunion}
-   *                                           a guardar.
+   * @param idConvocatoriaReunion                  Id de la
+   *                                               {@link ConvocatoriaReunion}
+   * @param idDocumentacionConvocatoriaReunion     id de la
+   *                                               {@link DocumentacionConvocatoriaReunion}
+   * @param documentacionConvocatoriaReunionUpdate la entidad
+   *                                               {@link DocumentacionConvocatoriaReunion}
+   *                                               a actualizar.
    * @return la entidad {@link DocumentacionConvocatoriaReunion} persistida.
    */
   @Override

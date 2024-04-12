@@ -15,7 +15,7 @@ public interface DocumentacionConvocatoriaReunionService {
    * Crea {@link DocumentacionConvocatoriaReunion} de una convocatoria de reunión
    * 
    * @param idConvocatoriaReunion            Id de la {@link ConvocatoriaReunion}
-   * @param DocumentacionConvocatoriaReunion la entidad
+   * @param documentacionConvocatoriaReunion la entidad
    *                                         {@link DocumentacionConvocatoriaReunion}
    *                                         a
    *                                         guardar.
@@ -32,10 +32,9 @@ public interface DocumentacionConvocatoriaReunionService {
    *                                           {@link ConvocatoriaReunion}
    * @param idDocumentacionConvocatoriaReunion id de la
    *                                           {@link DocumentacionConvocatoriaReunion}
-   * @param DocumentacionConvocatoriaReunion   la entidad
+   * @param documentacionConvocatoriaReunion   la entidad
    *                                           {@link DocumentacionConvocatoriaReunion}
-   *                                           a
-   *                                           guardar.
+   *                                           a guardar.
    * @return la entidad {@link DocumentacionConvocatoriaReunion} persistida.
    */
   DocumentacionConvocatoriaReunion updateDocumentacion(Long idConvocatoriaReunion,
