@@ -1,12 +1,20 @@
 <sgi-fragment
   title="{{'menu.csp.proyectos.configuracion-economica' | translate}} - {{'title.csp.proyecto-proyecto-sge' | translate}}">
 
-  <sgi-info-message *ngIf="formPart.showInfoSolicitudProyectoAltaPendiente"
-    message="{{'info.csp.proyecto-proyecto-sge.alta-pendiente' | translate:{count: formPart.solicitudesProyectoAltaPendientes.length, ids: idsSolicitudesProyectoAltaPendientesAsString} }}">
-  </sgi-info-message>
-  <sgi-info-message *ngIf="formPart.showInfoSolicitudProyectoModificacionPendiente"
-    message="{{'info.csp.proyecto-proyecto-sge.modificacion-pendiente' | translate:{count: formPart.solicitudesProyectoModificacionPendientes.length, idsSge: idsSgeSolicitudesProyectoModificacionPendientesAsString} }}">
-  </sgi-info-message>
+  <ng-container *ngIf="formPart.showInfoSolicitudProyectoAltaPendiente$ | async">
+    <ng-container *ngFor="let solicitud of formPart.solicitudesProyectoAltaPendientes$ | async">
+      <sgi-info-message message="{{'info.csp.proyecto-proyecto-sge.alta-pendiente' | translate:{id: solicitud.id} }}">
+      </sgi-info-message>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="formPart.showInfoSolicitudProyectoModificacionPendiente$ | async">
+    <ng-container *ngFor="let solicitud of formPart.solicitudesProyectoModificacionPendientes$ | async">
+      <sgi-info-message
+        message="{{'info.csp.proyecto-proyecto-sge.modificacion-pendiente' | translate:{id: solicitud.id, proyectoSgeRef: solicitud.proyectoSgeRef} }}">
+      </sgi-info-message>
+    </ng-container>
+  </ng-container>
 
   <div class="mat-elevation-z4">
     <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
@@ -65,14 +73,14 @@
   <div class="separation-button" *ngIf="!formPart.readonly">
     <ng-container *ngIf="isBuscadorSgeEnabled; else btnCreate">
       <button *ngIf="!this.formPart.isVisor" color="three" mat-button mat-raised-button
-        [disabled]="this.formPart.disableAddIdentificadorSge" (click)="openProyectoSgeSearchModal()">
+        [disabled]="this.formPart.disableAddIdentificadorSge$ | async" (click)="openProyectoSgeSearchModal()">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>
     </ng-container>
     <ng-template #btnCreate>
       <button *ngIf="!this.formPart.isVisor" color="three" mat-button mat-raised-button
-        [disabled]="this.formPart.disableAddIdentificadorSge" (click)="openProyectoSgeCreateModal()">
+        [disabled]="this.formPart.disableAddIdentificadorSge$ | async" (click)="openProyectoSgeCreateModal()">
         <mat-icon color="accent">add_circle</mat-icon>
         {{ 'btn.add.entity' | translate:msgParamEntity }}
       </button>

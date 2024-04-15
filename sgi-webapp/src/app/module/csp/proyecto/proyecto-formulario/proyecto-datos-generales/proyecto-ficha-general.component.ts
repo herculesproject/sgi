@@ -9,7 +9,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP, Estado } from '@core/models/csp/estado-proyecto';
 import { CAUSA_EXENCION_MAP, IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
-import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { ConfigService } from '@core/services/csp/config.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
@@ -48,8 +47,6 @@ const PROYECTO_CODIGO_INTERNO_FORMATO_KEY = marker('csp.proyecto.codigo-interno.
 export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyecto> implements OnInit, OnDestroy {
 
   formPart: ProyectoFichaGeneralFragment;
-
-  proyectosSge: StatusWrapper<IProyectoProyectoSge>[];
 
   displayedColumns = ['iva', 'fechaInicio', 'fechaFin'];
   elementosPagina = [5, 10, 25, 100];
@@ -174,10 +171,6 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
           }
         }
       ));
-    this.subscriptions.push(this.actionService.proyectosSge$.subscribe(elements => {
-      this.proyectosSge = elements;
-      this.formPart.getFormGroup().controls.codigosSge.patchValue(elements, { onlySelf: true, emitEvent: false });
-    }));
   }
 
   private setupI18N(): void {

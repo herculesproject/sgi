@@ -47,11 +47,8 @@
       <!-- Identificadores Sge -->
       <mat-form-field fxFlex="33%" *ngIf="this.formPart.isEdit()">
         <mat-label>{{'csp.proyecto.codigos-sge' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="codigosSge" multiple>
-          <mat-option *ngFor="let proyecto of this.proyectosSge" [value]="proyecto">
-            {{proyecto.value.proyectoSge?.id}}
-          </mat-option>
-        </mat-select>
+        <input type="text" placeholder="{{'csp.proyecto.codigos-sge' | translate}}" matInput
+          formControlName="codigosSge">
       </mat-form-field>
 
     </div>

@@ -61,14 +61,6 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
     return this._altaBuscadorSgeEnabled;
   }
 
-  get idsSolicitudesProyectoAltaPendientesAsString(): string {
-    return this.formPart.solicitudesProyectoAltaPendientes.map(s => s.id).join(', ');
-  }
-
-  get idsSgeSolicitudesProyectoModificacionPendientesAsString(): string {
-    return this.formPart.solicitudesProyectoModificacionPendientes.map(s => s.proyectoSgeRef).join(', ');
-  }
-
   constructor(
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,
@@ -207,10 +199,10 @@ export class ProyectoProyectosSgeComponent extends FragmentComponent implements 
       (response: IProyectoEconomicoFormlyResponse) => {
         if (response?.createdOrUpdated) {
           this.snackBarService.showSuccess(textoActionSuccess);
-
           if (response.proyectoSge && ACTION_MODAL_MODE.NEW === modalAction) {
             this.formPart.addProyectoSge(proyectoSge);
           }
+          this.formPart.refreshSolicitudesProyectoPendientes();
         }
       }
     );

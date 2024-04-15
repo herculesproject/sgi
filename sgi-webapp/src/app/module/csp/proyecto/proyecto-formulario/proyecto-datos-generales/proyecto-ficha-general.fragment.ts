@@ -32,7 +32,7 @@ import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindO
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, from, merge, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../proyecto-relaciones/proyecto-relaciones.fragment';
 
 interface IProyectoDatosGenerales extends IProyecto {
@@ -61,8 +61,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   unidadGestionConvocatoria: IUnidadGestion;
   modeloEjecucionConvocatoria: IModeloEjecucion;
 
-  identificadoresProyectoSge: string;
-
+  proyectosSgeIds$ = new Subject<string[]>();
   proyectoIva$ = new BehaviorSubject<StatusWrapper<IProyectoIVA>[]>([]);
 
   readonly permitePaquetesTrabajo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
@@ -118,6 +117,13 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   protected initializer(key: number): Observable<IProyectoDatosGenerales> {
     this.subscriptions.push(
+      this.proyectosSgeIds$.pipe(
+        filter(value => this.getFormGroup().controls.codigosSge.value !== value.join(', '))
+      ).subscribe(elements => {
+        this.getFormGroup().controls.codigosSge.setValue(elements.join(', '));
+      })
+    );
+    this.subscriptions.push(
       this.ultimaProrroga$.subscribe(
         (value) => {
           this.ultimaProrroga = value;
@@ -152,14 +158,17 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         solicitudProyecto: this.getSocilictudProyecto(proyecto),
         ultimaProrroga: this.getUltimaProrroga(proyecto),
         unidadGestion: this.getUnidadGestion(proyecto.unidadGestion.id),
+        proyectosSgeIds: this.service.findAllProyectosSgeProyecto(proyecto.id).pipe(map(({ items }) => items.map(p => p.proyectoSge.id)))
       }).pipe(
-        map(({ convocatoria, hasAnyProyectoSocio, palabrasClave, rolUniversidad, solicitudProyecto, ultimaProrroga, unidadGestion }) => {
+        map(({ convocatoria, hasAnyProyectoSocio, palabrasClave, rolUniversidad, solicitudProyecto, ultimaProrroga, unidadGestion, proyectosSgeIds }) => {
           proyecto.convocatoria = convocatoria;
           proyecto.rolUniversidad = rolUniversidad;
           proyecto.solicitudProyecto = solicitudProyecto;
           proyecto.unidadGestion = unidadGestion;
 
           this.getFormGroup().controls.palabrasClave.setValue(palabrasClave);
+          this.getFormGroup().controls.codigosSge.setValue(proyectosSgeIds.join(', '));
+          this.proyectosSgeIds$.next(proyectosSgeIds);
 
           this.hasPopulatedSocios = hasAnyProyectoSocio;
           this.hasPopulatedSocios$.next(hasAnyProyectoSocio);

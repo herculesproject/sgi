@@ -7,7 +7,6 @@ import { VALIDACION_REQUISITOS_EQUIPO_IP_MAP } from '@core/enums/validaciones-re
 import { MSG_PARAMS } from '@core/i18n';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { Module } from '@core/module';
 import { ActionService } from '@core/services/action-service';
@@ -187,7 +186,6 @@ export class ProyectoActionService extends ActionService {
   private readonly hasDocumentos$ = new BehaviorSubject<boolean>(false);
   readonly showAlertNotSocioCoordinadorExist$ = new BehaviorSubject<boolean>(false);
   readonly showSocios$: Subject<boolean> = new BehaviorSubject(false);
-  public readonly proyectosSge$ = new BehaviorSubject<StatusWrapper<IProyectoProyectoSge>[]>([]);
 
   get proyecto(): IProyecto {
     return this.fichaGeneral.getValue();
@@ -370,7 +368,7 @@ export class ProyectoActionService extends ActionService {
       if (this.isEdit()) {
         this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(() => this.proyectosSge.initialize()));
         this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => {
-          this.proyectosSge$.next(value);
+          this.fichaGeneral.proyectosSgeIds$.next(value.map(v => v.value.proyectoSge.id));
         }));
       }
 
@@ -602,7 +600,7 @@ export class ProyectoActionService extends ActionService {
             )
           );
 
-          this.subscriptions.push(this.proyectosSge$.subscribe(value => {
+          this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => {
             this.fichaGeneral.vinculacionesProyectosSge$.next(value.length > 0);
             this.amortizacionFondos.proyectosSGE$.next(value.map(wraper => wraper.value));
           }));
@@ -628,7 +626,7 @@ export class ProyectoActionService extends ActionService {
         if (this.isEdit()) {
           this.subscriptions.push(this.fichaGeneral.initialized$.subscribe(() => this.proyectosSge.initialize()));
           this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => {
-            this.proyectosSge$.next(value);
+            this.fichaGeneral.proyectosSgeIds$.next(value.map(v => v.value.proyectoSge.id));
           }));
         }
 

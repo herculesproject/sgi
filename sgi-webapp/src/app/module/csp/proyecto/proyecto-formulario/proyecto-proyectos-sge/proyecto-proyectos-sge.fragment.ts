@@ -10,43 +10,47 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { SolicitudProyectoSgeService } from '@core/services/sge/solicitud-proyecto-sge/solicitud-proyecto-sge.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { BehaviorSubject, Observable, concat, forkJoin, from, merge, of } from 'rxjs';
-import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, forkJoin, from, merge, of } from 'rxjs';
+import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 
 export class ProyectoProyectosSgeFragment extends Fragment {
   proyectosSge$ = new BehaviorSubject<StatusWrapper<IProyectoProyectoSge>[]>([]);
   isSectorIvaSgeEnabled$ = new BehaviorSubject<boolean>(false);
 
   private _cardinalidadRelacionSgiSge: CardinalidadRelacionSgiSge;
-  private _disableAddIdentificadorSge: boolean;
+  private _disableAddIdentificadorSge$ = new BehaviorSubject<boolean>(false);
   private _isModificacionProyectoSgeEnabled: boolean;
-  private _isSolicitudProyectoAltaPendiente: boolean;
-  private _solicitudesProyectoPendientes: ISolicitudProyectoSge[];
+  private _isSolicitudProyectoAltaPendiente$ = new BehaviorSubject<boolean>(false);
+  private _solicitudesProyectoPendientes$ = new BehaviorSubject<ISolicitudProyectoSge[]>([]);
 
-  get disableAddIdentificadorSge(): boolean {
-    return this._disableAddIdentificadorSge;
+  get disableAddIdentificadorSge$(): Observable<boolean> {
+    return this._disableAddIdentificadorSge$;
   }
 
   get isModificacionProyectoSgeEnabled(): boolean {
     return this._isModificacionProyectoSgeEnabled;
   }
 
-  get showInfoSolicitudProyectoAltaPendiente(): boolean {
-    return this._isSolicitudProyectoAltaPendiente
-      && (this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
-        || this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1);
+  get showInfoSolicitudProyectoAltaPendiente$(): Observable<boolean> {
+    return this._isSolicitudProyectoAltaPendiente$;
   }
 
-  get showInfoSolicitudProyectoModificacionPendiente(): boolean {
-    return !!this._solicitudesProyectoPendientes?.length;
+  get showInfoSolicitudProyectoModificacionPendiente$(): Observable<boolean> {
+    return this.solicitudesProyectoModificacionPendientes$.pipe(
+      map(modificacionesPendientes => !!modificacionesPendientes?.length)
+    );
   }
 
-  get solicitudesProyectoAltaPendientes(): ISolicitudProyectoSge[] {
-    return this._solicitudesProyectoPendientes?.filter(solicitud => this.isSolicitudProyectoAltaPendiente(solicitud)) ?? [];
+  get solicitudesProyectoAltaPendientes$(): Observable<ISolicitudProyectoSge[]> {
+    return this._solicitudesProyectoPendientes$.pipe(
+      map(solicitudesProyectoPendientes => solicitudesProyectoPendientes?.filter(solicitud => this.isSolicitudProyectoAltaPendiente(solicitud)) ?? [])
+    );
   }
 
-  get solicitudesProyectoModificacionPendientes(): ISolicitudProyectoSge[] {
-    return this._solicitudesProyectoPendientes?.filter(solicitud => this.isSolicitudProyectoModificacionPendiente(solicitud)) ?? [];
+  get solicitudesProyectoModificacionPendientes$(): Observable<ISolicitudProyectoSge[]> {
+    return this._solicitudesProyectoPendientes$.pipe(
+      map(solicitudesProyectoPendientes => solicitudesProyectoPendientes.filter(solicitud => this.isSolicitudProyectoModificacionPendiente(solicitud)) ?? [])
+    );
   }
 
   constructor(
@@ -102,17 +106,15 @@ export class ProyectoProyectosSgeFragment extends Fragment {
         ).subscribe(({ cardinalidadRelacionSgiSge, isModificacionProyectoSgeEnabled, proyectosSge, solicitudesPendientes }) => {
           this._cardinalidadRelacionSgiSge = cardinalidadRelacionSgiSge;
           this._isModificacionProyectoSgeEnabled = isModificacionProyectoSgeEnabled;
-          this._solicitudesProyectoPendientes = solicitudesPendientes;
-          this._isSolicitudProyectoAltaPendiente = this.containsSolicitudProyectoAltaPendiente(solicitudesPendientes);
+          this._solicitudesProyectoPendientes$.next(solicitudesPendientes);
+          this._isSolicitudProyectoAltaPendiente$.next(this.containsSolicitudProyectoAltaPendiente(solicitudesPendientes));
           this.proyectosSge$.next(proyectosSge);
         })
       );
 
       this.subscriptions.push(
         this.proyectosSge$.subscribe(proyectosSge => {
-          this._disableAddIdentificadorSge = ((proyectosSge?.length ?? 0) > 0 || this._isSolicitudProyectoAltaPendiente)
-            && (this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
-              || this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1);
+          this.fillDisableAddIdentificadorSge(proyectosSge);
         })
       )
     }
@@ -133,11 +135,18 @@ export class ProyectoProyectosSgeFragment extends Fragment {
     this.setChanges(true);
   }
 
+  public refreshSolicitudesProyectoPendientes(): void {
+    this.subscriptions.push(
+      this.getSolicitudesProyectoPendientes(this.getKey() as number).subscribe(solicitudesPendientes => {
+        this._solicitudesProyectoPendientes$.next(solicitudesPendientes);
+        this._isSolicitudProyectoAltaPendiente$.next(this.containsSolicitudProyectoAltaPendiente(solicitudesPendientes));
+        this.fillDisableAddIdentificadorSge(this.proyectosSge$.value);
+      })
+    );
+  }
+
   saveOrUpdate(): Observable<void> {
-    return concat(
-      this.createProyectosSge()
-    ).pipe(
-      takeLast(1),
+    return this.createProyectosSge().pipe(
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {
           this.setChanges(false);
@@ -202,7 +211,6 @@ export class ProyectoProyectosSgeFragment extends Fragment {
       Estado.MODIFICACION_ACEPTADA_SGE,
       Estado.MODIFICACION_RECHAZADA_SGE,
       Estado.MODIFICACION_SOLICITUD_SGI,
-      Estado.ALTA_SOLICITUD_SGI,
       Estado.REASIGNACION_ACEPTADA_SGE,
       Estado.REASIGNACION_ERROR_SGI
     ].includes(solicitud.estado);
@@ -210,6 +218,13 @@ export class ProyectoProyectosSgeFragment extends Fragment {
 
   private containsSolicitudProyectoAltaPendiente(solicitudes: ISolicitudProyectoSge[]): boolean {
     return solicitudes?.some(solicitud => this.isSolicitudProyectoAltaPendiente(solicitud));
+  }
+
+  private fillDisableAddIdentificadorSge(proyectosSge: StatusWrapper<IProyectoProyectoSge>[]): void {
+    this._disableAddIdentificadorSge$.next(
+      ((proyectosSge?.length ?? 0) > 0 || this._isSolicitudProyectoAltaPendiente$.value)
+      && (this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
+        || this._cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_N_SGE_1));
   }
 
 }
