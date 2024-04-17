@@ -46,7 +46,7 @@ export class ConvocatoriaReunionDocumentacionComponent extends FragmentComponent
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumnsDocumentoConvocatoriaReunion: string[] = ['nombre', 'acciones'];
+  displayedColumnsDocumentoConvocatoriaReunion: string[] = ['nombre', 'fichero', 'acciones'];
   elementosPaginaDocumentoConvocatoriaReunion: number[] = [5, 10, 25, 100];
 
   msgParamDocumentoEntity = {};

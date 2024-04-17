@@ -32,8 +32,8 @@
           translate}}
         </th>
         <td mat-cell *matCellDef="let wrapper">
-          <button *ngIf="isActaFinalizada(wrapper)" mat-button matTooltip="{{'btn.show.file' | translate}}"
-            (click)="visualizarInformeEvaluador(wrapper.value?.id)">
+          <button *ngIf="isActaFinalizada(wrapper) && hasDictamen(wrapper)" mat-button
+            matTooltip="{{'btn.show.file' | translate}}" (click)="visualizarInformeEvaluador(wrapper.value?.id)">
             <mat-icon color="primary">picture_as_pdf</mat-icon>
           </button>
         </td>

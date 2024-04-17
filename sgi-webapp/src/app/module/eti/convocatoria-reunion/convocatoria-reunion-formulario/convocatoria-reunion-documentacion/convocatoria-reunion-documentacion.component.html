@@ -11,6 +11,16 @@
         <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.nombre}} </td>
       </ng-container>
 
+      <!-- Fichero Column -->
+      <ng-container matColumnDef="fichero">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'eti.convocatoria-reunion.documento.fichero' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper">
+          {{ wrapper.value?.documento?.nombre}}
+        </td>
+      </ng-container>
+
       <!-- Acciones Column -->
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'label.actions' | translate}} </th>
@@ -21,7 +31,7 @@
           </button>
           <button color="primary" mat-icon-button matTooltip="{{'btn.show.file' | translate}}"
             (click)="downloadDocumentacion(wrapper.value)">
-            <mat-icon>picture_as_pdf</mat-icon>
+            <mat-icon>arrow_downward</mat-icon>
           </button>
           <ng-container>
             <button color="warn" mat-icon-button matTooltip="{{'btn.delete' | translate}}" *ngIf="!isReadonly"

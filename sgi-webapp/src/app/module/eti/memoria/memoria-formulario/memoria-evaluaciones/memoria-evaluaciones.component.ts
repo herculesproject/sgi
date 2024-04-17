@@ -130,6 +130,10 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
     return actaConvocatoriaReunion?.acta?.estadoActual?.id === 2 ? true : false;
   }
 
+  hasDictamen(evaluacionWrapper: StatusWrapper<IEvaluacion>): boolean {
+    return !!evaluacionWrapper.value.dictamen?.nombre;
+  }
+
   /**
    * Visualiza el informe de evaluación seleccionado.
    * @param idEvaluacion id de la evaluación del informe
