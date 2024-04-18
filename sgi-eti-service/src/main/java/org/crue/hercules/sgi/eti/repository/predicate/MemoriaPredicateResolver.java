@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.repository.predicate;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
-import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.Respuesta_;
 import org.crue.hercules.sgi.eti.util.PredicateResolverUtil;
@@ -68,7 +68,10 @@ public class MemoriaPredicateResolver implements SgiRSQLPredicateResolver<Memori
 
     List<Predicate> predicates = new ArrayList<>();
 
-    predicates.add(cb.like(subqRoot.get(Respuesta_.valor), PERCENT_SIGN + respuesta + PERCENT_SIGN));
+    String respuestaSinTildes = removeAccentsAndSpecialChars(respuesta);
+    predicates.add(cb.like(
+        cb.function("remove_accents_and_html_tags", String.class, subqRoot.get(Respuesta_.valor)),
+        PERCENT_SIGN + respuestaSinTildes.toUpperCase() + PERCENT_SIGN));
 
     queryGetIdMemoria.select(subqRoot.get(Respuesta_.memoria).get(Memoria_.id))
         .where(predicates.toArray(new Predicate[] {}));
@@ -97,5 +100,13 @@ public class MemoriaPredicateResolver implements SgiRSQLPredicateResolver<Memori
       default:
         return null;
     }
+  }
+
+  private String removeAccentsAndSpecialChars(String input) {
+    return Normalizer.normalize(input, Normalizer.Form.NFD)
+        .replaceAll("[^\\p{ASCII}]", "")
+        .replaceAll("[^a-zA-Z0-9 ]", "")
+        .replaceAll("\\s+", " ")
+        .trim();
   }
 }
