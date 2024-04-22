@@ -33,12 +33,26 @@ export class ConvocatoriaReunionDocumentacionFragment extends Fragment {
   protected onInitialize(): void {
     if (this.getKey()) {
       this.service.getDocumentaciones(this.getKey() as number).pipe(
-        map((response) => response.items)
+        map((response) =>
+          response.items.map((documentacionConvocatoriaReunion => {
+            this.resolveDocumentoInfo(documentacionConvocatoriaReunion);
+            return documentacionConvocatoriaReunion;
+          }))
+        )
       ).subscribe((documentacion) => {
         this.documentacionesConvocatoriaReunion$.next(documentacion.map(
           documentaciones => new StatusWrapper<IDocumentacionConvocatoriaReunion>(documentaciones))
         );
       });
+    }
+  }
+
+  private resolveDocumentoInfo(documentacionConvocatoriaReunion: IDocumentacionConvocatoriaReunion): void {
+    if (documentacionConvocatoriaReunion.documento?.documentoRef) {
+      this.subscriptions.push(
+        this.documentoService.getInfoFichero(documentacionConvocatoriaReunion.documento.documentoRef).pipe(
+          map(docInfo => documentacionConvocatoriaReunion.documento = docInfo)
+        ).subscribe());
     }
   }
 
