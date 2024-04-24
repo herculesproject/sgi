@@ -4,8 +4,10 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -17,7 +19,6 @@ import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.Respuesta_;
 import org.crue.hercules.sgi.eti.util.PredicateResolverUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
-
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import io.github.perplexhub.rsql.RSQLOperators;
 
@@ -68,9 +69,14 @@ public class MemoriaPredicateResolver implements SgiRSQLPredicateResolver<Memori
 
     List<Predicate> predicates = new ArrayList<>();
 
+    Expression<String> expression = subqRoot.get(Respuesta_.valor);
+    expression = cb.function("remove_accents", String.class, expression);
+    expression = cb.function("remove_html_tags", String.class, expression);
+    expression = cb.function("search_in_value_of_json", String.class, expression);
+
     String respuestaSinTildes = removeAccentsAndSpecialChars(respuesta);
     predicates.add(cb.like(
-        cb.function("remove_accents_and_html_tags", String.class, subqRoot.get(Respuesta_.valor)),
+        cb.upper(expression),
         PERCENT_SIGN + respuestaSinTildes.toUpperCase() + PERCENT_SIGN));
 
     queryGetIdMemoria.select(subqRoot.get(Respuesta_.memoria).get(Memoria_.id))
