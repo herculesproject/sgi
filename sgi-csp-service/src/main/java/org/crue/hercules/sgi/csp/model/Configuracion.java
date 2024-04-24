@@ -134,10 +134,15 @@ public class Configuracion extends BaseEntity {
     PROYECTO_SGE_ALTA_MODO_EJECUCION("proyectoSgeAltaModoEjecucion"),
     /**
      * Determina si la modificacion del proyecto económico en el SGE se realiza de
-     * forma
-     * sincrona o de forma asíncrona
+     * forma sincrona o de forma asíncrona
      */
-    PROYECTO_SGE_MODIFICACION_MODO_EJECUCION("proyectoSgeModificacionModoEjecucion");
+    PROYECTO_SGE_MODIFICACION_MODO_EJECUCION("proyectoSgeModificacionModoEjecucion"),
+    /**
+     * Determina si hay integración del calendario facturación con el SGE para
+     * indicar si se van a notificar las facturas previstas validadas del calendario
+     * de facturación al SGE
+     */
+    CALENDARIO_FACTURACION_SGE_ENABLED("calendarioFacturacionSgeEnabled");
 
     private final String key;
 
@@ -268,12 +273,19 @@ public class Configuracion extends BaseEntity {
 
   /**
    * Determina si la modificacion del proyecto económico en el SGE se realiza de
-   * forma
-   * sincrona o de forma asíncrona
+   * forma sincrona o de forma asíncrona
    */
   @Column(name = "sge_sincronizacion_modificacion_proyecto", nullable = false, unique = true)
   @Enumerated(EnumType.STRING)
   private ModoEjecucion proyectoSgeModificacionModoEjecucion;
+
+  /**
+   * Determina si hay integración del calendario facturación con el SGE para
+   * indicar si se van a notificar las facturas previstas validadas del calendario
+   * de facturación al SGE
+   */
+  @Column(name = "sge_calendario_facturacion", columnDefinition = "boolean default true", nullable = false, unique = true)
+  private Boolean calendarioFacturacionSgeEnabled;
 
   public Object getParamValue(Param key) {
     switch (key) {
@@ -315,6 +327,8 @@ public class Configuracion extends BaseEntity {
         return this.getProyectoSgeAltaModoEjecucion();
       case PROYECTO_SGE_MODIFICACION_MODO_EJECUCION:
         return this.getProyectoSgeModificacionModoEjecucion();
+      case CALENDARIO_FACTURACION_SGE_ENABLED:
+        return this.getCalendarioFacturacionSgeEnabled();
       default:
         return null;
     }
@@ -372,10 +386,16 @@ public class Configuracion extends BaseEntity {
         break;
       case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
         this.setDetalleOperacionesModificacionesEnabled(new Boolean(newValue));
+        break;
       case PROYECTO_SGE_ALTA_MODO_EJECUCION:
         this.setProyectoSgeAltaModoEjecucion(ModoEjecucion.valueOf(newValue));
+        break;
       case PROYECTO_SGE_MODIFICACION_MODO_EJECUCION:
         this.setProyectoSgeModificacionModoEjecucion(ModoEjecucion.valueOf(newValue));
+        break;
+      case CALENDARIO_FACTURACION_SGE_ENABLED:
+        this.setCalendarioFacturacionSgeEnabled(new Boolean(newValue));
+        break;
     }
   }
 }
