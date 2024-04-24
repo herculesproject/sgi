@@ -112,4 +112,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isCalendarioFacturacionSgeEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
 }

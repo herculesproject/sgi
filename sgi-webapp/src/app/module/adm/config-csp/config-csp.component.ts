@@ -59,6 +59,7 @@ export enum ConfigCsp {
   // Config CSP service
   CSP_ALTA_BUSCADOR_SGE_ENABLED = "altaBuscadorSgeEnabled",
   CSP_AMORTIZACION_FONDOS_SGE_ENABLED = "amortizacionFondosSgeEnabled",
+  CSP_CALENDARIO_FACTURACION_SGE_ENABLED = "calendarioFacturacionSgeEnabled",
   CSP_CARDINALIDAD_RELACION_SGI_SGE = 'cardinalidadRelacionSgiSge',
   CSP_DEDICACION_MINIMA_GRUPO = 'dedicacionMinimaGrupo',
   CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED = "detalleOperacionesModificacionesEnabled",
@@ -107,6 +108,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_ALTA_BUSCADOR_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_ALTA_BUSCADOR_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_ALTA_BUSCADOR_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_SECTOR_IVA_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED.description`) }],
+    [ConfigCsp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED.description`) }],
     [ConfigCsp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED.description`) }],
     [ConfigCsp.TITLE_CONVONCATORIA, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.convocatoria`), module: ConfigModule.NONE }],

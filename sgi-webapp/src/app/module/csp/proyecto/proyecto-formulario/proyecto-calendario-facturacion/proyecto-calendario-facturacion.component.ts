@@ -176,12 +176,15 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
 
   private showProyectoFacturacionDialog(
     proyectoFacturacion: IProyectoFacturacionData,
-    row: number, action: DialogAction): void {
+    row: number,
+    action: DialogAction
+  ): void {
     const modalData: IProyectoCalendarioFacturacionModalData = {
       proyectoId: this.formPart.getKey() as number,
       proyectoFacturacion,
       porcentajeIVA: proyectoFacturacion.porcentajeIVA || this.formPart.proyectoIVA,
-      action
+      action,
+      isCalendarioFacturacionSgeEnabled: this.formPart.isCalendarioFacturacionSgeEnabled
     };
 
     const config = {

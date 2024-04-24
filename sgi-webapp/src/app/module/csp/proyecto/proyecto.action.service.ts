@@ -50,6 +50,7 @@ import { InvencionService } from '@core/services/pii/invencion/invencion.service
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { FacturaPrevistaEmitidaService } from '@core/services/sge/factura-prevista-emitida/factura-prevista-emitida.service';
+import { FacturaPrevistaService } from '@core/services/sge/factura-prevista/factura-prevista.service';
 import { PartidaPresupuestariaGastoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-gasto-sge.service';
 import { PartidaPresupuestariaIngresoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-ingreso-sge.service';
 import { PeriodoAmortizacionService } from '@core/services/sge/periodo-amortizacion/periodo-amortizacion.service';
@@ -266,6 +267,7 @@ export class ProyectoActionService extends ActionService {
     private readonly documentoService: DocumentoService,
     private readonly empresaService: EmpresaService,
     private readonly facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
+    private readonly facturaPrevistaService: FacturaPrevistaService,
     private readonly invencionService: InvencionService,
     private readonly modeloEjecucionService: ModeloEjecucionService,
     private readonly palabraClaveService: PalabraClaveService,
@@ -344,8 +346,10 @@ export class ProyectoActionService extends ActionService {
         this.data?.proyecto,
         proyectoService,
         proyectoFacturacionService,
+        facturaPrevistaService,
         facturaPrevistaEmitidaService,
         proyectoProrrogaService,
+        configService,
         this.isInvestigador
       );
 
@@ -483,9 +487,12 @@ export class ProyectoActionService extends ActionService {
           this.data?.proyecto,
           proyectoService,
           proyectoFacturacionService,
+          facturaPrevistaService,
           facturaPrevistaEmitidaService,
           proyectoProrrogaService,
-          this.isInvestigador);
+          configService,
+          this.isInvestigador
+        );
 
         this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
         this.addFragment(this.FRAGMENT.SOCIOS, this.socios);

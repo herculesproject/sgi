@@ -8,6 +8,8 @@
   "adm.config.csp.CSP_ALTA_BUSCADOR_SGE_ENABLED.description": "Habilitar que se muestre el buscador de proyectos económicos al pulsar el botón de 'Añadir identificador SGE' en la pantalla de 'Configuración económica - Identificación'",
   "adm.config.csp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED": "Integración de amortización de fondos (proyectos - configuración económica)",
   "adm.config.csp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED.description": "Habilitar la integración de amortización de fondos (proyectos - configuración económica) en el SGE",
+  "adm.config.csp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED": "Integración calendario facturación (proyectos - configuración económica)",
+  "adm.config.csp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED.description": "Habilitar la integración de calendario facturación (proyectos - configuración económica) en el SGE",
   "adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE": "Cardinalidad relación proyecto SGI - identificador SGE",
   "adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE.description": "Parámetro para especificar la cardinalidad de la relación entre proyecto SGI y proyecto SGE",
   "adm.config.csp.CSP_COM_CAL_FACT_VALIDARIP_DESTINATARIOS_UO": "Destinatarios de comunicados al validar una factura de la unidad de gestión {unidadGestion}",

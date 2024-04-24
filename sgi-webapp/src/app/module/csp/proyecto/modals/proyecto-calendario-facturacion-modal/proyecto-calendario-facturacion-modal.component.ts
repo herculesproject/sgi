@@ -21,6 +21,7 @@ export interface IProyectoCalendarioFacturacionModalData {
   proyectoFacturacion: IProyectoFacturacionData;
   porcentajeIVA?: number;
   action: DialogAction;
+  isCalendarioFacturacionSgeEnabled: boolean;
 }
 
 const PROYECTO_CALENDARIO_FACTURACION_KEY = marker('csp.proyecto-calendario-facturacion.item');
@@ -155,6 +156,15 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       form.controls.tipoFacturacion.disable({ emitEvent: false });
       form.controls.proyectoProrroga.disable({ emitEvent: false });
       form.controls.nuevoEstadoValidacionIP.setValidators([Validators.required]);
+    }
+
+    if (
+      this.data.action !== DialogAction.NEW
+      && this.data.isCalendarioFacturacionSgeEnabled
+      && this.data.proyectoFacturacion.estadoValidacionIP?.estado === TipoEstadoValidacion.VALIDADA
+      && this.data.proyectoFacturacion.numeroFacturaEmitida
+    ) {
+      form.disable();
     }
 
     this.subscriptions.push(

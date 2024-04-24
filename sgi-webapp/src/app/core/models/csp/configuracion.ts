@@ -74,4 +74,6 @@ export interface IConfiguracion {
   proyectoSgeAltaModoEjecucion: ModoEjecucion;
   /** Determina si la modificacion del proyecto económico en el SGE se realiza de forma sincrona o de forma asíncrona */
   proyectoSgeModificacionModoEjecucion: ModoEjecucion;
+  /** Determina si hay integración del calendario facturación con el SGE para indicar si se van a notificar las facturas previstas validadas del calendario de facturación al SGE */
+  calendarioFacturacionSgeEnabled: ModoEjecucion;
 }
