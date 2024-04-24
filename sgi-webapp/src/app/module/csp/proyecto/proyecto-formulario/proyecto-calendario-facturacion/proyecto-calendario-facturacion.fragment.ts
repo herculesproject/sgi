@@ -235,6 +235,7 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
           obs$ = obs$.pipe(
             switchMap((itemFacturacion: IProyectoFacturacionData) => {
               itemFacturacion.facturaEmitida = toUpdate.value.facturaEmitida;
+              itemFacturacion.tipoFacturacion = toUpdate.value.tipoFacturacion;
 
               return this.createOrUpdateFacturaPrevista(itemFacturacion);
             })
@@ -308,6 +309,7 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
           .pipe(
             switchMap((createdProyectoFacturacion: IProyectoFacturacionData) => {
               if (this.isCalendarioFacturacionSgeEnabled && toCreate.value.estadoValidacionIP?.estado === TipoEstadoValidacion.VALIDADA) {
+                createdProyectoFacturacion.tipoFacturacion = toCreate.value.tipoFacturacion;
                 return this.createOrUpdateFacturaPrevista(createdProyectoFacturacion);
               }
 
