@@ -22,6 +22,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioPeriodoJustificacionServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -55,6 +56,11 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   // This bean must be created by Spring so validations can be applied
   @Autowired
   private SolicitudProyectoSocioPeriodoJustificacionService service;
+
+  @BeforeEach
+  void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
+  }
 
   @Test
   void update_ReturnsSolicitudProyectoSocioPeriodoJustificacion() {
@@ -323,7 +329,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
         .assertThatThrownBy(() -> service.update(solicitudProyectoSocioId,
             Arrays.asList(solicitudProyectoSocioPeriodoJustificacion1, solicitudProyectoSocioPeriodoJustificacion2)))
         .isInstanceOf(ConstraintViolationException.class)
-        .hasMessageContaining("End month must be bigger or equal than initial month");
+        .hasMessageContaining("mesFinal: El mes final debe ser mayor o igual que el mes inicial");
   }
 
   @Test
@@ -359,7 +365,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
         .assertThatThrownBy(
             () -> service.update(solicitudProyectoSocioId, Arrays.asList(solicitudProyectoSocioPeriodoJustificacion1)))
         .isInstanceOf(ConstraintViolationException.class)
-        .hasMessageContaining("End date must be bigger or equal than initial date");
+        .hasMessageContaining("fechaFin: La fecha final debe ser mayor o igual que la fecha inicial");
   }
 
   @Test

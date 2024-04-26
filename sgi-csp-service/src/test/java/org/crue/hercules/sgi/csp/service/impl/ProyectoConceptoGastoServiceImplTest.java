@@ -46,6 +46,7 @@ class ProyectoConceptoGastoServiceImplTest extends BaseServiceTest {
   @BeforeEach
   void setup() {
     // @formatter=off
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     this.service = new ProyectoConceptoGastoServiceImpl(repository,
         proyectoRepository,
         conceptoGastoRepository,

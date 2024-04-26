@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCienti
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaPeriodoSeguimientoCientificoServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -59,6 +60,11 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
   // This bean must be created by Spring so validations can be applied
   @Autowired
   private ConvocatoriaPeriodoSeguimientoCientificoService service;
+
+  @BeforeEach
+  void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
+  }
 
   @Test
   void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_ReturnsConvocatoriaPeriodoSeguimientoCientificoList() {
@@ -214,7 +220,7 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
             Arrays.asList(convocatoriaPeriodoSeguimientoCientifico)))
         // then: throw exception
         .isInstanceOf(ConstraintViolationException.class)
-        .hasMessageContaining("End month must be bigger or equal than initial month");
+        .hasMessageContaining("mesFinal: El mes final debe ser mayor o igual que el mes inicial");
   }
 
   @Test
@@ -239,7 +245,7 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
             Arrays.asList(convocatoriaPeriodoSeguimientoCientifico)))
         // then: throw exception
         .isInstanceOf(ConstraintViolationException.class)
-        .hasMessageContaining("End date must be bigger or equal than initial date");
+        .hasMessageContaining("fechaFinPresentacion: La fecha final debe ser mayor o igual que la fecha inicial");
   }
 
   @Test

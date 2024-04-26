@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepo
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaPeriodoJustificacionServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -63,6 +64,11 @@ class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest {
   // This bean must be created by Spring so validations can be applied
   @Autowired
   private ConvocatoriaPeriodoJustificacionService service;
+
+  @BeforeEach
+  void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
+  }
 
   @Test
   void updateConvocatoriaPeriodoJustificacionesConvocatoria_ReturnsConvocatoriaPeriodoJustificacionList() {
@@ -215,7 +221,7 @@ class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest {
             Arrays.asList(convocatoriaPeriodoJustificacion)))
         // then: throw exception
         .isInstanceOf(ConstraintViolationException.class)
-        .hasMessageContaining("End month must be bigger or equal than initial month");
+        .hasMessageContaining("mesFinal: El mes final debe ser mayor o igual que el mes inicial");
   }
 
   @Test
@@ -239,7 +245,7 @@ class ConvocatoriaPeriodoJustificacionServiceTest extends BaseServiceTest {
             Arrays.asList(convocatoriaPeriodoJustificacion)))
         // then: throw exception
         .isInstanceOf(ConstraintViolationException.class)
-        .hasMessageContaining("End date must be bigger or equal than initial date");
+        .hasMessageContaining("fechaFinPresentacion: La fecha final debe ser mayor o igual que la fecha inicial");
   }
 
   @Test

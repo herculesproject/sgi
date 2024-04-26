@@ -58,6 +58,7 @@ class FuenteFinanciacionServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     BDDMockito.given(entityManagerFactory.getPersistenceUnitUtil()).willReturn(persistenceUnitUtil);
     BDDMockito.given(entityManager.getEntityManagerFactory()).willReturn(entityManagerFactory);
   }
@@ -329,7 +330,8 @@ class FuenteFinanciacionServiceTest extends BaseServiceTest {
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion)).isInstanceOf(ValidationException.class)
-        .hasMessageContaining("No Fuente de Financiación active with identifier '1' exists");
+        .hasMessageContaining(
+            "update.fuenteFinanciacion: No existe Fuente de Financiación activa con el identificador '1'");
   }
 
   @Test
@@ -378,7 +380,7 @@ class FuenteFinanciacionServiceTest extends BaseServiceTest {
     // when: Activamos el FuenteFinanciacion
     // then: Lanza una excepcion porque hay otro FuenteFinanciacion con ese nombre
     Assertions.assertThatThrownBy(() -> service.activar(id)).isInstanceOf(ConstraintViolationException.class)
-        .hasMessageContaining("A Fuente de Financiación with name 'nombreRepetido' already exists");
+        .hasMessageContaining("Nombre: Ya existe una Fuente de Financiación con el nombre 'nombreRepetido'");
   }
 
   @Test
