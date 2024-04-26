@@ -64,6 +64,7 @@ class ProyectoSocioServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     proyectoHelper = new ProyectoHelper(proyectoRepository, proyectoEquipoRepository,
         proyectoResponsableEconomicoRepository);
     service = new ProyectoSocioServiceImpl(repository, equipoRepository, periodoPagoRepository, documentoRepository,

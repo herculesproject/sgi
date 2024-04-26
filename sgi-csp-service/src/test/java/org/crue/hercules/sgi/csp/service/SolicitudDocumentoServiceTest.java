@@ -52,6 +52,7 @@ class SolicitudDocumentoServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     authorityHelper = new SolicitudAuthorityHelper(solicitudRepository, solicitudExternaRepository);
     service = new SolicitudDocumentoServiceImpl(solicitudDocumentoRepository, solicitudService, authorityHelper);
   }

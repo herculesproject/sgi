@@ -154,6 +154,7 @@ class SolicitudServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     solicitudAuthorityHelper = new SolicitudAuthorityHelper(repository, solicitudExternaRepository);
     service = new SolicitudService(sgiConfigProperties,
         sgiApiEtiService, repository,

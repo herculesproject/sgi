@@ -51,6 +51,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new ProyectoSocioPeriodoJustificacionServiceImpl(repository, proyectoSocioRepository,
         proyectoSocioPeriodoJustificacionDocumentoRepository, proyectoRepository, sgdocService);
   }

@@ -74,6 +74,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new ProyectoHitoServiceImpl(repository,
         proyectoRepository,
         modeloTipoHitoRepository,
