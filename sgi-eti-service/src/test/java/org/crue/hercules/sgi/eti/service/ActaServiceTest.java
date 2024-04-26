@@ -91,6 +91,7 @@ public class ActaServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository,
         evaluacionRepository, retrospectivaRepository, memoriaService, retrospectivaService, reportService,
         sgdocService, comunicadosService, configService, blockchainService, asistentesService, comentarioRepository,

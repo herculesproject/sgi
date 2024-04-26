@@ -53,6 +53,7 @@ public class ConvocatoriaReunionServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new ConvocatoriaReunionServiceImpl(sgiConfigProperties, repository, actaRepository, evaluacionRepository,
         comunicadosService);
   }

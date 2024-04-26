@@ -44,6 +44,7 @@ public class RespuestaServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     respuestaService = new RespuestaServiceImpl(respuestaRepository, memoriaService,
         retrospectivaService);
   }

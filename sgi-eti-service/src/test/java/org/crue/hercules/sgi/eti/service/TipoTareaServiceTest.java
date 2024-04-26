@@ -34,6 +34,7 @@ public class TipoTareaServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     tipoTareaService = new TipoTareaServiceImpl(tipoTareaRepository);
   }
 

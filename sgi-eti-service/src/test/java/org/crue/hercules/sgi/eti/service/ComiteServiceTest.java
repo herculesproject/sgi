@@ -36,6 +36,7 @@ public class ComiteServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     comiteService = new ComiteServiceImpl(comiteRepository);
   }
 

@@ -34,6 +34,7 @@ public class CargoComiteServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     cargoComiteService = new CargoComiteServiceImpl(cargoComiteRepository);
   }
 

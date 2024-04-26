@@ -35,6 +35,7 @@ public class TipoEvaluacionServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     tipoEvaluacionService = new TipoEvaluacionServiceImpl(tipoEvaluacionRepository);
   }
 

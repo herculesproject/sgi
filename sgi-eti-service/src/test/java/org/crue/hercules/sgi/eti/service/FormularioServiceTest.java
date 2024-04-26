@@ -40,6 +40,7 @@ public class FormularioServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
+    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     formularioService = new FormularioServiceImpl(formularioRepository, memoriaService, retrospectivaService);
   }
 
