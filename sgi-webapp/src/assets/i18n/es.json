@@ -2341,7 +2341,7 @@
   "info.csp.proyecto-periodo-seguimiento.no-existe-en-convocatoria": "Este periodo de seguimiento no está incluido en la configuración de la convocatoria.",
   "info.csp.proyecto-periodo-seguimiento.no-existe-en-proyecto": "Este periodo de seguimiento está incluido en la configuración de la convocatoria pero no en el proyecto. Pulse el botón Editar si desea añadirlo al proyecto",
   "info.csp.proyecto-proyecto-sge.alta-pendiente": "Existe una solicitud de creación de identificador SGE en curso. Identificador de la petición: {id}",
-  "info.csp.proyecto-proyecto-sge.modificacion-pendiente": "Existe una solicitud de modificación o de reasignación de identificador SGE {proyectoSgeRef} en curso. Identificador de la petición: {id}",
+  "info.csp.proyecto-proyecto-sge.modificacion-pendiente": "Existe una solicitud de modificación o de reasignación en curso para el identificador SGE {proyectoSgeRef}. Identificador de la petición: {id}",
   "info.csp.proyecto-socio.fecha-fin": "Fecha Fin Partic.",
   "info.csp.proyecto-socio.fecha-inicio": "Fecha Inicio Partic.",
   "info.csp.proyecto-socio.importe-concedido": "Importe concedido",
