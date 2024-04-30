@@ -81,6 +81,9 @@ public class ProyectoFacturacion extends BaseEntity {
   @Column(name = "proyecto_prorroga_id", nullable = false)
   private Long proyectoProrrogaId;
 
+  @Column(name = "proyecto_sge_ref", nullable = true)
+  private String proyectoSgeRef;
+
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
   @JoinColumn(name = "proyecto_id", nullable = false, insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PROYECTOFACTURACION_PROYECTO"))

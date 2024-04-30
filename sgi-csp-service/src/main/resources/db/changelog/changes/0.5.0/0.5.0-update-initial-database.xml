@@ -122,4 +122,10 @@
       tableName="anualidad_gasto" />
   </changeSet>
 
+  <changeSet author="master" id="0.5.0-12">
+    <addColumn tableName="proyecto_facturacion">
+      <column name="proyecto_sge_ref" type="varchar(50)" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

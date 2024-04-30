@@ -54,6 +54,8 @@ public class ProyectoFacturacionInput implements Serializable {
 
   private Long proyectoProrrogaId;
 
+  private String proyectoSgeRef;
+
   @Data
   @EqualsAndHashCode(callSuper = false)
   @NoArgsConstructor
