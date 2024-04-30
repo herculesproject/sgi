@@ -13,4 +13,5 @@ export interface IProyectoFacturacionResponse {
   tipoFacturacion: ITipoFacturacion;
   estadoValidacionIP: IEstadoValidacionIP;
   proyectoProrrogaId: number;
+  proyectoSgeRef: string;
 }

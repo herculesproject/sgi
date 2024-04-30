@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 export interface IFacturaPrevista {
   id: string;
   proyectoIdSGI: number;
-  proyectoSgeRef: string;
+  proyectoSgeId: string;
   numeroPrevision: number;
   fechaEmision: DateTime;
   importeBase: number;

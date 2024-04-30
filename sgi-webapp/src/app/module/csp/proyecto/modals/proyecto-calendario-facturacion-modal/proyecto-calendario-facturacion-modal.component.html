@@ -132,6 +132,21 @@
         </mat-error>
       </mat-form-field>
     </div>
+
+    <!-- Identificador SGE -->
+    <div fxLayout="row"
+      *ngIf="data.isCalendarioFacturacionSgeEnabled && (DIALOG_ACTION.VALIDAR_IP === data.action || DIALOG_ACTION.EDIT === data.action) && showIndentificadorSge$ | async">
+      <mat-form-field>
+        <mat-label>{{'csp.proyecto-calendario-facturacion.identificador-sge' | translate}}</mat-label>
+        <sgi-select formControlName="identificadorSge" [options]=" data.proyectosSge" required
+          [displayWith]="displayerIdentificadorSge" [compareWith]="comparerIdentificadorSge"
+          [sortWith]="sorterIdentificadorSge">
+        </sgi-select>
+        <mat-error *ngIf="formGroup.controls.identificadorSge.errors?.required">
+          {{'error.required.entity' | translate:msgParamIdentificadorSge}}
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
 </sgi-dialog-content>
 <mat-dialog-actions>

@@ -5,7 +5,7 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { IProyectoFacturacionResponse } from './proyecto-facturacion-response';
 
 class ProyectoFacturacionResponseConverter extends
-  SgiBaseConverter<IProyectoFacturacionResponse, IProyectoFacturacion>{
+  SgiBaseConverter<IProyectoFacturacionResponse, IProyectoFacturacion> {
 
   toTarget(value: IProyectoFacturacionResponse): IProyectoFacturacion {
 
@@ -20,7 +20,8 @@ class ProyectoFacturacionResponseConverter extends
       porcentajeIVA: value.porcentajeIVA,
       proyectoId: value.proyectoId,
       tipoFacturacion: value.tipoFacturacion,
-      proyectoProrroga: value.proyectoProrrogaId ? { id: value.proyectoProrrogaId } as IProyectoProrroga : null
+      proyectoProrroga: value.proyectoProrrogaId ? { id: value.proyectoProrrogaId } as IProyectoProrroga : null,
+      proyectoSgeRef: value.proyectoSgeRef
     };
   }
 
@@ -36,7 +37,8 @@ class ProyectoFacturacionResponseConverter extends
       porcentajeIVA: value.porcentajeIVA,
       proyectoId: value.proyectoId,
       tipoFacturacion: value.tipoFacturacion,
-      proyectoProrrogaId: value.proyectoProrroga?.id
+      proyectoProrrogaId: value.proyectoProrroga?.id,
+      proyectoSgeRef: value.proyectoSgeRef
     };
   }
 

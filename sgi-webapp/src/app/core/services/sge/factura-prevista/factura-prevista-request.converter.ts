@@ -9,7 +9,7 @@ class FacturaPrevistaRequestConverter extends SgiBaseConverter<IFacturaPrevistaR
     return value ? {
       id: null,
       proyectoIdSGI: value.proyectoIdSGI,
-      proyectoSgeRef: value.proyectoSgeRef,
+      proyectoSgeId: value.proyectoSgeId,
       numeroPrevision: value.numeroPrevision,
       fechaEmision: LuxonUtils.fromBackend(value.fechaEmision),
       importeBase: value.importeBase,
@@ -22,7 +22,7 @@ class FacturaPrevistaRequestConverter extends SgiBaseConverter<IFacturaPrevistaR
   fromTarget(value: IFacturaPrevista): IFacturaPrevistaRequest {
     return value ? {
       proyectoIdSGI: value.proyectoIdSGI,
-      proyectoSgeRef: value.proyectoSgeRef,
+      proyectoSgeId: value.proyectoSgeId,
       numeroPrevision: value.numeroPrevision,
       fechaEmision: LuxonUtils.toBackend(value.fechaEmision),
       importeBase: value.importeBase,

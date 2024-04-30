@@ -1,7 +1,7 @@
 
 export interface IFacturaPrevistaRequest {
   proyectoIdSGI: number;
-  proyectoSgeRef: string;
+  proyectoSgeId: string;
   numeroPrevision: number;
   fechaEmision: string;
   importeBase: number;

@@ -26,7 +26,8 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
         fecha: undefined,
         proyectoFacturacionId: undefined
       },
-      proyectoProrroga: value.proyectoProrrogaId ? { id: value.proyectoProrrogaId } as IProyectoProrroga : null
+      proyectoProrroga: value.proyectoProrrogaId ? { id: value.proyectoProrrogaId } as IProyectoProrroga : null,
+      proyectoSgeRef: value.proyectoSgeRef
     };
   }
 
@@ -46,7 +47,8 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
         comentario: value.estadoValidacionIP.comentario,
         estado: value.estadoValidacionIP.estado,
       },
-      proyectoProrrogaId: value.proyectoProrroga?.id
+      proyectoProrrogaId: value.proyectoProrroga?.id,
+      proyectoSgeRef: value.proyectoSgeRef
     };
   }
 

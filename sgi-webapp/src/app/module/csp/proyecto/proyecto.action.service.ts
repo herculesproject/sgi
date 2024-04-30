@@ -610,6 +610,7 @@ export class ProyectoActionService extends ActionService {
           this.subscriptions.push(this.proyectosSge.proyectosSge$.subscribe(value => {
             this.fichaGeneral.vinculacionesProyectosSge$.next(value.length > 0);
             this.amortizacionFondos.proyectosSGE$.next(value.map(wraper => wraper.value));
+            this.proyectoCalendarioFacturacion.proyectosSGE$.next(value.map(wraper => wraper.value.proyectoSge));
           }));
 
           // Syncronize changes

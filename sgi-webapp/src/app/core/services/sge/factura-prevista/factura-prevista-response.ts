@@ -2,7 +2,7 @@
 export interface IFacturaPrevistaResponse {
   id: string;
   proyectoIdSGI: number;
-  proyectoSgeRef: string;
+  proyectoSgeId: string;
   numeroPrevision: number;
   fechaEmision: string;
   importeBase: number;

@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IEstadoValidacionIP, TipoEstadoValidacion, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
+import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP, TipoEstadoValidacion } from '@core/models/csp/estado-validacion-ip';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -23,6 +23,7 @@ import { IProyectoFacturacionData, ProyectoCalendarioFacturacionFragment } from 
 
 const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_CALENDARIO_FACTURACION_ITEM_KEY = marker('csp.proyecto-calendario-facturacion.item');
+const PROYECTO_CALENDARIO_FACTURACION_NOTIFICAR_NO_PERMITIDO_KEY = marker('msg.csp.proyecto-calendario-facturacion.notificar-no-permitido');
 
 @Component({
   selector: 'sgi-proyecto-calendario-facturacion',
@@ -57,6 +58,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
   ];
 
   msgParamEntity = {};
+  msgNotAvailableNotificar: string;
   textDelete: string;
 
   dataSource = new MatTableDataSource<StatusWrapper<IProyectoFacturacionData>>();
@@ -108,6 +110,11 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
         );
       })
     ).subscribe((value) => this.textDelete = value);
+
+    this.translate.get(
+      PROYECTO_CALENDARIO_FACTURACION_NOTIFICAR_NO_PERMITIDO_KEY,
+    ).subscribe((value) => this.msgNotAvailableNotificar = value);
+
   }
 
   private initDataTable() {
@@ -165,7 +172,13 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
     proyectoFacturacionTable.splice(row, 1);
 
     if (proyectoFacturacionToUpdate) {
-      this.showProyectoFacturacionDialog(proyectoFacturacionToUpdate, row, action);
+      if (action === DialogAction.VALIDAR_IP && this.formPart.isCalendarioFacturacionSgeEnabled && this.formPart.proyectosSGE$.value.length === 0) {
+        this.subscriptions.push(
+          this.dialogService.showInfoDialog(this.msgNotAvailableNotificar).subscribe()
+        );
+      } else {
+        this.showProyectoFacturacionDialog(proyectoFacturacionToUpdate, row, action);
+      }
     } else {
       this.showProyectoFacturacionDialog({
         numeroPrevision: this.formPart.getNextNumeroPrevision()
@@ -184,6 +197,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
       proyectoFacturacion,
       porcentajeIVA: proyectoFacturacion.porcentajeIVA || this.formPart.proyectoIVA,
       action,
+      proyectosSge: this.formPart.proyectosSGE$.value,
       isCalendarioFacturacionSgeEnabled: this.formPart.isCalendarioFacturacionSgeEnabled
     };
 

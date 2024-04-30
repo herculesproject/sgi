@@ -15,4 +15,5 @@ export interface IProyectoFacturacionRequest {
     estado: TipoEstadoValidacion;
   }
   proyectoProrrogaId: number;
+  proyectoSgeRef: string;
 }

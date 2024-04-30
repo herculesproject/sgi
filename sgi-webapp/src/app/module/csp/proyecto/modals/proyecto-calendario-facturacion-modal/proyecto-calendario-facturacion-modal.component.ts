@@ -3,9 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP, TipoEstadoValidacion } from '@core/models/csp/estado-validacion-ip';
 import { ITipoFacturacion } from '@core/models/csp/tipo-facturacion';
+import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { TipoFacturacionService } from '@core/services/csp/tipo-facturacion/tipo-facturacion.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -21,6 +23,7 @@ export interface IProyectoCalendarioFacturacionModalData {
   proyectoFacturacion: IProyectoFacturacionData;
   porcentajeIVA?: number;
   action: DialogAction;
+  proyectosSge: IProyectoSge[];
   isCalendarioFacturacionSgeEnabled: boolean;
 }
 
@@ -34,6 +37,7 @@ const PROYECTO_CALENDARIO_FACTURACION_COMENTARIO_KEY = marker('csp.proyecto-cale
 const PROYECTO_CALENDARIO_FACTURACION_MOTIVO_RECHAZO_KEY = marker('csp.proyecto-calendario-facturacion.motivo-rechazo');
 const PROYECTO_CALENDARIO_FACTURACION_NUEVO_ESTADO_VALIDACION_IP_KEY = marker('csp.proyecto-calendario-facturacion.nuevo-estado-validacion-ip');
 const PROYECTO_CALENDARIO_FACTURACION_VALIDACION_IP_KEY = marker('csp.proyecto-calendario-facturacion.validacion-ip');
+const PROYECTO_CALENDARIO_FACTURACION_IDENTIFICADOR_SGE_KEY = marker('csp.proyecto-calendario-facturacion.identificador-sge');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -55,6 +59,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
   msgParamNuevoEstadoValidacionIPEntity = {};
   msgParamMotivoRechazoEntity = {};
   msgParamFechaConformidadEntity = {};
+  msgParamIdentificadorSge = {};
 
   textSaveOrUpdate: string;
   title: string;
@@ -70,6 +75,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
   }
 
   public readonly showMensajeMotivoRechazo$ = new BehaviorSubject<boolean>(false);
+  public readonly showIndentificadorSge$ = new BehaviorSubject<boolean>(false);
 
   public readonly TIPO_ESTADO_VALIDACION_ESTADO_NOTIFICADA_MAP: Map<TipoEstadoValidacion, string> = new Map([
     [TipoEstadoValidacion.VALIDADA, marker('csp.tipo-estado-validacion.VALIDADA')],
@@ -118,7 +124,8 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       porcentajeIVA: this.formGroup.controls.porcentajeIVA.value,
       comentario: this.formGroup.controls.comentario.value,
       tipoFacturacion: this.formGroup.controls.tipoFacturacion.value,
-      proyectoProrroga: this.formGroup.controls.proyectoProrroga.value
+      proyectoProrroga: this.formGroup.controls.proyectoProrroga.value,
+      proyectoSgeRef: this.formGroup.controls.identificadorSge.value?.id
     };
     return this.data;
   }
@@ -126,6 +133,8 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
   protected buildFormGroup(): FormGroup {
 
     const data = this.data?.proyectoFacturacion;
+
+    const identificadorSgeUnico = this.data.proyectosSge.length !== 1 ? null : this.data.proyectosSge[0];
 
     const form = new FormGroup({
       numeroPrevision: new FormControl({ value: data?.numeroPrevision, disabled: true }, [Validators.required]),
@@ -138,11 +147,19 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       tipoFacturacion: new FormControl(data?.tipoFacturacion),
       proyectoProrroga: new FormControl(data?.proyectoProrroga),
       nuevoEstadoValidacionIP: new FormControl(null),
-      mensajeMotivoRechazo: new FormControl('')
+      mensajeMotivoRechazo: new FormControl(''),
+      identificadorSge: new FormControl(data?.proyectoSgeRef ?? identificadorSgeUnico)
     });
+
+
+    if (this.data.isCalendarioFacturacionSgeEnabled && (this.data.action === DialogAction.VALIDAR_IP || this.data.action === DialogAction.EDIT) && identificadorSgeUnico) {
+      form.controls.identificadorSge.disable({ emitEvent: false });
+    }
 
     if (form.controls.validacionIP.value === TipoEstadoValidacion.VALIDADA) {
       form.controls.fechaConformidad.setValidators(Validators.required);
+      form.controls.identificadorSge.setValidators(Validators.required);
+      this.showIndentificadorSge$.next(true);
     }
 
     if (this.data.action === DialogAction.VALIDAR_IP) {
@@ -174,8 +191,14 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
           this.showMensajeMotivoRechazo$.next(isRechazada);
           form.controls.mensajeMotivoRechazo.setValidators(isRechazada
             ? [Validators.required, Validators.maxLength(COMENTARIO_MAX_LENGTH)] : []);
-
           form.controls.mensajeMotivoRechazo.updateValueAndValidity();
+
+          if (this.data.isCalendarioFacturacionSgeEnabled) {
+            const isValidada = newEstado === TipoEstadoValidacion.VALIDADA;
+            this.showIndentificadorSge$.next(newEstado === TipoEstadoValidacion.VALIDADA);
+            form.controls.identificadorSge.setValidators(isValidada ? [Validators.required] : []);
+            form.controls.identificadorSge.updateValueAndValidity();
+          }
         })
     );
 
@@ -264,6 +287,11 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR, ...MSG_PARAMS.GENDER.MALE
     });
 
+    this.translate.get(
+      PROYECTO_CALENDARIO_FACTURACION_IDENTIFICADOR_SGE_KEY
+    ).subscribe((value) => this.msgParamIdentificadorSge = {
+      entity: value, ...MSG_PARAMS.CARDINALIRY.SINGULAR, ...MSG_PARAMS.GENDER.MALE
+    });
 
     this.textSaveOrUpdate = this.data?.proyectoFacturacion?.id ? MSG_ACEPTAR : MSG_ANADIR;
   }
@@ -274,6 +302,21 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
 
   public canShowFechaConformidad(): boolean {
     return this.data?.action === DialogAction.EDIT && this.data?.proyectoFacturacion?.estadoValidacionIP.estado === TipoEstadoValidacion.VALIDADA;
+  }
+
+  displayerIdentificadorSge(proyectoSge: IProyectoSge): string {
+    return proyectoSge?.id;
+  }
+
+  sorterIdentificadorSge(o1: SelectValue<IProyectoSge>, o2: SelectValue<IProyectoSge>): number {
+    return o1?.displayText.toString().localeCompare(o2?.displayText.toString());
+  }
+
+  comparerIdentificadorSge(o1: IProyectoSge, o2: IProyectoSge): boolean {
+    if (o1 && o2) {
+      return o1?.id === o2?.id;
+    }
+    return o1 === o2;
   }
 
   private loadTiposFacturacion() {

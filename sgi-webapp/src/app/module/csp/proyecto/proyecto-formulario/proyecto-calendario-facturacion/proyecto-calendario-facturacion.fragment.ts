@@ -3,6 +3,7 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
 import { IFacturaPrevista } from '@core/models/sge/factura-prevista';
 import { IFacturaPrevistaEmitida } from '@core/models/sge/factura-prevista-emitida';
+import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { Fragment } from '@core/services/action-service';
 import { ConfigService } from '@core/services/csp/config.service';
 import { ProyectoFacturacionService } from '@core/services/csp/proyecto-facturacion/proyecto-facturacion.service';
@@ -24,6 +25,7 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
 
   public proyectosFacturacion$: BehaviorSubject<StatusWrapper<IProyectoFacturacionData>[]> =
     new BehaviorSubject<StatusWrapper<IProyectoFacturacionData>[]>([]);
+  proyectosSGE$ = new BehaviorSubject<IProyectoSge[]>([]);
   private proyectosFacturacionDeleted: StatusWrapper<IProyectoFacturacionData>[] = [];
   private _isCalendarioFacturacionSgeEnabled = false;
 
@@ -273,7 +275,7 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
       numeroPrevision: itemFacturacion.numeroPrevision,
       porcentajeIVA: itemFacturacion.porcentajeIVA,
       proyectoIdSGI: itemFacturacion.proyectoId,
-      proyectoSgeRef: null,
+      proyectoSgeId: itemFacturacion.proyectoSgeRef,
       tipoFacturacion: itemFacturacion.tipoFacturacion?.nombre
     };
 
