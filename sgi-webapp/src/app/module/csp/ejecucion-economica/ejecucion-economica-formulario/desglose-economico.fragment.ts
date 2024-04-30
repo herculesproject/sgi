@@ -191,6 +191,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
 
   public loadDesglose(): void {
     const anualidades = this.aniosControl.value ?? [];
+    this.clearProblems();
     this.getDatosEconomicos(anualidades)
       .pipe(
         switchMap(response => this.buildRows(response))
