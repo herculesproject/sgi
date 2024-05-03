@@ -126,7 +126,7 @@ export class ProyectoEconomicoFormlyModalComponent
     }
 
     let load$: Observable<IFormlyData>;
-
+    this.options.formState.isGrupo = !!grupo;
     if (grupo == null) {
       load$ = this.fillProyectoData(formly$, action, proyectoSgiId, proyectoSgeId);
     } else {
@@ -344,21 +344,12 @@ export class ProyectoEconomicoFormlyModalComponent
             proyecto: {
               id: grupo?.id,
               titulo: grupo?.nombre,
-              finalidad: {
-                id: 17,
-                nombre: 'Grupo de investigación o proyecto de fondos propios'
-              },
+              finalidad: {},
               fechaInicio: grupo?.fechaInicio,
               fechaFin: grupo?.fechaFin,
-              modeloEjecucion: {
-                id: 3,
-                nombre: 'Recursos propios'
-              }
+              modeloEjecucion: {}
             },
-            tipoFinalidad: {
-              id: 17,
-              nombre: 'Grupo de investigación o proyecto de fondos propios'
-            }
+            tipoFinalidad: {}
           },
           model: {}
         } as IFormlyData;
@@ -492,16 +483,24 @@ export class ProyectoEconomicoFormlyModalComponent
   private parseModel() {
     FormlyUtils.convertFormlyToJSON(this.formlyData.model, this.formlyData.fields);
     this.formlyData.model.causaExencion = this.formlyData.data.causaExencion;
-    this.formlyData.model.modeloEjecucion = {
-      id: this.formlyData.model.modeloEjecucion?.id,
-      nombre: this.formlyData.model.modeloEjecucion?.nombre,
-    };
-    this.formlyData.model.tipoFinalidad = {
-      id: this.formlyData.model.tipoFinalidad?.id,
-      nombre: this.formlyData.model.tipoFinalidad?.nombre,
-    };
-  }
+    if (this.formlyData.model.modeloEjecucion?.id) {
+      this.formlyData.model.modeloEjecucion = {
+        id: this.formlyData.model.modeloEjecucion?.id,
+        nombre: this.formlyData.model.modeloEjecucion?.nombre,
+      };
+    } else {
+      this.formlyData.model.modeloEjecucion = null;
+    }
 
+    if (this.formlyData.model.tipoFinalidad?.id) {
+      this.formlyData.model.tipoFinalidad = {
+        id: this.formlyData.model.tipoFinalidad?.id,
+        nombre: this.formlyData.model.tipoFinalidad?.nombre,
+      };
+    } else {
+      this.formlyData.model.tipoFinalidad = null;
+    }
+  }
   private getCurrentMiembroEquipoWithRolOrdenPrimario(id: number): Observable<IResponsable> {
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('rolProyecto.rolPrincipal', SgiRestFilterOperator.EQUALS, 'true')
