@@ -148,7 +148,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       proyectoProrroga: new FormControl(data?.proyectoProrroga),
       nuevoEstadoValidacionIP: new FormControl(null),
       mensajeMotivoRechazo: new FormControl(''),
-      identificadorSge: new FormControl(data?.proyectoSgeRef ?? identificadorSgeUnico)
+      identificadorSge: new FormControl(data?.proyectoSgeRef ? { id: data.proyectoSgeRef } as IProyectoSge : identificadorSgeUnico)
     });
 
 

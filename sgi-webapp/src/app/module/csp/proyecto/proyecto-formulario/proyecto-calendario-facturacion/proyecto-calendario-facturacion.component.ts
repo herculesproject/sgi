@@ -172,13 +172,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
     proyectoFacturacionTable.splice(row, 1);
 
     if (proyectoFacturacionToUpdate) {
-      if (action === DialogAction.VALIDAR_IP && this.formPart.isCalendarioFacturacionSgeEnabled && this.formPart.proyectosSGE$.value.length === 0) {
-        this.subscriptions.push(
-          this.dialogService.showInfoDialog(this.msgNotAvailableNotificar).subscribe()
-        );
-      } else {
-        this.showProyectoFacturacionDialog(proyectoFacturacionToUpdate, row, action);
-      }
+      this.showProyectoFacturacionDialog(proyectoFacturacionToUpdate, row, action);
     } else {
       this.showProyectoFacturacionDialog({
         numeroPrevision: this.formPart.getNextNumeroPrevision()
@@ -251,14 +245,20 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
   }
 
   public notificarIP(item: StatusWrapper<IProyectoFacturacionData>, rowIndex: number): void {
-    // Necesario para sincronizar los cambios de orden de registros dependiendo de la ordenación y paginación
-    this.dataSource.sortData(this.dataSource.filteredData, this.dataSource.sort);
-    const row = (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
+    if (this.formPart.isCalendarioFacturacionSgeEnabled && this.formPart.proyectosSGE$.value.length === 0) {
+      this.subscriptions.push(
+        this.dialogService.showInfoDialog(this.msgNotAvailableNotificar).subscribe()
+      );
+    } else {
+      // Necesario para sincronizar los cambios de orden de registros dependiendo de la ordenación y paginación
+      this.dataSource.sortData(this.dataSource.filteredData, this.dataSource.sort);
+      const row = (this.paginator.pageSize * this.paginator.pageIndex) + rowIndex;
 
-    item.value.estadoValidacionIP = {
-      estado: TipoEstadoValidacion.NOTIFICADA,
-    } as IEstadoValidacionIP;
-    this.formPart.updateProyectoFacturacion(item, row);
+      item.value.estadoValidacionIP = {
+        estado: TipoEstadoValidacion.NOTIFICADA,
+      } as IEstadoValidacionIP;
+      this.formPart.updateProyectoFacturacion(item, row);
+    }
   }
 
 }

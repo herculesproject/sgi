@@ -2581,7 +2581,7 @@
   "msg.csp.notificacion-cvn.asociar-proyecto": "Indique si desea crear un nuevo proyecto o vincularlo a uno existente",
   "msg.csp.notificacion-presupuesto-sge.success": "Presupuestos notificados correctamente",
   "msg.csp.prorroga.update-importe-proyecto": "Recuerde que debe actualizar el presupuesto del proyecto de acuerdo al nuevo importe concedido en esta prórroga",
-  "msg.csp.proyecto-calendario-facturacion.notificar-no-permitido": "Para poder Notificar un ítem del facturación, es necesario que el proyecto SGI esté vinculado a un identificador SGE. Debe establecer este vínculo desde el menú Configuración económica - Identificación.",
+  "msg.csp.proyecto-calendario-facturacion.notificar-no-permitido": "Para poder Notificar un ítem de facturación, es necesario que el proyecto SGI esté vinculado a un identificador SGE. Debe establecer este vínculo desde el menú Configuración económica - Identificación.",
   "msg.csp.proyecto-concepto-gasto.listado.codigo-economico.delete": "Existen códigos económicos asignados al concepto de gasto del proyecto. ¿Desea eliminar el concepto de gasto asignado al proyecto?",
   "msg.csp.proyecto-partida-presupuestaria.vinculaciones": "No se puede modificar ni eliminar la partida porque está siendo usada en uno de los presupuestos del proyecto y la anualidad se ha enviado al SGE",
   "msg.csp.proyecto-periodo-seguimiento-cientifico.documento.delete": "Existen documentos asociados a este periodo de seguimiento ¿Desea continuar?",
