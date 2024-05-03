@@ -407,6 +407,7 @@
               },
               {
                 "fieldGroupClassName": "row-formly",
+                "hideExpression": "formState.isGrupo === true",
                 "fieldGroup": [
                   {
                     "key": "modeloEjecucion",
@@ -638,6 +639,7 @@
               },
               {
                 "fieldGroupClassName": "row-formly",
+                "hideExpression": "formState.isGrupo === true",
                 "fieldGroup": [
                   {
                     "key": "modeloEjecucion",
