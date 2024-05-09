@@ -46,6 +46,21 @@
   <!-- FORMULARIO M20 -->
   <changeSet context="!test" author="master" id="00.05.00-apartados-m20">
     <update tableName="apartado">
+      <column name="esquema" valueClobFile="clob/m20_apartado_3_6_1.json" />
+      <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="bloque_id"
+          valueComputed="(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20'))" />
+        <param
+          name="nombre" value="Definición" />
+        <param name="padre_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Datos referentes a los animales de experimentación' and orden = '6' and bloque_id=(select id from ${schemaPrefix}bloque where orden = '3' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
+        <param
+          name="orden" valueNumeric="1" />
+      </whereParams>
+    </update>
+    
+    <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_7_1.json" />
       <where>:name=:value AND :name=:value AND :name=:value AND :name=:value</where>
       <whereParams>
