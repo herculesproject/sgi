@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -132,6 +133,10 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
       proyectoSocioExistente.setImporteConcedido(proyectoSocio.getImporteConcedido());
       proyectoSocioExistente.setImportePresupuesto(proyectoSocio.getImportePresupuesto());
 
+      if (proyectoSocioExistente.getSolicitudSocioId() == null) {
+        proyectoSocioExistente.setSolicitudSocioId(proyectoSocio.getSolicitudSocioId());
+      }
+
       ProyectoSocio returnValue = repository.save(proyectoSocioExistente);
       log.debug("update(ProyectoSocio proyectoSocio) - end");
       return returnValue;
@@ -232,6 +237,19 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
   }
 
   /**
+   * Obtiene todas las entidades {@link ProyectoSocio} para un {@link Proyecto}.
+   *
+   * @param proyectoId el id de la {@link Proyecto}.
+   * @return el listado de entidades {@link ProyectoSocio} del {@link Proyecto}.
+   */
+  public List<ProyectoSocio> findAllByProyecto(Long proyectoId) {
+    log.debug("findAllByProyecto(Long proyectoId) - start");
+    List<ProyectoSocio> returnValue = repository.findAll(ProyectoSocioSpecifications.byProyectoId(proyectoId));
+    log.debug("findAllByProyecto(Long proyectoId) - end");
+    return returnValue;
+  }
+
+  /**
    * Comprueba si existe algun {@link ProyectoSocio} que tenga un rol con el flag
    * coordinador a true para el proyecto.
    * 
@@ -282,7 +300,8 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
    * @param proyectoSocio un {@link ProyectoSocio}.
    * @return true si se solapa o false si no hay solapamiento.
    */
-  private boolean isRangoFechasSolapado(ProyectoSocio proyectoSocio) {
+  @Override
+  public boolean isRangoFechasSolapado(ProyectoSocio proyectoSocio) {
     log.debug("isRangoFechasSolapado(ProyectoSocio proyectoSocio) - start");
 
     Specification<ProyectoSocio> specByIdNotEqual = ProyectoSocioSpecifications.byIdNotEqual(proyectoSocio.getId());
@@ -346,6 +365,25 @@ public class ProyectoSocioServiceImpl implements ProyectoSocioService {
     return !this.repository.findByProyectoId(proyectoId).stream()
         .filter(proyectoSocio -> this.periodoJustificacionRepository.existsByProyectoSocioId(proyectoSocio.getId()))
         .collect(Collectors.toList()).isEmpty();
+  }
+
+  /**
+   * Comprueba si alguno de los {@link ProyectoSocio} del {@link Proyecto}
+   * tienen fechas
+   * 
+   * @param proyectoId el id del {@link Proyecto}.
+   * @return true si existen y false en caso contrario.
+   */
+  @Override
+  public boolean proyectoHasSociosWithDates(Long proyectoId) {
+    log.debug("proyectoHasSociosWithDates({})  - start", proyectoId);
+
+    Specification<ProyectoSocio> specs = ProyectoSocioSpecifications.byProyectoId(proyectoId)
+        .and(ProyectoSocioSpecifications.withFechaInicioOrFechaFin());
+
+    boolean hasSociosWithDates = repository.count(specs) > 0;
+    log.debug("proyectoHasSociosWithDates({})  - end", proyectoId);
+    return hasSociosWithDates;
   }
 
 }

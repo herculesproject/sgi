@@ -123,21 +123,19 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
         Assert.isTrue(proyectoEquipo.getFechaInicio().isBefore(proyectoEquipo.getFechaFin()),
             "La fecha de fin de participación en el proyecto de algún miembro del equipo pasaría a ser menor que su fecha de inicio. Revise los datos del apartado equipo del proyecto");
       }
-      if (proyectoEquipo.getFechaInicio() != null) {
+      if (proyectoEquipo.getFechaInicio() != null && proyecto.getFechaInicio() != null) {
         Assert.isTrue(
             (proyectoEquipo.getFechaInicio().isAfter(proyecto.getFechaInicio())
                 || proyectoEquipo.getFechaInicio().equals(proyecto.getFechaInicio())),
             "Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
       }
-      if (proyecto.getFechaFinDefinitiva() != null && proyectoEquipo.getFechaFin() != null) {
+
+      Instant proyectoFechaFin = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
+          : proyecto.getFechaFin();
+      if (proyectoEquipo.getFechaFin() != null && proyectoFechaFin != null) {
         Assert.isTrue(
-            proyectoEquipo.getFechaFin().isBefore(proyecto.getFechaFinDefinitiva())
-                || proyectoEquipo.getFechaFin().equals(proyecto.getFechaFinDefinitiva()),
-            "Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
-      } else if (proyectoEquipo.getFechaFin() != null) {
-        Assert.isTrue(
-            proyectoEquipo.getFechaFin().isBefore(proyecto.getFechaFin())
-                || proyectoEquipo.getFechaFin().equals(proyecto.getFechaFin()),
+            (proyectoEquipo.getFechaFin().isBefore(proyectoFechaFin)
+                || proyectoEquipo.getFechaFin().equals(proyectoFechaFin)),
             "Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
       }
 
@@ -314,6 +312,25 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
 
     log.debug("findInvestigadoresPrincipales(Long proyectoId) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba si alguno de los {@link ProyectoEquipo} del {@link Proyecto}
+   * tienen fechas
+   * 
+   * @param proyectoId el id del {@link Proyecto}.
+   * @return true si existen y false en caso contrario.
+   */
+  @Override
+  public boolean proyectoHasProyectoEquipoWithDates(Long proyectoId) {
+    log.debug("proyectoHasProyectoEquipoWithDates({})  - start", proyectoId);
+
+    Specification<ProyectoEquipo> specs = ProyectoEquipoSpecifications.byProyectoId(proyectoId)
+        .and(ProyectoEquipoSpecifications.withFechaInicioOrFechaFin());
+
+    boolean hasProyectoEquipoWithDates = repository.count(specs) > 0;
+    log.debug("proyectoHasProyectoEquipoWithDates({})  - end", proyectoId);
+    return hasProyectoEquipoWithDates;
   }
 
 }

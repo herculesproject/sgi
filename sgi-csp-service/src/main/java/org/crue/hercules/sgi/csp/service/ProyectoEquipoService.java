@@ -102,4 +102,13 @@ public interface ProyectoEquipoService {
    */
   public List<ProyectoEquipo> findInvestigadoresPrincipales(Long proyectoId);
 
+  /**
+   * Comprueba si alguno de los {@link ProyectoEquipo} del {@link Proyecto}
+   * tienen fechas
+   * 
+   * @param proyectoId el id del {@link Proyecto}.
+   * @return true si existen y false en caso contrario.
+   */
+  boolean proyectoHasProyectoEquipoWithDates(Long proyectoId);
+
 }

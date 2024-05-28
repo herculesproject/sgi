@@ -128,4 +128,23 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.5.0-13">
+    <dropNotNullConstraint columnDataType="TIMESTAMP" columnName="fecha_inicio"
+      tableName="proyecto" />
+    <dropNotNullConstraint columnDataType="TIMESTAMP" columnName="fecha_fin"
+      tableName="proyecto" />
+  </changeSet>
+
+  <changeSet author="master" id="0.5.0-14">
+    <addColumn tableName="proyecto_socio">
+      <column name="solicitud_socio_id" type="BIGINT" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="master" id="0.5.0-15">
+    <addColumn tableName="proyecto">
+      <column name="fecha_inicio_started" type="BOOLEAN" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

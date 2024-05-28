@@ -100,13 +100,11 @@ public class Proyecto extends BaseEntity {
   private String codigoExterno;
 
   /** Fecha Inicio. */
-  @Column(name = "fecha_inicio", nullable = false)
-  @NotNull
+  @Column(name = "fecha_inicio", nullable = true)
   private Instant fechaInicio;
 
   /** Fecha Fin. */
-  @Column(name = "fecha_fin", nullable = false)
-  @NotNull
+  @Column(name = "fecha_fin", nullable = true)
   private Instant fechaFin;
 
   /** Fecha Fin definitiva */
@@ -228,6 +226,10 @@ public class Proyecto extends BaseEntity {
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   @NotNull
   private Boolean activo;
+
+  /** Fecha inicio informada en algun momento */
+  @Column(name = "fecha_inicio_started", columnDefinition = "boolean default false", nullable = true)
+  private Boolean fechaInicioStarted;
 
   // Relation mappings for JPA metamodel generation only
   @OneToOne(mappedBy = "proyecto")
