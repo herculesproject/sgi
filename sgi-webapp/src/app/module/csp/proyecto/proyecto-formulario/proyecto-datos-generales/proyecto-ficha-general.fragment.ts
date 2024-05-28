@@ -88,6 +88,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return this._proyectoRelaciones$;
   }
 
+  set fechaInicioStarted(started: boolean) {
+    this.proyecto.fechaInicioStarted = started;
+  }
+
   get fechasHasChanges(): boolean {
     return this.getValue().fechaInicio?.toMillis() !== this.proyectoWithoutChanges.fechaInicio?.toMillis()
       || this.getValue().fechaFin?.toMillis() !== this.proyectoWithoutChanges.fechaFin?.toMillis()

@@ -838,6 +838,8 @@ export class ProyectoActionService extends ActionService {
         if (!!proyecto.fechaInicio && !proyecto.fechaInicioStarted) {
           return this.proyectoService.initFechaInicio(proyecto.id).pipe(
             tap(() => {
+              this.fichaGeneral.fechaInicioStarted = true;
+
               if (this.elegibilidad.isInitialized()) {
                 this.elegibilidad.reloadData();
               }
