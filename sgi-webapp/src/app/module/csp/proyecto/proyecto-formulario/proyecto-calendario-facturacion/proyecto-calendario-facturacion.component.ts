@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { Estado } from '@core/models/csp/estado-proyecto';
 import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP, TipoEstadoValidacion } from '@core/models/csp/estado-validacion-ip';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -259,6 +260,10 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
       } as IEstadoValidacionIP;
       this.formPart.updateProyectoFacturacion(item, row);
     }
+  }
+
+  isProyectoEstadoConcedido(): boolean {
+    return this.actionService.estado === Estado.CONCEDIDO;
   }
 
 }

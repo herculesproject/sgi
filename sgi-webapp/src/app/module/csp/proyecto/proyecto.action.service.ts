@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
@@ -70,9 +71,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, merge, Observable, of, Subject, throwError } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, merge, Observable, of, Subject, throwError } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
+import { ProyectoCopiarAparatadosModalComponent, ProyectoCopiarApartadosModalData } from './modals/proyecto-copiar-apartados-modal/proyecto-copiar-apartados-modal.component';
+import { ProyectoInfoModificarFechasModalComponent } from './modals/proyecto-info-modificar-fechas-modal/proyecto-info-modificar-fechas-modal.component';
 import { PROYECTO_DATA_KEY } from './proyecto-data.resolver';
 import { ProyectoAgrupacionGastoFragment } from './proyecto-formulario/proyecto-agrupaciones-gasto/proyecto-agrupaciones-gasto.fragment';
 import { ProyectoAmortizacionFondosFragment } from './proyecto-formulario/proyecto-amortizacion-fondos/proyecto-amortizacion-fondos.fragment';
@@ -252,6 +255,7 @@ export class ProyectoActionService extends ActionService {
     fb: FormBuilder,
     logger: NGXLogger,
     private route: ActivatedRoute,
+    private matDialog: MatDialog,
     protected proyectoService: ProyectoService,
     private readonly areaConocimientoService: AreaConocimientoService,
     private readonly clasificacionService: ClasificacionService,
@@ -740,6 +744,56 @@ export class ProyectoActionService extends ActionService {
     let cascade = of(void 0);
 
     if (this.isEdit()) {
+      if (this.fichaGeneral?.hasChanges()) {
+        this.fichaGeneral.colaborativo$
+        const proyecto = this.fichaGeneral.getValue();
+        if (!!proyecto.fechaInicio && !proyecto.fechaInicioStarted && (!!proyecto.solicitudId || !!proyecto.convocatoriaId)) {
+
+          cascade = cascade.pipe(
+            switchMap(() =>
+              forkJoin({
+                apartadosToBeCopied: this.proyectoService.hasApartadosToBeCopied(proyecto.id),
+                apartadosWithDates: this.proyectoService.hasApartadosWithDates(proyecto.id)
+              }).pipe(
+                switchMap(({ apartadosToBeCopied, apartadosWithDates }) => {
+
+                  const hasApartadosWithDates = apartadosWithDates?.elegibilidad
+                    || apartadosWithDates?.equiposSocios
+                    || apartadosWithDates?.equipo
+                    || apartadosWithDates?.responsableEconomico
+                    || apartadosWithDates?.socios;
+
+                  const hasApartadosToBeCopied = apartadosToBeCopied?.elegibilidad
+                    || apartadosToBeCopied?.equiposSocios
+                    || apartadosToBeCopied?.equipo
+                    || apartadosToBeCopied?.responsableEconomico
+                    || apartadosToBeCopied?.socios;
+
+                  if (hasApartadosWithDates || hasApartadosToBeCopied) {
+                    const config = {
+                      data: {
+                        apartadosToBeCopied,
+                        apartadosWithDates
+                      } as ProyectoCopiarApartadosModalData,
+                    };
+
+                    return this.matDialog.open(ProyectoCopiarAparatadosModalComponent, config).afterClosed().pipe(
+                      filter(aceptado => !!aceptado)
+                    );
+                  }
+
+                  return of(void 0);
+                })
+              )
+            )
+          );
+        } else if (this.fichaGeneral.fechasHasChanges) {
+          cascade = cascade.pipe(
+            switchMap(() => this.matDialog.open(ProyectoInfoModificarFechasModalComponent).afterClosed())
+          );
+        }
+      }
+
       if (this.prorrogas?.hasChanges()) {
         if (this.proyectoEquipo?.hasChanges()) {
           cascade = cascade.pipe(
@@ -778,7 +832,33 @@ export class ProyectoActionService extends ActionService {
     }
 
     return cascade.pipe(
-      switchMap(() => super.saveOrUpdate())
+      switchMap(() => super.saveOrUpdate()),
+      switchMap(() => {
+        const proyecto = this.fichaGeneral.getValue();
+        if (!!proyecto.fechaInicio && !proyecto.fechaInicioStarted) {
+          return this.proyectoService.initFechaInicio(proyecto.id).pipe(
+            tap(() => {
+              if (this.elegibilidad.isInitialized()) {
+                this.elegibilidad.reloadData();
+              }
+
+              if (this.proyectoEquipo.isInitialized()) {
+                this.proyectoEquipo.reloadData();
+              }
+
+              if (this.responsableEconomico.isInitialized()) {
+                this.responsableEconomico.reloadData();
+              }
+
+              if (this.socios.isInitialized()) {
+                this.socios.reloadData();
+              }
+            })
+          );
+        }
+
+        return of(void 0);
+      })
     );
   }
 

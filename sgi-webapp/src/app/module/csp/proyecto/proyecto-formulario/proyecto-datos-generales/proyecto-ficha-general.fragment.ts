@@ -43,6 +43,7 @@ interface IProyectoDatosGenerales extends IProyecto {
 export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   private proyecto: IProyecto;
+  private proyectoWithoutChanges: IProyecto;
 
   selectedConvocatoria: IConvocatoria;
   solicitud: ISolicitud;
@@ -85,6 +86,12 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   public get proyectoRelaciones$() {
     return this._proyectoRelaciones$;
+  }
+
+  get fechasHasChanges(): boolean {
+    return this.getValue().fechaInicio?.toMillis() !== this.proyectoWithoutChanges.fechaInicio?.toMillis()
+      || this.getValue().fechaFin?.toMillis() !== this.proyectoWithoutChanges.fechaFin?.toMillis()
+      || this.getValue().fechaFinDefinitiva?.toMillis() !== this.proyectoWithoutChanges.fechaFinDefinitiva?.toMillis();
   }
 
   constructor(
@@ -142,6 +149,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return this.service.findById(key).pipe(
       map(proyecto => {
         this.proyecto = proyecto;
+        this.proyectoWithoutChanges = { ...proyecto };
         if (this.proyecto.solicitudId) {
           this.subscriptions.push(this.solicitudService.findById(this.proyecto.solicitudId).subscribe(solicitud => {
             this.solicitud = solicitud;
@@ -206,9 +214,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       acronimo: new FormControl('', [Validators.maxLength(50)]),
       codigoInterno: new FormControl(null, [Validators.maxLength(50)]),
       codigoExterno: new FormControl(null, [Validators.maxLength(50)]),
-      fechaInicio: new FormControl(null, [
-        Validators.required]),
-      fechaFin: new FormControl(null, [Validators.required, this.buildValidatorFechaFin()]),
+      fechaInicio: new FormControl(null),
+      fechaFin: new FormControl(null, [this.buildValidatorFechaFin()]),
       fechaFinDefinitiva: new FormControl(null),
       convocatoria: new FormControl({
         value: '',
@@ -246,7 +253,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       {
         validators: [
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
-          DateValidator.isAfterOrEqual('fechaInicio', 'fechaFinDefinitiva')
+          DateValidator.isAfterOrEqual('fechaInicio', 'fechaFinDefinitiva'),
+          this.validateCanAddfechaFinDefinitiva()
         ]
       });
 
@@ -338,15 +346,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
     if (!this.readonly) {
 
-      this.subscriptions.push(
-        form.controls.fechaFinDefinitiva.valueChanges.subscribe(
-          (value) => {
-            value ? form.controls.fechaFin.setValidators([Validators.required]) :
-              form.controls.fechaFin.setValidators([Validators.required, this.buildValidatorFechaFin()]);
-            form.controls.fechaFin.updateValueAndValidity();
-          }
-        )
-      );
 
       if (!this.isInvestigador) {
         this.subscriptions.push(
@@ -423,6 +422,28 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     );
 
     return form;
+  }
+
+  private validateCanAddfechaFinDefinitiva(): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+
+      const fechaInicioControl = formGroup.controls.fechaInicio;
+      const fechaFinControl = formGroup.controls.fechaFin;
+      const fechaFinDefinitivaControl = formGroup.controls.fechaFinDefinitiva;
+
+      if (fechaInicioControl.errors && fechaFinControl.errors) {
+        return;
+      }
+
+      if (!fechaInicioControl.value && !fechaFinControl.value && !!fechaFinDefinitivaControl.value) {
+        fechaFinDefinitivaControl.setErrors({ fechaFinRequired: true });
+        fechaFinDefinitivaControl.markAsTouched({ onlySelf: true });
+      } else if (fechaFinDefinitivaControl.errors) {
+        delete fechaFinDefinitivaControl.errors.fechaFinRequired;
+        fechaFinDefinitivaControl.updateValueAndValidity({ onlySelf: true });
+      }
+
+    };
   }
 
   private subscribeToVerifyIfCoordinadoAndRolUniversidadNoCoordinadorChecked(coordinado: FormControl, rolUniversidad: FormControl): void {
@@ -664,6 +685,13 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required]);
       formgroup.get('permitePaquetesTrabajo').setValidators([
         Validators.required]);
+      formgroup.get('fechaInicio').setValidators([
+        Validators.required
+      ]);
+      formgroup.get('fechaFin').setValidators([
+        Validators.required,
+        this.buildValidatorFechaFin()
+      ]);
       this.abiertoRequired = true;
     } else if (proyecto.estado.estado === Estado.RENUNCIADO || proyecto.estado.estado === Estado.RESCINDIDO) {
       formgroup.get('finalidad').setValidators(IsEntityValidator.isValid());
@@ -684,6 +712,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return obs.pipe(
       map((value) => {
         this.proyecto = value;
+        this.proyectoWithoutChanges = { ...value };
         this.loadHistoricoProyectoIVA(this.proyecto.id);
         return this.proyecto.id;
       })

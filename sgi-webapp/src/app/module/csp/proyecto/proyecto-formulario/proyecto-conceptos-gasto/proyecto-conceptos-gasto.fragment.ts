@@ -10,7 +10,7 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, from, merge, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { compareConceptoGasto, getFechaFinConceptoGasto, getFechaInicioConceptoGasto } from '../../../proyecto-concepto-gasto/proyecto-concepto-gasto.utils';
 
@@ -75,7 +75,15 @@ export class ProyectoConceptosGastoFragment extends Fragment {
     return form;
   }
 
+  public reloadData(): void {
+    this.loadTablesData();
+  }
+
   protected onInitialize(): void {
+    this.loadTablesData();
+  }
+
+  private loadTablesData(): void {
     const key = this.getKey() as number;
     if (key) {
 

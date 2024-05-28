@@ -28,24 +28,6 @@ export enum HelpIconClass {
   DANGER = 'danger',
 }
 
-enum ErroresRequisitos {
-  FECHA_OBTENCION = 'fechaObtencion',
-  FECHA_MAYOR = 'fechaMayorMax',
-  FECHA_MENOR = 'fechaMenorMin',
-  NIVEL_ACADEMICO = 'nivelAcademico',
-  SEXO = 'sexo',
-  DATOS_ACADEMICOS = 'datosAcademicos',
-  CATEGORIAS_PROFESIONALES = 'categoriasProfesionales',
-  VINCULACION = 'vinculacion',
-  NO_VINCULACION = 'noVinculacion',
-  FECHA_VINCULACION_MAYOR = 'fechaVinculacionMayorMax',
-  FECHA_VINCULACION_MENOR = 'fechaVinculacionMenorMin',
-  NO_FECHAS_VINCUALCION = 'noFechasVinculacion',
-  FECHA_OBTENCION_MAYOR = 'fechaObtencionMayorMax',
-  FECHA_OBTENCION_MENOR = 'fechaObtencionMenorMin',
-  EDAD = 'edadMax',
-}
-
 interface HelpIcon {
   class: HelpIconClass;
   tooltip: string;
@@ -114,7 +96,15 @@ export class ProyectoEquipoFragment extends Fragment {
     this.setComplete(true);
   }
 
+  public reloadData(): void {
+    this.initializeFragment(true);
+  }
+
   protected onInitialize(): void {
+    this.initializeFragment();
+  }
+
+  private initializeFragment(onlyReloadData = false): void {
     if (this.getKey()) {
       const id = this.getKey() as number;
       this.subscriptions.push(
@@ -162,7 +152,9 @@ export class ProyectoEquipoFragment extends Fragment {
         ).subscribe(
           result => {
             this.equipos$.next(result);
-            this.initializeValidationSolicitanteIncluded();
+            if (!onlyReloadData) {
+              this.initializeValidationSolicitanteIncluded();
+            }
           },
           error => {
             this.logger.error(error);
@@ -170,22 +162,24 @@ export class ProyectoEquipoFragment extends Fragment {
         )
       );
 
-      this.subscriptions.push(
-        this.fechaFinMaxUpdate$.subscribe(fechaFinMaxUpdate => {
-          this.equipos$.value.forEach(miembro => {
-            if (fechaFinMaxUpdate.fechaFinMaxCurrent === fechaFinMaxUpdate.fechaFinMaxNew) {
-              return;
-            }
+      if (!onlyReloadData) {
+        this.subscriptions.push(
+          this.fechaFinMaxUpdate$.subscribe(fechaFinMaxUpdate => {
+            this.equipos$.value.forEach(miembro => {
+              if (fechaFinMaxUpdate.fechaFinMaxCurrent === fechaFinMaxUpdate.fechaFinMaxNew) {
+                return;
+              }
 
-            if (miembro.value.proyectoEquipo.fechaFin
-              && (fechaFinMaxUpdate.fechaFinMaxCurrent?.toMillis() === miembro.value.proyectoEquipo.fechaFin?.toMillis()
-                || fechaFinMaxUpdate.fechaFinMaxCurrent < miembro.value.proyectoEquipo.fechaFin)) {
-              miembro.value.proyectoEquipo.fechaFin = fechaFinMaxUpdate.fechaFinMaxNew;
-              this.setChanges(true);
-            }
+              if (miembro.value.proyectoEquipo.fechaFin
+                && (fechaFinMaxUpdate.fechaFinMaxCurrent?.toMillis() === miembro.value.proyectoEquipo.fechaFin?.toMillis()
+                  || fechaFinMaxUpdate.fechaFinMaxCurrent < miembro.value.proyectoEquipo.fechaFin)) {
+                miembro.value.proyectoEquipo.fechaFin = fechaFinMaxUpdate.fechaFinMaxNew;
+                this.setChanges(true);
+              }
+            })
           })
-        })
-      );
+        );
+      }
     }
   }
 

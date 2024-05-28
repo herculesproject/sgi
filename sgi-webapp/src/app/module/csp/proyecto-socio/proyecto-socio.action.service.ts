@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { ActionService } from '@core/services/action-service';
@@ -50,6 +51,10 @@ export class ProyectoSocioActionService extends ActionService {
 
   get proyectoSocio(): IProyectoSocio {
     return this.datosGenerales.getValue();
+  }
+
+  get proyectoEstado(): Estado {
+    return this.data?.proyecto?.estado?.estado;
   }
 
   get showPeriodoJustificacion(): boolean {

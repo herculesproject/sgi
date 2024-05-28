@@ -44,6 +44,8 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoAgrupacionGasto } from '@core/models/csp/proyecto-agrupacion-gasto';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoAnualidadResumen } from '@core/models/csp/proyecto-anualidad-resumen';
+import { IProyectoApartadosToBeCopied } from '@core/models/csp/proyecto-aparatados-to-be-copied';
+import { IProyectoApartadosWithDates } from '@core/models/csp/proyecto-aparatados-with-dates';
 import { IProyectoAreaConocimiento } from '@core/models/csp/proyecto-area-conocimiento';
 import { IProyectoClasificacion } from '@core/models/csp/proyecto-clasificacion';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
@@ -924,4 +926,38 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
       options,
       REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER);
   }
+
+  /**
+   * Devuelve la informacion de cuales de los apartados tienen elementos con fechas.
+   *
+   * @param id Id del proyecto
+   */
+  hasApartadosWithDates(id: number): Observable<IProyectoApartadosWithDates> {
+    return this.http.get<IProyectoApartadosWithDates>(
+      `${this.endpointUrl}/${id}/has-apartados-with-dates`
+    );
+  }
+
+  /**
+   * Devuelve la informacion de cuales de los apartados de la convocatoria y/o se van copiar 
+   *
+   * @param id Id del proyecto
+   */
+  hasApartadosToBeCopied(id: number): Observable<IProyectoApartadosToBeCopied> {
+    return this.http.get<IProyectoApartadosToBeCopied>(
+      `${this.endpointUrl}/${id}/has-apartados-to-be-copied`
+    );
+  }
+
+  /**
+   * Marca la fecha de inicio del proyecto como inicializada y hace la copia de
+   * los apartados de la convocatoria y de la solicitud dependientes de la
+   * inicializacion de la fecha
+   * 
+   * @param id Id del proyecto
+   */
+  initFechaInicio(id: number): Observable<IProyecto> {
+    return this.http.patch<IProyecto>(`${this.endpointUrl}/${id}/init-fecha-inicio`, undefined);
+  }
+
 }

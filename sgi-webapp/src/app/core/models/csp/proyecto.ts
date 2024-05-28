@@ -23,6 +23,8 @@ export interface IProyecto {
   codigoInterno: string;
   /** Fecha Inicio */
   fechaInicio: DateTime;
+  /** Fecha inicio informada en algun momento */
+  fechaInicioStarted: boolean;
   /** Fecha Fin */
   fechaFin: DateTime;
   /** Fecha Fin Definitiva */

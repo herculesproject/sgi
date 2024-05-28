@@ -5,7 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IProyectoProrroga, Tipo, TIPO_MAP } from '@core/models/csp/proyecto-prorroga';
+import { Estado } from '@core/models/csp/estado-proyecto';
+import { IProyectoProrroga, TIPO_MAP, Tipo } from '@core/models/csp/proyecto-prorroga';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -118,6 +119,10 @@ export class ProyectoProrrogasComponent extends FragmentComponent implements OnI
         )
       );
     });
+  }
+
+  isProyectoEstadoConcedido(): boolean {
+    return this.actionService.estado === Estado.CONCEDIDO;
   }
 
   /**

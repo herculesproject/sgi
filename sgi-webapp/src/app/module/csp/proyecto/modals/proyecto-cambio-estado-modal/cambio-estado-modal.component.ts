@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { SgiError, ValidationError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
-import { Estado, ESTADO_MAP, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
+import { ESTADO_MAP, Estado, IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -27,6 +27,8 @@ const PROYECTO_CONFIDENCIAL = marker('csp.proyecto.confidencial');
 const PROYECTO_COORDINADO = marker('csp.proyecto.proyecto-coordinado');
 const PROYECTO_ROL_UNIVERSIDAD = marker('csp.proyecto.rol-universidad');
 const PROYECTO_PAQUETES_TRABAJO = marker('csp.proyecto.permite-paquetes-trabajo');
+const PROYECTO_FECHA_FIN = marker('csp.proyecto.fecha-fin');
+const PROYECTO_FECHA_INICIO = marker('csp.proyecto.fecha-inicio');
 const MSG_PROYECTO_EQUIPO_SOLICITANTE_REQUIRED = marker('error.csp.proyecto-equipo.solicitante.required');
 const MSG_CAMBIO_ESTADO_ERROR = marker('msg.csp.proyecto.cambio-estado.error');
 
@@ -49,6 +51,8 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoPro
 
   msgParamComentarioEntity = {};
   msgParamNuevoEstadoEntity = {};
+  msgProyectoFechaInicioRequired: string;
+  msgProyectoFechaFinRequired: string;
   msgProyectoFinalidadRequired: string;
   msgProyectoAmbitoGeograficoRequired: string;
   msgProyectoConfidencialRequired: string;
@@ -108,6 +112,21 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoPro
         ...MSG_PARAMS.GENDER.MALE,
         ...MSG_PARAMS.CARDINALIRY.SINGULAR
       }
+    );
+
+    this.msgProyectoFechaInicioRequired = this.translate.instant(
+      MSG_ENTITY_REQUIRED,
+      { entity: this.translate.instant(PROYECTO_FECHA_INICIO), ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
+    );
+
+    this.msgProyectoFechaFinRequired = this.translate.instant(
+      MSG_ENTITY_REQUIRED,
+      { entity: this.translate.instant(PROYECTO_FECHA_FIN), ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
+    );
+
+    this.msgProyectoFinalidadRequired = this.translate.instant(
+      MSG_ENTITY_REQUIRED,
+      { entity: this.translate.instant(PROYECTO_FINALIDAD), ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR }
     );
 
     this.msgProyectoFinalidadRequired = this.translate.instant(
@@ -199,6 +218,14 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoPro
 
   private validateRequiredFields(): ValidationError[] {
     const problems: ValidationError[] = [];
+
+    if (!this.data.proyecto.fechaInicio) {
+      problems.push(this.buildValidationError(this.msgProyectoFechaInicioRequired));
+    }
+
+    if (!this.data.proyecto.fechaFin) {
+      problems.push(this.buildValidationError(this.msgProyectoFechaFinRequired));
+    }
 
     if (!this.data.proyecto.finalidad) {
       problems.push(this.buildValidationError(this.msgProyectoFinalidadRequired));

@@ -21,6 +21,8 @@ export interface IProyectoBackend {
   codigoExterno: string;
   /** Fecha Inicio */
   fechaInicio: string;
+  /** Fecha inicio informada en algun momento */
+  fechaInicioStarted: boolean;
   /** Fecha Fin */
   fechaFin: string;
   /** Fecha Fin Definitiva */

@@ -211,7 +211,8 @@
       <!-- Fecha inicio -->
       <mat-form-field color="primary" fxFlex="33%">
         <mat-label>{{'csp.proyecto.fecha-inicio'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
+        <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio"
+          [required]="formPart.abiertoRequired">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaInicio>
         </mat-datepicker>
@@ -226,7 +227,8 @@
       <!-- Fecha fin -->
       <mat-form-field color="primary" sgiEndDate fxFlex="33%">
         <mat-label>{{'csp.proyecto.fecha-fin'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin" required>
+        <input matInput [matDatepicker]="pickerFechaFin" formControlName="fechaFin"
+          [required]="formPart.abiertoRequired">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaFin>
         </mat-datepicker>
@@ -253,6 +255,9 @@
         </mat-datepicker>
         <mat-error *ngIf="formGroup.controls.fechaFinDefinitiva.errors?.after">
           {{'error.after.fecha-fin-definitiva' | translate}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.fechaFinDefinitiva.errors?.fechaFinRequired">
+          {{'error.csp.proyecto-ficha-general.fecha-fin-definitiva.fecha-fin-required' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
