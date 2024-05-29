@@ -52,15 +52,7 @@ export function getFechaInicioConceptoGasto(fechaInicioProyecto: DateTime, mesIn
     return;
   }
 
-  let fechaInicioConvocatoriaConceptoGasto = fechaInicioProyecto.plus({ months: mesInicialConceptoGasto - 1 });
-
-  if (mesInicialConceptoGasto > 1) {
-    fechaInicioConvocatoriaConceptoGasto = fechaInicioConvocatoriaConceptoGasto.set({
-      day: 1, hour: 0, minute: 0, second: 0
-    });
-  }
-
-  return fechaInicioConvocatoriaConceptoGasto;
+  return fechaInicioProyecto.plus({ months: mesInicialConceptoGasto - 1 });
 }
 
 /**

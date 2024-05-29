@@ -183,6 +183,7 @@ export class ProyectoActionService extends ActionService {
 
   private readonly data: IProyectoData;
 
+  public readonly proyecto$ = new Subject<IProyecto>();
   public readonly showPaquetesTrabajo$: Subject<boolean> = new BehaviorSubject(false);
   public readonly disableAddSocios$ = new BehaviorSubject<boolean>(false);
   private readonly hasFases$ = new BehaviorSubject<boolean>(false);
@@ -320,6 +321,8 @@ export class ProyectoActionService extends ActionService {
 
     if (this.data && id) {
       this.enableEdit();
+      this.proyecto$.next(this.data.proyecto);
+
       if (this.data.proyecto?.solicitudId && !this.data.isInvestigador) {
         this.addSolicitudLink(this.data.proyecto.solicitudId);
       }
@@ -626,6 +629,18 @@ export class ProyectoActionService extends ActionService {
               this.showSocios$.next(value);
             }
           ));
+
+          this.subscriptions.push(
+            this.elegibilidad.initialized$.pipe(
+              filter(initialized => !!initialized)
+            ).subscribe(() => this.elegibilidad.proyecto$.next(this.data.proyecto))
+          );
+
+          this.subscriptions.push(
+            this.proyecto$.subscribe(proyecto => {
+              this.elegibilidad.proyecto$.next(proyecto)
+            })
+          );
         }
 
 
@@ -833,12 +848,18 @@ export class ProyectoActionService extends ActionService {
 
     return cascade.pipe(
       switchMap(() => super.saveOrUpdate()),
+      tap(() => {
+        if (this.data?.proyecto) {
+          this.updateAndEmitProyecto();
+        }
+      }),
       switchMap(() => {
         const proyecto = this.fichaGeneral.getValue();
         if (!!proyecto.fechaInicio && !proyecto.fechaInicioStarted) {
           return this.proyectoService.initFechaInicio(proyecto.id).pipe(
             tap(() => {
               this.fichaGeneral.fechaInicioStarted = true;
+              this.updateAndEmitProyecto();
 
               if (this.elegibilidad.isInitialized()) {
                 this.elegibilidad.reloadData();
@@ -862,6 +883,11 @@ export class ProyectoActionService extends ActionService {
         return of(void 0);
       })
     );
+  }
+
+  private updateAndEmitProyecto(): void {
+    this.data.proyecto = this.fichaGeneral.getValue();
+    this.proyecto$.next(this.data.proyecto);
   }
 
   private onProyectoSocioListChangeHandle(proyectoSocios: StatusWrapper<IProyectoSocio>[]): void {
