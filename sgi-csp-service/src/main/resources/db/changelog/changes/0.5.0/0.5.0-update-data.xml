@@ -31,6 +31,10 @@
         valueComputed="(select id from ${schemaPrefix}rol_socio WHERE nombre = 'Coordinador')" />
       <where>coordinador_externo = '0'</where>
     </update>
+    <update tableName="proyecto">
+      <column name="fecha_inicio_started" valueBoolean="true" />
+      <where>fecha_inicio IS NOT NULL</where>
+    </update>
   </changeSet>
 
 </databaseChangeLog>

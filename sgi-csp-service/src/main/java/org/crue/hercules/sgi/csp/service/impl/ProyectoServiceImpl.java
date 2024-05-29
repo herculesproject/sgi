@@ -390,15 +390,20 @@ public class ProyectoServiceImpl implements ProyectoService {
       }
 
       if (data.getSolicitudId() != null) {
-        SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(returnValue.getSolicitudId())
+        Solicitud solicitud = solicitudRepository.findById(returnValue.getSolicitudId())
             .orElseThrow(() -> new SolicitudNotFoundException(returnValue.getSolicitudId()));
+        if (FormularioSolicitud.PROYECTO.equals(solicitud.getFormularioSolicitud())) {
+          SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(returnValue.getSolicitudId())
+              .orElseThrow(() -> new SolicitudNotFoundException(returnValue.getSolicitudId()));
 
-        this.copyDateDependentSolicitudItems(returnValue, solicitudProyecto);
+          this.copyDateDependentSolicitudItems(returnValue, solicitudProyecto);
+        }
       }
 
       log.debug("initFechaInicio({}) - end", id);
       return returnValue;
     }).orElseThrow(() -> new ProyectoNotFoundException(id));
+
   }
 
   /**
