@@ -6,33 +6,33 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.6.5 Uso de tiempo lectivo"
+      "label": "4.6.5 Irakastorduen erabilera"
     },
     "hideExpression": "!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>¿Las pruebas en las que participarán los estudiantes como sujetos de investigación se realizarán durante el tiempo lectivo?</p>"
+        "template": "<p>Ikasleek ikerketako subjektu gisa parte hartuko duten probak irakastorduetan egingo dira?</p>"
       },
       {
         "key": "usoTiempoLectivoRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
       },
       {
-        "template": "Horario y duración",
+        "template": "Ordutegia eta iraupena",
         "hideExpression": "!model.usoTiempoLectivoRadio || model.usoTiempoLectivoRadio === 'no'"
       },
       {
@@ -40,8 +40,8 @@
         "type": "textarea",
         "hideExpression": "!model.usoTiempoLectivoRadio || model.usoTiempoLectivoRadio === 'no'",
         "templateOptions": {
-          "label": "Especificar",
-          "placeholder": "Especificiar",
+          "label": "Zehaztu",
+          "placeholder": "Zehaztu",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

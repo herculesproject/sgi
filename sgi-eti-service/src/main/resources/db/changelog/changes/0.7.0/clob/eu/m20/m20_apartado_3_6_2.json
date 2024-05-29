@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.6.2 Animales modificados genéticamente"
+      "label": "3.6.2 Genetikoki eraldatutako animaliak"
     },
     "fieldGroup": [
       {
-        "template": "¿Algunos de los animales utilizados son modificados genéticamente?"
+        "template": "Erabilitako animalia batzuk genetikoki eraldatzen dira?"
       },
       {
         "key": "animalesModificadosGeneticamenteRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -33,10 +33,10 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Requiere informe del CBE.</p>"
+        "template": "<p>Oharra: EBBren txostena behar da. </p>"
       },
       {
-        "template": "¿Implican riesgos para la salud humana, animal o para el medio ambiente?",
+        "template": "Arriskutsuak dira gizakien eta animalien osasunerako edo ingurumenerako?",
         "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'"
       },
       {
@@ -44,22 +44,22 @@
         "type": "radio",
         "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
       },
       {
-        "template": "¿La modificación genética puede dar lugar a una progenie o línea animal que experimente dolor, sufrimiento, angustia o daño duradero equivalente o superior al causado por la introducción de una aguja?",
+        "template": "Eraldaketa genetikoaren ondorioz sor daiteke orratz bat sartzeak eragindako minaren, sufrimenduaren, estutasunaren edo kalte iraunkorraren parekoa edo hori baino handiagoa jasaten duen animalia leinu edo lerro bat?",
         "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'"
       },
       {
@@ -67,16 +67,16 @@
         "type": "radio",
         "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }

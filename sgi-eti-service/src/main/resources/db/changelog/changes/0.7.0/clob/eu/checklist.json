@@ -1,20 +1,20 @@
 [
   {
-    "template": "<p>EU: Mi investigación conlleva la recogida de datos personales de seres humanos (a través de cuestionarios, entrevistas, grupos de discusión, grabaciones de audio o video, fotografías...).</p>"
+    "template": "<p>Nire ikerketan gizakien datu pertsonalak biltzen dira (hauen bidez: galdetegiak, elkarrizketak, eztabaida taldeak, audio edo bideo grabaketak, argazkiak…).</p>"
   },
   {
     "type": "radio",
     "key": "pregunta_1",
     "templateOptions": {
-      "label": "Respuesta",
+      "label": "Erantzuna",
       "color": "primary",
       "options": [
         {
-          "label": "No",
+          "label": "Ez",
           "value": false
         },
         {
-          "label": "Sí",
+          "label": "Bai",
           "value": true
         }
       ]
@@ -24,21 +24,21 @@
     }
   },
   {
-    "template": "<p>EU: Mi investigación permite identificar a los participantes (o permite que puedan llegar a ser identificables a partir de los datos recogidos).</p>"
+    "template": "<p>Nire ikerketan parte hartzaileak identifikatu egin daitezke (edo bildutako datuetatik abiatuta identifikagarriak izatera irits daitezke).</p>"
   },
   {
     "type": "radio",
     "key": "pregunta_2",
     "templateOptions": {
-      "label": "Respuesta",
+      "label": "Erantzuna",
       "color": "primary",
       "options": [
         {
-          "label": "No",
+          "label": "Ez",
           "value": false
         },
         {
-          "label": "Sí",
+          "label": "Bai",
           "value": true
         }
       ]
@@ -48,21 +48,21 @@
     }
   },
   {
-    "template": "<p>EU: Mi investigación conlleva el estudio con animales de experimentación.</p>"
+    "template": "<p>Nire ikerketan esperimentazio animaliak aztertzen dira.</p>"
   },
   {
     "type": "radio",
     "key": "pregunta_3",
     "templateOptions": {
-      "label": "Respuesta",
+      "label": "Erantzuna",
       "color": "primary",
       "options": [
         {
-          "label": "No",
+          "label": "Ez",
           "value": false
         },
         {
-          "label": "Sí",
+          "label": "Bai",
           "value": true
         }
       ]
@@ -72,21 +72,21 @@
     }
   },
   {
-    "template": "<p>EU: Mi investigación conlleva la recogida y tratamiento de muestras biológicas -de humanos o animales- (saliva, sangre, cabello, tejidos...).</p>"
+    "template": "<p>Nire ikerketan gizakien edo animalien lagin biologikoak (listua, odola, ilea, ehunak…) bildu eta tratatzen dira.</p>"
   },
   {
     "type": "radio",
     "key": "pregunta_4",
     "templateOptions": {
-      "label": "Respuesta",
+      "label": "Erantzuna",
       "color": "primary",
       "options": [
         {
-          "label": "No",
+          "label": "Ez",
           "value": false
         },
         {
-          "label": "Sí",
+          "label": "Bai",
           "value": true
         }
       ]
@@ -96,21 +96,21 @@
     }
   },
   {
-    "template": "<p>EU: Mi investigación cuenta con informe favorable pero se van a realizar cambios.</p>"
+    "template": "<p>Nire ikerketak aldeko txostena du, baina aldaketak egingo dira.</p>"
   },
   {
     "type": "radio",
     "key": "pregunta_5",
     "templateOptions": {
-      "label": "Respuesta",
+      "label": "Erantzuna",
       "color": "primary",
       "options": [
         {
-          "label": "No",
+          "label": "Ez",
           "value": false
         },
         {
-          "label": "Sí",
+          "label": "Bai",
           "value": true
         }
       ]
@@ -120,21 +120,21 @@
     }
   },
   {
-    "template": "<p>EU: Mi investigación supone trabajar con personas.</p>"
+    "template": "<p>Nire ikerketan pertsonekin lan egin behar da.</p>"
   },
   {
     "type": "radio",
     "key": "pregunta_6",
     "templateOptions": {
-      "label": "Respuesta",
+      "label": "Erantzuna",
       "color": "primary",
       "options": [
         {
-          "label": "No",
+          "label": "Ez",
           "value": false
         },
         {
-          "label": "Sí",
+          "label": "Bai",
           "value": true
         }
       ]

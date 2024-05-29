@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.2 Características del riesgo de los agentes biológicos y/o material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "4.1.2 Risk characteristics of biological agents and/or biological material, hazardous chemicals, radioactive substances and/or nanoparticles"
     },
     "fieldGroup": [
       {
-        "template": "<p>Los agentes biológicos, material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas que se utilizan ¿implican algún tipo de efecto potencialmente nocivo?</p>"
+        "template": "<p>Do the biological agents, biological material, hazardous chemicals, radioactive substances and/or nanoparticles used imply any type of potentially harmful effect?</p>"
       },
       {
         "key": "agentesBiologicos",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -34,27 +34,27 @@
         "type": "multicheckbox",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'",
         "templateOptions": {
-          "label": "Grupo diana:",
+          "label": "Target group:",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "serHumamno",
-              "label": "Ser humano"
+              "label": "Human being"
             },
             {
               "value": "animales",
-              "label": "Animales"
+              "label": "Animals"
             },
             {
               "value": "medioambiente",
-              "label": "Medio ambiente"
+              "label": "Environment "
             }
           ]
         }
       },
       {
-        "template": "Tipo de efecto nocivo",
+        "template": "Type of harmful effect",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'"
       },
       {
@@ -62,35 +62,35 @@
         "type": "multicheckbox",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'",
         "templateOptions": {
-          "label": "Tipo:",
+          "label": "Type:",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "infeccioso",
-              "label": "Infeccioso"
+              "label": "Infectious"
             },
             {
               "value": "toxico",
-              "label": "Tóxico"
+              "label": "Toxic"
             },
             {
               "value": "alergico",
-              "label": "Alérgico"
+              "label": "Allergic"
             },
             {
               "value": "radiactivo",
-              "label": "Radiactivo"
+              "label": "Radioactive"
             },
             {
               "value": "otro",
-              "label": "Otro"
+              "label": "Other"
             }
           ]
         }
       },
       {
-        "template": "Indicar el tipo de efecto nocivo",
+        "template": "Please indicate the type of harmful effect",
         "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))"
       },
       {
@@ -98,7 +98,7 @@
         "type": "textarea",
         "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))",
         "templateOptions": {
-          "label": "Indicar:",
+          "label": "Please indicate:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

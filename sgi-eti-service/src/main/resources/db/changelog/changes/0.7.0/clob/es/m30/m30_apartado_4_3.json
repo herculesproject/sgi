@@ -5,14 +5,14 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "4.3 Vigilancia y protección de la salud"
+      "label": "4.3. Osasuna zaintzea eta babestea"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>El/la investigador/a responsable con el apoyo del Servicio de Prevención está obligado a contemplar una política de vigilancia de la salud de las personas expuestas al riesgo biológico.<br>Las medidas de prevención sanitaria deberán ofrecerse antes de la exposición, durante y tras la finalización del trabajo así como cuando se haya detectado en alguna persona expuesta una infección o enfermedad que pueda deberse a la exposición a agentes biológicos <a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a8' target='_blank'>(Artículo 8 RD664/1997)</a>.</p>"
+        "template": "<p>Prebentzio Zerbitzuaren laguntzaz, ikertzaile arduradunak arrisku biologikoaren eraginpean daudenen osasuna zaintzeko politika ezarri behar du.<br>Osasun prebentziorako neurriak esposizioaren aurretik, lanak iraun bitartean eta lana amaitu ondoren eskaini beharko dira, baita arriskupean dagoen norbaitengan agente biologikoekiko esposizioak eragin dezakeen infekzio edo gaixotasun bat hautematen denean ere <a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a8' target='_blank'>( 664/1997 EDren 8. artikulua)</a>.</p>"
       }
     ]
   }

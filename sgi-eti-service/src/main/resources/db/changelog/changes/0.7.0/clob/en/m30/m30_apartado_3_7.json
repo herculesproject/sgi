@@ -5,18 +5,18 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.7 Trayectoria completa de los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "3.7 Complete trajectory of biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles"
     },
     "fieldGroup": [
       {
-        "template": "<p>Describir a continuación el recorrido que siguen los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartícula desde su obtención hasta su eliminación:</p>"
+        "template": "<p>Please describe below the path followed by biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles from the time they are obtained to the time they are disposed of:</p>"
       },
       {
         "key": "mododeObtencion",
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Modo de obtención",
+          "name": "Date obtained",
           "required": true
         }
       },
@@ -25,7 +25,7 @@
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Transporte",
+          "name": "Transport",
           "required": true
         }
       },
@@ -34,7 +34,7 @@
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Recepción",
+          "name": "Reception",
           "required": true
         }
       },
@@ -43,7 +43,7 @@
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Almacenamiento",
+          "name": "Storage",
           "required": true
         }
       },
@@ -52,7 +52,7 @@
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Eliminación",
+          "name": "Disposal",
           "required": true
         }
       }

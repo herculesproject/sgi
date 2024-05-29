@@ -6,18 +6,18 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.4.2 Reclutamiento realizado por personal ajeno al equipo investigador"
+      "label": "3.4.2 Recruitment carried out by personnel outside the research team"
     },
     "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>¿El reclutamiento va a ser realizado por alguien ajeno al equipo investigador?</p>"
+        "template": "<p>Is the recruitment going to be carried out by someone outside the research team?</p>"
       },
       {
         "key": "reclutamientoPersonalAjenoRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -26,13 +26,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "<p>¿Recibe algún tipo de compensación?</p>",
+        "template": "<p>Are you receiving any compensation?</p>",
         "hideExpression": "!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'no'"
       },
       {
@@ -40,7 +40,7 @@
         "type": "radio",
         "hideExpression": "!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'no'",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -49,7 +49,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -59,8 +59,8 @@
         "type": "textarea",
         "hideExpression": "(!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'no') || ((!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'si') && (!model.tipoCompensacionRadio || model.tipoCompensacionRadio === 'no'))",
         "templateOptions": {
-          "label": "Tipo de compensación",
-          "placeholder": "Tipo de compensación",
+          "label": "Type of compensation",
+          "placeholder": "Type of compensation",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -71,7 +71,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Si el reclutamiento se realiza desde un centro ajeno a la Universidad, y que además autoriza la realización de dicho proyecto en sus instalaciones, con sus asociados, etc. debe añadir en el apartado '5.3.' el documento de autorización del centro en el que se detallará la tarea de reclutamiento.</p>"
+        "template": "<p>Note: If the recruitment is carried out from a centre outside the University, and which also authorises the carrying out of such project in its facilities, with its associates, etc. should be added in section '5.3.' the authorisation document of the centre in which the recruitment task will be detailed.</p>"
       }
     ]
   }

@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Fecha  de inicio de la actividad de investigación EUSK",
+      "label": "Ikerketa jardueraren hasiera data",
       "expanded": true
     },
     "fieldGroup": [
@@ -13,7 +13,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Rellene este punto en función del comité al que se dirige su informe:<ul><li>Para el CEI fecha de inicio del reclutamiento.</li><li>Para el CEEA fecha de inicio de uso de animales de experimentación.</li><li>Para el CBE fecha de inicio de manipulación de agentes biológicos u OMG, SQP, SR.</li></ul></p>"
+        "template": "<p>Bete puntu hau zure txostena zer batzorderentzat den kontuan hartuta:<ul><li>IEB: parte hartzaileak biltzeko prozesuaren hasiera data.</li><li>AEEB: esperimentaziorako animalien erabileraren hasiera data.</li><li>EBB: GEO, SKA, SE edo agente biologikoen manipulazioaren hasiera data.</li></ul></p>"
       },
       {
         "key": "fechaInicio",
@@ -21,7 +21,7 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Fecha"
+          "label": "Data"
         }
       }
     ]

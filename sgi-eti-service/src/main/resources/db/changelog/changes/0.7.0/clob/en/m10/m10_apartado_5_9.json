@@ -6,22 +6,22 @@
     ],
     "hideExpression": "formState.memoria.tipoMemoria.id !== 3",
     "templateOptions": {
-      "label": "5.9 Informe del Comité o Comisión del organismo externo"
+      "label": "5.9 Report of the Committee or Commission of the external agency"
     },
     "fieldGroup": [
       {
-        "template": "Recuerde que debe adjuntar el informe de aprobación otorgado por el comité o comisión correspondiente del organismo externo con el que se desarrolla el proyecto"
+        "template": "Please remember that you need to attach the approval report granted by the respective committee or commission of the external agency with which the project is developed."
       },
       {
         "key": "informeRatificacion",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
               "value": 23,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

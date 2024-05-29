@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.4.4 Sustancias químicas peligrosas"
+      "label": "3.4.4 Hazardous chemicals"
     },
     "fieldGroup": [
       {
-        "template": "<p>En esta actividad ¿se utilizan Sustancias Químicas Peligrosas?</p>"
+        "template": "<p>Does this activity use Hazardous Chemicals?</p>"
       },
       {
         "key": "sustanciasQuimicasPeligrosas",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,13 +24,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "Tipo de Sustancia Química Peligrosa que se utiliza:",
+        "template": "Type of Hazardous Chemical used:",
         "hideExpression": "!model.sustanciasQuimicasPeligrosas || model.sustanciasQuimicasPeligrosas === 'no'"
       },
       {
@@ -38,41 +38,41 @@
         "key": "tiposSustanciasQuimicas",
         "hideExpression": "!model.sustanciasQuimicasPeligrosas || model.sustanciasQuimicasPeligrosas === 'no'",
         "templateOptions": {
-          "label": "Opciones:",
+          "label": "Options:",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "inflamable",
-              "label": "Inflamable"
+              "label": "Flammable"
             },
             {
               "value": "explosiva",
-              "label": "Explosiva"
+              "label": "Explosive"
             },
             {
               "value": "corrosiva",
-              "label": "Corrosiva"
+              "label": "Corrosive"
             },
             {
               "value": "toxica",
-              "label": "Tóxica"
+              "label": "Toxic"
             },
             {
               "value": "cancerigena",
-              "label": "Cancerígena"
+              "label": "Carcinogenic"
             },
             {
               "value": "mutagena",
-              "label": "Mutágena"
+              "label": "Mutagen"
             },
             {
               "value": "irritante",
-              "label": "Irritante"
+              "label": "Irritant"
             },
             {
               "value": "otra",
-              "label": "Otra"
+              "label": "Another"
             }
           ]
         }
@@ -82,8 +82,8 @@
         "type": "textarea",
         "hideExpression": "model.sustanciasQuimicasPeligrosas==='no' || (!model.tiposSustanciasQuimicas || !model.tiposSustanciasQuimicas.find((c) => c === 'otra'))",
         "templateOptions": {
-          "placeholder": "Especificar",
-          "label": "Especificar",
+          "placeholder": "Please specify",
+          "label": "Please specify",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -94,7 +94,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "Nota: Debe adjuntar la Ficha de Seguridad en Documentación Adicional."
+        "template": " Note: The Safety Data Sheet should be attached in Additional Documentation."
       }
     ]
   }

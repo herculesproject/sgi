@@ -6,18 +6,18 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.5 Muestras biológicas de origen humano"
+      "label": "3.5 Biological samples of human origin"
     },
     "fieldGroup": [
       {
-        "template": "<p>¿En esta actividad se utilizan muestras biológicas de origen humano?</p>"
+        "template": "<p>Are biological samples of human origin used in this activity?</p>"
       },
       {
         "key": "muestrasBiologicasRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "options": [
             {
               "value": "no",
@@ -25,7 +25,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -35,45 +35,45 @@
         "key": "muestrasBiologicasCheck",
         "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'",
         "templateOptions": {
-          "label": "Cuales",
+          "label": "Which",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "celulasgerminales",
-              "label": "Células germinales"
+              "label": "Germ cells"
             },
             {
               "value": "celulassomaticas",
-              "label": "Células somáticas"
+              "label": "Somatic cells"
             },
             {
               "value": "sangre",
-              "label": "Sangre"
+              "label": "Blood"
             },
             {
               "value": "fluidos",
-              "label": "Fluidos"
+              "label": "Fluids"
             },
             {
               "value": "organos",
-              "label": "Órganos"
+              "label": "Organs"
             },
             {
               "value": "tejidos",
-              "label": "Tejidos"
+              "label": "Tissues"
             },
             {
               "value": "lineasCelulares",
-              "label": "Líneas celulares troncales embrionarias*"
+              "label": "Embryonic stem cell lines*"
             },
             {
               "value": "celulasTejidos",
-              "label": "Células y tejidos de origen embrionario humano*"
+              "label": "Cells and tissues of human embryonic origin*"
             },
             {
               "value": "embrionesFetos",
-              "label": "Embriones y fetos humanos*"
+              "label": "Human embryos and foetuses*"
             }
           ]
         }
@@ -82,7 +82,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Recuerde que la manipulación de tejidos/sangre/fluidos humanos requiere de evaluación del CBE.</p><p>Las opciones marcadas con asterisco (*) requieren el informe previo favorable de la Comisión de Garantías antes de su utilización</p>",
+        "template": "<p>Note: Please note that the handling of human tissues/blood/fluids requires evaluation by the CBE.</p><p>The options marked with an asterisk (*) require a prior favourable report from the Guarantees Commission before use</p>\"",
         "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'"
       }
     ]

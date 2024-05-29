@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1.1 Laboratorio de la Universidad"
+      "label": "4.2.1.1 University Laboratory"
     },
     "fieldGroup": [
       {
-        "template": "<p>A continuación especificar en qué local de la Universidad se realizarán las tareas con agentes, material biológico, organismos modificados genéticamente, sustancias químicas peligrosas , sustancias radiactivas y/o nanopartículas</p>"
+        "template": "<p>Next, specify in which location of the University the tasks with agents, biological material, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles will be carried out.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "No necesita rellenar el código patrimonial en caso de haber indicado un laboratorio de los servicios y secciones del Área Científica y Técnica de Investigación (ACTI).</p>"
+        "template": "You do not need to fill out the asset code if you have indicated a laboratory of the services and sections of the Scientific and Technical Research Area (ACTI).</p>"
       },
       {
         "type": "table-crud",
@@ -33,7 +33,7 @@
               "key": "codPatrimonial",
               "type": "input",
               "templateOptions": {
-                "label": "Código Patrimonial",
+                "label": "Asset Code",
                 "order": 10
               }
             },
@@ -41,7 +41,7 @@
               "key": "nivelContencion",
               "type": "select",
               "templateOptions": {
-                "label": "Nivel contención",
+                "label": "Containment level",
                 "order": 20,
                 "options": [
                   {
@@ -67,7 +67,7 @@
               "key": "ubicacion",
               "type": "input",
               "templateOptions": {
-                "label": "Ubicación",
+                "label": "Location",
                 "order": 30
               }
             },
@@ -75,12 +75,12 @@
               "key": "certificadoIdoneidad",
               "type": "select",
               "templateOptions": {
-                "label": "Certificado idoneidad",
+                "label": "Certificate of suitability",
                 "order": 40,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Sí"
+                    "label": "Yes"
                   },
                   {
                     "value": "2",
@@ -93,7 +93,7 @@
               "key": "numeroRegistroServicioPrevencion",
               "type": "input",
               "templateOptions": {
-                "label": "No. Reg. Servicio Prevención",
+                "label": "Reg. No. Prevention Service",
                 "order": 50
               }
             },
@@ -101,7 +101,7 @@
               "key": "fecha",
               "type": "datepicker",
               "templateOptions": {
-                "label": "Fecha",
+                "label": "Date",
                 "luxonFormat": "shortDate",
                 "order": 60
               }

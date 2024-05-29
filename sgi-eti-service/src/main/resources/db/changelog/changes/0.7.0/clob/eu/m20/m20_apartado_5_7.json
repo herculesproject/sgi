@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.7 Aclaraciones al comité"
+      "label": "5.7 Batzordearentzako azalpenak"
     },
     "fieldGroup": [
       {
-        "template": "<p>Incluir a continuación cualquier otra aclaración que se considere necesaria para el comité</p>"
+        "template": "<p>Idatzi hemen Batzordearentzat beharrezkoa iruditzen zaizun beste edozein azalpen.</p>"
       },
       {
         "key": "aclaracionesComite",
         "type": "textarea",
         "templateOptions": {
-          "label": "Aclaraciones",
+          "label": "Azalpenak",
           "autosize": true,
           "autosizeMinRows": "1",
           "autosizeMaxRows": "10"

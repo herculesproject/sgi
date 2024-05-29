@@ -5,297 +5,297 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "1.1.1 Fin específico del proyecto EUSKERA"
+      "label": "1.1.1 Proiektuaren xede espezifikoa"
     },
     "fieldGroup": [
       {
-        "template": "Indicar el fin específico del proyecto:"
+        "template": "Adierazi proiektuaren xede espezifikoa:"
       },
       {
         "key": "finEspecificoProyecto",
         "type": "select",
         "templateOptions": {
-          "label": "Seleccione",
+          "label": "Hautatu",
           "required": true,
           "options": [
             {
-              "label": "EU: [PB1] Investigación Básica. Oncología",
+              "label": " [PB1] Oinarrizko ikerketa. Onkologia",
               "value": "PB1"
             },
             {
-              "label": "EU: [PB2] Investigación Básica. Sistema cardiovascular, sanguíneo y linfático",
+              "label": " [PB2] Oinarrizko ikerketa. Sistema kardiobaskularra, odol sistema eta sistema linfatikoa",
               "value": "PB2"
             },
             {
-              "label": "EU: [PB3] Investigación Básica. Sistema nervioso",
+              "label": " [PB3] Oinarrizko ikerketa. Nerbio sistema",
               "value": "PB3"
             },
             {
-              "label": "EU: [PB4] Investigación Básica. Sistema respiratorio",
+              "label": " [PB4] Oinarrizko ikerketa. Arnas sistema",
               "value": "PB4"
             },
             {
-              "label": "EU: [PB5] Investigación Básica. Sistema gastrointestinal, hígado incluido",
+              "label": " [PB5] Oinarrizko ikerketa. Sistema gastrointestinala, gibela barne",
               "value": "PB5"
             },
             {
-              "label": "EU: [PB6] Investigación Básica. Sistema músculo-esquelético",
+              "label": " [PB6] Oinarrizko ikerketa. Hezur eta muskulu sistema",
               "value": "PB6"
             },
             {
-              "label": "EU: [PB7] Investigación Básica. Sistema inmunitario",
+              "label": " [PB7] Oinarrizko ikerketa. Immunitate sistema",
               "value": "PB7"
             },
             {
-              "label": "EU: [PB8] Investigación Básica. Sistema urogenital-reproductor",
+              "label": " [PB8] Oinarrizko ikerketa. Sistema urogenitala eta ugalketakoa",
               "value": "PB8"
             },
             {
-              "label": "EU: [PB9] Investigación Básica. Órganos sensoriales (piel/ojos/oídos)",
+              "label": " [PB9] Oinarrizko ikerketa. Zentzumen organoak (azala/begiak/belarriak)",
               "value": "PB9"
             },
             {
-              "label": "EU: [PB10] Investigación Básica. Sistema endocrino/metabolismo",
+              "label": " [PB10] Oinarrizko ikerketa. Sistema endokrinoa/metabolismoa",
               "value": "PB10"
             },
             {
-              "label": "EU: [PB11] Investigación Básica. Sistema multisistémico",
+              "label": " [PB11] Oinarrizko ikerketa. Sistema anitzeko sistema",
               "value": "PB11"
             },
             {
-              "label": "EU: [PB12] Investigación Básica. Etología/Comportamiento animal/Biología animal",
+              "label": " [PB12] Oinarrizko ikerketa. Etologia/Animalien portaera/Animalien biologia",
               "value": "PB12"
             },
             {
-              "label": "EU: [PB13] Investigación Básica. Otros",
+              "label": " [PB13] Oinarrizko ikerketa. Beste batzuk",
               "value": "PB13"
             },
             {
-              "label": "EU: [PT21] Investigación traslacional y aplicada. Cáncer humano",
+              "label": " [PT21] Ikerketa translazionala eta aplikatua. Giza minbizia",
               "value": "PT21"
             },
             {
-              "label": "EU: [PT22] Investigación traslacional y aplicada. Enfermedades infecciosas humanas",
+              "label": " [PT22] Ikerketa translazionala eta aplikatua. Giza gaixotasun infekziosoak",
               "value": "PT22"
             },
             {
-              "label": "EU: [PT23] Investigación traslacional y aplicada. Enfermedades cardiovasculares humanas",
+              "label": " [PT23] Ikerketa translazionala eta aplikatua. Giza gaixotasun kardiobaskularrak",
               "value": "PT23"
             },
             {
-              "label": "EU: [PT24] Investigación traslacional y aplicada. Enfermedades nerviosas y mentales humanas",
+              "label": " [PT24] Ikerketa translazionala eta aplikatua. Gizaki gaixotasun nerbiosoak eta mentalak",
               "value": "PT24"
             },
             {
-              "label": "EU: [PT25] Investigación traslacional y aplicada. Enfermedades respiratorias humanas",
+              "label": " [PT25] Ikerketa translazionala eta aplikatua. Gizakien arnasketa gaixotasunak",
               "value": "PT25"
             },
             {
-              "label": "EU: [PT26] Investigación traslacional y aplicada. Enfermedades gastrointestinales, incluidas hepáticas",
+              "label": " [PT26] Ikerketa translazionala eta aplikatua. Gaixotasun gastrointestinalak, hepatikoak barne",
               "value": "PT26"
             },
             {
-              "label": "EU: [PT27] Investigación traslacional y aplicada. Enfermedades musculoesqueléticas humanas",
+              "label": " [PT27] Ikerketa translazionala eta aplikatua. Gizakien muskulu eta eskeletoetako gaixotasunak",
               "value": "PT27"
             },
             {
-              "label": "EU: [PT28] Investigación traslacional y aplicada. Enfermedades inmunológicas humanas",
+              "label": " [PT28] Ikerketa translazionala eta aplikatua. Giza gaixotasun immunologikoak",
               "value": "PT28"
             },
             {
-              "label": "EU: [PT29] Investigación traslacional y aplicada. Enfermedades humanas urogenitales y del aparato reproductor",
+              "label": " [PT29] Ikerketa translazionala eta aplikatua. Giza gaixotasun urogenitalak eta ugalketa aparatuko gaixotasunak",
               "value": "PT29"
             },
             {
-              "label": "EU: [PT30] Investigación traslacional y aplicada. Enfermedades humanas de los órganos de los sentidos (piel/ojos/oídos)",
+              "label": " [PT30] Ikerketa translazionala eta aplikatua. Zentzumen organoetako (azala/begiak/belarriak) giza gaixotasunak",
               "value": "PT30"
             },
             {
-              "label": "EU: [PT31] Investigación traslacional y aplicada. Enfermedades humanas endocrinas y metabólicas",
+              "label": " [PT31] Ikerketa translazionala eta aplikatua. Giza gaixotasun endokrinoak eta metabolikoak",
               "value": "PT31"
             },
             {
-              "label": "EU: [PT32] Investigación traslacional y aplicada. Otras enfermedades humanas",
+              "label": " [PT32] Ikerketa translazionala eta aplikatua. Beste giza gaixotasun batzuk",
               "value": "PT32"
             },
             {
-              "label": "EU: [PT33] Investigación traslacional y aplicada. Enfermedades de los animales",
+              "label": " [PT33] Ikerketa translazionala eta aplikatua. Animalien gaixotasunak",
               "value": "PT33"
             },
             {
-              "label": "EU: [PT34] Investigación traslacional y aplicada. Bienestar de los animales",
+              "label": " [PT34] Ikerketa translazionala eta aplikatua. Animalien ongizatea",
               "value": "PT34"
             },
             {
-              "label": "EU: [PT35] Investigación traslacional y aplicada. Diagnóstico de enfermedades",
+              "label": " [PT35] Ikerketa translazionala eta aplikatua. Gaixotasunen diagnostikoa",
               "value": "PT35"
             },
             {
-              "label": "EU: [PT36] Investigación traslacional y aplicada. Enfermedades de las plantas",
+              "label": " [PT36] Ikerketa translazionala eta aplikatua. Landareen gaixotasunak",
               "value": "PT36"
             },
             {
-              "label": "EU: [PT37] Investigación traslacional y aplicada. Toxicología y ecotoxicología no reglamentarias",
+              "label": " [PT37] Ikerketa translazionala eta aplikatua. Arauzkoak ez diren toxikologia eta ekotoxikologia ",
               "value": "PT37"
             },
             {
-              "label": "EU: [PE40] Protección del medio ambiente natural en interés de la salud o el bienestar de los seres humanos o de los animales",
+              "label": "[PE40] Ingumen naturalaren babesa gizakien edo animalien osasunaren edo ongizatearen mesederako",
               "value": "PE40"
             },
             {
-              "label": "EU: [PS41] Preservación de especies",
+              "label": "[PS41] Espezieen babesa",
               "value": "PS41"
             },
             {
-              "label": "EU: [PE42] Enseñanza superior o formación para la adquisición, mantenimiento o mejora de las competencias profesionales",
+              "label": "[PE42] Goi mailako irakaskuntza edo gaitasun profesionalak eskuratu, mantendu edo hobetzeko formakuntza",
               "value": "PE42"
             },
             {
-              "label": "EU: [PF43] Investigaciones forenses",
+              "label": "[PF43] Ikerketa forentseak",
               "value": "PF43"
             },
             {
-              "label": "EU: [PG43] Mantenimiento de colonias de animales genéticamente alterados, no utilizados en otros procedimientos",
+              "label": "[PG43] Beste prozedura batzuetan erabiltzen ez diren genetikoki eraldatutako animalien koloniak mantentzea ",
               "value": "PG43"
             },
             {
-              "label": "EU: [PR51] Utilización reglamentaria y producción rutinaria. Productos sanguíneos",
+              "label": " [PR51] Arauzko erabilera eta ohiko ekoizpena. Odol produktuak",
               "value": "PR51"
             },
             {
-              "label": "EU: [PR52] Utilización reglamentaria y producción rutinaria. Anticuerpos monoclonales",
+              "label": " [PR52] Arauzko erabilera eta ohiko ekoizpena. Antigorputz monoklonalak",
               "value": "PR52"
             },
             {
-              "label": "EU: [PR53] Utilización reglamentaria y producción rutinaria. Otros",
+              "label": " [PR53] Arauzko erabilera eta ohiko ekoizpena. Beste batzuk",
               "value": "PR53"
             },
             {
-              "label": "EU: [PR61] Utilización reglamentaria/control de calidad. Ensayos de seguridad de los lotes",
+              "label": " [PR61] Arauzko erabilera/kalitate kontrola. Sorten segurtasun saiakuntzak ",
               "value": "PR61"
             },
             {
-              "label": "EU: [PR62] Utilización reglamentaria/control de calidad. Ensayos de pirogenicidad",
+              "label": " [PR62] Arauzko erabilera/kalitate kontrola. Pirogenotasun saiakuntzak ",
               "value": "PR62"
             },
             {
-              "label": "EU: [PR63] Utilización reglamentaria/control de calidad. Ensayos de potencia de los lotes",
+              "label": " [PR63] Arauzko erabilera/kalitate kontrola. Sorten potentzia saiakuntzak ",
               "value": "PR63"
             },
             {
-              "label": "EU: [PR64] Utilización reglamentaria/control de calidad. Otros controles de calidad",
+              "label": " [PR64] Arauzko erabilera/kalitate kontrola. Beste kalitate kontrol batzuk ",
               "value": "PR64"
             },
             {
-              "label": "EU: [PR71] Utilización reglamentaria. Otros controles de eficacia y tolerancia",
+              "label": " [PR71] Arauzko erabilera. Beste efikazia eta tolerantzia kontrol batzuk",
               "value": "PR71"
             },
             {
-              "label": "EU: [PR81] Utilización reglamentaria/Toxicidad y seguridad/aguda y sub-aguda. LD50, LC50",
+              "label": " [PR81] Arauzko erabilera/Toxikotasuna eta segurtasuna/akutua eta subakutua. LD50, LC50",
               "value": "PR81"
             },
             {
-              "label": "EU: [PR82] Utilización reglamentaria/Toxicidad y seguridad/aguda y subaguda. Otros métodos letales",
+              "label": " [PR82] Arauzko erabilera/Toxikotasuna eta segurtasuna/akutua eta subakutua. Beste metodo hilgarri batzuk",
               "value": "PR82"
             },
             {
-              "label": "EU: [PR83] Utilización reglamentaria/Toxicidad y seguridad/Aguda y subaguda. Métodos no letales",
+              "label": " [PR83] Arauzko erabilera/Toxikotasuna eta segurtasuna/Akutua eta subakutua. Metodo ez-hilgarriak",
               "value": "PR83"
             },
             {
-              "label": "EU: [PR84] Utilización reglamentaria/Toxicidad y seguridad. Irritación/corrosión cutánea",
+              "label": " [PR84] Arauzko erabilera/Toxikotasuna eta segurtasuna. Larruazalaren narritadura/korrosioa",
               "value": "PR84"
             },
             {
-              "label": "EU: [PR85] Utilización reglamentaria/Toxicidad y seguridad. Sensibilización cutánea",
+              "label": " [PR85] Arauzko erabilera/Toxikotasuna eta segurtasuna. Larruazalaren sentsibilizazioa",
               "value": "PR85"
             },
             {
-              "label": "EU: [PR86] Utilización reglamentaria/Toxicidad y seguridad. Irritación/corrosión ocular",
+              "label": " [PR86] Arauzko erabilera/Toxikotasuna eta segurtasuna. Begiaren narritadura/korrosioa",
               "value": "PR86"
             },
             {
-              "label": "EU: [PR87] Utilización reglamentaria/Toxicidad y seguridad/Toxicidad por dosis repetidas. Hasta 28 días",
+              "label": " [PR87] Arauzko erabilera/Toxikotasuna eta segurtasuna/Dosi errepikatuengatiko toxikotasuna. Gehienez 28 egun",
               "value": "PR87"
             },
             {
-              "label": "EU: [PR88] Utilización reglamentaria/Toxicidad y seguridad/Toxicidad por dosis repetidas. Entre 29 y 90 días",
+              "label": " [PR88] Arauzko erabilera/Toxikotasuna eta segurtasuna/Dosi errepikatuengatiko toxikotasuna. 29-90 egun",
               "value": "PR88"
             },
             {
-              "label": "EU: [PR89] Utilización reglamentaria/Toxicidad y seguridad/Toxicidad por dosis repetidas. Más de 90 días",
+              "label": " [PR89] Arauzko erabilera/Toxikotasuna eta segurtasuna/Dosi errepikatuengatiko toxikotasuna. 90 egun baino gehiago",
               "value": "PR89"
             },
             {
-              "label": "EU: [PR90] Utilización reglamentaria/Toxicidad y seguridad. Carcinogenicidad",
+              "label": " [PR90] Arauzko erabilera/Toxikotasuna eta segurtasuna/Kartzinogenotasuna",
               "value": "PR90"
             },
             {
-              "label": "EU: [PR91] Utilización reglamentaria/Toxicidad y seguridad. Genotoxicidad",
+              "label": " [PR91] Arauzko erabilera/Toxikotasuna eta segurtasuna. Genotoxikotasuna",
               "value": "PR91"
             },
             {
-              "label": "EU: [PR92] Utilización reglamentaria/Toxicidad y seguridad. Toxicidad reproductiva",
+              "label": " [PR92] Arauzko erabilera/Toxikotasuna eta segurtasuna. Ugalketako toxikotasuna",
               "value": "PR92"
             },
             {
-              "label": "EU: [PR93] Utilización reglamentaria/Toxicidad y seguridad. Toxicidad del desarrollo",
+              "label": " [PR93] Arauzko erabilera/Toxikotasuna eta segurtasuna. Garapenaren toxikotasuna",
               "value": "PR93"
             },
             {
-              "label": "EU: [PR94] Utilización reglamentaria/Toxicidad y seguridad. Neurotoxicidad",
+              "label": " [PR94] Arauzko erabilera/Toxikotasuna eta segurtasuna. Neurotoxikotasuna",
               "value": "PR94"
             },
             {
-              "label": "EU: [PR95] Utilización reglamentaria/Toxicidad y seguridad. Cinética",
+              "label": " [PR95] Arauzko erabilera/Toxikotasuna eta segurtasuna. Zinetika",
               "value": "PR95"
             },
             {
-              "label": "EU: [PR96] Utilización reglamentaria/Toxicidad y seguridad. Farmacodinámica (incluida la farmacología de seguridad)",
+              "label": " [PR96] Arauzko erabilera/Toxikotasuna eta segurtasuna. Farmakodinamika (segurtasun farmakologia barne)",
               "value": "PR96"
             },
             {
-              "label": "EU: [PR97] Utilización reglamentaria/Toxicidad y seguridad. Fototoxicidad",
+              "label": " [PR97] Arauzko erabilera/Toxikotasuna eta segurtasuna. Fototoxikotasuna",
               "value": "PR97"
             },
             {
-              "label": "EU: [PR98] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Toxicidad aguda",
+              "label": " [PR98] Arauzko erabilera/Toxikotasuna eta segurtasuna/Ekotoxikotasuna. Toxikotasun akutua",
               "value": "PR98"
             },
             {
-              "label": "EU: [PR99] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Toxicidad crónica",
+              "label": " [PR99] Arauzko erabilera/Toxikotasuna eta segurtasuna/Ekotoxikotasuna. Toxikotasun kronikoa",
               "value": "PR99"
             },
             {
-              "label": "EU: [PR100] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Toxicidad reproductiva",
+              "label": " [PR100] Arauzko erabilera/Toxikotasuna eta segurtasuna/Ekotoxikotasuna. Ugalketako toxikotasuna",
               "value": "PR100"
             },
             {
-              "label": "EU: [PR101] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Actividad endocrina",
+              "label": " [PR101] Arauzko erabilera/Toxikotasuna eta segurtasuna/Ekotoxikotasuna. Jarduera endokrinoa",
               "value": "PR101"
             },
             {
-              "label": "EU: [PR102] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Bioacumulación",
+              "label": " [PR102] Arauzko erabilera/Toxikotasuna eta segurtasuna/Ekotoxikotasuna. Bioakumulazioa",
               "value": "PR102"
             },
             {
-              "label": "EU: [PR103] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Otros",
+              "label": " [PR103] Arauzko erabilera/Toxikotasuna eta segurtasuna/Ekotoxikotasuna. Beste batzuk",
               "value": "PR103"
             },
             {
-              "label": "EU: [PR104] Utilización reglamentaria/Toxicidad y seguridad. Ensayos de seguridad en el ámbito de la alimentación humana y animal",
+              "label": " [PR104] Arauzko erabilera/Toxikotasuna eta segurtasuna. Segurtasun saiakuntzak gizakien eta animalien elikaduraren esparruan",
               "value": "PR104"
             },
             {
-              "label": "EU: [PR105] Utilización reglamentaria/Toxicidad y seguridad. Seguridad de los animales destinatarios",
+              "label": " [PR105] Arauzko erabilera/Toxikotasuna eta segurtasuna. Animalia hartzaileen segurtasuna",
               "value": "PR105"
             },
             {
-              "label": "EU: [PR106] Utilización reglamentaria/Toxicidad y seguridad. Otros",
+              "label": " [PR106] Arauzko erabilera/Toxikotasuna eta segurtasuna. Beste batzuk",
               "value": "PR106"
             },
             {
-              "label": "EU: [PN107] Fines ajenos a la UE",
+              "label": "[PN107] EBtik kanpoko xedeak",
               "value": "PN107"
             }
           ]

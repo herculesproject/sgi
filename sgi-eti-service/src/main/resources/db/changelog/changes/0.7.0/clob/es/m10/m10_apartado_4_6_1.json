@@ -6,33 +6,33 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.6.1 Justificación del uso de estudiantes"
+      "label": "4.6.1 Ikasleen erabilera justifikatzea"
     },
     "hideExpression": "!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>¿Son los estudiantes de la Universidad un grupo específico de población necesario para el proyecto?</p>"
+        "template": "<p>Unibertsitateko ikasleak beharrezko populazio talde espezifiko bat dira proiekturako?</p>"
       },
       {
         "key": "justificacionUsoEstudiantesRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción: ",
+          "label": "Hautatu aukera bat: ",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
       },
       {
-        "template": "Motivos por los que no se plantea su sustitución",
+        "template": "Zergatik ez da planteatzen horiek ordezkatzea?",
         "hideExpression": "!model.justificacionUsoEstudiantesRadio || model.justificacionUsoEstudiantesRadio === 'si'"
       },
       {
@@ -40,8 +40,8 @@
         "type": "textarea",
         "hideExpression": "!model.justificacionUsoEstudiantesRadio || model.justificacionUsoEstudiantesRadio === 'si'",
         "templateOptions": {
-          "label": "Motivos",
-          "placeholder": "Motivos",
+          "label": "Arrazoiak",
+          "placeholder": "Arrazoiak",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

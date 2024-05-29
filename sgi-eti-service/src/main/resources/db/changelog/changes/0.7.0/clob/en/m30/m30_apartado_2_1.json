@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "2.1 Personal que llevará a cabo las tareas con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "2.1 Personnel carrying out work with biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles"
     },
     "fieldGroup": [
       {
-        "template": "<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas.<br><br>Especificar por cada persona:<br><ul><li>Datos identificativos (nombre, E-mail, vinculación con la Universidad).</li><li>Formación específica en riesgos biológicos.</li><li>Organismo acreditador (especificar universidad u organismo).</li><li>Año.</li></ul></p>"
+        "template": "<p>Below are all the members of the research team. Add in this section any other person who collaborates in the project carrying out tasks related to biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles.<br><br>Please specify for each person:<br><ul><li>Identification data (name, email, links to the University).</li><li>Specific training in biological risks.</li><li>Accrediting agency (specify university or agency).</li><li>Year.</li></ul></p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Asignación de tareas</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.",
+        "template": "This section is completed automatically based on the data entered in the section <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Task assignment</b></to> of the <b>Evaluation Request</b>. Access this menu item to make the necessary modifications.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
@@ -37,7 +37,7 @@
               "key": "nombre",
               "type": "input",
               "templateOptions": {
-                "label": "Nombre",
+                "label": "Name",
                 "order": 10,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.nombre"
               }
@@ -46,7 +46,7 @@
               "key": "apellidos",
               "type": "input",
               "templateOptions": {
-                "label": "Apellidos",
+                "label": "Surname",
                 "order": 20,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.apellidos"
               }
@@ -64,7 +64,7 @@
               "key": "vinculacion",
               "type": "input",
               "templateOptions": {
-                "label": "Vinculación",
+                "label": "Links",
                 "order": 40,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.vinculacion?.categoriaProfesional?.nombre"
               }
@@ -73,7 +73,7 @@
               "key": "nivelAcademico",
               "type": "input",
               "templateOptions": {
-                "label": "Nivel académico",
+                "label": "Academic level",
                 "order": 50,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona.datosAcademicos?.nivelAcademico?.nombre"
               }
@@ -82,7 +82,7 @@
               "key": "tarea",
               "type": "input",
               "templateOptions": {
-                "label": "Tarea",
+                "label": "Task",
                 "order": 60,
                 "expressionModelValue": "formState.tareas[$1].tarea"
               }
@@ -91,7 +91,7 @@
               "key": "experiencia",
               "type": "input",
               "templateOptions": {
-                "label": "Formación en riesgo biológico",
+                "label": "Biological risk training",
                 "order": 70,
                 "expressionModelValue": "formState.tareas[$1].formacion"
               }
@@ -100,7 +100,7 @@
               "key": "organismo",
               "type": "input",
               "templateOptions": {
-                "label": "Organismo acreditador",
+                "label": "Accrediting agency",
                 "order": 80,
                 "expressionModelValue": "formState.tareas[$1].organismo"
               }
@@ -109,7 +109,7 @@
               "key": "anio",
               "type": "input",
               "templateOptions": {
-                "label": "Año",
+                "label": "Year",
                 "order": 90,
                 "expressionModelValue": "formState.tareas[$1].anio"
               }

@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.2 Informe veterinario"
+      "label": "5.2 Veterinary report"
     },
     "fieldGroup": [
       {
-        "template": "¿Se requiere informe veterinario para la valoración de severidad acumulada por reutilización anterior o posterior de animales (ver apartado 4.3.2)?"
+        "template": "Is a veterinary report required for the assessment of cumulative severity due to previous or subsequent reuse of animals (see section 4.3.2)?"
       },
       {
         "key": "informeVeterinario",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": 13,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

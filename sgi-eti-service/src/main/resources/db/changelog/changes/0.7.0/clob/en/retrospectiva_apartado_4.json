@@ -5,19 +5,19 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Reducción, reemplazo y refinamiento",
+      "label": "Reduction, replacement and refinement",
       "expanded": true
     },
     "fieldGroup": [
       {
-        "template": "<p>Indique aquellas propuestas que considere que pueden contribuir a una mejor aplicación de la reducción, el reemplazo y el refinamiento en el uso de animales en investigación: </p><p>Reducción.</p>"
+        "template": "<p>Please indicate those proposals that you consider can contribute to a better application of reduction, replacement and refinement in the use of animals in research: </p><p>Reduction.</p>"
       },
       {
         "key": "reduccion",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Description",
+          "label": "Description",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -25,14 +25,14 @@
         }
       },
       {
-        "template": "<p>Reemplazo.</p>"
+        "template": "<p>Replacement.</p>"
       },
       {
         "key": "reemplazo",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Description",
+          "label": "Description",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -40,14 +40,14 @@
         }
       },
       {
-        "template": "<p>Refinamiento.</p>"
+        "template": "<p>Refinement.</p>"
       },
       {
         "key": "refinamiento",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Description",
+          "label": "Description",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.6.4 Número de animales a utilizar"
+      "label": "3.6.4 Number of animals to be used"
     },
     "fieldGroup": [
       {

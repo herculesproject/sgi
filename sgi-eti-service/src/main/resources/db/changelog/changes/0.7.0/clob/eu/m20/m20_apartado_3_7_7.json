@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.7 Agentes biológicos"
+      "label": "3.7.7 Agente biologikoak"
     },
     "fieldGroup": [
       {
-        "template": "¿El proceso de experimentación incluye la inoculación de agentes biológicos?"
+        "template": "Esperimentazio prozesuan agente biologikoak inokulatuko zaizkie?"
       },
       {
         "key": "agentesBiologicosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -33,16 +33,16 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Requiere informe del CBE</p>"
+        "template": "<p>EBBren txostena behar du.</p>"
       },
       {
         "key": "tipoAgenteBiologico",
         "type": "input",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
         "templateOptions": {
-          "label": "Tipo de agente biológico",
+          "label": "Agente biologiko mota",
           "required": true,
-          "placeholder": "Tipo"
+          "placeholder": "Mota"
         }
       },
       {
@@ -50,9 +50,9 @@
         "type": "input",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
         "templateOptions": {
-          "label": "Nivel de bioseguridad",
+          "label": "Biosegurtasun maila",
           "required": true,
-          "placeholder": "Nivel"
+          "placeholder": "Maila"
         }
       },
       {
@@ -60,9 +60,9 @@
         "type": "input",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
         "templateOptions": {
-          "label": "Dosis y vía de administración",
+          "label": "Dosia eta emateko modua",
           "required": true,
-          "placeholder": "Dosis"
+          "placeholder": "Dosia"
         }
       }
     ]

@@ -5,23 +5,23 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.6 Anestesia"
+      "label": "3.7.6 Anaesthesia"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>los procedimientos/intervenciones deberán llevarse a cabo con anestesia general o local, salvo que se considere que es inapropiada porque:</p><ul><li>Es más traumática para el animal que el propio procedimiento/intervención en sí.</li><li>Es incompatible con los fines del procedimiento/intervención (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a26'>art, 26.1 RD 53/13</a>).</li></ul><p>los procedimientos/intervenciones que impliquen lesiones graves que puedan causar dolores intensos no se llevarán a cabo sin anestesia (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a26'>art, 26.3 RD 53/13</a>).</p>"
+        "template": "<p>Procedures/interventions should be carried out under general or local anaesthesia, unless it is considered inappropriate because:</p><ul><li>It is more traumatic for the animal than the procedure/intervention itself.</li><li>It is incompatible with the purposes of the procedure/intervention (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a26'>art, 26.1 Royal Decree 53/13</to>).</li></ul><p>Procedures/interventions involving serious injuries that may cause severe pain will not be carried out without anaesthesia (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a26'>art, 26.3 Royal Decree 53/13</to>).</p>"
       },
       {
-        "template": "¿Se va utilizar anestesia en algún momento del proceso de experimentación?"
+        "template": "Will anaesthesia be used at any time during the experimentation process?"
       },
       {
         "key": "anestesiaRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -30,7 +30,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -39,7 +39,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: recuerde que las excepciones requieren aportar el documento correspondiente en el apartado '5.4 Situaciones especiales'.</p>"
+        "template": "<p>Note: please remember that exceptions require providing the respective document in section '5.4 Special situations'.</p>"
       }
     ]
   }

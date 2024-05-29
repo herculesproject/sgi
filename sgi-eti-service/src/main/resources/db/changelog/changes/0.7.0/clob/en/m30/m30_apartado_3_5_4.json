@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.5.4 Organismo modificado genéticamente"
+      "label": "3.5.4 Genetically modified organism"
     },
     "hideExpression": "!formState.mainModel.ap3_4 || !formState.mainModel.ap3_4.ap3_4_3 || !formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio || formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio === 'no'",
     "fieldGroup": [
@@ -25,9 +25,9 @@
               "key": "organismoModificadoNombre",
               "type": "textarea",
               "templateOptions": {
-                "label": "Nombre",
+                "label": "Name",
                 "order": 10,
-                "placeholder": "Nombre",
+                "placeholder": "Name",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -38,9 +38,9 @@
               "key": "organismoModificadoHuesped",
               "type": "textarea",
               "templateOptions": {
-                "label": "Huésped",
+                "label": "Host",
                 "order": 20,
-                "placeholder": "Huésped",
+                "placeholder": "Host",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -51,9 +51,9 @@
               "key": "organismoModificadoVectorUtilizado",
               "type": "textarea",
               "templateOptions": {
-                "label": "Vector utilizado",
+                "label": "Vector used",
                 "order": 30,
-                "placeholder": "Vector utilizado",
+                "placeholder": "Vector used",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -64,9 +64,9 @@
               "key": "organismoModificadoInsertoEspecie",
               "type": "textarea",
               "templateOptions": {
-                "label": "Inserto y especie de procedencia del inserto",
+                "label": "Insert and species of origin of the insert",
                 "order": 40,
-                "placeholder": "Inserto y especie de procedencia del inserto",
+                "placeholder": "Insert and species of origin of the insert",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -77,9 +77,9 @@
               "key": "organismoModificadoProteina",
               "type": "textarea",
               "templateOptions": {
-                "label": "Proteína que codifica",
+                "label": "Protein it encodes",
                 "order": 50,
-                "placeholder": "Proteína que codifica",
+                "placeholder": "Protein it encodes",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -90,24 +90,24 @@
               "key": "organismoModificadoGrupoRiesgo",
               "type": "select",
               "templateOptions": {
-                "label": "Grupo de riesgo",
+                "label": "Risk group",
                 "order": 60,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Grupo 1"
+                    "label": "Group 1"
                   },
                   {
                     "value": "2",
-                    "label": "Grupo 2"
+                    "label": "Group 2"
                   },
                   {
                     "value": "3",
-                    "label": "Grupo 3"
+                    "label": "Group 3"
                   },
                   {
                     "value": "4",
-                    "label": "Grupo 4"
+                    "label": "Group 4"
                   }
                 ]
               }
@@ -116,9 +116,9 @@
               "key": "organismoModificadoVolumenMaximo",
               "type": "textarea",
               "templateOptions": {
-                "label": "Volumen máximo de muestra que se maneja en cada vez o número de animales",
+                "label": "Maximum sample volume to be handled at any one time or number of animals",
                 "order": 70,
-                "placeholder": "Volumen máximo de muestra que se maneja en cada vez o número de animales",
+                "placeholder": "Maximum sample volume to be handled at any one time or number of animals",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",

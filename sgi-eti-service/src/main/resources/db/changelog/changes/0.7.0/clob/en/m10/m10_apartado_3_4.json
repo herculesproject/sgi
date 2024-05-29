@@ -6,26 +6,26 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.4 Intervenciones o pruebas en seres humanos"
+      "label": "3.4 Interventions or tests in humans"
     },
     "fieldGroup": [
       {
-        "template": "<p>¿En esta actividad se realizan intervenciones o pruebas en seres humanos?</p>"
+        "template": "<p>Are interventions or tests carried out on human beings in this activity?</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>A efectos de este formulario se consideran intervenciones o pruebas los trabajos concretos que requieran la <strong>concurrencia directa del ser humano</strong> sujeto de la experimentación; bien porque se vaya a obtener de él las muestras biológicas (de forma invasiva o no) o datos de carácter personal o tenga que realizar algún test, encuesta, ejercicio, etc.. </p>"
+        "template": "<p>For the purposes of this form, interventions or tests are considered specific procedures that require the <strong>direct participation of the human being</strong> subject of experimentation; either because biological samples are going to be obtained from them (invasively or not) or personal data or they have to carry out a test, survey, exercise, etc. </p>"
       },
       {
-        "template": "<p>Intervenciones o pruebas en seres humanos</p>"
+        "template": "<p>Interventions or tests in humans</p>"
       },
       {
         "key": "intervencionesSeresHumanosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -34,7 +34,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -44,37 +44,37 @@
         "type": "multicheckbox",
         "hideExpression": "!model.intervencionesSeresHumanosRadio || model.intervencionesSeresHumanosRadio === 'no'",
         "templateOptions": {
-          "label": "Cuales",
+          "label": "Which",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "entrevistasEncuestas",
-              "label": "Entrevistas, encuestas, cuestionarios, etc."
+              "label": "Interviews, surveys, questionnaires, etc."
             },
             {
               "value": "obtencionImagenes",
-              "label": "Obtencion de imágenes, sonido o similares (fotos, vídeos, grabaciones, RX, ECO, ect)"
+              "label": "Obtaining images, sound or similar (photos, videos, recordings, RX, ECO, etc.)"
             },
             {
               "value": "pruebasFisicas",
-              "label": "Pruebas físicas"
+              "label": "Physical tests"
             },
             {
               "value": "pruebasPsiquicas",
-              "label": "Pruebas psíquicas"
+              "label": "Psychic tests"
             },
             {
               "value": "obtencionNoInvasivas",
-              "label": "Obtención no invasivas de muestras"
+              "label": "Non-invasive sample collection"
             },
             {
               "value": "obtencionInvasivas",
-              "label": "Obtención invasivas de muestras"
+              "label": "Invasive sample collection"
             },
             {
               "value": "otras",
-              "label": "Otras. Especificar"
+              "label": "Others. Please specify"
             }
           ]
         }
@@ -84,8 +84,8 @@
         "type": "textarea",
         "hideExpression": "!((model.intervencionesSeresHumanosRadio && model.intervencionesSeresHumanosRadio === 'si') && (model.intervencionesSeresHumanosCheck && model.intervencionesSeresHumanosCheck.find((c)=> c === 'otras')))",
         "templateOptions": {
-          "placeholder": "Otras. Especificar",
-          "label": "Otras. Especificar",
+          "placeholder": "Others. Please specify",
+          "label": "Others. Please specify",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

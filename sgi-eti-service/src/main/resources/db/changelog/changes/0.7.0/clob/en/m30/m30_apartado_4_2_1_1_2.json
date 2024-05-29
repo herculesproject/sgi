@@ -5,12 +5,12 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1.1.2 Equipos de seguridad"
+      "label": "4.2.1.1.2 Safety equipment"
     },
     "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
     "fieldGroup": [
       {
-        "template": "<p>Se dispone de sistemas mecánicos de pipeteo</p>",
+        "template": "<p>Mechanical pipetting systems are available</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -19,7 +19,7 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Choose an option",
           "options": [
             {
               "value": "no",
@@ -27,7 +27,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -37,8 +37,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Remarks",
+          "placeholder": "Remarks",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "template": "<p>Se dispone de CSB adecuada a la clase de riesgo</p>",
+        "template": "<p>BSC is available appropriate to the risk class</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -56,7 +56,7 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Choose an option",
           "options": [
             {
               "value": "no",
@@ -64,7 +64,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -74,8 +74,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Remarks",
+          "placeholder": "Remarks",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -84,7 +84,7 @@
         }
       },
       {
-        "template": "<p>Se dispone de equipos de protección individual, como guantes impermeables para la manipulación de material potencialmenteinfeccioso en el interior de las CSB y guantes, gafas y mascarilla para trabajos con material infeccioso realizados en el banco de trabajoy en los que se puedan generar aerosoles, salpicaduras o proyecciones</p>",
+        "template": "<p>Personal protective equipment is available, such as waterproof gloves for handling potentially infectious material inside the BSC and gloves, glasses and a mask for work with infectious material carried out on the workbench and in which aerosols, splashes or projections</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -93,7 +93,7 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Choose an option",
           "options": [
             {
               "value": "no",
@@ -101,7 +101,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -111,8 +111,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Remarks",
+          "placeholder": "Remarks",
           "required": false,
           "disabled": false,
           "autosize": true,

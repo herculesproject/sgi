@@ -5,32 +5,32 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.5 Resumen no técnico (RNT)"
+      "label": "5.5 Laburpen ez-teknikoa (LET)"
     },
     "fieldGroup": [
       {
-        "template": "A continuación debe descargarse la plantilla 'RNT: Resumen no técnico' para redactar el <strong>Resumen no técnico (RNT)</strong> y aportarlo en el apartado correspondiente de 'Documentación'."
+        "template": "Jarraian, ‘LET: Laburpen ez-teknikoa’ txantiloia deskargatu behar duzu, <strong>Laburpen ez-teknikoa (LET)</strong> idazteko eta ‘Dokumentazio’ atalean eransteko."
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p><strong>Real Decreto 118/2021</strong>, de 23 de febrero, por el que se modifica el Real Decreto 53/2013, de 1 de febrero dictamina que el/la responsable del proyecto debe redactar un resumen anónimo no técnico (RNT) del proyecto y sus eventuales actualizaciones, que se presentará a la Comisión Europea en el plazo máximo de seis meses desde su autorización.</p><p>Siempre que la propiedad intelectual y la información confidencial queden protegidas, el resumen no técnico del proyecto incluirá, al menos, lo siguiente:</p><ul><li><strong>Será anónimo y no contendrá nombres</strong> ni direcciones de los usuarios ni de las personas, ni ningún otro dato de carácter personal.</li><li>Información sobre los <strong>objetivos</strong> del proyecto, incluidos los <strong>perjuicios</strong> y los <strong>beneficios</strong> previstos, así como el <strong>número</strong> y <strong>tipo</strong> de animales que van a utilizarse.<li>La demostración del cumplimiento del requisito de <strong>reemplazo</strong>, <strong>reducción</strong> y <strong>refinamiento</strong>.</li></ul><p>Los órganos competentes podrán exigir que el resumen no técnico del proyecto especifique si este debe someterse a una evaluación retrospectiva y, en tal caso, establecer el plazo. En tal caso, el resumen no técnico del proyecto debe actualizarse con los resultados de la evaluación retrospectiva en un plazo de seis meses a partir de la finalización de esta evaluación retrospectiva.</p><p>Una vez autorizado el proyecto, el órgano competente publicará el RNT en la página web del <a target='_blank' href='https://www.magrama.gob.es/es/ganaderia/temas/produccion-y-mercados-ganaderos/bienestanimal/en-la-investigacion/Resumenes_no_tecnicos_de_los_proyectos.aspx'>Ministerio de Economía y Competitividad</a>.</p><p> Para la redacción del RNT se facilitan plantillas en la página correspondiente en la web del <a target='_blank' href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea'>Comité de la Universidad</a>.</p>"
+        "template": " <p>Otsailaren 1eko 53/2013 Errege Dekretua aldatzen duen otsailaren 23ko <strong>118/2021 Errege Dekretuak</strong> agintzen duenez,  proiektuaren arduradunak proiektuaren eta horren balizko eguneraketen laburpen anonimo ez-tekniko bat (LET) idatzi behar du, eta laburpen hori Europako Batzordeari aurkeztuko zaio baimena jasotzen denetik gehienez sei hilabeteko epean. </p><p>Jabetza intelektuala eta informazio konfidentziala babestuta badaude, proiektuaren laburpen ez-teknikoak gutxieneko hauek beteko ditu: </p><ul><li><strong>Anonimoa izango da, eta bertan ez da agertuko erabiltzaile eta norbanakoen izenik</strong>, ezta helbiderik edo bestelako datu pertsonalik ere. </li><li>Proiektuaren <strong>helburuei</strong> buruzko informazioa emango du, horren barruan sartuta aurreikusitako <strong>kalteak</strong> eta <strong>onurak</strong>, baita erabiliko diren animalien <strong>kopurua</strong> eta <strong>mota</strong> ere. <li><strong>Ordezkatze</strong>, <strong>murrizte</strong> eta <strong>fintze</strong> baldintza betetzen dela frogatuko du.</li></ul><p>Proiektuaren laburpen ez-teknikoak proiektuari atzera begirako ebaluazioa egin behar zaion zehaztu dezala eskatu ahal izango dute organo eskudunek, eta, hala eginez gero, epea ezarriko dute. Kasu horretan, proiektuaren laburpen ez-teknikoa atzera begirako ebaluazioaren emaitzen arabera eguneratu beharko da, ebaluazioa amaitu eta sei hilabeteko epean. </p><p>Behin proiektua baimenduta, organo eskudunak laburpen ez-teknikoa argitaratuko du <a target='_blank' href='https://www.magrama.gob.es/es/ganaderia/temas/produccion-y-mercados-ganaderos/bienestanimal/en-la-investigacion/Resumenes_no_tecnicos_de_los_proyectos. aspx'>Ekonomia eta Lehiakortasun Ministerioaren</a> webgunean.</p><p> LETa idazteko, zenbait txantiloi daude <a target='_blank' href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea'>Unibertsitateko Batzordearen</a> webguneko dagokion orrian.</p>"
       },
       {
         "key": "resumenNoTecnico",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": 15,
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }

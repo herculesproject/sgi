@@ -5,14 +5,14 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.7 Proceso de experimentación al que va a ser sometido el animal"
+      "label": "3.7 Animaliari aplikatuko zaion esperimentazio prozesua"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Denominamos 'proceso de experimentación' al conjunto o sucesión de procedimientos/intervenciones a las que es sometido el animal desde el momento en que se inicia la preparación del animal para su utilización hasta que 'ya no vayan a hacerse observaciones ulteriores sobre él' y 'haya sido sacrificado, realojado o reintegrado a un hábitat o sistema zootécnico conveniente'.</p>"
+        "template": "<p>Animalia bat prestatzen denetik ‘haren gaineko behaketa gehiago egiten ez den’ arte eta ‘animalia hil, birkokatu edo habitat edo sistema zootekniko egoki batera itzultzen duten’ arte egiten diren prozeduren/esku hartzeen multzo edo segidari esaten diogu ‘esperimentazio prozesu’.</p>"
       }
     ]
   }

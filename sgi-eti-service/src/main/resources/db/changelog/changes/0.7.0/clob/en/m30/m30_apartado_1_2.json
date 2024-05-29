@@ -5,24 +5,24 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "1.2 Justificación del uso de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias Radiactivas y/o nanopartículas"
+      "label": "1.2 Justification of the use of biological agents, genetically modified organisms, hazardous chemicals, Radioactive substances and/or nanoparticles"
     },
     "fieldGroup": [
       {
-        "template": "<p>Exponer brevemente (máximo diez líneas) la necesidad de utilización de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas.</p>"
+        "template": "<p>Briefly explain (maximum ten lines) the need to use biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Sustancias químicas peligrosas (SQP*),* según el Reglamento (CE) nº1272/2008 sobre clasificación, etiquetado y envasado de sustancias y mezclas (CLP).</p><p>Sustancias radiactivas e instalaciones radiactivas, según la normativa recogida en el R.D 1836/1999 y en el R.D. 783/2001. Equipos radiológicos, según el RD 1085/2009, de 3 de julio, por el que se aprueba el Reglamento sobre instalación y utilización de aparatos de Rayos X con fines de diagnóstico médico.</p>"
+        "template": "<p>Hazardous chemicals (hazardous chemicals*),* according to Regulation (EC) No. 1272/2008 on classification, labelling and packaging of substances and mixtures (CLP).</p><p>Radioactive substances and radioactive facilities, according to the regulations contained in Spanish Royal Decrees 1836/1999 and 783/2001. Radiological equipment, according to Spanish Royal Decree 1085/2009, of July 3 2009, which approves the Regulation on the installation and use of X-ray equipment for medical diagnostic purposes.</p>"
       },
       {
         "key": "justificacion",
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Justificación",
+          "name": "Supporting evidence",
           "required": true
         }
       }

@@ -5,32 +5,32 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.3.2 Reutilización"
+      "label": "4.3.2 Berrerabiltzea"
     },
     "fieldGroup": [
       {
-        "template": "¿Los animales han sido o van a ser reutilizados en otro proyecto de investigación?"
+        "template": "Animaliak beste ikerketa proiektu batean berrerabili dira edo berrerabiliko dira?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Un animal que ya haya sido utilizado no deberá ser sometido a nuevos procesos experimentales o procedimiento alguno cuando en su lugar puede ser utilizado otro animal al que no se le haya realizado ningún procedimiento/intervención, a menos que se den las condiciones siguientes:<br><ul><li>a) Que la severidad de las intervenciomes anteriores fuera <u>leve</u> o <u>moderada</u></li><li>b) Que se haya demostrado la recuperación total del estado de salud general y del bienestar del animal</li><li>c) Que los/las nuevos/nuevas procedimientos/intervenciones estén clasificadas como <u>leves</u>, <u>moderadas</u> o <u>sin recuperación</u> y</li><li>d) Que se ajuste al dictamen veterinario teniendo en cuenta la experiencia durante la vida del animal</li></ul><br> En circunstancias excepcionales, no obstante lo dispuesto en la letra a), y previo examen veterinario del animal, la autoridad competente podrá autorizar la reutilización de un animal siempre que dicho animal no haya sido sometido más de una vez a procedimientos/intervenciones que le haya provocado angustia y dolor severos o un sufrimiento equivalente.<br>Para más información sobre la reutilización de animales ver el art. 29 y anexo X.10 del RD 53-13"
+        "template": "Lehendik erabili duten animalia bat ezingo da beste prozesu esperimental edo prozedura batean erabili, baldin eta haren ordez inongo prozedura/esku hartze aplikatu ez zaion beste animalia bat erabil badaiteke. Salbuespena izango dira honako egoera hauek: <br><ul><li>a) Aurreko esku hartzeen laztasuna <u>arina</u> edo <u>ertaina</u> izatea.</li><li>b) Animaliaren osasun egoera orokorra eta ongizatea erabat leheneratu direla frogatzea.</li><li>c) Prozedura/esku hartze berriak <u>arin</u>, <u>ertain</u> edo <u>suspertzeko aukerarik gabeko</u> gisa sailkatuta egotea.</li><li>d) Albaitariak iradokitzea, animaliaren bizitzako esperientzia kontuan hartuta.</li></ul><br> a) letran xedatutakoa gorabehera, salbuespenezko egoeretan, eta albaitariak animalia aztertu ondoren, agintaritza eskudunak animalia bat berrerabiltzeko baimena eman ahal izango du, baldin eta animalia horri ez bazaio behin baino gehiagotan aplikatu estutasuna eta min larria edo antzeko sufrimenduren bat eragin dion prozedura/esku hartze bat.<br>Animalien berrerabilpenari buruzko informazio gehiagorako, ikusi 53-13 EDren 29. art., eta X. eranskina."
       },
       {
         "key": "reutilizacionRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Reutilizado",
+          "label": "Berrerabilia",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -40,23 +40,23 @@
         "type": "multicheckbox",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no'",
         "templateOptions": {
-          "label": "Seleccionar",
+          "label": "Hautatu",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "anterior",
-              "label": "Proceden de un proyecto ANTERIOR"
+              "label": "AURREKO proiektu batetik datoz."
             },
             {
               "value": "posterior",
-              "label": "Podrán ser utilizados en un proyecto POSTERIOR"
+              "label": "ONDORENGO proiektu batean erabili ahal izango dira."
             }
           ]
         }
       },
       {
-        "template": "Código de referencia del proyecto anterior",
+        "template": "Aurreko proiektuaren erreferentzia kodea",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')"
       },
       {
@@ -64,12 +64,12 @@
         "type": "input",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')",
         "templateOptions": {
-          "label": "Código",
-          "placeholder": "Código"
+          "label": "Kodea",
+          "placeholder": "Kodea"
         }
       },
       {
-        "template": "Grado de severidad global del proyecto anterior",
+        "template": "Aurreko proiektuaren laztasun maila orokorra",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')"
       },
       {
@@ -77,29 +77,29 @@
         "type": "select",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')",
         "templateOptions": {
-          "label": "Seleccionar",
+          "label": "Hautatu",
           "options": [
             {
-              "label": "No recuperación",
+              "label": "Suspertzeko aukerarik gabe",
               "value": "1"
             },
             {
-              "label": "Leve",
+              "label": "Arina",
               "value": "2"
             },
             {
-              "label": "Moderada",
+              "label": "Ertaina",
               "value": "3"
             },
             {
-              "label": "Severa",
+              "label": "Larria",
               "value": "4"
             }
           ]
         }
       },
       {
-        "template": "Código de referencia del proyecto posterior",
+        "template": "Ondorengo proiektuaren erreferentzia kodea",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')"
       },
       {
@@ -107,12 +107,12 @@
         "type": "input",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')",
         "templateOptions": {
-          "label": "Código",
-          "placeholder": "Código"
+          "label": "Kodea",
+          "placeholder": "Kodea"
         }
       },
       {
-        "template": "Grado de severidad global del proyecto posterior",
+        "template": "Ondorengo proiektuaren laztasun maila orokorra",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')"
       },
       {
@@ -120,22 +120,22 @@
         "type": "select",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')",
         "templateOptions": {
-          "label": "Seleccionar",
+          "label": "Hautatu",
           "options": [
             {
-              "label": "No recuperación",
+              "label": "Suspertzeko aukerarik gabe",
               "value": "1"
             },
             {
-              "label": "Leve",
+              "label": "Arina",
               "value": "2"
             },
             {
-              "label": "Moderada",
+              "label": "Ertaina",
               "value": "3"
             },
             {
-              "label": "Severa",
+              "label": "Larria",
               "value": "4"
             }
           ]
@@ -145,7 +145,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Requiere informe veterinario que debe adjuntarse en el apartado 5.2</p>"
+        "template": "<p>Oharra: albaitariaren txostena behar du, eta 5.2 atalean erantsi behar da.</p>"
       }
     ]
   }

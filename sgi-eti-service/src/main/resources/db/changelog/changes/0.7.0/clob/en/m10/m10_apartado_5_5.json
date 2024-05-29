@@ -6,23 +6,23 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.5 Informe de la Comisión de Garantías"
+      "label": "5.5 Report of the Guarantees Commission"
     },
     "fieldGroup": [
       {
-        "template": "¿Su proyecto requiere informe previo favorable de la Comisión de Garantías?"
+        "template": "Does your project require a prior favourable report from the Guarantees Commission?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Requerirán el informe previo favorable de la Comisión de Garantías para la Donación y Utilización de Células y Tejidos Humanos, los proyectos de investigación que versen en todo o en parte sobre las siguientes materias:</p><ul><li>La investigación con preembriones humanos para la derivación de líneas celulares, para la investigación embriológica y para otros usos de investigación, excepto aquellos relacionados con el desarrollo y aplicación de las técnicas de reproducción asistida.</li><li>La investigación con células troncales embrionarias humanas.</li><li>La activación de ovocitos mediante transferencia nuclear para su uso con fines terapéuticos o de investigación.</li><li>Cualquier otra técnica que, utilizando en todo o en parte muestras biológicas de origen humano, pueda dar lugar a la obtención de células troncales.</li><li>La investigación con células o tejidos embrionarios obtenidos por cualquiera de los procedimientos señalados en el <a href='https://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a33' target='_blank'>artículo 33.2</a>.</li><li>Cualquier otra línea de investigación que incluya material celular de origen embrionario humano u otro funcionalmente semejante.</li><li>La investigación con líneas de células troncales embrionarias que provengan de otro país, intracomunitario o extracomunitario. Dicho origen vendrá especificado en el proyecto presentado a informe.</li></ul><p>Para más información consultar el <a href='https://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a35' target='_blank'>artículo 35 de la LIB 14/2007</a></p>"
+        "template": "<p>Research projects that deal in whole or in part with the following subjects will require a prior favourable report from the Guarantees Commission for the Donation and Use of Human Cells and Tissues:</p><ul><li>Research with human pre-embryos for the derivation of cell lines, for embryological research and for other research uses, except those related to the development and application of assisted reproduction techniques.</li><li>Research with human embryonic stem cells.</li><li>The activation of oocytes by nuclear transfer for use for therapeutic or research purposes.</li><li>Any other technique that, using all or part of biological samples of human origin, can lead to the obtaining of stem cells.</li><li>Research with embryonic cells or tissues obtained by any of the procedures indicated in the <a href='https://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a33' target='_blank'>article 33.2</to>.</li><li>Any other research line that includes cellular material of human embryonic origin or another functionally similar one.</li><li>Research with embryonic stem cell lines that come from another country, intra-community or extra-community. Such origin is to be specified in the project submitted to the report.</li></ul><p>For more information consult <a href='https://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a35' target='_blank'>article 35 of LIB 14/2007</to></p>"
       },
       {
         "key": "informeComisionGarantiasRadio",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
@@ -31,7 +31,7 @@
             },
             {
               "value": 8,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -40,7 +40,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: sólo se podrá constestar <b>Sí</b> si en el apartado '3.5 Muestras biológicas de origen humano' se ha seleccionado alguna de las opciones marcadas con asterisco <b>*</b>.</p>"
+        "template": "<p>Note: you can only answer <b>Yes</b> if in section '3.5 Biological samples of human origin' any of the options marked with an asterisk have been selected <b>*</b>.</p>"
       }
     ]
   }

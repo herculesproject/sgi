@@ -5,28 +5,28 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.1 Procedimientos/Intervenciones que se realizarán al animal"
+      "label": "3.7.1 Animaliari aplikatuko zaizkion prozedurak/esku hartzeak"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Denominamos 'procedimientos/intervenciones' a las manipulaciones (quirúrgicas o no), pruebas u observaciones a las que es sometido el animal a lo largo del proceso de experimentación.</p>"
+        "template": "<p>Esperimentazio prozesuan zehar animaliari egiten zaizkion manipulazio (kirurgikoak edo ez), proba edo behaketei esaten diegu ‘prozedura/esku hartze’. </p>"
       },
       {
-        "template": "<p>Describir <strong>PORMENORIZADAMENTE</strong> (y <strong>numerados</strong>) todos los procedimientos/intervenciones a las que es sometido el animal a lo largo del proceso de experimentación. Detallar especialmente aquellas en las que se prevé que pueda sufrir 'un nivel de dolor, sufrimiento, angustia o daño duradero, equivalente o superior al causado por la introducción de una aguja conforme a la buena práctica veterinaria'.</p>"
+        "template": "<p>Deskribatu <strong>ZEHATZ-MEHATZ</strong> (eta <strong>zenbakitu</strong>) esperimentazio prozesuan zehar animaliari egingo zaizkion prozedura/esku hartze guztiak. Zehaztu, bereziki, animaliari ‘albaitaritza jardunbide egokiaren arabera orratz bat sartzeak eragiten duen min, sufrimendu, estutasun edo kalte iraunkorraren parekoa edo hori baino handiagoa’ eragin diezazkioketenak.</p>"
       },
       {
         "key": "descripcionProcedimientoIntervencion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Descripción del procedimiento/intervención",
+          "name": " Prozeduraren/esku hartzearen deskribapena",
           "required": false
         }
       },
       {
-        "template": "<p>Indicar la duración de cada procedimiento/intervención, frecuencia de realización, número de animales de cada procedimiento y categoría de severidad.</p></br><p>La clasificación de la severidad que se prevé que el animal pueda experimentar dolor, sufrimiento o ansiedad, se realiza de acuerdo a la siguiente clasificación:<ul><li><strong>Sin recuperación</strong>: los procedimientos/intervenciones que se realizan enteramente bajo anestesia general tras la cual el animal no recuperará la conciencia deben clasificarse como de no recuperación.</li><li><strong>Leve</strong>: los procedimientos/intervenciones en animales a consecuencia de las cuales es probable que experimente dolor, sufrimiento o angustia leves de corta de duración, así como los procedimientos/intervenciones sin alteración significativa del bienestar o del estado general de los animales deben de clasificarse como leves.</li><li><strong>Moderada</strong>: los procedimientos/intervenciones en animales a consecuencia de las cuales es probable que experimenten dolor, sufrimiento o angustia moderados de corta duración pero duraderos, así como los procedimientos/intervenciones que pudieran causar una alteración moderada del bienestar o el estado general de los animales deben clasificarse como moderadas.</li><li><strong>Severa</strong>: los procedimientos/intervenciones en animales a consecuencia de las cuales es probable que experimenten dolor, sufrimiento o angustia intensos, o moderados pero duraderos, así como los procedimientos/intervenciones que pudieran causar una alteración grave del bienestar o del estado general de los animales deben clasificarse como severas.</li></ul></p>"
+        "template": "<p>Adierazi prozedura/esku hartze bakoitzaren iraupena, maiztasuna, animalia kopurua eta laztasun kategoria. </p></br><p>Animaliak jasan dezakeen min, sufrimendu edo estutasunaren laztasuna sailkatzeko, sailkapen hau erabiliko da: <ul><li><strong>Suspertzeko aukerarik gabe</strong>: prozedura/esku hartze hauek anestesia orokorrarekin egiten dira, eta horren ondoren animalia ez da suspertzen. </li><li><strong>Arina</strong>: prozedura/esku hartze hauen ondorioz animaliak min, sufrimendu edo estutasun labur eta arina jasan dezake; animaliaren ongizatea edo egoera orokorra nabarmenki aldatzen ez duten prozedurak/esku hartzeak ere arintzat sailkatu behar dira. </li><li><strong>Ertaina</strong>: prozedura/esku hartze hauen ondorioz, animaliek gutxi irauten duten baina iraunkorrak diren min, sufrimendu edo estutasun ertainak jasan ditzakete; animalien ongizatean edo egoera orokorrean aldaketa handi samarra eragin dezaketen prozedurak/esku hartzeak ere ertaintzat sailkatu behar dira. </li><li><strong>Larria</strong>: prozedura/esku hartze hauen ondorioz, animaliek min, sufrimendu edo estutasun biziak jasan ditzakete, edo ertainak baina iraunkorrak; animalien ongizatean edo egoera orokorrean aldaketa larriak eragin ditzaketen prozedurak/esku hartzeak ere larritzat sailkatu behar dira. </li></ul></p>"
       },
       {
         "type": "table-crud",
@@ -44,7 +44,7 @@
               "key": "numeroProcedimiento",
               "type": "input",
               "templateOptions": {
-                "label": "Nº Procedimiento/ Intervención",
+                "label": "Prozeduraren/Esku hartzearen zk.",
                 "required": true,
                 "order": 10
               }
@@ -53,7 +53,7 @@
               "key": "frecuenciaRealizacion",
               "type": "input",
               "templateOptions": {
-                "label": "Frecuencia realización",
+                "label": "Maiztasuna",
                 "required": true,
                 "order": 30
               }
@@ -62,7 +62,7 @@
               "key": "numeroAnimales",
               "type": "input",
               "templateOptions": {
-                "label": "Número de animales",
+                "label": "Animalia kopurua",
                 "required": true,
                 "order": 40
               }
@@ -71,38 +71,31 @@
               "key": "categoriaSeveridad",
               "type": "select",
               "templateOptions": {
-                "label": "Categoría de severidad",
+                "label": "Laztasun kategoria",
                 "required": true,
                 "order": 50,
                 "options": [
                   {
                     "value": "Sin recuperación",
-                    "label": "Sin recuperación"
+                    "label": "Suspertzeko aukerarik gabe"
                   },
                   {
                     "value": "Leve",
-                    "label": "Leve"
+                    "label": "Arina"
                   },
                   {
                     "value": "Moderada",
-                    "label": "Moderada"
+                    "label": "Ertaina"
                   },
                   {
                     "value": "Severa",
-                    "label": "Severa"
+                    "label": "Larria"
                   }
                 ]
               }
             }
           ]
         }
-      },
-      {
-        "wrappers": [
-          "warn-div"
-        ],
-        "hideExpression": "!model.procedimientoIntervencionMedidaCorrectoraTable.length > 0",
-        "template": "<p>Si modifica los procedimientos/intervenciones o su severidad, recuerde revisar y actualizar la tabla del apartado 4.2.1</p>"
       }
     ]
   }

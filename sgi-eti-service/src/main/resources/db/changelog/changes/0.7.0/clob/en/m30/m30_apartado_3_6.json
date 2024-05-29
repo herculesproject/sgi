@@ -5,18 +5,18 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.6 Frecuencia y periodicidad de uso"
+      "label": "3.6 Frequency and periodicity of use"
     },
     "fieldGroup": [
       {
-        "template": "<p>Describir a continuación la frecuencia de uso de los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas especificados, es decir, número de veces al día o a la semana que se accederá a la muestra para manipulación, cultivo etc., duración de esa manipulación, y si esa acción se repetirá de forma periódica (por ejemplo número de veces a la semana o al mes, número de meses al año, etc).</p>"
+        "template": "<p>Please describe below the frequency of use of the specified biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles, that is, number of times per day or week that the sample will be accessed for manipulation, culture, etc., duration of that manipulation, and whether that action will be repeated periodically (for example, number of times per week or month, number of months per year, etc.).</p>"
       },
       {
         "key": "frecuenciaPeriodicidad",
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Describir",
+          "name": "Please describe",
           "required": true
         }
       }

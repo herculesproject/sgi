@@ -6,17 +6,17 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.2 Documento de cesión de datos"
+      "label": "5.2 Data transfer document"
     },
     "fieldGroup": [
       {
-        "template": "<p>Si existen documentos de cesión de datos, como pueden ser del profesor al alumno para realizar la investigación tutelada, de personal clínico al personal investigador de la Universidad, de biobancos, etc. se deben de incluir.</p>"
+        "template": "<p>If there are data transfer documents, such as from the professor to the student to carry out supervised research, from clinical staff to the University's research staff, from biobanks, etc., they should be included.</p>"
       },
       {
         "key": "documentoCesion",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
@@ -25,7 +25,7 @@
             },
             {
               "value": 5,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

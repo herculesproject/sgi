@@ -6,17 +6,17 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.3 Referencias de publicaciones científicas"
+      "label": "3.3 References from scientific publications"
     },
     "fieldGroup": [
       {
-        "template": "<p>Citar de forma completa (autor, título, publicación, fecha, etc) las referencias más relevantes utilizadas para la redacción del proyecto (máximo 10 referencias)</p>"
+        "template": "<p>Please cite in full (author, title, publication, date, etc.) the most relevant references used for drafting the project (maximum 10 references)</p>"
       },
       {
         "key": "referenciasPublicaciones",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Referencias",
+          "name": "References",
           "required": true
         }
       }

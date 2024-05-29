@@ -6,17 +6,17 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.6 Acuerdo de transferencia de muestras"
+      "label": "5.6 Sample transfer agreement"
     },
     "fieldGroup": [
       {
-        "template": "<p>Si su proyecto ha requerido cesión de muestras o tejidos ¿dispone del acuerdo de transferencia (MTA) correspondiente?</p>"
+        "template": "<p>If your project has required the transfer of samples or tissues, do you have the respective transfer agreement (MTA)?</p>"
       },
       {
         "key": "acuerdoTransferenciaMuestras",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
@@ -25,7 +25,7 @@
             },
             {
               "value": 9,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

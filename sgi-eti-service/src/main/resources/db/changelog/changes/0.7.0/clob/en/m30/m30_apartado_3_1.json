@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.1 Objetivos científicos del proyecto"
+      "label": "3.1 Scientific objectives of the project"
     },
     "fieldGroup": [
       {
-        "template": "<p>Describir brevemente los principales objetivos que se pretenden alcanzar con esta experimentación con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas</p>"
+        "template": "<p>Briefly describe the main objectives to be achieved by this experimentation with biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el campo <b>Objetivos científicos</b> del apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>Datos generales</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.",
+        "template": "This section is completed automatically based on the data entered in the field <b>Scientific objectives</b> of the section <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>General data</b></to> of the <b>Evaluation Request</b>. Access this menu item to make the necessary modifications.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
@@ -24,7 +24,7 @@
         "key": "objetivosCientificos",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Descripción objetivos científicos del proyecto",
+          "name": "Description of the scientific objectives of the project",
           "disabled": true,
           "required": true,
           "expressionModelValue": "formState.memoria.peticionEvaluacion.objetivos"

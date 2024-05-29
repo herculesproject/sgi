@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.5.4 Organismo modificado genéticamente"
+      "label": "3.5.4 Genetikoki eraldatutako organismoa"
     },
     "hideExpression": "!formState.mainModel.ap3_4 || !formState.mainModel.ap3_4.ap3_4_3 || !formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio || formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio === 'no'",
     "fieldGroup": [
@@ -25,9 +25,9 @@
               "key": "organismoModificadoNombre",
               "type": "textarea",
               "templateOptions": {
-                "label": "Nombre",
+                "label": "Izena",
                 "order": 10,
-                "placeholder": "Nombre",
+                "placeholder": "Izena",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -38,9 +38,9 @@
               "key": "organismoModificadoHuesped",
               "type": "textarea",
               "templateOptions": {
-                "label": "Huésped",
+                "label": "Ostalaria",
                 "order": 20,
-                "placeholder": "Huésped",
+                "placeholder": "Ostalaria",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -51,9 +51,9 @@
               "key": "organismoModificadoVectorUtilizado",
               "type": "textarea",
               "templateOptions": {
-                "label": "Vector utilizado",
+                "label": "Erabilitako bektorea",
                 "order": 30,
-                "placeholder": "Vector utilizado",
+                "placeholder": "Erabilitako bektorea",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -64,9 +64,9 @@
               "key": "organismoModificadoInsertoEspecie",
               "type": "textarea",
               "templateOptions": {
-                "label": "Inserto y especie de procedencia del inserto",
+                "label": "Elementu txertatua eta elementu txertatuaren jatorrizko espeziea",
                 "order": 40,
-                "placeholder": "Inserto y especie de procedencia del inserto",
+                "placeholder": "Elementu txertatua eta elementu txertatuaren jatorrizko espeziea",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -77,9 +77,9 @@
               "key": "organismoModificadoProteina",
               "type": "textarea",
               "templateOptions": {
-                "label": "Proteína que codifica",
+                "label": "Kodetzen duen proteina",
                 "order": 50,
-                "placeholder": "Proteína que codifica",
+                "placeholder": "Kodetzen duen proteina",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -90,24 +90,24 @@
               "key": "organismoModificadoGrupoRiesgo",
               "type": "select",
               "templateOptions": {
-                "label": "Grupo de riesgo",
+                "label": "Arrisku taldea",
                 "order": 60,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Grupo 1"
+                    "label": "1. taldea"
                   },
                   {
                     "value": "2",
-                    "label": "Grupo 2"
+                    "label": "2. taldea"
                   },
                   {
                     "value": "3",
-                    "label": "Grupo 3"
+                    "label": "3. taldea"
                   },
                   {
                     "value": "4",
-                    "label": "Grupo 4"
+                    "label": "4. taldea"
                   }
                 ]
               }
@@ -116,9 +116,9 @@
               "key": "organismoModificadoVolumenMaximo",
               "type": "textarea",
               "templateOptions": {
-                "label": "Volumen máximo de muestra que se maneja en cada vez o número de animales",
+                "label": "Aldi bakoitzean erabiltzen den gehienezko lagin bolumena edo animalia kopurua",
                 "order": 70,
-                "placeholder": "Volumen máximo de muestra que se maneja en cada vez o número de animales",
+                "placeholder": "Aldi bakoitzean erabiltzen den gehienezko lagin bolumena edo animalia kopurua",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",

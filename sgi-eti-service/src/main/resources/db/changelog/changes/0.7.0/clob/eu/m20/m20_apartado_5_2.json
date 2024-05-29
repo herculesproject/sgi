@@ -5,26 +5,26 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.2 Informe veterinario"
+      "label": "5.2 Albaitariaren txostena"
     },
     "fieldGroup": [
       {
-        "template": "¿Se requiere informe veterinario para la valoración de severidad acumulada por reutilización anterior o posterior de animales (ver apartado 4.3.2)?"
+        "template": "Albaitariaren txostena behar da, animaliak aurretik edo ondoren berrerabiltzeagatik metatutako laztasuna baloratzeko?"
       },
       {
         "key": "informeVeterinario",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": 13,
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }

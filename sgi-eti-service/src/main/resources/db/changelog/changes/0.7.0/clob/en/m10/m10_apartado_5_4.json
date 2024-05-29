@@ -6,17 +6,17 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.4 Documento de aceptación de colaboración"
+      "label": "5.4 Collaboration acceptance document"
     },
     "fieldGroup": [
       {
-        "template": "Si el reclutamiento de las personas participantes va a ser realizado por alguien ajeno al equipo investigador ¿dispone del documento de aceptación de colaboración?"
+        "template": "If the recruitment of participants is going to be carried out by someone outside the research team, do you have the collaboration acceptance document?"
       },
       {
         "key": "documentoAceptacionColaboracion",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
@@ -25,7 +25,7 @@
             },
             {
               "value": 7,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -34,7 +34,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: ver apartado '3,4.2 Reclutamiento realizado por personal ajeno al equipo investigador'.</p>"
+        "template": "<p>Note: see section '3,4.2 Recruitment carried out by personnel outside the research team'.</p>"
       }
     ]
   }

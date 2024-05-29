@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Aclaraciones",
+      "label": "Batzordearentzako azalpenak",
       "expanded": true
     },
     "fieldGroup": [
@@ -13,7 +13,7 @@
         "key": "aclaraciones",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
+          "placeholder": "Deskribapena",
           "label": "",
           "required": false,
           "autosize": true,

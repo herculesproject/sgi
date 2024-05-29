@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.8 Administración de isótopos radiactivos"
+      "label": "3.7.8 Administration of radioactive isotopes"
     },
     "fieldGroup": [
       {
-        "template": "¿El proceso de experimentación incluye la administración de isótopos radiactivos al animal?"
+        "template": "Does the experimental process include the administration of radioactive isotopes to the animal?"
       },
       {
         "key": "administracionIsotoposRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "Se requiere informe del CBE",
+        "template": "CBE report required",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'"
       },
       {
@@ -41,9 +41,9 @@
         "type": "input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",
         "templateOptions": {
-          "label": "Tipo de isótopo",
+          "label": "Type of isotope",
           "required": true,
-          "placeholder": "Tipo"
+          "placeholder": "Type"
         }
       },
       {
@@ -51,9 +51,9 @@
         "type": "input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",
         "templateOptions": {
-          "label": "Dosis y vía de administración",
+          "label": "Dosage and route of administration",
           "required": true,
-          "placeholder": "Dosis"
+          "placeholder": "Dose"
         }
       }
     ]

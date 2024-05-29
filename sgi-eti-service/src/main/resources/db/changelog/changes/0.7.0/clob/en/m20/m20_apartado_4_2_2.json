@@ -5,23 +5,23 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.2 No aplicación de medidas correctoras"
+      "label": "4.2.2 Non-application of corrective measures"
     },
     "fieldGroup": [
       {
-        "template": "En caso de no aplicar medidas correctoras en algún procedimiento/intervención justifique la razón"
+        "template": "If corrective measures are not applied in any procedure/intervention, please justify the reason."
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Para más información sobre medidas correctoras (anestesia y analgesia) ver Art. 26 del RD 53/13."
+        "template": "For more information on corrective measures (anaesthesia and analgesia) see Art. 26 of Royal Decree 53/13."
       },
       {
         "key": "justificarRazon",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Justificar",
+          "name": "Justify",
           "required": true
         }
       }

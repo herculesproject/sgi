@@ -5,18 +5,18 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.7 Trayectoria completa de los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "3.7 Agente biologikoen, genetikoki eraldatutako organismoen, substantzia kimiko arriskutsuen, substantzia erradioaktiboen edo/eta nanopartikulen ibilbide osoa"
     },
     "fieldGroup": [
       {
-        "template": "<p>Describir a continuación el recorrido que siguen los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartícula desde su obtención hasta su eliminación:</p>"
+        "template": "<p>Jarraian, deskribatu zer ibilbide egiten duten agente biologikoek, genetikoki eraldatutako organismoek, substantzia kimiko arriskutsuek, substantzia erradioaktiboek edo/eta nanopartikulek eskuratzen direnetik ezabatzen diren arte:</p>"
       },
       {
         "key": "mododeObtencion",
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Modo de obtención",
+          "name": "Nola eskuratzen diren",
           "required": true
         }
       },
@@ -25,7 +25,7 @@
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Transporte",
+          "name": "Nola garraiatzen diren",
           "required": true
         }
       },
@@ -34,7 +34,7 @@
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Recepción",
+          "name": "Nola hartzen diren",
           "required": true
         }
       },
@@ -43,7 +43,7 @@
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Almacenamiento",
+          "name": "Nola biltegiratzen diren",
           "required": true
         }
       },
@@ -52,7 +52,7 @@
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Eliminación",
+          "name": "Nola ezabatzen diren",
           "required": true
         }
       }

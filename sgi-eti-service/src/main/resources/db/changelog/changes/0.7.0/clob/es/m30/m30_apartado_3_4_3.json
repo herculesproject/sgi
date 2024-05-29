@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.4.3 Uso confinado de organismos modificados genéticamente"
+      "label": "3.4.3 Genetikoki eraldatutako organismoen erabilera konfinatua"
     },
     "fieldGroup": [
       {
-        "template": "<p>En esta actividad ¿se realizan tareas de uso confinado de organismos modificados genéticamente?</p>"
+        "template": "<p>Jarduera honetan genetikoki eraldatutako organismoen erabilera konfinatua dakarten zereginak egiten dira?</p>"
       },
       {
         "key": "tareasUsoConfinadoRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -33,10 +33,10 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "Adjuntar la hoja de información del transgénico de la casa comercial."
+        "template": "Erantsi etxe komertzialaren transgenikoari buruzko informazio orria."
       },
       {
-        "template": "Tipo de organismos modificados genéticamente que se utiliza",
+        "template": "Genetikoki eraldatutako zer organismo mota erabiltzen den",
         "hideExpression": "!model.tareasUsoConfinadoRadio || model.tareasUsoConfinadoRadio === 'no'"
       },
       {
@@ -44,21 +44,21 @@
         "key": "tiposOMG",
         "hideExpression": "!model.tareasUsoConfinadoRadio || model.tareasUsoConfinadoRadio === 'no'",
         "templateOptions": {
-          "label": "Opciones:",
+          "label": "Aukerak:",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "agentesBiologicos",
-              "label": "Agentes biológicos"
+              "label": "Agente biologikoak"
             },
             {
               "value": "animales",
-              "label": "Animales"
+              "label": "Animaliak"
             },
             {
               "value": "plantas",
-              "label": "Plantas"
+              "label": "Landareak"
             }
           ]
         }
@@ -68,7 +68,7 @@
           "info-div"
         ],
         "hideExpression": "!model.tareasUsoConfinadoRadio || model.tareasUsoConfinadoRadio === 'no'",
-        "template": "<p>Agentes biológicos: Los agentes biológicos se definen en el artículo 2 del <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144'>Real Decreto 664/199, de 12 de mayo,</a> sobre la protección de los trabajadores contra los riesgos relacionados con la exposición a agentes biológicos durante el trabajo como 'los microorganismos, con inclusión de los genéticamente modificados, los cultivos celulares y los endoparásitos humanos, susceptibles de originar cualquier tipo de infección, alergia o toxicidad'.</p>"
+        "template": "<p>Agente biologikoak: agente biologikoak honela definituta daude langilea lanean agente biologikoen eraginpean egoteak dakartzan arriskuetatik babesteari buruzko <a target='_blank' href='https://www.boe.es/buscar/act.php? id=BOE-A-1997-11144'>maiatzaren 12ko 664/199 Errege Dekretuaren</a> 2. artikuluan: edozein motatako infekzioak, alergiak edo toxikotasuna eragin dezaketen mikroorganismoak (genetikoki eraldatutakoak barne), zelula kultiboak eta giza endoparasitoak. </p>"
       }
     ]
   }

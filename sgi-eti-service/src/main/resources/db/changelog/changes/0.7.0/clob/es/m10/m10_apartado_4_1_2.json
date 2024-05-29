@@ -6,27 +6,27 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.1.2 Valoración de los riesgos o molestias"
+      "label": "4.1.2 Arrisku edo eragozpenak baloratzea"
     },
     "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
     "fieldGroup": [
       {
-        "template": "<p>Teniendo en cuenta las intervenciones y pruebas que se van a realizar a los sujetos de investigación descritas en el apartado 3.4.3 ¿cómo valoraría los riesgos o molestias posibles según la siguiente definición?</p>"
+        "template": "<p>Kontuan hartuta ikerketako subjektuei egingo zaizkien esku hartzeak eta probak (3.4.3 atalean deskribatu dira), nola baloratuko zenituzke arrisku edo eragozpen posibleak, honako definizio hauen arabera?</p>"
       },
       {
         "key": "valoracionRiesgosMolestiasCheck",
         "type": "multicheckbox",
         "templateOptions": {
-          "label": "Opciones:",
+          "label": "Aukerak:",
           "type": "array",
           "options": [
             {
               "value": "riegosMinimo",
-              "label": "Riesgo mínimo: aquel que no supera en probabilidad o magnitud al que cabría esperar en la actividad cotidiana, incluyendo exámenes físicos o psicológicos rutinarios"
+              "label": "Gutxieneko arriskua: arrisku honen probabilitatea edo larritasuna ez da ohiko jardueran (ohiko azterketa fisiko edo psikologikoak barne) espero daitekeen arriskuarena baino handiagoa."
             },
             {
               "value": "riesgoSuperior",
-              "label": "Riesgo superior al mínimo: aquel que se produce cuando la posibilidad de daño físico, psicológico o relacionado con la invasión de la privacidad o confidencialidad es mayor que el esperado en la actitud cotidiana"
+              "label": "Gutxienekoa baino arrisku handiagoa: kasu honetan, ohiko jardueran baino aukera handiagoa dago kalte fisiko edo psikologikoak edo pribatutasunaren edo konfidentzialtasunaren inbasioarekin lotutako kalteak jasateko."
             }
           ]
         }
@@ -36,8 +36,8 @@
         "type": "textarea",
         "hideExpression": "!model.valoracionRiesgosMolestiasCheck || !model.valoracionRiesgosMolestiasCheck.find((c) => c === 'riesgoSuperior')",
         "templateOptions": {
-          "label": "Justificar la pertinencia del estudio así como la no existencia o la no utilización de alternativas de eficacia comparable",
-          "placeholder": "Justificar la pertinencia del estudio así como la no existencia o la no utilización de alternativas de eficacia comparable",
+          "label": "Justifikatu azterketaren egokitasuna eta zergatik ez dauden edo ez diren erabiltzen eraginkortasun bertsuko beste aukera batzuk.",
+          "placeholder": "Justifikatu azterketaren egokitasuna eta zergatik ez dauden edo ez diren erabiltzen eraginkortasun bertsuko beste aukera batzuk.",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

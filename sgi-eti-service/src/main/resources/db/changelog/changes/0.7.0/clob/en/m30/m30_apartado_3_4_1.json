@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.4.1 Exposición no intencionada o incidental"
+      "label": "3.4.1 Unintentional or incidental exposure"
     },
     "fieldGroup": [
       {
-        "template": "<p>En esta actividad ¿se realizan tareas en las que puede haber exposición no intencionada o incidental a agentes biológicos?</p>"
+        "template": "<p>In this activity, are tasks performed in which there may be unintentional or incidental exposure to biological agents?</p>"
       },
       {
         "key": "agentesBiologicosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,13 +24,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "Tipo de material biológico que se utiliza",
+        "template": "Type of biological material used",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'"
       },
       {
@@ -38,31 +38,31 @@
         "key": "muestrasBiologicasCheck",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
         "templateOptions": {
-          "label": "Opciones:",
+          "label": "Options:",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "criaymanejoanimales",
-              "label": "Cría y manejo de animales"
+              "label": "Animal husbandry and management"
             },
             {
               "value": "tejidossangrefluidosanimales",
-              "label": "Tejidos/sangre/fluidos animales"
+              "label": "Animal tissues/blood/fluids"
             },
             {
               "value": "tejidossangrefluidoshumanos",
-              "label": "Tejidos/sangre/fluidos humanos"
+              "label": "Human tissues/blood/fluids"
             },
             {
               "value": "otros",
-              "label": "Otros"
+              "label": "Other"
             }
           ]
         }
       },
       {
-        "template": "Indicar el tipo de material biológico",
+        "template": "Please indicate the type of biological material",
         "hideExpression": "!((model.agentesBiologicosRadio && model.agentesBiologicosRadio === 'si') && (model.muestrasBiologicasCheck && model.muestrasBiologicasCheck.find((m) => m === 'otros')))"
       },
       {
@@ -70,7 +70,7 @@
         "type": "textarea",
         "hideExpression": "!((model.agentesBiologicosRadio && model.agentesBiologicosRadio === 'si') && (model.muestrasBiologicasCheck && model.muestrasBiologicasCheck.find((m) => m === 'otros')))",
         "templateOptions": {
-          "label": "Indicar:",
+          "label": "Please indicate:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

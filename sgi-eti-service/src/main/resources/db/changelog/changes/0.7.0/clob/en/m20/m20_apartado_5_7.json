@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.7 Aclaraciones al comité"
+      "label": "5.7 Clarifications to the committee"
     },
     "fieldGroup": [
       {
-        "template": "<p>Incluir a continuación cualquier otra aclaración que se considere necesaria para el comité</p>"
+        "template": "<p>Please include below any further clarification deemed necessary for the committee</p>"
       },
       {
         "key": "aclaracionesComite",
         "type": "textarea",
         "templateOptions": {
-          "label": "Aclaraciones",
+          "label": "Clarifications",
           "autosize": true,
           "autosizeMinRows": "1",
           "autosizeMaxRows": "10"

@@ -5,35 +5,35 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "2.1 Personal que llevará a cabo las tareas con animales"
+      "label": "2.1 Personnel who will carry out tasks with animals"
     },
     "fieldGroup": [
       {
-        "template": "<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los animales de experimentación.<br><br>Especificar por cada persona<br><ul><li>Datos indentificativos (nombre, E-mail, vinculacion y nivel académico)</li><li>Tareas concretas que realizará de acuerdo o lo descrito en el apartado '3.3 Diseño metodológico' (diseño del proyecto y metodología, realización de cada procedimiento/intervención y/o eutanasia, aplicación del protocolo de supervisión, etc..)</li></ul></p>"
+        "template": "<p>Below are all the members of the research team. Add in this section any other person who collaborates in the project by carrying out tasks related to experimental animals.<br><br>Please specify for each person<br><ul><li>Identifying data (name, email, connection and academic level)</li><li>Specific tasks that will be carried out in accordance with what is described in section '3.3 Methodological design' (design of the project and methodology, performance of each procedure/intervention and/or euthanasia, application of the supervision protocol, etc.)</li></ul></p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La normativa respecto a la experimentación animal está en continua revisión. Actualmente la capacitación necesaria para la experimentación animal se especifica en la orden ministerial Orden <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2015-3564' target='_blank'>ECC/566/2015</a>. Ya no se habla de categorías A, B, C y D sino de 'funciones'. De forma simplificada la equivalencia entre ambas es la siguiente:<br>Se puede encontrar información sobre cursos de capacitación autorizados en las páginas de la <a href='https://secal.es' target='_blank'>SECAL</a> y <a href='https://www.animalaria.org' target='_blank'>ANIMALARIA</a>.</div><br><ul><li>Categoría A: Función a y b</li><li>Categoría B: Función b y c</li><li>Categoría C: Función c y d</li><li>Categoría D1: Función e</li><li>Categoría D2: Función f y b</li></ul></p>"
+        "template": "<p>The regulations regarding animal experimentation are under continuous review. Currently the training necessary for animal experimentation is specified in the ministerial Order <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2015-3564' target='_blank'>ECC/566/2015</to>. We no longer speak of categories A, B, C and D but of 'functions'. In a simplified way, the equivalence between the two is as follows:<br>Information about authorised training courses can be found on the websites of <a href='https://secal.es' target='_blank'>SECAL</to> and <a href='https://www.animalaria.org' target='_blank'>ANIMALARIA</to>.</div><br><ul><li>Category A: Function a and b</li><li>Category B: Function b and c</li><li>Category C: Function c and d</li><li>Category D1: Function e</li><li>Category D2: Function f and b</li></ul></p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: recuerde que hay que aportar copia de todas las acreditaciones del equipo investigador en el apartado '5.1. Acreditaciones' para que queden archivadas junto con la memoria del proyecto.</p>"
+        "template": "<p>Note: please remember that you need to provide a copy of all the research team's accreditations in section '5.1. Accreditations' to be archived together with the project report.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota:  En cada solicitud sólo debe haber una persona con Función D, que además será la persona que solicita la evaluación.</p><p>El resto de los integrantes del equipo, tendrán la función B o C en función de que realicen la eutanasia (B) o los procedimientos/intervenciones (C), y habrá tantos como personal con acreditación. Aquellos que todavía no han realizado el TBS trabajo bajo supervisión (requerido para la obtención de la acreditación) no se pueden incluir como integrantes del equipo en esa solicitud, hasta que hayan finalizado su TBS y hayan obtenido la capacitación.</p><p>Quienes posean las acreditaciones antiguas de categoría B y C, deben solicitar la acreditación para las nuevas funciones al mismo organismo acreditador.</p>"
+        "template": "<p>Note:  In each request there should only be one person with Function D, who will also be the person requesting the evaluation.</p><p>The rest of the team members will have function B or C depending on whether they perform euthanasia (B) or procedures/interventions (C), and there will be as many as there are accredited personnel. Those who have not yet completed the TBS work under supervision (required for accreditation) cannot be included as team members on that application until they have completed their TBS and obtained training.</p><p>Those who hold the old category B and C accreditations should request accreditation for the new functions from the same accreditation agency.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Asignación de tareas</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.",
+        "template": "This section is completed automatically based on the data entered in the section <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Task assignment</b></to> of the <b>Evaluation Request</b>. Access this menu item to make the necessary modifications.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
@@ -55,7 +55,7 @@
               "key": "nombre",
               "type": "input",
               "templateOptions": {
-                "label": "Nombre",
+                "label": "Name",
                 "order": 10,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.nombre"
               }
@@ -64,7 +64,7 @@
               "key": "apellidos",
               "type": "input",
               "templateOptions": {
-                "label": "Apellidos",
+                "label": "Surname",
                 "order": 20,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.apellidos"
               }
@@ -82,7 +82,7 @@
               "key": "vinculacion",
               "type": "input",
               "templateOptions": {
-                "label": "Vinculación",
+                "label": "Links",
                 "order": 40,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.vinculacion?.categoriaProfesional?.nombre"
               }
@@ -91,7 +91,7 @@
               "key": "nivelAcademico",
               "type": "input",
               "templateOptions": {
-                "label": "Nivel académico",
+                "label": "Academic level",
                 "order": 50,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona.datosAcademicos?.nivelAcademico?.nombre"
               }
@@ -100,7 +100,7 @@
               "key": "tarea",
               "type": "input",
               "templateOptions": {
-                "label": "Tarea",
+                "label": "Task",
                 "order": 60,
                 "expressionModelValue": "formState.tareas[$1].tipoTarea?.nombre"
               }
@@ -109,7 +109,7 @@
               "key": "experiencia",
               "type": "input",
               "templateOptions": {
-                "label": "Formación específica o  experiencia",
+                "label": "Specific training or experience",
                 "order": 70,
                 "expressionModelValue": "formState.tareas[$1].formacionEspecifica?.nombre"
               }
@@ -118,7 +118,7 @@
               "key": "organismo",
               "type": "input",
               "templateOptions": {
-                "label": "Organismo acreditador",
+                "label": "Accrediting agency",
                 "order": 80,
                 "expressionModelValue": "formState.tareas[$1].organismo"
               }
@@ -127,7 +127,7 @@
               "key": "anio",
               "type": "input",
               "templateOptions": {
-                "label": "Año",
+                "label": "Year",
                 "order": 90,
                 "expressionModelValue": "formState.tareas[$1].anio"
               }

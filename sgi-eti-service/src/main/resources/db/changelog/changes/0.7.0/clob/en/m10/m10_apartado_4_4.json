@@ -6,24 +6,24 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.4 Información y consentimiento"
+      "label": "4.4 Information and consent"
     },
     "fieldGroup": [
       {
-        "template": "<p>¿Se solicita el consentimiento de la persona participante/fuente y/o su representante legal?</p>"
+        "template": "<p>Is the consent of the participant/source and/or their legal representative requested?</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Para que la participación de una persona como sujeto de estudio en una investigación pueda considerarse verdaderamente <strong>libre y voluntaria</strong> debe recibir previamente una <strong>adecuada</strong> información que puede darse de forma oral, escrita y/o audiovisual.</p><p><strong>El proceso de información y posterior consentimiento debe documentarse en una hoja</strong> que recoja las firmas y la información mínima obligatoria pero puede ir acompañado de otros materiales informativos de ayuda tales como trípticos, cuadernillos, diapositivas, vídeos, multimedia, etc) orientados a informar al sujeto participante y por tanto dirigidos y adecuados en lenguaje y forma a sus características.</p><p>El documento que recoge el consentimiento en sí no tiene validez legal si no se acredita que se ha proporcionado al participante la información necesaria.</p><p>Para saber más sobre la información mínima obligatoria consultar:</p><ul><li>Artículos <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>15</a>, <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a47' target='_blank'>47</a>, <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a59' target='_blank'>59 y 60</a> de la LIB 14/2007</li><li><a href='https://www.um.es/it/web/comision-etica-investigacion/comision-etica/ceic' target='_blank'>Guía para elaboración de documentos</a> (pdf), elaborada por el CEI.</li></ul>"
+        "template": "<p>So that the participation of a person as a study subject in research can be truly considered <strong>free and voluntary</strong> should first receive <strong>suitable</strong> information that can be given orally, written and/or audiovisual.</p><p><strong>The information and subsequent consent process should be documented on a sheet</strong> that collects the signatures and the minimum mandatory information but may be accompanied by other helpful information materials such as brochures, booklets, slides, videos, multimedia, etc.) aimed at informing the participating subject and therefore directed and appropriate in language and form to her characteristics.</p><p>The document that contains the consent itself does not have legal validity if it is not proven that the necessary information has been provided to the participant.</p><p>To learn more about the minimum mandatory information, consult:</p><ul><li>Articles <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>fifteen</to>, <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a47' target='_blank'>47</to>, <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a59' target='_blank'>59 and 60</to> of LIB 14/2007</li><li><a href='https://www.um.es/it/web/comision-etica-investigacion/comision-etica/ceic' target='_blank'>Guide for drafting documents</to> (pdf), prepared by the CEI.</li></ul>"
       },
       {
         "key": "informacionConsentimientoRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "options": [
             {
               "value": "no",
@@ -31,7 +31,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -39,22 +39,22 @@
       {
         "fieldGroup": [
           {
-            "template": "Indicar el motivo por el que no se solicita"
+            "template": "Please indicate the reason why it is not requested"
           },
           {
             "key": "informacionConsentimientoMotivoRadio",
             "type": "radio",
             "templateOptions": {
               "required": true,
-              "label": "Elige opción",
+              "label": "Choose an option",
               "options": [
                 {
                   "value": "anonimizados",
-                  "label": "Muestras/datos anonimizados"
+                  "label": "Samples/anonymised data"
                 },
                 {
                   "value": "otros",
-                  "label": "Otros"
+                  "label": "Other"
                 }
               ]
             }
@@ -63,7 +63,7 @@
         "hideExpression": "!model.informacionConsentimientoRadio || model.informacionConsentimientoRadio === 'si'"
       },
       {
-        "template": "<p>Especificar o justificar</p>",
+        "template": "<p>Please specify or justify</p>",
         "hideExpression": "!((model.informacionConsentimientoRadio && model.informacionConsentimientoRadio === 'no') && (model.informacionConsentimientoMotivoRadio && model.informacionConsentimientoMotivoRadio === 'otros'))"
       },
       {
@@ -71,8 +71,8 @@
         "type": "textarea",
         "hideExpression": "!((model.informacionConsentimientoRadio && model.informacionConsentimientoRadio === 'no') && (model.informacionConsentimientoMotivoRadio && model.informacionConsentimientoMotivoRadio === 'otros'))",
         "templateOptions": {
-          "label": "Especificar o justificar",
-          "placeholder": "Especificar o justificar",
+          "label": "Please specify or justify",
+          "placeholder": "Please specify or justify",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -83,7 +83,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: añadir en el apartado '5.1 Documento de consentimiento' la hoja de consentimiento así como todo el material auxiliar de información que se haya preparado.</p>"
+        "template": "<p>Note: add the consent form as well as all the auxiliary information material that has been prepared in section '5.1 Consent document'.</p>"
       }
     ]
   }

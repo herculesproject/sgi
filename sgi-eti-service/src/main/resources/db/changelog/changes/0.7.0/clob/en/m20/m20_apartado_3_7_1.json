@@ -5,28 +5,28 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.1 Procedimientos/Intervenciones que se realizarán al animal"
+      "label": "3.7.1 Procedures/Interventions to be performed on the animal"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Denominamos 'procedimientos/intervenciones' a las manipulaciones (quirúrgicas o no), pruebas u observaciones a las que es sometido el animal a lo largo del proceso de experimentación.</p>"
+        "template": "<p>We refer to the manipulations (surgical or non-surgical), tests or observations to which the animal is subjected throughout the experimental process as 'procedures/interventions'.</p>"
       },
       {
-        "template": "<p>Describir <strong>PORMENORIZADAMENTE</strong> (y <strong>numerados</strong>) todos los procedimientos/intervenciones a las que es sometido el animal a lo largo del proceso de experimentación. Detallar especialmente aquellas en las que se prevé que pueda sufrir 'un nivel de dolor, sufrimiento, angustia o daño duradero, equivalente o superior al causado por la introducción de una aguja conforme a la buena práctica veterinaria'.</p>"
+        "template": "<p>Please describe <strong>IN DETAIL</strong> (and <strong>numbered</strong>) all the procedures/interventions to which the animal is subjected throughout the experimental process. Particularly detail those where it is anticipated that it may suffer 'a level of pain, suffering, distress or lasting harm equivalent to or greater than that caused by the introduction of a needle in accordance with good veterinary practice'.</p>"
       },
       {
         "key": "descripcionProcedimientoIntervencion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Descripción del procedimiento/intervención",
+          "name": "Description of the procedure/intervention",
           "required": false
         }
       },
       {
-        "template": "<p>Indicar la duración de cada procedimiento/intervención, frecuencia de realización, número de animales de cada procedimiento y categoría de severidad.</p></br><p>La clasificación de la severidad que se prevé que el animal pueda experimentar dolor, sufrimiento o ansiedad, se realiza de acuerdo a la siguiente clasificación:<ul><li><strong>Sin recuperación</strong>: los procedimientos/intervenciones que se realizan enteramente bajo anestesia general tras la cual el animal no recuperará la conciencia deben clasificarse como de no recuperación.</li><li><strong>Leve</strong>: los procedimientos/intervenciones en animales a consecuencia de las cuales es probable que experimente dolor, sufrimiento o angustia leves de corta de duración, así como los procedimientos/intervenciones sin alteración significativa del bienestar o del estado general de los animales deben de clasificarse como leves.</li><li><strong>Moderada</strong>: los procedimientos/intervenciones en animales a consecuencia de las cuales es probable que experimenten dolor, sufrimiento o angustia moderados de corta duración pero duraderos, así como los procedimientos/intervenciones que pudieran causar una alteración moderada del bienestar o el estado general de los animales deben clasificarse como moderadas.</li><li><strong>Severa</strong>: los procedimientos/intervenciones en animales a consecuencia de las cuales es probable que experimenten dolor, sufrimiento o angustia intensos, o moderados pero duraderos, así como los procedimientos/intervenciones que pudieran causar una alteración grave del bienestar o del estado general de los animales deben clasificarse como severas.</li></ul></p>"
+        "template": "<p>Please indicate the duration of each procedure/intervention, frequency of performance, number of animals for each procedure and severity category.</p></br><p>The classification of the severity that the animal is expected to experience pain, suffering or anxiety is carried out according to the following classification:<ul><li><strong>No recovery</strong>: Procedures/interventions that are performed entirely under general anaesthesia after which the animal will not regain consciousness should be classified as non-recovery.</li><li><strong>Mild</strong>: Procedures/interventions on animals as a result of which the animal is likely to experience mild pain, suffering or distress of short duration, as well as procedures/interventions without significant alteration of the well-being or general condition of the animals, should be classified as mild. .</li><li><strong>Moderate</strong>: procedures/interventions on animals as a result of which they are likely to experience short-term but long-lasting moderate pain, suffering or distress, as well as procedures/interventions that could cause a moderate alteration in the well-being or general condition of the animals should be classified as moderate.</li><li><strong>Severe</strong>: procedures/interventions on animals as a result of which they are likely to experience severe or moderate but long-lasting pain, suffering or distress, as well as procedures/interventions that could cause a serious alteration in the well-being or general condition of the animals. be classified as severe.</li></ul>"
       },
       {
         "type": "table-crud",
@@ -44,7 +44,7 @@
               "key": "numeroProcedimiento",
               "type": "input",
               "templateOptions": {
-                "label": "Nº Procedimiento/ Intervención",
+                "label": "No. Procedure/ Intervention",
                 "required": true,
                 "order": 10
               }
@@ -53,7 +53,7 @@
               "key": "frecuenciaRealizacion",
               "type": "input",
               "templateOptions": {
-                "label": "Frecuencia realización",
+                "label": "Frequency of implementation",
                 "required": true,
                 "order": 30
               }
@@ -62,7 +62,7 @@
               "key": "numeroAnimales",
               "type": "input",
               "templateOptions": {
-                "label": "Número de animales",
+                "label": "Number of animals",
                 "required": true,
                 "order": 40
               }
@@ -71,38 +71,31 @@
               "key": "categoriaSeveridad",
               "type": "select",
               "templateOptions": {
-                "label": "Categoría de severidad",
+                "label": "Severity category",
                 "required": true,
                 "order": 50,
                 "options": [
                   {
                     "value": "Sin recuperación",
-                    "label": "Sin recuperación"
+                    "label": "No recovery"
                   },
                   {
                     "value": "Leve",
-                    "label": "Leve"
+                    "label": "Mild"
                   },
                   {
                     "value": "Moderada",
-                    "label": "Moderada"
+                    "label": "Moderate"
                   },
                   {
                     "value": "Severa",
-                    "label": "Severa"
+                    "label": "Severe"
                   }
                 ]
               }
             }
           ]
         }
-      },
-      {
-        "wrappers": [
-          "warn-div"
-        ],
-        "hideExpression": "!model.procedimientoIntervencionMedidaCorrectoraTable.length > 0",
-        "template": "<p>Si modifica los procedimientos/intervenciones o su severidad, recuerde revisar y actualizar la tabla del apartado 4.2.1</p>"
       }
     ]
   }

@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Equipo investigador",
+      "label": "Ikertzaile taldea",
       "expanded": true
     },
     "fieldGroup": [
@@ -13,17 +13,17 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Cualquier cambio en el equipo investigador debe ser notificado al comité de ética correspondiente.</p>"
+        "template": "<p>Ikertzaile taldeko aldaketa oro dagokion etika batzordeari jakinarazi behar zaio.</p>"
       },
       {
-        "template": "Describa brevemente si ha habido cambios en el equipo investigador (alta o baja de miembros) o en las tareas de los miembros y su justificación."
+        "template": "Deskribatu labur-labur ea aldaketarik izan den ikertzaile taldean (kideen altak edo bajak), edo taldekideen zereginetan eta horien justifikazioan."
       },
       {
         "key": "equipoInvestigador",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Deskribapena",
+          "label": "Deskribapena",
           "required": false,
           "autosize": true,
           "autosizeMinRows": "1",

@@ -5,297 +5,297 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "1.1.1 Fin específico del proyecto ENGLISH"
+      "label": "1.1.1 Specific purpose of the project"
     },
     "fieldGroup": [
       {
-        "template": "Indicar el fin específico del proyecto:"
+        "template": "Please indicate the specific purpose of the project:"
       },
       {
         "key": "finEspecificoProyecto",
         "type": "select",
         "templateOptions": {
-          "label": "Seleccione",
+          "label": "Please choose",
           "required": true,
           "options": [
             {
-              "label": "EN: [PB1] Investigación Básica. Oncología",
+              "label": "[PB1] Basic Research. Oncology",
               "value": "PB1"
             },
             {
-              "label": "EN: [PB2] Investigación Básica. Sistema cardiovascular, sanguíneo y linfático",
+              "label": "[PB2] Basic Research. Cardiovascular, blood and lymphatic system",
               "value": "PB2"
             },
             {
-              "label": "EN: [PB3] Investigación Básica. Sistema nervioso",
+              "label": "[PB3] Basic Research. Nervous system",
               "value": "PB3"
             },
             {
-              "label": "EN: [PB4] Investigación Básica. Sistema respiratorio",
+              "label": "[PB4] Basic Research. Respiratory system",
               "value": "PB4"
             },
             {
-              "label": "EN: [PB5] Investigación Básica. Sistema gastrointestinal, hígado incluido",
+              "label": "[PB5] Basic Research. Gastrointestinal system, including liver",
               "value": "PB5"
             },
             {
-              "label": "EN: [PB6] Investigación Básica. Sistema músculo-esquelético",
+              "label": "[PB6] Basic Research. Musculoskeletal system",
               "value": "PB6"
             },
             {
-              "label": "EN: [PB7] Investigación Básica. Sistema inmunitario",
+              "label": "[PB7] Basic Research. Immune system",
               "value": "PB7"
             },
             {
-              "label": "EN: [PB8] Investigación Básica. Sistema urogenital-reproductor",
+              "label": "[PB8] Basic Research. Urogenital-reproductive system",
               "value": "PB8"
             },
             {
-              "label": "EN: [PB9] Investigación Básica. Órganos sensoriales (piel/ojos/oídos)",
+              "label": "[PB9] Basic Research. Sensory organs (skin/eyes/ears)",
               "value": "PB9"
             },
             {
-              "label": "EN: [PB10] Investigación Básica. Sistema endocrino/metabolismo",
+              "label": "[PB10] Basic Research. Endocrine system/metabolism",
               "value": "PB10"
             },
             {
-              "label": "EN: [PB11] Investigación Básica. Sistema multisistémico",
+              "label": "[PB11] Basic Research. Multi-system system",
               "value": "PB11"
             },
             {
-              "label": "EN: [PB12] Investigación Básica. Etología/Comportamiento animal/Biología animal",
+              "label": "[PB12] Basic Research. Ethology/Animal Behaviour/Animal Biology",
               "value": "PB12"
             },
             {
-              "label": "EN: [PB13] Investigación Básica. Otros",
+              "label": "[PB13] Basic Research. Other",
               "value": "PB13"
             },
             {
-              "label": "EN: [PT21] Investigación traslacional y aplicada. Cáncer humano",
+              "label": "[PT21] Translational and applied research. Human cancer",
               "value": "PT21"
             },
             {
-              "label": "EN: [PT22] Investigación traslacional y aplicada. Enfermedades infecciosas humanas",
+              "label": "[PT22] Translational and applied research. Human infectious diseases",
               "value": "PT22"
             },
             {
-              "label": "EN: [PT23] Investigación traslacional y aplicada. Enfermedades cardiovasculares humanas",
+              "label": "[WP23] Translational and applied research. Human cardiovascular diseases",
               "value": "PT23"
             },
             {
-              "label": "EN: [PT24] Investigación traslacional y aplicada. Enfermedades nerviosas y mentales humanas",
+              "label": "[PT24] Translational and applied research. Human nervous and mental diseases",
               "value": "PT24"
             },
             {
-              "label": "EN: [PT25] Investigación traslacional y aplicada. Enfermedades respiratorias humanas",
+              "label": "[PT25] Translational and applied research. Human respiratory diseases",
               "value": "PT25"
             },
             {
-              "label": "EN: [PT26] Investigación traslacional y aplicada. Enfermedades gastrointestinales, incluidas hepáticas",
+              "label": "[PT26] Translational and applied research. Gastrointestinal diseases, including liver diseases",
               "value": "PT26"
             },
             {
-              "label": "EN: [PT27] Investigación traslacional y aplicada. Enfermedades musculoesqueléticas humanas",
+              "label": "[PT27] Translational and applied research. Human musculoskeletal diseases",
               "value": "PT27"
             },
             {
-              "label": "EN: [PT28] Investigación traslacional y aplicada. Enfermedades inmunológicas humanas",
+              "label": "[PT28] Translational and applied research. Human immunological diseases",
               "value": "PT28"
             },
             {
-              "label": "EN: [PT29] Investigación traslacional y aplicada. Enfermedades humanas urogenitales y del aparato reproductor",
+              "label": "[PT29] Translational and applied research. Human urogenital and reproductive system diseases",
               "value": "PT29"
             },
             {
-              "label": "EN: [PT30] Investigación traslacional y aplicada. Enfermedades humanas de los órganos de los sentidos (piel/ojos/oídos)",
+              "label": "[PT30] Translational and applied research. Human diseases of the sense organs (skin/eyes/ears)",
               "value": "PT30"
             },
             {
-              "label": "EN: [PT31] Investigación traslacional y aplicada. Enfermedades humanas endocrinas y metabólicas",
+              "label": "[PT31] Translational and applied research. Human endocrine and metabolic diseases",
               "value": "PT31"
             },
             {
-              "label": "EN: [PT32] Investigación traslacional y aplicada. Otras enfermedades humanas",
+              "label": "[PT32] Translational and applied research. Other human diseases",
               "value": "PT32"
             },
             {
-              "label": "EN: [PT33] Investigación traslacional y aplicada. Enfermedades de los animales",
+              "label": "[PT33] Translational and applied research. Animal diseases",
               "value": "PT33"
             },
             {
-              "label": "EN: [PT34] Investigación traslacional y aplicada. Bienestar de los animales",
+              "label": "[PT34] Translational and applied research. Animal welfare",
               "value": "PT34"
             },
             {
-              "label": "EN: [PT35] Investigación traslacional y aplicada. Diagnóstico de enfermedades",
+              "label": "[PT35] Translational and applied research. Diagnosis of diseases",
               "value": "PT35"
             },
             {
-              "label": "EN: [PT36] Investigación traslacional y aplicada. Enfermedades de las plantas",
+              "label": "[PT36] Translational and applied research. Plant diseases",
               "value": "PT36"
             },
             {
-              "label": "EN: [PT37] Investigación traslacional y aplicada. Toxicología y ecotoxicología no reglamentarias",
+              "label": "[PT37] Translational and applied research. Non-regulatory toxicology and ecotoxicology",
               "value": "PT37"
             },
             {
-              "label": "EN: [PE40] Protección del medio ambiente natural en interés de la salud o el bienestar de los seres humanos o de los animales",
+              "label": "[PE40] Protection of the natural environment in the interests of human or animal health or welfare",
               "value": "PE40"
             },
             {
-              "label": "EN: [PS41] Preservación de especies",
+              "label": "[PS41] Species preservation",
               "value": "PS41"
             },
             {
-              "label": "EN: [PE42] Enseñanza superior o formación para la adquisición, mantenimiento o mejora de las competencias profesionales",
+              "label": "[PE42] Higher education or training for the acquisition, maintenance or upgrading of vocational competences",
               "value": "PE42"
             },
             {
-              "label": "EN: [PF43] Investigaciones forenses",
+              "label": "[PF43] Forensic investigations",
               "value": "PF43"
             },
             {
-              "label": "EN: [PG43] Mantenimiento de colonias de animales genéticamente alterados, no utilizados en otros procedimientos",
+              "label": "[PG43] Maintenance of colonies of genetically altered animals, not used in other processes",
               "value": "PG43"
             },
             {
-              "label": "EN: [PR51] Utilización reglamentaria y producción rutinaria. Productos sanguíneos",
+              "label": "[PR51] Regulatory use and routine production. Blood products",
               "value": "PR51"
             },
             {
-              "label": "EN: [PR52] Utilización reglamentaria y producción rutinaria. Anticuerpos monoclonales",
+              "label": "[PR52] Regulatory use and routine production. Monoclonal antibodies",
               "value": "PR52"
             },
             {
-              "label": "EN: [PR53] Utilización reglamentaria y producción rutinaria. Otros",
+              "label": "[PR53] Regulatory use and routine production. Other",
               "value": "PR53"
             },
             {
-              "label": "EN: [PR61] Utilización reglamentaria/control de calidad. Ensayos de seguridad de los lotes",
+              "label": "[PR61] Regulatory use/quality control. Batch safety testing",
               "value": "PR61"
             },
             {
-              "label": "EN: [PR62] Utilización reglamentaria/control de calidad. Ensayos de pirogenicidad",
+              "label": "[PR62] Regulatory use/quality control. Pyrogenicity tests",
               "value": "PR62"
             },
             {
-              "label": "EN: [PR63] Utilización reglamentaria/control de calidad. Ensayos de potencia de los lotes",
+              "label": "[PR63] Regulatory use/quality control. Batch potency tests",
               "value": "PR63"
             },
             {
-              "label": "EN: [PR64] Utilización reglamentaria/control de calidad. Otros controles de calidad",
+              "label": "[PR64] Regulatory use/quality control. Other quality controls",
               "value": "PR64"
             },
             {
-              "label": "EN: [PR71] Utilización reglamentaria. Otros controles de eficacia y tolerancia",
+              "label": "[PR71] Regulatory use. Other efficacy and tolerance controls",
               "value": "PR71"
             },
             {
-              "label": "EN: [PR81] Utilización reglamentaria/Toxicidad y seguridad/aguda y sub-aguda. LD50, LC50",
+              "label": "[PR81] Regulatory use/Toxicity and safety/acute and sub-acute. LD50, LC50",
               "value": "PR81"
             },
             {
-              "label": "EN: [PR82] Utilización reglamentaria/Toxicidad y seguridad/aguda y subaguda. Otros métodos letales",
+              "label": "[PR82] Regulatory use/Toxicity and safety/acute and sub-acute. Other lethal methods",
               "value": "PR82"
             },
             {
-              "label": "EN: [PR83] Utilización reglamentaria/Toxicidad y seguridad/Aguda y subaguda. Métodos no letales",
+              "label": "[PR83] Regulatory use/Toxicity and safety/Acute and sub-acute. Non-lethal methods",
               "value": "PR83"
             },
             {
-              "label": "EN: [PR84] Utilización reglamentaria/Toxicidad y seguridad. Irritación/corrosión cutánea",
+              "label": "[PR84] Regulatory use/Toxicity and safety. Skin irritation/corrosion",
               "value": "PR84"
             },
             {
-              "label": "EN: [PR85] Utilización reglamentaria/Toxicidad y seguridad. Sensibilización cutánea",
+              "label": "[PR85] Regulatory use/Toxicity and safety. Skin sensitisation",
               "value": "PR85"
             },
             {
-              "label": "EN: [PR86] Utilización reglamentaria/Toxicidad y seguridad. Irritación/corrosión ocular",
+              "label": "[PR86] Regulatory use/Toxicity and safety. Eye irritation/corrosion",
               "value": "PR86"
             },
             {
-              "label": "EN: [PR87] Utilización reglamentaria/Toxicidad y seguridad/Toxicidad por dosis repetidas. Hasta 28 días",
+              "label": "[PR87] Regulatory use/Toxicity and safety/Repetitive dose toxicity. Up to 28 days",
               "value": "PR87"
             },
             {
-              "label": "EN: [PR88] Utilización reglamentaria/Toxicidad y seguridad/Toxicidad por dosis repetidas. Entre 29 y 90 días",
+              "label": "[PR88] Regulatory use/Toxicity and safety/Repetitive dose toxicity. Between 29 and 90 days",
               "value": "PR88"
             },
             {
-              "label": "EN: [PR89] Utilización reglamentaria/Toxicidad y seguridad/Toxicidad por dosis repetidas. Más de 90 días",
+              "label": "[PR89] Regulatory use/Toxicity and safety/Repetitive dose toxicity. More than 90 days",
               "value": "PR89"
             },
             {
-              "label": "EN: [PR90] Utilización reglamentaria/Toxicidad y seguridad. Carcinogenicidad",
+              "label": "[PR90] Regulatory use/Toxicity and safety. Carcinogenicity",
               "value": "PR90"
             },
             {
-              "label": "EN: [PR91] Utilización reglamentaria/Toxicidad y seguridad. Genotoxicidad",
+              "label": "[PR91] Regulatory use/Toxicity and safety. Genotoxicity",
               "value": "PR91"
             },
             {
-              "label": "EN: [PR92] Utilización reglamentaria/Toxicidad y seguridad. Toxicidad reproductiva",
+              "label": "[PR92] Regulatory use/Toxicity and safety. Reproductive toxicity",
               "value": "PR92"
             },
             {
-              "label": "EN: [PR93] Utilización reglamentaria/Toxicidad y seguridad. Toxicidad del desarrollo",
+              "label": "[PR93] Regulatory use/Toxicity and safety. Developmental toxicity",
               "value": "PR93"
             },
             {
-              "label": "EN: [PR94] Utilización reglamentaria/Toxicidad y seguridad. Neurotoxicidad",
+              "label": "[PR94] Regulatory use/Toxicity and safety. Neurotoxicity",
               "value": "PR94"
             },
             {
-              "label": "EN: [PR95] Utilización reglamentaria/Toxicidad y seguridad. Cinética",
+              "label": "[PR95] Regulatory use/Toxicity and safety. Kinetics",
               "value": "PR95"
             },
             {
-              "label": "EN: [PR96] Utilización reglamentaria/Toxicidad y seguridad. Farmacodinámica (incluida la farmacología de seguridad)",
+              "label": "[PR96] Regulatory use/Toxicity and safety. Pharmacodynamics (including safety pharmacology)",
               "value": "PR96"
             },
             {
-              "label": "EN: [PR97] Utilización reglamentaria/Toxicidad y seguridad. Fototoxicidad",
+              "label": "[PR97] Regulatory use/Toxicity and safety. Phototoxicity",
               "value": "PR97"
             },
             {
-              "label": "EN: [PR98] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Toxicidad aguda",
+              "label": "[PR98] Regulatory use/Toxicity and safety/Ecotoxicity. Acute toxicity",
               "value": "PR98"
             },
             {
-              "label": "EN: [PR99] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Toxicidad crónica",
+              "label": "[PR99] Regulatory use/Toxicity and safety/Ecotoxicity. Chronic toxicity",
               "value": "PR99"
             },
             {
-              "label": "EN: [PR100] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Toxicidad reproductiva",
+              "label": "[PR100] Regulatory use/Toxicity and safety/Ecotoxicity. Reproductive toxicity",
               "value": "PR100"
             },
             {
-              "label": "EN: [PR101] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Actividad endocrina",
+              "label": "[PR101] Regulatory use/Toxicity and safety/Ecotoxicity. Endocrine activity",
               "value": "PR101"
             },
             {
-              "label": "EN: [PR102] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Bioacumulación",
+              "label": "[PR102] Regulatory use/Toxicity and safety/Ecotoxicity. Bioaccumulation",
               "value": "PR102"
             },
             {
-              "label": "EN: [PR103] Utilización reglamentaria/Toxicidad y seguridad/Ecotoxicidad. Otros",
+              "label": "[PR103] Regulatory use/Toxicity and safety/Ecotoxicity. Other",
               "value": "PR103"
             },
             {
-              "label": "EN: [PR104] Utilización reglamentaria/Toxicidad y seguridad. Ensayos de seguridad en el ámbito de la alimentación humana y animal",
+              "label": "[PR104] Regulatory use/Toxicity and safety. Food and feed safety testing",
               "value": "PR104"
             },
             {
-              "label": "EN: [PR105] Utilización reglamentaria/Toxicidad y seguridad. Seguridad de los animales destinatarios",
+              "label": "[PR105] Regulatory use/Toxicity and safety. Safety of target animals",
               "value": "PR105"
             },
             {
-              "label": "EN: [PR106] Utilización reglamentaria/Toxicidad y seguridad. Otros",
+              "label": "[PR106] Regulatory use/Toxicity and safety. Other",
               "value": "PR106"
             },
             {
-              "label": "EN: [PN107] Fines ajenos a la UE",
+              "label": "[PN107] Non-EU Purposes",
               "value": "PN107"
             }
           ]

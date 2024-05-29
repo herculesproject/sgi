@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.8 Administración de isótopos radiactivos"
+      "label": "3.7.8 Isotopo erradioaktiboak ematea"
     },
     "fieldGroup": [
       {
-        "template": "¿El proceso de experimentación incluye la administración de isótopos radiactivos al animal?"
+        "template": "Esperimentazio prozesuan isotopo erradioaktiboak emango zaizkio animaliari?"
       },
       {
         "key": "administracionIsotoposRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "Se requiere informe del CBE",
+        "template": "EBBren txostena behar da.",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'"
       },
       {
@@ -41,9 +41,9 @@
         "type": "input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",
         "templateOptions": {
-          "label": "Tipo de isótopo",
+          "label": "Isotopo mota",
           "required": true,
-          "placeholder": "Tipo"
+          "placeholder": "Mota"
         }
       },
       {
@@ -51,9 +51,9 @@
         "type": "input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",
         "templateOptions": {
-          "label": "Dosis y vía de administración",
+          "label": "Dosia eta emateko modua",
           "required": true,
-          "placeholder": "Dosis"
+          "placeholder": "Dosia"
         }
       }
     ]

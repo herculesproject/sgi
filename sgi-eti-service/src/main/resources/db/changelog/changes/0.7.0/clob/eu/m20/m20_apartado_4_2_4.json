@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.4 Protocolo de supervisión"
+      "label": "4.2.4 Gainbegiratzeko protokoloa"
     },
     "fieldGroup": [
       {
-        "template": "Elaborar un protocolo sobre cómo será la supervisión del animal y cuantificar los parámetros que se supervisarán, indicando en qué momento del procedimiento/intervención comenzará el control y cuál será la duración y la frecuencia de la supervisión."
+        "template": "Prestatu animalia gainbegiratzeko protokoloa, eta kuantifikatu gainbegiratuko diren parametroak, honako hauek adierazita: prozeduraren/esku hartzearen zer unetan hasiko den kontrola, eta zenbat iraungo duen eta zer maiztasun izango duen ikuskapenak."
       },
       {
         "key": "protocoloSupervision",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Protocolo de supervisión",
+          "name": "Gainbegiratzeko protokoloa",
           "required": true
         }
       }

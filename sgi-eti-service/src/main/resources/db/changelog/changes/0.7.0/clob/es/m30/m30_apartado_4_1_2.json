@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.2 Características del riesgo de los agentes biológicos y/o material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "4.1.2 Agente biologikoen edo/eta material biologikoaren, substantzia kimiko arriskutsuen, substantzia erradioaktiboen edo/eta nanopartikulen arriskuaren ezaugarriak "
     },
     "fieldGroup": [
       {
-        "template": "<p>Los agentes biológicos, material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas que se utilizan ¿implican algún tipo de efecto potencialmente nocivo?</p>"
+        "template": "<p>Erabiltzen diren agente biologikoek, material biologikoak, substantzia kimiko arriskutsuek, substantzia erradioaktiboek edo/eta nanopartikulek efektu potentzialki kaltegarriren bat dakarte?</p>"
       },
       {
         "key": "agentesBiologicos",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -34,27 +34,27 @@
         "type": "multicheckbox",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'",
         "templateOptions": {
-          "label": "Grupo diana:",
+          "label": "Jomugako taldea:",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "serHumamno",
-              "label": "Ser humano"
+              "label": "Gizakiak"
             },
             {
               "value": "animales",
-              "label": "Animales"
+              "label": "Animaliak"
             },
             {
               "value": "medioambiente",
-              "label": "Medio ambiente"
+              "label": "Ingurumena"
             }
           ]
         }
       },
       {
-        "template": "Tipo de efecto nocivo",
+        "template": "Efektu kaltegarri mota",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'"
       },
       {
@@ -62,35 +62,35 @@
         "type": "multicheckbox",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'",
         "templateOptions": {
-          "label": "Tipo:",
+          "label": "Mota:",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "infeccioso",
-              "label": "Infeccioso"
+              "label": "Infekziosoa"
             },
             {
               "value": "toxico",
-              "label": "Tóxico"
+              "label": "Toxikoa"
             },
             {
               "value": "alergico",
-              "label": "Alérgico"
+              "label": "Alergikoa"
             },
             {
               "value": "radiactivo",
-              "label": "Radiactivo"
+              "label": "Erradioaktiboa"
             },
             {
               "value": "otro",
-              "label": "Otro"
+              "label": "Beste bat"
             }
           ]
         }
       },
       {
-        "template": "Indicar el tipo de efecto nocivo",
+        "template": "Adierazi zer motatako efektu kaltegarria den",
         "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))"
       },
       {
@@ -98,7 +98,7 @@
         "type": "textarea",
         "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))",
         "templateOptions": {
-          "label": "Indicar:",
+          "label": "Adierazi:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

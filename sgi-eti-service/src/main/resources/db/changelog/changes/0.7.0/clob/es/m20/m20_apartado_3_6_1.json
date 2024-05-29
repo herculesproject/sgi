@@ -18,7 +18,7 @@
         "type": "table-crud",
         "key": "animalesExperimentacionTable",
         "templateOptions": {
-          "entity": "experimentación animal",
+          "entity": "especie animal",
           "gender": "female"
         },
         "validators": {

@@ -5,23 +5,23 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.12 Eutanasia"
+      "label": "3.7.12 Euthanasia"
     },
     "fieldGroup": [
       {
-        "template": "Explicar a continuación un método de eutanasia (programada y/o no programada) que se vaya a utilizar."
+        "template": "Explain below a method of euthanasia (planned and/or unplanned) that will be used."
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "El RD 53/13 dedica el <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>Anexo III</a>, puntos 1 y 3, a los Métodos de eutanasia."
+        "template": "Royal Decree 53/13 dedicates the <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>Annex III</to>, points 1 and 3, to the Methods of euthanasia."
       },
       {
         "key": "explicarMetodoEutanasia",
         "type": "textarea",
         "templateOptions": {
-          "label": "Explicar",
+          "label": "Please explain",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -29,19 +29,19 @@
         }
       },
       {
-        "template": "¿Qué método se empleará para confirmar la muerte del animal?"
+        "template": "What method will be used to confirm the death of the animal?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Pueden consultarse los métodos para completar la eutanasia en el <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>Anexo III</a> punto 2 del RD 53/13."
+        "template": "Methods for completing euthanasia can be found in <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>Annex III</a> point 2 of Royal Decree 53/13."
       },
       {
         "key": "confirmarMuerte",
         "type": "textarea",
         "templateOptions": {
-          "label": "Explicar",
+          "label": "Please explain",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -49,19 +49,19 @@
         }
       },
       {
-        "template": "Tiempo máximo estimado desde la finalización del proceso de experimentación hasta el sacrificio."
+        "template": "Estimated maximum time from the completion of the experimentation process to sacrifice."
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "El RD 53/2013 en su <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a25'>artículo 25.6</a> señala que “tan pronto como se haya conseguido la finalidad del procedimiento se tomarán las medidas adecuadas para minimizar el sufrimiento del animal”. De ello puede deducirse que la aplicación de la eutanasia debe realizarse sin demora injustificada."
+        "template": "Royal Decree 53/2013 in its <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a25'>article 25.6</to> points out that “as soon as the purpose of the procedure has been achieved, appropriate measures will be taken to minimise the animal's suffering.” From this it can be deduced that the application of euthanasia should be carried out without undue delay."
       },
       {
         "key": "tiempoProceso",
         "type": "textarea",
         "templateOptions": {
-          "label": "Tiempo",
+          "label": "Time",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

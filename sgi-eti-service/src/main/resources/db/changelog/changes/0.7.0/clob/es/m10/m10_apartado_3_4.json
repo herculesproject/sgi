@@ -6,35 +6,35 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.4 Intervenciones o pruebas en seres humanos"
+      "label": "3.4 Esku hartzeak edo probak gizakiekin"
     },
     "fieldGroup": [
       {
-        "template": "<p>¿En esta actividad se realizan intervenciones o pruebas en seres humanos?</p>"
+        "template": "<p>Jarduera honetan esku hartzeak edo probak egingo zaizkie gizakiei?</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>A efectos de este formulario se consideran intervenciones o pruebas los trabajos concretos que requieran la <strong>concurrencia directa del ser humano</strong> sujeto de la experimentación; bien porque se vaya a obtener de él las muestras biológicas (de forma invasiva o no) o datos de carácter personal o tenga que realizar algún test, encuesta, ejercicio, etc.. </p>"
+        "template": "<p>Formulario honen ondorioetarako, esku hartze edo probatzat jotzen dira esperimentazioaren subjektu den <strong>gizakiaren partaidetza zuzena</strong> behar duten lan zehatzak. Subjektuarengandik lagin biologikoak (modu inbaditzailean edo ez-inbaditzailean) edo datu pertsonalak lortzeko behar da hark zuzenean parte hartzea, edo test, inkesta, ariketa edo antzeko probaren bat egin behar duelako.</p>"
       },
       {
-        "template": "<p>Intervenciones o pruebas en seres humanos</p>"
+        "template": "<p>Esku hartzeak edo probak gizakiekin</p>"
       },
       {
         "key": "intervencionesSeresHumanosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -44,37 +44,37 @@
         "type": "multicheckbox",
         "hideExpression": "!model.intervencionesSeresHumanosRadio || model.intervencionesSeresHumanosRadio === 'no'",
         "templateOptions": {
-          "label": "Cuales",
+          "label": "Hauetako zein?",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "entrevistasEncuestas",
-              "label": "Entrevistas, encuestas, cuestionarios, etc."
+              "label": "Elkarrizketak, inkestak, galdetegiak, etab."
             },
             {
               "value": "obtencionImagenes",
-              "label": "Obtencion de imágenes, sonido o similares (fotos, vídeos, grabaciones, RX, ECO, ect)"
+              "label": "Irudiak, soinua edo antzekoak lortzea (argazkiak, bideoak, grabaketak, RX, ECO, etab.)"
             },
             {
               "value": "pruebasFisicas",
-              "label": "Pruebas físicas"
+              "label": "Proba fisikoak"
             },
             {
               "value": "pruebasPsiquicas",
-              "label": "Pruebas psíquicas"
+              "label": "Proba psikikoak"
             },
             {
               "value": "obtencionNoInvasivas",
-              "label": "Obtención no invasivas de muestras"
+              "label": "Laginak modu ez-inbaditzailean lortzea"
             },
             {
               "value": "obtencionInvasivas",
-              "label": "Obtención invasivas de muestras"
+              "label": "Laginak modu inbaditzailean lortzea"
             },
             {
               "value": "otras",
-              "label": "Otras. Especificar"
+              "label": "Beste batzuk. Zehaztu"
             }
           ]
         }
@@ -84,8 +84,8 @@
         "type": "textarea",
         "hideExpression": "!((model.intervencionesSeresHumanosRadio && model.intervencionesSeresHumanosRadio === 'si') && (model.intervencionesSeresHumanosCheck && model.intervencionesSeresHumanosCheck.find((c)=> c === 'otras')))",
         "templateOptions": {
-          "placeholder": "Otras. Especificar",
-          "label": "Otras. Especificar",
+          "placeholder": "Beste batzuk. Zehaztu",
+          "label": "Beste batzuk. Zehaztu",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

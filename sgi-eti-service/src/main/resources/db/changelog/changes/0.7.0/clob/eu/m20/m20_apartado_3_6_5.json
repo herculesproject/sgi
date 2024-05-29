@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.6.5 Periodo del proyecto durante el que se utilizarán los animales"
+      "label": "3.6.5 Proiektuaren zer alditan erabiliko diren animaliak"
     },
     "fieldGroup": [
       {
@@ -14,7 +14,7 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Desde"
+          "label": "Noiztik"
         },
         "validators": {
           "validation": [
@@ -38,7 +38,7 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Hasta"
+          "label": "Noiz arte"
         },
         "validators": {
           "validation": [

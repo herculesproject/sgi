@@ -5,20 +5,20 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.6.1 Definición"
+      "label": "3.6.1 Definizioa"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Sólo podrán utilizarse en experimentación animales de las especies enumeradas en el <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#ani'>anexo I del RD 53/13</a> si han sido criados expresamente para ese fin.</p><p>En casos excepcionales, y siempre que exista una justificación científica, los órganos competentes podrán autorizar el uso de animales que no hayan sido criados para experimentación (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a19'>Art. 19 RD 53/13</a>).</p>"
+        "template": "<p>Esperimentazioan <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#ani'>53/13 EDren I. eranskinean</a> zerrendatuta dauden espezieetako animaliak bakarrik erabili ahal izango dira, berariaz helburu horretarako hazi badituzte.</p><p>Salbuespenezko kasuetan, eta betiere justifikazio zientifikoren bat badago, organo eskudunek esperimentaziorako hazi ez dituzten animaliak erabiltzea baimendu ahal izango dute (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a19'>53/13 EDren 19. art.</a>).</p>"
       },
       {
         "type": "table-crud",
         "key": "animalesExperimentacionTable",
         "templateOptions": {
-          "entity": "experimentación animal",
+          "entity": "especie animal",
           "gender": "female"
         },
         "validators": {
@@ -35,108 +35,108 @@
               "key": "especie",
               "type": "select",
               "templateOptions": {
-                "label": "Especie",
+                "label": "Espeziea",
                 "required": true,
                 "order": 10,
                 "options": [
                   {
-                    "label": "[1] Ratón",
+                    "label": "[1] Sagua",
                     "value": "1"
                   },
                   {
-                    "label": "[2] Rata",
+                    "label": "[2] Arratoia",
                     "value": "2"
                   },
                   {
-                    "label": "[3] Cobaya",
+                    "label": "[3] Akuria",
                     "value": "3"
                   },
                   {
-                    "label": "[4] Hámster",
+                    "label": "[4] Hamsterra",
                     "value": "4"
                   },
                   {
-                    "label": "[5] Otros roedores",
+                    "label": "[5] Beste karraskari batzuk",
                     "value": "5"
                   },
                   {
-                    "label": "[6] Conejo",
+                    "label": "[6] Untxia",
                     "value": "6"
                   },
                   {
-                    "label": "[7] Gato",
+                    "label": "[7] Katua",
                     "value": "7"
                   },
                   {
-                    "label": "[8] Perro",
+                    "label": "[8] Txakurra",
                     "value": "8"
                   },
                   {
-                    "label": "[9] Hurón",
+                    "label": "[9] Hudoa",
                     "value": "9"
                   },
                   {
-                    "label": "[10] Otros carnívoros",
+                    "label": "[10] Beste karniboro batzuk",
                     "value": "10"
                   },
                   {
-                    "label": "[11] Caballo, asno, híbrido",
+                    "label": "[11] Zaldia, astoa, hibridoa",
                     "value": "11"
                   },
                   {
-                    "label": "[12] Cerdo",
+                    "label": "[12] Txerria",
                     "value": "12"
                   },
                   {
-                    "label": "[13] Cabra",
+                    "label": "[13] Ahuntza",
                     "value": "13"
                   },
                   {
-                    "label": "[14] Oveja",
+                    "label": "[14] Ardia",
                     "value": "14"
                   },
                   {
-                    "label": "[15] Vaca",
+                    "label": "[15] Behia",
                     "value": "15"
                   },
                   {
-                    "label": "[16] Prosimios",
+                    "label": "[16] Prosimioak",
                     "value": "16"
                   },
                   {
-                    "label": "[17] Primates viejo mundo",
+                    "label": "[17] Mundu zaharreko primateak",
                     "value": "17"
                   },
                   {
-                    "label": "[18] Primates nuevo mundo",
+                    "label": "[18] Mundu berriko primateak",
                     "value": "18"
                   },
                   {
-                    "label": "[19] Primates homínidos",
+                    "label": "[19] Primate hominidoak",
                     "value": "19"
                   },
                   {
-                    "label": "[20] Otros mamíferos",
+                    "label": "[20] Beste ugaztun batzuk",
                     "value": "20"
                   },
                   {
-                    "label": "[21] Codorniz",
+                    "label": "[21] Galeperra",
                     "value": "21"
                   },
                   {
-                    "label": "[22] Otras aves",
+                    "label": "[22] Beste hegazti batzuk",
                     "value": "22"
                   },
                   {
-                    "label": "[23] Reptiles",
+                    "label": "[23] Narrastiak",
                     "value": "23"
                   },
                   {
-                    "label": "[24] Anfibios",
+                    "label": "[24] Anfibioak",
                     "value": "24"
                   },
                   {
-                    "label": "[25] Peces",
+                    "label": "[25] Arrainak",
                     "value": "25"
                   }
                 ]
@@ -146,9 +146,9 @@
               "key": "nombreCientifico",
               "type": "input",
               "templateOptions": {
-                "label": "Nombre científico",
+                "label": "Izen zientifikoa",
                 "required": true,
-                "placeholder": "Nombre",
+                "placeholder": "Izena",
                 "order": 20
               }
             },
@@ -156,8 +156,8 @@
               "key": "cepa",
               "type": "textarea",
               "templateOptions": {
-                "label": "Cepa/s",
-                "placeholder": "Cepa/s",
+                "label": "Anduia/k",
+                "placeholder": "Anduia/k",
                 "required": true,
                 "autosize": true,
                 "autosizeMinRows": "1",
@@ -169,24 +169,24 @@
               "key": "sexo",
               "type": "select",
               "templateOptions": {
-                "label": "Sexo",
+                "label": "Sexua",
                 "required": true,
                 "order": 40,
                 "options": [
                   {
-                    "label": "Macho",
+                    "label": "Arra",
                     "value": "1"
                   },
                   {
-                    "label": "Hembra",
+                    "label": "Emea",
                     "value": "2"
                   },
                   {
-                    "label": "Macho y Hembra",
+                    "label": "Arra eta emea",
                     "value": "3"
                   },
                   {
-                    "label": "Indiferente",
+                    "label": "Ez du garrantzirik",
                     "value": "4"
                   }
                 ]
@@ -196,38 +196,38 @@
               "key": "edadPeso",
               "type": "input",
               "templateOptions": {
-                "label": "Edad o peso",
+                "label": "Adina edo pisua",
                 "order": 50,
                 "required": true,
-                "placeholder": "Edad o peso"
+                "placeholder": "Adina edo pisua"
               }
             },
             {
               "key": "procedencia",
               "type": "select",
               "templateOptions": {
-                "label": "Procedencia",
+                "label": "Jatorria",
                 "required": true,
                 "order": 60,
                 "options": [
                   {
-                    "label": "Producción propia",
+                    "label": "Ekoizpen propioa",
                     "value": "1"
                   },
                   {
-                    "label": "Centros de cría o suministro registrados del país",
+                    "label": "Herrialdean erregistratutako hazkuntza edo hornikuntza zentroak",
                     "value": "2"
                   },
                   {
-                    "label": "Cedido por otro centro usuario/intercambio científico",
+                    "label": "Beste zentro erabiltzaile batek emana/truke zientifikoa",
                     "value": "3"
                   },
                   {
-                    "label": "Importados legalmente",
+                    "label": "Legalki inportatuak",
                     "value": "4"
                   },
                   {
-                    "label": "Capturados en la naturaleza o vagabundos",
+                    "label": "Naturan harrapatuak edo kalekoak",
                     "value": "5"
                   }
                 ]

@@ -5,23 +5,23 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.6.3 Animales protegidos o en peligro de extinción"
+      "label": "3.6.3 Protected or endangered animals"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Las especies amenazadas y en peligro de extinción pueden consultarse en la página de la CITES (<a target='_blank' href='https://cites.org/esp/app/appendices.php'>Anexo A del Reglamento (CE) nº 338/97</a>).</p><p>La regulación del uso en experimentación de estas especies se precisa en el <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a20'>artículo 20</a> del RD 53/13, según el cual sólo se pueden utilizar estos animales si se cumplen las dos condiciones siguientes:</p><ul><li>El proyecto tiene una de las siguientes finalidades:<br><li>a) Precención, profilaxis, diagnóstico o tratamiento de enfermedades, maa salud u otras anomalías o sus efectos en los seres humanos, los animales o las plantas</li><br><li>b) La protección del medio natural en interés de la salud o el bienestar de los seres humanos o los aniamles.</li><br><li>c) La investigación dirigida a la conservación de las especies.</li></li><li>Se ha justificado científicamente que dicha finalidad no puede conseguirse utilizando animales de otras especies.</li></ul><p>En este apartado también se incluye el uso de primates como animal de experimentación, para lo cual hay que tener en cuenta lo dispuesto en el <strong>Real Decreto 1386/2018</strong>, de 19 de noviembre, por el que se modifica el Real Decreto 53/2013.</p>"
+        "template": "<p>Threatened and endangered species can be consulted on the CITES website (<a target='_blank' href='https://cites.org/esp/app/appendices.php'>Annex A to Regulation (EC) No 338/97</to>).</p><p>The regulation of the experimental use of these species is specified in the <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a20'>article 20</to> of Royal Decree 53/13, according to which these animals can only be used if the following two conditions are met:</p><ul><li>The project has one of the following purposes:<br><li>a) Prevention, prophylaxis, diagnosis or treatment of diseases, health problems or other anomalies or their effects on humans, animals or plants</li><br><li>b) The protection of the natural environment in the interest of the health or well-being of humans or animals.</li><br><li>c) Research aimed at the conservation of species.</li></li><li>It has been scientifically justified that this purpose cannot be achieved using animals of other species.</li></ul><p>This section also includes the use of primates as experimental animals, for which the provisions of the <strong>Royal Decree 1386/2018</strong>, of November 19, which modifies Royal Decree 53/2013.</p>"
       },
       {
-        "template": "¿Son animales protegidos o en peligro de extinción?"
+        "template": "Are they protected or endangered animals?"
       },
       {
         "key": "animalesProtegidosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -30,7 +30,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -39,7 +39,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: recuerde que las excepciones requieren aportar el documento correspondiente en el apartado '5.4 Situaciones especiales'.</p>"
+        "template": "<p>Note: please remember that exceptions require providing the respective document in section '5.4 Special situations'.</p>"
       }
     ]
   }

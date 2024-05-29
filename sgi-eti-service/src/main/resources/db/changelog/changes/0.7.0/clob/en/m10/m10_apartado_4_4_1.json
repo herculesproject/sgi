@@ -6,46 +6,46 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.4.1 Tipo de consentimiento"
+      "label": "4.4.1 Type of consent"
     },
     "hideExpression": "!formState.mainModel.ap4_4.informacionConsentimientoRadio || formState.mainModel.ap4_4.informacionConsentimientoRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>Tarea para la que se solicita el consentimiento</p>"
+        "template": "<p>Task for which consent is requested</p>"
       },
       {
         "type": "multicheckbox",
         "key": "tipoConsentimientoCheck",
         "templateOptions": {
-          "label": "Tarea",
+          "label": "Task",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "intervencionesInvasivas",
-              "label": "Para realizar a la persona participante intervenciones invasivas"
+              "label": "To perform invasive interventions on the participating person"
             },
             {
               "value": "intervencionesNoInvasivas",
-              "label": "Para realizar a la persona participante intervenciones no invasivas"
+              "label": "To perform non-invasive interventions on the participating person"
             },
             {
               "value": "usoMuestrasProyectoActual",
-              "label": "Para el uso de las muestras y/o los datos de la persona participante en el proyecto actual"
+              "label": "For the use of samples and/or data of the person participating in the current project"
             },
             {
               "value": "usoMuestrasProyectosPosteriores",
-              "label": "Para almacenamiento y uso de las muestras y/o los datos en proyectos posteriores"
+              "label": "For storage and use of samples and/or data in subsequent projects"
             },
             {
               "value": "cesion",
-              "label": "Para cesión"
+              "label": "For transfer"
             }
           ]
         }
       },
       {
-        "template": "<p>En los siguientes apartados se hace un repaso a la información que va a facilitarse al sujeto participante y puede servir de lista de chequeo para el investigador responsable.</p>"
+        "template": "<p>In the following sections, a review is made of the information that will be provided to the participating subject and can serve as a checklist for the responsible researcher.</p>"
       }
     ]
   }

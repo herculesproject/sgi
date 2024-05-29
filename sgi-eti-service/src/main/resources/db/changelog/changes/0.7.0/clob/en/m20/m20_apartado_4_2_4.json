@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.4 Protocolo de supervisión"
+      "label": "4.2.4 Supervision protocol"
     },
     "fieldGroup": [
       {
-        "template": "Elaborar un protocolo sobre cómo será la supervisión del animal y cuantificar los parámetros que se supervisarán, indicando en qué momento del procedimiento/intervención comenzará el control y cuál será la duración y la frecuencia de la supervisión."
+        "template": "Develop a protocol on how the animal will be supervised and quantify the parameters that will be supervised, indicating at what point in the procedure/intervention the monitoring will begin and what the duration and frequency of the monitoring will be."
       },
       {
         "key": "protocoloSupervision",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Protocolo de supervisión",
+          "name": "Supervision protocol",
           "required": true
         }
       }

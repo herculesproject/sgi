@@ -5,14 +5,14 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.2 Diseño metodológico del proyecto"
+      "label": "3.2 Proiektuaren diseinu metodologikoa"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el campo <b>Diseño metodológico</b> del apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>Datos generales</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.",
+        "template": "Atal hau automatikoki betetzen da, <b>Ebaluazio eskaerako</b> <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>Datu orokorrak</b></a> ataleko <b>Diseinu metodologikoa</b> eremuan sartutako datuetatik abiatuta. Beharrezko aldaketak egiteko, joan menuko puntu horretara.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
@@ -21,20 +21,20 @@
         "key": "disenoMetodologico",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Diseño metodológico",
+          "name": "Diseinu metodologikoa",
           "disabled": true,
           "required": true,
           "expressionModelValue": "formState.memoria.peticionEvaluacion.disMetodologico"
         }
       },
       {
-        "template": "<h5>Proceso de experimentación</h5><p>Los apartados que vienen a continuación ayudarán a precisar el proceso de experimentación al que es sometido el animal. En los casos que la complejidad del proyecto lo requiera (por ejemplo si se utilizan varias especies distintas de animales o si existen varios grupos de animales sometidos a distintos procesos de experimentación) pueden utilizarse varias memorias.</p>"
+        "template": "<h5>Esperimentazio prozesua</h5><p>Atal hauek animaliari aplikatuko zaion esperimentazio prozesua zehazten lagunduko dute. Proiektuaren konplexutasunak hala eskatzen badu (adibidez, zenbait animalia espezie erabiltzen badira edo esperimentazio prozesu desberdinak jasango dituzten animalia talde desberdinak badaude), memoria bat baino gehiago erabil daiteke. </p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Para añadir una nueva memoria debe de acceder al apartado <b>Memorias</b> de la <b>Solicitud de evaluación</b>"
+        "template": "Beste memoria bat eransteko, <b>Ebaluazio eskaerako</b> <b>Memoriak</b> atalera jo behar duzu. "
       }
     ]
   }

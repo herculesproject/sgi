@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.6.2 Animales modificados genéticamente"
+      "label": "3.6.2 Genetically modified animals"
     },
     "fieldGroup": [
       {
-        "template": "¿Algunos de los animales utilizados son modificados genéticamente?"
+        "template": "Are any of the animals used genetically modified?"
       },
       {
         "key": "animalesModificadosGeneticamenteRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -33,10 +33,10 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Requiere informe del CBE.</p>"
+        "template": "<p>Note: Requires CBE report.</p>"
       },
       {
-        "template": "¿Implican riesgos para la salud humana, animal o para el medio ambiente?",
+        "template": "Do they involve risks to human, animal or environmental health?",
         "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'"
       },
       {
@@ -44,7 +44,7 @@
         "type": "radio",
         "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -53,13 +53,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "¿La modificación genética puede dar lugar a una progenie o línea animal que experimente dolor, sufrimiento, angustia o daño duradero equivalente o superior al causado por la introducción de una aguja?",
+        "template": "Can genetic modification result in progeny or animal line that experiences pain, suffering, distress or lasting harm equivalent to or greater than that caused by the introduction of a needle?",
         "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'"
       },
       {
@@ -67,7 +67,7 @@
         "type": "radio",
         "hideExpression": "!model.animalesModificadosGeneticamenteRadio || model.animalesModificadosGeneticamenteRadio === 'no'",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -76,7 +76,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

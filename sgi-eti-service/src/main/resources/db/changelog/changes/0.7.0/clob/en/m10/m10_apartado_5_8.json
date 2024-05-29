@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.8 Aclaraciones al comité"
+      "label": "5.8 Clarifications to the committee"
     },
     "fieldGroup": [
       {
-        "template": "Incluir a continuación cualquier otra aclaración que se considere necesaria para el comité"
+        "template": "Please include below any other clarification that the committee considers necessary."
       },
       {
         "key": "aclaracionesComite",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Aclaraciones"
+          "name": "Clarifications"
         }
       }
     ]

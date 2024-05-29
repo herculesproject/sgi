@@ -6,36 +6,36 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.5.1 Origen de las muestras"
+      "label": "3.5.2 Destination of samples of human origin"
     },
     "hideExpression": "!formState.mainModel.ap3_5.muestrasBiologicasRadio || formState.mainModel.ap3_5.muestrasBiologicasRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "¿Cómo se han obtenido las muestras?"
+        "template": "How were the samples obtained?"
       },
       {
         "type": "multicheckbox",
         "key": "origenMuestrasCheck",
         "templateOptions": {
-          "label": "Origen",
+          "label": "Origin",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "recogidasExpresamente",
-              "label": "Recogidas expresamente para este proyecto con intervención del sujeto de estudio (debe contestar afirmativamente a la pregunta 3.4)"
+              "label": "Collected expressly for this project with the intervention of the study subject (you need to answer affirmatively to question 3.4)"
             },
             {
               "value": "recogidasApartirDeMuestras",
-              "label": "Recogidas a partir de muestras ya obtenidas en otro proceso (ej. clínico-asistencial, autopsia)*"
+              "label": "Collected from samples already obtained in another process (e.g. clinical-care, autopsy)*"
             },
             {
               "value": "procedentesBiobanco",
-              "label": "Procedentes de Biobanco*"
+              "label": "From Biobank*"
             },
             {
               "value": "procedentesColeccion",
-              "label": "Procedentes de una colección de muestras*"
+              "label": "From a collection of samples*"
             }
           ]
         }
@@ -45,8 +45,8 @@
         "type": "textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'recogidasApartirDeMuestras')",
         "templateOptions": {
-          "label": "Especificar recogidas a partir de muestras ya obtenidas",
-          "placeholder": "Especificar recogidas a partir de muestras ya obtenidas",
+          "label": "Please specify collections from samples already obtained",
+          "placeholder": "Please specify collections from samples already obtained",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -58,8 +58,8 @@
         "type": "textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'procedentesBiobanco')",
         "templateOptions": {
-          "label": "Especificar procedentes de Biobanco",
-          "placeholder": "Especificar procedentes de Biobanco",
+          "label": "Please specify from Biobanco",
+          "placeholder": "Please specify from Biobanco",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -71,8 +71,8 @@
         "type": "textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'procedentesColeccion')",
         "templateOptions": {
-          "label": "Especificar procedentes de una colección de muestras",
-          "placeholder": "Especificar procedentes de una colección de muestras",
+          "label": "Please specify from a sample collection",
+          "placeholder": "Please specify from a sample collection",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -83,7 +83,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Las opciones marcadas con (*) requiren MTA o convenio que debe aportarse en el apartado 5.5.</p>"
+        "template": "<p>Note: The options marked with (*) require MTA or agreement to be provided in section 5.5.</p>"
       }
     ]
   }

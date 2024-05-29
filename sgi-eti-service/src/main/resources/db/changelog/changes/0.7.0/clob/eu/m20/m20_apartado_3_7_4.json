@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.4 Procedimientos/Intervenciones quirúrgicos/quirúrgicas"
+      "label": "3.7.4 Prozedura/esku hartze kirurgikoak"
     },
     "fieldGroup": [
       {
-        "template": "¿Van a ser sometidos a cirugía en algún momento del proceso de experimentación?"
+        "template": "Kirurgia egingo zaie esperimentazio prozesuaren uneren batean?"
       },
       {
         "key": "intervencionQuirurgicaRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }

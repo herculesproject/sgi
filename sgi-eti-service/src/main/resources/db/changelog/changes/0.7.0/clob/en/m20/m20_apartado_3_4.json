@@ -5,29 +5,29 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.4 Tipo de proyecto"
+      "label": "3.4 Project type"
     },
     "fieldGroup": [
       {
-        "template": "<p>Indique el tipo de proyecto (según el <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2013-1337' target='_blank'>artículo 31 del RD 53/2013</a>).</p>"
+        "template": "<p>Please indicate the type of project (according to <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2013-1337' target='_blank'>article 31 of Royal Decree 53/2013</to>).</p>"
       },
       {
         "key": "tipoProyecto",
         "type": "select",
         "templateOptions": {
-          "label": "Seleccione",
+          "label": "Please choose",
           "required": true,
           "options": [
             {
-              "label": "Tipo 1",
+              "label": "Type 1",
               "value": "1"
             },
             {
-              "label": "Tipo 2",
+              "label": "Type 2",
               "value": "2"
             },
             {
-              "label": "Tipo 3",
+              "label": "Type 3",
               "value": "3"
             }
           ]

@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1.2 Otro centro o lugar ajeno a la Universidad"
+      "label": "4.2.1.2 Another centre or place outside the University"
     },
     "fieldGroup": [
       {
-        "template": "<p>¿Las tareas con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas o parte de ellas se realizan en dependencias de otro centro o lugar?</p>"
+        "template": "<p>Are tasks with biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles or part of them carried out in the premises of another centre or place?</p>"
       },
       {
         "key": "tareasAgentesBiologicos",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -34,12 +34,12 @@
         "type": "ckeditor",
         "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
         "templateOptions": {
-          "name": "Especificar",
+          "name": "Please specify",
           "required": true
         }
       },
       {
-        "template": "Justificar la necesidad de realizar las tareas en ese lugar",
+        "template": "Please justify the need to perform the tasks in that location",
         "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'"
       },
       {
@@ -47,12 +47,12 @@
         "type": "ckeditor",
         "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
         "templateOptions": {
-          "name": "Justificar",
+          "name": "Justify",
           "required": true
         }
       },
       {
-        "template": "Si dispone de acreditación indicar agencia y adjuntar copia",
+        "template": "If you have accreditation, please indicate agency and attach a copy",
         "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'"
       },
       {
@@ -60,7 +60,7 @@
         "type": "ckeditor",
         "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
         "templateOptions": {
-          "name": "Indicar:",
+          "name": "Please indicate:",
           "required": true
         }
       },
@@ -71,11 +71,11 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Fecha de acreditación:"
+          "label": "Accreditation date:"
         }
       },
       {
-        "template": "<p>Se recuerda que el informe del CBE, sólo es válido para labores desarrolladas en Instalaciones de la Universidad, por personal de la Universidad o por cualquier otro que, en aplicación de la normativa vigente, desarrolle sus labores en la misma.NOTA: La instalación deberá cumplir con los requisitos de contención para AB, OMGs, SQP, SR o nanoparticulas y, en su caso, la autorización / comunicación correspondiente.</p>"
+        "template": "<p>Please remember that the CBE report is only valid for work carried out in University Facilities, by University personnel or by any other person who, in application of current regulations, carries out their work there. NOTE: The facility is to comply with the containment requirements for biological agents, GMOs, hazardous chemicals, radioactive substances or nanoparticles and, where applicable, the respective authorisation/communication.</p>"
       }
     ]
   }

@@ -5,14 +5,14 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.2 Diseño metodológico del proyecto"
+      "label": "3.2 Methodological design of the project"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el campo <b>Diseño metodológico</b> del apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>Datos generales</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.",
+        "template": "This section is completed automatically based on the data entered in the field <b>Methodological design</b> of the section <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>General data</b></to> of the <b>Evaluation Request</b>. Access this menu item to make the necessary modifications.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
@@ -21,20 +21,20 @@
         "key": "disenoMetodologico",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Diseño metodológico",
+          "name": "Methodological design",
           "disabled": true,
           "required": true,
           "expressionModelValue": "formState.memoria.peticionEvaluacion.disMetodologico"
         }
       },
       {
-        "template": "<h5>Proceso de experimentación</h5><p>Los apartados que vienen a continuación ayudarán a precisar el proceso de experimentación al que es sometido el animal. En los casos que la complejidad del proyecto lo requiera (por ejemplo si se utilizan varias especies distintas de animales o si existen varios grupos de animales sometidos a distintos procesos de experimentación) pueden utilizarse varias memorias.</p>"
+        "template": "<h5>Experimentation process</h5><p>The sections below will help specify the experimentation process to which the animal is subjected. In cases where the complexity of the project so requires (for example if several different species of animals are used or if there are several groups of animals subjected to different experimental processes) several reports can be used.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Para añadir una nueva memoria debe de acceder al apartado <b>Memorias</b> de la <b>Solicitud de evaluación</b>"
+        "template": "To add a new report you need to access the <b>Reports</b> section of the <b>Evaluation request</b>"
       }
     ]
   }

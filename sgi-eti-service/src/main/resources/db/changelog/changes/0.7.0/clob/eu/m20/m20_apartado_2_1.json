@@ -5,35 +5,35 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "2.1 Personal que llevará a cabo las tareas con animales"
+      "label": "2.1 Animaliekin lotutako zereginak egingo dituzten langileak"
     },
     "fieldGroup": [
       {
-        "template": "<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los animales de experimentación.<br><br>Especificar por cada persona<br><ul><li>Datos indentificativos (nombre, E-mail, vinculacion y nivel académico)</li><li>Tareas concretas que realizará de acuerdo o lo descrito en el apartado '3.3 Diseño metodológico' (diseño del proyecto y metodología, realización de cada procedimiento/intervención y/o eutanasia, aplicación del protocolo de supervisión, etc..)</li></ul></p>"
+        "template": "<p>Jarraian, ikertzaile taldeko kide guztiak ageri dira. Gehitu atal honetan esperimentazio animaliekin lotutako zereginak eginez proiektuan laguntzen duen beste edozein pertsona. <br><br>Zehaztu hauek pertsona bakoitzeko:<br><ul><li>Identifikazio datuak (izena, e-maila, lotura eta maila akademikoa)</li><li>‘3.3 Diseinu metodologikoa’ atalean deskribatutakoaren arabera egingo dituen zeregin zehatzak (proiektuaren diseinua eta metodologia, prozedura/esku hartze bakoitza edo/eta eutanasia, gainbegiratzeko protokoloaren aplikazioa, etab.) </li></ul></p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La normativa respecto a la experimentación animal está en continua revisión. Actualmente la capacitación necesaria para la experimentación animal se especifica en la orden ministerial Orden <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2015-3564' target='_blank'>ECC/566/2015</a>. Ya no se habla de categorías A, B, C y D sino de 'funciones'. De forma simplificada la equivalencia entre ambas es la siguiente:<br>Se puede encontrar información sobre cursos de capacitación autorizados en las páginas de la <a href='https://secal.es' target='_blank'>SECAL</a> y <a href='https://www.animalaria.org' target='_blank'>ANIMALARIA</a>.</div><br><ul><li>Categoría A: Función a y b</li><li>Categoría B: Función b y c</li><li>Categoría C: Función c y d</li><li>Categoría D1: Función e</li><li>Categoría D2: Función f y b</li></ul></p>"
+        "template": "<p>Animaliekin egiten den esperimentazioari buruzko araudia etengabe berrikusten dute. Gaur egun, animaliekin esperimentatzeko beharrezko trebakuntza <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2015-3564' target='_blank'>ECC/566/2015</a> ministro aginduan zehaztuta dago. Jada ez dira aipatzen A, B, C eta D kategoriak, ‘funtzioak’ baizik. Labur esanda, hauxe da bien arteko baliokidetasuna: <br>Baimendutako trebakuntza ikastaroei buruzko informazioa <a href='https://secal.es' target='_blank'>SECALen</a> eta <a href='https://www.animalaria.org' target='_blank'>ANIMALARIAren</a> webguneetan kontsulta daiteke.</div><br><ul><li>A kategoria: a eta b funtzioa</li><li>B kategoria: b eta c funtzioa</li><li>C kategoria: c eta d funtzioa</li><li>D1 kategoria: e funtzioa</li><li>D2 kategoria: f eta b funtzioa</li></ul></p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: recuerde que hay que aportar copia de todas las acreditaciones del equipo investigador en el apartado '5.1. Acreditaciones' para que queden archivadas junto con la memoria del proyecto.</p>"
+        "template": "<p> Oharra: gogoratu ikertzaile taldearen akreditazio guztien kopiak aurkeztu behar dituzula ‘5.1 Akreditazioak’ atalean, proiektuaren memoriarekin batera artxibatuta gera daitezen. </p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota:  En cada solicitud sólo debe haber una persona con Función D, que además será la persona que solicita la evaluación.</p><p>El resto de los integrantes del equipo, tendrán la función B o C en función de que realicen la eutanasia (B) o los procedimientos/intervenciones (C), y habrá tantos como personal con acreditación. Aquellos que todavía no han realizado el TBS trabajo bajo supervisión (requerido para la obtención de la acreditación) no se pueden incluir como integrantes del equipo en esa solicitud, hasta que hayan finalizado su TBS y hayan obtenido la capacitación.</p><p>Quienes posean las acreditaciones antiguas de categoría B y C, deben solicitar la acreditación para las nuevas funciones al mismo organismo acreditador.</p>"
+        "template": "<p>Oharra: eskaera bakoitzean D funtzioa duen pertsona bakar bat egongo da, eta ebaluazioaren eskatzailea izango da. </p><p>Taldeko gainerako kideek B edo C funtzioa izango dute, eutanasia (B) edo prozedurak/esku hartzeak (C) egiten dituzten kontuan hartuta, eta akreditazioa duten langileak adina egongo dira. Oraindik lan gainbegiratua (akreditazioa lortzeko eskatzen dute) egin ez dutenak ezin dira sartu taldekide gisa eskaera horretan, lan gainbegiratua amaitu eta akreditazioa lortzen duten arte. </p><p>B eta C kategorien akreditazio zaharrak dituztenek funtzio berrietarako akreditazioa eskatu behar diote erakunde akreditatzaile berberari. </p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Asignación de tareas</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.",
+        "template": "Atal hau automatikoki betetzen da, <b>Ebaluazio eskaerako</b> <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Zereginen esleipena</b></a> atalean sartutako datuetatik abiatuta. Beharrezko aldaketak egiteko, joan menuko puntu horretara.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
@@ -55,7 +55,7 @@
               "key": "nombre",
               "type": "input",
               "templateOptions": {
-                "label": "Nombre",
+                "label": "Izena",
                 "order": 10,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.nombre"
               }
@@ -64,7 +64,7 @@
               "key": "apellidos",
               "type": "input",
               "templateOptions": {
-                "label": "Apellidos",
+                "label": "Abizenak",
                 "order": 20,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.apellidos"
               }
@@ -73,7 +73,7 @@
               "key": "email",
               "type": "input",
               "templateOptions": {
-                "label": "E-mail",
+                "label": "E-maila",
                 "order": 30,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.emails?.find((e)=>e.principal)?.email"
               }
@@ -82,7 +82,7 @@
               "key": "vinculacion",
               "type": "input",
               "templateOptions": {
-                "label": "Vinculación",
+                "label": "Lotura",
                 "order": 40,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.vinculacion?.categoriaProfesional?.nombre"
               }
@@ -91,7 +91,7 @@
               "key": "nivelAcademico",
               "type": "input",
               "templateOptions": {
-                "label": "Nivel académico",
+                "label": "Maila akademikoa",
                 "order": 50,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona.datosAcademicos?.nivelAcademico?.nombre"
               }
@@ -100,7 +100,7 @@
               "key": "tarea",
               "type": "input",
               "templateOptions": {
-                "label": "Tarea",
+                "label": "Zeregina",
                 "order": 60,
                 "expressionModelValue": "formState.tareas[$1].tipoTarea?.nombre"
               }
@@ -109,7 +109,7 @@
               "key": "experiencia",
               "type": "input",
               "templateOptions": {
-                "label": "Formación específica o  experiencia",
+                "label": "Formakuntza espezifikoa edo esperientzia",
                 "order": 70,
                 "expressionModelValue": "formState.tareas[$1].formacionEspecifica?.nombre"
               }
@@ -118,7 +118,7 @@
               "key": "organismo",
               "type": "input",
               "templateOptions": {
-                "label": "Organismo acreditador",
+                "label": "Erakunde akreditatzailea",
                 "order": 80,
                 "expressionModelValue": "formState.tareas[$1].organismo"
               }
@@ -127,7 +127,7 @@
               "key": "anio",
               "type": "input",
               "templateOptions": {
-                "label": "Año",
+                "label": "Urtea",
                 "order": 90,
                 "expressionModelValue": "formState.tareas[$1].anio"
               }

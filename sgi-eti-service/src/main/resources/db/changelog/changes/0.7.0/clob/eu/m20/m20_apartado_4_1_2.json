@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.2 Fuentes consultadas para búsqueda de métodos alternativos"
+      "label": "4.1.2 Metodo alternatiboak bilatzeko kontsultatutako iturriak"
     },
     "fieldGroup": [
       {
-        "template": "Describir las fuentes consultadas y los criterios de búsqueda utilizados"
+        "template": "Deskribatu kontsultatutako iturriak eta erabilitako bilaketa irizpideak."
       },
       {
         "key": "fuentes",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Fuentes consultadas",
+          "name": "Kontsultatutako iturriak",
           "required": true
         }
       },
@@ -23,7 +23,7 @@
         "key": "criteriosBusqueda",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Criterios de búsqueda",
+          "name": "Bilaketa irizpideak",
           "required": true
         }
       }

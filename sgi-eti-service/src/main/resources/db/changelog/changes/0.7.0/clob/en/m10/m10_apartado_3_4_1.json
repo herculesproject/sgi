@@ -6,29 +6,29 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.4.1 Proceso de reclutamiento"
+      "label": "3.4.1 Recruitment process"
     },
     "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>Describir el proceso de reclutamiento: presentación del proyecto y obtención de consentimiento del sujeto fuente y/o su representante legal de acuerdo al siguiente esquema:</p><ul><li>quién (persona/s encargada/s)</li><li>cómo (conversación, vídeo, folleto..)</li><li>dónde (lugar de información y de firma de documentos)</li><li>cuándo se van a realizar (momento en que se llevan a cabo; por ejemplo: cuando la persona participante acuda a la consulta).</li></ul>"
+        "template": "<p>Please describe the recruitment process: submission of the project and obtaining consent from the source subject and/or their legal representative according to the following scheme:</p><ul><li>who (person/s in charge)</li><li>how (conversation, video, brochure...)</li><li>where (place of information and document signing)</li><li>when they are going to be carried out (time at which they are carried out; for example: when the participating person attends).</li></ul>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Se entiende por 'proceso de reclutamiento' todas aquellas acciones encaminadas a captar las personas que participarán en el estudio como sujetos de investigación.</p><p>Este proceso incluye la información al posible participante, su convencimiento y posterior obtención y firma del consentimiento.</p><p>El proceso de reclutamiento es posterior a la definición de la muestra con los criterios de inclusión y exclusión al hacer el diseño metodológico.</p><p>El proceso de reclutamiento es una parte esencial de la investigación porque afecta directamente a aspectos éticos como la voluntariedad, la equidad y el respeto.</p>"
+        "template": "<p>'Recruitment process' is understood as all those actions aimed at recruiting people who will participate in the study as research subjects.</p><p>This process includes informing the potential participant, convincing them and subsequently obtaining and signing consent.</p><p>The recruitment process follows the definition of the sample with the inclusion and exclusion criteria when making the methodological design.</p><p>The recruitment process is an essential part of research because it directly affects ethical aspects such as voluntary nature, equity and respect.</p>"
       },
       {
         "key": "descripcionProcesoReclutamiento",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Proceso de reclutamiento",
+          "name": "Recruitment process",
           "required": true
         }
       },
       {
-        "template": "<p>Fecha prevista de inicio del reclutamiento</p>"
+        "template": "<p>Expected start date of recruitment</p>"
       },
       {
         "key": "fechaReclutamiento",
@@ -36,7 +36,7 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Fecha prevista"
+          "label": "Expected date"
         },
         "validators": {
           "validation": [
@@ -55,7 +55,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Añadir en el apartado '5.7 Documentación adicional' todos los documentos que vayan a utilizarse para reclutamiento de sujetos de estudio (por ejemplo anuncios, trípticos, etc., con el texto íntegro).</p><p>Si el proceso va a realizarse fuera de las instalaciones de la universidad añadir en el apartado '5.3' el Documento de autorización del centro o local (hospitales, centros educativos, centros de salud, etc).</p><p>Recuerde que el proyecto <strong>no puede iniciarse sin haber obtenido el informe favorable</strong> del comité; por tanto, las fechas deben ser coherentes. La fecha de inicio de reclutamiento no puede ser anterior a la fecha de obtención del informe favorable.</p></div>"
+        "template": "<p>Note: Add in section '5.7 Additional documentation' all the documents that will be used to recruit study subjects (for example advertisements, brochures, etc., with the full text).</p><p>If the process is going to be carried out outside the university facilities, add in section '5.3' the Authorisation Document of the centre or premises (hospitals, educational centres, health centres, etc.).</p><p>Please remember that the project <strong>cannot be started without having obtained a favourable report</strong> of the committee; therefore, the dates should be consistent. The start date of recruitment cannot be earlier than the date when favourable report is issued.</p></div>"
       }
     ]
   }

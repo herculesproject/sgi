@@ -6,19 +6,19 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.5.1 Resultado del estudio genético"
+      "label": "4.5.1 Result of the genetic study"
     },
     "hideExpression": "!formState.mainModel.ap4_5.estudiosGeneticosRadio || formState.mainModel.ap4_5.estudiosGeneticosRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>¿Se puede obtener alguna información relevante para la vida o la salud del sujeto participante?</p>"
+        "template": "<p>Can any information relevant to the life or health of the participating subject be obtained?</p>"
       },
       {
         "key": "resultadoEstudioGeneticoRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "options": [
             {
               "value": "no",
@@ -26,13 +26,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "<p>En caso afirmativo especificar</p>",
+        "template": "<p>If yes, specify</p>",
         "hideExpression": "!model.resultadoEstudioGeneticoRadio || model.resultadoEstudioGeneticoRadio === 'no'"
       },
       {
@@ -40,7 +40,7 @@
         "type": "textarea",
         "hideExpression": "!model.resultadoEstudioGeneticoRadio || model.resultadoEstudioGeneticoRadio === 'no'",
         "templateOptions": {
-          "label": "Especificar",
+          "label": "Please specify",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

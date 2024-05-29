@@ -5,18 +5,18 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.4 Efectos nocivos que puedan derivarse del uso de agentes, material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "4.1.4 Harmful effects that may arise from the use of biological agents/material, hazardous chemicals, radioactive substances and/or nanoparticles"
     },
     "fieldGroup": [
       {
-        "template": "<p>Describir brevemente la enfermedad o efectos nocivos que puedan derivarse del uso de agentes y/o material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas</p>"
+        "template": "<p>Briefly describe the disease or harmful effects that may result from the use of biological agents and/or material, hazardous chemicals, radioactive substances and/or nanoparticles</p>"
       },
       {
         "key": "efectosNocivos",
         "className": "descripcion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Describir",
+          "name": "Please describe",
           "required": true
         }
       }

@@ -5,23 +5,23 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.5 Lugar en el que se realizarán los procedimientos/intervenciones de los animales"
+      "label": "3.5 Non egingo diren animalien prozedurak/esku hartzeak"
     },
     "fieldGroup": [
       {
-        "template": "<p>Especificar el lugar en el que se mantendrán los animales durante el proceso de experimentación.</p>"
+        "template": "<p>Zehaztu non edukiko diren animaliak esperimentazio prozesuan zehar.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>los procedimientos/intervenciones se realizarán en centros usuarios autorizados, salvo autorización del órgano competente, previa justificación científica de la necesidad o conveniencia de que se realicen fuera de dichos centros (<a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>Art. 25-4 RD 53/13</a>)</p>"
+        "template": "<p>Prozedurak/esku hartzeak baimendutako zentro erabiltzaileetan egingo dira, organo eskudunak besterik baimendu ezean, aldez aurretik emanda zentro horietatik kanpo egiteko beharraren edo egokitasunaren justifikazio zientifikoa (<a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>53/13 EDren 25-4 art.</a>)</p>"
       },
       {
         "key": "centroUsuarioUniversidadCheckPrincipal",
         "type": "checkbox",
         "templateOptions": {
-          "label": "Centro usuario de la Universidad",
+          "label": "Unibertsitateko zentro erabiltzailea",
           "indeterminate": false
         }
       },
@@ -30,21 +30,21 @@
         "type": "multicheckbox",
         "hideExpression": "!model.centroUsuarioUniversidadCheckPrincipal",
         "templateOptions": {
-          "label": "Seleccionar",
+          "label": "Hautatu",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "animalarioCampusEspinardo",
-              "label": "Animalario Campus Espinardo"
+              "label": "Espinardo Campuseko animaliategia"
             },
             {
               "value": "animalarioCampusCienciasSalud",
-              "label": "Animalario Campus Ciencias de la Salud (CEIB)"
+              "label": "Osasun Zientzien Campuseko animaliategia (CEIB)"
             },
             {
               "value": "otros",
-              "label": "Otros (especificar)"
+              "label": "Beste batzuk (zehaztu)"
             }
           ]
         }
@@ -54,7 +54,7 @@
         "type": "textarea",
         "hideExpression": "!(model.centroUsuarioUniversidadCheckPrincipal && model.centroUsuarioUniversidadCheck && model.centroUsuarioUniversidadCheck.find((c)=> c === 'otros'))",
         "templateOptions": {
-          "label": "Especificar",
+          "label": "Zehaztu",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -66,7 +66,7 @@
         "key": "otroCentroRegistradoCheck",
         "type": "checkbox",
         "templateOptions": {
-          "label": "Otro centro usuario, registrado.",
+          "label": "Beste zentro erabiltzaile erregistratu bat",
           "indeterminate": false
         }
       },
@@ -75,7 +75,7 @@
         "type": "textarea",
         "hideExpression": "!model.otroCentroRegistradoCheck",
         "templateOptions": {
-          "label": "Especificar",
+          "label": "Zehaztu",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -88,7 +88,7 @@
         "type": "textarea",
         "hideExpression": "!model.otroCentroRegistradoCheck",
         "templateOptions": {
-          "label": "Nº de registro",
+          "label": "Erregistro zk.",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -100,7 +100,7 @@
         "key": "otroCentroNoRegistradoCheck",
         "type": "checkbox",
         "templateOptions": {
-          "label": "Otro centro o lugar no registrado.",
+          "label": "Erregistratu gabeko beste zentro edo leku bat",
           "indeterminate": false
         }
       },
@@ -109,7 +109,7 @@
         "type": "textarea",
         "hideExpression": "!model.otroCentroNoRegistradoCheck",
         "templateOptions": {
-          "label": "Especificar",
+          "label": "Zehaztu",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -122,7 +122,7 @@
         "type": "textarea",
         "hideExpression": "!model.otroCentroNoRegistradoCheck",
         "templateOptions": {
-          "label": "Justificar",
+          "label": "Justifikatu",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -134,7 +134,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Para más información de lugares del Centro usuario de la Universidad consultar en la <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>página web del Comité de la Universidad</a>.</p>"
+        "template": "<p>Unibertsitateko zentro erabiltzaileko lekuei buruzko informazio gehiagorako, kontsultatu <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>Unibertsitateko Batzordearen webgunea</a>.</p>"
       }
     ]
   }

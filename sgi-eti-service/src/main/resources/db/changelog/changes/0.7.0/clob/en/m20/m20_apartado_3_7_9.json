@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.9 Extracción de sangre"
+      "label": "3.7.9 Blood collection"
     },
     "fieldGroup": [
       {
-        "template": "¿Se va a extraer sangre animal?"
+        "template": "Is animal blood to be drawn?"
       },
       {
         "key": "extraccionSangreRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -46,7 +46,7 @@
               "key": "lugarAnatomico",
               "type": "input",
               "templateOptions": {
-                "label": "Lugar anatómico",
+                "label": "Anatomical site",
                 "order": 10
               }
             },
@@ -54,7 +54,7 @@
               "key": "volumen",
               "type": "input",
               "templateOptions": {
-                "label": "Volumen",
+                "label": "Volume",
                 "order": 20
               }
             },
@@ -62,7 +62,7 @@
               "key": "pauta",
               "type": "input",
               "templateOptions": {
-                "label": "Pauta",
+                "label": "Guideline",
                 "order": 30
               }
             },
@@ -70,7 +70,7 @@
               "key": "analgesiaAnestesia",
               "type": "select",
               "templateOptions": {
-                "label": "Analgesia/Anestesia",
+                "label": "Analgesia/Anaesthesia",
                 "order": 40,
                 "options": [
                   {
@@ -78,7 +78,7 @@
                     "value": "1"
                   },
                   {
-                    "label": "Anestesia",
+                    "label": "Anaesthesia",
                     "value": "2"
                   }
                 ]
@@ -91,7 +91,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: en caso de utilizar analgesia/anestesia especificar pauta en el apartado correspondiente (3.7.6 y 3.7.14).</p>"
+        "template": "<p>Note: if analgesia/anaesthesia is used, specify guideline in the respective section (3.7.6 and 3.7.14).</p>"
       }
     ]
   }

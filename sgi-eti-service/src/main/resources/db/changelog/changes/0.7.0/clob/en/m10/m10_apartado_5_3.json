@@ -6,23 +6,23 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.3 Documento de autorización"
+      "label": "5.3 Authorisation document"
     },
     "fieldGroup": [
       {
-        "template": "Si parte de su proyecto se realiza fuera de las instalaciones de la Universidad ¿dispone del correspondiente documento de autorización emitido por la persona responsable del centro o lugar?"
+        "template": "If part of your project is carried out outside the University facilities, do you have the respective authorisation document issued by the person responsible for the centre or place?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>En general cualquier faceta de un estudio que se realice fuera de las instalaciones de la Universidad requerirá de la autorización o acuerdo firmado por parte del/la responsable del Centro o instalaciones donde se vaya a realizar esa fase del proyecto, incluido el reclutamiento de sujetos para el estudio, distribución de información sobre el proyecto, toma de muestras, realización de encuestas, realización de pruebas físicas o psicológicas, recopilación de datos, etc.</p>"
+        "template": "<p>In general, any facet of a study that is carried out outside the University facilities will require authorisation or a signed agreement from the person responsible for the Centre or facilities where that phase of the project will be carried out, including the recruitment of subjects for the study, distribution of information about the project, taking samples, conducting surveys, performing physical or psychological tests, collecting data, etc.</p>"
       },
       {
         "key": "documentoAutorizacion",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
@@ -31,7 +31,7 @@
             },
             {
               "value": 6,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -40,7 +40,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: describir en los apartados '3.4.1 Proceso de reclutamiento y/o 3.5.3 Descripción de las intervenciones'.</p>"
+        "template": "<p>Note: describe in sections '3.4.1 Recruitment process and/or 3.5.3 Description of interventions'.</p>"
       }
     ]
   }

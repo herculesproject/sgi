@@ -5,14 +5,14 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.4 Tipo de exposición"
+      "label": "3.4 Type of exposure"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La exposición a los agentes biológicos puede ser de dos tipos.</p><br><ul><li>Exposición por intención deliberada de utilizar o manipular un agente biológico, que constituye el propósito principal del trabajo. Actividades de este tipo serían las desarrolladas con animales deliberadamente infectados o en los laboratorios cuya actividad principal constituye el trabajar con agentes biológicos. Otras actividades encuadradas en este grupo serían, por ejemplo, las relacionadas con las industrias de biotecnología: industrias farmacéuticas (para la obtención de antibióticos, enzimas, vacunas virales); industria alimentaria (cerveza, quesos, yogur); etc.</li><li>Exposición no intencionada o incidental al propósito principal del trabajo. En este caso la actividad no implica la manipulación, ni el trabajo en contacto directo o el uso deliberado del agente biológico pero si existe un riesgo de contaminación por agentes biológicos. Este sería el caso del trabajo en contacto con seres humanos o animales o sus productos (tejidos, sangre o fluidos), así como el contacto con elementos o medios donde dicho agente vive o puede sobrevivir (materiales, agua, suelo, alimentos, residuos ...), que servirían como fuente de exposición.</li></ul><p>En esta memoria se incluye además la exposición a OMG en tareas de uso confinado.</p>"
+        "template": "<p>Exposure to biological agents can be of two types.</p><br><ul><li>Exposure due to deliberate intent to use or manipulate a biological agent, which constitutes the main purpose of the work. Activities of this type would be those carried out with deliberately infected animals or in laboratories whose main activity is working with biological agents. Other activities included in this group would be, for example, those related to biotechnology industries: pharmaceutical industries (for obtaining antibiotics, enzymes, viral vaccines); food industry (beer, cheese, yoghurt); etc</li><li>Unintentional or incidental exposure to the primary purpose of the work. In this case, the activity does not involve manipulation, work in direct contact or deliberate use of the biological agent, but there is a risk of contamination by biological agents. This would be the case of work in contact with human beings or animals or their products (tissues, blood or fluids), as well as contact with elements or media where such agent lives or can survive (materials, water, soil, food, waste...), which would serve as a source of exposure.</li></ul><p>This report also includes exposure to GMOs in confined use tasks.</p>"
       }
     ]
   }

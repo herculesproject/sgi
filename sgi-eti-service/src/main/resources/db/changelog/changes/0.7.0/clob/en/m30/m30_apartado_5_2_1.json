@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "5.2.1 Comunicación de uso de agentes biológicos, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "5.2.1 Communication of the use of biological agents, hazardous chemicals, radioactive substances and/or nanoparticles"
     },
     "fieldGroup": [
       {
-        "template": "¿Se ha comunicado al Servicio de Prevención que se va a trabajar con agentes/material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?"
+        "template": "Has the Prevention Service been informed that you are going to work with biological agents/material, hazardous chemicals, radioactive substances and/or nanoparticles?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La utilización de agentes biológicos del grupo 2, 3 ó 4 por primera vez en una actividad investigadora debe notificarse.</p><p>Se efectuará una nueva notificación siempre que se introduzcan cambios sustanciales en algún proceso de trabajo cuyas repercusiones en las condiciones de seguridad y salud invaliden la notificación anterior <b><a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a10' target='_blank'>(Artículo 10 RD664/1997)</a></b>.</p>"
+        "template": "<p>The use of biological agents of group 2, 3 or 4 for the first time in a research activity should be reported.</p><p>A new notification will be made whenever substantial changes are introduced in a work process whose repercussions on health and safety conditions invalidate the previous notification. <b><a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a10' target='_blank'>(Article 10 RD664/1997)</to></b>.</p>"
       },
       {
         "key": "comunicacionAgentesBiologicos",
@@ -29,7 +29,7 @@
             },
             {
               "value": 18,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -41,7 +41,7 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Fecha"
+          "label": "Date"
         }
       },
       {
@@ -49,8 +49,8 @@
         "type": "textarea",
         "hideExpression": "model.comunicacionAgentesBiologicos !== 0",
         "templateOptions": {
-          "label": "Justificación",
-          "placeholder": "Justificación",
+          "label": "Supporting evidence",
+          "placeholder": "Supporting evidence",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

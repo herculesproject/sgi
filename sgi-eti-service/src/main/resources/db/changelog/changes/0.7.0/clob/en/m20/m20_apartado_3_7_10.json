@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.10 Privación de alimento y/o agua"
+      "label": "3.7.10 Deprivation of food and/or water"
     },
     "fieldGroup": [
       {
-        "template": "¿El animal va a ser privado de alimento y/o bebida en algún momento?"
+        "template": "Is the animal going to be deprived of food and/or drink at any time?"
       },
       {
         "key": "privacionRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -34,23 +34,23 @@
         "type": "multicheckbox",
         "hideExpression": "!model.privacionRadio || model.privacionRadio === 'no'",
         "templateOptions": {
-          "label": "Seleccionar",
+          "label": "Choose",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "privacionAlimento",
-              "label": "Privación de alimento"
+              "label": "Deprivation of food"
             },
             {
               "value": "privacionAgua",
-              "label": "Privación de agua"
+              "label": "Deprivation of water"
             }
           ]
         }
       },
       {
-        "template": "Describir a continuación la pauta de la privación de alimento y/o agua indicando la hora de inicio y la duración (en horas)",
+        "template": "Please describe below the pattern of food and/or water deprivation, indicating the start time and duration (in hours)",
         "hideExpression": "!model.privacionRadio || model.privacionRadio === 'no'"
       },
       {
@@ -58,7 +58,7 @@
         "type": "ckeditor",
         "hideExpression": "!model.privacionRadio || model.privacionRadio === 'no'",
         "templateOptions": {
-          "name": "Describir",
+          "name": "Please describe",
           "required": true
         }
       }

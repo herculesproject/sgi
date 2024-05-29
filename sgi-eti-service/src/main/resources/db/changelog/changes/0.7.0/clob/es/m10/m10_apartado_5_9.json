@@ -6,22 +6,22 @@
     ],
     "hideExpression": "formState.memoria.tipoMemoria.id !== 3",
     "templateOptions": {
-      "label": "5.9 Informe del Comité o Comisión del organismo externo"
+      "label": "5.9 Kanpo erakundeko Batzordearen txostena"
     },
     "fieldGroup": [
       {
-        "template": "Recuerde que debe adjuntar el informe de aprobación otorgado por el comité o comisión correspondiente del organismo externo con el que se desarrolla el proyecto"
+        "template": "Gogoratu: proiektua garatzen ari zaren kanpo erakundean dagokion batzordeak eman dizun onespen txostena erantsi behar duzu."
       },
       {
         "key": "informeRatificacion",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 23,
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }

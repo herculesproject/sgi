@@ -5,31 +5,31 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.3 Referencias de publicaciones científicas"
+      "label": "3.7.3 Argitalpen zientifikoen erreferentziak"
     },
     "fieldGroup": [
       {
-        "template": "¿Los procedimientos/intervenciones siguen alguna línea directriz oficial?"
+        "template": "Prozedurek/esku hartzeek gidalerro ofizialen bati jarraitzen diote?"
       },
       {
         "key": "siguenDirectrizOficialRadio",
         "type": "radio",
         "className": "vertical-radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "si",
-              "label": "Sí, se especifica a continuación"
+              "label": "Bai. Jarraian zehaztuta dago."
             },
             {
               "value": "noConDisenioSimilar",
-              "label": "No, pero se facilitan referencias de publicaciones científicas con diseño similar"
+              "label": "Ez, baina antzeko diseinua duten argitalpen zientifikoen erreferentziak emango dira."
             },
             {
               "value": "noSinDisenioSimilar",
-              "label": "No, no existen publicaciones con un diseño similar"
+              "label": "Ez. Ez dago antzeko diseinua duen argitalpenik."
             }
           ]
         }
@@ -38,14 +38,14 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: citar las referencias más relevantes (máximo 10 líneas) de forma completa (autor, título, publicación, fecha etc.) y facilitar los documentos en el apartado '5.6 Documentación adicional'.</p>"
+        "template": "<p>Oharra: aipatu erreferentzia aipagarrienak (gehienez 10 lerro) modu osatuan (egilea, izenburua, argitalpena, data, etab.), eta erantsi dokumentuak ‘5.6 Dokumentazio osagarria’ atalean. </p>"
       },
       {
         "key": "especificarDirectriz",
         "type": "ckeditor",
         "hideExpression": "!model.siguenDirectrizOficialRadio || model.siguenDirectrizOficialRadio === 'noSinDisenioSimilar'",
         "templateOptions": {
-          "name": "Especificar",
+          "name": "Zehaztu",
           "required": true
         }
       }

@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Aspectos éticos específicos",
+      "label": "Specific ethical aspects",
       "expanded": true
     },
     "fieldGroup": [
@@ -13,17 +13,17 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La descripción respecto a los aspectos éticos específicos dependerá del comité al que se dirige el informe anual y recogerá lo ocurrido en el año objeto del informe.<ul><li>Para el CEI el desarrollo y los problemas surgidos con los aspectos relativos al riesgo/beneficio, a la información y consentimiento, a la confidencialidad, etc.</li><li>Para el CEEA el desarrollo y los problemas surgidos en torno al reemplazo, al refinamiento y a la reducción.</li><li>Para el CBE el desarrollo y los problemas surgidos en torno a la prevención de los riesgos para la salud o para el medioambiente relacionados con los agentes biológicos u OMG con los que se investiga.</li></ul></p>"
+        "template": "<p>The description with regard to specific ethical issues will depend on the committee to which the annual report is addressed and will reflect progress in the reporting year. <ul><li>For the CEI, progress and issues arising with regard to risk/benefit aspects, information and consent, confidentiality, etc.</li><li>For the CEEA, progress and issues arising with regard to replacement, refinement and reduction.</li><li>For CBE, progress and issues arising from the prevention of health or environmental risks related to biological agents or genetically modified organisms under research.</li></ul></p>"
       },
       {
-        "template": "Describa brevemente cómo se van desarrollando los aspectos éticos del proyecto y señale los problemas encontrados y sus soluciones, si los ha habido."
+        "template": "Briefly describe how the ethical aspects of the project are progressing and point out any issues encountered and solutions, if any."
       },
       {
         "key": "aspectosEticos",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Description",
+          "label": "Description",
           "required": false,
           "autosize": true,
           "autosizeMinRows": "1",

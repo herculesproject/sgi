@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.4.2 Exposición deliberada"
+      "label": "3.4.2 Deliberate exposure"
     },
     "fieldGroup": [
       {
-        "template": "<p>En esta actividad ¿se realizan tareas en las que hay intención deliberada de utilizar agentes biológicos, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?</p>"
+        "template": "<p>In this activity, are tasks carried out in which there is a deliberate intention to use biological agents, hazardous chemicals, radioactive substances and/or nanoparticles?</p>"
       },
       {
         "key": "tareasAgentesBiologicosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,13 +24,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "Tipo de agente biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas que se utiliza",
+        "template": "Type of biological agent, hazardous chemicals, radioactive substances and/or nanoparticles used",
         "hideExpression": "!model.tareasAgentesBiologicosRadio || model.tareasAgentesBiologicosRadio === 'no'"
       },
       {
@@ -38,33 +38,33 @@
         "key": "exposicionNointencionada",
         "hideExpression": "!model.tareasAgentesBiologicosRadio || model.tareasAgentesBiologicosRadio === 'no'",
         "templateOptions": {
-          "label": "Opciones:",
+          "label": "Options:",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "microorganismos",
-              "label": "Microorganismos"
+              "label": "Microorganisms"
             },
             {
               "value": "cultivoscelulares",
-              "label": "Cultivos celulares"
+              "label": "Cell cultures"
             },
             {
               "value": "endoparasitos",
-              "label": "Endoparásitos"
+              "label": "Endoparasites"
             },
             {
               "value": "sustanciasquímicaspeligrosas",
-              "label": "Sustancias Químicas Peligrosas"
+              "label": "Hazardous chemicals"
             },
             {
               "value": "sustanciasradiactivas",
-              "label": "Sustancias Radiactivas"
+              "label": "Radioactive Substances"
             },
             {
               "value": "nanoparticulas",
-              "label": "Nanopartículas"
+              "label": "Nanoparticles"
             }
           ]
         }

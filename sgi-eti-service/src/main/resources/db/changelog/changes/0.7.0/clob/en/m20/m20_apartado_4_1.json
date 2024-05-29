@@ -5,14 +5,14 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "4.1 Reemplazo"
+      "label": "4.1 Replacement"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Una de las principales herramientas de que disponen los/las investigadores/as para cumplir con el reemplazo es el uso de métodos alternativos. Por métodos alternativos se entiende aquellos que <u>no implican el uso de animales</u>, permiten <u>reducir el número de animales</u> a utilizar o <u>sustituirlos</u> por otras especies con un menor grado de padecimiento.</p><p>Puede encontrarse más información sobre métodos alternativos en las páginas web de la <a target='_blank' href='https://joint-research-centre.ec.europa.eu/eu-reference-laboratory-alternatives-animal-testing-eurl-ecvam_en'>ECVAN</a> y <a target='_blank' href='http://www.remanet.net/'>REMA</a>.</p>"
+        "template": "<p>One of the main tools available to researchers to comply with replacement is the use of alternative methods. Alternative methods are understood as those that <u>do not involve the use of animals</u>, allow <u>reduce the number of animals</u> to use or <u>replace them</u> by other species with a lower degree of suffering.</p><p>More information about alternative methods can be found on the web pages of the <a target='_blank' href='https://joint-research-centre.ec.europa.eu/eu-reference-laboratory-alternatives-animal-testing-eurl-ecvam_en'>ECVAN</to> and <a target='_blank' href='http://www.remanet.net/'>REMA</to>.</p>"
       }
     ]
   }

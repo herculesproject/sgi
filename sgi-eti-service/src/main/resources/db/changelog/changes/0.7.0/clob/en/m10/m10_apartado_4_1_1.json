@@ -6,46 +6,46 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.1.1 Tipo de riesgos o molestias"
+      "label": "4.1.1 Type of risks or inconveniences"
     },
     "hideExpression": "!formState.bloques[3].ap3_4.intervencionesSeresHumanosRadio || formState.bloques[3].ap3_4.intervencionesSeresHumanosRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>Señale a continuación el tipo de riesgos y/o molestias que se ocasionarán al sujeto de investigación debido a las intervenciones o pruebas que se le realizarán para el proyecto.</p>"
+        "template": "<p>Please indicate below the type of risks and/or inconveniences that will be caused to the research subject due to the interventions or tests that will be carried out for the project.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La consideración de riesgo o molestia debe realizarse en un sentido amplio, ya que no sólo hay que tener en cuenta los riesgos fisicos para la salud (como en el caso de pruebas invasivas, por ejemplo) sino también posibles daños psicológicos (por ejemplo cuando se tratan 'temas sensibles') o las molestias ocasionadas por la simple intromisión en la initimidad del sujeto de estudio o el uso de su tiempo.</p>"
+        "template": "<p>The consideration of risk or discomfort should be carried out in a broad sense, since not only the physical risks to health should be taken into account (as in the case of invasive tests, for example) but also possible psychological damages (for example when deal with 'sensitive topics') or the inconvenience caused by the simple intrusion into the privacy of the study subject or the use of their time.</p>"
       },
       {
         "type": "multicheckbox",
         "key": "tipoRiesgosOMolestiasCheck",
         "templateOptions": {
-          "label": "Opciones",
+          "label": "Options",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "riesgoFisico",
-              "label": "Riesgo físico"
+              "label": "Physical risk"
             },
             {
               "value": "riesgoPsicologico",
-              "label": "Riesgo Psicológico"
+              "label": "Psychological Risk"
             },
             {
               "value": "intromisionIntimidad",
-              "label": "Intromisión en la intimidad"
+              "label": "Intrusion into privacy"
             },
             {
               "value": "usoTiempo",
-              "label": "Uso de su tiempo"
+              "label": "Use of their time"
             },
             {
               "value": "sinRiesgoPorTratarseDeDatos",
-              "label": "Sin riesgo por tratarse de datos/muestras anónimas"
+              "label": "No risk as data/samples are anonymous"
             }
           ]
         },
@@ -101,7 +101,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: los posibles daños/molestias deben relacionarse con las intervenciones descritas detalladamente en el apartado <strong>'3.4.3 Descripción de las intervenciones o pruebas'</strong></p><p>Recuerde que el/la participante debe ser informado debidamente de las molestias y los posibles riesgos y beneficios de la investigación y debe ser informado de ello en <strong>el documento de consentimiento</strong> (apartado '4.4.2 Información obligatoria mínima').</p><p>Para obtener más información sobre la información mínima exigida consultar el <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>artículo 15</a> de la LIB 14/2007 y en <a href='https://www.um.es/it/web/comision-etica-investigacion/comision-etica/ceic' target='_blank'>página de la Web de la Comisión de Ética de Investigación</a>.</p>"
+        "template": "<p>Note: possible damage/discomfort should be related to the interventions described in detail in the section <strong>'3.4.3 Description of interventions or tests'</strong></p><p>Please remember that the participant should be duly informed of the inconveniences and possible risks and benefits of the research and should be informed of this in <strong>the consent document</strong> (section '4.4.2 Minimum mandatory information').</p><p>For more information on the minimum information required, consult <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>article 15</to> of LIB 14/2007 and in <a href='https://www.um.es/it/web/comision-etica-investigacion/comision-etica/ceic' target='_blank'>Research Ethics Commission website page</to>.</p>"
       }
     ]
   }

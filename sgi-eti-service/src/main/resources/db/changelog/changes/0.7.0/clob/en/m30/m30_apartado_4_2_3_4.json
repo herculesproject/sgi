@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.3.4 Métodos de descontaminación/desinfección"
+      "label": "4.2.3.4 Decontamination/disinfection methods"
     },
     "fieldGroup": [
       {
-        "template": "<p>¿Se aplican o contemplan métodos de descontaminación/desinfección del material contaminado?</p>"
+        "template": "<p>Are decontamination/disinfection methods for contaminated material applied or contemplated?</p>"
       },
       {
         "key": "metodosDesinfeccion",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,19 +24,19 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "Especificar los métodos o justificar en caso negativo"
+        "template": "Please specify the methods or justify if not"
       },
       {
         "key": "especificarLimitar",
         "type": "textarea",
         "templateOptions": {
-          "label": "Especificar:",
+          "label": "Please specify:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

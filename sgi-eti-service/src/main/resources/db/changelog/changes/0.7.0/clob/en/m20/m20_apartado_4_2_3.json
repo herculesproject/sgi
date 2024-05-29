@@ -5,34 +5,34 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.3 Severidad global"
+      "label": "4.2.3 Global severity"
     },
     "fieldGroup": [
       {
-        "template": "Teniendo en cuenta la severidad acumulada ¿Cómo calificaría la severidad global de todo el proceso?"
+        "template": "Taking into account the cumulative severity, how would you rate the overall severity of the entire process?"
       },
       {
         "key": "severidadGlobal",
         "type": "select",
         "templateOptions": {
-          "label": "Severidad",
+          "label": "Severity",
           "order": 40,
           "options": [
             {
               "value": "1",
-              "label": "No recuperación"
+              "label": "Non-recovery"
             },
             {
               "value": "2",
-              "label": "Leve"
+              "label": "Mild"
             },
             {
               "value": "3",
-              "label": "Moderada"
+              "label": "Moderate"
             },
             {
               "value": "4",
-              "label": "Severa"
+              "label": "Severe"
             }
           ]
         }
@@ -41,7 +41,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Valore la severidad global según la siguiente escala: 1. No recuperación, 2. Leve, 3. Moderada, 4. Severa</p>"
+        "template": "<p>Note: Rate the overall severity according to the following scale: 1. Non-recovery, 2. Mild, 3. Moderate, 4. Severe</p>"
       }
     ]
   }

@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.3 Evaluación retrospectiva"
+      "label": "5.3 Retrospective evaluation"
     },
     "fieldGroup": [
       {
-        "template": "¿El proyecto requiere evaluación retrospectiva?"
+        "template": "Does the project require retrospective evaluation?"
       },
       {
         "key": "evaluacionRetrospectivaRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -33,10 +33,10 @@
         "wrappers": [
           "info-div"
         ],
-        "template": " <p>Requieren <strong>evaluación retrospectiva</strong> los <strong>proyectos Tipo III</strong> que, en líneas generales, son aquellos que incluyen:</p><ul><li>procedimientos/intervenciones de clasificación «severa» que implican dolor severo, sufrimiento o angustia para el animal y que puede ser duradero y que no puede experimentar una mejoría.</li><li>utilización de primates no humanos</li><li>alguna excepción o situación especial que requiera la pertinente solicitud del apartado 5.4</li></ul><p>También requerirán evaluación retrospectiva los proyectos de Tipo II con intervenciones calificadas de “moderadas” cuya evaluación así lo determine.</p><p>Para más información sobre evaluación retrospectiva consultar los artículos <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#a31'>31</a>, <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#a35'>35</a> y <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#dasegunda'>Disposición adicional segunda</a> del RD 53/2013)</p>"
+        "template": " <p>require <strong>retrospective evaluation</strong> the <strong>Type III projects</strong> which, in general terms, are those that include:</p><ul><li>“severe” classification procedures/interventions that involve severe pain, suffering or distress to the animal and that may be long-lasting and may not experience improvement.</li><li>use of non-human primates</li><li>any exception or special situation that requires the pertinent request in section 5.4</li></ul><p>Type II projects with interventions classified as “moderate” whose evaluation determines this will also require retrospective evaluation.</p><p>For more information on retrospective evaluation consult the articles <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#a31'>31</to>, <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#a35'>35</to> and <a target='_blank' href='http://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&amp;p=20130208&amp;tn=1#second'>Second additional provision</to> of Royal Decree 53/2013)</p>"
       },
       {
-        "template": "Motivo de la evaluación",
+        "template": "Reason for evaluation",
         "hideExpression": "!model.evaluacionRetrospectivaRadio || model.evaluacionRetrospectivaRadio === 'no'"
       },
       {
@@ -44,21 +44,21 @@
         "key": "motivoEvaluacionRetrospectivaCheck",
         "hideExpression": "!model.evaluacionRetrospectivaRadio || model.evaluacionRetrospectivaRadio === 'no'",
         "templateOptions": {
-          "label": "Seleccionar",
+          "label": "Choose",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "intervencionesSeveras",
-              "label": "El proyecto incluye intervenciones clasificadas como «severas» que implican dolor severo, sufrimiento o angustia para el animal y que puede ser duradero y que no puede experimentar una mejoría"
+              "label": "The project includes interventions classified as ‘severe’ that involve severe pain, suffering or distress for the animal and that may be long-lasting and may not experience improvement"
             },
             {
               "value": "primatesNoHumanos",
-              "label": "Utilización de primates no humanos"
+              "label": "Use of non-human primates"
             },
             {
               "value": "otros",
-              "label": "Otros motivos."
+              "label": "Other motives."
             }
           ]
         }
@@ -68,13 +68,13 @@
         "type": "input",
         "hideExpression": "!model.motivoEvaluacionRetrospectivaCheck || !model.motivoEvaluacionRetrospectivaCheck.find((m) => m === 'otros')",
         "templateOptions": {
-          "label": "Especificar",
+          "label": "Please specify",
           "required": true,
-          "placeholder": "Especificar"
+          "placeholder": "Please specify"
         }
       },
       {
-        "template": "Fecha de la evaluación retrospectiva (seguimiento)",
+        "template": "Date of retrospective evaluation (follow-up)",
         "hideExpression": "!model.evaluacionRetrospectivaRadio || model.evaluacionRetrospectivaRadio === 'no'"
       },
       {
@@ -82,7 +82,7 @@
         "type": "datepicker",
         "hideExpression": "!model.evaluacionRetrospectivaRadio || model.evaluacionRetrospectivaRadio === 'no'",
         "templateOptions": {
-          "label": "Fecha",
+          "label": "Date",
           "required": false
         }
       }

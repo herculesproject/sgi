@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.5.6 Sustancias radiactivas, equipo radiológico, instalación radiactiva"
+      "label": "3.5.6 Radioactive substances, radiological equipment, radioactive facility"
     },
     "fieldGroup": [
       {
@@ -25,7 +25,7 @@
               "key": "radioisotopo",
               "type": "input",
               "templateOptions": {
-                "label": "Radioisótopo (s)",
+                "label": "Radioisotope(s)",
                 "order": 10
               }
             },
@@ -33,7 +33,7 @@
               "key": "compuestosMarcados",
               "type": "input",
               "templateOptions": {
-                "label": "Compuestos marcados",
+                "label": "Labelled compounds",
                 "order": 20
               }
             },
@@ -41,7 +41,7 @@
               "key": "actividadExperimento",
               "type": "input",
               "templateOptions": {
-                "label": "Actividad por experimento (μCi o kBq)",
+                "label": "Activity per experiment (μCi or kBq)",
                 "order": 30
               }
             }
@@ -65,7 +65,7 @@
               "key": "equipoRadiologico",
               "type": "input",
               "templateOptions": {
-                "label": "Equipo radiológico",
+                "label": "radiological equipment",
                 "order": 10
               }
             },
@@ -73,7 +73,7 @@
               "key": "ubicacion",
               "type": "input",
               "templateOptions": {
-                "label": "Ubicación",
+                "label": "Location",
                 "order": 20
               }
             }
@@ -97,7 +97,7 @@
               "key": "instalacionRadiactiva",
               "type": "input",
               "templateOptions": {
-                "label": "Instalación radiactiva",
+                "label": "radioactive facility",
                 "order": 10
               }
             },
@@ -105,7 +105,7 @@
               "key": "ubicacion",
               "type": "input",
               "templateOptions": {
-                "label": "Ubicación",
+                "label": "Location",
                 "order": 20
               }
             }

@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.4.5 Sustancias radiactivas"
+      "label": "3.4.5 Radioactive substances"
     },
     "fieldGroup": [
       {
-        "template": "<p>En esta actividad ¿se utilizan Sustancias Radiactivas?</p>"
+        "template": "<p>Does this activity use Radioactive Substances?</p>"
       },
       {
         "key": "sustanciasRadiactivas",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

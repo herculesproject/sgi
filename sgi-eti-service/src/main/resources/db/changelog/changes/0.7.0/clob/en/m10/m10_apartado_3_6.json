@@ -6,11 +6,11 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.6 Datos de carácter personal"
+      "label": "3.6 Personal data"
     },
     "fieldGroup": [
       {
-        "template": "<p>Para dar debido cumplimiento a lo referido a la protección de datos de carácter personal, deberá rellenar la siguiente <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>encuesta</a> (las preguntas y respuestas son almacenadas en la herramienta de encuestas de la Universidad, de forma independiente al SGI)</p>"
+        "template": "<p>To properly comply with the protection of personal data, you need to fill out the following form: <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>survey</to> (the questions and answers are stored in the University survey tool, independently of the SGI)</p>"
       }
     ]
   }

@@ -6,24 +6,24 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.1.3 Minimización del riesgo o molestias superiores al mínimo"
+      "label": "4.1.3 Minimisation of risk or inconvenience greater than the minimum"
     },
-    "hideExpression": "(!formState.mainModel.ap4_1.ap4_1_1 || !formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck || formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.some((c) => c === 'sinRiesgoPorTratarseDeDatos')) || (!formState.mainModel.ap4_1.ap4_1_2 || !formState.mainModel.ap4_1.ap4_1_2.valoracionRiesgosMolestiasCheck || !formState.mainModel.ap4_1.ap4_1_2.valoracionRiesgosMolestiasCheck.some(r => r === 'riesgoSuperior'))",
+    "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
     "fieldGroup": [
       {
-        "template": "<p>¿Qué mecanismos se han previsto para reducir el riesgo o las molestias que se han calificado como superiores al mínimo?</p>"
+        "template": "<p>What mechanisms have been planned to reduce the risk or inconvenience that has been classified as above the minimum?</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>El criterio de no maleficencia en investigación (no hacer daño y hacer buenas prácticas científicas) implica que no debe causarse daño a los sujetos de investigación.</p><p>Cuando el riesgo o las molestias son incoherentes a la propia investigación, es responsabilidad del/la investigador principal reducirlas al mínimo. P.ej: aplicar anestesia en intervenciones invasivas para obtención de muestras, disponer de tratamiento de rescate para posibles acontecimientos adversos (desde shock anafiláctico hasta crisis de ansiedad), preservar la intimidad si se habla y se toman datos personales sensibles, monitorizar las constantes al realizar pruebas físicas, mantener la presencia de padres o tutores en poblaciones vulnerables etc.</p>"
+        "template": "<p>The criterion of non-maleficence in research (do no harm and apply good scientific practices) implies that no harm should be caused to research subjects.</p><p>When the risk or inconvenience is inconsistent with the research itself, it is the responsibility of the principal investigator to reduce it to a minimum. For example: applying anaesthesia in invasive interventions to obtain samples, having rescue treatment for possible adverse events (from anaphylactic shock to anxiety crises), preserving privacy if talking about and collecting sensitive personal data, monitoring vital signs when performing physical tests, maintaining the presence of parents or guardians in vulnerable populations, etc.</p>"
       },
       {
         "key": "minimizacionRiesgo",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Mecanismos",
+          "name": "Mechanisms",
           "required": true
         }
       }

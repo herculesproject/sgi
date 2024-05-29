@@ -6,19 +6,19 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.6.6 Actividades alternativas"
+      "label": "4.6.6 Jarduera alternatiboak "
     },
     "hideExpression": "(!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no') || (formState.mainModel.ap4_6.ap4_6_5 && formState.mainModel.ap4_6.ap4_6_5.usoTiempoLectivoRadio && formState.mainModel.ap4_6.ap4_6_5.usoTiempoLectivoRadio === 'no')",
     "fieldGroup": [
       {
-        "template": "¿Qué actividades alternativas se ofrecen para los alumnos que no deseen participar en la investigación?"
+        "template": "Zer jarduera alternatibo eskaintzen zaizkie ikerketan parte hartu nahi ez duten ikasleei?"
       },
       {
         "key": "actividadesAlternativas",
         "type": "textarea",
         "templateOptions": {
-          "label": "Actividades",
-          "placeholder": "Actividades",
+          "label": "Jarduerak",
+          "placeholder": "Jarduerak",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

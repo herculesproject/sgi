@@ -6,18 +6,18 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.4.4 Incentivos para la participación"
+      "label": "3.4.4 Incentives for participation"
     },
     "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>¿Se va a dar algún tipo de incentivo o compensación al sujeto de estudio por su participación?</p>"
+        "template": "<p>Will any type of incentive or compensation be given to the study subject for their participation?</p>"
       },
       {
         "key": "incentivosParticipacionRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -26,13 +26,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "<p>Especificar tipo de incentivo, cuantía y justificación</p>",
+        "template": "<p>Please specify type of incentive, amount and justification</p>",
         "hideExpression": "!model.incentivosParticipacionRadio || model.incentivosParticipacionRadio === 'no'"
       },
       {
@@ -40,8 +40,8 @@
         "type": "textarea",
         "hideExpression": "!model.incentivosParticipacionRadio || model.incentivosParticipacionRadio === 'no'",
         "templateOptions": {
-          "label": "Incentivos",
-          "placeholder": "Incentivos",
+          "label": "Incentives",
+          "placeholder": "Incentives",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

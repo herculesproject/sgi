@@ -5,19 +5,19 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Supervisión",
+      "label": "Supervision",
       "expanded": true
     },
     "fieldGroup": [
       {
-        "template": "<p>Describa los resultados de la aplicación del PROTOCOLO DE SUPERVISIÓN indicando las medidas correctoras aplicadas:</p>"
+        "template": "<p>Please describe the results of the implementation of the SUPERVISION PROTOCOL indicating the corrective measures implemented:</p>"
       },
       {
         "key": "describir",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Description",
+          "label": "Description",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

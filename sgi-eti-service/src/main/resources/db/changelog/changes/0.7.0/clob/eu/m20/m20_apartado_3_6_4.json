@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.6.4 Número de animales a utilizar"
+      "label": "3.6.4 Erabiliko den animalia kopurua"
     },
     "fieldGroup": [
       {
@@ -13,8 +13,8 @@
         "type": "input",
         "templateOptions": {
           "required": true,
-          "label": "Total",
-          "placeholder": "Total"
+          "label": "Guztira",
+          "placeholder": "Guztira"
         }
       }
     ]

@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.5 Criterios de punto final"
+      "label": "4.2.5 Amaierako puntuko irizpideak"
     },
     "fieldGroup": [
       {
-        "template": "En función de la cuantificación de los parámetros, indicar los criterios de punto final que se aplicarán para proceder a la eutanasia del animal."
+        "template": "Parametroen kuantifikazioaren arabera, adierazi amaierako puntuko zer irizpide erabiliko diren animaliari eutanasia aplikatzeko."
       },
       {
         "key": "puntoFinal",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Criterios de punto final",
+          "name": "Amaierako puntuko irizpideak",
           "required": true
         }
       }

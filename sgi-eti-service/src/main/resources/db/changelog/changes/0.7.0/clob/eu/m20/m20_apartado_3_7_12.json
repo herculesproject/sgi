@@ -9,19 +9,19 @@
     },
     "fieldGroup": [
       {
-        "template": "Explicar a continuación un método de eutanasia (programada y/o no programada) que se vaya a utilizar."
+        "template": "Jarraian, azaldu erabiliko den eutanasia metodo bat (programatua edo/eta programatu gabea)."
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "El RD 53/13 dedica el <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>Anexo III</a>, puntos 1 y 3, a los Métodos de eutanasia."
+        "template": "53/13 EDren <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>III. eranskineko</a> 1. eta 3. puntuek eutanasia metodoei buruz hitz egiten dute."
       },
       {
         "key": "explicarMetodoEutanasia",
         "type": "textarea",
         "templateOptions": {
-          "label": "Explicar",
+          "label": "Azaldu",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -29,19 +29,19 @@
         }
       },
       {
-        "template": "¿Qué método se empleará para confirmar la muerte del animal?"
+        "template": "Zer metodo erabiliko da animaliaren heriotza egiaztatzeko?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Pueden consultarse los métodos para completar la eutanasia en el <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>Anexo III</a> punto 2 del RD 53/13."
+        "template": "Hemen kontsulta daitezke eutanasia gauzatzeko metodoak: 53/13 EDren <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#aniii'>III. eranskineko</a> 2. puntua."
       },
       {
         "key": "confirmarMuerte",
         "type": "textarea",
         "templateOptions": {
-          "label": "Explicar",
+          "label": "Azaldu",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -49,19 +49,19 @@
         }
       },
       {
-        "template": "Tiempo máximo estimado desde la finalización del proceso de experimentación hasta el sacrificio."
+        "template": "Esperimentazio prozesua amaitzen denetik animaliak hil arteko gehienezko denbora."
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "El RD 53/2013 en su <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a25'>artículo 25.6</a> señala que “tan pronto como se haya conseguido la finalidad del procedimiento se tomarán las medidas adecuadas para minimizar el sufrimiento del animal”. De ello puede deducirse que la aplicación de la eutanasia debe realizarse sin demora injustificada."
+        "template": "53/2013 EDren <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a25'>25.6 artikuluak</a> honako hau dio: “Prozeduraren helburua lortu bezain pronto, neurri egokiak hartuko dira animaliaren sufrimendua txikiagotzeko”. Hortik ondoriozta daiteke eutanasia lehenbailehen aplikatu behar dela, atzeratzeko justifikaziorik ez badago. "
       },
       {
         "key": "tiempoProceso",
         "type": "textarea",
         "templateOptions": {
-          "label": "Tiempo",
+          "label": "Denbora",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

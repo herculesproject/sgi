@@ -5,23 +5,23 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.2 No aplicación de medidas correctoras"
+      "label": "4.2.2 Neurri zuzentzailerik ez aplikatzea"
     },
     "fieldGroup": [
       {
-        "template": "En caso de no aplicar medidas correctoras en algún procedimiento/intervención justifique la razón"
+        "template": "Prozedura edo esku hartzeren batean neurri zuzentzailerik aplikatuko ez bada, justifikatu arrazoia."
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Para más información sobre medidas correctoras (anestesia y analgesia) ver Art. 26 del RD 53/13."
+        "template": "Neurri zuzentzaileei (anestesia eta analgesia) buruzko informazio gehiagorako, ikusi 53/13 EDren 26. art. "
       },
       {
         "key": "justificarRazon",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Justificar",
+          "name": "Justifikatu",
           "required": true
         }
       }

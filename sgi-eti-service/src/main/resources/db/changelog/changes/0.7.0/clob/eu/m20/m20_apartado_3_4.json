@@ -5,29 +5,29 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.4 Tipo de proyecto"
+      "label": "3.4 Proiektu mota"
     },
     "fieldGroup": [
       {
-        "template": "<p>Indique el tipo de proyecto (según el <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2013-1337' target='_blank'>artículo 31 del RD 53/2013</a>).</p>"
+        "template": "<p>Adierazi proiektu mota (<a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2013-1337' target='_blank'>53/2013 EDren 31. artikuluaren</a> arabera).</p>"
       },
       {
         "key": "tipoProyecto",
         "type": "select",
         "templateOptions": {
-          "label": "Seleccione",
+          "label": "Hautatu",
           "required": true,
           "options": [
             {
-              "label": "Tipo 1",
+              "label": "1. mota",
               "value": "1"
             },
             {
-              "label": "Tipo 2",
+              "label": "2. mota",
               "value": "2"
             },
             {
-              "label": "Tipo 3",
+              "label": "3. mota",
               "value": "3"
             }
           ]

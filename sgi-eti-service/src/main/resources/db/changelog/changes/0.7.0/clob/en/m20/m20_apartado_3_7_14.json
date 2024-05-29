@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.14 Relación y protocolo de sustancias y agentes biológicos administradas incluidas anestesia y analgesia"
+      "label": "3.7.14 List and protocol of biological substances and agents administered including anaesthesia and analgesia"
     },
     "fieldGroup": [
       {
-        "template": "Especificar a continuación el principio activo y pautas de TODAS las sustancias administradas, incluidas anestesia, analgesia y protocolo de eutanasia programada y no programada (si procede)."
+        "template": "Please specify below the active ingredient and guidelines for ALL substances administered, including anaesthesia, analgesia, and planned and unplanned euthanasia protocol (if applicable)."
       },
       {
         "type": "table-crud",
@@ -27,43 +27,43 @@
               "key": "Tipo",
               "type": "select",
               "templateOptions": {
-                "label": "Tipo",
+                "label": "Type",
                 "order": 10,
                 "options": [
                   {
-                    "label": "Pre-anestesia para procedimiento/intervención quirúrgica",
+                    "label": "Pre-anaesthesia for surgical procedure/intervention",
                     "value": "1"
                   },
                   {
-                    "label": "Anestesia",
+                    "label": "Anaesthesia",
                     "value": "2"
                   },
                   {
-                    "label": "Anestesia intraoperatoria",
+                    "label": "Intra-operative anaesthesia",
                     "value": "3"
                   },
                   {
-                    "label": "Anestesia post-operatoria",
+                    "label": "Post-operative anaesthesia",
                     "value": "4"
                   },
                   {
-                    "label": "Analgesia en intevención no quirúrgica",
+                    "label": "Analgesia in non-surgical intervention",
                     "value": "5"
                   },
                   {
-                    "label": "Otra sustancia del procedimiento de experimentación",
+                    "label": "Another substance of the experimental procedure",
                     "value": "6"
                   },
                   {
-                    "label": "Eutanasia programada",
+                    "label": "Planned euthanasia",
                     "value": "7"
                   },
                   {
-                    "label": "Eutanasia no programada",
+                    "label": "Unplanned euthanasia",
                     "value": "8"
                   },
                   {
-                    "label": "Eutanasia (programada y no programada)",
+                    "label": "Euthanasia (planned and unplanned)",
                     "value": "9"
                   }
                 ]
@@ -73,7 +73,7 @@
               "key": "producto",
               "type": "input",
               "templateOptions": {
-                "label": "Producto (principio activo)",
+                "label": "Product (active ingredient)",
                 "order": 20
               }
             },
@@ -81,7 +81,7 @@
               "key": "viaAdministracion",
               "type": "input",
               "templateOptions": {
-                "label": "Vía administración",
+                "label": "Route of administration",
                 "order": 30
               }
             },
@@ -89,7 +89,7 @@
               "key": "dosis",
               "type": "input",
               "templateOptions": {
-                "label": "Dosis",
+                "label": "Dose",
                 "order": 40
               }
             },
@@ -97,7 +97,7 @@
               "key": "volumen",
               "type": "input",
               "templateOptions": {
-                "label": "Volumen",
+                "label": "Volume",
                 "order": 50
               }
             },
@@ -105,7 +105,7 @@
               "key": "pauta",
               "type": "input",
               "templateOptions": {
-                "label": "Pauta",
+                "label": "Guideline",
                 "order": 60
               }
             }

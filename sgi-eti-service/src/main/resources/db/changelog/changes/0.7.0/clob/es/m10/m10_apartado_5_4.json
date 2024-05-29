@@ -6,26 +6,26 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.4 Documento de aceptación de colaboración"
+      "label": "5.4 Lankidetza onartzeko dokumentua"
     },
     "fieldGroup": [
       {
-        "template": "Si el reclutamiento de las personas participantes va a ser realizado por alguien ajeno al equipo investigador ¿dispone del documento de aceptación de colaboración?"
+        "template": "Ikertzaile taldekoa ez den beste norbaitek bilduko baditu parte hartzaileak, badaukazu lankidetza onartzeko dokumentua? "
       },
       {
         "key": "documentoAceptacionColaboracion",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": 7,
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -34,7 +34,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: ver apartado '3,4.2 Reclutamiento realizado por personal ajeno al equipo investigador'.</p>"
+        "template": "<p>Oharra: ikusi ‘3.4.2 Parte hartzaileak ikertzaile taldeaz kanpoko langileek biltzea'. </p>"
       }
     ]
   }

@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1 Valoración de la severidad y medidas correctoras ante el dolor, sufrimiento o la angustia del animal"
+      "label": "4.2.1 Assessment of severity and corrective measures for pain, suffering or distress of the animal"
     },
     "fieldGroup": [
       {
-        "template": "<p>Teniendo en cuenta los procedimientos/intervenciones enumeradas en el apartado 'Procedimientos/Intervenciones que se realizarán al animal' señale las medidas correctoras previstas (p.ej anestesia, analgesia) para minimizar el posible dolor, sufrimiento o ansiedad causados:<ul><li><strong>Efecto buscado</strong>: efecto que se busca en el animal con el procedimiento/intervención realizado: extracción del bazo, subida de un parámetro determinado, anestesiar al animal para la cirugía.</li><li><strong>Efectos colaterales, secundarios o reacciones adversas</strong>: cualquier efecto, diferente al buscado, que pueda provocar que el animal experimente dolor, sufrimiento, angustia o daño duradero equivalente o superior al causado por la introducción de una aguja.</li><li><strong>Medida correctora</strong>: cualquier medida destinada a paliar el sufrimiento del animal y/o los efectos colaterales que se apliquen, sin interferir en el efecto buscado'.</li></ul></p>"
+        "template": "<p>Taking into account the procedures/interventions listed under 'Procedures/interventions to be performed on the animal' please indicate the corrective measures envisaged (e.g. anaesthesia, analgesia) to minimise possible pain, suffering or anxiety caused:<ul><li><strong>intended effect</strong>: intended effect on the animal of the procedure/intervention performed: removal of the spleen, increase of a certain parameter, anaesthetising the animal for surgery.</li><li><strong>Side effects, side effects or adverse reactions</strong>: any effect, other than the intended effect, which may cause the animal to experience pain, suffering, distress or lasting harm equivalent to or greater than that caused by the introduction of a needle.</li><li><strong>Corrective measure</strong>: any measure intended to alleviate animal suffering and/or side-effects without interfering with the intended effect'.</li></ul></p>\""
       },
       {
         "type": "table-crud",
@@ -30,7 +30,7 @@
               "key": "intervencion",
               "type": "selector-procedimientos",
               "templateOptions": {
-                "label": "Procedimiento/Intervención",
+                "label": "Procedure/Intervention",
                 "options": [],
                 "order": 10
               },
@@ -42,7 +42,7 @@
               "key": "severidad",
               "type": "input",
               "templateOptions": {
-                "label": "Categoría de severidad",
+                "label": "Severity category",
                 "order": 20,
                 "disabled": true
               }
@@ -51,7 +51,7 @@
               "key": "efectoBuscado",
               "type": "textarea",
               "templateOptions": {
-                "label": "Efecto buscado",
+                "label": "Intended effect",
                 "order": 30
               }
             },
@@ -59,7 +59,7 @@
               "key": "efectoColateral",
               "type": "textarea",
               "templateOptions": {
-                "label": "Efecto colateral",
+                "label": "Collateral effect",
                 "order": 40
               }
             },
@@ -67,7 +67,7 @@
               "key": "medidasCorrectoras",
               "type": "input",
               "templateOptions": {
-                "label": "Medidas correctoras",
+                "label": "Corrective measures",
                 "order": 50
               }
             }
@@ -78,7 +78,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Recuerde que las excepciones requieren aportar el documento correspondiente en el apartado '5.4 Situaciones especiales' anexo IX del RD 53/2013.</p>"
+        "template": "<p>Note: Please remember that exceptions require providing the respective document in section '5.4 Special situations', annex IX of Royal Decree 53/2013.</p>"
       }
     ]
   }

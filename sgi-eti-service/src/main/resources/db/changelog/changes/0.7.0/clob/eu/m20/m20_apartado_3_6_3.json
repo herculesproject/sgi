@@ -5,32 +5,32 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.6.3 Animales protegidos o en peligro de extinción"
+      "label": "3.6.3 Animalia babestuak edo galzorian daudenak"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Las especies amenazadas y en peligro de extinción pueden consultarse en la página de la CITES (<a target='_blank' href='https://cites.org/esp/app/appendices.php'>Anexo A del Reglamento (CE) nº 338/97</a>).</p><p>La regulación del uso en experimentación de estas especies se precisa en el <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a20'>artículo 20</a> del RD 53/13, según el cual sólo se pueden utilizar estos animales si se cumplen las dos condiciones siguientes:</p><ul><li>El proyecto tiene una de las siguientes finalidades:<br><li>a) Precención, profilaxis, diagnóstico o tratamiento de enfermedades, maa salud u otras anomalías o sus efectos en los seres humanos, los animales o las plantas</li><br><li>b) La protección del medio natural en interés de la salud o el bienestar de los seres humanos o los aniamles.</li><br><li>c) La investigación dirigida a la conservación de las especies.</li></li><li>Se ha justificado científicamente que dicha finalidad no puede conseguirse utilizando animales de otras especies.</li></ul><p>En este apartado también se incluye el uso de primates como animal de experimentación, para lo cual hay que tener en cuenta lo dispuesto en el <strong>Real Decreto 1386/2018</strong>, de 19 de noviembre, por el que se modifica el Real Decreto 53/2013.</p>"
+        "template": "<p>Mehatxupean eta galzorian dauden espezieak CITESen webgunean kontsulta daitezke (<a target='_blank' href='https://cites.org/esp/app/appendices.php'>338/97 zenbakidun Erregelamenduaren (CE) A eranskina</a>).</p><p>Esperimentazioan espezie horiek erabiltzeko arauak 53/13 EDren <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a20'>20. artikuluan</a> zehazten dira; horren arabera, bi baldintza hauek betetzen badira bakarrik erabil daitezke horrelako animaliak:</p><ul><li>Proiektuak helburu hauetako bat badu:<br><li>a) Gaixotasun, osasun txar edo bestelako anomalien edo horien ondorioen prebentzioa, profilaxia, diagnostikoa edo tratamendua gizaki, animalia edo landareetan.</li><br><li>b) Ingurumenaren babesa, gizakien edo animalien osasun edo ongizatearen mesedetan.</li><br><li>c) Espezieak kontserbatzea xedetzat duen ikerketa.</li></li><li>Zientifikoki justifikatu bada helburu hori ezin dela lortu beste espezie bateko animaliak erabiliz.</li></ul><p>Atal honetan sartzen da, halaber, primateen erabilera esperimentazio animalia gisa, eta horretarako kontuan hartu behar da azaroaren 19ko <strong>1386/2018 Errege Dekretua</strong>, zeinak aldatzen baitu 53/2013 Errege Dekretua.</p>"
       },
       {
-        "template": "¿Son animales protegidos o en peligro de extinción?"
+        "template": "Animalia babestuak dira edo galzorian daude?"
       },
       {
         "key": "animalesProtegidosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -39,7 +39,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: recuerde que las excepciones requieren aportar el documento correspondiente en el apartado '5.4 Situaciones especiales'.</p>"
+        "template": "<p>Oharra: gogoratu salbuespen kasuetan dagokion dokumentua aurkeztu behar dela ‘5.4 Egoera bereziak’ atalean. </p>"
       }
     ]
   }

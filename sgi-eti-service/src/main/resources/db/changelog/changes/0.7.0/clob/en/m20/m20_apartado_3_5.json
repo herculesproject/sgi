@@ -5,23 +5,23 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.5 Lugar en el que se realizarán los procedimientos/intervenciones de los animales"
+      "label": "3.5 Location where animal procedures/interventions will be performed"
     },
     "fieldGroup": [
       {
-        "template": "<p>Especificar el lugar en el que se mantendrán los animales durante el proceso de experimentación.</p>"
+        "template": "<p>Please specify the place where the animals will be kept during the experimentation process.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>los procedimientos/intervenciones se realizarán en centros usuarios autorizados, salvo autorización del órgano competente, previa justificación científica de la necesidad o conveniencia de que se realicen fuera de dichos centros (<a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>Art. 25-4 RD 53/13</a>)</p>"
+        "template": "<p>The procedures/interventions will be carried out in authorised user centres, unless authorised by the competent agency, after scientific justification of the need or convenience for them to be carried out outside of such centres (<a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>Art. 25-4 Royal Decree 53/13</to>)</p>"
       },
       {
         "key": "centroUsuarioUniversidadCheckPrincipal",
         "type": "checkbox",
         "templateOptions": {
-          "label": "Centro usuario de la Universidad",
+          "label": "University user centre",
           "indeterminate": false
         }
       },
@@ -30,21 +30,21 @@
         "type": "multicheckbox",
         "hideExpression": "!model.centroUsuarioUniversidadCheckPrincipal",
         "templateOptions": {
-          "label": "Seleccionar",
+          "label": "Choose",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "animalarioCampusEspinardo",
-              "label": "Animalario Campus Espinardo"
+              "label": "Espinardo Campus Animal Facility"
             },
             {
               "value": "animalarioCampusCienciasSalud",
-              "label": "Animalario Campus Ciencias de la Salud (CEIB)"
+              "label": "Health Sciences Campus Animal Facility (CEIB)"
             },
             {
               "value": "otros",
-              "label": "Otros (especificar)"
+              "label": "Others (specify)"
             }
           ]
         }
@@ -54,7 +54,7 @@
         "type": "textarea",
         "hideExpression": "!(model.centroUsuarioUniversidadCheckPrincipal && model.centroUsuarioUniversidadCheck && model.centroUsuarioUniversidadCheck.find((c)=> c === 'otros'))",
         "templateOptions": {
-          "label": "Especificar",
+          "label": "Please specify",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -66,7 +66,7 @@
         "key": "otroCentroRegistradoCheck",
         "type": "checkbox",
         "templateOptions": {
-          "label": "Otro centro usuario, registrado.",
+          "label": "Another user registered centre.",
           "indeterminate": false
         }
       },
@@ -75,7 +75,7 @@
         "type": "textarea",
         "hideExpression": "!model.otroCentroRegistradoCheck",
         "templateOptions": {
-          "label": "Especificar",
+          "label": "Please specify",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -88,7 +88,7 @@
         "type": "textarea",
         "hideExpression": "!model.otroCentroRegistradoCheck",
         "templateOptions": {
-          "label": "Nº de registro",
+          "label": "Registration no.",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -100,7 +100,7 @@
         "key": "otroCentroNoRegistradoCheck",
         "type": "checkbox",
         "templateOptions": {
-          "label": "Otro centro o lugar no registrado.",
+          "label": "Another unregistered centre or place.",
           "indeterminate": false
         }
       },
@@ -109,7 +109,7 @@
         "type": "textarea",
         "hideExpression": "!model.otroCentroNoRegistradoCheck",
         "templateOptions": {
-          "label": "Especificar",
+          "label": "Please specify",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -122,7 +122,7 @@
         "type": "textarea",
         "hideExpression": "!model.otroCentroNoRegistradoCheck",
         "templateOptions": {
-          "label": "Justificar",
+          "label": "Justify",
           "disabled": false,
           "required": true,
           "autosize": true,
@@ -134,7 +134,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Para más información de lugares del Centro usuario de la Universidad consultar en la <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>página web del Comité de la Universidad</a>.</p>"
+        "template": "<p>For more information on places in the University User Centre, consult the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>University Committee website</to>.</p>"
       }
     ]
   }

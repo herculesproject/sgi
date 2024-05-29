@@ -5,23 +5,23 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.3.1 Vacunación"
+      "label": "4.3.1 Vaccination"
     },
     "fieldGroup": [
       {
-        "template": "<p>¿Qué vacunación se ofrece al personal que manejará los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?</p>"
+        "template": "<p>What vaccination is offered to personnel who will handle biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles?</p>"
       },
       {
         "key": "vacunacionCheck",
         "type": "multicheckbox",
         "templateOptions": {
-          "label": "Cuáles",
+          "label": "Which",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "tetanos",
-              "label": "Tétanos"
+              "label": "Tetanus"
             },
             {
               "value": "hepatitis",
@@ -29,11 +29,11 @@
             },
             {
               "value": "otras",
-              "label": "Otras"
+              "label": "Others"
             },
             {
               "value": "noNecesariaVacunacion",
-              "label": "No es necesaria vacunación"
+              "label": "Vaccination is not necessary"
             }
           ]
         },
@@ -83,8 +83,8 @@
         "type": "textarea",
         "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.some((c) => c === 'otras') || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
-          "placeholder": "Especificar",
-          "label": "Especificar",
+          "placeholder": "Please specify",
+          "label": "Please specify",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -96,8 +96,8 @@
         "type": "textarea",
         "hideExpression": "!model.vacunacionCheck || model.vacunacionCheck.length>1 || !model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
-          "placeholder": "Justificar",
-          "label": "Justificar",
+          "placeholder": "Justify",
+          "label": "Justify",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -105,7 +105,7 @@
         }
       },
       {
-        "template": "Organismo responsable de la vacunación",
+        "template": "Agency responsible for vaccination",
         "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.length>0 || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')"
       },
       {
@@ -113,7 +113,7 @@
         "type": "textarea",
         "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.length>0 || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
-          "label": "Organismo:",
+          "label": "Agency:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

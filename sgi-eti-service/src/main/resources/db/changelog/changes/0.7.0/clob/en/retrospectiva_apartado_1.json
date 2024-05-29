@@ -5,18 +5,18 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Objetivos EN",
+      "label": "Objectives",
       "expanded": true
     },
     "fieldGroup": [
       {
-        "template": "<p>Señale si se han alcanzado los objetivos del proyecto de investigación.</p>"
+        "template": "<p>Please indicate whether the objectives of the research project have been achieved.</p>"
       },
       {
         "key": "cumpleObjetivosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -25,24 +25,24 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             },
             {
               "value": "parcialmente",
-              "label": "Parcialmente"
+              "label": "Partially"
             }
           ]
         }
       },
       {
-        "template": "<p>Justifique la respuesta:</p>"
+        "template": "<p>Please justify your answer:</p>"
       },
       {
         "key": "justificar",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Justificación",
-          "label": "Justificación",
+          "placeholder": "Supporting evidence",
+          "label": "Supporting evidence",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

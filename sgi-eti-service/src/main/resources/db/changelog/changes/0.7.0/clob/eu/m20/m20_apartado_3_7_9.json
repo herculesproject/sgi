@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.9 Extracción de sangre"
+      "label": "3.7.9 Odola ateratzea"
     },
     "fieldGroup": [
       {
-        "template": "¿Se va a extraer sangre animal?"
+        "template": "Animaliei odola aterako zaie?"
       },
       {
         "key": "extraccionSangreRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -46,7 +46,7 @@
               "key": "lugarAnatomico",
               "type": "input",
               "templateOptions": {
-                "label": "Lugar anatómico",
+                "label": "Kokapen anatomikoa",
                 "order": 10
               }
             },
@@ -54,7 +54,7 @@
               "key": "volumen",
               "type": "input",
               "templateOptions": {
-                "label": "Volumen",
+                "label": "Bolumena",
                 "order": 20
               }
             },
@@ -91,7 +91,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: en caso de utilizar analgesia/anestesia especificar pauta en el apartado correspondiente (3.7.6 y 3.7.14).</p>"
+        "template": "<p>Oharra: analgesia/anestesia erabiliko bada, zehaztu pauta dagokion atalean (3.7.6 eta 3.7.14). </p>"
       }
     ]
   }

@@ -5,35 +5,35 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.1 Nivel de riesgo"
+      "label": "4.1.1 Risk level"
     },
     "fieldGroup": [
       {
-        "template": "<p>Señalar el nivel de riesgo global de la actividad. En caso de manejo de varios agentes de distinto nivel de riesgo considérese el de nivel superior</p>"
+        "template": "<p>Please indicate the overall risk level of the activity. In the case of handling several agents with different risk levels, consider the highest level.</p>"
       },
       {
         "key": "nivelRiesgo",
         "type": "radio",
         "className": "vertical-radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
               "value": "nivel_1",
-              "label": "Nivel I: Riesgo individual y poblacional escaso o nulo. Microorganismos que tienen pocas probabilidades de provocar enfermedades en el ser humano o los animales."
+              "label": "Level I: Little or no individual and population risk. Microorganisms that are unlikely to cause disease in humans or animals."
             },
             {
               "value": "nivel_2",
-              "label": "Nivel II: Riesgo individual moderado, riesgo poblacional bajo. Los agentes patógenos que pueden provocar enfermedades humanas o animales pero que tienen pocas probabilidades de entrañar un riesgo grave para el personal de laboratorio, la población, el ganado o el medio ambiente. La exposición en el laboratorio puede provocar una infección grave, pero existen medidas preventivas y terapéuticas eficaces y el riesgo de propagación es limitado."
+              "label": "Level II: Moderate individual risk, low population risk. Pathogens that can cause human or animal disease but are unlikely to pose a serious risk to laboratory personnel, the public, livestock or the environment. Exposure in the laboratory can cause serious infection, but effective preventive and therapeutic measures are available and the risk of spread is limited."
             },
             {
               "value": "nivel_3",
-              "label": "Nivel III: Riesgo individual elevado, riesgo poblacional bajo. Agentes patógenos que suelen provocar enfermedades humanas o animales graves, pero que de ordinario no se propagan de un individuo a otro. Existen medidas preventivas y terapéuticas eficaces."
+              "label": "Level III: High individual risk, low population risk. Pathogens that usually cause serious human or animal diseases, but do not ordinarily spread from one individual to another. There are effective preventive and therapeutic measures."
             },
             {
               "value": "nivel_4",
-              "label": "Nivel IV: Riesgo individual y poblacional elevado. Agentes patógenos que suelen provocar enfermedades graves en el ser humano o los animales y que se transmiten fácilmente de un individuo a otro, directa o indirectamente. Normalmente no existen medidas preventivas y terapéuticas eficaces."
+              "label": "Level IV: High individual and population risk. Pathogens that usually cause serious diseases in humans or animals and that are easily transmitted from one individual to another, directly or indirectly. Effective preventive and therapeutic measures are usually not available."
             }
           ]
         }

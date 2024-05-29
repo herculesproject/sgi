@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Fecha  de inicio de la actividad de investigación ENG",
+      "label": "Start date of the research activity",
       "expanded": true
     },
     "fieldGroup": [
@@ -13,7 +13,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Rellene este punto en función del comité al que se dirige su informe:<ul><li>Para el CEI fecha de inicio del reclutamiento.</li><li>Para el CEEA fecha de inicio de uso de animales de experimentación.</li><li>Para el CBE fecha de inicio de manipulación de agentes biológicos u OMG, SQP, SR.</li></ul></p>"
+        "template": "<p>Fill in this item according to the committee to which your report is addressed:<ul><li>For the CEI start date of recruitment.</li><li>For the CEEA start date of use of experimental animals.</li><li>For the CBE start date of handling of biological agents or GMOs, hazardous chemicals, radioactive substances.</li></ul></p>"
       },
       {
         "key": "fechaInicio",
@@ -21,7 +21,7 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Fecha"
+          "label": "Date"
         }
       }
     ]

@@ -5,14 +5,14 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1 Lugar en el que se realizará el manejo de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "4.2.1 Zer lekutan erabiliko diren agente biologikoak, genetikoki eraldatutako organismoak, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La manipulación de agentes biológicos o materiales susceptibles de contenerlos requiere unas condiciones específicas del lugar de trabajo acordes con el grado de peligrosidad del agente y nivel de riesgo que garanticen la seguridad.<br>El tipo de laboratorio debe ser adecuado al nivel de riesgo. En caso de exposición a más de un agente biológico se tendrá en cuenta <b>el de mayor riesgo</b>.</p><ul><li>Nivel de contención C1: Laboratorio básico</li><li>Nivel de contención C2: Laboratorio básico con cabina de seguridad biológica u otros dispositivos apropiados de protección personal o contención física.</li><li>Nivel de contención C3: Laboratorio restringido con cabina de seguridad biológica u otros dispositivos apropiados de protección personal o contención física</li><li>Nivel de contención C4: Laboratorio estanco de contención máxima</li></ul><p>Para más información sobre medidas y niveles de contención consultar el <b><a href='https://boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#anv' target='_blank'>Anexo V del RD 664-97</a></b>.</p>"
+        "template": "<p>Agente biologikoak edo halakoak izan ditzaketen materialak manipulatzeko, agentearen arriskugarritasun eta arrisku mailarekin bat datozen baldintza zehatz batzuk bete behar ditu lanerako lekuak, segurtasuna bermatzeko.<br>Laborategi motak arrisku mailarako egokia izan behar du. Agente biologiko baten baino gehiagoren eraginpean egonez gero, <b>arrisku handienekoa</b> hartuko da kontuan.</p><ul><li>E1 euste maila: oinarrizko laborategia</li><li>E2 euste maila: oinarrizko laborategia, segurtasun biologikoko kabinarekin, edo babes pertsonalerako edo euste fisikorako egokiak diren beste gailu batzuekin. </li><li>E3 euste maila: laborategi mugatua, segurtasun biologikoko kabinarekin, edo babes pertsonalerako edo euste fisikorako egokiak diren beste gailu batzuekin. </li><li>E4 euste maila: gehienezko euste maila duen laborategi hermetikoa.</li></ul><p>Euste neurri eta mailei buruzko informazio gehiagorako, kontsultatu <b><a href='https://boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#anv' target='_blank'> 664-97 EDren V. eranskina</a></b>.</p>"
       }
     ]
   }

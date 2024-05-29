@@ -5,24 +5,24 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.2 Duración del proceso de experimentación"
+      "label": "3.7.2 Esperimentazio prozesuaren iraupena"
     },
     "fieldGroup": [
       {
-        "template": "¿Cuánto tiempo dura el proceso de experimentación al que es sometido cada animal (en días)?"
+        "template": "Zenbat denbora (egun) irauten du animalia bakoitzari aplikatzen zaion esperimentazio prozesuak?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>La duración debe contarse desde el momento en que se inicia la preparación de un animal para su utilización en el proceso de experimentación hasta que 'ya no vayan a hacerse observaciones ulteriores sobre él' y 'haya sido sacrificado, realojado o reintegrado a un hábitat o sistema zootécnico conveniente'.</p>"
+        "template": "<p>Prozesuaren iraupena animalia bat esperimentazio prozesuan erabiltzeko prestatzen dutenetik ‘haren gaineko behaketa gehiago egingo ez diren’ arte eta ‘animalia hil, birkokatu edo habitat edo sistema zootekniko egoki batera itzultzen duten’ arte luzatzen da.</p>"
       },
       {
         "key": "duracionProcesoExperimentacion",
         "type": "input",
         "templateOptions": {
-          "label": "Tiempo (días)",
-          "placeholder": "Tiempo en días"
+          "label": "Denbora (egunak)",
+          "placeholder": "Denbora egunetan"
         }
       }
     ]

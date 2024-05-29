@@ -5,14 +5,14 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.3.1 Justificación del tamaño muestral y tratamiento estadístico"
+      "label": "4.3.1 Justification of the sample size and statistical treatment"
     },
     "fieldGroup": [
       {
         "key": "justificacionMuestraEstadistica",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Justificación",
+          "name": "Supporting evidence",
           "required": true
         }
       }

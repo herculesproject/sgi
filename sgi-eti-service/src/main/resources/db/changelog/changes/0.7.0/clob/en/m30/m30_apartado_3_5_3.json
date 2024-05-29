@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.5.3 Material biológico"
+      "label": "3.5.3 Biological material"
     },
     "hideExpression": "!formState.mainModel.ap3_4.ap3_4_1 || !formState.mainModel.ap3_4.ap3_4_1.agentesBiologicosRadio || formState.mainModel.ap3_4.ap3_4_1.agentesBiologicosRadio === 'no'",
     "fieldGroup": [
@@ -25,24 +25,24 @@
               "key": "tipoMaterial",
               "type": "select",
               "templateOptions": {
-                "label": "Tipo de material",
+                "label": "Type of material",
                 "order": 10,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Cría y manejo de animales"
+                    "label": "Animal husbandry and management"
                   },
                   {
                     "value": "2",
-                    "label": "Tejido, sangre y/o fluidos animales"
+                    "label": "Animal tissue, blood and/or fluids"
                   },
                   {
                     "value": "3",
-                    "label": "Tejido, sangre y/o fluidos humanos"
+                    "label": "Human tissue, blood and/or fluids"
                   },
                   {
                     "value": "4",
-                    "label": "Otros"
+                    "label": "Other"
                   }
                 ]
               }
@@ -51,7 +51,7 @@
               "key": "descripcionCaracteristicas",
               "type": "input",
               "templateOptions": {
-                "label": "Descripción/Características",
+                "label": "Description/Characteristics",
                 "order": 20
               }
             },
@@ -59,24 +59,24 @@
               "key": "grupoRiesgo",
               "type": "select",
               "templateOptions": {
-                "label": "Grupo de riesgo",
+                "label": "Risk group",
                 "order": 30,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Grupo 1"
+                    "label": "Group 1"
                   },
                   {
                     "value": "2",
-                    "label": "Grupo 2"
+                    "label": "Group 2"
                   },
                   {
                     "value": "3",
-                    "label": "Grupo 3"
+                    "label": "Group 3"
                   },
                   {
                     "value": "4",
-                    "label": "Grupo 4"
+                    "label": "Group 4"
                   }
                 ]
               }
@@ -85,7 +85,7 @@
               "key": "volumenMaximo",
               "type": "input",
               "templateOptions": {
-                "label": "Volumen máximo de muestra que se maneja en cada vez o número de animales",
+                "label": "Maximum sample volume to be handled at any one time or number of animals",
                 "order": 40
               }
             }

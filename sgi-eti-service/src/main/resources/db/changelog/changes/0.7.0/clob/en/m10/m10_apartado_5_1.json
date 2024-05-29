@@ -6,17 +6,17 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.1 Documento de consentimiento"
+      "label": "5.1 Consent document"
     },
     "fieldGroup": [
       {
-        "template": "¿Su proyecto requiere documento de consentimiento del sujeto fuente y/o su representante?"
+        "template": "Does your project require a consent document from the source subject and/or their representative?"
       },
       {
         "key": "documentoConsentimiento",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
@@ -25,7 +25,7 @@
             },
             {
               "value": 4,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
@@ -34,7 +34,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: ver apartado '4.4 Información y consentimiento'.</p>"
+        "template": "<p>Note: see section '4.4 Information and consent'.</p>"
       }
     ]
   }

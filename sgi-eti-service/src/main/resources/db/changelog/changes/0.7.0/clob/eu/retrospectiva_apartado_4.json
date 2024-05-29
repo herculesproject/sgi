@@ -5,19 +5,19 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Reducción, reemplazo y refinamiento",
+      "label": "Murriztea, ordezkatzea eta fintzea",
       "expanded": true
     },
     "fieldGroup": [
       {
-        "template": "<p>Indique aquellas propuestas que considere que pueden contribuir a una mejor aplicación de la reducción, el reemplazo y el refinamiento en el uso de animales en investigación: </p><p>Reducción.</p>"
+        "template": "<p>Aipatu ikerketan animaliak erabiltzean murriztea, ordezkatzea eta fintzea hobeto aplikatzeko mesedegarriak izan daitezkeen proposamenak: </p><p>Murriztea. </p>"
       },
       {
         "key": "reduccion",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Deskribapena",
+          "label": "Deskribapena",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -25,14 +25,14 @@
         }
       },
       {
-        "template": "<p>Reemplazo.</p>"
+        "template": "<p>Ordezkatzea.</p>"
       },
       {
         "key": "reemplazo",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Deskribapena",
+          "label": "Deskribapena",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -40,14 +40,14 @@
         }
       },
       {
-        "template": "<p>Refinamiento.</p>"
+        "template": "<p>Fintzea.</p>"
       },
       {
         "key": "refinamiento",
         "type": "textarea",
         "templateOptions": {
-          "placeholder": "Descripción",
-          "label": "Descripción",
+          "placeholder": "Deskribapena",
+          "label": "Deskribapena",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

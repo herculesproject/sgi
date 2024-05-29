@@ -5,22 +5,22 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.1 Acreditaciones"
+      "label": "5.1 Accreditations"
     },
     "fieldGroup": [
       {
-        "template": "Recuerde que debe aportar copia de todas las acreditaciones del equipo investigador para que queden archivadas junto con la memoria del proyecto."
+        "template": "Please remember that you need to provide a copy of all the research team's accreditations so that they are archived along with the project report."
       },
       {
         "key": "acreditaciones",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Please indicate",
           "required": true,
           "options": [
             {
               "value": 17,
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

@@ -6,14 +6,14 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.2 Diseño metodológico del proyecto"
+      "label": "3.2 Proiektuaren diseinu metodologikoa"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el campo <b>Diseño metodológico</b> del apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>Datos generales</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias",
+        "template": "Atal hau automatikoki betetzen da, <b>Ebaluazio eskaerako</b> <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>Datu orokorrak</b></a> ataleko <b>Diseinu metodologikoa</b> eremuan sartutako datuetatik abiatuta. Beharrezko aldaketak egiteko, joan menuko puntu horretara.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
@@ -22,7 +22,7 @@
         "key": "disenoMetodologico",
         "type": "ckeditor",
         "templateOptions": {
-          "name": "Diseño metodológico",
+          "name": "Diseinu metodologikoa",
           "disabled": true,
           "required": true,
           "expressionModelValue": "formState.memoria.peticionEvaluacion.disMetodologico"

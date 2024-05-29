@@ -6,14 +6,14 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.1 Ponderación de los riesgos o molestias"
+      "label": "4.1 Weighting of risks or discomforts"
     },
     "fieldGroup": [
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>El balance entre riesgos y beneficios es una de las cuestiones básicas en ética de la investigación.</p><p>Es responsabilidad del investigador o investigadora principal (IP) ponderar con prudencia el riesgo al que se somete a los/las participantes en relación con los beneficios esperables para ellos (previamente descritos en el apartado 1.2 de este formulario).</p><p>Hay que tener en cuenta que un gran beneficio no justifica cualquier riesgo, ni siquiera si es aceptado voluntariamente. El bienestar y la integridad del individuo priman sobre el beneficio esperable.</p><p>Para más información sobre el balance riesgo/beneficio consultar el documento de la CIOMS <a href='https://www.um.es/it/web/comision-etica-investigacion/comision-etica/ceic' target='_blank'>Pautas éticas internacionales para la investigación biomédica en seres humanos</a></p>"
+        "template": "<p>The balance between risks and benefits is one of the basic questions in research ethics.</p><p>It is the responsibility of the principal investigator (PI) to carefully weigh the risk to which the participants are subjected in relation to the expected benefits for them (previously described in section 1.2 of this form).</p><p>It should be taken into account that a great benefit does not justify any risk, not even if it is accepted voluntarily. The well-being and integrity of the individual take precedence over the expected benefit.</p><p>For more information on the risk/reward balance, consult the CIOMS document <a href='https://www.um.es/it/web/comision-etica-investigacion/comision-etica/ceic' target='_blank'>International ethical guidelines for biomedical research involving human subjects</to></p>"
       }
     ],
     "hideExpression": "!formState.bloques[3].ap3_4.intervencionesSeresHumanosRadio || formState.bloques[3].ap3_4.intervencionesSeresHumanosRadio === 'no'"

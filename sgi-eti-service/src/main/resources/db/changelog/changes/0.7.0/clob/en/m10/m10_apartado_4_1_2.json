@@ -6,27 +6,27 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.1.2 Valoración de los riesgos o molestias"
+      "label": "4.1.2 Assessment of risks or discomforts"
     },
     "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
     "fieldGroup": [
       {
-        "template": "<p>Teniendo en cuenta las intervenciones y pruebas que se van a realizar a los sujetos de investigación descritas en el apartado 3.4.3 ¿cómo valoraría los riesgos o molestias posibles según la siguiente definición?</p>"
+        "template": "<p>Taking into account the interventions and tests that are going to be performed on the research subjects described in section 3.4.3, how would you assess the possible risks or discomforts according to the following definition?</p>"
       },
       {
         "key": "valoracionRiesgosMolestiasCheck",
         "type": "multicheckbox",
         "templateOptions": {
-          "label": "Opciones:",
+          "label": "Options:",
           "type": "array",
           "options": [
             {
               "value": "riegosMinimo",
-              "label": "Riesgo mínimo: aquel que no supera en probabilidad o magnitud al que cabría esperar en la actividad cotidiana, incluyendo exámenes físicos o psicológicos rutinarios"
+              "label": "Minimal risk: that which does not exceed in probability or magnitude that which would be expected in daily activities, including routine physical or psychological examinations."
             },
             {
               "value": "riesgoSuperior",
-              "label": "Riesgo superior al mínimo: aquel que se produce cuando la posibilidad de daño físico, psicológico o relacionado con la invasión de la privacidad o confidencialidad es mayor que el esperado en la actitud cotidiana"
+              "label": "Risk greater than minimal: that which occurs when the possibility of physical, psychological or damage related to the invasion of privacy or confidentiality is greater than that expected in everyday behaviour."
             }
           ]
         }
@@ -36,8 +36,8 @@
         "type": "textarea",
         "hideExpression": "!model.valoracionRiesgosMolestiasCheck || !model.valoracionRiesgosMolestiasCheck.find((c) => c === 'riesgoSuperior')",
         "templateOptions": {
-          "label": "Justificar la pertinencia del estudio así como la no existencia o la no utilización de alternativas de eficacia comparable",
-          "placeholder": "Justificar la pertinencia del estudio así como la no existencia o la no utilización de alternativas de eficacia comparable",
+          "label": "Please justify the relevance of the study as well as the non-existence or non-use of alternatives of comparable efficacy",
+          "placeholder": "Please justify the relevance of the study as well as the non-existence or non-use of alternatives of comparable efficacy",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

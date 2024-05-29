@@ -5,32 +5,32 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.4.2 Exposición deliberada"
+      "label": "3.4.2 Nahitako esposizioa"
     },
     "fieldGroup": [
       {
-        "template": "<p>En esta actividad ¿se realizan tareas en las que hay intención deliberada de utilizar agentes biológicos, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?</p>"
+        "template": "<p>Jarduera honetan, zenbait zereginetan nahita erabiltzen dira agente biologikoak, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak?</p>"
       },
       {
         "key": "tareasAgentesBiologicosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
       },
       {
-        "template": "Tipo de agente biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas que se utiliza",
+        "template": "Zer motatako agente biologikoak, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak erabiltzen diren",
         "hideExpression": "!model.tareasAgentesBiologicosRadio || model.tareasAgentesBiologicosRadio === 'no'"
       },
       {
@@ -38,33 +38,33 @@
         "key": "exposicionNointencionada",
         "hideExpression": "!model.tareasAgentesBiologicosRadio || model.tareasAgentesBiologicosRadio === 'no'",
         "templateOptions": {
-          "label": "Opciones:",
+          "label": "Aukerak:",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "microorganismos",
-              "label": "Microorganismos"
+              "label": "Mikroorganismoak"
             },
             {
               "value": "cultivoscelulares",
-              "label": "Cultivos celulares"
+              "label": "Zelulen kultiboak"
             },
             {
               "value": "endoparasitos",
-              "label": "Endoparásitos"
+              "label": "Endoparasitoak"
             },
             {
               "value": "sustanciasquímicaspeligrosas",
-              "label": "Sustancias Químicas Peligrosas"
+              "label": "Substantzia kimiko arriskutsuak"
             },
             {
               "value": "sustanciasradiactivas",
-              "label": "Sustancias Radiactivas"
+              "label": "Substantzia erradioaktiboak"
             },
             {
               "value": "nanoparticulas",
-              "label": "Nanopartículas"
+              "label": "Nanopartikulak"
             }
           ]
         }

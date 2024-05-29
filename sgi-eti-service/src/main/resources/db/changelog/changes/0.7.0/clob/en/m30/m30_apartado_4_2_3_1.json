@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.3.1 Control de la exposición"
+      "label": "4.2.3.1 Exposure control"
     },
     "fieldGroup": [
       {
-        "template": "<p>Además de para las personas que realizan las tareas con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas, ¿hay riesgo de exposición para otras personas?</p>"
+        "template": "<p>In addition to people who perform tasks with biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles, is there a risk of exposure for other people?</p>"
       },
       {
         "key": "riesgoExposicion",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,13 +24,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "Especificar quienes (equipo de mantenimiento, personal de limpieza, personal del animalario, etc.) o justificar en caso negativo.",
+        "template": "Please specify who (maintenance team, cleaning staff, animal facility staff, etc.) or justify if not.",
         "hideExpression": "!model.riesgoExposicion"
       },
       {
@@ -38,7 +38,7 @@
         "type": "textarea",
         "hideExpression": "!model.riesgoExposicion",
         "templateOptions": {
-          "label": "Especificar:",
+          "label": "Please specify:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

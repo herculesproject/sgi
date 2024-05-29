@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.4 Procedimientos/Intervenciones quirúrgicos/quirúrgicas"
+      "label": "3.7.4 Surgical Procedures/Interventions"
     },
     "fieldGroup": [
       {
-        "template": "¿Van a ser sometidos a cirugía en algún momento del proceso de experimentación?"
+        "template": "Are they going to undergo surgery at any point in the experimentation process?"
       },
       {
         "key": "intervencionQuirurgicaRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -24,7 +24,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

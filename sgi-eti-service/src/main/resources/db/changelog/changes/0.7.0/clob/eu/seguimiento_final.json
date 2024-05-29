@@ -10,7 +10,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Descripción de los conocimientos obtenidos con el proyecto de investigación<\/p>"
+        "template": "<p>Descripción de los conocimientos obtenidos con el proyecto de investigación</p>"
       },
       {
         "key": "descripcion",
@@ -29,7 +29,7 @@
         }
       },
       {
-        "template": "<p>Haga un breve resumen de los resultados obtenidos con el proyecto finalizado<\/p>"
+        "template": "<p>Haga un breve resumen de los resultados obtenidos con el proyecto finalizado</p>"
       },
       {
         "key": "resumen",

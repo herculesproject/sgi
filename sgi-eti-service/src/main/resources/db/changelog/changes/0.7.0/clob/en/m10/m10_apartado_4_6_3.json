@@ -6,18 +6,18 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.6.3 Vinculación académica con el equipo investigador"
+      "label": "4.6.3 Academic link with the research team"
     },
     "hideExpression": "!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>Los estudiantes que participen ¿van a tener vinculación académica con el equipo investigador?</p>"
+        "template": "<p>Will the students who participate have an academic link with the research team?</p>"
       },
       {
         "key": "vinculacionAcademicaEquipoInvestigadorRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -26,13 +26,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "Especificar cuál es esta vinculación y justificar la necesidad de esa elección",
+        "template": "Please specify what this connection is and justify the need for that choice",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si'"
       },
       {
@@ -40,8 +40,8 @@
         "type": "textarea",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si'",
         "templateOptions": {
-          "label": "Especificar",
-          "placeholder": "Especificar",
+          "label": "Please specify",
+          "placeholder": "Please specify",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -49,18 +49,18 @@
         }
       },
       {
-        "template": "<p>¿Qué medidas especiales van a adoptarse para proteger la voluntariedad de los alumnos vinculados académicamente con el equipo investigador?</p>",
+        "template": "<p>What special measures will be adopted to protect the voluntary nature of students academically linked to the research team?</p>",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si'"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Es importante reducir al mínimo la posible influencia sobre el alumnado en el momento de la captación tanto por parte del profesorado como de la presión ejercida por el grupo.</p><ul><li><strong>Reclutamiento directo:</strong> es el que realiza el propio profesor en el aula o hablando con los alumnos, ofreciendo incentivos académicos, etc. Es lo menos recomendable, pues se produce coerción.</li><li><strong>Interposición de tercera persona no vinculada académicamente al alumnado:</strong> cuando es necesaria la captación directa se recomienda que no sea el profesor quien realice la captación, sino una tercera persona sin vinculación con el alumnado.</li><li><strong>Reclutamiento indirecto:</strong> mediante anuncios, folletos, etc.</li></ul>",
+        "template": "<p>It is important to minimise the possible influence on the students at the time of recruitment, both by the teaching staff and by the pressure exerted by the group.</p><ul><li><strong>Direct recruitment:</strong> It is what the teacher does in the classroom or speaking with the students, offering academic incentives, etc. It is the least recommended, since coercion occurs.</li><li><strong>Interposition of a third person not academically linked to the students:</strong> When direct recruitment is necessary, it is recommended that it is not the teacher who carries out the recruitment, but rather a third person with no connection to the students.</li><li><strong>Indirect recruitment:</strong> through advertisements, brochures, etc.</li></ul>",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si'"
       },
       {
-        "template": "<p>Medidas</p>",
+        "template": "<p>Measures</p>",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si'"
       },
       {
@@ -70,25 +70,25 @@
         "className": "vertical-radio",
         "required": true,
         "templateOptions": {
-          "label": "Opciones:",
+          "label": "Options:",
           "options": [
             {
               "value": "reclutamientoIndirecto",
-              "label": "Reclutamiento indirecto: Asegúrese de que está descrito en el apartado 3.4.1"
+              "label": "Indirect recruitment: Make sure it is described in section 3.4.1"
             },
             {
               "value": "interposicionTerceraPersona",
-              "label": "Interposición de tercera persona para recabar consentimiento, almacenar los datos personales y codificarlos, trato directo con el estudiante al realizar las pruebas o experimentos. Identificar y aportar documento descriptivo de sus tareas y firma de compromiso para realizarlas si procede. Describir en el apartado 3.4.1"
+              "label": "Interposition of a third person to obtain consent, store personal data and encode it, direct contact with the student when carrying out tests or experiments. Identify and provide a descriptive document of your tasks and a commitment signature to carry them out if applicable. Please describe in section 3.4.1"
             },
             {
               "value": "otras",
-              "label": "Otras"
+              "label": "Others"
             }
           ]
         }
       },
       {
-        "template": "Especificar",
+        "template": "Please specify",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si' || !model.medidasEspecialesEquipoInvestigadorRadio || model.medidasEspecialesEquipoInvestigadorRadio !== 'otras'"
       },
       {
@@ -96,8 +96,8 @@
         "type": "textarea",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si' || !model.medidasEspecialesEquipoInvestigadorRadio || model.medidasEspecialesEquipoInvestigadorRadio !== 'otras'",
         "templateOptions": {
-          "label": "Especificar",
-          "placeholder": "Especificar",
+          "label": "Please specify",
+          "placeholder": "Please specify",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -105,13 +105,13 @@
         }
       },
       {
-        "template": "<p>¿Algún miembro del equipo investigador va a calificar a los estudiantes?</p>"
+        "template": "<p>Is any member of the research team going to grade the students?</p>"
       },
       {
         "key": "calificacionEstudiantesRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Choose an option:",
           "required": true,
           "options": [
             {
@@ -120,7 +120,7 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }

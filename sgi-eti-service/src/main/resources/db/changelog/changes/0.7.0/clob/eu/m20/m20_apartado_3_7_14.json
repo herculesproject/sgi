@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.7.14 Relación y protocolo de sustancias y agentes biológicos administradas incluidas anestesia y analgesia"
+      "label": "3.7.14 Animaliei emandako substantzia eta agente biologikoen (anestesia eta analgesia barne) zerrenda eta protokoloa "
     },
     "fieldGroup": [
       {
-        "template": "Especificar a continuación el principio activo y pautas de TODAS las sustancias administradas, incluidas anestesia, analgesia y protocolo de eutanasia programada y no programada (si procede)."
+        "template": "Zehaztu animaliari emandako substantzia GUZTIEN printzipio aktiboa eta jarraibideak, horien barruan sartuta anestesia, analgesia eta eutanasia programaturako eta programatu gaberako protokoloa (hala badagokio)."
       },
       {
         "type": "table-crud",
@@ -27,11 +27,11 @@
               "key": "Tipo",
               "type": "select",
               "templateOptions": {
-                "label": "Tipo",
+                "label": "Mota",
                 "order": 10,
                 "options": [
                   {
-                    "label": "Pre-anestesia para procedimiento/intervención quirúrgica",
+                    "label": "Prozedura/esku hartze kirurgikorako aurre-anestesia",
                     "value": "1"
                   },
                   {
@@ -39,31 +39,31 @@
                     "value": "2"
                   },
                   {
-                    "label": "Anestesia intraoperatoria",
+                    "label": "Operazio barruko anestesia",
                     "value": "3"
                   },
                   {
-                    "label": "Anestesia post-operatoria",
+                    "label": "Operazio osteko anestesia",
                     "value": "4"
                   },
                   {
-                    "label": "Analgesia en intevención no quirúrgica",
+                    "label": "Esku hartze ez-kirurgikoko analgesia",
                     "value": "5"
                   },
                   {
-                    "label": "Otra sustancia del procedimiento de experimentación",
+                    "label": "Esperimentazio prozesuko beste substantzia bat",
                     "value": "6"
                   },
                   {
-                    "label": "Eutanasia programada",
+                    "label": "Eutanasia programatua",
                     "value": "7"
                   },
                   {
-                    "label": "Eutanasia no programada",
+                    "label": "Eutanasia programatu gabea",
                     "value": "8"
                   },
                   {
-                    "label": "Eutanasia (programada y no programada)",
+                    "label": "Eutanasia (programatua eta programatu gabea)",
                     "value": "9"
                   }
                 ]
@@ -73,7 +73,7 @@
               "key": "producto",
               "type": "input",
               "templateOptions": {
-                "label": "Producto (principio activo)",
+                "label": "Produktua (printzipio aktiboa)",
                 "order": 20
               }
             },
@@ -81,7 +81,7 @@
               "key": "viaAdministracion",
               "type": "input",
               "templateOptions": {
-                "label": "Vía administración",
+                "label": "Emateko modua",
                 "order": 30
               }
             },
@@ -89,7 +89,7 @@
               "key": "dosis",
               "type": "input",
               "templateOptions": {
-                "label": "Dosis",
+                "label": "Dosia",
                 "order": 40
               }
             },
@@ -97,7 +97,7 @@
               "key": "volumen",
               "type": "input",
               "templateOptions": {
-                "label": "Volumen",
+                "label": "Bolumena",
                 "order": 50
               }
             },

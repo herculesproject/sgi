@@ -6,19 +6,19 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.6.1 Justificación del uso de estudiantes"
+      "label": "4.6.1 Justification for the use of students"
     },
     "hideExpression": "!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>¿Son los estudiantes de la Universidad un grupo específico de población necesario para el proyecto?</p>"
+        "template": "<p>Are University students a specific population group necessary for the project?</p>"
       },
       {
         "key": "justificacionUsoEstudiantesRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción: ",
+          "label": "Choose an option: ",
           "options": [
             {
               "value": "no",
@@ -26,13 +26,13 @@
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Yes"
             }
           ]
         }
       },
       {
-        "template": "Motivos por los que no se plantea su sustitución",
+        "template": "Reasons why their replacement is not considered",
         "hideExpression": "!model.justificacionUsoEstudiantesRadio || model.justificacionUsoEstudiantesRadio === 'si'"
       },
       {
@@ -40,8 +40,8 @@
         "type": "textarea",
         "hideExpression": "!model.justificacionUsoEstudiantesRadio || model.justificacionUsoEstudiantesRadio === 'si'",
         "templateOptions": {
-          "label": "Motivos",
-          "placeholder": "Motivos",
+          "label": "Reasons",
+          "placeholder": "Reasons",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

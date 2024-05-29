@@ -6,26 +6,26 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.6 Acuerdo de transferencia de muestras"
+      "label": "5.6 Laginak transferitzeko hitzarmena"
     },
     "fieldGroup": [
       {
-        "template": "<p>Si su proyecto ha requerido cesión de muestras o tejidos ¿dispone del acuerdo de transferencia (MTA) correspondiente?</p>"
+        "template": "<p>Zure proiektuan beharrezkoa izan bada laginak edo ehunak lagatzea, baduzu dagokion transferentzia hitzarmena (MTA)?</p>"
       },
       {
         "key": "acuerdoTransferenciaMuestras",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": 9,
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }

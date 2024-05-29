@@ -5,12 +5,12 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1.1.3 Buenas prácticas de laboratorio"
+      "label": "4.2.1.1.3 Laborategiko jardunbide egokiak"
     },
     "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
     "fieldGroup": [
       {
-        "template": "<p>Las puertas del laboratorio están cerradas y el acceso al laboratorio se limita, a juicio del responsable del mismo, cuando losexperimentos se hallan en marcha</p>",
+        "template": "<p>Esperimentuak abian direnean, laborategiko ateak itxita daude, eta laborategirako sarrera mugatu egiten da, bertako arduradunak erabakitakoaren arabera.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -19,15 +19,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -37,8 +37,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "template": "<p>Las superficies de trabajo se descontaminan al menos una vez al día, al final de la jornada de trabajo y después de cualquier derramede material biológico</p>",
+        "template": "<p>Lan eremuak gutxienez egunean behin deskutsatzen dira, lanaldiaren amaieran, eta edozein material biologiko isuri ondoren.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -56,15 +56,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -74,8 +74,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -84,7 +84,7 @@
         }
       },
       {
-        "template": "<p>Los residuos cortantes o punzantes se recogen en contenedores adecuados resistentes</p>",
+        "template": "<p>Hondakin ebakitzaileak edo zorrotzak edukiontzi gogor egokietan biltzen dira.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -93,15 +93,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -111,8 +111,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -121,7 +121,7 @@
         }
       },
       {
-        "template": "<p>Las técnicas de manipulación se efectúan de manera que se minimice la generación de aerosoles y salpicaduras</p>",
+        "template": "<p>Ahalik eta aerosol eta zipriztin gutxien sortzeko moduan gauzatzen dira manipulazio teknikak.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -130,15 +130,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -148,8 +148,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -158,7 +158,7 @@
         }
       },
       {
-        "template": "<p>La recogida y limpieza de derrames se realiza de forma segura según procedimiento escrito</p>",
+        "template": "<p>Isuriak modu seguruan jaso eta garbitzen dira, idatzizko prozeduraren arabera.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -167,15 +167,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -185,8 +185,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -195,7 +195,7 @@
         }
       },
       {
-        "template": "<p>No está permitido comer, beber, fumar, maquillarse o llevar lentillas en el laboratorio</p>",
+        "template": "<p>Laborategian debekatuta dago jatea, edatea, erretzea, makillatzea edo lentillak eramatea.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -204,15 +204,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -222,8 +222,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -232,7 +232,7 @@
         }
       },
       {
-        "template": "<p>Estará prohibido salir del laboratorio con la ropa de trabajo y con los equipos de protección puestos</p>",
+        "template": "<p>Debekatuta egongo da laneko arropa eta babes ekipamenduak jantzita irtetea laborategitik.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -241,15 +241,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -259,8 +259,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -269,7 +269,7 @@
         }
       },
       {
-        "template": "<p>La ropa de trabajo se guarda en distinto lugar que la ropa de calle</p>",
+        "template": "<p>Laneko arropa eta kalekoa leku desberdinetan gordetzen dira.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -278,15 +278,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -296,8 +296,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -306,7 +306,7 @@
         }
       },
       {
-        "template": "<p>La recogida, manipulación, almacenamiento y el transporte de muestras, de material contaminado o de residuos se hace encontenedores específicos y con procedimientos adecuados</p>",
+        "template": "<p>Laginak, material kutsatua edo hondakinak bildu, manipulatu, biltegiratu eta garraiatzeko edukiontzi espezifikoak eta prozedura egokiak erabiltzen dira.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -315,15 +315,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -333,8 +333,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -343,7 +343,7 @@
         }
       },
       {
-        "template": "<p>En la puerta de entrada del laboratorio está colocada la señal de peligro biológico</p>",
+        "template": "<p>Laborategiko sarrerako atean ipinita dago arrisku biologikoaren seinalea.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -352,15 +352,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -370,8 +370,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -380,7 +380,7 @@
         }
       },
       {
-        "template": "<p>Los equipos del laboratorio se descontaminan después de finalizar el trabajo</p>",
+        "template": "<p>Laborategiko ekipoak deskutsatu egiten dira lana amaitzean.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -389,15 +389,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -407,8 +407,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -417,7 +417,7 @@
         }
       },
       {
-        "template": "<p>Todo derrame o accidente que tenga como consecuencia la sobreexposición del personal a material infeccioso será comunicado al responsable de seguridad</p>",
+        "template": "<p>Langileentzat material infekziosoarekiko gehiegizko esposizioa dakarren isuri edo istripu bat gertatuz gero, segurtasuneko arduradunari jakinaraziko zaio.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -426,15 +426,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -444,8 +444,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -454,7 +454,7 @@
         }
       },
       {
-        "template": "<p>Ningún material infeccioso sale del laboratorio sin descontaminar o en contenedor específico</p>",
+        "template": "<p>Inongo material infekzioso ez da laborategitik ateratzen deskutsatu gabe edo berariazko edukiontzian ez bada.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -463,15 +463,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -481,8 +481,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -491,7 +491,7 @@
         }
       },
       {
-        "template": "<p>Todas las técnicas que puedan producir aerosoles (centrifugación, mezclas, apertura de envases de materiales infecciosos a distintapresión, inserción de asas de siembra calientes en el cultivo, inyección violenta de fluidos, etc.) se realizan en una CSB</p>",
+        "template": "<p>Aerosolak sor ditzaketen teknika guztiak (zentrifugazioa, nahasteak, presio desberdinean dauden material infekziosoen ontziak irekitzea, ereite uztai beroak kultiboan sartzea, jariakinak bortizki injektatzea, etab.) SBK batean egiten dira.</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -500,15 +500,15 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
@@ -518,8 +518,8 @@
         "type": "textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Observaciones",
-          "placeholder": "Observaciones",
+          "label": "Oharrak",
+          "placeholder": "Oharrak",
           "required": false,
           "disabled": false,
           "autosize": true,
