@@ -52,6 +52,7 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
   private static final String MSG_MODEL_PROYECTO = "org.crue.hercules.sgi.csp.model.Proyecto.message";
   private static final String MSG_MODEL_PROYECTO_EQUIPO = "org.crue.hercules.sgi.csp.model.ProyectoEquipo.message";
   private static final String MSG_FECHAS_PROYECTO_EQUIPO = "proyectoEquipo.fechas";
+  private static final String MSG_PROYECTO_EQUIPO_FECHA_FIN_ANTERIOR_A_FECHA_INICIO = "proyectoEquipo.fechaFinAnteriorAFechaInicio";
   private static final String MSG_PROYECTO_EQUIPO_OVERLOAP = "proyectoEquipo.overloap";
 
   private final ProyectoEquipoRepository repository;
@@ -138,7 +139,8 @@ public class ProyectoEquipoServiceImpl implements ProyectoEquipoService {
       proyectoEquipo.setProyectoId(proyectoId);
 
       if (proyectoEquipo.getFechaInicio() != null && proyectoEquipo.getFechaFin() != null) {
-        AssertHelper.isBefore(proyectoEquipo.getFechaInicio().isBefore(proyectoEquipo.getFechaFin()));
+        Assert.isTrue(proyectoEquipo.getFechaInicio().isBefore(proyectoEquipo.getFechaFin()),
+            ApplicationContextSupport.getMessage(MSG_PROYECTO_EQUIPO_FECHA_FIN_ANTERIOR_A_FECHA_INICIO));
       }
       if (proyectoEquipo.getFechaInicio() != null && proyecto.getFechaInicio() != null) {
         Assert.isTrue(
