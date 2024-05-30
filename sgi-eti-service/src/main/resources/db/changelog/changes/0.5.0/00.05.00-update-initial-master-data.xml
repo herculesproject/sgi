@@ -49,7 +49,7 @@
       <where>:name=:value</where>
       <whereParams>
         <param name="apartado_id"
-          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Relación y protocolo de sustancias y agentes biológicos administradas incluídas anestesia y analgesia' orden=15 and padre_id=(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal'))" />
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Relación y protocolo de sustancias y agentes biológicos administradas incluídas anestesia y analgesia' and orden=15 and padre_id=(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal'))" />
       </whereParams>
     </delete>
   </changeSet>
