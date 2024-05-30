@@ -44,6 +44,16 @@
   </changeSet>
 
   <!-- FORMULARIO M20 -->
+  <changeSet context="!test" author="master" id="00.05.00-respuestas-m20">
+    <delete tableName="respuesta">
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="apartado_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where nombre = 'Relación y protocolo de sustancias y agentes biológicos administradas incluídas anestesia y analgesia' orden=15 and padre_id=(select id from ${schemaPrefix}apartado where nombre = 'Proceso de experimentación al que va a ser sometido el animal'))" />
+      </whereParams>
+    </delete>
+  </changeSet>
+
   <changeSet context="!test" author="master" id="00.05.00-apartados-m20">
     <update tableName="apartado">
       <column name="esquema" valueClobFile="clob/m20_apartado_3_6_1.json" />
