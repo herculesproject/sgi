@@ -35,6 +35,9 @@ export enum ConfigGlobal {
   SGEMP_ALTA = 'sgemp-alta',
   SGEMP_MODIFICACION = 'sgemp-modificacion',
   WEB_LANGUAGES_HEADER = 'web-languages-header',
+  REP_FONT_ES = "rep-font-es",
+  REP_FONT_EU = "rep-font-eu",
+  REP_FONT_EN = "rep-font-en",
   //TITLES
   TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS = 'title-integracion-sistemas-corporativos'
 }
@@ -66,6 +69,9 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.WEB_HEADER_LOGO_IDIOMA_EU, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_IDIOMA_EU`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_IDIOMA_EN, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_IDIOMA_EN`), module: ConfigModule.CNF }],
     [ConfigGlobal.REP_COMMON_HEADER_LOGO, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_COMMON_HEADER_LOGO`), module: ConfigModule.CNF }],
+    [ConfigGlobal.REP_FONT_ES, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_FONT_ES`), module: ConfigModule.CNF }],
+    [ConfigGlobal.REP_FONT_EU, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_FONT_EU`), module: ConfigModule.CNF }],
+    [ConfigGlobal.REP_FONT_EN, { type: ConfigType.FILE, label: marker(`adm.config.global.REP_FONT_EN`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_I18N_ES, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_ES`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_I18N_EU, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_EU`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_I18N_EN, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_I18N_EN`), module: ConfigModule.CNF }],
