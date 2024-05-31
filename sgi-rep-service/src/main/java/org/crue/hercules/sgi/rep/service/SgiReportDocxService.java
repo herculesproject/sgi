@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
+import org.crue.hercules.sgi.rep.util.SgiLocaleHelper;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -29,7 +30,10 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
+import com.lowagie.text.Font;
+import com.lowagie.text.pdf.BaseFont;
 
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -154,6 +158,26 @@ public class SgiReportDocxService {
 
   protected XWPFDocument compileReportData(InputStream is, Configure config, HashMap<String, Object> dataReport) {
     return XWPFTemplate.compile(is, config).render(dataReport).getXWPFDocument();
+  }
+
+  protected PdfOptions createCustomPdfOptions() {
+    PdfOptions pdfOptions = PdfOptions.create();
+    String lang = SgiLocaleHelper.getLang(LocaleContextHolder.getLocale());
+    byte[] fontBytes = sgiApiConfService
+        .getResource("rep-font-" + lang);
+    if (ObjectUtils.isNotEmpty(fontBytes)) {
+      String nameFont = "custom-font-" + lang + ".otf";
+      try {
+        BaseFont baseFont = BaseFont.createFont(nameFont, BaseFont.IDENTITY_H,
+            BaseFont.EMBEDDED, true, fontBytes, null);
+
+        pdfOptions.fontProvider((familyName, encoding, size, style, color) -> new Font(baseFont, size, style, color));
+      } catch (Exception e) {
+        // Si falla la fuente se coge la de por defecto del sistema
+        log.warn(e.getMessage(), e);
+      }
+    }
+    return pdfOptions;
   }
 
 }

@@ -84,7 +84,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
           getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE), lang);
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
-      PdfOptions pdfOptions = PdfOptions.create();
+      PdfOptions pdfOptions = createCustomPdfOptions();
 
       PdfConverter.getInstance().convert(document, outputPdf, pdfOptions);
 

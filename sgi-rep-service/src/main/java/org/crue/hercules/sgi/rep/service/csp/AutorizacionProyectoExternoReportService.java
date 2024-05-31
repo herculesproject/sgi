@@ -175,7 +175,7 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
           getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
-      PdfOptions pdfOptions = PdfOptions.create();
+      PdfOptions pdfOptions = createCustomPdfOptions();
 
       PdfConverter.getInstance().convert(document, outputPdf, pdfOptions);
 

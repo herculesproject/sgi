@@ -127,7 +127,7 @@ public class MXXReportService extends SgiReportDocxService {
       XWPFDocument document = getDocument(dataReport, getReportDefinitionStream(reportMXX.getPath() + SUFIJO_LANGUAGE));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
-      PdfOptions pdfOptions = PdfOptions.create();
+      PdfOptions pdfOptions = createCustomPdfOptions();
 
       PdfConverter.getInstance().convert(document, outputPdf, pdfOptions);
 
