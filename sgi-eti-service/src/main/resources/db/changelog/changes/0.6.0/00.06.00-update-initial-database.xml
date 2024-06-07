@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+  <changeSet context="!test" author="master" id="00.06.00-REMOVE_ACCENTS_FUNCTION">
+    <sqlFile encoding="utf8"
+      dbms="oracle"
+      path="sql/remove-accents-function.sql"
+      relativeToChangelogFile="true"
+      splitStatements="false"
+      stripComments="false"
+    />
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="00.06.00-STRIP_HTML_FUNCTION">
+    <sqlFile encoding="utf8"
+      dbms="oracle"
+      path="sql/strip-html-function.sql"
+      relativeToChangelogFile="true"
+      splitStatements="false"
+      stripComments="false"
+    />
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="00.06.00-GET_ALL_JSON_VALUES_FUNCTION">
+    <sqlFile encoding="utf8"
+      dbms="oracle"
+      path="sql/get-all-json-values-function.sql"
+      relativeToChangelogFile="true"
+      splitStatements="false"
+      stripComments="false"
+    />
+  </changeSet>
+</databaseChangeLog>
