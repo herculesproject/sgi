@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { CookieService } from 'ngx-cookie-service';
+import { Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 export class Language {
@@ -22,6 +23,10 @@ export const LANGUAGE_MAP: Map<Language, string> = new Map([
 ]);
 
 export class LocaleId extends String {
+  get onChange$(): Subject<string> {
+    return this.languageService.languageChange$;
+  }
+
   constructor(private languageService: LanguageService) {
     super();
   }
@@ -43,7 +48,7 @@ export class LanguageService {
 
   private language: Language = Language.ES;
   private readonly COOKIE_PATH: string = '/';
-  languageChange$: BehaviorSubject<String> = new BehaviorSubject<String>(Language.ES.code);
+  readonly languageChange$: BehaviorSubject<string> = new BehaviorSubject<string>(Language.ES.code);
 
   constructor(
     private readonly cookieService: CookieService
@@ -90,6 +95,7 @@ export class LanguageService {
   public switchLanguage(language: Language): void {
     this.cookieService.set('sgi-locale', language.code, { path: this.COOKIE_PATH, sameSite: 'Strict' });
     this.language = language;
+    this.languageChange$.next(this.language.code);
   }
 
 }
