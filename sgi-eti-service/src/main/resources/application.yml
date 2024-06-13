@@ -44,7 +44,7 @@ spring:
     properties:
       hibernate:
         # We use a H2 database with PostgreSQL compatibility mode
-        dialect: org.crue.hercules.sgi.eti.repository.functions.CustomPostgreSQL9Dialect
+        dialect: org.crue.hercules.sgi.eti.repository.dialect.SgiH2Dialect
         # Set default Hibernate schema
         '[default_schema]': ${spring.datasource.username}
         jdbc:
@@ -310,8 +310,6 @@ spring:
   jpa:
     properties:
       hibernate:
-      # We use a Oracle database
-      dialect: org.crue.hercules.sgi.eti.repository.functions.CustomOracle12cDialect
       # Set default Hibernate Schema
       '[default_schema]': test
   liquibase:
