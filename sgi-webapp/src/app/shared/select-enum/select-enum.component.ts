@@ -46,6 +46,8 @@ export class SelectEnumComponent extends SelectCommonComponent<string> {
     this.displayWith = (option) => {
       return !!option ? this.translateService.instant(this.enumMap.get(option)) : '';
     };
+
+    this.subscriptions.push(this.translateService.onLangChange.subscribe(() => this.refreshDisplayValue()));
   }
 
 }

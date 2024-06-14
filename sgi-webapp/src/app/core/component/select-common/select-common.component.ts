@@ -282,9 +282,7 @@ export abstract class SelectCommonComponent<T>
   }
   set displayWith(fn: (option: T) => string) {
     this._displayWith = fn;
-    if (this.ready) {
-      this.refreshDisplayValue();
-    }
+    this.refreshDisplayValue();
   }
   // tslint:disable-next-line: variable-name
   private _displayWith: (option: T) => string = (option) => `${option}`;
@@ -407,9 +405,11 @@ export abstract class SelectCommonComponent<T>
     });
   }
 
-  private refreshDisplayValue(): void {
-    this.selectValues.forEach((value => value.displayText = this.displayWith(value.item)));
-    this.selectValues.sort(this.sortWith);
+  protected refreshDisplayValue(): void {
+    if (this.ready) {
+      this.selectValues.forEach((value => value.displayText = this.displayWith(value.item)));
+      this.selectValues.sort(this.sortWith);
+    }
   }
 
   private refreshDisableValue(): void {
