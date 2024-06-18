@@ -114,7 +114,7 @@ export class ProyectoCalendarioFacturacionListadoExportService
 
       return this.facturaPrevistaEmitidaService.findAll({ filter }).pipe(
         map((facturasEmitidas) => {
-          if (facturasEmitidas.items.length === 1) {
+          if (facturasEmitidas.items.length > 0) {
             proyectoCalendarioFacturacion.numeroFacturaEmitida = facturasEmitidas.items[0]?.numeroFactura;
           }
           return proyectoCalendarioFacturacion;

@@ -77,7 +77,7 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
       }).subscribe(({ itemsFacturacion, facturasPrevistasEmitidas }) => {
 
         const itemsFacturacionWrapped = itemsFacturacion.map(item => {
-          item.facturaEmitida = facturasPrevistasEmitidas.find(factura => factura.numeroPrevision === item.numeroPrevision);
+          item.facturaEmitida = facturasPrevistasEmitidas.find(factura => factura.numeroPrevision === item.numeroPrevision?.toString());
           item.numeroFacturaEmitida = item.facturaEmitida?.numeroFactura;
           return new StatusWrapper(item);
         })
