@@ -13,7 +13,7 @@
       <mat-label>{{'eti.acta.asistente.asistencia' | translate}}</mat-label>
       <mat-radio-group class="radio-inline" name="opciones" formControlName="asistencia">
         <mat-radio-button color="primary" *ngFor="let estado of estados" name="opciones" [value]="estado.value">
-          {{estado.label}}
+          {{estado.label | translate}}
         </mat-radio-button>
       </mat-radio-group>
     </div>

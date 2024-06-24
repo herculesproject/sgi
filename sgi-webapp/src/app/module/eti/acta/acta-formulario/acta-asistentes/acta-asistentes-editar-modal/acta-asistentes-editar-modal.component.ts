@@ -22,8 +22,8 @@ export class ActaAsistentesEditarModalComponent extends DialogFormComponent<IAsi
 
   estados =
     [
-      { label: 'Sí', value: true },
-      { label: 'No', value: false }
+      { label: 'label.si', value: true },
+      { label: 'label.no', value: false }
     ];
 
   msgParamMotivoEntity = {};
