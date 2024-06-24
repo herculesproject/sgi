@@ -2443,7 +2443,7 @@
   "label.page.items": "Elementuak orriko:",
   "label.page.last": "Azken orria",
   "label.page.next": "Hurrengo orria",
-  "label.page.of": "__-(e)tik __.a",
+  "label.page.of": "/",
   "label.page.prev": "Aurreko orria",
   "label.search.too-many-results": "Emaitza gehiegi. Mesedez, findu bilaketa.",
   "label.select-email-recipients.add": "Gehitu hartzailea…",
