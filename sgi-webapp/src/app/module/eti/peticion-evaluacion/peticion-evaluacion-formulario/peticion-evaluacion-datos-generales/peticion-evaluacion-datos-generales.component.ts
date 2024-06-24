@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -13,7 +13,7 @@ import { TipoActividadService } from '@core/services/eti/tipo-actividad.service'
 import { TipoInvestigacionTuteladaService } from '@core/services/eti/tipo-investigacion-tutelada.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiCkEditorConfig } from '@shared/sgi-ckeditor-config';
+import { CKEDITOR_CONFIG, CkEditorConfig } from '@shared/sgi-ckeditor-config';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -50,7 +50,6 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   public readonly CkEditor = Editor;
-  public readonly configCkEditor = SgiCkEditorConfig.defaultConfig;
 
   FormGroupUtil = FormGroupUtil;
   fxFlexProperties: FxFlexProperties;
@@ -98,7 +97,8 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     private readonly tipoActividadService: TipoActividadService,
     private readonly tipoInvestigacionTuteladaService: TipoInvestigacionTuteladaService,
     private actionService: PeticionEvaluacionActionService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    @Inject(CKEDITOR_CONFIG) public readonly configCkEditor: CkEditorConfig
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();

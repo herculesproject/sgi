@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -15,7 +15,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
-import { SgiCkEditorConfig } from '@shared/sgi-ckeditor-config';
+import { CKEDITOR_CONFIG, CkEditorConfig } from '@shared/sgi-ckeditor-config';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription, of } from 'rxjs';
@@ -42,7 +42,6 @@ const CONVOCATORIA_CONVOCANTES_KEY = marker('eti.convocatoria-reunion.convocante
 })
 export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComponent<IConvocatoriaReunion> implements OnInit, OnDestroy {
   public readonly CkEditor = Editor;
-  public readonly configCkEditor = SgiCkEditorConfig.defaultConfig
 
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesInline: FxFlexProperties;
@@ -70,7 +69,8 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     private personaService: PersonaService,
     private actionService: ConvocatoriaReunionActionService,
     private convocatoriaReunionService: ConvocatoriaReunionService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    @Inject(CKEDITOR_CONFIG) public readonly configCkEditor: CkEditorConfig
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formFragment = this.fragment as ConvocatoriaReunionDatosGeneralesFragment;

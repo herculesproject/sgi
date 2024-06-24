@@ -1,5 +1,5 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es';
 import localeEu from '@angular/common/locales/eu';
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
@@ -11,6 +11,7 @@ import { SgiErrorHttpInterceptor } from '@core/error-http-interceptor';
 import { SgiLanguageHttpInterceptor } from '@core/languague-http-interceptor';
 import { SgiRequestHttpInterceptor } from '@core/request-http-interceptor';
 import { ResourcePublicService } from '@core/services/cnf/resource-public.service';
+import { Language, LanguageService, LocaleId } from '@core/services/language.service';
 import { TimeZoneService } from '@core/services/timezone.service';
 import { TIME_ZONE } from '@core/time-zone';
 import { environment } from '@env';
@@ -18,18 +19,18 @@ import { AppMatPaginatorIntl } from '@material/app-mat-paginator-intl';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FormlyModule } from '@ngx-formly/core';
 import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { SgiAuthMode, SgiAuthModule, SGI_AUTH_CONFIG } from '@sgi/framework/auth';
+import { SGI_AUTH_CONFIG, SgiAuthMode, SgiAuthModule } from '@sgi/framework/auth';
+import { CKEDITOR_CONFIG, CkEditorConfig, DEFAULT_CKEDITOR_CONFIG } from '@shared/sgi-ckeditor-config';
+import { CookieService } from 'ngx-cookie-service';
 import { LoggerModule } from 'ngx-logger';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
-import { forkJoin, Observable, of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BlockModule } from './block/block.module';
 import { ConfigService } from './core/services/config.service';
 import { HomeComponent } from './home/home.component';
-import { Language, LanguageService, LocaleId } from '@core/services/language.service';
-import { CookieService } from 'ngx-cookie-service';
 
 export class SgiTranslateLoader implements TranslateLoader {
   constructor(
@@ -150,6 +151,23 @@ const appInitializerFn = (appConfig: ConfigService) => {
       provide: TIME_ZONE,
       useFactory: (timeZoneService: TimeZoneService) => timeZoneService.zone$,
       deps: [TimeZoneService]
+    },
+    {
+      provide: CKEDITOR_CONFIG,
+      useFactory: (languageService: LanguageService) => {
+        const defaultConfig = { ...DEFAULT_CKEDITOR_CONFIG }
+        //CkEditor internally use the spread operator. Because spread operator won't work for class getter/setter properties we need to use anonymous object. 
+        //See https://github.com/microsoft/TypeScript/issues/26547
+        return {
+          toolbar: defaultConfig.toolbar,
+          link: defaultConfig.link,
+          get language() {
+            return languageService.getLanguageCode();
+          },
+          table: defaultConfig.table
+        } as CkEditorConfig
+      },
+      deps: [LanguageService]
     }
   ],
   bootstrap: [AppComponent]
