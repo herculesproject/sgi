@@ -70,9 +70,9 @@ export class GrupoEquipoInvestigacionFragment extends Fragment {
               mergeMap(element => {
                 const filter = new RSQLSgiRestFilter(
                   'fechaObtencion', SgiRestFilterOperator.LOWER_OR_EQUAL,
-                  LuxonUtils.toBackend(element.value.fechaFin) ?? LuxonUtils.toBackend(element.value.fechaInicio)
+                  LuxonUtils.toBackend(element.value.fechaFin, true) ?? LuxonUtils.toBackend(element.value.fechaInicio, true)
                 ).and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL,
-                  LuxonUtils.toBackend(element.value.fechaFin) ?? LuxonUtils.toBackend(element.value.fechaInicio));
+                  LuxonUtils.toBackend(element.value.fechaFin, true) ?? LuxonUtils.toBackend(element.value.fechaInicio, true));
                 const options: SgiRestFindOptions = {
                   filter
                 };
@@ -199,9 +199,9 @@ export class GrupoEquipoInvestigacionFragment extends Fragment {
   private getVinculacionPersona(element: IGrupoEquipoListado): Observable<IGrupoEquipoListado> {
     const filter = new RSQLSgiRestFilter(
       'fechaObtencion', SgiRestFilterOperator.LOWER_OR_EQUAL,
-      LuxonUtils.toBackend(element.fechaFin) ?? LuxonUtils.toBackend(element.fechaInicio)
+      LuxonUtils.toBackend(element.fechaFin, true) ?? LuxonUtils.toBackend(element.fechaInicio, true)
     ).and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL,
-      LuxonUtils.toBackend(element.fechaFin) ?? LuxonUtils.toBackend(element.fechaInicio));
+      LuxonUtils.toBackend(element.fechaFin, true) ?? LuxonUtils.toBackend(element.fechaInicio, true));
     const options: SgiRestFindOptions = {
       filter
     };
