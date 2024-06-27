@@ -27,7 +27,7 @@ import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.serv
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
-import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { FormlyFormOptions } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, from, merge, of, zip } from 'rxjs';
@@ -878,19 +878,16 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   }
 
   public refreshBlockChanges() {
-    this.blocks$.value.forEach((block) => {
-      block.formlyData.fields.forEach((f) => {
-        if (f.group) {
-          f.group.refreshInitialState();
-        }
-      });
-    });
+    this.subscriptions.push(this.loadFormulario(this.tipoEvaluacion, this.comite).subscribe());
   }
 
   private cleanFieldGroup(formlyFieldConfig: SgiFormlyFieldConfig[]): SgiFormlyFieldConfig[] {
-    formlyFieldConfig.forEach((f, index) => {
-      if (f.fieldGroup && f.fieldGroup.length > 0) {
-        formlyFieldConfig.splice(index, 1)
+    let deleted = 0;
+    const formFieldConfigArray = [...formlyFieldConfig];
+    formFieldConfigArray.forEach((f, index) => {
+      if (f.fieldGroup && f.fieldGroup.length > 0 && f.type !== "table-crud") {
+        formlyFieldConfig.splice(index - deleted, 1)
+        deleted++;
       }
     })
     return formlyFieldConfig;
