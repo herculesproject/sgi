@@ -6,7 +6,7 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3. 5 Giza jatorriko lagin biologikoak"
+      "label": "3.5 Giza jatorriko lagin biologikoak"
     },
     "fieldGroup": [
       {

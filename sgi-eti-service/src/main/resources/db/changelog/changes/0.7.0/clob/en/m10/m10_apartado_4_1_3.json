@@ -8,7 +8,7 @@
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
       "label": "4.1.3 Minimisation of risk or inconvenience greater than the minimum"
     },
-    "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
+    "hideExpression": "(!formState.mainModel.ap4_1.ap4_1_1 || !formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck || formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.some((c) => c === 'sinRiesgoPorTratarseDeDatos')) || (!formState.mainModel.ap4_1.ap4_1_2 || !formState.mainModel.ap4_1.ap4_1_2.valoracionRiesgosMolestiasCheck || !formState.mainModel.ap4_1.ap4_1_2.valoracionRiesgosMolestiasCheck.some(r => r === 'riesgoSuperior'))",
     "fieldGroup": [
       {
         "template": "<p>What mechanisms have been planned to reduce the risk or inconvenience that has been classified as above the minimum?</p>"

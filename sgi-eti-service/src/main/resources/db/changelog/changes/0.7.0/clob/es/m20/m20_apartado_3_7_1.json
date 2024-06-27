@@ -21,7 +21,7 @@
         "key": "descripcionProcedimientoIntervencion",
         "type": "ckeditor",
         "templateOptions": {
-          "name": " Prozeduraren/esku hartzearen deskribapena",
+          "name": "Prozeduraren/esku hartzearen deskribapena",
           "required": false
         }
       },
@@ -96,6 +96,13 @@
             }
           ]
         }
+      },
+      {
+        "wrappers": [
+          "warn-div"
+        ],
+        "hideExpression": "!model.procedimientoIntervencionMedidaCorrectoraTable.length > 0",
+        "template": "<p>Si modifica los procedimientos/intervenciones o su severidad, recuerde revisar y actualizar la tabla del apartado 4.2.1</p>"
       }
     ]
   }
