@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { TIPO_ACTIVIDAD_MAP } from '@core/models/eti/tipo-actividad';
+import { TIPO_INVESTIGACION_TUTELADA_MAP } from '@core/models/eti/tipo-investigacion-tutelada';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { IPersona } from '@core/models/sgp/persona';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
@@ -137,8 +139,8 @@ export class PeticionEvaluacionGeneralListadoExportService extends
       peticionData.codigo ?? '',
       peticionData.codigoSolicitudConvocatoria ?? '',
       peticionData.titulo ?? '',
-      peticionData.tipoActividad?.nombre ?? '',
-      peticionData.tipoInvestigacionTutelada?.nombre ?? '',
+      peticionData.tipoActividad?.id ? this.translate.instant(TIPO_ACTIVIDAD_MAP.get(peticionData.tipoActividad?.id)) : '',
+      peticionData.tipoInvestigacionTutelada?.id ? this.translate.instant(TIPO_INVESTIGACION_TUTELADA_MAP.get(peticionData.tipoInvestigacionTutelada?.id)) : '',
       peticionData.fuenteFinanciacion ?? '',
       peticionData.importeFinanciacion ?? '',
       LuxonUtils.toBackend(peticionData.fechaInicio) ?? '',

@@ -5,8 +5,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_FINANCIACION_MAP, IPeticionEvaluacion, TIPO_VALOR_SOCIAL_MAP } from '@core/models/eti/peticion-evaluacion';
-import { ITipoActividad } from '@core/models/eti/tipo-actividad';
-import { ITipoInvestigacionTutelada } from '@core/models/eti/tipo-investigacion-tutelada';
+import { ITipoActividad, TIPO_ACTIVIDAD_MAP } from '@core/models/eti/tipo-actividad';
+import { ITipoInvestigacionTutelada, TIPO_INVESTIGACION_TUTELADA_MAP } from '@core/models/eti/tipo-investigacion-tutelada';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TipoActividadService } from '@core/services/eti/tipo-actividad.service';
@@ -92,6 +92,22 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   get tipoColectivoTutor() {
     return TipoColectivo.TUTOR_CSP;
   }
+
+  readonly displayerTipoActividad = (option: ITipoActividad): string => {
+    return option?.id
+      ? (TIPO_ACTIVIDAD_MAP.get(option.id)
+        ? this.translate.instant(TIPO_ACTIVIDAD_MAP.get(option.id))
+        : option?.nombre ?? '')
+      : option?.nombre ?? '';
+  };
+
+  readonly displayerTipoInvestigacionTutelada = (option: ITipoInvestigacionTutelada): string => {
+    return option?.id
+      ? (TIPO_INVESTIGACION_TUTELADA_MAP.get(option.id)
+        ? this.translate.instant(TIPO_INVESTIGACION_TUTELADA_MAP.get(option.id))
+        : option?.nombre ?? '')
+      : option?.nombre ?? '';
+  };
 
   constructor(
     private readonly tipoActividadService: TipoActividadService,

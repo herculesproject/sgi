@@ -6,6 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TIPO_CONVOCATORIA_REUNION } from '@core/models/eti/tipo-convocatoria-reunion';
+import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
+import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConfigService } from '@core/services/cnf/config.service';
@@ -48,6 +50,14 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
 
   get TIPO_CONVOCATORIA() {
     return TIPO_CONVOCATORIA_REUNION;
+  }
+
+  get TIPO_EVALUACION_MAP() {
+    return TIPO_EVALUACION_MAP;
+  }
+
+  get TIPO_MEMORIA_MAP() {
+    return TIPO_MEMORIA_MAP;
   }
 
   constructor(

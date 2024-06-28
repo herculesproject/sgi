@@ -10,7 +10,7 @@ import { IBaseExportModalData } from '@core/component/base-export/base-export-mo
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IActaWithNumEvaluaciones } from '@core/models/eti/acta-with-num-evaluaciones';
-import { ESTADO_ACTA_MAP } from '@core/models/eti/tipo-estado-acta';
+import { ESTADO_ACTA_MAP, TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -19,7 +19,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { DialogService } from '@core/services/dialog.service';
 import { ActaService } from '@core/services/eti/acta.service';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { TipoEstadoActaService } from '@core/services/eti/tipo-estado-acta.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -28,11 +28,8 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ActaListadoExportModalComponent } from '../modals/acta-listado-export-modal/acta-listado-export-modal.component';
-import { IInforme } from '@core/models/eti/informe';
-import { LanguageService } from '@core/services/language.service';
-import { IActaDocumento } from '@core/models/eti/acta-documento';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_FINALIZAR_ERROR = marker('error.eti.acta.finalizar');
@@ -67,6 +64,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   actas$: Observable<IActaWithNumEvaluaciones[]> = of();
+  tiposEstadoActa$: Observable<TipoEstadoActa[]>;
 
   textoCrear: string;
   private textoFinalizarError: string;
@@ -96,6 +94,14 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
   private isModuleInv: boolean;
   private isRolEvaluador: boolean;
 
+  readonly displayerEstadoActa = (option: TipoEstadoActa): string => {
+    return option?.id
+      ? (ESTADO_ACTA_MAP.get(option.id)
+        ? this.translate.instant(ESTADO_ACTA_MAP.get(option.id))
+        : option?.nombre ?? '')
+      : option?.nombre ?? '';
+  };
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly actasService: ActaService,
@@ -105,10 +111,9 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     private readonly matDialog: MatDialog,
     private readonly cnfService: ConfigService,
     private readonly route: ActivatedRoute,
-    private readonly evaluacionService: EvaluacionService,
     private readonly dialogService: DialogService,
     private readonly authService: SgiAuthService,
-    private readonly languageService: LanguageService
+    private readonly tipoEstadoActaService: TipoEstadoActaService
   ) {
     super(translate);
 
@@ -131,7 +136,6 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
   ngOnInit(): void {
     super.ngOnInit();
 
-
     this.formGroup = new FormGroup({
       comite: new FormControl(null),
       fechaEvaluacionInicio: new FormControl(null, []),
@@ -145,6 +149,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
         this.limiteRegistrosExportacionExcel = value;
       }));
 
+    this.loadTiposEstadoActa();
   }
 
   protected setupI18N(): void {
@@ -384,6 +389,11 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
         aceptado = false;
       });
     this.suscripciones.push(enviarComentariosDialogSubscription);
+  }
+
+  private loadTiposEstadoActa(): void {
+    this.tiposEstadoActa$ = this.tipoEstadoActaService.findAll().pipe(
+      map(response => response.items));
   }
 
 }

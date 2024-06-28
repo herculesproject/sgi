@@ -31,7 +31,8 @@
         <mat-form-field>
           <mat-label>{{'eti.memoria.tipo' | translate}}</mat-label>
           <sgi-select-entity #selectTipoMemoria formControlName="tipoMemoria" required
-            [resetOnChange]="selectComite.selectionChange" [options]="tiposMemoria$ | async"></sgi-select-entity>
+            [resetOnChange]="selectComite.selectionChange" [options]="tiposMemoria$ | async"
+            [displayWith]="displayerTipoMemoria"></sgi-select-entity>
           <mat-error *ngIf="formGroup.controls.tipoMemoria.errors?.required">
             {{'error.required.entity' | translate:msgParamTipoMemoriaEntity}}
           </mat-error>

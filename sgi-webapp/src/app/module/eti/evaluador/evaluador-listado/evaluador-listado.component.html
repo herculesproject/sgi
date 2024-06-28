@@ -76,7 +76,7 @@
       <!-- Cargo comite Column -->
       <ng-container matColumnDef="cargoComite">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.cargo-comite' | translate}} </th>
-        <td mat-cell *matCellDef="let evaluador"> {{evaluador.cargoComite?.nombre}} </td>
+        <td mat-cell *matCellDef="let evaluador"> {{ CARGO_COMITE_MAP.get(evaluador.cargoComite?.id) | translate}} </td>
       </ng-container>
 
       <!-- Fecha alta Column -->

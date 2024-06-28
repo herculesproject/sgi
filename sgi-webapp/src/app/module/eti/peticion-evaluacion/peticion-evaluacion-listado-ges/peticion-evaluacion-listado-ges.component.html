@@ -32,8 +32,7 @@
       <!-- Estado Memoria -->
       <mat-form-field fxFlex="20%">
         <mat-label>{{'eti.peticion-evaluacion.estado-memoria' | translate}}</mat-label>
-        <sgi-select-enum formControlName="tipoEstadoMemoria" [enumMap]="ESTADO_MEMORIA_MAP">
-        </sgi-select-enum>
+        <sgi-select-tipo-estado-memoria formControlName="tipoEstadoMemoria"></sgi-select-tipo-estado-memoria>
       </mat-form-field>
 
       <!-- Comité -->

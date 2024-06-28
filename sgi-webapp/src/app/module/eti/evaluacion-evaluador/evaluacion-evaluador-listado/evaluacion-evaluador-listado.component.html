@@ -94,7 +94,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'eti.evaluacion.tipo-evaluacion' | translate}}
         </th>
-        <td mat-cell *matCellDef="let evaluacion">{{evaluacion.tipoEvaluacion.nombre | translate}}
+        <td mat-cell *matCellDef="let evaluacion">
+          {{TIPO_EVALUACION_MAP.get(evaluacion.tipoEvaluacion?.id) | translate}}
         </td>
       </ng-container>
 
@@ -103,7 +104,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'eti.evaluacion.tipo-memoria' | translate}}
         </th>
-        <td mat-cell *matCellDef="let evaluacion">{{evaluacion.memoria?.tipoMemoria?.nombre | translate}}
+        <td mat-cell *matCellDef="let evaluacion">
+          {{TIPO_MEMORIA_MAP.get(evaluacion?.memoria?.tipoMemoria?.id) | translate}}
         </td>
       </ng-container>
 

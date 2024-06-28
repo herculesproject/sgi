@@ -4,6 +4,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectCommonComponent } from '@core/component/select-common/select-common.component';
 import { EntityKey } from '@core/component/select-service/select-service.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-select-entity',
@@ -20,6 +21,7 @@ export class SelectEntityComponent extends SelectCommonComponent<EntityKey> {
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
+    private translateService: TranslateService,
     @Self() @Optional() ngControl: NgControl) {
     super(defaultErrorStateMatcher, ngControl);
 
@@ -36,6 +38,8 @@ export class SelectEntityComponent extends SelectCommonComponent<EntityKey> {
 
     // Override default sortWith
     this.sortWith = (o1, o2) => o1?.displayText?.localeCompare(o2?.displayText);
+
+    this.subscriptions.push(this.translateService.onLangChange.subscribe(() => this.refreshDisplayValue()));
   }
 
 }

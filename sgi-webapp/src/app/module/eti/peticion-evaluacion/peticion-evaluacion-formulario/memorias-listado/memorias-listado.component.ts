@@ -9,7 +9,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { COMITE } from '@core/models/eti/comite';
 import { ESTADO_RETROSPECTIVA } from '@core/models/eti/estado-retrospectiva';
 import { IMemoria } from '@core/models/eti/memoria';
-import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
+import { ESTADO_MEMORIA, ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -77,6 +77,10 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
 
   get isModuleInv(): boolean {
     return this.listadoFragment.isModuleInv;
+  }
+
+  get ESTADO_MEMORIA_MAP() {
+    return ESTADO_MEMORIA_MAP;
   }
 
   constructor(

@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -11,7 +11,7 @@ import { FORMULARIO } from '@core/models/eti/formulario';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
-import { TipoTarea } from '@core/models/eti/tipo-tarea';
+import { TIPO_TAREA_MAP, TipoTarea } from '@core/models/eti/tipo-tarea';
 import { IPersona } from '@core/models/sgp/persona';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { FormacionEspecificaService } from '@core/services/eti/formacion-especifica.service';
@@ -80,6 +80,8 @@ export class PeticionEvaluacionTareasModalComponent
   get MSG_PARAMS() {
     return MSG_PARAMS;
   }
+
+  readonly displayerTipoTarea = (option) => option?.id ? (TIPO_TAREA_MAP.get(option.id) ? this.translate.instant(TIPO_TAREA_MAP.get(option.id)) : (option?.nombre ?? '')) : (option?.nombre ?? '');
 
   constructor(
     matDialogRef: MatDialogRef<PeticionEvaluacionTareasModalComponent>,

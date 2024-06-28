@@ -70,7 +70,8 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.evaluador.cargo-comite' | translate}}</mat-label>
-        <sgi-select-entity formControlName="cargoComite" [options]="cargosComite$ | async" required>
+        <sgi-select-entity formControlName="cargoComite" [options]="cargosComite$ | async"
+          [displayWith]="displayerCargoComite" required>
         </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.cargoComite.errors?.required">
           {{'error.required.entity' | translate:msgParamCargoComiteEntity}}

@@ -4,7 +4,7 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
-import { ITipoMemoria } from '@core/models/eti/tipo-memoria';
+import { ITipoMemoria, TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,6 +44,18 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
 
   private subscriptions: Subscription[] = [];
 
+  get TIPO_MEMORIA_MAP() {
+    return TIPO_MEMORIA_MAP;
+  }
+
+  readonly displayerTipoMemoria = (option: ITipoMemoria): string => {
+    return option?.id
+      ? (TIPO_MEMORIA_MAP.get(option.id)
+        ? this.translate.instant(TIPO_MEMORIA_MAP.get(option.id))
+        : option?.nombre ?? '')
+      : option?.nombre ?? '';
+  };
+
   constructor(
     private readonly comiteService: ComiteService,
     public actionService: MemoriaActionService,
@@ -62,7 +74,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
         if (comite) {
           this.subscriptions.push(this.comiteService.findTipoMemoria(comite.id).subscribe(
             (res) => {
-              this.tiposMemoria$.next(res.items);
+              this.tiposMemoria$.next(res.items)
             }
           ));
         }
@@ -150,4 +162,5 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   displayerComite(comite: IComite): string {
     return comite?.nombreInvestigacion;
   }
+
 }

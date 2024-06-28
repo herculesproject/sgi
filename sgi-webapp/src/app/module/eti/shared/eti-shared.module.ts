@@ -8,15 +8,17 @@ import { ComentariosGeneralesFormlyComponent } from './comentarios-generales-for
 import { SelectComiteComponent } from './select-comite/select-comite.component';
 import { SelectEvaluadorComponent } from './select-evaluador/select-evaluador.component';
 import { SelectTipoConvocatoriaReunionComponent } from './select-tipo-convocatoria-reunion/select-tipo-convocatoria-reunion.component';
+import { SelectTipoEstadoMemoriaComponent } from './select-tipo-estado-memoria/select-tipo-estado-memoria.component';
 import { SelectTipoEvaluacionComponent } from './select-tipo-evaluacion/select-tipo-evaluacion.component';
 
 @NgModule({
   declarations: [
     SelectComiteComponent,
     SelectEvaluadorComponent,
+    ComentariosGeneralesFormlyComponent,
     SelectTipoConvocatoriaReunionComponent,
     SelectTipoEvaluacionComponent,
-    ComentariosGeneralesFormlyComponent
+    SelectTipoEstadoMemoriaComponent
   ],
   imports: [
     SharedModule,
@@ -29,9 +31,10 @@ import { SelectTipoEvaluacionComponent } from './select-tipo-evaluacion/select-t
   exports: [
     SelectComiteComponent,
     SelectEvaluadorComponent,
+    ComentariosGeneralesFormlyComponent,
     SelectTipoConvocatoriaReunionComponent,
     SelectTipoEvaluacionComponent,
-    ComentariosGeneralesFormlyComponent
+    SelectTipoEstadoMemoriaComponent
   ]
 })
 export class EtiSharedModule { }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { TIPO_CONVOCATORIA_REUNION_MAP } from '@core/models/eti/tipo-convocatoria-reunion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
@@ -72,7 +73,7 @@ export class ConvocatoriaReunionGeneralListadoExportService extends
       convocatoriaData.comite?.comite ?? '',
       LuxonUtils.toBackend(convocatoriaData.fechaEvaluacion) ?? '',
       convocatoriaData.codigo ?? '',
-      convocatoriaData.tipoConvocatoriaReunion?.nombre ?? '',
+      convocatoriaData.tipoConvocatoriaReunion?.id ? TIPO_CONVOCATORIA_REUNION_MAP.get(convocatoriaData.tipoConvocatoriaReunion?.id) : '',
       convocatoriaData.ordenDia ?? '',
     ];
   }

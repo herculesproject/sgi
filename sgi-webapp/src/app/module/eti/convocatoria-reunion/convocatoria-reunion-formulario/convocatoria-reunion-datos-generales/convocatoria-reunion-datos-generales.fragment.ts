@@ -13,7 +13,7 @@ import { DateValidator } from '@core/validators/date-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, from, Observable, of } from 'rxjs';
+import { EMPTY, Observable, from, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 
 export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<IConvocatoriaReunionDatosGenerales> {

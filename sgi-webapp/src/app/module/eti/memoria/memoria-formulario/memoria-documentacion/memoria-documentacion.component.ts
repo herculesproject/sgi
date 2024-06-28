@@ -19,7 +19,7 @@ import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/do
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaDocumentacionMemoriaModalComponent, MemoriaDocumentacionMemoriaModalData } from '../../modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';

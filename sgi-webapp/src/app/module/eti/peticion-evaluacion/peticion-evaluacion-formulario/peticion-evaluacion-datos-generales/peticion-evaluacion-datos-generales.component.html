@@ -39,7 +39,8 @@
       <!-- Tipo de actividad-->
       <mat-form-field fxFlex="28%">
         <mat-label>{{'eti.peticion-evaluacion.tipo-actividad' | translate}}</mat-label>
-        <sgi-select-entity formControlName="tipoActividad" [options]="tipoActividades$ | async" required>
+        <sgi-select-entity formControlName="tipoActividad" [options]="tipoActividades$ | async"
+          [displayWith]="displayerTipoActividad" required>
         </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.tipoActividad.errors?.required">
           {{'error.required.entity' | translate:msgParamTipoActividadEntity}}
@@ -50,7 +51,7 @@
         <mat-form-field fxFlex="20%">
           <mat-label>{{'eti.peticion-evaluacion.tipo-investigacion-tutelada' | translate}}</mat-label>
           <sgi-select-entity formControlName="tipoInvestigacionTutelada" [options]="tipoInvestigacionTuteladas$ | async"
-            [required]="isInvestigacionTutelada$.getValue()">
+            [displayWith]="displayerTipoInvestigacionTutelada" [required]="isInvestigacionTutelada$.getValue()">
           </sgi-select-entity>
           <mat-error
             *ngIf="isInvestigacionTutelada$.getValue() && formGroup.controls.tipoInvestigacionTutelada.errors?.required">

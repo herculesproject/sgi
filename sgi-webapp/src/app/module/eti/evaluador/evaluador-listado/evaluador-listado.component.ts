@@ -26,6 +26,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { EvaluadorListadoExportModalComponent } from '../modals/evaluador-listado-export-modal/evaluador-listado-export-modal.component';
+import { CARGO_COMITE_MAP } from '@core/models/eti/cargo-comite';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const MSG_ERROR = marker('error.load');
@@ -65,6 +66,10 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
   get tipoColectivoEvaluador() {
     return TipoColectivo.EVALUADOR_ETICA;
+  }
+
+  get CARGO_COMITE_MAP() {
+    return CARGO_COMITE_MAP;
   }
 
   constructor(

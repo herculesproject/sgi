@@ -23,6 +23,7 @@ import { switchMap } from 'rxjs/operators';
 import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
 import { PeticionEvaluacionTareasModalComponent, PeticionEvaluacionTareasModalComponentData } from '../peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-tareas-listado.fragment';
+import { TIPO_TAREA_MAP } from '@core/models/eti/tipo-tarea';
 
 const MSG_CONFIRM_DELETE = marker('msg.delete.entity');
 const TAREA_KEY = marker('eti.peticion-evaluacion.tarea');
@@ -53,6 +54,10 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
+  }
+
+  get TIPO_TAREA_MAP() {
+    return TIPO_TAREA_MAP;
   }
 
   constructor(

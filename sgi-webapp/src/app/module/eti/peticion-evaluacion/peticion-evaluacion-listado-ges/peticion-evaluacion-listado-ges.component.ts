@@ -11,7 +11,6 @@ import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
-import { ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -64,10 +63,6 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   get tipoColectivoSolicitante() {
     return TipoColectivo.SOLICITANTE_ETICA;
-  }
-
-  get ESTADO_MEMORIA_MAP() {
-    return ESTADO_MEMORIA_MAP;
   }
 
   constructor(

@@ -9,6 +9,7 @@ import { IBaseExportModalData } from '@core/component/base-export/base-export-mo
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { TIPO_CONVOCATORIA_REUNION_MAP } from '@core/models/eti/tipo-convocatoria-reunion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -20,7 +21,7 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ConvocatoriaReunionListadoExportModalComponent } from '../modals/convocatoria-reunion-listado-export-modal/convocatoria-reunion-listado-export-modal.component';
 
@@ -65,6 +66,10 @@ export class ConvocatoriaReunionListadoComponent
   mapModificable: Map<number, boolean> = new Map();
 
   private limiteRegistrosExportacionExcel: string;
+
+  get TIPO_CONVOCATORIA_REUNION_MAP() {
+    return TIPO_CONVOCATORIA_REUNION_MAP;
+  }
 
   constructor(
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,

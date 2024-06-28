@@ -4,7 +4,6 @@ import { FormFragment } from '@core/services/action-service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { DateValidator } from '@core/validators/date-validator';
-import { NullIdValidador } from '@core/validators/null-id-validador';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 

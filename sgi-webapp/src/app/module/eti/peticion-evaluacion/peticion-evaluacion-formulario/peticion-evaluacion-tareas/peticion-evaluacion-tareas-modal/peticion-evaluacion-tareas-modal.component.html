@@ -31,7 +31,7 @@
       <mat-form-field [ngClass]="!tareaYformacionTexto ? '' : 'ocultarCampo'">
         <mat-label>{{'eti.peticion-evaluacion.tarea'| translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
         <sgi-select-entity formControlName="tipoTarea" [options]="this.tipoTareas$ | async"
-          [required]="!tareaYformacionTexto">
+          [displayWith]="displayerTipoTarea" [required]="!tareaYformacionTexto">
         </sgi-select-entity>
         <mat-error *ngIf="formGroup.controls.tipoTarea.errors?.required">
           {{'error.required.entity' | translate:msgParamTareaEntity}}

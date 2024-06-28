@@ -10,6 +10,8 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IEvaluacionReportData, IEvaluacionReportOptions } from './evaluacion-listado-export.service';
+import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
+import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
 
 const EVALUACION_COMITE_KEY = marker('eti.evaluacion.report.comite');
 const EVALUACION_TIPO_EVALUACION_KEY = marker('eti.evaluacion.report.tipo-evaluacion');
@@ -106,8 +108,8 @@ export class EvaluacionGeneralListadoExportService extends
 
     return [
       convocatoriaData.memoria?.comite?.comite ?? '',
-      convocatoriaData.tipoEvaluacion?.nombre ?? '',
-      convocatoriaData.memoria?.tipoMemoria?.nombre ?? '',
+      convocatoriaData.tipoEvaluacion?.id ? this.translate.instant(TIPO_EVALUACION_MAP.get(convocatoriaData.tipoEvaluacion?.id)) : '',
+      convocatoriaData.memoria?.tipoMemoria?.id ? this.translate.instant(TIPO_MEMORIA_MAP.get(convocatoriaData.memoria?.tipoMemoria?.id)) : '',
       LuxonUtils.toBackend(convocatoriaData.fechaDictamen) ?? '',
       convocatoriaData.memoria?.numReferencia ?? '',
       convocatoriaData.solicitante?.nombre ?? '',

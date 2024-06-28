@@ -13,6 +13,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { IEmail } from '../../../core/models/sgp/email';
 import { IEvaluadorReportData, IEvaluadorReportOptions } from './evaluador-listado-export.service';
 import { EstadoEvaluadorPipe } from './pipes/estado-evaluador.pipe';
+import { CARGO_COMITE_MAP } from '@core/models/eti/cargo-comite';
 
 const EVALUADOR_NOMBRE_KEY = marker('eti.evaluador.report.nombre');
 const EVALUADOR_APELLIDOS_KEY = marker('eti.evaluador.report.apellidos');
@@ -111,7 +112,7 @@ export class EvaluadorGeneralListadoExportService extends
       evaluadorData.persona?.apellidos ?? '',
       this.getEmailPrincipal(evaluadorData),
       evaluadorData.comite?.comite ?? '',
-      evaluadorData.cargoComite?.nombre ?? '',
+      evaluadorData.cargoComite?.id ? this.translate.instant(CARGO_COMITE_MAP.get(evaluadorData.cargoComite?.id)) : '',
       LuxonUtils.toBackend(evaluadorData.fechaAlta) ?? '',
       LuxonUtils.toBackend(evaluadorData.fechaBaja) ?? '',
       this.estadoEvaluadorPipe.transform(evaluadorData.fechaBaja) ?? ''

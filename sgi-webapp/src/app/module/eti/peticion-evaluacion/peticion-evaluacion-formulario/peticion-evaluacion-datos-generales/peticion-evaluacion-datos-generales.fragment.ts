@@ -3,6 +3,8 @@ import { IChecklist } from '@core/models/eti/checklist';
 import { IConfiguracion } from '@core/models/eti/configuracion';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { IPeticionEvaluacion, TipoValorSocial } from '@core/models/eti/peticion-evaluacion';
+import { ITipoActividad } from '@core/models/eti/tipo-actividad';
+import { ITipoInvestigacionTutelada } from '@core/models/eti/tipo-investigacion-tutelada';
 import { IPersona } from '@core/models/sgp/persona';
 import { FormFragment } from '@core/services/action-service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';

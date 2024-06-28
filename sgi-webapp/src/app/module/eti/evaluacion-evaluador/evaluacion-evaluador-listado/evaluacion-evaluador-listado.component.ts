@@ -6,6 +6,8 @@ import { AbstractTablePaginationComponent } from '@core/component/abstract-table
 import { IConfiguracion } from '@core/models/eti/configuracion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TIPO_CONVOCATORIA_REUNION } from '@core/models/eti/tipo-convocatoria-reunion';
+import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
+import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -18,13 +20,13 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoComentario } from '../../evaluacion/evaluacion-listado-export.service';
 import { EvaluacionListadoExportModalComponent, IEvaluacionListadoModalData } from '../../evaluacion/modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
-import { SgiAuthService } from '@sgi/framework/auth';
 
 export interface IEvaluacionWithComentariosEnviados extends IEvaluacion {
   enviada: boolean;
@@ -56,6 +58,14 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
 
   get TIPO_CONVOCATORIA() {
     return TIPO_CONVOCATORIA_REUNION;
+  }
+
+  get TIPO_EVALUACION_MAP() {
+    return TIPO_EVALUACION_MAP;
+  }
+
+  get TIPO_MEMORIA_MAP() {
+    return TIPO_MEMORIA_MAP;
   }
 
   constructor(
