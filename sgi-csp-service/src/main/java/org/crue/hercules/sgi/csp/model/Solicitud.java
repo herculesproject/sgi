@@ -122,6 +122,10 @@ public class Solicitud extends BaseEntity {
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   private Boolean activo;
 
+  /** Año */
+  @Column(name = "anio", nullable = true)
+  private Integer anio;
+
   // Relation mappings for JPA metamodel generation only
   @OneToOne(mappedBy = "solicitud")
   @Getter(AccessLevel.NONE)

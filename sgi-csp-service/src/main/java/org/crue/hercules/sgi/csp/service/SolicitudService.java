@@ -323,6 +323,7 @@ public class SolicitudService {
       data.setCodigoExterno(solicitud.getCodigoExterno());
       data.setObservaciones(solicitud.getObservaciones());
       data.setTitulo(solicitud.getTitulo());
+      data.setAnio(solicitud.getAnio());
 
       if (null == data.getConvocatoriaId()) {
         data.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());

@@ -80,6 +80,11 @@ public class Convocatoria extends BaseEntity {
   @Size(max = 50)
   private String codigo;
 
+  /** Codigo interno */
+  @Column(name = "codigo_interno", length = 50, nullable = true)
+  @Size(max = 50)
+  private String codigoInterno;
+
   /** Fecha Publicación */
   @Column(name = "fecha_publicacion")
   private Instant fechaPublicacion;
@@ -152,6 +157,10 @@ public class Convocatoria extends BaseEntity {
   @Column(name = "formulario_solicitud", length = 50, nullable = true)
   @Enumerated(EnumType.STRING)
   private FormularioSolicitud formularioSolicitud;
+
+  /** Año */
+  @Column(name = "anio", nullable = true)
+  private Integer anio;
 
   // Relations mapping, only for JPA metamodel generation
   @OneToOne(mappedBy = "convocatoria")

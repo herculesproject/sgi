@@ -153,6 +153,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -381,6 +382,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setImportePresupuestoCostesIndirectos(proyectoActualizar.getImportePresupuestoCostesIndirectos());
       data.setImporteConcedidoCostesIndirectos(proyectoActualizar.getImporteConcedidoCostesIndirectos());
       data.setIvaDeducible(proyectoActualizar.getIvaDeducible());
+      data.setAnio(proyectoActualizar.getAnio());
 
       // Crea o actualiza el proyecto iva del proyecto si el porcentaje de IVA es cero
       // o superior
@@ -996,6 +998,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     proyecto.setSolicitudId(solicitud.getId());
     proyecto.setConvocatoriaId(solicitud.getConvocatoriaId());
     proyecto.setUnidadGestionRef(solicitud.getUnidadGestionRef());
+    proyecto.setAnio(solicitud.getAnio());
     if (solicitud.getConvocatoriaId() != null) {
       Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
           .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
@@ -1003,6 +1006,9 @@ public class ProyectoServiceImpl implements ProyectoService {
       proyecto.setAmbitoGeografico(convocatoria.getAmbitoGeografico());
       proyecto.setClasificacionCVN(convocatoria.getClasificacionCVN());
       proyecto.setExcelencia(convocatoria.getExcelencia());
+      if (ObjectUtils.isEmpty(proyecto.getAnio())) {
+        proyecto.setAnio(convocatoria.getAnio());
+      }
     } else {
       proyecto.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
     }

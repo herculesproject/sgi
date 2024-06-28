@@ -231,6 +231,10 @@ public class Proyecto extends BaseEntity {
   @Column(name = "fecha_inicio_started", columnDefinition = "boolean default false", nullable = true)
   private Boolean fechaInicioStarted;
 
+  /** Año */
+  @Column(name = "anio", nullable = true)
+  private Integer anio;
+
   // Relation mappings for JPA metamodel generation only
   @OneToOne(mappedBy = "proyecto")
   @Getter(AccessLevel.NONE)
