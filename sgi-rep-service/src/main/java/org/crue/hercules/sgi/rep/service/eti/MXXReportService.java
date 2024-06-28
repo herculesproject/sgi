@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,9 @@ import org.crue.hercules.sgi.rep.dto.eti.RespuestaInput;
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto.VinculacionDto;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoActividadI18n;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoEstadoMemoriaI18n;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoInvestigacionTuteladaI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
@@ -29,6 +33,7 @@ import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.crue.hercules.sgi.rep.util.AssertHelper;
 import org.crue.hercules.sgi.rep.util.CustomSpELRenderDataCompute;
 import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
+import org.crue.hercules.sgi.rep.util.SgiLocaleHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
@@ -110,6 +115,29 @@ public class MXXReportService extends SgiReportDocxService {
 
     List<ApartadoTreeDto> apartados = new ArrayList<>();
     bloques.forEach(bloque -> apartados.addAll(bloqueService.getApartados(bloque.getId(), lang)));
+
+    if (!ObjectUtils.isEmpty(memoria.getPeticionEvaluacion())
+        && !ObjectUtils.isEmpty(memoria.getPeticionEvaluacion().getTipoActividad())) {
+      memoria.getPeticionEvaluacion().getTipoActividad().setNombre(TipoActividadI18n.getI18nMessageFromEnumAndLocale(
+          memoria.getPeticionEvaluacion().getTipoActividad().getId(), SgiLocaleHelper.newLocale(lang)));
+    }
+
+    if (!ObjectUtils.isEmpty(memoria.getPeticionEvaluacion())
+        && !ObjectUtils.isEmpty(memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada())) {
+      memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada()
+          .setNombre(TipoInvestigacionTuteladaI18n.getI18nMessageFromEnumAndLocale(
+              memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId(), SgiLocaleHelper.newLocale(lang)));
+    }
+
+    if (!memoriasPeticionEvaluacion.isEmpty()) {
+      memoriasPeticionEvaluacion.forEach(mem -> {
+        if (!ObjectUtils.isEmpty(mem.getEstadoActual())) {
+          mem.getEstadoActual()
+              .setNombre(TipoEstadoMemoriaI18n.getI18nMessageFromEnumAndLocale(mem.getEstadoActual().getId(),
+                  SgiLocaleHelper.newLocale(lang)));
+        }
+      });
+    }
 
     try {
       HashMap<String, Object> dataReport = getReportModelFormulario(bloques, apartados, respuestas,

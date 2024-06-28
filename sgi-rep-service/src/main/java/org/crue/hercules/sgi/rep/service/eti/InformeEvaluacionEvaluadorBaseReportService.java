@@ -27,8 +27,11 @@ import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionEvaluadorReportOutput;
 import org.crue.hercules.sgi.rep.dto.sgp.EmailDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoActividadI18n;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoInvestigacionTuteladaI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
+import org.crue.hercules.sgi.rep.service.eti.SgiFormlyService.TipoValorSocialI18n;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.springframework.stereotype.Service;
@@ -272,7 +275,8 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
         && !evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId()
             .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
       dataReport.put("actividad",
-          evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre().toLowerCase());
+          TipoActividadI18n.getI18nMessageFromEnum(
+              evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId()));
       if (evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId()
           .equals(TIPO_ACTIVIDAD_PROYECTO_DE_INVESTIGACION)) {
         dataReport.put("fieldDelActividad", ApplicationContextSupport.getMessage("common.del"));
@@ -288,7 +292,8 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     } else if (ObjectUtils.isNotEmpty(evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad()) && ObjectUtils
         .isNotEmpty(evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada())) {
       dataReport.put("actividad",
-          evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre().toLowerCase());
+          TipoInvestigacionTuteladaI18n.getI18nMessageFromEnum(
+              evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()));
       if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()
           .equals(TIPO_INVESTIGACION_TUTELADA_TESIS_DOCTORAL)) {
         dataReport.put("fieldDelActividad", ApplicationContextSupport.getMessage("common.del"));

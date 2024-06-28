@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaEvaluadaDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoConvocatoriaReunionI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
@@ -140,7 +141,8 @@ public class InformeActaReportService extends SgiReportDocxService {
     strDuracion.append(i18nMinutos);
     dataReport.put("duracion", strDuracion.toString());
 
-    dataReport.put("tipoConvocatoria", acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getNombre());
+    dataReport.put("tipoConvocatoria", TipoConvocatoriaReunionI18n
+        .getI18nMessageFromEnum(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getId()));
 
     dataReport.put("resumenActa", acta.getResumen());
 

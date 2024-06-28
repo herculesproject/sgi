@@ -8,6 +8,8 @@ import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluador;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoActividadI18n;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoInvestigacionTuteladaI18n;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.springframework.stereotype.Service;
@@ -39,10 +41,12 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
     String tipoActividad = "";
     if (null != evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada() && StringUtils
         .hasText(evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre())) {
-      tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+      tipoActividad = TipoInvestigacionTuteladaI18n.getI18nMessageFromEnum(
+          evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getId());
     } else if (null != evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad()
         && StringUtils.hasText(evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre())) {
-      tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
+      tipoActividad = TipoActividadI18n
+          .getI18nMessageFromEnum(evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId());
     }
     dataReport.put("tipoActividad", tipoActividad);
     dataReport.put("titulo", evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
