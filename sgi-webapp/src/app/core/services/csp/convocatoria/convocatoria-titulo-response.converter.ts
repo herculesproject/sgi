@@ -28,7 +28,9 @@ class ConvocatoriaTituloResponseConverter
       objeto: undefined,
       regimenConcurrencia: undefined,
       titulo: value.titulo,
-      unidadGestion: undefined
+      unidadGestion: undefined,
+      codigoInterno: undefined,
+      anio: undefined
     };
   }
 

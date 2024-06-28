@@ -44,4 +44,6 @@ export interface ISolicitud {
   unidadGestion: IUnidadGestion;
   /** Observaciones */
   observaciones: string;
+  /** Año */
+  anio: number;
 }

@@ -89,6 +89,8 @@ export interface IProyecto {
   totalImportePresupuesto: number;
   /** total Importe concedido */
   totalImporteConcedido: number;
+  /** Año */
+  anio: number;
 }
 
 export enum CausaExencion {

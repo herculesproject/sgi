@@ -26,4 +26,6 @@ export interface IConvocatoriaBackend {
   clasificacionCVN: ClasificacionCVN;
   activo: boolean;
   excelencia: boolean;
+  codigoInterno: string;
+  anio: number;
 }

@@ -84,4 +84,6 @@ export interface IProyectoBackend {
   totalImportePresupuesto: number;
   /** total Importe concedido */
   totalImporteConcedido: number;
+  /** Año */
+  anio: number;
 }

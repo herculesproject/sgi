@@ -25,7 +25,8 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
       formularioSolicitud: value.formularioSolicitud,
       tipoSolicitudGrupo: value.tipoSolicitudGrupo,
       unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
-      observaciones: value.observaciones
+      observaciones: value.observaciones,
+      anio: value.anio
     };
   }
 
@@ -47,7 +48,8 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
       formularioSolicitud: value.formularioSolicitud,
       tipoSolicitudGrupo: value.tipoSolicitudGrupo,
       unidadGestionRef: String(value.unidadGestion?.id),
-      observaciones: value.observaciones
+      observaciones: value.observaciones,
+      anio: value.anio
     };
   }
 }

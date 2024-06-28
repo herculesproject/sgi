@@ -20,7 +20,7 @@ import { IProyectoReportData, IProyectoReportOptions } from './proyecto-listado-
 const CONVOCATORIA_KEY = 'csp.convocatoria';
 const CONVOCATORIA_TITULO_KEY = 'csp.convocatoria.titulo';
 const CONVOCATORIA_FIELD = 'convocatoria';
-const CONVOCATORIA_IDENTIFICACION_KEY = marker('csp.convocatoria.referencia');
+const CONVOCATORIA_IDENTIFICACION_KEY = marker('csp.convocatoria.codigo-externo');
 const CONVOCATORIA_IDENTIFICACION_FIELD = 'identificacionConvocatoria';
 const CONVOCATORIA_FECHA_PUBLICACION_KEY = marker('csp.convocatoria.fecha-publicacion');
 const CONVOCATORIA_FECHA_PUBLICACION_FIELD = 'fechaPublicacionConvocatoria';

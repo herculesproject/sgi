@@ -121,15 +121,24 @@
     </div>
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Año -->
+      <mat-form-field fxFlex="8%">
+        <mat-label>{{'csp.solicitud.anio'| translate}}</mat-label>
+        <input matInput formControlName="anio" type="number" placeholder="{{'csp.solicitud.anio' | translate}}">
+        <mat-error *ngIf="formGroup.controls.anio.errors?.invalidAnio">
+          {{ 'error.anio.invalid' | translate }}
+        </mat-error>
+      </mat-form-field>
+
       <!-- Codigo de registro -->
-      <mat-form-field *ngIf="fragment.isEdit()" fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
+      <mat-form-field *ngIf="fragment.isEdit()" fxFlex="20.5%">
         <mat-label>{{'csp.solicitud.codigo-registro' | translate}}</mat-label>
         <input matInput formControlName="codigoRegistro" type="text" id="codigoRegistro"
           placeholder="{{'csp.solicitud.codigo-registro' | translate}}">
       </mat-form-field>
 
       <!-- Codigo de registro en entidad convocante -->
-      <mat-form-field fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
+      <mat-form-field [fxFlex]="fragment.isEdit() ? '20%' : '41%'">
         <mat-label>{{'csp.solicitud.codigo-externo' | translate}}</mat-label>
         <input matInput formControlName="codigoExterno" type="text" id="codigoExterno"
           placeholder="{{'csp.solicitud.codigo-externo' | translate}}">

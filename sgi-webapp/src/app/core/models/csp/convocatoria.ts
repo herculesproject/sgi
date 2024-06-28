@@ -28,6 +28,8 @@ export interface IConvocatoria {
   clasificacionCVN: ClasificacionCVN;
   activo: boolean;
   excelencia: boolean;
+  anio: number;
+  codigoInterno: string;
 }
 
 export enum Estado {

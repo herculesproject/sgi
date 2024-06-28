@@ -31,4 +31,6 @@ export interface ISolicitudBackend {
   unidadGestionRef: string;
   /** Observaciones */
   observaciones: string;
+  /** Año */
+  anio: number;
 }

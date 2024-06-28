@@ -9,6 +9,7 @@ import { AbstractTableExportFillService } from '@core/services/rep/abstract-tabl
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { toString } from '@core/utils/string-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
@@ -17,7 +18,7 @@ import { ISolicitudReportData, ISolicitudReportOptions } from './solicitud-lista
 
 const CODIGO_INTERNO_KEY = marker('csp.solicitud.codigo-registro');
 const CODIGO_EXTERNO_KEY = marker('csp.solicitud.codigo-externo');
-const REFERENCIA_KEY = marker('csp.solicitud.referencia-convocatoria.no-registrada-sgi');
+const REFERENCIA_KEY = marker('csp.solicitud.convocatoria-externa.no-registrada-sgi');
 const CONVOCATORIA_SGI_KEY = marker('csp.solicitud.convocatoria-sgi');
 const SOLICITANTE_KEY = marker('csp.solicitud.solicitante');
 const NOMBRE_KEY = marker('sgp.nombre');
@@ -27,6 +28,7 @@ const ESTADO_KEY = marker('csp.solicitud.estado');
 const TITULO_KEY = marker('csp.solicitud.titulo-listado');
 const FECHA_ESTADO_KEY = marker('csp.solicitud.estado-solicitud.fecha');
 const COMENTARIO_ESTADO_KEY = marker('csp.solicitud.estado-solicitud.comentario');
+const ANIO_KEY = marker('csp.solicitud.anio');
 
 @Injectable()
 export class SolicitudGeneralListadoExportService extends AbstractTableExportFillService<ISolicitudReportData, ISolicitudReportOptions> {
@@ -87,6 +89,12 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
       {
         title: this.translate.instant(TITULO_KEY),
         name: 'titulo',
+        type: ColumnType.STRING,
+        format: '#'
+      },
+      {
+        title: this.translate.instant(ANIO_KEY),
+        name: 'anio',
         type: ColumnType.STRING,
         format: '#'
       },
@@ -167,6 +175,7 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
 
     const elementsRow: any[] = [];
     elementsRow.push(solicitud.titulo);
+    elementsRow.push(toString(solicitud.anio));
     elementsRow.push(solicitud.codigoRegistroInterno ?? '');
     elementsRow.push(solicitud.codigoExterno ?? '');
     elementsRow.push(solicitante?.nombre ?? '');

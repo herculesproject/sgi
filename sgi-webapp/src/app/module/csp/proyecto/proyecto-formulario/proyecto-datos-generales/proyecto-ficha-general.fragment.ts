@@ -34,6 +34,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, merge, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../proyecto-relaciones/proyecto-relaciones.fragment';
+import { anioValidator } from '@core/validators/anio-validator';
 
 interface IProyectoDatosGenerales extends IProyecto {
   convocatoria: IConvocatoria;
@@ -253,7 +254,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       }),
       solicitudProyecto: new FormControl({ value: null, disabled: true }),
       proyectosRelacionados: new FormControl({ value: '', disabled: true }),
-      palabrasClave: new FormControl(null)
+      palabrasClave: new FormControl(null),
+      anio: new FormControl(this.isEdit() ? null : this.getCurrentYear(), anioValidator())
     },
       {
         validators: [
@@ -600,6 +602,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario,
       solicitudProyecto: this.solicitud?.titulo ?? null,
+      anio: proyecto.anio
     };
 
     this.initialIva = proyecto.iva?.iva;
@@ -662,6 +665,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     this.proyecto.ivaDeducible = form.ivaDeducible.value;
     this.proyecto.iva = {} as IProyectoIVA;
     this.proyecto.iva.iva = form.iva.value;
+    this.proyecto.anio = form.anio.value;
 
     if (form.causaExencion.value?.length > 0) {
       this.proyecto.causaExencion = form.causaExencion?.value;
@@ -742,9 +746,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.ambitoGeograficoConvocatoria = convocatoria.ambitoGeografico;
       this.finalidadConvocatoria = convocatoria.finalidad;
       this.modeloEjecucionConvocatoria = convocatoria.modeloEjecucion;
+
+      if (convocatoria.anio) {
+        this.getFormGroup().controls.anio.setValue(convocatoria.anio);
+      }
     } else if (!this.isEdit()) {
       // Clean dependencies
       this.getFormGroup().controls.unidadGestion.setValue(null);
+      this.getFormGroup().controls.anio.setValue(this.getCurrentYear());
       // Enable fields
       if (!this.isVisor && !this.isInvestigador) {
         this.getFormGroup().controls.unidadGestion.enable();
@@ -979,5 +988,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     if (!this.readonly) {
       this.getFormGroup()?.controls.permitePaquetesTrabajo.enable({ emitEvent: false });
     }
+  }
+
+  private getCurrentYear(): number {
+    const today = new Date();
+    return today.getFullYear();
   }
 }

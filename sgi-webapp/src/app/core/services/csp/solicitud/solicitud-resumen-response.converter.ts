@@ -22,7 +22,8 @@ class SolicitudResumenResponseConverter
       formularioSolicitud: undefined,
       tipoSolicitudGrupo: undefined,
       unidadGestion: undefined,
-      observaciones: undefined
+      observaciones: undefined,
+      anio: undefined
     };
   }
 

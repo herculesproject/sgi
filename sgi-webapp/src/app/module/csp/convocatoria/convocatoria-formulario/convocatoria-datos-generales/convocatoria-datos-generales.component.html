@@ -93,17 +93,27 @@
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <!-- Código de referencia -->
-      <mat-form-field fxFlex="60%">
-        <mat-label>{{'csp.convocatoria.codigo-referencia' | translate}}</mat-label>
+      <mat-form-field fxFlex="33%">
+        <mat-label>{{'csp.convocatoria.codigo-interno' | translate}}</mat-label>
+        <input matInput formControlName="codigoInterno" type="text"
+          placeholder="{{'csp.convocatoria.codigo-interno' | translate}}">
+        <mat-error *ngIf="formGroup.controls.codigoInterno.errors?.maxlength">
+          {{ 'error.maxlength.entity' | translate:msgParamCodigoInternoEntity }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Código de referencia -->
+      <mat-form-field fxFlex="33%">
+        <mat-label>{{'csp.convocatoria.codigo-externo' | translate}}</mat-label>
         <input matInput formControlName="codigo" type="text" id="codigo"
-          placeholder="{{'csp.convocatoria.codigo-referencia' | translate}}">
+          placeholder="{{'csp.convocatoria.codigo-externo' | translate}}">
         <mat-error *ngIf="formGroup.controls.codigo.errors?.maxlength">
           {{ 'error.maxlength.entity' | translate:msgParamCodigoReferenciaEntity }}
         </mat-error>
       </mat-form-field>
 
       <!-- Entidad gestora -->
-      <mat-form-field fxFlex="40%">
+      <mat-form-field fxFlex="33%">
         <mat-label>{{'csp.convocatoria.entidad-gestora' | translate}}</mat-label>
         <sgi-select-empresa placeholder="{{'csp.convocatoria.entidad-gestora' | translate}}"
           formControlName="entidadGestora">
@@ -115,8 +125,17 @@
     </div>
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Año -->
+      <mat-form-field fxFlex="8%">
+        <mat-label>{{'csp.convocatoria.anio'| translate}}</mat-label>
+        <input matInput formControlName="anio" type="number" placeholder="{{'csp.convocatoria.anio' | translate}}">
+        <mat-error *ngIf="formGroup.controls.anio.errors?.invalidAnio">
+          {{ 'error.anio.invalid' | translate }}
+        </mat-error>
+      </mat-form-field>
+
       <!-- Fecha Publicación -->
-      <mat-form-field color="primary" fxFlex="33%">
+      <mat-form-field color="primary" fxFlex="24.5%">
         <mat-label>{{'csp.convocatoria.fecha-publicacion'| translate}}</mat-label>
         <input matInput [matDatepicker]="pickerFechaPublicacion" formControlName="fechaPublicacion">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaPublicacion"></mat-datepicker-toggle>

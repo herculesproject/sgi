@@ -53,7 +53,8 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       importeConcedidoSocios: value.importeConcedidoSocios,
       importePresupuestoSocios: value.importePresupuestoSocios,
       totalImporteConcedido: value.totalImporteConcedido,
-      totalImportePresupuesto: value.totalImportePresupuesto
+      totalImportePresupuesto: value.totalImportePresupuesto,
+      anio: value.anio
     };
   }
 
@@ -100,7 +101,8 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       importeConcedidoSocios: value.importeConcedidoSocios,
       importePresupuestoSocios: value.importePresupuestoSocios,
       totalImporteConcedido: value.totalImporteConcedido,
-      totalImportePresupuesto: value.totalImportePresupuesto
+      totalImportePresupuesto: value.totalImportePresupuesto,
+      anio: value.anio
     };
   }
 }

@@ -209,8 +209,17 @@
     </div>
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Año -->
+      <mat-form-field fxFlex="8%">
+        <mat-label>{{'csp.proyecto.anio'| translate}}</mat-label>
+        <input matInput formControlName="anio" type="number" placeholder="{{'csp.proyecto.anio' | translate}}">
+        <mat-error *ngIf="formGroup.controls.anio.errors?.invalidAnio">
+          {{ 'error.anio.invalid' | translate }}
+        </mat-error>
+      </mat-form-field>
+
       <!-- Fecha inicio -->
-      <mat-form-field color="primary" fxFlex="33%">
+      <mat-form-field color="primary" fxFlex="24.5%">
         <mat-label>{{'csp.proyecto.fecha-inicio'| translate}}</mat-label>
         <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio"
           [required]="formPart.abiertoRequired">

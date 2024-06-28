@@ -18,10 +18,11 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { anioValidator } from '@core/validators/anio-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subject, from, merge, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
 export interface SolicitudModalidadEntidadConvocanteListado {
@@ -174,7 +175,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         unidadGestion: new FormControl(null, Validators.required),
         codigoExterno: new FormControl('', Validators.maxLength(50)),
         codigoRegistro: new FormControl({ value: '', disabled: true }),
-        observaciones: new FormControl('', Validators.maxLength(2000))
+        observaciones: new FormControl('', Validators.maxLength(2000)),
+        anio: new FormControl(this.isEdit() ? null : this.getCurrentYear(), anioValidator()),
       });
       // Se setean los validaores condicionales y se hace una subscripcion a los campos que provocan
       // cambios en los validadores del formulario
@@ -204,6 +206,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       comentariosEstado: solicitud?.estado?.comentario,
       tipoSolicitudGrupo: solicitud.tipoSolicitudGrupo,
       grupo: this.solicitudGrupo?.grupo,
+      anio: this.isEdit() ? solicitud?.anio : solicitud?.convocatoria?.anio,
     };
 
     if (!this.isInvestigador) {
@@ -256,6 +259,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       this.solicitud.unidadGestion = form.unidadGestion.value;
       this.solicitud.codigoExterno = form.codigoExterno.value;
       this.solicitud.observaciones = form.observaciones.value;
+      this.solicitud.anio = form.anio.value;
     }
 
     return this.solicitud;
@@ -610,6 +614,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
             this.entidadesConvocantesModalidad$.next(entidadesConvocantes)
           )
       );
+      if (!this.isEdit() && convocatoria.anio) {
+        this.getFormGroup().controls.anio.setValue(convocatoria.anio);
+      }
     } else if (!this.isEdit()) {
       // Clean dependencies
       this.getFormGroup().controls.unidadGestion.setValue(null);
@@ -620,6 +627,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       this.getFormGroup().controls.convocatoriaExterna.enable();
       this.getFormGroup().controls.unidadGestion.enable();
       this.getFormGroup().controls.formularioSolicitud.enable();
+      this.getFormGroup().controls.anio.setValue(this.getCurrentYear());
     }
   }
 
@@ -790,4 +798,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     this.convocatoriaExternaRequired = !convocatoriaSolicitud;
   }
 
+  private getCurrentYear(): number {
+    const today = new Date();
+    return today.getFullYear();
+  }
 }

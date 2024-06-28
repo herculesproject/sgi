@@ -13,6 +13,7 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { toString } from '@core/utils/string-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
@@ -43,6 +44,7 @@ const IVA_DECUCIBLE_KEY = marker('csp.ejecucion-economica.iva-deducible');
 const PORCENTAJE_IVA_KEY = marker('csp.ejecucion-economica.iva');
 const CAUSA_EXENCION_IVA_KEY = marker('csp.proyecto.causa-exencion');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica.nombre');
+const ANIO_KEY = marker('csp.proyecto.anio');
 
 @Injectable()
 export class ProyectoGeneralListadoExportService extends AbstractTableExportFillService<IProyectoReportData, IProyectoReportOptions> {
@@ -187,6 +189,11 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
         type: ColumnType.STRING
       },
       {
+        title: this.translate.instant(ANIO_KEY),
+        name: 'anio',
+        type: ColumnType.STRING
+      },
+      {
         title: this.translate.instant(FECHA_INICIO_KEY),
         name: 'fechaInicio',
         type: ColumnType.DATE
@@ -267,6 +274,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(proyecto.unidadGestion?.nombre);
     elementsRow.push(proyecto.modeloEjecucion?.nombre);
     elementsRow.push(proyecto.finalidad?.nombre);
+    elementsRow.push(toString(proyecto.anio))
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaInicio));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFin));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFinDefinitiva));

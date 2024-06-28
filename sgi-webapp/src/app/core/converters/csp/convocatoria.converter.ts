@@ -30,7 +30,9 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       ambitoGeografico: value.ambitoGeografico,
       clasificacionCVN: value.clasificacionCVN,
       activo: value.activo,
-      excelencia: value.excelencia
+      excelencia: value.excelencia,
+      codigoInterno: value.codigoInterno,
+      anio: value.anio
     };
   }
 
@@ -58,7 +60,9 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       ambitoGeografico: value.ambitoGeografico,
       clasificacionCVN: value.clasificacionCVN,
       activo: value.activo,
-      excelencia: value.excelencia
+      excelencia: value.excelencia,
+      codigoInterno: value.codigoInterno,
+      anio: value.anio
     };
   }
 }
