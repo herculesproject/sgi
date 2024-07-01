@@ -1,15 +1,14 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.util.List;
-import java.util.Locale;
 
 import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
-import org.crue.hercules.sgi.eti.util.SgiLocaleHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -78,8 +77,7 @@ public class ApartadoController {
   @GetMapping("/{id}")
   ApartadoOutput one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
-    Locale locale = LocaleContextHolder.getLocale();
-    ApartadoOutput returnValue = service.findByIdAndLanguage(id, SgiLocaleHelper.getLang(locale));
+    ApartadoOutput returnValue = service.findByIdAndLanguage(id, SgiLocaleContextHolder.getLanguage());
     log.debug("one(Long id) - end");
     return returnValue;
   }
@@ -96,8 +94,8 @@ public class ApartadoController {
   @GetMapping("/{id}/padre/{idPadre}")
   ApartadoOutput apartadoByPadre(@PathVariable Long id, @PathVariable Long idPadre) {
     log.debug("one(Long id) - start");
-    Locale locale = LocaleContextHolder.getLocale();
-    ApartadoOutput returnValue = service.findByIdAndPadreIdAndLanguage(id, idPadre, SgiLocaleHelper.getLang(locale));
+    ApartadoOutput returnValue = service.findByIdAndPadreIdAndLanguage(id, idPadre,
+        SgiLocaleContextHolder.getLanguage());
     log.debug("one(Long id) - end");
     return returnValue;
   }
@@ -115,7 +113,7 @@ public class ApartadoController {
   ResponseEntity<Page<ApartadoOutput>> getHijos(@PathVariable Long id, @PathVariable String lang,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("getHijos(Long id, Pageable paging - start");
-    Page<ApartadoOutput> page = service.findByPadreId(id, lang, paging);
+    Page<ApartadoOutput> page = service.findByPadreId(id, Language.fromCode(lang), paging);
     log.debug("getHijos(Long id, Pageable paging - end");
     if (page.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);

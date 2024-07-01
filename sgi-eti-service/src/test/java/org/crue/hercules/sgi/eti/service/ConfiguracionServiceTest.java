@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ConfiguracionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
@@ -23,7 +24,6 @@ public class ConfiguracionServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     configuracionService = new ConfiguracionServiceImpl(configuracionRepository);
   }
 

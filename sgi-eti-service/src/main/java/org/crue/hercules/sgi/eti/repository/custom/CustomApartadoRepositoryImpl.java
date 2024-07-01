@@ -13,13 +13,13 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.ApartadoNombre;
 import org.crue.hercules.sgi.eti.model.ApartadoNombre_;
 import org.crue.hercules.sgi.eti.model.Apartado_;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Bloque_;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,12 +46,12 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
    * {@link Bloque} e idioma
    * 
    * @param idBloque Id de {@link Bloque}.
-   * @param lang     code language
+   * @param lang     El {@link Language} sobre el que buscar.
    * @param pageable datos de paginación
    * @return lista de {@link Apartado} paginados
    */
   @Override
-  public Page<ApartadoOutput> findByBloqueIdAndPadreIsNullAndLanguage(Long idBloque, String lang, Pageable pageable) {
+  public Page<ApartadoOutput> findByBloqueIdAndPadreIsNullAndLanguage(Long idBloque, Language lang, Pageable pageable) {
     log.debug("findByBloqueIdAndPadreIsNullAndLanguage : {} - start");
 
     // Crete query
@@ -75,11 +75,11 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
         root.get(ApartadoNombre_.lang));
 
     // Where
-    cq.where(cb.equal(root.get(ApartadoNombre_.lang), Language.fromCode(lang)),
+    cq.where(cb.equal(root.get(ApartadoNombre_.lang), lang),
         cb.equal(joinApartado.get(Apartado_.bloque).get(Bloque_.id), idBloque),
         cb.isNull(joinApartado.get(Apartado_.padre).get(Apartado_.id)));
 
-    countQuery.where(cb.equal(rootCount.get(ApartadoNombre_.lang), Language.fromCode(lang)),
+    countQuery.where(cb.equal(rootCount.get(ApartadoNombre_.lang), lang),
         cb.equal(joinCountApartado.get(Apartado_.bloque).get(Bloque_.id), idBloque),
         cb.isNull(joinCountApartado.get(Apartado_.padre).get(Apartado_.id)));
 
@@ -100,7 +100,7 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
   }
 
   @Override
-  public Page<ApartadoOutput> findByPadreIdAndLanguage(Long idPadre, String lang, Pageable pageable) {
+  public Page<ApartadoOutput> findByPadreIdAndLanguage(Long idPadre, Language lang, Pageable pageable) {
     log.debug("findByBloqueIdAndPadreIsNullAndLanguage : {} - start");
 
     // Crete query
@@ -124,10 +124,10 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
         joinApartado.get(Apartado_.padre).get(Apartado_.orden), joinApartado.get(Apartado_.orden),
         root.get(ApartadoNombre_.esquema), root.get(ApartadoNombre_.lang));
     // Where
-    cq.where(cb.equal(root.get(ApartadoNombre_.lang), Language.fromCode(lang)),
+    cq.where(cb.equal(root.get(ApartadoNombre_.lang), lang),
         cb.equal(joinApartado.get(Apartado_.padre).get(Apartado_.id), idPadre));
 
-    countQuery.where(cb.equal(rootCount.get(ApartadoNombre_.lang), Language.fromCode(lang)),
+    countQuery.where(cb.equal(rootCount.get(ApartadoNombre_.lang), lang),
         cb.equal(joinCountApartado.get(Apartado_.padre).get(Apartado_.id), idPadre));
 
     Long count = entityManager.createQuery(countQuery).getSingleResult();
@@ -152,11 +152,11 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
    * 
    * 
    * @param idApartado Id de {@link Apartado}.
-   * @param lang       code language
+   * @param lang       El {@link Language} sobre el que buscar.
    * @return lista de {@link Apartado}
    */
   @Override
-  public ApartadoOutput findByApartadoIdAndLanguage(Long idApartado, String lang) {
+  public ApartadoOutput findByApartadoIdAndLanguage(Long idApartado, Language lang) {
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
@@ -173,7 +173,7 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
     // Where
     cq.where(
         cb.equal(joinApartado.get(Apartado_.id), idApartado),
-        cb.equal(root.get(ApartadoNombre_.lang), Language.fromCode(lang)),
+        cb.equal(root.get(ApartadoNombre_.lang), lang),
         cb.isNull(joinApartado.get(Apartado_.padre)));
 
     TypedQuery<ApartadoOutput> typedQuery = entityManager.createQuery(cq);
@@ -191,11 +191,11 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
    * 
    * @param idApartado Id de {@link Apartado}.
    * @param idPadre    id {@link Apartado} padre
-   * @param lang       code language
+   * @param lang       El {@link Language} sobre el que buscar.
    * @return lista de {@link Apartado}
    */
   @Override
-  public ApartadoOutput findByApartadoIdAndPadreIdAndLanguage(Long idApartado, Long idPadre, String lang) {
+  public ApartadoOutput findByApartadoIdAndPadreIdAndLanguage(Long idApartado, Long idPadre, Language lang) {
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
@@ -213,7 +213,7 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
     // Where
     cq.where(
         cb.equal(joinApartado.get(Apartado_.id), idApartado),
-        cb.equal(root.get(ApartadoNombre_.lang), Language.fromCode(lang)),
+        cb.equal(root.get(ApartadoNombre_.lang), lang),
         cb.equal(joinApartado.get(Apartado_.padre).get(Apartado_.id), idPadre));
 
     TypedQuery<ApartadoOutput> typedQuery = entityManager.createQuery(cq);
@@ -223,7 +223,7 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
   }
 
   @Override
-  public List<ApartadoOutput> findByPadreIdAndLanguageOrderByOrdenDesc(Long idPadre, String lang) {
+  public List<ApartadoOutput> findByPadreIdAndLanguageOrderByOrdenDesc(Long idPadre, Language lang) {
     log.debug("findByPadreIdAndLanguageOrderByOrdenDesc : {} - start");
 
     // Crete query
@@ -241,7 +241,7 @@ public class CustomApartadoRepositoryImpl implements CustomApartadoRepository {
         joinApartado.get(Apartado_.padre).get(Apartado_.orden), joinApartado.get(Apartado_.orden),
         root.get(ApartadoNombre_.esquema), root.get(ApartadoNombre_.lang));
     // Where
-    cq.where(cb.equal(root.get(ApartadoNombre_.lang), Language.fromCode(lang)),
+    cq.where(cb.equal(root.get(ApartadoNombre_.lang), lang),
         cb.equal(joinApartado.get(Apartado_.padre).get(Apartado_.id), idPadre));
 
     List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.DESC, Apartado_.ORDEN), joinApartado,

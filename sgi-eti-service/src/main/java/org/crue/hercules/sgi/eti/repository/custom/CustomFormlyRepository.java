@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.eti.dto.FormlyOutput;
 import org.crue.hercules.sgi.eti.model.Formly;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,21 +14,22 @@ import org.springframework.stereotype.Component;
 public interface CustomFormlyRepository {
 
   /**
-   * Devuelve una lista paginada de {@link Formly} para una determinada
+   * Devuelve una lista de {@link FormlyOutput} para un determinado id de
    * {@link Formly}
    * 
    * @param idFormly Id de {@link Formly}.
-   * @return lista de {@link Formly}
+   * @return lista de {@link FormlyOutput}
    */
   List<FormlyOutput> findByFormlyId(Long idFormly);
 
   /**
-   * Devuelve una lista paginada de {@link Formly}
+   * Devuelve el {@link FormlyOutput} con él mayor número de versión a partir del
+   * nombre e idioma especificado
    * 
    * @param nombre nombre de {@link Formly}.
-   * @param lang   language code
-   * @return lista de {@link Formly}
+   * @param lang   El {@link Language} sobre el que buscar.
+   * @return lista de {@link FormlyOutput}
    */
-  FormlyOutput findByNombreOrderByVersionDesc(String nombre, String lang);
+  FormlyOutput findByNombreOrderByVersionDesc(String nombre, Language lang);
 
 }

@@ -63,7 +63,6 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     comentarioService = new ComentarioServiceImpl(comentarioRepository, evaluacionRepository, evaluadorRepository,
         actaRepository);
   }

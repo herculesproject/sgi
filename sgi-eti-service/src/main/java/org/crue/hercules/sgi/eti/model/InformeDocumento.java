@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -14,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.crue.hercules.sgi.eti.enums.Language;
+import org.crue.hercules.sgi.framework.i18n.Language;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -43,14 +41,12 @@ public class InformeDocumento implements Serializable {
 
   /** Informe */
   @Id
-  @Column(name = "informe_id", nullable = false)
   @NotNull
   private Long informeId;
 
   /** Language. */
   @Id
-  @Column(name = "lang", length = 2)
-  @Enumerated(EnumType.STRING)
+  @NotNull
   private Language lang;
 
   /** Referencia documento */

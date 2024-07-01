@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.io.StringWriter;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
@@ -15,8 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.crue.hercules.sgi.eti.converter.LanguageConverter;
-import org.crue.hercules.sgi.eti.enums.Language;
+import org.crue.hercules.sgi.framework.i18n.Language;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
@@ -60,7 +58,7 @@ public class FormlyNombre implements Serializable {
 
   /** Language. */
   @Id
-  @Convert(converter = LanguageConverter.class)
+  @NotNull
   private Language lang;
 
   /** Nombre */

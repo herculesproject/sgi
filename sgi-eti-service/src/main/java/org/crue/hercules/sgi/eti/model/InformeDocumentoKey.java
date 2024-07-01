@@ -2,7 +2,11 @@ package org.crue.hercules.sgi.eti.model;
 
 import java.io.Serializable;
 
-import org.crue.hercules.sgi.eti.enums.Language;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.persistence.LanguageConverter;
 
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +20,11 @@ public class InformeDocumentoKey implements Serializable {
    */
   private static final long serialVersionUID = 1L;
 
+  @Column(name = "informe_id", nullable = false)
   private Long informeId;
+
+  @Column(name = "lang", nullable = false, length = 2)
+  @Convert(converter = LanguageConverter.class)
   private Language lang;
 
 }

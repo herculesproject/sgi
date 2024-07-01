@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
@@ -15,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -34,6 +33,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ApartadoControllerTest
@@ -60,7 +61,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .toString();
     // @formatter:on
 
-    BDDMockito.given(service.findByIdAndLanguage(response.getId(), "es")).willReturn(response);
+    BDDMockito.given(service.findByIdAndLanguage(response.getId(), Language.ES)).willReturn(response);
 
     // when: Se busca la entidad por ese Id
     mockMvc
@@ -84,7 +85,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .toString();
     // @formatter:on
 
-    BDDMockito.given(service.findByIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+    BDDMockito.given(service.findByIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers.<Language>any()))
         .will((InvocationOnMock invocation) -> {
           throw new ApartadoNotFoundException(invocation.getArgument(0));
         });
@@ -260,12 +261,13 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .append(PATH_PARAMETER_HIJOS).toString();
 
     BDDMockito
-        .given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+        .given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers
+            .<Language>any(),
             ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
-    mockMvc.perform(MockMvcRequestBuilders.get(url, id, "es").with(SecurityMockMvcRequestPostProcessors.csrf()))
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id, Language.ES).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -286,7 +288,8 @@ public class ApartadoControllerTest extends BaseControllerTest {
     }
 
     BDDMockito
-        .given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+        .given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers
+            .<Language>any(),
             ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Apartado>>() {
           @Override
@@ -300,7 +303,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         });
     // when: Se buscan todos los apartados hijos de ese apartador
     mockMvc
-        .perform(MockMvcRequestBuilders.get(url, id, "es").with(SecurityMockMvcRequestPostProcessors.csrf())
+        .perform(MockMvcRequestBuilders.get(url, id, Language.ES).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los apartados hijos relacionados

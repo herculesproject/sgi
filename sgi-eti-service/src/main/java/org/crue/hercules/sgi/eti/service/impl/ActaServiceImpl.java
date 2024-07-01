@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaEvaluada;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
@@ -48,10 +47,10 @@ import org.crue.hercules.sgi.eti.service.sgi.SgiApiBlockchainService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.AssertHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
-import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -329,12 +328,11 @@ public class ActaServiceImpl implements ActaService {
    * - En caso de ser una retrospectiva se actualiza siempre a estado "Fin
    * evaluación".
    * 
-   * @param id   identificador del {@link Acta} a finalizar.
-   * @param lang code language
+   * @param id identificador del {@link Acta} a finalizar.
    */
   @Override
   @Transactional
-  public void finishActa(Long id, String lang) {
+  public void finishActa(Long id) {
 
     log.debug("finishActa(Long id) - start");
 
@@ -462,7 +460,7 @@ public class ActaServiceImpl implements ActaService {
       });
     }
 
-    this.generarDocumentosActa(acta.getId(), lang);
+    this.generarDocumentosActa(acta.getId());
 
     // Se crea el nuevo estado acta 2:"Finalizado"
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
@@ -561,10 +559,10 @@ public class ActaServiceImpl implements ActaService {
 
   @Override
   @Transactional
-  public Boolean confirmarRegistroBlockchain(Long idActa, String lang) {
+  public Boolean confirmarRegistroBlockchain(Long idActa, Language lang) {
     log.debug("confirmarRegistroBlockchain(Long idActa) - start");
     Acta acta = actaRepository.findById(idActa).orElseThrow(() -> new ActaNotFoundException(idActa));
-    ActaDocumento actaDocumento = actaDocumentoRepository.findByActaIdAndLang(idActa, Language.fromCode(lang));
+    ActaDocumento actaDocumento = actaDocumentoRepository.findByActaIdAndLang(idActa, lang);
 
     DocumentoOutput documento = sgdocService.getDocumento(actaDocumento.getDocumentoRef());
 
@@ -652,13 +650,10 @@ public class ActaServiceImpl implements ActaService {
     return true;
   }
 
-  @Transactional
-  public DocumentoOutput generarDocumentosActa(Long idActa, String lang) {
-    DocumentoOutput returnDocumento = null;
-
+  private void generarDocumentosActa(Long idActa) {
     for (Language language : Language.values()) {
       ActaDocumento actaDocumento = null;
-      Resource informePdf = reportService.getInformeActa(idActa, language.getCode());
+      Resource informePdf = reportService.getInformeActa(idActa, language);
       // Se sube el informe a sgdoc
       String fileName = TITULO_INFORME_ACTA + "_" + idActa + LocalDate.now() + ".pdf";
       DocumentoOutput documento = null;
@@ -678,11 +673,6 @@ public class ActaServiceImpl implements ActaService {
       actaDocumento.setActaId(idActa);
       documento = sgdocService.uploadInforme(fileName, informePdf);
 
-      if (language.getCode().equals(lang)) {
-        returnDocumento = new DocumentoOutput();
-        BeanUtils.copyProperties(documento, returnDocumento);
-      }
-
       actaDocumento.setDocumentoRef(documento.getDocumentoRef());
       actaDocumento.setLang(language);
 
@@ -697,13 +687,11 @@ public class ActaServiceImpl implements ActaService {
 
       actaDocumentoRepository.save(actaDocumento);
     }
-
-    return returnDocumento;
   }
 
   @Override
   @Transactional
-  public DocumentoOutput generarDocumentoActa(Long idActa, String lang) {
+  public DocumentoOutput generarDocumentoActa(Long idActa, Language lang) {
 
     ActaDocumento actaDocumento = null;
     Acta acta = this.findById(idActa);
@@ -711,7 +699,7 @@ public class ActaServiceImpl implements ActaService {
 
     String fileName = TITULO_INFORME_ACTA + "_" + idActa + LocalDate.now() + ".pdf";
     DocumentoOutput documento = null;
-    actaDocumento = actaDocumentoRepository.findByActaIdAndLang(idActa, Language.fromCode(lang));
+    actaDocumento = actaDocumentoRepository.findByActaIdAndLang(idActa, lang);
     if (ObjectUtils.isNotEmpty(actaDocumento) && ObjectUtils.isNotEmpty(actaDocumento.getDocumentoRef())) {
       documento = sgdocService.getDocumento(actaDocumento.getDocumentoRef());
       if (!isActaFinalizada) {
@@ -728,7 +716,7 @@ public class ActaServiceImpl implements ActaService {
       Resource informePdf = reportService.getInformeActa(idActa, lang);
       documento = sgdocService.uploadInforme(fileName, informePdf);
       actaDocumento.setDocumentoRef(documento.getDocumentoRef());
-      actaDocumento.setLang(Language.fromCode(lang));
+      actaDocumento.setLang(lang);
 
       actaDocumentoRepository.save(actaDocumento);
     }

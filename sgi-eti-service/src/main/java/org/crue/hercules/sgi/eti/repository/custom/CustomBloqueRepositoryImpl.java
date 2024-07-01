@@ -12,13 +12,13 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.eti.dto.BloqueOutput;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.BloqueNombre;
 import org.crue.hercules.sgi.eti.model.BloqueNombre_;
 import org.crue.hercules.sgi.eti.model.Bloque_;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Formulario_;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -42,12 +42,12 @@ public class CustomBloqueRepositoryImpl implements CustomBloqueRepository {
    * e idioma
    * 
    * @param idFormulario Id de {@link Formulario}.
-   * @param lang         code language
+   * @param lang         El {@link Language} sobre el que buscar.
    * @param pageable     datos de paginación
    * @return lista de tareas con la informacion de si son eliminables.
    */
   @Override
-  public Page<BloqueOutput> findByFormularioIdAndLanguage(Long idFormulario, String lang, Pageable pageable) {
+  public Page<BloqueOutput> findByFormularioIdAndLanguage(Long idFormulario, Language lang, Pageable pageable) {
     log.debug("findAllByPeticionEvaluacionId : {} - start");
 
     // Crete query
@@ -70,10 +70,10 @@ public class CustomBloqueRepositoryImpl implements CustomBloqueRepository {
         joinBloque.get(Bloque_.orden), root.get(BloqueNombre_.lang));
 
     // Where
-    cq.where(cb.equal(root.get(BloqueNombre_.lang), Language.fromCode(lang)),
+    cq.where(cb.equal(root.get(BloqueNombre_.lang), lang),
         cb.equal(joinBloque.get(Bloque_.formulario).get(Formulario_.id), idFormulario));
 
-    countQuery.where(cb.equal(rootCount.get(BloqueNombre_.lang), Language.fromCode(lang)),
+    countQuery.where(cb.equal(rootCount.get(BloqueNombre_.lang), lang),
         cb.equal(joinCountBloque.get(Bloque_.formulario).get(Formulario_.id), idFormulario));
 
     Long count = entityManager.createQuery(countQuery).getSingleResult();
@@ -96,11 +96,11 @@ public class CustomBloqueRepositoryImpl implements CustomBloqueRepository {
    * /**
    * Devuelve el {@link Bloque} general para un determinado idioma
    * 
-   * @param lang code language
+   * @param lang El {@link Language} sobre el que obtener el bloque.
    * @return el bloque general
    */
   @Override
-  public BloqueOutput getBloqueComentarioGenerales(String lang) {
+  public BloqueOutput getBloqueComentarioGenerales(Language lang) {
     log.debug("getBloqueComentarioGenerales : {} - start");
 
     // Crete query
@@ -117,7 +117,7 @@ public class CustomBloqueRepositoryImpl implements CustomBloqueRepository {
         joinBloque.get(Bloque_.orden), root.get(BloqueNombre_.lang));
 
     // Where
-    cq.where(cb.equal(root.get(BloqueNombre_.lang), Language.fromCode(lang)),
+    cq.where(cb.equal(root.get(BloqueNombre_.lang), lang),
         cb.isNull(joinBloque.get(Bloque_.formulario).get(Formulario_.id)),
         cb.equal(joinBloque.get(Bloque_.ORDEN), "0"));
 
@@ -132,7 +132,7 @@ public class CustomBloqueRepositoryImpl implements CustomBloqueRepository {
   }
 
   @Override
-  public BloqueOutput findByBloqueIdAndLanguage(Long idBloque, String lang) {
+  public BloqueOutput findByBloqueIdAndLanguage(Long idBloque, Language lang) {
     log.debug("getBloqueComentarioGenerales : {} - start");
 
     // Crete query
@@ -149,7 +149,7 @@ public class CustomBloqueRepositoryImpl implements CustomBloqueRepository {
         joinBloque.get(Bloque_.orden), root.get(BloqueNombre_.lang));
 
     // Where
-    cq.where(cb.equal(root.get(BloqueNombre_.lang), Language.fromCode(lang)),
+    cq.where(cb.equal(root.get(BloqueNombre_.lang), lang),
         cb.equal(joinBloque.get(Bloque_.id), idBloque));
 
     TypedQuery<BloqueOutput> typedQuery = entityManager.createQuery(cq);

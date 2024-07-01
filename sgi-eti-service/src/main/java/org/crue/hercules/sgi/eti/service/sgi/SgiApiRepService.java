@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.util.AssertHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.core.ParameterizedTypeReference;
@@ -43,10 +44,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    *
    * @param idMemoria    Id de la memoria
    * @param idFormulario id del formulario
-   * @param lang         code language
+   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getMXX(Long idMemoria, Long idFormulario, String lang) {
+  public Resource getMXX(Long idMemoria, Long idFormulario, Language lang) {
     log.debug("getMXX(Long idMemoria, Long idFormulario)- start");
     Assert.notNull(idMemoria,
         // Defer message resolution untill is needed
@@ -65,7 +66,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idMemoria, idFormulario, lang).getBody();
+          }, idMemoria, idFormulario, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -78,10 +79,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe de evaluación en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         code language
+   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeEvaluacion(Long idEvaluacion, String lang) {
+  public Resource getInformeEvaluacion(Long idEvaluacion, Language lang) {
     log.debug("getInformeEvaluacion(idEvaluacion)- start");
 
     // TODO incluir validaciones de llamada al informe
@@ -104,7 +105,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang).getBody();
+          }, idEvaluacion, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -118,10 +119,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe de evaluador en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         code language
+   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeEvaluador(Long idEvaluacion, String lang) {
+  public Resource getInformeEvaluador(Long idEvaluacion, Language lang) {
     log.debug("getInformeEvaluador(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -140,7 +141,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang).getBody();
+          }, idEvaluacion, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -154,10 +155,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe favorable memoria en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         code language
+   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeFavorableMemoria(Long idEvaluacion, String lang) {
+  public Resource getInformeFavorableMemoria(Long idEvaluacion, Language lang) {
     log.debug("getInformeFavorableMemoria(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -176,7 +177,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang).getBody();
+          }, idEvaluacion, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -190,10 +191,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe favorable ratificación en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         code language
+   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeFavorableRatificacion(Long idEvaluacion, String lang) {
+  public Resource getInformeFavorableRatificacion(Long idEvaluacion, Language lang) {
     log.debug("getInformeFavorableRatificacion(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -212,7 +213,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang).getBody();
+          }, idEvaluacion, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -226,10 +227,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe favorable modificación en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         code language
+   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeFavorableModificacion(Long idEvaluacion, String lang) {
+  public Resource getInformeFavorableModificacion(Long idEvaluacion, Language lang) {
     log.debug("getInformeFavorableModificacion(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -248,7 +249,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang).getBody();
+          }, idEvaluacion, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -262,10 +263,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe acta en pdf
    *
    * @param idActa Id del acta
-   * @param lang   code language
+   * @param lang   El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeActa(Long idActa, String lang) {
+  public Resource getInformeActa(Long idActa, Language lang) {
     log.debug("getInformeActa(idActa)- start");
     Assert.notNull(idActa,
         // Defer message resolution untill is needed
@@ -282,7 +283,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idActa, lang).getBody();
+          }, idActa, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -297,10 +298,10 @@ public class SgiApiRepService extends SgiApiBaseService {
    *
    * @param idEvaluacion Id de la evaluación
    * @param fecha        Fecha del informe
-   * @param lang         code language
+   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeEvaluacionRetrospectiva(Long idEvaluacion, Instant fecha, String lang) {
+  public Resource getInformeEvaluacionRetrospectiva(Long idEvaluacion, Instant fecha, Language lang) {
     log.debug("getInformeEvaluacionRetrospectiva(idEvaluacion, fecha)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -322,7 +323,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<InformeEvaluacionReportInput, Resource>callEndpointWithCurrentUserAuthorization(mergedURL,
           httpMethod, input, new ParameterizedTypeReference<Resource>() {
-          }, lang).getBody();
+          }, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();

@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 
-import org.crue.hercules.sgi.eti.enums.Language;
-import org.crue.hercules.sgi.eti.model.Bloque;
+import org.crue.hercules.sgi.framework.i18n.Language;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;

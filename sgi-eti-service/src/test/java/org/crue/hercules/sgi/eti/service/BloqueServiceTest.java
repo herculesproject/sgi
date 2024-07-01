@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.BloqueRepository;
 import org.crue.hercules.sgi.eti.service.impl.BloqueServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -36,17 +37,16 @@ public class BloqueServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     bloqueService = new BloqueServiceImpl(bloqueRepository);
   }
 
   @Test
   public void find_WithId_ReturnsBloque() {
     BDDMockito.given(bloqueRepository.findById(1L)).willReturn(Optional.of(generarMockBloque(1L, "Bloque1")));
-    BDDMockito.given(bloqueRepository.findByBloqueIdAndLanguage(1L, "es"))
+    BDDMockito.given(bloqueRepository.findByBloqueIdAndLanguage(1L, Language.ES))
         .willReturn(generarMockBloqueOutput(1L, "Bloque1"));
 
-    BloqueOutput Bloque = bloqueService.findByIdAndLanguage(1L, "es");
+    BloqueOutput Bloque = bloqueService.findByIdAndLanguage(1L, Language.ES);
 
     Assertions.assertThat(Bloque.getId()).isEqualTo(1L);
 
@@ -56,7 +56,7 @@ public class BloqueServiceTest extends BaseServiceTest {
   public void find_NotFound_ThrowsBloqueNotFoundException() throws Exception {
     BDDMockito.given(bloqueRepository.findById(1L)).willReturn(Optional.empty());
 
-    Assertions.assertThatThrownBy(() -> bloqueService.findByIdAndLanguage(1L, "es"))
+    Assertions.assertThatThrownBy(() -> bloqueService.findByIdAndLanguage(1L, Language.ES))
         .isInstanceOf(BloqueNotFoundException.class);
   }
 
@@ -132,12 +132,13 @@ public class BloqueServiceTest extends BaseServiceTest {
     }
 
     BDDMockito
-        .given(bloqueRepository.findByFormularioIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+        .given(bloqueRepository.findByFormularioIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers
+            .<Language>any(),
             ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(bloques));
 
     // when: Se buscan todos las datos
-    Page<BloqueOutput> result = bloqueService.findByFormularioId(formularioId, "es", Pageable.unpaged());
+    Page<BloqueOutput> result = bloqueService.findByFormularioId(formularioId, Language.ES, Pageable.unpaged());
 
     // then: Se recuperan todos los datos
     Assertions.assertThat(result.getContent()).isEqualTo(bloques);

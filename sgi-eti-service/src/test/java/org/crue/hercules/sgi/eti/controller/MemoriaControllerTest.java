@@ -37,6 +37,7 @@ import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RespuestaService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -174,7 +175,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(memoriaService.createModificada(ArgumentMatchers.<Memoria>any(), ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyString()))
+            ArgumentMatchers
+                .<Language>any()))
         .willReturn(memoria);
 
     // when: Creamos una memoria
@@ -199,7 +201,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     BDDMockito
         .given(memoriaService.createModificada(ArgumentMatchers.<Memoria>any(), ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyString()))
+            ArgumentMatchers
+                .<Language>any()))
         .willThrow(new IllegalArgumentException());
 
     // when: Creamos una memoria

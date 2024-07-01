@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.eti.repository.BloqueRepository;
 import org.crue.hercules.sgi.eti.repository.specification.BloqueSpecifications;
 import org.crue.hercules.sgi.eti.service.BloqueService;
 import org.crue.hercules.sgi.eti.util.AssertHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,15 +56,16 @@ public class BloqueServiceImpl implements BloqueService {
   }
 
   /**
-   * Obtiene una entidad {@link Bloque} por id.
+   * Obtiene una entidad {@link Bloque} por id e idioma.
    *
-   * @param id el id de la entidad {@link Bloque}.
+   * @param id   el id de la entidad {@link Bloque}.
+   * @param lang El {@link BloqueOutput} sobre el que buscar.
    * @return la entidad {@link Bloque}.
    * @throws BloqueNotFoundException Si no existe ningún {@link Bloque} con ese
    *                                 id.
    */
   @Override
-  public BloqueOutput findByIdAndLanguage(final Long id, String lang) throws BloqueNotFoundException {
+  public BloqueOutput findByIdAndLanguage(final Long id, Language lang) throws BloqueNotFoundException {
     log.debug("Petición a get Bloque : {} - start", id);
     bloqueRepository.findById(id).orElseThrow(() -> new BloqueNotFoundException(id));
     final BloqueOutput bloque = bloqueRepository.findByBloqueIdAndLanguage(id, lang);
@@ -73,15 +75,15 @@ public class BloqueServiceImpl implements BloqueService {
 
   /**
    * Obtener todas las entidades {@link Bloque} paginadas de una
-   * {@link Formulario}.
+   * {@link Formulario} en el idioma solicitado.
    * 
    * @param id       Id del formulario
-   * @param lang     code language
+   * @param lang     El {@link Language} sobre el que buscar.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Bloque} paginadas y/o filtradas.
+   * @return la lista de entidades {@link BloqueOutput} paginadas y/o filtradas.
    */
   @Override
-  public Page<BloqueOutput> findByFormularioId(Long id, String lang, Pageable pageable) {
+  public Page<BloqueOutput> findByFormularioId(Long id, Language lang, Pageable pageable) {
     log.debug("update(Bloque bloqueActualizar) - start");
     AssertHelper.idNotNull(id, Formulario.class);
     Page<BloqueOutput> bloque = bloqueRepository.findByFormularioIdAndLanguage(id, lang, pageable);
@@ -90,13 +92,13 @@ public class BloqueServiceImpl implements BloqueService {
   }
 
   /**
-   * Obtiene el {@link Bloque} de comentarios generales.
+   * Obtiene el {@link Bloque} de comentarios generales en el idioma solicitado.
    *
-   * @param lang code language
-   * @return la entidad {@link Bloque}.
+   * @param lang El {@link Language} sobre el que buscar.
+   * @return la entidad {@link BloqueOutput}.
    */
   @Override
-  public BloqueOutput getBloqueComentariosGenerales(String lang) {
+  public BloqueOutput getBloqueComentariosGenerales(Language lang) {
     log.debug("getBloqueComentariosGenerales(String lang) - start");
     final BloqueOutput bloque = bloqueRepository.getBloqueComentarioGenerales(lang);
     log.debug("getBloqueComentariosGenerales(String lang) - end");

@@ -30,6 +30,7 @@ import org.crue.hercules.sgi.eti.service.impl.ActaServiceImpl;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiBlockchainService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -91,7 +92,6 @@ public class ActaServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository,
         evaluacionRepository, retrospectivaRepository, memoriaService, retrospectivaService, reportService,
         sgdocService, comunicadosService, configService, blockchainService, asistentesService, comentarioRepository,
@@ -312,7 +312,7 @@ public class ActaServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: Delete un id no existente
-        () -> actaService.finishActa(1L, "es"))
+        () -> actaService.finishActa(1L))
         // then: Lanza ActaNotFoundException
         .isInstanceOf(ActaNotFoundException.class);
 
@@ -325,7 +325,7 @@ public class ActaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(actaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(acta));
 
-    BDDMockito.given(reportService.getInformeActa(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+    BDDMockito.given(reportService.getInformeActa(ArgumentMatchers.anyLong(), ArgumentMatchers.<Language>any()))
         .willReturn(new FileSystemResource("path"));
 
     BDDMockito
@@ -348,7 +348,7 @@ public class ActaServiceTest extends BaseServiceTest {
     // when: Actualizamos el acta
     BDDMockito.given(actaRepository.save(ArgumentMatchers.<Acta>any())).willReturn(acta);
 
-    actaService.finishActa(1L, "es");
+    actaService.finishActa(1L);
 
     Mockito.verify(actaRepository, Mockito.times(1)).save(ArgumentMatchers.<Acta>any());
 

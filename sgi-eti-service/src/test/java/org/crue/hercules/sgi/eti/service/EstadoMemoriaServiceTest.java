@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.EstadoMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Formulario;
@@ -20,7 +21,6 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.service.impl.EstadoMemoriaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +48,6 @@ public class EstadoMemoriaServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     estadoMemoriaService = new EstadoMemoriaServiceImpl(estadoMemoriaRepository);
   }
 

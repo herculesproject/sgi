@@ -12,9 +12,9 @@ import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.exceptions.EvaluadorNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.service.impl.EvaluadorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,6 @@ public class EvaluadorServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     evaluadorService = new EvaluadorServiceImpl(evaluadorRepository, sgiConfigProperties);
   }
 

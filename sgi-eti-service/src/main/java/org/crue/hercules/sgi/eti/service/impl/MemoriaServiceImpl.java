@@ -25,7 +25,6 @@ import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
-import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -37,7 +36,6 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.InformeDocumento;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
@@ -70,6 +68,7 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -240,7 +239,7 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   @Transactional
   @Override
-  public Memoria createModificada(Memoria nuevaMemoria, Long id, String lang) {
+  public Memoria createModificada(Memoria nuevaMemoria, Long id, Language lang) {
     log.debug("createModificada(Memoria memoria, Long id) - start");
 
     validacionesCreateMemoria(nuevaMemoria);
@@ -947,27 +946,24 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     Informe informeNuevo = informeService.create(informe);
 
-    for (Language lang : Language.values()) {
-      // Se obtiene el informe en formato pdf creado mediante el servicio de reporting
-      this.createInformeAllLanguages(tituloInforme, informeNuevo, memoria.getId(), idFormulario,
-          lang.getCode());
-    }
+    this.createInformeAllLanguages(tituloInforme, informeNuevo, memoria.getId(), idFormulario);
 
     log.debug("crearInforme(memoria, tipoEvaluacion)- end");
   }
 
-  private void createInformeAllLanguages(String tituloInforme, Informe informe, Long idMemoria, Long idFormulario,
-      String lang) {
-    Resource informePdf = reportService.getMXX(idMemoria, idFormulario, lang);
-    // Se sube el informe a sgdoc
-    String fileName = tituloInforme + "_" + idMemoria + LocalDate.now() + ".pdf";
-    DocumentoOutput documento = sgdocService.uploadInforme(fileName, informePdf);
+  private void createInformeAllLanguages(String tituloInforme, Informe informe, Long idMemoria, Long idFormulario) {
+    for (Language lang : Language.values()) {
+      Resource informePdf = reportService.getMXX(idMemoria, idFormulario, lang);
+      // Se sube el informe a sgdoc
+      String fileName = tituloInforme + "_" + idMemoria + LocalDate.now() + ".pdf";
+      DocumentoOutput documento = sgdocService.uploadInforme(fileName, informePdf);
 
-    InformeDocumento informeDocumento = new InformeDocumento();
-    informeDocumento.setDocumentoRef(documento.getDocumentoRef());
-    informeDocumento.setInformeId(informe.getId());
-    informeDocumento.setLang(Language.fromCode(lang));
-    informeDocumentoRepository.save(informeDocumento);
+      InformeDocumento informeDocumento = new InformeDocumento();
+      informeDocumento.setDocumentoRef(documento.getDocumentoRef());
+      informeDocumento.setInformeId(informe.getId());
+      informeDocumento.setLang(lang);
+      informeDocumentoRepository.save(informeDocumento);
+    }
 
   }
 

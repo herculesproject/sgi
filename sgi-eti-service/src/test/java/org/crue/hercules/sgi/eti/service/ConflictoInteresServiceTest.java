@@ -1,31 +1,30 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.time.Instant;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ConflictoInteresNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.repository.ConflictoInteresRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.service.impl.ConflictoInteresServiceImpl;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.domain.PageImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * ConflictoInteresServiceTest
@@ -42,7 +41,6 @@ public class ConflictoInteresServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     conflictoInteresService = new ConflictoInteresServiceImpl(conflictoInteresRepository, evaluadorRepository);
   }
 

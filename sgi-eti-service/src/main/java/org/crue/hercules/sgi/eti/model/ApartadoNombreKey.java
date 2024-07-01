@@ -5,8 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 
-import org.crue.hercules.sgi.eti.converter.LanguageConverter;
-import org.crue.hercules.sgi.eti.enums.Language;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.persistence.LanguageConverter;
 
 import lombok.EqualsAndHashCode;
 

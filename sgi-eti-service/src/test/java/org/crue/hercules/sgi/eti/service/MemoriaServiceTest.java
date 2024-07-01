@@ -9,13 +9,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
@@ -53,6 +51,7 @@ import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -138,7 +137,6 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     memoriaService = new MemoriaServiceImpl(sgiConfigProperties, memoriaRepository, estadoMemoriaRepository,
         evaluacionRepository, comentarioRepository, informeService,
         peticionEvaluacionRepository, comiteRepository, documentacionMemoriaRepository, respuestaRepository,
@@ -416,7 +414,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(documentacionMemoriaRepository.findByMemoriaIdAndMemoriaActivoTrue(memoriaOld.getId(), null))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
-    BDDMockito.given(bloqueRepository.findByFormularioIdAndLanguage(Constantes.FORMULARIO_RETROSPECTIVA, "es", null))
+    BDDMockito
+        .given(bloqueRepository.findByFormularioIdAndLanguage(Constantes.FORMULARIO_RETROSPECTIVA, Language.ES, null))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     BDDMockito.given(respuestaRepository.findByMemoriaIdAndMemoriaActivoTrue(memoriaOld.getId(), null))
@@ -425,7 +424,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(memoriaRepository.save(memoriaNew)).willReturn(memoria);
 
     // when: Creamos la memoria
-    Memoria memoriaCreado = memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode());
+    Memoria memoriaCreado = memoriaService.createModificada(memoriaNew, 2L, Language.ES);
 
     // then: La memoria se crea correctamente
     Assertions.assertThat(memoriaCreado).isNotNull();
@@ -440,7 +439,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     Memoria memoriaNew = generarMockMemoria(1L, "numRef-5598", "MemoriaNew", 1, 1L);
     // when: Creamos la Memoria
     // then: Lanza una excepcion porque la Memoria ya tiene id
-    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode()))
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -451,7 +450,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     try {
       // when: Creamos la memoria
-      memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode());
+      memoriaService.createModificada(memoriaNew, 2L, Language.ES);
       Assertions.fail("Identificador de Memoria debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -467,7 +466,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     try {
       // when: Creamos la memoria
-      memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode());
+      memoriaService.createModificada(memoriaNew, 2L, Language.ES);
       Assertions.fail("Identificador de Petición Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -488,7 +487,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.empty());
 
-    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode()))
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES))
         .isInstanceOf(PeticionEvaluacionNotFoundException.class);
 
   }
@@ -507,7 +506,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(comiteRepository.findByIdAndActivoTrue(memoriaNew.getComite().getId()))
         .willReturn(Optional.empty());
 
-    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode()))
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES))
         .isInstanceOf(ComiteNotFoundException.class);
 
   }
@@ -529,7 +528,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     try {
       // when: Creamos la memoria
-      memoriaService.createModificada(memoriaNew, 2L, Language.ES.getCode());
+      memoriaService.createModificada(memoriaNew, 2L, Language.ES);
       Assertions.fail("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {

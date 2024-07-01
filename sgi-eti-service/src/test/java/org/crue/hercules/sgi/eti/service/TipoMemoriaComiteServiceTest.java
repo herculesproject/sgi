@@ -7,10 +7,10 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.repository.TipoMemoriaComiteRepository;
 import org.crue.hercules.sgi.eti.service.impl.TipoMemoriaComiteServiceImpl;
@@ -37,7 +37,6 @@ public class TipoMemoriaComiteServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     tipoMemoriaComiteService = new TipoMemoriaComiteServiceImpl(tipoMemoriaComiteRepository, comiteRepository);
   }
 

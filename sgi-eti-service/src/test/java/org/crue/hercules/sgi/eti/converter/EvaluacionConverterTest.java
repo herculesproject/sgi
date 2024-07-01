@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
@@ -42,8 +41,6 @@ public class EvaluacionConverterTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     evaluacionConverter = new EvaluacionConverter(comentarioRepository);
   }
 

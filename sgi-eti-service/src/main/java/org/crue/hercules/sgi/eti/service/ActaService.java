@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -72,10 +73,9 @@ public interface ActaService {
   /**
    * Finaliza el {@link Acta} con el id recibido como parámetro.
    * 
-   * @param id   identificador del {@link Acta} a finalizar.
-   * @param lang code language
+   * @param id identificador del {@link Acta} a finalizar.
    */
-  void finishActa(Long id, String lang);
+  void finishActa(Long id);
 
   /**
    * Devuelve el {@link Acta} asociada a una {@link ConvocatoriaReunion}
@@ -111,13 +111,13 @@ public interface ActaService {
   List<MemoriaEvaluada> findAllMemoriasEvaluadasSinRevMinimaByActaId(Long idActa);
 
   /**
-   * Obtiene el informe de un {@link Acta}
+   * Obtiene el informe de un {@link Acta} en un idioma concreto
    * 
    * @param idActa id {@link Acta}
-   * @param lang   code language
+   * @param lang   El {@link Language} en el que generar el informe.
    * @return El documento del informe del acta
    */
-  DocumentoOutput generarDocumentoActa(Long idActa, String lang);
+  DocumentoOutput generarDocumentoActa(Long idActa, Language lang);
 
   /**
    * Devuelve si el usuario es miembro activo del comité del {@link Acta}
@@ -140,10 +140,10 @@ public interface ActaService {
    * Confirma si el hash del blockchain sellado es igual o ha sido alterado
    * 
    * @param id   identificador del {@link Acta} a confirmar.
-   * @param lang code language
+   * @param lang El {@link Language} en el que verificar el hash.
    * @return true/false
    */
-  Boolean confirmarRegistroBlockchain(Long id, String lang);
+  Boolean confirmarRegistroBlockchain(Long id, Language lang);
 
   /**
    * Identifica si los {@link Comentario} en el {@link Acta} han sido

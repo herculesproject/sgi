@@ -12,11 +12,11 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.eti.dto.FormlyOutput;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Formly;
 import org.crue.hercules.sgi.eti.model.FormlyNombre;
 import org.crue.hercules.sgi.eti.model.FormlyNombre_;
 import org.crue.hercules.sgi.eti.model.Formly_;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -76,14 +76,15 @@ public class CustomFormlyRepositoryImpl implements CustomFormlyRepository {
   }
 
   /**
-   * Devuelve una lista de {@link Formly}
-   * 
+   * Devuelve el {@link FormlyOutput} con él mayor número de versión a partir del
+   * nombre e idioma especificado
    * 
    * @param nombre nombre de {@link Formly}.
-   * @return lista de {@link Formly}
+   * @param lang   El {@link Language} sobre el que buscar.
+   * @return lista de {@link FormlyOutput}
    */
   @Override
-  public FormlyOutput findByNombreOrderByVersionDesc(String nombre, String lang) {
+  public FormlyOutput findByNombreOrderByVersionDesc(String nombre, Language lang) {
 
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -99,7 +100,7 @@ public class CustomFormlyRepositoryImpl implements CustomFormlyRepository {
         joinFormly.get(Formly_.version), root.get(FormlyNombre_.esquema), root.get(FormlyNombre_.lang));
     // Where
     cq.where(
-        cb.and(cb.equal(root.get(FormlyNombre_.lang), Language.fromCode(lang)),
+        cb.and(cb.equal(root.get(FormlyNombre_.lang), lang),
             cb.equal(root.get(FormlyNombre_.nombre), nombre)));
     cq.orderBy(cb.desc(joinFormly.get(Formly_.version)));
     TypedQuery<FormlyOutput> typedQuery = entityManager.createQuery(cq);

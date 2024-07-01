@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.eti.repository;
 
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.ActaDocumento;
 import org.crue.hercules.sgi.eti.model.ActaDocumentoKey;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

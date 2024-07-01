@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.FormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.BloqueService;
 import org.crue.hercules.sgi.eti.service.FormularioService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -29,6 +28,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * FormularioControllerTest
@@ -185,7 +186,7 @@ public class FormularioControllerTest extends BaseControllerTest {
         .append(PATH_PARAMETER_BLOQUES).toString();
 
     BDDMockito
-        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Language>any(),
             ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
@@ -211,7 +212,8 @@ public class FormularioControllerTest extends BaseControllerTest {
     }
 
     BDDMockito
-        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(),
+        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers
+            .<Language>any(),
             ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Formulario>>() {
           @Override

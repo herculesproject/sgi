@@ -4,6 +4,7 @@ import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.exceptions.BloqueNotFoundException;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,34 +23,35 @@ public interface BloqueService {
   Page<Bloque> findAll(String query, Pageable pageable);
 
   /**
-   * Obtiene {@link Bloque} por id.
+   * Obtiene {@link Bloque} por id y idioma.
    *
    * @param id   el id de la entidad {@link Bloque}.
-   * @param lang code language
+   * @param lang El {@link Language} sobre el que buscar.
    * @return la entidad {@link Bloque}.
-   * @throws BloqueNotFoundException Si no existe ningún {@link Bloque} con ese
+   * @throws BloqueNotFoundException Si no existe ningún {@link BloqueOutput} con
+   *                                 ese
    *                                 id.
    */
-  BloqueOutput findByIdAndLanguage(Long id, String lang) throws BloqueNotFoundException;
+  BloqueOutput findByIdAndLanguage(Long id, Language lang) throws BloqueNotFoundException;
 
   /**
    * Obtener todas las entidades {@link Bloque} paginadas de una
-   * {@link Formulario}.
+   * {@link Formulario} en el idioma solicitado.
    * 
    * @param id       Id del formulario
-   * @param lang     code language
+   * @param lang     El {@link Language} sobre el que buscar.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Bloque} paginadas y/o filtradas.
+   * @return la lista de entidades {@link BloqueOutput} paginadas y/o filtradas.
    */
-  Page<BloqueOutput> findByFormularioId(Long id, String lang, Pageable pageable);
+  Page<BloqueOutput> findByFormularioId(Long id, Language lang, Pageable pageable);
 
   /**
-   * Obtiene el {@link Bloque} de comentarios generales.
+   * Obtiene el {@link Bloque} de comentarios generales en el idioma solicitado.
    * 
-   * @param lang code language
-   * @return el {@link Bloque}.
+   * @param lang El {@link Language} sobre el que buscar.
+   * @return el {@link BloqueOutput}.
    */
-  BloqueOutput getBloqueComentariosGenerales(String lang);
+  BloqueOutput getBloqueComentariosGenerales(Language lang);
 
   /**
    * Obtener todas las entidades {@link Bloque} paginadas de una

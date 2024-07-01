@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.repository.ApartadoRepository;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
 import org.crue.hercules.sgi.eti.util.AssertHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,16 +60,17 @@ public class ApartadoServiceImpl implements ApartadoService {
   }
 
   /**
-   * Obtiene {@link Apartado} por id.
+   * Obtiene {@link Apartado} por id e idioma.
    *
-   * @param id El id de la entidad {@link Apartado}.
-   * @return La entidad {@link Apartado}.
+   * @param id   El id de la entidad {@link Apartado}.
+   * @param lang El {@link Language} sobre el que buscar.
+   * @return La entidad {@link ApartadoOutput}.
    * @throws ApartadoNotFoundException Si no existe ninguna entidad
    *                                   {@link Apartado} con ese id.
    * @throws IllegalArgumentException  Si no se informa Id.
    */
   @Override
-  public ApartadoOutput findByIdAndLanguage(final Long id, String lang) {
+  public ApartadoOutput findByIdAndLanguage(final Long id, Language lang) {
     log.debug("findById(final Long id) - start");
     AssertHelper.idNotNull(id, Apartado.class);
     repository.findById(id).orElseThrow(() -> new ApartadoNotFoundException(id));
@@ -78,16 +80,18 @@ public class ApartadoServiceImpl implements ApartadoService {
   }
 
   /**
-   * Obtiene {@link Apartado} por id.
+   * Obtiene {@link Apartado} por id, identificador del padre e idioma.
    *
-   * @param id El id de la entidad {@link Apartado}.
-   * @return La entidad {@link Apartado}.
+   * @param id      El id de la entidad {@link Apartado}.
+   * @param idPadre Identificador del {@link Apartado} padre.
+   * @param lang    El {@link Language} sobre el que buscar.
+   * @return La entidad {@link ApartadoOutput}.
    * @throws ApartadoNotFoundException Si no existe ninguna entidad
    *                                   {@link Apartado} con ese id.
    * @throws IllegalArgumentException  Si no se informa Id.
    */
   @Override
-  public ApartadoOutput findByIdAndPadreIdAndLanguage(final Long id, Long idPadre, String lang) {
+  public ApartadoOutput findByIdAndPadreIdAndLanguage(final Long id, Long idPadre, Language lang) {
     log.debug("findById(final Long id) - start");
     AssertHelper.idNotNull(id, Apartado.class);
     final ApartadoOutput apartado = repository.findByApartadoIdAndPadreIdAndLanguage(id, idPadre, lang);
@@ -96,16 +100,18 @@ public class ApartadoServiceImpl implements ApartadoService {
   }
 
   /**
-   * Obtiene las entidades {@link Apartado} filtradas y paginadas según por el id
-   * de su {@link Bloque}. Solamente se devuelven los Apartados de primer nivel
+   * Obtiene las entidades {@link Apartado} filtradas y paginadas según el id
+   * de su {@link Bloque} y el idioma solicitado. Solamente se devuelven los
+   * Apartados de primer nivel
    * (sin padre).
    *
    * @param id       id del {@link Bloque}.
+   * @param lang     El {@link Language} sobre el que buscar.
    * @param pageable pageable
    * @return el listado de entidades {@link Apartado} paginadas y filtradas.
    */
   @Override
-  public Page<ApartadoOutput> findByBloqueId(Long id, String lang, Pageable pageable) {
+  public Page<ApartadoOutput> findByBloqueId(Long id, Language lang, Pageable pageable) {
     log.debug("findByBloqueId(Long id, Pageable pageable) - start");
     AssertHelper.idNotNull(id, Bloque.class);
     final Page<ApartadoOutput> apartado = repository.findByBloqueIdAndPadreIsNullAndLanguage(id, lang, pageable);
@@ -115,15 +121,15 @@ public class ApartadoServiceImpl implements ApartadoService {
 
   /**
    * Obtiene las entidades {@link Apartado} filtradas y paginadas según por el id
-   * de su padre {@link Apartado}.
+   * de su padre {@link Apartado} y el idioma solicitado.
    *
    * @param id       id del {@link Apartado}.
-   * @param lang     code language
+   * @param lang     El {@link Language} sobre el que buscar.
    * @param pageable pageable
    * @return el listado de entidades {@link Apartado} paginadas y filtradas.
    */
   @Override
-  public Page<ApartadoOutput> findByPadreId(Long id, String lang, Pageable pageable) {
+  public Page<ApartadoOutput> findByPadreId(Long id, Language lang, Pageable pageable) {
     log.debug("findByPadreId(Long id, Pageable pageable) - start");
     AssertHelper.idNotNull(id, Apartado.class);
     final Page<ApartadoOutput> apartado = repository.findByPadreIdAndLanguage(id, lang, pageable);
@@ -133,14 +139,16 @@ public class ApartadoServiceImpl implements ApartadoService {
 
   /**
    * Obtiene las entidades {@link ApartadoTreeOutput} paginadas por el id
-   * de su {@link Bloque}. Se devuelven los Apartados de primer nivel
+   * de su {@link Bloque} en el idioma solicitado. Se devuelven los Apartados de
+   * primer nivel
    * (sin padre) con sus arboles de apartados hijos.
    *
    * @param id       id del {@link Bloque}.
+   * @param lang     El {@link Language} sobre el que buscar.
    * @param pageable pageable
    * @return el listado de entidades {@link ApartadoTreeOutput} paginadas.
    */
-  public Page<ApartadoTreeOutput> findApartadosTreeByBloqueId(Long id, String lang, Pageable pageable) {
+  public Page<ApartadoTreeOutput> findApartadosTreeByBloqueId(Long id, Language lang, Pageable pageable) {
     log.debug("findByPadreId(Long id, Pageable pageable) - start");
     AssertHelper.idNotNull(id, Bloque.class);
     final Page<ApartadoTreeOutput> apartados = repository.findByBloqueIdAndPadreIsNullAndLanguage(id, lang, pageable)
@@ -153,7 +161,7 @@ public class ApartadoServiceImpl implements ApartadoService {
 
   private ApartadoTreeOutput fillApartadoTreeHijosRecursive(ApartadoTreeOutput apartado) {
     List<ApartadoTreeOutput> hijos = apartadoTreeConverter.convertList(
-        repository.findByPadreIdAndLanguageOrderByOrdenDesc(apartado.getId(), apartado.getLang()))
+        repository.findByPadreIdAndLanguageOrderByOrdenDesc(apartado.getId(), Language.fromCode(apartado.getLang())))
         .stream()
         .map(this::fillApartadoTreeHijosRecursive)
         .collect(Collectors.toList());

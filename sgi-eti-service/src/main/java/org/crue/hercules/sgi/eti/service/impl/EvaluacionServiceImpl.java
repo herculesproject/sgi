@@ -42,6 +42,7 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -586,7 +587,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
   @Transactional
   @Override
-  public DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion, String lang) {
+  public DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion, Language lang) {
     Evaluacion evaluacion = this.findById(idEvaluacion);
     DocumentoOutput documento = null;
     switch (evaluacion.getTipoEvaluacion().getTipo()) {
@@ -617,14 +618,14 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     return documento;
   }
 
-  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion, String lang) {
+  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion, Language lang) {
     boolean isFavorable = (evaluacion.getDictamen() != null
         && (evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE.getId())));
 
     return this.generarDocumento(evaluacion, isFavorable, lang);
   }
 
-  private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable, String lang) {
+  private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable, Language lang) {
     log.debug("generarDocumento(Evaluacion evaluacion, Boolean favorable)- start");
 
     Resource informePdf = null;
@@ -666,14 +667,14 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   }
 
   /**
-   * Obtiene el documento de la ficha del Evaluador
+   * Obtiene el documento de la ficha del Evaluador en idioma solicitado
    * 
    * @param idEvaluacion id {@link Evaluacion}
-   * @param lang         code language
+   * @param lang         El {@link Language} en el que generar el informe.
    * @return El documento del informe de la ficha del Evaluador
    */
   @Override
-  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion, String lang) {
+  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion, Language lang) {
     Resource informePdf = reportService.getInformeEvaluador(idEvaluacion, lang);
     // Se sube el informe a sgdoc
     String fileName = TITULO_INFORME_FICHA_EVALUADOR + "_" + idEvaluacion + LocalDate.now() + ".pdf";

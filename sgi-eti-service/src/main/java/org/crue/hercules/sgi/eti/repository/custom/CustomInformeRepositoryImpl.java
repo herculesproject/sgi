@@ -13,13 +13,13 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 
 import org.crue.hercules.sgi.eti.dto.InformeOutput;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.InformeDocumento;
 import org.crue.hercules.sgi.eti.model.InformeDocumento_;
 import org.crue.hercules.sgi.eti.model.Informe_;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

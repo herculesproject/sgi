@@ -12,10 +12,10 @@ import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
@@ -53,7 +53,6 @@ public class ConvocatoriaReunionServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new ConvocatoriaReunionServiceImpl(sgiConfigProperties, repository, actaRepository, evaluacionRepository,
         comunicadosService);
   }

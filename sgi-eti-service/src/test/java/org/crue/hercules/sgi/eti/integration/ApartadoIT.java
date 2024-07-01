@@ -8,11 +8,11 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.BloqueNombre;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;

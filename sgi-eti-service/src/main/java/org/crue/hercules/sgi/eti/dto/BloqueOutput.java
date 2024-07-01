@@ -2,8 +2,8 @@ package org.crue.hercules.sgi.eti.dto;
 
 import java.io.Serializable;
 
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.framework.i18n.Language;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.eti.dto.ApartadoTreeOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,65 +27,68 @@ public interface ApartadoService {
   Page<Apartado> findAll(String query, Pageable paging);
 
   /**
-   * Obtiene {@link Apartado} por id.
+   * Obtiene {@link Apartado} por id e idioma.
    *
    * @param id   El id de la entidad {@link Apartado}.
-   * @param lang code language
-   * @return La entidad {@link Apartado}.
+   * @param lang El {@link Language} sobre el que buscar.
+   * @return La entidad {@link ApartadoOutput}.
    * @throws ApartadoNotFoundException Si no existe ninguna entidad
    *                                   {@link Apartado} con ese id.
    * @throws IllegalArgumentException  Si no se informa Id.
    */
-  ApartadoOutput findByIdAndLanguage(Long id, String lang) throws ApartadoNotFoundException, IllegalArgumentException;
+  ApartadoOutput findByIdAndLanguage(Long id, Language lang)
+      throws ApartadoNotFoundException, IllegalArgumentException;
 
   /**
-   * Obtiene {@link Apartado} por id.
+   * Obtiene {@link Apartado} por id, identificador del apartado padre y idioma.
    *
-   * @param id      El id de la entidad {@link Apartado}.
-   * @param idPadre id del {@link Apartado} padre
-   * @param lang    code language
-   * @return La entidad {@link Apartado}.
+   * @param id       El id de la entidad {@link Apartado}.
+   * @param idPadre  id del {@link Apartado} padre
+   * @param language El {@link Language} sobre el que buscar.
+   * @return La entidad {@link ApartadoOutput}.
    * @throws ApartadoNotFoundException Si no existe ninguna entidad
    *                                   {@link Apartado} con ese id.
    * @throws IllegalArgumentException  Si no se informa Id.
    */
-  ApartadoOutput findByIdAndPadreIdAndLanguage(Long id, Long idPadre, String lang)
+  ApartadoOutput findByIdAndPadreIdAndLanguage(Long id, Long idPadre, Language language)
       throws ApartadoNotFoundException, IllegalArgumentException;
 
   /**
    * Obtiene las entidades {@link Apartado} filtradas y paginadas según por el id
-   * de su {@link Bloque}. Solamente se devuelven los Apartados de primer nivel
+   * de su {@link Bloque} y el idioma solicitado. Solamente se devuelven los
+   * Apartados de primer nivel
    * (sin padre).
    *
    * @param id       id del {@link Bloque}.
-   * @param lang     code language
+   * @param language El {@link Language} sobre el que buscar.
    * @param pageable pageable
-   * @return el listado de entidades {@link Apartado} paginadas y filtradas.
+   * @return el listado de entidades {@link ApartadoOutput} paginadas y filtradas.
    */
-  Page<ApartadoOutput> findByBloqueId(Long id, String lang, Pageable pageable);
+  Page<ApartadoOutput> findByBloqueId(Long id, Language language, Pageable pageable);
 
   /**
    * Obtiene las entidades {@link Apartado} filtradas y paginadas según por el id
-   * de su padre {@link Apartado}.
+   * de su padre {@link Apartado} y el idioma.
    *
    * @param id       id del {@link Apartado} padre.
-   * @param lang     code language
+   * @param language El {@link Language} sobre el que buscar.
    * @param pageable pageable
-   * @return el listado de entidades {@link Apartado} paginadas y filtradas.
+   * @return el listado de entidades {@link ApartadoOutput} paginadas y filtradas.
    */
-  Page<ApartadoOutput> findByPadreId(Long id, String lang, Pageable pageable);
+  Page<ApartadoOutput> findByPadreId(Long id, Language language, Pageable pageable);
 
   /**
    * Obtiene las entidades {@link ApartadoTreeOutput} paginadas por el id
-   * de su {@link Bloque}. Se devuelven los Apartados de primer nivel
+   * de su {@link Bloque} y el idioma solicitado. Se devuelven los Apartados de
+   * primer nivel
    * (sin padre) con sus arboles de apartados hijos.
    *
    * @param id       id del {@link Bloque}.
-   * @param lang     code language
+   * @param language El {@link Language} sobre el que buscar.
    * @param pageable pageable
    * @return el listado de entidades {@link ApartadoTreeOutput} paginadas.
    */
-  Page<ApartadoTreeOutput> findApartadosTreeByBloqueId(Long id, String lang, Pageable pageable);
+  Page<ApartadoTreeOutput> findApartadosTreeByBloqueId(Long id, Language language, Pageable pageable);
 
   /**
    * Obtiene las entidades {@link Apartado} en todos los idiomas

@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.ApartadoRepository;
 import org.crue.hercules.sgi.eti.service.impl.ApartadoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -39,7 +40,6 @@ public class ApartadoServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new ApartadoServiceImpl(repository, apartadoTreeConverter);
   }
 
@@ -49,10 +49,10 @@ public class ApartadoServiceTest extends BaseServiceTest {
     // given: Entidad con un determinado Id
     ApartadoOutput response = getMockDataOutput(1L, 1L, null);
     BDDMockito.given(repository.findById(response.getId())).willReturn(Optional.of(getMockData(1L, 1L, null)));
-    BDDMockito.given(repository.findByApartadoIdAndLanguage(response.getId(), "es")).willReturn(response);
+    BDDMockito.given(repository.findByApartadoIdAndLanguage(response.getId(), Language.ES)).willReturn(response);
 
     // when: Se busca la entidad por ese Id
-    ApartadoOutput result = service.findByIdAndLanguage(response.getId(), "es");
+    ApartadoOutput result = service.findByIdAndLanguage(response.getId(), Language.ES);
 
     // then: Se recupera la entidad con el Id
     Assertions.assertThat(result).isEqualTo(response);
@@ -67,7 +67,7 @@ public class ApartadoServiceTest extends BaseServiceTest {
 
     // when: Se busca entidad con ese id
     // then: Se produce error porque no encuentra la entidad con ese Id
-    Assertions.assertThatThrownBy(() -> service.findByIdAndLanguage(id, "es"))
+    Assertions.assertThatThrownBy(() -> service.findByIdAndLanguage(id, Language.ES))
         .isInstanceOf(ApartadoNotFoundException.class);
   }
 
@@ -164,11 +164,12 @@ public class ApartadoServiceTest extends BaseServiceTest {
     response.add(apartado);
 
     Page<ApartadoOutput> pageResponse = new PageImpl<>(response.subList(0, 1), Pageable.unpaged(), response.size());
-    BDDMockito.given(repository.findByBloqueIdAndPadreIsNullAndLanguage(bloque.getId(), "es", Pageable.unpaged()))
+    BDDMockito
+        .given(repository.findByBloqueIdAndPadreIsNullAndLanguage(bloque.getId(), Language.ES, Pageable.unpaged()))
         .willReturn(pageResponse);
 
     // when: Se busca la entidad por ese Id
-    Page<ApartadoOutput> result = service.findByBloqueId(bloque.getId(), "es", Pageable.unpaged());
+    Page<ApartadoOutput> result = service.findByBloqueId(bloque.getId(), Language.ES, Pageable.unpaged());
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result).isEqualTo(pageResponse);
@@ -182,7 +183,7 @@ public class ApartadoServiceTest extends BaseServiceTest {
     Long id = null;
     try {
       // when: se quiera listar sus apartados
-      service.findByBloqueId(id, "es", Pageable.unpaged());
+      service.findByBloqueId(id, Language.ES, Pageable.unpaged());
       Assertions.fail("El id no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
@@ -200,10 +201,10 @@ public class ApartadoServiceTest extends BaseServiceTest {
     response.add(apartado);
 
     Page<ApartadoOutput> pageResponse = new PageImpl<>(response.subList(0, 1), Pageable.unpaged(), response.size());
-    BDDMockito.given(repository.findByPadreIdAndLanguage(id, "es", Pageable.unpaged())).willReturn(pageResponse);
+    BDDMockito.given(repository.findByPadreIdAndLanguage(id, Language.ES, Pageable.unpaged())).willReturn(pageResponse);
 
     // when: Se busca la entidad por ese Id
-    Page<ApartadoOutput> result = service.findByPadreId(id, "es", Pageable.unpaged());
+    Page<ApartadoOutput> result = service.findByPadreId(id, Language.ES, Pageable.unpaged());
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result).isEqualTo(pageResponse);
@@ -217,7 +218,7 @@ public class ApartadoServiceTest extends BaseServiceTest {
     Long id = null;
     try {
       // when: se quiera listar sus apartados hijos
-      service.findByPadreId(id, "es", Pageable.unpaged());
+      service.findByPadreId(id, Language.ES, Pageable.unpaged());
       Assertions.fail("Id no puede ser null para buscar una apartado por el Id de su padre");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {

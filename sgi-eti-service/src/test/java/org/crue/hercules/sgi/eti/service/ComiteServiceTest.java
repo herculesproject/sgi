@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Comite.Genero;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.service.impl.ComiteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,6 @@ public class ComiteServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     comiteService = new ComiteServiceImpl(comiteRepository);
   }
 

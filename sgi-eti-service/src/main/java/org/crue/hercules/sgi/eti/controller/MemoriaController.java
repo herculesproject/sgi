@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -35,9 +34,8 @@ import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RespuestaService;
-import org.crue.hercules.sgi.eti.util.SgiLocaleHelper;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -238,8 +236,7 @@ public class MemoriaController {
   public ResponseEntity<Memoria> newMemoriaModificada(
       @Validated({ BaseEntity.Create.class, Default.class }) @RequestBody Memoria nuevaMemoria, @PathVariable Long id) {
     log.debug("newMemoriaModificada(Memoria nuevaMemoria,  Long id) - start");
-    Locale locale = LocaleContextHolder.getLocale();
-    Memoria returnValue = service.createModificada(nuevaMemoria, id, SgiLocaleHelper.getLang(locale));
+    Memoria returnValue = service.createModificada(nuevaMemoria, id, SgiLocaleContextHolder.getLanguage());
     log.debug("newMemoriaModificada(Memoria nuevaMemoria,  Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }

@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.crue.hercules.sgi.eti.enums.Language;
+import org.crue.hercules.sgi.framework.i18n.Language;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
@@ -51,6 +51,7 @@ public class ApartadoNombre implements Serializable {
 
   /** Language. */
   @Id
+  @NotNull
   private Language lang;
 
   /** Nombre. */

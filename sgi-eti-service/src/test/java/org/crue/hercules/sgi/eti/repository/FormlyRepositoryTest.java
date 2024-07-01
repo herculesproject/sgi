@@ -2,9 +2,9 @@ package org.crue.hercules.sgi.eti.repository;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.FormlyOutput;
-import org.crue.hercules.sgi.eti.enums.Language;
 import org.crue.hercules.sgi.eti.model.Formly;
 import org.crue.hercules.sgi.eti.model.FormlyNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -27,12 +27,12 @@ public class FormlyRepositoryTest extends BaseRepositoryTest {
       FormlyNombre formlyNombre = entityManager
           .persistAndFlush(
               FormlyNombre.builder().nombre("FRM" + j).formlyId(formly.getId()).esquema("{}")
-                  .lang(Language.fromCode("es")).build());
+                  .lang(Language.ES).build());
       formlyNombre = entityManager.persistAndFlush(formlyNombre);
     }
 
     // when: find latest formly version named 'FRM1'
-    FormlyOutput dataFound = repository.findByNombreOrderByVersionDesc("FRM3", "es");
+    FormlyOutput dataFound = repository.findByNombreOrderByVersionDesc("FRM3", Language.ES);
 
     // then: latest formly version is returned
     Assertions.assertThat(dataFound).isNotNull();

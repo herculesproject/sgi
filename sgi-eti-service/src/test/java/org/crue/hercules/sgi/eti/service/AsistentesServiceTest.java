@@ -12,11 +12,11 @@ import org.crue.hercules.sgi.eti.exceptions.AsistentesNotFoundException;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.repository.AsistentesRepository;
 import org.crue.hercules.sgi.eti.service.impl.AsistentesServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,6 @@ public class AsistentesServiceTest extends BaseServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     asistentesService = new AsistentesServiceImpl(asistentesRepository);
   }
 
