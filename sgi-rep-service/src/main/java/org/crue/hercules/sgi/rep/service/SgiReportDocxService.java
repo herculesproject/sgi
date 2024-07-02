@@ -15,11 +15,12 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
-import org.crue.hercules.sgi.rep.util.SgiLocaleHelper;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -162,11 +163,11 @@ public class SgiReportDocxService {
 
   protected PdfOptions createCustomPdfOptions() {
     PdfOptions pdfOptions = PdfOptions.create();
-    String lang = SgiLocaleHelper.getLang(LocaleContextHolder.getLocale());
+    Language lang = SgiLocaleContextHolder.getLanguage();
     byte[] fontBytes = sgiApiConfService
-        .getResource("rep-font-" + lang);
+        .getResource("rep-font-" + lang.getCode());
     if (ObjectUtils.isNotEmpty(fontBytes)) {
-      String nameFont = "custom-font-" + lang + ".otf";
+      String nameFont = "custom-font-" + lang.getCode() + ".otf";
       try {
         BaseFont baseFont = BaseFont.createFont(nameFont, BaseFont.IDENTITY_H,
             BaseFont.EMBEDDED, true, fontBytes, null);

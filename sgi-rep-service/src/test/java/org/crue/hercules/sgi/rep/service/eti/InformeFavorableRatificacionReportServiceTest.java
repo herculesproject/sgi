@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableRatificacion;
@@ -54,7 +55,7 @@ class InformeFavorableRatificacionReportServiceTest extends BaseReportEtiService
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(report,
-        idEvaluacion, "es");
+        idEvaluacion, Language.ES);
     assertNotNull(reportContent);
 
   }

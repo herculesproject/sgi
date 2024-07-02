@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
@@ -45,7 +46,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
   }
 
   protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
-      String lang) {
+      Language lang) {
 
     AssertHelper.entityNotNull(evaluacion, EvaluacionDto.class, EvaluacionDto.class);
 
@@ -137,7 +138,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
     return compileReportData(path, dataReport);
   }
 
-  public byte[] getReportInformeEvaluacion(ReportInformeEvaluacion sgiReport, Long idEvaluacion, String lang) {
+  public byte[] getReportInformeEvaluacion(ReportInformeEvaluacion sgiReport, Long idEvaluacion, Language lang) {
     getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }

@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
@@ -149,8 +150,8 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
   }
 
   private XWPFDocument getReportFromDetalleGrupo(ReportInformeDetalleGrupo sgiReport, Integer anio,
-      Long grupoId, String lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang;
+      Long grupoId, Language lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
     try {
 
       HashMap<String, Object> dataReport = new HashMap<>();
@@ -176,7 +177,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
     }
   }
 
-  public byte[] getReportDetalleGrupo(ReportInformeDetalleGrupo sgiReport, Integer anio, Long grupoId, String lang) {
+  public byte[] getReportDetalleGrupo(ReportInformeDetalleGrupo sgiReport, Integer anio, Long grupoId, Language lang) {
     getReportFromDetalleGrupo(sgiReport, anio, grupoId, lang);
     return sgiReport.getContent();
   }
@@ -204,8 +205,8 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
   }
 
   private XWPFDocument getReportFromResumenPuntuacionGrupos(ReportInformeResumenPuntuacionGrupos sgiReport,
-      Integer anio, String lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang;
+      Integer anio, Language lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
     try {
 
       HashMap<String, Object> dataReport = new HashMap<>();
@@ -232,7 +233,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
   }
 
   public byte[] getReportResumenPuntuacionGrupos(ReportInformeResumenPuntuacionGrupos sgiReport, Integer anio,
-      String lang) {
+      Language lang) {
     getReportFromResumenPuntuacionGrupos(sgiReport, anio, lang);
     return sgiReport.getContent();
   }
@@ -264,8 +265,8 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
 
   private XWPFDocument getReportFromDetalleProduccionInvestigador(
       ReportInformeDetalleProduccionInvestigador sgiReport,
-      Integer anio, String personaRef, String lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang;
+      Integer anio, String personaRef, Language lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
     try {
 
       HashMap<String, Object> dataReport = new HashMap<>();
@@ -293,7 +294,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
   }
 
   public byte[] getReportDetalleProduccionInvestigador(ReportInformeDetalleProduccionInvestigador sgiReport,
-      Integer anio, String personaRef, String lang) {
+      Integer anio, String personaRef, Language lang) {
     getReportFromDetalleProduccionInvestigador(sgiReport, anio, personaRef, lang);
     return sgiReport.getContent();
   }

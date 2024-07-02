@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
@@ -68,7 +69,7 @@ public class BaseApartadosRespuestasReportService {
    * @param input BloquesReportInput
    * @return BloquesReportOutput
    */
-  public BloquesReportOutput getDataFromApartadosAndRespuestas(@Valid BloquesReportInput input, String lang) {
+  public BloquesReportOutput getDataFromApartadosAndRespuestas(@Valid BloquesReportInput input, Language lang) {
     log.debug("getDataFromApartadosAndRespuestas(EtiBloquesReportInput) - start");
 
     BloquesReportOutput bloquesReportOutput = new BloquesReportOutput();
@@ -104,7 +105,7 @@ public class BaseApartadosRespuestasReportService {
   }
 
   private void parseBloque(BloquesReportInput input, BloquesReportOutput bloquesReportOutput, BloqueDto bloque,
-      int tamBloques, String lang) {
+      int tamBloques, Language lang) {
 
     String nombre = bloque.getNombre();
     if (bloque.getFormulario() != null) {
@@ -138,13 +139,13 @@ public class BaseApartadosRespuestasReportService {
     }
   }
 
-  private ApartadoOutput parseApartadoAndHijos(BloquesReportInput input, ApartadoDto apartado, String lang) {
+  private ApartadoOutput parseApartadoAndHijos(BloquesReportInput input, ApartadoDto apartado, Language lang) {
     ApartadoOutput apartadoOutput = parseApartadoOutput(input, apartado);
     apartadoOutput.setApartadosHijos(findApartadosHijosAndRespuestas(input, apartado.getId(), lang));
     return apartadoOutput;
   }
 
-  public List<ApartadoOutput> findApartadosHijosAndRespuestas(BloquesReportInput input, Long idPadre, String lang) {
+  public List<ApartadoOutput> findApartadosHijosAndRespuestas(BloquesReportInput input, Long idPadre, Language lang) {
     List<ApartadoOutput> apartadosHijosResult = new ArrayList<>();
 
     List<ApartadoDto> apartados = apartadoService.findByPadreId(idPadre, lang);

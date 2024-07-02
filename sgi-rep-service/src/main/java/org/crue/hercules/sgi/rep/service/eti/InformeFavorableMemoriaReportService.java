@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
@@ -38,7 +39,7 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionEvalu
   }
 
   protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
-      String lang) {
+      Language lang) {
 
     dataReport.put("codigoMemoria", evaluacion.getMemoria().getNumReferencia());
 
@@ -106,7 +107,7 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionEvalu
   }
 
   public byte[] getReportInformeFavorableMemoria(ReportInformeFavorableMemoria sgiReport, Long idEvaluacion,
-      String lang) {
+      Language lang) {
     getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }

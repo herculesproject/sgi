@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
@@ -29,7 +30,7 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
   }
 
   protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
-      String lang) {
+      Language lang) {
 
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(),
         dataReport);
@@ -47,7 +48,7 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
   }
 
   public byte[] getReportInformeEvaluacionRetrospectiva(ReportInformeEvaluacionRetrospectiva sgiReport,
-      InformeEvaluacionReportInput input, String lang) {
+      InformeEvaluacionReportInput input, Language lang) {
     getReportFromEvaluacionId(sgiReport, input.getIdEvaluacion(), lang);
     return sgiReport.getContent();
   }

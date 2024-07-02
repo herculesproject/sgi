@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.HashMap;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ConvocatoriaReunionDto;
@@ -35,7 +36,7 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
   }
 
   protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
-      String lang) {
+      Language lang) {
 
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), dataReport);
 
@@ -80,7 +81,7 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
   }
 
   public byte[] getReportInformeFavorableModificacion(ReportInformeFavorableModificacion sgiReport, Long idEvaluacion,
-      String lang) {
+      Language lang) {
     getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }

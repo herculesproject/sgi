@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
@@ -31,7 +32,7 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
   }
 
   protected XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, InputStream path,
-      String lang) {
+      Language lang) {
 
     dataReport.put("referenciaMemoria", evaluacion.getMemoria().getNumReferencia());
     dataReport.put("version", evaluacion.getVersion());
@@ -67,12 +68,13 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
     return compileReportData(path, dataReport);
   }
 
-  private XWPFDocument getReportFromEvaluador(SgiReportDto sgiReport, Long idEvaluacion, String lang) {
+  private XWPFDocument getReportFromEvaluador(SgiReportDto sgiReport, Long idEvaluacion, Language lang) {
     return this.getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
 
   }
 
-  public byte[] getReportInformeEvaluadorEvaluacion(ReportInformeEvaluador sgiReport, Long idEvaluacion, String lang) {
+  public byte[] getReportInformeEvaluadorEvaluacion(ReportInformeEvaluador sgiReport, Long idEvaluacion,
+      Language lang) {
     this.getReportFromEvaluador(sgiReport, idEvaluacion, lang);
     return sgiReport.getContent();
   }

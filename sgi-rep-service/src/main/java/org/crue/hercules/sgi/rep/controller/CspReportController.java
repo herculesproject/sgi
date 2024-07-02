@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.rep.controller;
 
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.csp.AutorizacionReport;
 import org.crue.hercules.sgi.rep.service.csp.AutorizacionProyectoExternoReportService;
@@ -53,7 +54,7 @@ public class CspReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = autorizacionProyectoExternoReportService.getReportAutorizacionProyectoExterno(report,
-        idAutorizacion, lang);
+        idAutorizacion, Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();

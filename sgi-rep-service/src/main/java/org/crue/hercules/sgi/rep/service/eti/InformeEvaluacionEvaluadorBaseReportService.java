@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
@@ -31,7 +32,6 @@ import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoActividadI18n;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoInvestigacionTuteladaI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
-import org.crue.hercules.sgi.rep.service.eti.SgiFormlyService.TipoValorSocialI18n;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.springframework.stereotype.Service;
@@ -75,8 +75,8 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     this.baseApartadosRespuestasService = baseApartadosRespuestasService;
   }
 
-  protected XWPFDocument getReportFromEvaluacionId(SgiReportDto sgiReport, Long idEvaluacion, String lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang;
+  protected XWPFDocument getReportFromEvaluacionId(SgiReportDto sgiReport, Long idEvaluacion, Language lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
     try {
       HashMap<String, Object> dataReport = new HashMap<>();
       EvaluacionDto evaluacion = evaluacionService.findById(idEvaluacion);
@@ -312,8 +312,8 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
 
   protected RenderData generarBloqueApartados(Long idDictamen,
       InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput, String namePlantillaDocx,
-      String lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang;
+      Language lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
     Map<String, Object> subDataBloqueApartado = new HashMap<>();
     subDataBloqueApartado.put("idDictamen", idDictamen);
     subDataBloqueApartado.put("idDictamenNoProcedeEvaluar", DICTAMEN_NO_PROCEDE_EVALUAR);
@@ -345,7 +345,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
    *         informe
    */
   private InformeEvaluacionEvaluadorReportOutput getInformeEvaluadorEvaluacion(Long idEvaluacion,
-      boolean isInformeEvaluacion, String lang) {
+      boolean isInformeEvaluacion, Language lang) {
     log.debug("getInformeEvaluacion(idEvaluacion)- start");
 
     Assert.notNull(idEvaluacion,
@@ -451,15 +451,15 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     return informeEvaluacionEvaluadorReportOutput;
   }
 
-  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluacion(Long idEvaluacion, String lang) {
+  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluacion(Long idEvaluacion, Language lang) {
     return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.TRUE, lang);
   }
 
-  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluador(Long idEvaluacion, String lang) {
+  protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluador(Long idEvaluacion, Language lang) {
     return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.FALSE, lang);
   }
 
   protected abstract XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport,
-      InputStream path, String lang);
+      InputStream path, Language lang);
 
 }

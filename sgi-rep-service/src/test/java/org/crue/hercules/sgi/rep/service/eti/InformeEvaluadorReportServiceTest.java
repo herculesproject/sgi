@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.rep.service.eti;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluador;
@@ -56,7 +57,8 @@ class InformeEvaluadorReportServiceTest extends BaseReportEtiServiceTest {
     report.setOutputType(OutputType.PDF);
 
     Assertions
-        .assertThatThrownBy(() -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null, "es"))
+        .assertThatThrownBy(
+            () -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null, Language.ES))
         .isInstanceOf(GetDataReportException.class);
   }
 
@@ -69,7 +71,8 @@ class InformeEvaluadorReportServiceTest extends BaseReportEtiServiceTest {
         .willReturn(getResource("eti/docx/rep-eti-ficha-evaluador.docx"));
 
     Assertions
-        .assertThatThrownBy(() -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null, "es"))
+        .assertThatThrownBy(
+            () -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null, Language.ES))
         .isInstanceOf(GetDataReportException.class);
   }
 
@@ -88,7 +91,7 @@ class InformeEvaluadorReportServiceTest extends BaseReportEtiServiceTest {
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion,
-        "es");
+        Language.ES);
 
     assertNotNull(reportContent);
   }

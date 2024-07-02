@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class BloqueServiceTest extends BaseReportEtiServiceTest {
   void findByFormularioId_ReturnsException() throws Exception {
     Long idBloque = 1L;
 
-    Assertions.assertThatThrownBy(() -> bloqueService.findByFormularioId(idBloque, "es"))
+    Assertions.assertThatThrownBy(() -> bloqueService.findByFormularioId(idBloque, Language.ES))
         .isInstanceOf(GetDataReportException.class);
   }
 

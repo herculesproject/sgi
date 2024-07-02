@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoTreeDto;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueDto;
@@ -33,7 +34,6 @@ import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.crue.hercules.sgi.rep.util.AssertHelper;
 import org.crue.hercules.sgi.rep.util.CustomSpELRenderDataCompute;
 import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
-import org.crue.hercules.sgi.rep.util.SgiLocaleHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
@@ -86,11 +86,12 @@ public class MXXReportService extends SgiReportDocxService {
    * @param lang         Code del language
    * @return byte[] Report
    */
-  public byte[] getReport(ReportMXX reportMXX, Long memoriaId, Long formularioId, String lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang;
+  public byte[] getReport(ReportMXX reportMXX, Long memoriaId, Long formularioId, Language lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
     AssertHelper.idNotNull(memoriaId, MemoriaDto.class);
     AssertHelper.idNotNull(formularioId, FormularioDto.class);
 
+    Locale locale = new Locale(lang.getCode());
     MemoriaDto memoria = memoriaService.findById(memoriaId);
     List<RespuestaInput> respuestas = memoriaService.getRespuestas(memoriaId);
     boolean isMemoriaModificacion = memoria.getMemoriaOriginal() != null;
@@ -119,14 +120,14 @@ public class MXXReportService extends SgiReportDocxService {
     if (!ObjectUtils.isEmpty(memoria.getPeticionEvaluacion())
         && !ObjectUtils.isEmpty(memoria.getPeticionEvaluacion().getTipoActividad())) {
       memoria.getPeticionEvaluacion().getTipoActividad().setNombre(TipoActividadI18n.getI18nMessageFromEnumAndLocale(
-          memoria.getPeticionEvaluacion().getTipoActividad().getId(), SgiLocaleHelper.newLocale(lang)));
+          memoria.getPeticionEvaluacion().getTipoActividad().getId(), locale));
     }
 
     if (!ObjectUtils.isEmpty(memoria.getPeticionEvaluacion())
         && !ObjectUtils.isEmpty(memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada())) {
       memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada()
           .setNombre(TipoInvestigacionTuteladaI18n.getI18nMessageFromEnumAndLocale(
-              memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId(), SgiLocaleHelper.newLocale(lang)));
+              memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId(), locale));
     }
 
     if (!memoriasPeticionEvaluacion.isEmpty()) {
@@ -134,7 +135,7 @@ public class MXXReportService extends SgiReportDocxService {
         if (!ObjectUtils.isEmpty(mem.getEstadoActual())) {
           mem.getEstadoActual()
               .setNombre(TipoEstadoMemoriaI18n.getI18nMessageFromEnumAndLocale(mem.getEstadoActual().getId(),
-                  SgiLocaleHelper.newLocale(lang)));
+                  locale));
         }
       });
     }

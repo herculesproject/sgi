@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
@@ -83,7 +84,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     this.baseApartadosRespuestasReportService = baseApartadosRespuestasReportService;
   }
 
-  private XWPFDocument getDocument(ActaDto acta, HashMap<String, Object> dataReport, InputStream path, String lang) {
+  private XWPFDocument getDocument(ActaDto acta, HashMap<String, Object> dataReport, InputStream path, Language lang) {
     Assert.notNull(
         acta,
         // Defer message resolution untill is needed
@@ -202,13 +203,13 @@ public class InformeActaReportService extends SgiReportDocxService {
 
   }
 
-  public byte[] getReportInformeActa(ReportInformeActa sgiReport, Long idActa, String lang) {
+  public byte[] getReportInformeActa(ReportInformeActa sgiReport, Long idActa, Language lang) {
     getReportFromIdActa(sgiReport, idActa, lang);
     return sgiReport.getContent();
   }
 
-  private XWPFDocument getReportFromIdActa(SgiReportDto sgiReport, Long idActa, String lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang;
+  private XWPFDocument getReportFromIdActa(SgiReportDto sgiReport, Long idActa, Language lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
     try {
       HashMap<String, Object> dataReport = new HashMap<>();
       ActaDto acta = actaService.findById(idActa);
@@ -255,7 +256,7 @@ public class InformeActaReportService extends SgiReportDocxService {
    * @param actaId Id del acta
    * @return ActaComentariosReportOutput Datos a presentar en el informe
    */
-  protected ActaComentariosReportOutput getActaComentariosSubReport(Long actaId, String lang) {
+  protected ActaComentariosReportOutput getActaComentariosSubReport(Long actaId, Language lang) {
     log.debug("getActaComentariosSubReport(actaId) - start");
 
     Assert.notNull(
@@ -349,8 +350,8 @@ public class InformeActaReportService extends SgiReportDocxService {
     return actaComentariosSubReportOutput;
   }
 
-  protected RenderData generarBloqueApartados(ActaComentariosReportOutput actaComentariosReportOutput, String lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang;
+  protected RenderData generarBloqueApartados(ActaComentariosReportOutput actaComentariosReportOutput, Language lang) {
+    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
     Map<String, Object> subDataBloqueApartado = new HashMap<>();
     if (ObjectUtils.isNotEmpty(actaComentariosReportOutput)
         && ObjectUtils.isNotEmpty(actaComentariosReportOutput.getComentariosMemoria())

@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -31,12 +31,13 @@ public class ApartadoService extends BaseRestTemplateService<ApartadoDto> {
     return URL_API;
   }
 
-  public List<ApartadoDto> findByPadreId(Long idPadre, String lang) {
+  public List<ApartadoDto> findByPadreId(Long idPadre, Language lang) {
     List<ApartadoDto> result = null;
     try {
       HttpHeaders headers = new HttpHeaders();
       String sort = "orden,asc";
-      URI uri = UriComponentsBuilder.fromUriString(getUrlBase() + getUrlApi() + "/" + idPadre + "/hijos/" + lang)
+      URI uri = UriComponentsBuilder
+          .fromUriString(getUrlBase() + getUrlApi() + "/" + idPadre + "/hijos/" + lang.getCode())
           .queryParam("s", sort).build(false).toUri();
       result = findAllFromURI(uri, headers, new ParameterizedTypeReference<List<ApartadoDto>>() {
       });
@@ -48,13 +49,13 @@ public class ApartadoService extends BaseRestTemplateService<ApartadoDto> {
     return result;
   }
 
-  public List<ApartadoDto> findByBloqueId(Long idBloque, String lang) {
+  public List<ApartadoDto> findByBloqueId(Long idBloque, Language lang) {
     List<ApartadoDto> result = null;
     try {
       HttpHeaders headers = new HttpHeaders();
       String sort = "orden,asc";
       URI uri = UriComponentsBuilder
-          .fromUriString(getUrlBase() + BloqueService.URL_API + "/" + idBloque + URL_API + "/" + lang)
+          .fromUriString(getUrlBase() + BloqueService.URL_API + "/" + idBloque + URL_API + "/" + lang.getCode())
           .queryParam("s", sort).build(false).toUri();
       result = findAllFromURI(uri, headers, new ParameterizedTypeReference<List<ApartadoDto>>() {
       });

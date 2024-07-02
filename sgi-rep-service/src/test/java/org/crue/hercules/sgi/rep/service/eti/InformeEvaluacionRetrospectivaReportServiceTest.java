@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.Instant;
 
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
@@ -62,7 +63,7 @@ class InformeEvaluacionRetrospectivaReportServiceTest extends BaseReportEtiServi
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(report,
-        input, "es");
+        input, Language.ES);
     assertNotNull(reportContent);
 
   }

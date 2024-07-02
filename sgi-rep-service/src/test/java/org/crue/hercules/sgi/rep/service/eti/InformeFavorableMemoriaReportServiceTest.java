@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
@@ -68,7 +69,7 @@ class InformeFavorableMemoriaReportServiceTest extends BaseReportEtiServiceTest 
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion,
-        "es");
+        Language.ES);
     assertNotNull(reportContent);
 
   }
@@ -95,7 +96,7 @@ class InformeFavorableMemoriaReportServiceTest extends BaseReportEtiServiceTest 
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion,
-        "es");
+        Language.ES);
     assertNotNull(reportContent);
 
   }

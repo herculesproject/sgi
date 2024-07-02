@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.rep.controller;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
@@ -74,7 +75,7 @@ public class EtiReportController {
     ReportMXX report = new ReportMXX();
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = mxxReportService.getReport(report, idMemoria, idFormulario, lang);
+    byte[] reportContent = mxxReportService.getReport(report, idMemoria, idFormulario, Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -99,7 +100,8 @@ public class EtiReportController {
     ReportInformeEvaluacion report = new ReportInformeEvaluacion();
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion, lang);
+    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion,
+        Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -125,7 +127,7 @@ public class EtiReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion,
-        lang);
+        Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -153,7 +155,7 @@ public class EtiReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion,
-        lang);
+        Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -179,7 +181,7 @@ public class EtiReportController {
     ReportInformeActa report = new ReportInformeActa();
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa, lang);
+    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa, Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -207,7 +209,7 @@ public class EtiReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(report,
-        input, lang);
+        input, Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -235,7 +237,7 @@ public class EtiReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeFavorableModificacionReportService.getReportInformeFavorableModificacion(report,
-        idEvaluacion, lang);
+        idEvaluacion, Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -263,7 +265,7 @@ public class EtiReportController {
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(report,
-        idEvaluacion, lang);
+        idEvaluacion, Language.fromCode(lang));
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
