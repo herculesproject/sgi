@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.AutorizacionPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.AutorizacionSpecifications;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -36,7 +37,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 
-import liquibase.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -478,14 +478,14 @@ public class AutorizacionService {
   }
 
   /**
-   * Obtiene el informe de una {@link Autorizacion}
+   * Obtiene el informe de una {@link Autorizacion} en el idioma solicitado
    * 
    * @param idAutorizacion identificador {@link Autorizacion}
    * @param fileName       nombre del fichero
-   * @param lang           code language
+   * @param lang           {@link Language} en el generar el informe
    * @return El documento del informe de la {@link Autorizacion}
    */
-  public DocumentoOutput generarDocumentoAutorizacion(Long idAutorizacion, String fileName, String lang) {
+  public DocumentoOutput generarDocumentoAutorizacion(Long idAutorizacion, String fileName, Language lang) {
     Resource informePdf = reportService.getInformeAutorizacion(idAutorizacion, lang);
     // Se sube el informe a sgdoc
     String pattern = "yyyyMMddHH:mm:ss";

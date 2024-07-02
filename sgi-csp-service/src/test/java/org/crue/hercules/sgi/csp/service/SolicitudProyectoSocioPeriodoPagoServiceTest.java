@@ -8,13 +8,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioPeriodoPagoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioPeriodoPagoNotFoundException;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioPeriodoPagoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +55,6 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new SolicitudProyectoSocioPeriodoPagoServiceImpl(repository, solicitudProyectoSocioRepository,
         solicitudService, solicitudProyectoRepository);
   }

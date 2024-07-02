@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.Locale;
+
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.framework.spring.context.support.boot.autoconfigure.ApplicationContextSupportAutoConfiguration;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,4 +27,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(initializers = { ConfigFileApplicationContextInitializer.class })
 public abstract class BaseServiceTest {
 
+  public BaseServiceTest() {
+    Locale.setDefault(new Locale("es", "ES"));
+  }
 }

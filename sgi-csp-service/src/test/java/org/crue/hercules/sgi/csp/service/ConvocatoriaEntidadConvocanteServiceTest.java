@@ -55,7 +55,6 @@ class ConvocatoriaEntidadConvocanteServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     this.authorityHelper = new ConvocatoriaAuthorityHelper(convocatoriaRepository, configuracionSolicitudRepository);
     service = new ConvocatoriaEntidadConvocanteServiceImpl(repository, convocatoriaRepository, programaRepository,
         convocatoriaService, solicitudRepository, authorityHelper);

@@ -58,7 +58,6 @@ class FuenteFinanciacionServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     BDDMockito.given(entityManagerFactory.getPersistenceUnitUtil()).willReturn(persistenceUnitUtil);
     BDDMockito.given(entityManager.getEntityManagerFactory()).willReturn(entityManagerFactory);
   }

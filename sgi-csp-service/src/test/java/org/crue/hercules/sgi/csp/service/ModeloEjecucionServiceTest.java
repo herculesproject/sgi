@@ -1,7 +1,5 @@
 package org.crue.hercules.sgi.csp.service;
 
-import static org.mockito.ArgumentMatchers.any;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +38,6 @@ class ModeloEjecucionServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     modeloEjecucionService = new ModeloEjecucionServiceImpl(modeloEjecucionRepository, proyectoRepository);
   }
 

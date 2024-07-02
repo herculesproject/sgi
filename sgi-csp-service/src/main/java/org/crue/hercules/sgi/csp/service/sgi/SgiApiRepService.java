@@ -4,6 +4,7 @@ import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.enums.ServiceType;
 import org.crue.hercules.sgi.csp.exceptions.rep.GetDataReportException;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,13 +33,13 @@ public class SgiApiRepService extends SgiApiBaseService {
   }
 
   /**
-   * Devuelve un informe Autorizacion en pdf
+   * Devuelve un informe Autorizacion en pdf en el idioma solicitado
    *
    * @param idAutorizacion Identificador de la Autorizacion
-   * @param lang           code language
+   * @param lang           {@link Language} en el generar el informe
    * @return Resource informe
    */
-  public Resource getInformeAutorizacion(Long idAutorizacion, String lang) {
+  public Resource getInformeAutorizacion(Long idAutorizacion, Language lang) {
     log.debug("getInformeAutorizacion(Long idAutorizacion)- start");
     Assert.notNull(
         idAutorizacion,
@@ -55,7 +56,7 @@ public class SgiApiRepService extends SgiApiBaseService {
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idAutorizacion, lang).getBody();
+          }, idAutorizacion, lang.getCode()).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();

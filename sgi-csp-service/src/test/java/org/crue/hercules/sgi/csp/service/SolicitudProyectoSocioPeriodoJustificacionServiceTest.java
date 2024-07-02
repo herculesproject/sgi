@@ -22,7 +22,6 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioPeriodoJustificacionServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -56,11 +55,6 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   // This bean must be created by Spring so validations can be applied
   @Autowired
   private SolicitudProyectoSocioPeriodoJustificacionService service;
-
-  @BeforeEach
-  void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
-  }
 
   @Test
   void update_ReturnsSolicitudProyectoSocioPeriodoJustificacion() {

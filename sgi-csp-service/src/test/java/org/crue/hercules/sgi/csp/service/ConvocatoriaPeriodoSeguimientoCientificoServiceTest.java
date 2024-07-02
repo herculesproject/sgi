@@ -28,7 +28,6 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCienti
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaPeriodoSeguimientoCientificoServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -60,11 +59,6 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
   // This bean must be created by Spring so validations can be applied
   @Autowired
   private ConvocatoriaPeriodoSeguimientoCientificoService service;
-
-  @BeforeEach
-  void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
-  }
 
   @Test
   void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_ReturnsConvocatoriaPeriodoSeguimientoCientificoList() {

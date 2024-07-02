@@ -10,10 +10,10 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioEquipoNotFound
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioEquipoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +54,6 @@ class SolicitudProyectoSocioEquipoServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new SolicitudProyectoSocioEquipoServiceImpl(repository, solicitudService,
         solicitudProyectoSocioRepository, solicitudProyectoRepository);
   }

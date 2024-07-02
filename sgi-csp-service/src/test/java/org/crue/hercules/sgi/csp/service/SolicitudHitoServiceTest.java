@@ -70,7 +70,6 @@ class SolicitudHitoServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new SolicitudHitoService(repository, solicitudRepository, tipoHitoRepository, solicitudService,
         solicitudHitoAvisoRepository, emailService, sgiApiTaskService, personaService);
   }

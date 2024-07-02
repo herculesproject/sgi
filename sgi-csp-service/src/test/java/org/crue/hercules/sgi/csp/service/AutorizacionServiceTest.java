@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -111,14 +112,15 @@ class AutorizacionServiceTest extends BaseServiceTest {
         .nombre("application.yml")
         .build();
 
-    BDDMockito.given(this.reportService.getInformeAutorizacion(anyLong(), anyString())).willReturn(docFile);
+    BDDMockito.given(this.reportService.getInformeAutorizacion(anyLong(),
+        ArgumentMatchers.<Language>any())).willReturn(docFile);
 
     BDDMockito.given(this.sgiConfigProperties.getTimeZone()).willReturn(TimeZone.getDefault());
 
     BDDMockito.given(this.sgdocService.uploadInforme(anyString(), ArgumentMatchers.<Resource>any()))
         .willReturn(expectedDocumento);
 
-    DocumentoOutput documento = autorizacionService.generarDocumentoAutorizacion(1L, null, "es");
+    DocumentoOutput documento = autorizacionService.generarDocumentoAutorizacion(1L, null, Language.ES);
 
     Assertions.assertThat(documento).isNotNull();
     Assertions.assertThat(documento.getArchivo()).isEqualTo(expectedDocumento.getArchivo());

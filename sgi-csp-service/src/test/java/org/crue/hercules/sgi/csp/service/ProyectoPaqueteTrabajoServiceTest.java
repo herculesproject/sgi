@@ -42,7 +42,6 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    java.util.Locale.setDefault(new java.util.Locale("es", "es"));
     service = new ProyectoPaqueteTrabajoServiceImpl(repository, proyectoRepository);
   }
 

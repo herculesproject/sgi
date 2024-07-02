@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -25,10 +24,9 @@ import org.crue.hercules.sgi.csp.service.CertificadoAutorizacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoAutorizacionService;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
-import org.crue.hercules.sgi.csp.util.SgiLocaleHelper;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -458,9 +456,8 @@ public class AutorizacionController {
   public ResponseEntity<DocumentoOutput> documentoAutorizacion(@PathVariable Long idAutorizacion,
       @PathVariable String fileName) {
     log.debug("documentoAutorizacion(@PathVariable Long idAutorizacion, @PathVariable String fileName) - start");
-    Locale locale = LocaleContextHolder.getLocale();
     DocumentoOutput documento = service.generarDocumentoAutorizacion(idAutorizacion, fileName,
-        SgiLocaleHelper.getLang(locale));
+        SgiLocaleContextHolder.getLanguage());
     log.debug("documentoAutorizacion(@PathVariable Long idAutorizacion, @PathVariable String fileName) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
   }
