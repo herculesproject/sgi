@@ -9,7 +9,7 @@ export class SgiLanguageHttpInterceptor implements HttpInterceptor {
   constructor(private languageService: LanguageService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const authRequest = req.clone({ setHeaders: { 'Accept-Language': this.languageService.getLocale() } });
+    const authRequest = req.clone({ setHeaders: { 'Accept-Language': this.languageService.getLanguageCode() } });
     return next.handle(authRequest);
   }
 }

@@ -81,13 +81,6 @@ export class LanguageService {
     return this.language;
   }
 
-  public getLocale(): string {
-    if (this.language?.code === Language.EU.code) {
-      return 'es-EU';
-    }
-    return this.language.code;
-  }
-
   public getLanguageCode(): string {
     return this.language.code;
   }
