@@ -21,8 +21,10 @@ import org.crue.hercules.sgi.eti.model.Formulario_;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -79,12 +81,14 @@ public class CustomBloqueRepositoryImpl implements CustomBloqueRepository {
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
     TypedQuery<BloqueOutput> typedQuery = entityManager.createQuery(cq);
-    if (pageable.isPaged()) {
+    List<BloqueOutput> result = typedQuery.getResultList();
+
+    if (!ObjectUtils.isEmpty(pageable) && pageable.isPaged()) {
       typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
       typedQuery.setMaxResults(pageable.getPageSize());
+    } else {
+      pageable = PageRequest.of(0, result.size());
     }
-
-    List<BloqueOutput> result = typedQuery.getResultList();
 
     Page<BloqueOutput> returnValue = new PageImpl<>(result, pageable, count);
 

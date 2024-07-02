@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -60,7 +61,7 @@ public class Informe extends BaseEntity {
   @JoinColumn(name = "tipo_evaluacion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_INFORME_TIPOEVALUACION"))
   private TipoEvaluacion tipoEvaluacion;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "informe")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "informe")
   private final List<InformeDocumento> informeDocumentos = null;
 
 }
