@@ -42,7 +42,7 @@
     <!-- Manifest data for the Apache Maven JAR Plugin -->
     <manifest.name>org/crue/hercules/sgi/pii</manifest.name>
     <!-- Versions -->
-    <sgi-framework-spring.version>0.1.0</sgi-framework-spring.version>
+    <sgi-framework-spring.version>0.2.0-SNAPSHOT</sgi-framework-spring.version>
   </properties>
 
   <profiles>
