@@ -198,6 +198,9 @@
       <column
         name="description"
         value="Informe del certificado de autorización del proyecto externo en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-csp-certificado-autorizacion-proyecto-externo.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-csp-certificado-autorizacion-proyecto-externo-docx" />
@@ -208,6 +211,8 @@
       <column name="name" value="rep-eti-acta-docx-en" />
       <column name="description"
         value="Informe del acta en inglés" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-acta.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-acta-docx" />
@@ -218,6 +223,8 @@
       <column name="name" value="rep-eti-bloque-apartado-acta-docx-en" />
       <column name="description"
         value="Informe de los bloques apartados acta en inglés" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-bloque-apartado-acta.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-bloque-apartado-acta-docx" />
@@ -229,6 +236,9 @@
       <column
         name="description"
         value="Informe de los bloques apartados de la ficha de evaluador en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-bloque-apartado-ficha-evaluador.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-bloque-apartado-ficha-evaluador-docx" />
@@ -239,6 +249,9 @@
       <column name="name" value="rep-eti-bloque-apartado-docx-en" />
       <column name="description"
         value="Informe bloques apartados de las evaluaciones en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-bloque-apartado.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-bloque-apartado-docx" />
@@ -251,6 +264,9 @@
       <column
         name="description"
         value="Informe de evaluación favorable de memoria de modificación en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion-favorable-memoria-modificacion.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-evaluacion-favorable-memoria-modificacion-docx" />
@@ -262,6 +278,9 @@
       <column
         name="description"
         value="Informe de evaluación favorable de memoria nueva en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion-favorable-memoria-nueva.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-evaluacion-favorable-memoria-nueva-docx" />
@@ -274,6 +293,9 @@
       <column
         name="description"
         value="Informe de evaluación favorable de memoria de ratificación en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion-favorable-memoria-ratificacion.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-evaluacion-favorable-memoria-ratificacion-docx" />
@@ -285,6 +307,9 @@
       <column
         name="description"
         value="Informe de evaluación favorable de memoria de retrospectiva en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion-retrospectiva.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-evaluacion-retrospectiva-docx" />
@@ -295,6 +320,8 @@
       <column name="name" value="rep-eti-evaluacion-docx-en" />
       <column name="description"
         value="Informe de evaluación en inglés" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-evaluacion.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-evaluacion-docx" />
@@ -305,6 +332,8 @@
       <column name="name" value="rep-eti-ficha-evaluador-docx-en" />
       <column name="description"
         value="Informe de la ficha de evaluador en inglés" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-ficha-evaluador.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-ficha-evaluador-docx" />
@@ -315,6 +344,8 @@
       <column name="name" value="rep-eti-mxx-docx-en" />
       <column name="description"
         value="Informe formularios M10, M20 y M30 en inglés" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-eti-mxx.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-mxx-docx" />
@@ -325,6 +356,8 @@
       <column name="name" value="rep-prc-detalle-grupo-docx-en" />
       <column name="description"
         value="Informe del detalle de grupo en inglés" />
+      <column name="default_value"
+        valueBlobFile="blob/rep/en/rep-prc-detalle-grupo.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-prc-detalle-grupo-docx" />
@@ -336,6 +369,9 @@
       <column
         name="description"
         value="Informe del detalle de grupos de producción por investigador en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-prc-detalle-produccion-investigador.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-prc-detalle-produccion-investigador-docx" />
@@ -346,9 +382,24 @@
       <column name="name" value="rep-prc-resumen-puntuacion-grupos-docx-en" />
       <column
         name="description" value="Informe del resumen de puntuación de grupos en inglés" />
+      <column
+        name="default_value"
+        valueBlobFile="blob/rep/en/rep-prc-resumen-puntuacion-grupos.docx" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-prc-resumen-puntuacion-grupos-docx" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="name" value="web-i18n-en" />
+      <column
+        name="description" value="i18n en" />
+      <column name="default_value"
+        valueBlobFile="blob/web/web-i18n-en.json" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-i18n-es" />
       </whereParams>
     </update>
   </changeSet>

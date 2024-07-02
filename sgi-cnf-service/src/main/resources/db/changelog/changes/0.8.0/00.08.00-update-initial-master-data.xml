@@ -9,15 +9,13 @@
   <property name="schemaPrefix" value="" />
   <property name="defaultLang" value="es" />
 
-  <changeSet context="!test" author="master" id="00.08.00-resources-update-oracle" dbms="oracle">
-    <update tableName="resources">
-      <column name="value" valueBlobFile="blob/rep/es/rep-eti-mxx.docx" />
-      <where>:name=:value AND dbms_lob.compare(value, default_value) = 0</where>
-      <whereParams>
-        <param name="name" value="rep-eti-mxx-docx" />
-      </whereParams>
-    </update>
-
+  <changeSet context="!test" author="master" id="00.08.00-resources-update-oracle">
+    <!-- Update value if mach default_value -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-eti-mxx-docx" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/rep/es/rep-eti-mxx.docx" />
+    </customChange>
     <update tableName="resources">
       <column name="default_value" valueBlobFile="blob/rep/es/rep-eti-mxx.docx" />
       <where>:name=:value</where>
@@ -25,22 +23,19 @@
         <param name="name" value="rep-eti-mxx-docx" />
       </whereParams>
     </update>
-  </changeSet>
 
-  <changeSet context="!test" author="master" id="00.08.00-resources-update-!oracle" dbms="!oracle">
+    <!-- rep-common-header-logo -->
+    <!-- Update value if mach default_value -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="rep-common-header-logo" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/rep/rep-common-header-logo.png" />
+    </customChange>
     <update tableName="resources">
-      <column name="value" valueBlobFile="blob/rep/es/rep-eti-mxx.docx" />
-        <where>:name=:value AND value=default_value</where>
-        <whereParams>
-        <param name="name" value="rep-eti-mxx-docx" />
-      </whereParams>
-    </update>
-
-    <update tableName="resources">
-      <column name="default_value" valueBlobFile="blob/rep/es/rep-eti-mxx.docx" />
+      <column name="default_value" valueBlobFile="blob/rep/rep-common-header-logo.png" />
       <where>:name=:value</where>
       <whereParams>
-        <param name="name" value="rep-eti-mxx-docx" />
+        <param name="name" value="rep-common-header-logo" />
       </whereParams>
     </update>
   </changeSet>
