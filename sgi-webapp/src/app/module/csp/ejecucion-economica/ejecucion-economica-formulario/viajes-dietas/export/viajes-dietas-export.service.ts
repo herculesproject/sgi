@@ -12,7 +12,7 @@ import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { IEjecucionPresupuestariaReportOptions } from '../../../common/ejecucion-presupuestaria-report-options';
-import { IColumnDefinition } from '../../desglose-economico.fragment';
+import { IColumnDefinition, IRowConfig } from '../../desglose-economico.fragment';
 import { IDesglose } from '../../facturas-justificantes.fragment';
 
 const ANUALIDAD_KEY = marker('sge.dato-economico.anualidad');
@@ -47,20 +47,28 @@ export class ViajesDietasExportService
       const row: ISgiRowReport = {
         elements: []
       };
-      row.elements.push(item.anualidad);
 
-      if (reportConfig.reportOptions.showColumnProyectoSgi) {
+      if (reportConfig.reportOptions.rowConfig.anualidadShow) {
+        row.elements.push(item.anualidad);
+      }
+
+      if (reportConfig.reportOptions.rowConfig.proyectoShow) {
         row.elements.push(item.proyecto?.titulo ?? 'Sin clasificar');
       }
 
       row.elements.push(item.conceptoGasto?.nombre ?? 'Sin clasificar');
 
-      if (reportConfig.reportOptions.showColumClasificadoAutomaticamente) {
+      if (reportConfig.reportOptions.rowConfig.clasificadoAutomaticamenteShow) {
         row.elements.push(this.getI18nBooleanYesNo(item.clasificadoAutomaticamente));
       }
 
-      row.elements.push(item.clasificacionSGE?.nombre ?? 'Sin clasificar');
-      row.elements.push(item.partidaPresupuestaria);
+      if (reportConfig.reportOptions.rowConfig.clasificacionSgeShow) {
+        row.elements.push(item.clasificacionSGE?.nombre ?? 'Sin clasificar');
+      }
+
+      if (reportConfig.reportOptions.rowConfig.aplicacionPresupuestariaShow) {
+        row.elements.push(item.partidaPresupuestaria);
+      }
 
       const codigoEconomico = (item.codigoEconomico?.id ?? '') + (item.codigoEconomico?.nombre ? ' - ' + item.codigoEconomico.nombre : '');
       row.elements.push(codigoEconomico);
@@ -89,64 +97,72 @@ export class ViajesDietasExportService
     return of(
       this.toReportColumns(
         reportConfig.reportOptions.columns,
-        reportConfig.reportOptions.showColumnProyectoSgi,
-        reportConfig.reportOptions.showColumClasificadoAutomaticamente
+        reportConfig.reportOptions.rowConfig,
       )
     );
   }
 
-  private toReportColumns(columns: IColumnDefinition[], showColumnProyectoSgi = false, showColumClasificadoAutomaticamente = false): ISgiColumnReport[] {
+  private toReportColumns(columns: IColumnDefinition[], rowConfig: IRowConfig): ISgiColumnReport[] {
 
-    const columnsReport: ISgiColumnReport[] = [
-      {
+    const columnsReport: ISgiColumnReport[] = [];
+
+    if (rowConfig.anualidadShow) {
+      columnsReport.push({
         title: this.translate.instant(ANUALIDAD_KEY),
         name: 'anualidad',
         type: ColumnType.STRING,
-      },
-      {
-        title: this.translate.instant(CONCEPTO_GASTO_KEY),
-        name: 'conceptoGasto',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(CLASIFICACION_SGE_KEY),
-        name: 'clasificacionSGE',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(APLICACION_PRESUPUESTARIA_KEY),
-        name: 'aplicacionPresupuestaria',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(CODIGO_ECONOMICO_KEY),
-        name: 'codigoEconomico',
-        type: ColumnType.STRING
-      },
-      {
-        title: this.translate.instant(FECHA_DEVENGO_KEY),
-        name: 'fechaDevengo',
-        type: ColumnType.DATE
-      }
-    ];
+      });
+    }
 
-    if (showColumnProyectoSgi) {
-      const column: ISgiColumnReport = {
+    if (rowConfig.proyectoShow) {
+      columnsReport.push({
         title: this.translate.instant(PROYECTO_KEY),
         name: 'proyecto',
         type: ColumnType.STRING
-      };
-      columnsReport.splice(1, 0, column);
+      });
     }
 
-    if (showColumClasificadoAutomaticamente) {
-      const column: ISgiColumnReport = {
+    columnsReport.push({
+      title: this.translate.instant(CONCEPTO_GASTO_KEY),
+      name: 'conceptoGasto',
+      type: ColumnType.STRING
+    });
+
+    if (rowConfig.clasificadoAutomaticamenteShow) {
+      columnsReport.push({
         title: this.translate.instant(CLASIFICADO_AUTOMATICAMENTE_KEY),
         name: 'clasificadoAutomaticamente',
         type: ColumnType.STRING
-      };
-      columnsReport.splice(showColumnProyectoSgi ? 3 : 2, 0, column);
+      });
     }
+
+    if (rowConfig.clasificacionSgeShow) {
+      columnsReport.push({
+        title: this.translate.instant(CLASIFICACION_SGE_KEY),
+        name: 'clasificacionSGE',
+        type: ColumnType.STRING
+      });
+    }
+
+    if (rowConfig.aplicacionPresupuestariaShow) {
+      columnsReport.push({
+        title: this.translate.instant(APLICACION_PRESUPUESTARIA_KEY),
+        name: 'aplicacionPresupuestaria',
+        type: ColumnType.STRING
+      });
+    }
+
+    columnsReport.push({
+      title: this.translate.instant(CODIGO_ECONOMICO_KEY),
+      name: 'codigoEconomico',
+      type: ColumnType.STRING
+    });
+
+    columnsReport.push({
+      title: this.translate.instant(FECHA_DEVENGO_KEY),
+      name: 'fechaDevengo',
+      type: ColumnType.DATE
+    });
 
     columns.forEach(column => {
       columnsReport.push({

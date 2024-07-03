@@ -11,7 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import {
   DesgloseEconomicoFragment, IColumnDefinition,
-  IDesgloseEconomicoExportData, RowTreeDesglose
+  IDesgloseEconomicoExportData, IRowConfig, RowTreeDesglose
 } from '../desglose-economico.fragment';
 
 export class FacturasEmitidasFragment extends DesgloseEconomicoFragment<IDatoEconomico> {
@@ -105,6 +105,10 @@ export class FacturasEmitidasFragment extends DesgloseEconomicoFragment<IDatoEco
           this.desglose$.next(regs);
         }
       );
+  }
+
+  protected getRowConfig(): IRowConfig {
+    return null;
   }
 
   protected buildRows(datosEconomicos: IDatoEconomico[]): Observable<RowTreeDesglose<IDatoEconomico>[]> {
