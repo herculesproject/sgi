@@ -311,7 +311,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     });
   }
 
-  public refreshFormlyModelValues(
+  private refreshFormlyModelValues(
     firstLevel: boolean,
     model: any,
     formState: any,
@@ -740,7 +740,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     this.setErrors(errors);
   }
 
-  public evalExpressionModelValue(fieldConfig: SgiFormlyFieldConfig[], model: any, formState: any, parentKey?: string) {
+  private evalExpressionModelValue(fieldConfig: SgiFormlyFieldConfig[], model: any, formState: any, parentKey?: string) {
     fieldConfig.forEach(fg => {
       if (fg.key && fg.templateOptions?.expressionModelValue) {
         if (parentKey) {
@@ -877,8 +877,14 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     return JSON.stringify(respuesta?.valor) !== JSON.stringify(respuestaAnterior?.valor);
   }
 
-  public refreshBlockChanges() {
-    this.subscriptions.push(this.loadFormulario(this.tipoEvaluacion, this.comite).subscribe());
+  private refreshBlockChanges() {
+    this.blocks$.value.forEach((block) => {
+      block.formlyData.fields.forEach((f) => {
+        if (f.group) {
+          f.group.refreshInitialState();
+        }
+      });
+    });
   }
 
   private cleanFieldGroup(formlyFieldConfig: SgiFormlyFieldConfig[]): SgiFormlyFieldConfig[] {
