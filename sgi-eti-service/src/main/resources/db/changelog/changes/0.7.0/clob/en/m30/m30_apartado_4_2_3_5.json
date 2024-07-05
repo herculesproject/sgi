@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>With respect to the management of biological waste, genetically modified organisms, chemicals and radioactive waste, do you know, apply and have at your disposal the <a href='https://www.um.es/web/acti/contenido/servicios/radioproteccion-residuos/normas' target='_blank'>'University Hazardous, Biological and Radioactive Waste Management Manual'</to>?</p>"
+        "template": "<p>With respect to the management of biological waste, genetically modified organisms, chemicals and radioactive waste, do you know, apply and have at your disposal the <a href='https://www.um.es/web/acti/contenido/servicios/radioproteccion-residuos/normas' target='_blank'>'University Hazardous, Biological and Radioactive Waste Management Manual'</a>?</p>"
       },
       {
         "key": "manualGestionResiduos",

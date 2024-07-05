@@ -6,7 +6,7 @@
     ],
     "templateOptions": {
       "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.5.2 Destination of samples of human origin"
+      "label": "3.5.1 Origin of the samples"
     },
     "hideExpression": "!formState.mainModel.ap3_5.muestrasBiologicasRadio || formState.mainModel.ap3_5.muestrasBiologicasRadio === 'no'",
     "fieldGroup": [

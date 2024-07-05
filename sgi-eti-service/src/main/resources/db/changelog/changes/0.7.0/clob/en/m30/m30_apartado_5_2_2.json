@@ -55,7 +55,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Both authorisation and communication notifications can be made through the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Biosafety Committee in Experimentation</to> of the University.</p><p>More information about notifications can be found on the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Biosafety Committee in Experimentation</to> of the University.</p>"
+        "template": "<p>Both authorisation and communication notifications can be made through the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Biosafety Committee in Experimentation</a> of the University.</p><p>More information about notifications can be found on the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Biosafety Committee in Experimentation</a> of the University.</p>"
       }
     ]
   }

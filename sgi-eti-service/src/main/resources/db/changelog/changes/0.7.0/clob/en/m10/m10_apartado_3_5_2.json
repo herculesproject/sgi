@@ -87,7 +87,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Note: Please remember that the participant has the right to know and decide the destination of their samples and should be informed of this in the <strong>consent document</strong> (section 4.4.8 Right to decide on the destination of the samples').</p><p>For more information on the minimum information required, consult <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a59' target='_blank'>article 59</to> of LIB 14/2007.</p>"
+        "template": "<p>Note: Please remember that the participant has the right to know and decide the destination of their samples and should be informed of this in the <strong>consent document</strong> (section 4.4.8 Right to decide on the destination of the samples').</p><p>For more information on the minimum information required, consult <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a59' target='_blank'>article 59</a> of LIB 14/2007.</p>"
       }
     ]
   }

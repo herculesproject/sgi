@@ -10,7 +10,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>To properly comply with the protection of personal data, you need to fill out the following form: <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>survey</to> (the questions and answers are stored in the University survey tool, independently of the SGI)</p>"
+        "template": "<p>To properly comply with the protection of personal data, you need to fill out the following form: <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>survey</a> (the questions and answers are stored in the University survey tool, independently of the SGI)</p>"
       }
     ]
   }

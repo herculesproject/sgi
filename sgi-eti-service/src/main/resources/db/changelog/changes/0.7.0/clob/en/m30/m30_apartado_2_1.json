@@ -15,7 +15,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "This section is completed automatically based on the data entered in the section <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Task assignment</b></to> of the <b>Evaluation Request</b>. Access this menu item to make the necessary modifications.",
+        "template": "This section is completed automatically based on the data entered in the section <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Task assignment</b></a> of the <b>Evaluation Request</b>. Access this menu item to make the necessary modifications.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }

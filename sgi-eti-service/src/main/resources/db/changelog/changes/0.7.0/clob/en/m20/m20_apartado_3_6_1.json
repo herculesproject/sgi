@@ -12,7 +12,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Only animals of the species listed in <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#ani'>Annex I of Royal Decree 53/13</to> if they have been bred expressly for that purpose.</p><p>In exceptional cases, and provided there is scientific justification, the competent bodies may authorise the use of animals that have not been bred for experimentation (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a19'>Art. 19 Royal Decree 53/13</to>).</p>"
+        "template": "<p>Only animals of the species listed in <a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#ani'>Annex I of Royal Decree 53/13</a> if they have been bred expressly for that purpose.</p><p>In exceptional cases, and provided there is scientific justification, the competent bodies may authorise the use of animals that have not been bred for experimentation (<a target='_blank' href='https://www.boe.es/buscar/act.php?id=BOE-A-2013-1337&p=20130208&tn=1#a19'>Art. 19 Royal Decree 53/13</a>).</p>"
       },
       {
         "type": "table-crud",

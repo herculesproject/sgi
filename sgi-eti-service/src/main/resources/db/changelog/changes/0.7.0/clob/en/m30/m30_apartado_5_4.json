@@ -15,7 +15,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>For more information you can consult the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>University Committee.</to></p>"
+        "template": "<p>For more information you can consult the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>University Committee.</a></p>"
       },
       {
         "key": "protocoloActuacion",

@@ -15,7 +15,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>The procedures/interventions will be carried out in authorised user centres, unless authorised by the competent agency, after scientific justification of the need or convenience for them to be carried out outside of such centres (<a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>Art. 25-4 Royal Decree 53/13</to>)</p>"
+        "template": "<p>The procedures/interventions will be carried out in authorised user centres, unless authorised by the competent agency, after scientific justification of the need or convenience for them to be carried out outside of such centres (<a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>Art. 25-4 Royal Decree 53/13</a>)</p>"
       },
       {
         "key": "centroUsuarioUniversidadCheckPrincipal",
@@ -134,7 +134,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>For more information on places in the University User Centre, consult the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>University Committee website</to>.</p>"
+        "template": "<p>For more information on places in the University User Centre, consult the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>University Committee website</a>.</p>"
       }
     ]
   }
