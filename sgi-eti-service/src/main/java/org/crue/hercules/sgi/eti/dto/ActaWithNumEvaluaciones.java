@@ -2,9 +2,7 @@ package org.crue.hercules.sgi.eti.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.List;
 
-import org.crue.hercules.sgi.eti.model.ActaDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 
 import lombok.AllArgsConstructor;
@@ -34,7 +32,7 @@ public class ActaWithNumEvaluaciones implements Serializable {
   private Integer numeroActa;
 
   /** Tipo convocatoria */
-  private String convocatoria;
+  private TipoConvocatoriaOutput tipoConvocatoria;
 
   /** Nº de evaluaciones (iniciales) */
   private Integer numEvaluaciones;
@@ -52,17 +50,22 @@ public class ActaWithNumEvaluaciones implements Serializable {
   private Integer numEvaluacionesNoEvaluadas;
 
   public ActaWithNumEvaluaciones(Long id, String comite, Instant fechaEvaluacion, Integer numeroActa,
-      String convocatoria, Long numEvaluaciones, Long numRevisiones, Long numEvaluacionesNoEvaluadas,
+      Long tipoConvocatoriaId, String tipoConvocatoriaNombre, Boolean tipoConvocatoriaActivo, Long numEvaluaciones,
+      Long numRevisiones,
+      Long numEvaluacionesNoEvaluadas,
       TipoEstadoActa estadoActa) {
     this.id = id;
     this.comite = comite;
     this.fechaEvaluacion = fechaEvaluacion;
     this.numeroActa = numeroActa;
-    this.convocatoria = convocatoria;
     this.numEvaluaciones = (numEvaluaciones == null) ? 0 : numEvaluaciones.intValue();
     this.numRevisiones = (numRevisiones == null) ? 0 : numRevisiones.intValue();
     this.numTotal = (this.numEvaluaciones + this.numRevisiones);
     this.estadoActa = estadoActa;
     this.numEvaluacionesNoEvaluadas = numEvaluacionesNoEvaluadas.intValue();
+    this.tipoConvocatoria = new TipoConvocatoriaOutput();
+    this.tipoConvocatoria.setId(tipoConvocatoriaId);
+    this.tipoConvocatoria.setNombre(tipoConvocatoriaNombre);
+    this.tipoConvocatoria.setActivo(tipoConvocatoriaActivo);
   }
 }

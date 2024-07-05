@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
+import org.crue.hercules.sgi.eti.dto.TipoConvocatoriaOutput;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -379,17 +380,28 @@ public class ActaControllerTest extends BaseControllerTest {
   public ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
     Acta acta = generarMockActa(id, numero);
 
+    TipoConvocatoriaOutput tipoConvocatoria = generarMockTipoConvocatoriaOutput(
+        acta.getConvocatoriaReunion().getTipoConvocatoriaReunion());
+
     ActaWithNumEvaluaciones returnValue = new ActaWithNumEvaluaciones();
     returnValue.setId(acta.getId());
     returnValue.setComite(acta.getConvocatoriaReunion().getComite().getComite());
     returnValue.setFechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion());
     returnValue.setNumeroActa(acta.getNumero());
-    returnValue.setConvocatoria(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getNombre());
+    returnValue.setTipoConvocatoria(tipoConvocatoria);
     returnValue.setNumEvaluaciones(1);
     returnValue.setNumRevisiones(2);
     returnValue.setNumTotal(returnValue.getNumEvaluaciones() + returnValue.getNumRevisiones());
     returnValue.setEstadoActa(acta.getEstadoActual());
     return returnValue;
+  }
+
+  private TipoConvocatoriaOutput generarMockTipoConvocatoriaOutput(TipoConvocatoriaReunion tipoConvocatoria) {
+    TipoConvocatoriaOutput tipoConvocatoriaOutput = new TipoConvocatoriaOutput();
+    tipoConvocatoriaOutput.setId(tipoConvocatoria.getId());
+    tipoConvocatoriaOutput.setNombre(tipoConvocatoria.getNombre());
+    tipoConvocatoriaOutput.setActivo(tipoConvocatoria.getActivo());
+    return tipoConvocatoriaOutput;
   }
 
 }

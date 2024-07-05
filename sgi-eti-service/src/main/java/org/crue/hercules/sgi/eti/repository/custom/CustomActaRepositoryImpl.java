@@ -14,21 +14,16 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.springframework.data.domain.Sort;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.dto.MemoriaEvaluada;
 import org.crue.hercules.sgi.eti.model.Acta;
-import org.crue.hercules.sgi.eti.model.ActaDocumento;
-import org.crue.hercules.sgi.eti.model.ActaDocumento_;
 import org.crue.hercules.sgi.eti.model.Acta_;
-import org.crue.hercules.sgi.eti.model.Bloque;
-import org.crue.hercules.sgi.eti.model.BloqueNombre;
-import org.crue.hercules.sgi.eti.model.BloqueNombre_;
 import org.crue.hercules.sgi.eti.model.Comite_;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres_;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.Dictamen_;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
@@ -41,11 +36,13 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
+import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
@@ -121,13 +118,18 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
 
     cq.where(listPredicates.toArray(new Predicate[] {}));
 
+    Join<Acta, ConvocatoriaReunion> convocatoriaJoin = root.join(Acta_.convocatoriaReunion);
+    Join<ConvocatoriaReunion, TipoConvocatoriaReunion> tipoConvocatoriaJoin = convocatoriaJoin
+        .join(ConvocatoriaReunion_.tipoConvocatoriaReunion);
+
     // Execute query
     cq.multiselect(root.get(Acta_.id).alias("id"),
-        root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.comite).get(Comite_.comite).alias("comite"),
-        root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaEvaluacion).alias("fechaEvaluacion"),
+        convocatoriaJoin.get(ConvocatoriaReunion_.comite).get(Comite_.comite).alias("comite"),
+        convocatoriaJoin.get(ConvocatoriaReunion_.fechaEvaluacion).alias("fechaEvaluacion"),
         root.get(Acta_.numero).alias("numeroActa"),
-        root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.tipoConvocatoriaReunion)
-            .get(TipoConvocatoriaReunion_.nombre).alias("convocatoria"),
+        tipoConvocatoriaJoin.get(TipoConvocatoriaReunion_.id).alias("tipoConvocatoriaId"),
+        tipoConvocatoriaJoin.get(TipoConvocatoriaReunion_.nombre).alias("tipoConvocatoriaNombre"),
+        tipoConvocatoriaJoin.get(TipoConvocatoriaReunion_.activo).alias("tipoConvocatoriaActivo"),
         getNumEvaluaciones(root, cb, cq, Boolean.TRUE).alias("numEvaluaciones"),
         getNumEvaluaciones(root, cb, cq, Boolean.FALSE).alias("numRevisiones"),
         getNumEvaluacionesNoEvaluadas(root, cb, cq).alias("evaluacionesEvaluadas"),
