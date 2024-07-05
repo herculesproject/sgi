@@ -8,6 +8,7 @@ import { SharedModule } from '@shared/shared.module';
 
 import { ComentarioModule } from '../comentario/comentario.module';
 import { DocumentacionMemoriaModule } from '../documentacion-memoria/documentacion-memoria.module';
+import { EtiSharedModule } from '../shared/eti-shared.module';
 import { SeguimientoComentariosComponent } from './seguimiento-comentarios/seguimiento-comentarios.component';
 import { SeguimientoDatosMemoriaComponent } from './seguimiento-datos-memoria/seguimiento-datos-memoria.component';
 import { SeguimientoDocumentacionComponent } from './seguimiento-documentacion/seguimiento-documentacion.component';
@@ -25,6 +26,7 @@ import { SeguimientoListadoComentariosEquipoEvaluadorComponent } from './seguimi
     SeguimientoListadoComentariosEquipoEvaluadorComponent
   ],
   imports: [
+    EtiSharedModule,
     SharedModule,
     CommonModule,
     TranslateModule,

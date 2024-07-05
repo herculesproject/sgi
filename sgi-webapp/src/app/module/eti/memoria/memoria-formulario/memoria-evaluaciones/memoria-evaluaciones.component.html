@@ -8,7 +8,8 @@
       <ng-container matColumnDef="tipoEvaluacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.memoria.evaluacion.tipo' | translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.tipoEvaluacion.nombre}} </td>
+        <td mat-cell *matCellDef="let wrapper"> {{TIPO_EVALUACION_MAP.get(wrapper.value.tipoEvaluacion?.id) |
+          translate}} </td>
       </ng-container>
 
       <!-- Version Column -->
@@ -22,7 +23,8 @@
       <ng-container matColumnDef="dictamen">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.dictamen' | translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper"> {{isActaFinalizada(wrapper) ? wrapper.value.dictamen?.nombre : ''}}
+        <td mat-cell *matCellDef="let wrapper">
+          {{isActaFinalizada(wrapper) ? (DICTAMEN_MAP.get(wrapper.value.dictamen?.id) | translate) : ''}}
         </td>
       </ng-container>
 

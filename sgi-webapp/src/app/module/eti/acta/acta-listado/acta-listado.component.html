@@ -94,7 +94,8 @@
       <!-- Convocatoria Column -->
       <ng-container matColumnDef="convocatoriaReunion.tipoConvocatoriaReunion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.convocatoria' | translate}} </th>
-        <td mat-cell *matCellDef="let acta"> {{acta.convocatoria}} </td>
+        <td mat-cell *matCellDef="let acta">
+          {{TIPO_CONVOCATORIA_REUNION_MAP.get(acta.tipoConvocatoria?.id) | translate}} </td>
       </ng-container>
 
       <!-- Numero de iniciales Column -->

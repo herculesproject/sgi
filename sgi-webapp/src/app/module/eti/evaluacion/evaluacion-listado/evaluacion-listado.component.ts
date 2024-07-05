@@ -22,6 +22,7 @@ import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { TipoComentario } from '../evaluacion-listado-export.service';
 import { EvaluacionListadoExportModalComponent, IEvaluacionListadoModalData } from '../modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
+import { DICTAMEN_MAP } from '@core/models/eti/dictamen';
 
 @Component({
   selector: 'sgi-evaluacion-listado',
@@ -58,6 +59,10 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
 
   get TIPO_MEMORIA_MAP() {
     return TIPO_MEMORIA_MAP;
+  }
+
+  get DICTAMEN_MAP() {
+    return DICTAMEN_MAP;
   }
 
   constructor(

@@ -30,6 +30,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ActaListadoExportModalComponent } from '../modals/acta-listado-export-modal/acta-listado-export-modal.component';
+import { TIPO_CONVOCATORIA_REUNION_MAP } from '@core/models/eti/tipo-convocatoria-reunion';
 
 const MSG_BUTTON_NEW = marker('btn.add.entity');
 const MSG_FINALIZAR_ERROR = marker('error.eti.acta.finalizar');
@@ -101,6 +102,10 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
         : option?.nombre ?? '')
       : option?.nombre ?? '';
   };
+
+  get TIPO_CONVOCATORIA_REUNION_MAP() {
+    return TIPO_CONVOCATORIA_REUNION_MAP;
+  }
 
   constructor(
     private readonly logger: NGXLogger,

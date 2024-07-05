@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, MatSortable } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IActa } from '@core/models/eti/acta';
-import { DICTAMEN } from '@core/models/eti/dictamen';
+import { DICTAMEN, DICTAMEN_MAP } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
+import { TIPO_EVALUACION, TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -22,7 +22,6 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaEvaluacionesFragment } from './memoria-evaluaciones.fragment';
-import { TranslateService } from '@ngx-translate/core';
 
 interface IActaConvocatoriaReunion {
   idConvocatoriaReunion: number;
@@ -56,6 +55,14 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
 
   get isInvestigador(): boolean {
     return this.actionService.isModuleInv();
+  }
+
+  get TIPO_EVALUACION_MAP() {
+    return TIPO_EVALUACION_MAP;
+  }
+
+  get DICTAMEN_MAP() {
+    return DICTAMEN_MAP;
   }
 
   constructor(

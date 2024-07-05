@@ -20,7 +20,7 @@ import {
 import {
   EvaluacionListadoAnteriorMemoriaComponent,
 } from '../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-import { BloqueApartadoPipe } from '../shared/pipes/bloque-apartado.pipe';
+import { EtiSharedModule } from '../shared/eti-shared.module';
 import { EvaluacionEvaluacionComponent } from './evaluacion-evaluacion/evaluacion-evaluacion.component';
 import { EvaluacionListadoComentariosEquipoEvaluadorComponent } from './evaluacion-listado-comentarios-equipo-evaluador/evaluacion-listado-comentarios-equipo-evaluador.component';
 
@@ -34,6 +34,7 @@ import { EvaluacionListadoComentariosEquipoEvaluadorComponent } from './evaluaci
     EvaluacionListadoComentariosEquipoEvaluadorComponent
   ],
   imports: [
+    EtiSharedModule,
     SharedModule,
     CommonModule,
     TranslateModule,

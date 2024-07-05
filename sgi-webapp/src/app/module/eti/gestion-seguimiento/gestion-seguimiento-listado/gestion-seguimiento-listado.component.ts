@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { DICTAMEN_MAP } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
 import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
@@ -42,6 +43,10 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
 
   get tipoColectivoSolicitante() {
     return TipoColectivo.SOLICITANTE_ETICA;
+  }
+
+  get DICTAMEN_MAP() {
+    return DICTAMEN_MAP;
   }
 
   constructor(

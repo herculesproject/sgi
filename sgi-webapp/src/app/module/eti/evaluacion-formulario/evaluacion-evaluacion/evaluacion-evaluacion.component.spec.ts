@@ -14,6 +14,7 @@ import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.serv
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionEvaluacionComponent } from './evaluacion-evaluacion.component';
+import { EtiSharedModule } from '../../shared/eti-shared.module';
 
 
 describe('EvaluacionEvaluacionComponent', () => {
@@ -37,7 +38,8 @@ describe('EvaluacionEvaluacionComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule,
         SgiAuthModule,
-        SharedModule
+        SharedModule,
+        EtiSharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

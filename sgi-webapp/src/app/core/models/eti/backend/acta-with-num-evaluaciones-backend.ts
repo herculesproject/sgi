@@ -1,4 +1,5 @@
 import { IActaDocumento } from '../acta-documento';
+import { TipoConvocatoriaReunion } from '../tipo-convocatoria-reunion';
 import { TipoEstadoActa } from '../tipo-estado-acta';
 
 export interface IActaWithNumEvaluacionesBackend {
@@ -10,8 +11,8 @@ export interface IActaWithNumEvaluacionesBackend {
   fechaEvaluacion: string;
   /** Numero acta */
   numeroActa: number;
-  /** Convocatoria */
-  convocatoria: string;
+  /** Tipo Convocatoria */
+  tipoConvocatoria: TipoConvocatoriaReunion;
   /** Nº de evaluaciones (iniciales) */
   numEvaluaciones: number;
   /** Nº de revisiones */

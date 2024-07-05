@@ -26,6 +26,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { PeticionEvaluacionListadoExportModalComponent } from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
+import { ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion-etica-proyecto');
@@ -257,9 +258,9 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     if (memorias?.length > 0) {
       memorias.forEach(memoria => {
         if (memoria.retrospectiva && memoria.retrospectiva?.estadoRetrospectiva.id > 1) {
-          memoriasColumn.push(memoria.numReferencia + '-' + memoria.estadoActual.nombre + '-' + memoria.version + '-Ret.');
+          memoriasColumn.push(memoria.numReferencia + '-' + this.translate.instant(ESTADO_MEMORIA_MAP.get(memoria.estadoActual?.id)) + '-' + memoria.version + '-Ret.');
         } else {
-          memoriasColumn.push(memoria.numReferencia + '-' + memoria.estadoActual.nombre + '-' + (memoria.version === 0 ? '1' : memoria.version));
+          memoriasColumn.push(memoria.numReferencia + '-' + this.translate.instant(ESTADO_MEMORIA_MAP.get(memoria.estadoActual?.id)) + '-' + (memoria.version === 0 ? '1' : memoria.version));
         }
       });
       return memoriasColumn.join(', ');

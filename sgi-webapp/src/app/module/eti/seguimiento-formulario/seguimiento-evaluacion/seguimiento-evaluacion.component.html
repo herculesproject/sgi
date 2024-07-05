@@ -56,8 +56,8 @@
       <div fxLayout="row">
         <mat-form-field class="input-form">
           <mat-label>{{'eti.dictamen' | translate}}</mat-label>
-          <sgi-select-entity formControlName="dictamen" [options]="dictamenes$ | async" required>
-          </sgi-select-entity>
+          <sgi-select-dictamen formControlName="dictamen" [evaluacionId]="this.actionService.getEvaluacion().id"
+            required></sgi-select-dictamen>
         </mat-form-field>
         <div fxLayoutAlign="center center">
           <button mat-icon-button color="primary" (click)="visualizarInforme(this.formPart.evaluacion?.id)"

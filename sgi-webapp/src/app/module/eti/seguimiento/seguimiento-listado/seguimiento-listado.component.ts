@@ -22,6 +22,8 @@ import { map } from 'rxjs/operators';
 import { IEvaluacionWithComentariosEnviados } from '../../evaluacion-evaluador/evaluacion-evaluador-listado/evaluacion-evaluador-listado.component';
 import { ISeguimientoListadoModalData, SeguimientoListadoExportModalComponent } from '../modals/seguimiento-listado-export-modal/seguimiento-listado-export-modal.component';
 import { RolPersona } from '../seguimiento-listado-export.service';
+import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
+import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
 
 const MSG_ENVIAR_COMENTARIO = marker('msg.enviar.comentario');
 const MSG_ENVIAR_COMENTARIO_SUCCESS = marker('msg.enviar.comentario.success');
@@ -42,6 +44,14 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   private textoEnviarComentarioSuccess: string;
 
   private usuarioRef: string;
+
+  get TIPO_MEMORIA_MAP() {
+    return TIPO_MEMORIA_MAP;
+  }
+
+  get TIPO_EVALUACION_MAP() {
+    return TIPO_EVALUACION_MAP;
+  }
 
   constructor(
     private readonly personaService: PersonaService,
