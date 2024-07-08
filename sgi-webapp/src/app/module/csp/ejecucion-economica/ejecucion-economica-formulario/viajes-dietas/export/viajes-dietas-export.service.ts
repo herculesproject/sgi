@@ -8,7 +8,6 @@ import { AbstractTableExportService, IReportConfig } from '@core/services/rep/ab
 import { ReportService } from '@core/services/rep/report.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
-import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { IEjecucionPresupuestariaReportOptions } from '../../../common/ejecucion-presupuestaria-report-options';
@@ -33,7 +32,6 @@ export class ViajesDietasExportService
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private luxonDatePipe: LuxonDatePipe,
     protected reportService: ReportService
   ) {
     super(reportService);
@@ -75,7 +73,7 @@ export class ViajesDietasExportService
 
       row.elements.push(LuxonUtils.toBackend(item.fechaDevengo));
 
-      reportConfig.reportOptions.columns.forEach((column, index) => {
+      reportConfig.reportOptions.columns.forEach((column, _) => {
         const value = item.columnas[column.id] ?? (column?.compute ? 0 : '');
         row.elements.push(value);
       });

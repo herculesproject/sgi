@@ -4,11 +4,10 @@ import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
-import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
+import { AbstractTableExportService, IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
-import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { IEjecucionPresupuestariaReportOptions } from '../../../common/ejecucion-presupuestaria-report-options';
@@ -33,7 +32,6 @@ export class PersonalContratadoExportService
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private luxonDatePipe: LuxonDatePipe,
     protected reportService: ReportService
   ) {
     super(reportService);
@@ -75,8 +73,8 @@ export class PersonalContratadoExportService
 
       row.elements.push(LuxonUtils.toBackend(item.fechaDevengo));
 
-      reportConfig.reportOptions.columns.forEach((column, index) => {
-        const value = item.columnas[column.id] ?? 0;
+      reportConfig.reportOptions.columns.forEach((column, _) => {
+        const value = item.columnas[column.id] ?? (column?.compute ? 0 : '');
         row.elements.push(value);
       });
       rows.push(row);
