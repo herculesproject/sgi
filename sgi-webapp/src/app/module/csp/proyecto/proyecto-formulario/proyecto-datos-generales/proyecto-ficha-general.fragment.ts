@@ -214,7 +214,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         disabled: true
       }),
       titulo: new FormControl('', [
-        Validators.required, Validators.maxLength(200)]),
+        Validators.required, Validators.maxLength(250)]),
       acronimo: new FormControl('', [Validators.maxLength(50)]),
       codigoInterno: new FormControl(null, [Validators.maxLength(50)]),
       codigoExterno: new FormControl(null, [Validators.maxLength(50)]),
@@ -225,7 +225,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         value: '',
         disabled: this.isEdit()
       }),
-      convocatoriaExterna: new FormControl(null, [Validators.maxLength(200)]),
+      convocatoriaExterna: new FormControl(null, [Validators.maxLength(50)]),
       unidadGestion: new FormControl(null, Validators.required),
       modeloEjecucion: new FormControl(null, Validators.required),
       finalidad: new FormControl(null),
