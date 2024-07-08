@@ -404,14 +404,14 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.subscriptions.push(
         this._proyectoRelaciones$.pipe(
           tap(relaciones => {
-            const codigos = relaciones.filter(relacion => relacion.tipoEntidadRelacionada === TipoEntidad.PROYECTO).map(relacion => (relacion.entidadRelacionada as IProyecto).codigoExterno).join(', ');
+            const codigos = relaciones.filter(relacion => relacion.tipoEntidadRelacionada === TipoEntidad.PROYECTO).map(relacion => (relacion.entidadRelacionada as IProyecto).id).join(', ');
             form.controls?.proyectosRelacionados.setValue(codigos);
           })
         )
           .subscribe()
       );
       this.subscriptions.push(
-        this.getCodigosExternosProyectosRelacionados().subscribe(codigos => {
+        this.getProyectosIdsRelacionados().subscribe(codigos => {
           form.controls?.proyectosRelacionados.setValue(codigos.map(codigo => codigo).join(', '));
         }));
     }
@@ -845,7 +845,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     };
   }
 
-  private getCodigosExternosProyectosRelacionados(): Observable<string[]> {
+  private getProyectosIdsRelacionados(): Observable<string[]> {
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('tipoEntidadOrigen', SgiRestFilterOperator.EQUALS, TipoEntidad.PROYECTO)
         .and('tipoEntidadDestino', SgiRestFilterOperator.EQUALS, TipoEntidad.PROYECTO).and(
@@ -855,18 +855,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     };
 
     return this.relacionService.findAll(options).pipe(
-      map(response => this.getProyectosRelacionadosIds(response.items)),
-      switchMap(proyectosIds =>
-        from(proyectosIds).pipe(
-          mergeMap(proyectoId => this.service.findById(proyectoId).pipe(
-            map(response => response.codigoExterno))),
-          toArray()
-        )
-      ));
-  }
-
-  private getProyectosRelacionadosIds(relaciones: IRelacion[]): number[] {
-    return relaciones.map(relacion => this.getEntidadRelacionadaId(relacion));
+      map(response => response.items.map(relacion => this.getEntidadRelacionadaId(relacion)?.toString() ?? ''))
+    );
   }
 
   private getEntidadRelacionadaId(relacion: IRelacion): number {
