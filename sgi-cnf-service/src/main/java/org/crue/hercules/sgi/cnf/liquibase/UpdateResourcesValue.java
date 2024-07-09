@@ -10,6 +10,7 @@ import org.springframework.util.ResourceUtils;
 import liquibase.change.custom.CustomTaskChange;
 import liquibase.database.Database;
 import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.CustomChangeException;
 import liquibase.exception.SetupException;
@@ -101,7 +102,11 @@ public class UpdateResourcesValue implements CustomTaskChange {
       log.info(update.toString());
       updateStatement = dbConnection.prepareStatement(update.toString());
       log.debug("Applaying column parameter = 1 for column {}", defaultValueColumnName);
-      updateStatement.setBlob(1, in);
+      if (database.getDatabaseProductName().equalsIgnoreCase(PostgresDatabase.PRODUCT_NAME)) {
+        updateStatement.setBinaryStream(1, in);
+      } else {
+        updateStatement.setBlob(1, in);
+      }
 
       log.debug("Applaying column parameter = 2 for column {}", resourceColumnName);
       updateStatement.setString(2, resourceName);
