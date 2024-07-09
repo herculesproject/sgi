@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.com.dto.ProcessedEmailTpl;
-import org.crue.hercules.sgi.com.dto.ProcessedEmailTpl.ProcessedEmailTplBuilder;
 import org.crue.hercules.sgi.com.exceptions.ContentException;
 import org.crue.hercules.sgi.com.exceptions.SubjectException;
 import org.crue.hercules.sgi.com.model.EmailTpl;
@@ -50,7 +49,7 @@ public class FreemarkerEmailTemplateProcessor {
         .orElseThrow(() -> new NotFoundException(ProblemMessage.builder().key(NotFoundException.class)
             .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY, ApplicationContextSupport.getMessage(EmailTpl.class))
             .parameter(MESSAGE_KEY_ID, name).build()));
-    ProcessedEmailTplBuilder builder = ProcessedEmailTpl.builder();
+    ProcessedEmailTpl.ProcessedEmailTplBuilder builder = ProcessedEmailTpl.builder();
     try {
       if (ObjectUtils.isNotEmpty(emailTpl.getSubjectTpl())) {
         Template subjectTemplate = freemarkerCfg.getTemplate(
