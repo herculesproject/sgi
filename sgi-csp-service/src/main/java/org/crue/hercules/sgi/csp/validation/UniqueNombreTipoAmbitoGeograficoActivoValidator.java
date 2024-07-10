@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +54,7 @@ public class UniqueNombreTipoAmbitoGeograficoActivoValidator
     hibernateContext.disableDefaultConstraintViolation();
     // Build a custom message for a property using the default message
     hibernateContext.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+        .enableExpressionLanguage(ExpressionLanguageFeatureLevel.BEAN_PROPERTIES)
         .addPropertyNode(ApplicationContextSupport.getMessage(field)).addConstraintViolation();
   }
 }

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoRechazadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData;
-import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoSolicitadaSolTipoRrhhData.CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder;
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoValidadaSolTipoRrhhData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
@@ -46,7 +45,7 @@ public class SolicitudRrhhComService {
   public void enviarComunicadoCambioEstadoSolicitadaSolTipoRrhh(Instant fechaEstado, Solicitud solicitud)
       throws JsonProcessingException {
 
-    CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder = CspComCambioEstadoSolicitadaSolTipoRrhhData
+    CspComCambioEstadoSolicitadaSolTipoRrhhData.CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder = CspComCambioEstadoSolicitadaSolTipoRrhhData
         .builder()
         .fechaEstado(fechaEstado)
         .nombreApellidosSolicitante(
@@ -54,7 +53,13 @@ public class SolicitudRrhhComService {
         .codigoInternoSolicitud(solicitud.getCodigoRegistroInterno())
         .enlaceAplicacionMenuValidacionTutor(getEnlaceAplicacionMenuValidacionTutor());
 
-    this.fillConvocatoriaData(dataBuilder, solicitud.getConvocatoriaId());
+    if (solicitud.getConvocatoriaId() != null) {
+      Optional<Convocatoria> convocatoria = this.convocatoriaRepository.findById(solicitud.getConvocatoriaId());
+      if (convocatoria.isPresent()) {
+        dataBuilder.tituloConvocatoria(convocatoria.get().getTitulo());
+        dataBuilder.fechaProvisionalConvocatoria(convocatoria.get().getFechaProvisional());
+      }
+    }
 
     log.debug(
         "Construyendo comunicado aviso cambio de estado SOLICITADA a la solicitud de tipo RRHH {} para enviarlo inmediatamente al solicitante",
@@ -109,18 +114,6 @@ public class SolicitudRrhhComService {
             this.solicitanteDataService.getSolicitanteRecipients(solicitud.getId(), solicitud.getSolicitanteRef()));
     this.emailService.sendEmail(comunicado.getId());
 
-  }
-
-  private void fillConvocatoriaData(
-      CspComCambioEstadoSolicitadaSolTipoRrhhDataBuilder dataBuilder,
-      Long convocatoriaId) {
-    if (convocatoriaId != null) {
-      Optional<Convocatoria> convocatoria = this.convocatoriaRepository.findById(convocatoriaId);
-      if (convocatoria.isPresent()) {
-        dataBuilder.tituloConvocatoria(convocatoria.get().getTitulo());
-        dataBuilder.fechaProvisionalConvocatoria(convocatoria.get().getFechaProvisional());
-      }
-    }
   }
 
   private String getTituloConvocatoria(Long convocatoriaId) {
