@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.pii.model.TipoProcedimiento_;
 import org.crue.hercules.sgi.pii.repository.TipoProcedimientoRepository;
 import org.crue.hercules.sgi.pii.repository.specification.TipoProcedimientoSpecifications;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
@@ -61,6 +62,7 @@ public class UniqueNombreTipoProcedimientoValidator
     hibernateContext.disableDefaultConstraintViolation();
     // Build a custom message for a property using the default message
     hibernateContext.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+        .enableExpressionLanguage(ExpressionLanguageFeatureLevel.BEAN_PROPERTIES)
         .addPropertyNode(ApplicationContextSupport.getMessage(field)).addConstraintViolation();
   }
 

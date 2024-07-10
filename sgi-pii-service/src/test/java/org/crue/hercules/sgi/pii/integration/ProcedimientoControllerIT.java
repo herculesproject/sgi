@@ -153,8 +153,9 @@ class ProcedimientoControllerIT extends BaseIT {
     ProcedimientoOutput output = response.getBody();
     Assertions.assertThat(output).isNotNull();
     Assertions.assertThat(output.getId()).isEqualTo(toUpdateId);
-    Assertions.assertThat(output.getFecha()).isEqualTo(input.getFecha());
-    Assertions.assertThat(output.getFechaLimiteAccion()).isEqualTo(input.getFechaLimiteAccion());
+    Assertions.assertThat(output.getFecha().toEpochMilli()).isEqualTo(input.getFecha().toEpochMilli());
+    Assertions.assertThat(output.getFechaLimiteAccion().toEpochMilli())
+        .isEqualTo(input.getFechaLimiteAccion().toEpochMilli());
     Assertions.assertThat(output.getGenerarAviso()).isTrue();
     Assertions.assertThat(output.getSolicitudProteccionId()).isEqualTo(input.getSolicitudProteccionId());
     Assertions.assertThat(output.getAccionATomar()).isEqualTo(input.getAccionATomar());

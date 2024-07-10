@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContext
 import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidad;
 import org.crue.hercules.sgi.pii.repository.ResultadoInformePatentabilidadRepository;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +54,7 @@ public class UniqueNombreResultadoInformePatentabilidadValidator
     hibernateContext.disableDefaultConstraintViolation();
     // Build a custom message for a property using the default message
     hibernateContext.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+        .enableExpressionLanguage(ExpressionLanguageFeatureLevel.BEAN_PROPERTIES)
         .addPropertyNode(ApplicationContextSupport.getMessage(field)).addConstraintViolation();
   }
 
