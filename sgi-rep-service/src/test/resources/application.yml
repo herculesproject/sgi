@@ -1,9 +1,3 @@
-server:
-  port : 4287
-  error:
-    whitelabel:
-      # Disble the default error page displayed in browsers in case of a server error
-      enabled: false
 sgi:
   time-zone: "Europe/Madrid"
   rest:
@@ -20,12 +14,9 @@ sgi:
       tp-url: "http://sgi-tp-service:4285"
       usr-url: "http://sgi-usr-service:4282"
 spring:
-  profiles:
-    # Set spring-profile using maven
-    active: @spring.profiles.active@
   datasource:
     # We use a H2 in file database with PostgreSQL compatibility mode
-    url: "jdbc:h2:./target/db/rep;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE"
+    url: "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"
     driver-class-name: org.h2.Driver
     username: rep
     password: rep
@@ -46,13 +37,13 @@ spring:
         # We use a H2 database with PostgreSQL compatibility mode
         dialect: org.hibernate.dialect.H2Dialect
         # Set default Hibernate schema
-        '[default_schema]': ${spring.datasource.username}
+        '[default_schema]': test
         jdbc:
           # see: https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/
           '[time_zone]': UTC
   liquibase:
     # No Liquibase contexts
-    contexts: none
+    contexts: test
     # Default database schema
     default-schema: ${spring.jpa.properties.hibernate.[default_schema]}
     # Enable Liquibase
@@ -95,11 +86,15 @@ spring:
         jwt:
           # JSON Web Key endpoint (with the cryptographic key to validate JSON Web Signature)
           jwk-set-uri: ${spring.security.oauth2.client.provider.keycloak.issuer-uri}/protocol/openid-connect/certs
-          user-name-claim: user_ref_id
+          user-name-claim: preferred_username
   web:
     resources:
       # Disable the static resource handling
       add-mappings: false
+  test:
+    database:
+      # By default, tests annotated with @DataJpaTest will use an embedded in-memory database (replacing any explicit or usually auto-configured DataSource).
+      replace: none
 
 preliquibase:
   enabled: false
@@ -108,113 +103,10 @@ spring:
   config:
     activate:
       on-profile:
-      - dev
-  liquibase:
-    # Set Liquibase contexts same as spring profiles
-    contexts: dev
-#  # H2 console
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
-#      settings:
-#        web-allow-others: true
-#  security:
-#    oauth2:
-#      # Enable login page if JWT not provided (enable only for development)
-#      enable-login: true
-#    # Disable CSRF (disable only for development)
-#    csrf:
-#      enable: false
-#    # Disable X-Frame-Options (disable only for development)
-#    frameoptions:
-#      enable: false
-preliquibase:
-  enabled: true
-logging:
-  level:
-    org:
-      crue:
-        hercules:
-          sgi: DEBUG
-      hibernate:
-        # Log the SQL statements
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              # Log SQL query parameter binding
-              BasicBinder: TRACE
-      springframework:
-        jdbc:
-          core:
-            # Log JdbcTemplate Queries
-            JdbcTemplate: DEBUG
-            StatementCreatorUtils: TRACE
----
-spring:
-  config:
-    activate:
-      on-profile:
-      - dev-oracle
-  datasource:
-    # We use Oracle database
-    url: jdbc:oracle:thin:@oracle12c:1521/ORCLPDB1.localdomain
-    driver-class-name: oracle.jdbc.OracleDriver
-    username: REP_SGI
-    password: REP_SGI
-  jpa:
-    hibernate:
-      # Make sure Hibernate will not use the entities to create, update or validate the database
-      # validate | update | create | create-drop
-      ddl-auto: none
-    properties:
-      hibernate:
-        # We use Oracle database
-        dialect: org.hibernate.dialect.Oracle12cDialect
-  liquibase:
-    # Set Liquibase contexts same as spring profiles
-    contexts: dev
-logging:
-  level:
-    org:
-      hibernate:
-        # Log the SQL statements
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              # Log SQL query parameter binding
-              BasicBinder: TRACE
-      springframework:
-        jdbc:
-          core:
-            # Log JdbcTemplate Queries
-            JdbcTemplate: DEBUG
-            StatementCreatorUtils: TRACE
----
-sgi:
-  rest:
-    api:
-      cnf-url: "http://sgi-cnf-service:8080"
-      com-url: "http://sgi-com-service:8080"
-      csp-url: "http://sgi-csp-service:8080"
-      eti-url: "http://sgi-eti-service:8080"
-      pii-url: "http://sgi-pii-service:8080"
-      prc-url: "http://sgi-prc-service:8080"
-      rel-url: "http://sgi-rel-service:8080"
-      sgemp-url: "http://sgi-esb:8080/sgemp"
-      sgp-url: "http://sgi-esb:8080/sgp"
-      tp-url: "http://sgi-tp-service:8080"
-      usr-url: "http://sgi-usr-service:8080"
-spring:
-  config:
-    activate:
-      on-profile:
-      - prod
+      - test-postgres
   datasource:
     # We use PostgreSQL database
-    url: "jdbc:postgresql://postgres:5432/rep"
+    url: "jdbc:postgresql://postgres:5432/db"
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: admin
@@ -223,11 +115,3 @@ spring:
       hibernate:
         # We use a PostgreSQL database
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
-        # Set default Hibernate Schema
-        '[default_schema]': rep
-  security:
-    oauth2:
-      client:
-        provider:
-          keycloak:
-            issuer-uri: http://sgi-auth:8080/auth/realms/sgi

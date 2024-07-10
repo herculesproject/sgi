@@ -18,8 +18,6 @@ import com.deepoove.poi.render.compute.EnvModel;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.google.gson.internal.LinkedTreeMap;
 
-import lombok.var;
-
 /**
  * Adds support for a #root object for the SpEL expressions. Necessary to access
  * the root object from in side an iterable block {{?block}} {{/block}}
