@@ -64,6 +64,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   proyectosSgeIds$ = new Subject<string[]>();
   proyectoIva$ = new BehaviorSubject<StatusWrapper<IProyectoIVA>[]>([]);
+  private initialIva;
 
   readonly permitePaquetesTrabajo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
   readonly colaborativo$: Subject<boolean> = new BehaviorSubject<boolean>(null);
@@ -519,6 +520,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       solicitudProyecto: this.solicitud?.titulo ?? null,
     };
 
+    this.initialIva = proyecto.iva?.iva;
+
     this.checkEstado(this.getFormGroup(), proyecto);
 
     if (proyecto.convocatoria && this.isEdit()) {
@@ -716,6 +719,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return obs.pipe(
       map((value) => {
         this.proyecto = value;
+        this.initialIva = value.iva?.iva;
         this.proyectoWithoutChanges = { ...value };
         this.loadHistoricoProyectoIVA(this.proyecto.id);
         return this.proyecto.id;
@@ -838,7 +842,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
 
   private buildValidatorIva(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (this.vinculacionesProyectosSge && control.value === 0) {
+      if (this.vinculacionesProyectosSge && control.value === 0 && !!this.initialIva) {
         return { ivaProyectosSge: true };
       }
       return null;
