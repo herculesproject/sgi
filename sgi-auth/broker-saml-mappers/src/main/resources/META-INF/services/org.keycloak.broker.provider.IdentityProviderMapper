@@ -17,3 +17,4 @@
 
 org.crue.hercules.sgi.auth.broker.saml.mappers.ScriptToAttributeMapper
 org.crue.hercules.sgi.auth.broker.saml.mappers.ScriptToGroupMapper
+org.crue.hercules.sgi.auth.broker.saml.mappers.AttributeTemplateMapper
