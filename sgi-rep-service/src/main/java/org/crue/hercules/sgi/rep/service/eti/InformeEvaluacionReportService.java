@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.DictamenI18n;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
@@ -117,7 +118,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
 
     dataReport.put("idDictamen", evaluacion.getDictamen().getId());
 
-    dataReport.put("dictamen", evaluacion.getDictamen().getNombre());
+    dataReport.put("dictamen", DictamenI18n.getI18nMessageFromEnum(evaluacion.getDictamen().getId()));
 
     dataReport.put("comentarioNoProcedeEvaluar",
         !ObjectUtils.isEmpty(evaluacion.getComentario()) ? evaluacion.getComentario() : null);

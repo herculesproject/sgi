@@ -240,5 +240,122 @@ public class TiposEnumI18n {
       }
       return message;
     }
+
+    public static String getI18nMessageFromEnumAndLocale(final Long id, Locale locale) {
+      String message = "";
+      if (!StringUtils.isEmpty(id)) {
+        TipoConvocatoriaReunionI18n tipoBusq = Stream.of(TipoConvocatoriaReunionI18n.values())
+            .filter(ta -> id.equals(ta.getId())).findFirst().orElse(null);
+        if (!ObjectUtils.isEmpty(tipoBusq)) {
+          message = ApplicationContextSupport.getApplicationContext().getMessage(tipoBusq.i18nMessage, null, locale);
+        }
+      }
+      return message;
+    }
+  }
+
+  public enum DictamenI18n {
+    FAVORABLE(1L, "enum.dictamen.FAVORABLE"),
+    FAVORABLE_PDTE_REV_MINIMA(2L, "enum.dictamen.FAVORABLE_PDTE_REV_MINIMA"),
+    PDTE_CORRECCIONES(3L, "enum.dictamen.PDTE_CORRECCIONES"),
+    NO_PROCEDE_EVALUAR(4L, "enum.dictamen.NO_PROCEDE_EVALUAR"),
+    FAVORABLE_SEG_ANUAL(5L, "enum.dictamen.FAVORABLE_SEG_ANUAL"),
+    SOLICITUD_MODIFICACIONES_SEG_ANUAL(6L, "enum.dictamen.SOLICITUD_MODIFICACIONES_SEG_ANUAL"),
+    FAVORABLE_SEG_FINAL(7L, "enum.dictamen.FAVORABLE_SEG_FINAL"),
+    SOLICITUD_ACLARACIONES_SEG_FINAL(8L, "enum.dictamen.SOLICITUD_ACLARACIONES_SEG_FINAL"),
+    FAVORABLE_RETROSPECTIVA(9L, "enum.dictamen.FAVORABLE_RETROSPECTIVA"),
+    DESFAVORABLE_RETROSPECTIVA(10L, "enum.dictamen.DESFAVORABLE_RETROSPECTIVA"),
+    DESFAVORABLE(11L, "enum.dictamen.DESFAVORABLE");
+
+    private final Long id;
+    private final String i18nMessage;
+
+    private DictamenI18n(Long id, String i18nMessage) {
+      this.id = id;
+      this.i18nMessage = i18nMessage;
+    }
+
+    public Long getId() {
+      return this.id;
+    }
+
+    public String getI18nMessage() {
+      return this.i18nMessage;
+    }
+
+    public static String getI18nMessageFromEnum(final Long id) {
+      String message = "";
+      if (!StringUtils.isEmpty(id)) {
+        DictamenI18n tipoBusq = Stream.of(DictamenI18n.values())
+            .filter(tit -> id.equals(tit.getId())).findFirst().orElse(null);
+        if (!ObjectUtils.isEmpty(tipoBusq)) {
+          message = ApplicationContextSupport.getMessage(tipoBusq.i18nMessage);
+        }
+      }
+      return message;
+    }
+
+    public static String getI18nMessageFromEnumAndLocale(final Long id, Locale locale) {
+      String message = "";
+      if (!StringUtils.isEmpty(id)) {
+        DictamenI18n tipoBusq = Stream.of(DictamenI18n.values())
+            .filter(ta -> id.equals(ta.getId())).findFirst().orElse(null);
+        if (!ObjectUtils.isEmpty(tipoBusq)) {
+          message = ApplicationContextSupport.getApplicationContext().getMessage(tipoBusq.i18nMessage, null, locale);
+        }
+      }
+      return message;
+    }
+  }
+
+  public enum TipoEvaluacionI18n {
+    /** Retrospectiva <code>1L</code> */
+    RETROSPECTIVA(1L, "enum.tipo-evaluacion.RETROSPECTIVA"),
+    /** Memoria <code>2L</code> */
+    MEMORIA(2L, "enum.tipo-evaluacion.MEMORIA"),
+    /** Seguimiento anual <code>3L</code> */
+    SEGUIMIENTO_ANUAL(3L, "enum.tipo-evaluacion.SEGUIMIENTO_ANUAL"),
+    /** Seguimiento final <code>4L</code> */
+    SEGUIMIENTO_FINAL(4L, "enum.tipo-evaluacion.SEGUIMIENTO_FINAL");
+
+    private final Long id;
+    private final String i18nMessage;
+
+    private TipoEvaluacionI18n(Long id, String i18nMessage) {
+      this.id = id;
+      this.i18nMessage = i18nMessage;
+    }
+
+    public Long getId() {
+      return this.id;
+    }
+
+    public String getI18nMessage() {
+      return this.i18nMessage;
+    }
+
+    public static String getI18nMessageFromEnum(final Long id) {
+      String message = "";
+      if (!StringUtils.isEmpty(id)) {
+        TipoEvaluacionI18n tipoBusq = Stream.of(TipoEvaluacionI18n.values())
+            .filter(tit -> id.equals(tit.getId())).findFirst().orElse(null);
+        if (!ObjectUtils.isEmpty(tipoBusq)) {
+          message = ApplicationContextSupport.getMessage(tipoBusq.i18nMessage);
+        }
+      }
+      return message;
+    }
+
+    public static String getI18nMessageFromEnumAndLocale(final Long id, Locale locale) {
+      String message = "";
+      if (!StringUtils.isEmpty(id)) {
+        TipoEvaluacionI18n tipoBusq = Stream.of(TipoEvaluacionI18n.values())
+            .filter(ta -> id.equals(ta.getId())).findFirst().orElse(null);
+        if (!ObjectUtils.isEmpty(tipoBusq)) {
+          message = ApplicationContextSupport.getApplicationContext().getMessage(tipoBusq.i18nMessage, null, locale);
+        }
+      }
+      return message;
+    }
   }
 }

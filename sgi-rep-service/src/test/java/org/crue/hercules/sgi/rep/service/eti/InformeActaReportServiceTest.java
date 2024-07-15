@@ -96,9 +96,9 @@ class InformeActaReportServiceTest extends BaseReportEtiServiceTest {
     memorias.add(MemoriaEvaluadaDto.builder()
         .numReferencia("numReferencia")
         .personaRef(null)
-        .dictamen("dictamen")
+        .dictamenId(1L)
         .version(1)
-        .tipoEvaluacion("tipoEvaluacion")
+        .tipoEvaluacionId(1L)
         .build());
     return memorias;
   }

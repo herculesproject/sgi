@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -32,9 +33,12 @@ import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaEvaluadaDto;
+import org.crue.hercules.sgi.rep.dto.eti.MemoriaEvaluadaReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.DictamenI18n;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoConvocatoriaReunionI18n;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoEvaluacionI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
@@ -58,12 +62,6 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class InformeActaReportService extends SgiReportDocxService {
 
-  private static final String DICTAMEN_FAVORABLE = "Favorable";
-  private static final String TIPO_EVALUACION_MEMORIA = "Memoria";
-  private static final String TIPO_EVALUACION_SEG_ANUAL = "Seguimiento anual";
-  private static final String TIPO_EVALUACION_SEG_FINAL = "Seguimiento final";
-  private static final Long TIPO_COMENTARIO_GESTOR = 1L;
-
   private final PersonaService personaService;
   private final ConvocatoriaReunionService convocatoriaReunionService;
   private final ActaService actaService;
@@ -85,6 +83,7 @@ public class InformeActaReportService extends SgiReportDocxService {
   }
 
   private XWPFDocument getDocument(ActaDto acta, HashMap<String, Object> dataReport, InputStream path, Language lang) {
+    Locale locale = Locale.forLanguageTag(lang.getCode());
     Assert.notNull(
         acta,
         // Defer message resolution untill is needed
@@ -143,7 +142,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     dataReport.put("duracion", strDuracion.toString());
 
     dataReport.put("tipoConvocatoria", TipoConvocatoriaReunionI18n
-        .getI18nMessageFromEnum(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getId()));
+        .getI18nMessageFromEnumAndLocale(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getId(), locale));
 
     dataReport.put("resumenActa", acta.getResumen());
 
@@ -163,17 +162,17 @@ public class InformeActaReportService extends SgiReportDocxService {
     List<MemoriaEvaluadaDto> memorias = actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(acta.getId());
 
     Optional<MemoriaEvaluadaDto> memoriasEvaluadasNoFavorables = memorias
-        .stream().filter(memoria -> !memoria.getDictamen().equals(DICTAMEN_FAVORABLE)
-            && (memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_MEMORIA)
-                || memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_SEG_ANUAL)
-                || memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_SEG_FINAL)))
+        .stream().filter(memoria -> !memoria.getDictamenId().equals(DictamenI18n.FAVORABLE.getId())
+            && (memoria.getTipoEvaluacionId().equals(TipoEvaluacionI18n.MEMORIA.getId())
+                || memoria.getTipoEvaluacionId().equals(TipoEvaluacionI18n.SEGUIMIENTO_ANUAL.getId())
+                || memoria.getTipoEvaluacionId().equals(TipoEvaluacionI18n.SEGUIMIENTO_FINAL.getId())))
         .findAny();
 
     dataReport.put("existsComentarios", memoriasEvaluadasNoFavorables.isPresent());
 
     addDataAsistentes(acta, dataReport);
 
-    getTableMemoriasEvaluadas(acta, dataReport);
+    getTableMemoriasEvaluadas(acta, dataReport, locale);
 
     dataReport.put("bloqueApartados",
         generarBloqueApartados(getActaComentariosSubReport(acta.getId(), lang), lang));
@@ -233,20 +232,33 @@ public class InformeActaReportService extends SgiReportDocxService {
     }
   }
 
-  private void getTableMemoriasEvaluadas(ActaDto acta, HashMap<String, Object> dataReport) {
+  private void getTableMemoriasEvaluadas(ActaDto acta, HashMap<String, Object> dataReport, Locale locale) {
 
     List<MemoriaEvaluadaDto> memorias = actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(acta.getId());
 
-    dataReport.put("isMemoriasEvaluadas", !memorias.isEmpty());
-    dataReport.put("memoriasEvaluadas", memorias);
+    List<MemoriaEvaluadaReportOutput> memoriasEvaluadas = new ArrayList<>();
     memorias.forEach(memoria -> {
+      MemoriaEvaluadaReportOutput memoriaEvaluada = new MemoriaEvaluadaReportOutput();
+      memoriaEvaluada.setDictamen(DictamenI18n.getI18nMessageFromEnumAndLocale(memoria.getDictamenId(), locale));
+      memoriaEvaluada.setEvaluacionId(memoria.getEvaluacionId());
+      memoriaEvaluada.setId(memoria.getId());
+      memoriaEvaluada.setNumReferencia(memoria.getNumReferencia());
+      memoriaEvaluada.setPersonaRef(memoria.getPersonaRef());
+      memoriaEvaluada
+          .setTipoEvaluacion(TipoEvaluacionI18n.getI18nMessageFromEnumAndLocale(memoria.getTipoEvaluacionId(), locale));
+      memoriaEvaluada.setTitulo(memoria.getTitulo());
+      memoriaEvaluada.setVersion(memoria.getVersion());
       try {
         PersonaDto persona = personaService.findById(memoria.getPersonaRef());
-        memoria.setResponsable(persona);
+        memoriaEvaluada.setResponsable(persona);
       } catch (Exception e) {
         log.error(e.getMessage(), e);
       }
+      memoriasEvaluadas.add(memoriaEvaluada);
     });
+
+    dataReport.put("isMemoriasEvaluadas", !memorias.isEmpty());
+    dataReport.put("memoriasEvaluadas", memoriasEvaluadas);
 
   }
 
@@ -258,7 +270,7 @@ public class InformeActaReportService extends SgiReportDocxService {
    */
   protected ActaComentariosReportOutput getActaComentariosSubReport(Long actaId, Language lang) {
     log.debug("getActaComentariosSubReport(actaId) - start");
-
+    Locale locale = Locale.forLanguageTag(lang.getCode());
     Assert.notNull(
         actaId,
         // Defer message resolution untill is needed
@@ -275,15 +287,16 @@ public class InformeActaReportService extends SgiReportDocxService {
 
       List<MemoriaEvaluadaDto> memorias = actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(actaId);
 
-      memorias.stream().filter(memoria -> !memoria.getDictamen().equals(DICTAMEN_FAVORABLE)
-          && (memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_MEMORIA)
-              || memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_SEG_ANUAL)
-              || memoria.getTipoEvaluacion().equals(TIPO_EVALUACION_SEG_FINAL)))
+      memorias.stream().filter(memoria -> !memoria.getDictamenId().equals(DictamenI18n.FAVORABLE.getId())
+          && (memoria.getTipoEvaluacionId().equals(TipoEvaluacionI18n.MEMORIA.getId())
+              || memoria.getTipoEvaluacionId().equals(TipoEvaluacionI18n.SEGUIMIENTO_ANUAL.getId())
+              || memoria.getTipoEvaluacionId().equals(TipoEvaluacionI18n.SEGUIMIENTO_FINAL.getId())))
           .forEach(memoria -> {
             ActaComentariosMemoriaReportOutput comentariosMemoriaReportOutput = new ActaComentariosMemoriaReportOutput();
             comentariosMemoriaReportOutput.setNumReferenciaMemoria(memoria.getNumReferencia());
             comentariosMemoriaReportOutput.setTituloProyecto(memoria.getTitulo());
-            comentariosMemoriaReportOutput.setDictamen(memoria.getDictamen());
+            comentariosMemoriaReportOutput
+                .setDictamen(DictamenI18n.getI18nMessageFromEnumAndLocale(memoria.getDictamenId(), locale));
             comentariosMemoriaReportOutput.setBloques(new ArrayList<>());
 
             try {
