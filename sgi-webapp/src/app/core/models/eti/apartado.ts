@@ -1,4 +1,4 @@
-import { IApartadoNombre } from './apartado-nombre';
+import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { IBloque } from './bloque';
 
 export interface IApartado {
@@ -14,5 +14,17 @@ export interface IApartado {
   /** Orden */
   orden: number;
 
-  apartadoNombres: IApartadoNombre[]
+  /** Definición del apartado */
+  definicion: IApartadoDefinion[]
+}
+
+export interface IApartadoDefinion {
+  /** Language */
+  lang: string;
+
+  /** Nombre */
+  nombre: string;
+
+  /** Esquema */
+  esquema: SgiFormlyFieldConfig[];
 }

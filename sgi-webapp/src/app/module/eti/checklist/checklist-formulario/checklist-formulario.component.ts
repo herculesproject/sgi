@@ -13,7 +13,7 @@ import { ChecklistService } from '@core/services/eti/checklist/checklist.service
 import { FormlyService } from '@core/services/eti/formly/formly.service';
 import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { Observable, Subscription } from 'rxjs';
@@ -31,6 +31,7 @@ export interface FormlyData {
   formGroup: FormGroup;
   formly: IFormly;
   model: {};
+  options: FormlyFormOptions;
 }
 
 export interface SolicitudProyectoData {
@@ -48,7 +49,16 @@ export class ChecklistFormularioComponent implements OnInit, OnDestroy {
   public readonly data: FormlyData = {
     formGroup: new FormGroup({}),
     formly: {} as IFormly,
-    model: {}
+    model: {},
+    options: {
+      formState: {
+        solicitud: {
+          estado: {
+            estado: ""
+          }
+        }
+      }
+    }
   };
 
   private subscriptions: Subscription[] = [];
@@ -163,8 +173,8 @@ export class ChecklistFormularioComponent implements OnInit, OnDestroy {
   }
 
   getEsquema(formly: IFormly): FormlyFieldConfig[] {
-    if (formly?.formlyNombres) {
-      return this.data.formly?.formlyNombres.find(f => f.lang.toLowerCase() === this.languageService.getLanguage().code).esquema;
+    if (formly?.definicion?.length) {
+      return formly?.definicion.find(f => f.lang.toLowerCase() === this.languageService.getLanguage().code).esquema;
     } else {
       return [];
     }

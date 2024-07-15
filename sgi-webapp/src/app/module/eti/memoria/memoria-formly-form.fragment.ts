@@ -319,12 +319,12 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     questions: IQuestion[]
   ): void {
     questions.forEach(question => {
-      const firstFieldConfig = question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema ? question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema[0] : {};
+      const firstFieldConfig = question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema ? question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema[0] : {};
       const key = firstFieldConfig.key as string;
       const fieldConfig = firstFieldConfig.fieldGroup;
       if (firstLevel && key) {
         if (this.isEditable()) {
-          this.evalExpressionModelValue(question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema, model[key], formState);
+          this.evalExpressionModelValue(question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema, model[key], formState);
         }
         if (question.childs.length) {
           const isFirstLevel = !firstLevel ? question.childs.length > 0 : firstLevel;
@@ -337,7 +337,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   private getRespuestas(question: IQuestion): IRespuesta[] {
     const respuestas: IRespuesta[] = [];
     let respuesta = {};
-    question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema.forEach((field) => {
+    question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema.forEach((field) => {
       respuesta = Object.assign(respuesta, field.model);
     });
     question.apartado.respuesta.valor = respuesta;
@@ -397,7 +397,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     this.formularioTipo = resolveFormularioByTipoEvaluacionAndComite(tipoEvaluacion, comite);
     return this.formularioService.findById(this.formularioTipo).pipe(
       switchMap((formulario) => {
-        return this.formularioService.getBloquesAllLanguages(formulario.id);
+        return this.formularioService.getBloques(formulario.id);
       }),
       map((response) => {
         return this.toBlocks(response.items);
@@ -490,7 +490,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   private loadBlock(index: number): void {
     const block = this.blocks$.value[index];
     if (block && !block.loaded$.value) {
-      this.subscriptions.push(this.bloqueService.getApartadosAllLanguages(block.bloque.id).pipe(
+      this.subscriptions.push(this.bloqueService.getApartados(block.bloque.id).pipe(
         map((apartados) => {
           return apartados.items.map((ap) => ap as IApartadoWithRespuestaAndComentario);
         }),
@@ -584,7 +584,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
    * @param question The question where the childs are searched
    */
   private getQuestionChilds(question: IQuestion): Observable<IQuestion[]> {
-    return this.apartadoService.getHijosAllLanguages(question.apartado.id).pipe(
+    return this.apartadoService.getHijos(question.apartado.id).pipe(
       map((apartados) => {
         return apartados.items.map((ap) => ap as IApartadoWithRespuestaAndComentario);
       }),
@@ -648,13 +648,13 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     mapGroup?: Map<String, Group>
   ): void {
     questions.forEach(question => {
-      const firstFieldConfig = question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema ? question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema[0] : {};
+      const firstFieldConfig = question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema ? question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema[0] : {};
       const key = firstFieldConfig.key as string;
       const fieldConfig = this.cleanFieldGroup(firstFieldConfig.fieldGroup);
       if (firstLevel && key) {
         model[key] = question.apartado.respuesta.valor;
         if (this.isEditable()) {
-          this.evalExpressionModelValue(question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema, model[key], formState);
+          this.evalExpressionModelValue(question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema, model[key], formState);
         }
       }
       else {
@@ -695,14 +695,14 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
           });
         }
       }
-      const fieldsDocumentacion = this.getFieldsDocumentacion(question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema);
+      const fieldsDocumentacion = this.getFieldsDocumentacion(question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema);
       if (fieldsDocumentacion.length) {
         if (fieldsDocumentacion.length > 1) {
           throw Error('Un apartado no puede contener más de un campo de tipo documento');
         }
         this.fieldsDocumentacion.set(question.apartado.id, fieldsDocumentacion[0]);
       }
-      formlyFieldConfig.push(...question.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema);
+      formlyFieldConfig.push(...question.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema);
       if (question.childs.length) {
         const isFirstLevel = !firstLevel ? question.childs.length > 0 : firstLevel;
         this.fillFormlyData(isFirstLevel, key ? model[key] : model, formState, fieldConfig ? fieldConfig : formlyFieldConfig, question.childs, mapGroup);

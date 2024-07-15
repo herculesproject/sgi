@@ -153,8 +153,8 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
 
   getBloqueNombre(comentario: IComentario): string {
     return comentario.apartado?.bloque.orden === 0 ?
-      comentario.apartado?.bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre : (comentario.apartado?.bloque?.orden
-        + ' ' + comentario.apartado?.bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre)
+      comentario.apartado?.bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.value : (comentario.apartado?.bloque?.orden
+        + ' ' + comentario.apartado?.bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.value)
   }
 
   /**

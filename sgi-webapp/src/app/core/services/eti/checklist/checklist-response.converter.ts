@@ -5,7 +5,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IChecklistResponse } from './checklist-response';
 
-class ChecklistResponseConverter extends SgiBaseConverter<IChecklistResponse, IChecklist>{
+class ChecklistResponseConverter extends SgiBaseConverter<IChecklistResponse, IChecklist> {
   toTarget(value: IChecklistResponse): IChecklist {
     if (!value) {
       return value as unknown as IChecklist;
@@ -13,7 +13,7 @@ class ChecklistResponseConverter extends SgiBaseConverter<IChecklistResponse, IC
     return {
       id: value.id,
       persona: { id: value.personaRef } as IPersona,
-      formly: value.formly as unknown as IFormly,
+      formly: value.formly as IFormly,
       respuesta: value.respuesta,
       fechaCreacion: LuxonUtils.fromBackend(value.fechaCreacion)
     };
@@ -27,7 +27,7 @@ class ChecklistResponseConverter extends SgiBaseConverter<IChecklistResponse, IC
       personaRef: value.persona?.id,
       formly: {
         id: value.formly?.id,
-        formlyNombres: value.formly?.formlyNombres
+        definicion: value.formly?.definicion
       },
       fechaCreacion: LuxonUtils.toBackend(value.fechaCreacion),
       respuesta: value.respuesta

@@ -1,7 +1,11 @@
-import { IFormlyNombre } from '@core/models/eti/formly-nombre';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 
 export interface IFormlyResponse {
   id: number;
+  nombre: string;
   version: number;
-  formlyNombres: IFormlyNombre[];
+  definicion: {
+    lang: string;
+    esquema: FormlyFieldConfig[];
+  }[];
 }

@@ -210,7 +210,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
    */
   private loadBloques(evaluacion: IEvaluacion): void {
     this.bloques$ = forkJoin({
-      bloquesFormulario: this.formularioService.getBloquesAllLanguages(resolveFormularioByTipoEvaluacionAndComite
+      bloquesFormulario: this.formularioService.getBloques(resolveFormularioByTipoEvaluacionAndComite
         (evaluacion?.tipoEvaluacion?.id, evaluacion?.memoria?.comite)),
       bloqueComentariosGenerales: this.bloqueService.getBloqueComentariosGenerales()
     }).pipe(
@@ -229,7 +229,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
     this.nodeMap.clear();
     this.dataSource.data = [];
     if (id) {
-      const susbcription = this.bloqueService.getApartadosAllLanguages(id).pipe(
+      const susbcription = this.bloqueService.getApartados(id).pipe(
         switchMap(response => {
           return from(response.items).pipe(
             mergeMap((apartado) => {
@@ -264,7 +264,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
    * Carga todos los subapartados del apartado seleccionado en el formulario
    */
   private getChilds(parent: NodeApartado): Observable<NodeApartado[]> {
-    return this.apartadoService.getHijosAllLanguages(parent.apartado.value.id).pipe(
+    return this.apartadoService.getHijos(parent.apartado.value.id).pipe(
       map((result) => {
         const childs: NodeApartado[] = result.items.map(
           (apartado) => {
@@ -311,7 +311,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
   }
 
   getNombreBloque(bloque: IBloque): string {
-    return bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre;
+    return bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.value;
   }
 
   protected buildFormGroup(): FormGroup {
@@ -351,7 +351,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
   }
 
   readonly displayerBloque = (bloque: IBloque): string => {
-    return bloque.orden + ' ' + bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre;
+    return bloque.orden + ' ' + bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.value;
   }
 
 }

@@ -93,7 +93,7 @@ export class MemoriaFormularioComponent extends FragmentComponent implements OnI
   }
 
   getNombreBloque(bloque: IBloque): string {
-    return bloque.bloqueNombres.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code).nombre;
+    return bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code).value;
   }
 
   getOrdenBloque(key: string): number {

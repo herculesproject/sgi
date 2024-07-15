@@ -11,10 +11,10 @@ export function getApartadoNombre(apartado?: IApartado, lang?: string): string {
     });
   }
   if (apartado.bloque.orden === 0) {
-    return apartado?.padre ? apartado?.padre.apartadoNombres.find(a => a.lang.toLowerCase() === lang)?.nombre : (apartado.apartadoNombres.find(a => a.lang.toLowerCase() === lang)?.nombre);
+    return apartado?.padre ? apartado?.padre.definicion.find(a => a.lang.toLowerCase() === lang)?.nombre : (apartado.definicion.find(a => a.lang.toLowerCase() === lang)?.nombre);
   } else {
     return apartado?.padre ?
-      (apartado?.bloque?.orden + ordenNumber + ' ' + apartado?.padre.apartadoNombres.find(a => a.lang.toLowerCase() === lang)?.nombre) : (apartado?.bloque?.orden + ordenNumber + '.' + apartado?.orden + ' ' + apartado.apartadoNombres.find(a => a.lang.toLowerCase() === lang)?.nombre);
+      (apartado?.bloque?.orden + ordenNumber + ' ' + apartado?.padre.definicion.find(a => a.lang.toLowerCase() === lang)?.nombre) : (apartado?.bloque?.orden + ordenNumber + '.' + apartado?.orden + ' ' + apartado.definicion.find(a => a.lang.toLowerCase() === lang)?.nombre);
   }
 }
 
@@ -25,7 +25,7 @@ export function getSubApartadoNombre(apartado?: IApartado, lang?: string): strin
     apartados.reverse().forEach(aptdo => {
       ordenNumber += '.' + aptdo.orden;
     });
-    return apartado?.bloque?.orden + ordenNumber + '.' + apartado?.orden + ' ' + apartado.apartadoNombres.find(a => a.lang.toLowerCase() === lang)?.nombre;
+    return apartado?.bloque?.orden + ordenNumber + '.' + apartado?.orden + ' ' + apartado.definicion.find(a => a.lang.toLowerCase() === lang)?.nombre;
   } else {
     return null;
   }
@@ -57,15 +57,15 @@ export class BloqueApartadoPipe implements PipeTransform {
   private getApartadosNombre(apartado?: IApartado): string {
     let ordenNumber = '';
     if (apartado.bloque.orden === 0) {
-      return apartado?.padre ? apartado?.padre.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre : (apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre);
+      return apartado?.padre ? apartado?.padre.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre : (apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre);
     } else if (apartado.padre) {
       const apartados = getSubapartados(apartado.padre, []);
       apartados.reverse().forEach(aptdo => {
         ordenNumber += '.' + aptdo.orden;
       });
-      return apartado?.bloque?.orden + ordenNumber + '.' + apartado?.orden + ' ' + apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre;
+      return apartado?.bloque?.orden + ordenNumber + '.' + apartado?.orden + ' ' + apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre;
     } else {
-      return apartado?.bloque?.orden + '.' + apartado?.orden + ' ' + apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre;
+      return apartado?.bloque?.orden + '.' + apartado?.orden + ' ' + apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre;
     }
   }
 

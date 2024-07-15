@@ -1,7 +1,8 @@
-import { IFormlyNombre } from './formly-nombre';
+import { IFormlyDefinicion } from './formly-definicion';
 
 export interface IFormly {
   id: number;
+  nombre: string;
   version: number;
-  formlyNombres: IFormlyNombre[];
+  definicion: IFormlyDefinicion[];
 }

@@ -34,7 +34,7 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
 
   public readonly data: FormlyData = {
     formGroup: new FormGroup({}),
-    formly: { formlyNombres: [] } as IFormly,
+    formly: { definicion: [{ esquema: [] }] } as IFormly,
     model: {},
     options: {}
   };
@@ -182,7 +182,7 @@ export class SolicitudAutoevaluacionFragment extends Fragment {
   }
 
   public getEsquema(formly: IFormly): FormlyFieldConfig[] {
-    return formly?.formlyNombres?.find(f => f.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema;
+    return formly?.definicion?.find(f => f.lang.toLowerCase() === this.languageService.getLanguage().code)?.esquema;
   }
 
 }

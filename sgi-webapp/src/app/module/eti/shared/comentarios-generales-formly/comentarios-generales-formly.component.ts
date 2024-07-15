@@ -36,7 +36,7 @@ export class ComentariosGeneralesFormlyComponent {
   private _expanded = true;
 
   get titulo(): string {
-    return this.comentarios[0]?.apartado.apartadoNombres.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre ?? '';
+    return this.comentarios[0]?.apartado.definicion.find(a => a.lang.toLowerCase() === this.languageService.getLanguage().code)?.nombre ?? '';
   }
 
   constructor(private readonly languageService: LanguageService) {

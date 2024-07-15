@@ -2,15 +2,16 @@ import { IFormly } from '@core/models/eti/formly';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IFormlyResponse } from './formly-response';
 
-class FormlyResponseConverter extends SgiBaseConverter<IFormlyResponse, IFormly>{
+class FormlyResponseConverter extends SgiBaseConverter<IFormlyResponse, IFormly> {
   toTarget(value: IFormlyResponse): IFormly {
     if (!value) {
       return value as unknown as IFormly;
     }
     return {
       id: value.id,
+      nombre: value.nombre,
       version: value.version,
-      formlyNombres: value.formlyNombres
+      definicion: value.definicion
     };
   }
   fromTarget(value: IFormly): IFormlyResponse {
@@ -19,8 +20,9 @@ class FormlyResponseConverter extends SgiBaseConverter<IFormlyResponse, IFormly>
     }
     return {
       id: value.id,
+      nombre: value.nombre,
       version: value.version,
-      formlyNombres: value.formlyNombres
+      definicion: value.definicion
     };
   }
 }
