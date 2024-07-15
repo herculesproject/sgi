@@ -20,8 +20,8 @@ public class MemoriaEvaluada implements Serializable {
   private Long evaluacionId;
   private String numReferencia;
   private String personaRef;
-  private String dictamen;
+  private Long dictamenId;
   private Integer version;
-  private String tipoEvaluacion;
+  private Long tipoEvaluacionId;
   private String titulo;
 }

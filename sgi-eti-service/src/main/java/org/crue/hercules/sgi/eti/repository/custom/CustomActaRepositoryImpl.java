@@ -312,8 +312,8 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
         joinMemoria.get(Memoria_.id),
         root.get(Evaluacion_.id),
         joinMemoria.get(Memoria_.numReferencia), joinPeticionEvaluacion.get(PeticionEvaluacion_.personaRef),
-        root.get(Evaluacion_.dictamen).get(Dictamen_.nombre), root.get(Evaluacion_.version),
-        root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.nombre),
+        root.get(Evaluacion_.dictamen).get(Dictamen_.id), root.get(Evaluacion_.version),
+        root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id),
         joinPeticionEvaluacion.get(PeticionEvaluacion_.titulo));
 
     // Where
