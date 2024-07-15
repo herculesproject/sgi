@@ -24,7 +24,6 @@ import org.crue.hercules.sgi.csp.service.CertificadoAutorizacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.EstadoAutorizacionService;
 import org.crue.hercules.sgi.csp.service.NotificacionProyectoExternoCVNService;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -456,8 +455,7 @@ public class AutorizacionController {
   public ResponseEntity<DocumentoOutput> documentoAutorizacion(@PathVariable Long idAutorizacion,
       @PathVariable String fileName) {
     log.debug("documentoAutorizacion(@PathVariable Long idAutorizacion, @PathVariable String fileName) - start");
-    DocumentoOutput documento = service.generarDocumentoAutorizacion(idAutorizacion, fileName,
-        SgiLocaleContextHolder.getLanguage());
+    DocumentoOutput documento = service.generarDocumentoAutorizacion(idAutorizacion, fileName);
     log.debug("documentoAutorizacion(@PathVariable Long idAutorizacion, @PathVariable String fileName) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
   }

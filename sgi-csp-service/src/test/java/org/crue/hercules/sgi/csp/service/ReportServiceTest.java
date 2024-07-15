@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiRepService;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -46,7 +45,7 @@ class ReportServiceTest extends BaseServiceTest {
             ArgumentMatchers.<Long>any()))
         .willReturn(expectedResource);
 
-    Resource resource = reportService.getInformeAutorizacion(idAutorizacion, Language.ES);
+    Resource resource = reportService.getInformeAutorizacion(idAutorizacion);
 
     Assertions.assertThat(resource).isNotNull().isEqualTo(expectedResource.getBody());
   }
