@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.persistence.LanguageConverter;
@@ -11,17 +12,18 @@ import org.crue.hercules.sgi.framework.persistence.LanguageConverter;
 import lombok.EqualsAndHashCode;
 
 /**
- * Bloque Nombre
+ * Formly Definicion Id
  */
 @EqualsAndHashCode
-public class BloqueNombreKey implements Serializable {
+public class FormlyDefinicionId implements Serializable {
   /**
    * Serial version
    */
   private static final long serialVersionUID = 1L;
 
-  @Column(name = "bloque_id", nullable = false)
-  private Long bloqueId;
+  @NotNull
+  @Column(name = "formly_id", nullable = false)
+  private Long formlyId;
 
   @Column(name = "lang", nullable = false, length = 2)
   @Convert(converter = LanguageConverter.class)

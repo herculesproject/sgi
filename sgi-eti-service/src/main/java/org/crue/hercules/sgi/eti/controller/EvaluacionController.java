@@ -17,7 +17,6 @@ import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -568,7 +567,7 @@ public class EvaluacionController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR', 'ETI-EVC-EVALR')")
   public ResponseEntity<DocumentoOutput> documentoEvaluador(@PathVariable Long idEvaluacion) {
     log.debug("documentoEvaluador(@PathVariable Long idEvaluacion) - start");
-    DocumentoOutput documento = service.generarDocumentoEvaluador(idEvaluacion, SgiLocaleContextHolder.getLanguage());
+    DocumentoOutput documento = service.generarDocumentoEvaluador(idEvaluacion);
     log.debug("documentoEvaluador(@PathVariable Long idEvaluacion) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
   }
@@ -583,7 +582,7 @@ public class EvaluacionController {
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL','ETI-EVC-INV-EVALR','ETI-EVC-EVALR')")
   public ResponseEntity<DocumentoOutput> documentoEvaluacion(@PathVariable Long idEvaluacion) {
     log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - start");
-    DocumentoOutput documento = service.generarDocumentoEvaluacion(idEvaluacion, SgiLocaleContextHolder.getLanguage());
+    DocumentoOutput documento = service.generarDocumentoEvaluacion(idEvaluacion);
     log.debug("documentoEvaluacion(@PathVariable Long idEvaluacion) - end");
     return new ResponseEntity<>(documento, HttpStatus.OK);
   }

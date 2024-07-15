@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.junit.jupiter.api.Test;
@@ -39,14 +38,14 @@ public class BloqueIT extends BaseIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String BLOQUE_CONTROLLER_BASE_PATH = "/bloques";
 
-  private HttpEntity<BloqueOutput> buildRequest(HttpHeaders headers, BloqueOutput entity) throws Exception {
+  private HttpEntity<Bloque> buildRequest(HttpHeaders headers, Bloque entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-Bloque-EDITAR", "ETI-Bloque-VER")));
 
-    HttpEntity<BloqueOutput> request = new HttpEntity<>(entity, headers);
+    HttpEntity<Bloque> request = new HttpEntity<>(entity, headers);
     return request;
 
   }
@@ -54,12 +53,12 @@ public class BloqueIT extends BaseIT {
   // @Test
   // TODO Revisar
   public void getBloque_WithId_ReturnsBloque() throws Exception {
-    final ResponseEntity<BloqueOutput> response = restTemplate.exchange(BLOQUE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), BloqueOutput.class, 1L);
+    final ResponseEntity<Bloque> response = restTemplate.exchange(BLOQUE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.GET, buildRequest(null, null), Bloque.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    final BloqueOutput bloque = response.getBody();
+    final Bloque bloque = response.getBody();
 
     Assertions.assertThat(bloque.getId()).isEqualTo(1L);
   }

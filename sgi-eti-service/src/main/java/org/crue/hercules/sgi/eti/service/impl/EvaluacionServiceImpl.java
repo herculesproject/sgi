@@ -42,7 +42,6 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -587,23 +586,23 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
   @Transactional
   @Override
-  public DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion, Language lang) {
+  public DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion) {
     Evaluacion evaluacion = this.findById(idEvaluacion);
     DocumentoOutput documento = null;
     switch (evaluacion.getTipoEvaluacion().getTipo()) {
       case MEMORIA:
-        documento = this.getDocumentoByTipoEvaluacionMemoria(evaluacion, lang);
+        documento = this.getDocumentoByTipoEvaluacionMemoria(evaluacion);
         break;
       case SEGUIMIENTO_ANUAL:
         if (evaluacion.getDictamen() != null
             && evaluacion.getDictamen().getId().equals(Dictamen.Tipo.SOLICITUD_MODIFICACIONES.getId())) {
-          documento = this.generarDocumento(evaluacion, false, lang);
+          documento = this.generarDocumento(evaluacion, false);
         }
         break;
       case SEGUIMIENTO_FINAL:
         if (evaluacion.getDictamen() != null && (evaluacion.getDictamen().getId()
             .equals(Dictamen.Tipo.SOLICITUD_ACLARACIONES_SEGUIMIENTO_FINAL.getId()))) {
-          documento = this.generarDocumento(evaluacion, false, lang);
+          documento = this.generarDocumento(evaluacion, false);
         }
         break;
       case RETROSPECTIVA:
@@ -611,21 +610,21 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         if (evaluacion.getDictamen() != null
             && (evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE.getId())
                 || evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE_RETROSPECTIVA.getId()))) {
-          documento = this.generarDocumento(evaluacion, true, lang);
+          documento = this.generarDocumento(evaluacion, true);
         }
         break;
     }
     return documento;
   }
 
-  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion, Language lang) {
+  private DocumentoOutput getDocumentoByTipoEvaluacionMemoria(Evaluacion evaluacion) {
     boolean isFavorable = (evaluacion.getDictamen() != null
         && (evaluacion.getDictamen().getId().equals(Dictamen.Tipo.FAVORABLE.getId())));
 
-    return this.generarDocumento(evaluacion, isFavorable, lang);
+    return this.generarDocumento(evaluacion, isFavorable);
   }
 
-  private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable, Language lang) {
+  private DocumentoOutput generarDocumento(Evaluacion evaluacion, Boolean favorable) {
     log.debug("generarDocumento(Evaluacion evaluacion, Boolean favorable)- start");
 
     Resource informePdf = null;
@@ -634,18 +633,18 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       // Se obtiene el informe favorable en formato pdf creado mediante el
       // servicio de reporting
       if (Objects.equals(evaluacion.getTipoEvaluacion().getTipo(), TipoEvaluacion.Tipo.RETROSPECTIVA)) {
-        informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now(), lang);
+        informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now());
         tituloInforme = TITULO_INFORME_EVALUACION_RETROSPECTIVA;
       } else {
         switch (evaluacion.getMemoria().getTipoMemoria().getTipo()) {
           case NUEVA:
-            informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId(), lang);
+            informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId());
             break;
           case MODIFICACION:
-            informePdf = reportService.getInformeFavorableModificacion(evaluacion.getId(), lang);
+            informePdf = reportService.getInformeFavorableModificacion(evaluacion.getId());
             break;
           case RATIFICACION:
-            informePdf = reportService.getInformeFavorableRatificacion(evaluacion.getId(), lang);
+            informePdf = reportService.getInformeFavorableRatificacion(evaluacion.getId());
             break;
           default:
             break;
@@ -655,7 +654,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     } else {
       // Se obtiene el informe de evaluación en formato pdf creado mediante el
       // servicio de reporting
-      informePdf = reportService.getInformeEvaluacion(evaluacion.getId(), lang);
+      informePdf = reportService.getInformeEvaluacion(evaluacion.getId());
       tituloInforme = TITULO_INFORME_EVALUACION;
     }
 
@@ -670,12 +669,11 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * Obtiene el documento de la ficha del Evaluador en idioma solicitado
    * 
    * @param idEvaluacion id {@link Evaluacion}
-   * @param lang         El {@link Language} en el que generar el informe.
    * @return El documento del informe de la ficha del Evaluador
    */
   @Override
-  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion, Language lang) {
-    Resource informePdf = reportService.getInformeEvaluador(idEvaluacion, lang);
+  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion) {
+    Resource informePdf = reportService.getInformeEvaluador(idEvaluacion);
     // Se sube el informe a sgdoc
     String fileName = TITULO_INFORME_FICHA_EVALUADOR + "_" + idEvaluacion + LocalDate.now() + ".pdf";
     return sgdocService.uploadInforme(fileName, informePdf);

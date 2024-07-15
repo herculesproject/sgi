@@ -1,30 +1,32 @@
 package org.crue.hercules.sgi.eti.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * La entidad Formly representa un formulario configurable.
  */
 @Entity
-@Table(name = "formly")
+@Table(name = "formly", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "nombre", "version" }, name = "UK_FORMLY_NOMBRE_VERSION") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -44,8 +46,14 @@ public class Formly extends BaseEntity {
   @Column(name = "version", nullable = false)
   private Integer version;
 
-  @OneToMany(mappedBy = "formly")
-  @LazyCollection(LazyCollectionOption.FALSE)
-  private List<FormlyNombre> formlyNombres = null;
+  /** Nombre */
+  @Column(name = "nombre", length = NOMBRE_LENGTH, nullable = false)
+  private String nombre;
+
+  @OneToMany(fetch = FetchType.EAGER)
+  @JoinColumn(name = "formly_id")
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private Set<FormlyDefinicion> definicion;
 
 }

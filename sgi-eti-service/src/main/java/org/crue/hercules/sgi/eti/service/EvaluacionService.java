@@ -11,7 +11,6 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -223,16 +222,15 @@ public interface EvaluacionService {
    */
   Instant findFirstFechaEnvioSecretariaByIdEvaluacion(Long idEvaluacion);
 
-  DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion, Language lang);
+  DocumentoOutput generarDocumentoEvaluacion(Long idEvaluacion);
 
   /**
    * Obtiene el documento de la ficha del Evaluador en el idioma solicitado
    * 
    * @param idEvaluacion id {@link Evaluacion}
-   * @param lang         El {@link Language} sobre el que buscar.
    * @return El documento del informe de la ficha del Evaluador
    */
-  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion, Language lang);
+  public DocumentoOutput generarDocumentoEvaluador(Long idEvaluacion);
 
   /**
    * 

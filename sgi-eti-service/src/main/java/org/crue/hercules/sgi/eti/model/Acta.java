@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,13 +17,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "acta")
@@ -102,10 +98,5 @@ public class Acta extends BaseEntity {
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   @NotNull
   private Boolean activo;
-
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "acta")
-  @Getter(AccessLevel.NONE)
-  @Setter(AccessLevel.NONE)
-  private final List<ActaDocumento> actaDocumentos = null;
 
 }

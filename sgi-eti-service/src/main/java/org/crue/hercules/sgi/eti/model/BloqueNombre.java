@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.framework.i18n.Language;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +29,7 @@ import lombok.Setter;
  */
 
 @Entity
-@IdClass(BloqueNombreKey.class)
+@IdClass(BloqueNombreId.class)
 @Table(name = "bloque_nombre")
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -42,6 +44,7 @@ public class BloqueNombre implements Serializable {
   /** Bloque */
   @Id
   @NotNull
+  @JsonIgnore()
   private Long bloqueId;
 
   /** Language. */
@@ -50,8 +53,8 @@ public class BloqueNombre implements Serializable {
   private Language lang;
 
   /** Nombre */
-  @Column(name = "nombre", length = 2000, nullable = false)
-  private String nombre;
+  @Column(name = "value_", length = 2000, nullable = false)
+  private String value;
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne

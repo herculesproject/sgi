@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.eti.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,9 +17,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Bloque
@@ -31,6 +33,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Bloque extends BaseEntity {
 
   /**
@@ -55,7 +58,10 @@ public class Bloque extends BaseEntity {
   @NotNull
   private Integer orden;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "bloque")
-  private List<BloqueNombre> bloqueNombres = null;
+  @OneToMany(fetch = FetchType.EAGER)
+  @JoinColumn(name = "bloque_id")
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private Set<BloqueNombre> nombre;
 
 }

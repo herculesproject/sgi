@@ -11,10 +11,10 @@ import org.crue.hercules.sgi.framework.persistence.LanguageConverter;
 import lombok.EqualsAndHashCode;
 
 /**
- * Informe
+ * Informe Documento Id
  */
 @EqualsAndHashCode
-public class InformeDocumentoKey implements Serializable {
+public class InformeDocumentoId implements Serializable {
   /**
    * Serial version
    */

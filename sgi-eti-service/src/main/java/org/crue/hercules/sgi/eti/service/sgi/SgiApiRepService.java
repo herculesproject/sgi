@@ -60,7 +60,7 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/eti/informe-mxx/{idMemoria}/{idFormulario}/{lang}";
+      String relativeUrl = "/report/eti/informe-mxx/{idMemoria}/{idFormulario}?l={lang}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
@@ -79,10 +79,9 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe de evaluación en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeEvaluacion(Long idEvaluacion, Language lang) {
+  public Resource getInformeEvaluacion(Long idEvaluacion) {
     log.debug("getInformeEvaluacion(idEvaluacion)- start");
 
     // TODO incluir validaciones de llamada al informe
@@ -99,13 +98,13 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/eti/informe-evaluacion/{idEvaluacion}/{lang}";
+      String relativeUrl = "/report/eti/informe-evaluacion/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang.getCode()).getBody();
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -119,10 +118,9 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe de evaluador en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeEvaluador(Long idEvaluacion, Language lang) {
+  public Resource getInformeEvaluador(Long idEvaluacion) {
     log.debug("getInformeEvaluador(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -135,13 +133,13 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/eti/informe-ficha-evaluador/{idEvaluacion}/{lang}";
+      String relativeUrl = "/report/eti/informe-ficha-evaluador/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang.getCode()).getBody();
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -155,10 +153,9 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe favorable memoria en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeFavorableMemoria(Long idEvaluacion, Language lang) {
+  public Resource getInformeFavorableMemoria(Long idEvaluacion) {
     log.debug("getInformeFavorableMemoria(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -171,13 +168,13 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/eti/informe-favorable-memoria/{idEvaluacion}/{lang}";
+      String relativeUrl = "/report/eti/informe-favorable-memoria/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang.getCode()).getBody();
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -191,10 +188,9 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe favorable ratificación en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeFavorableRatificacion(Long idEvaluacion, Language lang) {
+  public Resource getInformeFavorableRatificacion(Long idEvaluacion) {
     log.debug("getInformeFavorableRatificacion(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -207,13 +203,13 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/eti/informe-favorable-ratificacion/{idEvaluacion}/{lang}";
+      String relativeUrl = "/report/eti/informe-favorable-ratificacion/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang.getCode()).getBody();
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -227,10 +223,9 @@ public class SgiApiRepService extends SgiApiBaseService {
    * Devuelve un informe favorable modificación en pdf
    *
    * @param idEvaluacion Id de la evaluación
-   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeFavorableModificacion(Long idEvaluacion, Language lang) {
+  public Resource getInformeFavorableModificacion(Long idEvaluacion) {
     log.debug("getInformeFavorableModificacion(idEvaluacion)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -243,13 +238,13 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/eti/informe-favorable-modificacion/{idEvaluacion}/{lang}";
+      String relativeUrl = "/report/eti/informe-favorable-modificacion/{idEvaluacion}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
       informe = super.<Resource>callEndpointWithCurrentUserAuthorization(mergedURL, httpMethod,
           new ParameterizedTypeReference<Resource>() {
-          }, idEvaluacion, lang.getCode()).getBody();
+          }, idEvaluacion).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();
@@ -277,7 +272,7 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/eti/informe-acta/{idActa}/{lang}";
+      String relativeUrl = "/report/eti/informe-acta/{idActa}?l={lang}";
       HttpMethod httpMethod = HttpMethod.GET;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
@@ -298,10 +293,9 @@ public class SgiApiRepService extends SgiApiBaseService {
    *
    * @param idEvaluacion Id de la evaluación
    * @param fecha        Fecha del informe
-   * @param lang         El {@link Language} en el que obtener el informe.
    * @return Resource informe
    */
-  public Resource getInformeEvaluacionRetrospectiva(Long idEvaluacion, Instant fecha, Language lang) {
+  public Resource getInformeEvaluacionRetrospectiva(Long idEvaluacion, Instant fecha) {
     log.debug("getInformeEvaluacionRetrospectiva(idEvaluacion, fecha)- start");
     Assert.notNull(idEvaluacion,
         // Defer message resolution untill is needed
@@ -317,13 +311,13 @@ public class SgiApiRepService extends SgiApiBaseService {
     Resource informe = null;
     try {
       ServiceType serviceType = ServiceType.REP;
-      String relativeUrl = "/report/eti/informe-evaluacion-retrospectiva/{lang}";
+      String relativeUrl = "/report/eti/informe-evaluacion-retrospectiva";
       HttpMethod httpMethod = HttpMethod.POST;
       String mergedURL = buildUri(serviceType, relativeUrl);
 
       informe = super.<InformeEvaluacionReportInput, Resource>callEndpointWithCurrentUserAuthorization(mergedURL,
           httpMethod, input, new ParameterizedTypeReference<Resource>() {
-          }, lang.getCode()).getBody();
+          }).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new GetDataReportException();

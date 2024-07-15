@@ -7,13 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -47,21 +45,21 @@ public class ApartadoControllerTest extends BaseControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String APARTADO_CONTROLLER_BASE_PATH = "/apartados";
-  private static final String PATH_PARAMETER_HIJOS = "/hijos/{lang}";
+  private static final String PATH_PARAMETER_HIJOS = "/hijos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-APARTADO-VER" })
   public void findById_WithExistingId_ReturnsApartado() throws Exception {
 
     // given: Entidad con un determinado Id
-    ApartadoOutput response = getMockDataOutput(1L, 1L, null);
+    Apartado response = getMockDataOutput(1L, 1L, null);
     // @formatter:off
     final String url = new StringBuffer(APARTADO_CONTROLLER_BASE_PATH)
         .append(PATH_PARAMETER_ID)
         .toString();
     // @formatter:on
 
-    BDDMockito.given(service.findByIdAndLanguage(response.getId(), Language.ES)).willReturn(response);
+    BDDMockito.given(service.findById(response.getId())).willReturn(response);
 
     // when: Se busca la entidad por ese Id
     mockMvc
@@ -85,7 +83,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .toString();
     // @formatter:on
 
-    BDDMockito.given(service.findByIdAndLanguage(ArgumentMatchers.anyLong(), ArgumentMatchers.<Language>any()))
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
           throw new ApartadoNotFoundException(invocation.getArgument(0));
         });
@@ -261,13 +259,12 @@ public class ApartadoControllerTest extends BaseControllerTest {
         .append(PATH_PARAMETER_HIJOS).toString();
 
     BDDMockito
-        .given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers
-            .<Language>any(),
+        .given(service.findByPadreId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
-    mockMvc.perform(MockMvcRequestBuilders.get(url, id, Language.ES).with(SecurityMockMvcRequestPostProcessors.csrf()))
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera lista vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -288,8 +285,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
     }
 
     BDDMockito
-        .given(service.findByPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers
-            .<Language>any(),
+        .given(service.findByPadreId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Apartado>>() {
           @Override
@@ -303,7 +299,7 @@ public class ApartadoControllerTest extends BaseControllerTest {
         });
     // when: Se buscan todos los apartados hijos de ese apartador
     mockMvc
-        .perform(MockMvcRequestBuilders.get(url, id, Language.ES).with(SecurityMockMvcRequestPostProcessors.csrf())
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recuperan todos los apartados hijos relacionados
@@ -347,12 +343,12 @@ public class ApartadoControllerTest extends BaseControllerTest {
    * @param padreId
    * @return Apartado
    */
-  private ApartadoOutput getMockDataOutput(Long id, Long bloqueId, Long padreId) {
+  private Apartado getMockDataOutput(Long id, Long bloqueId, Long padreId) {
     Apartado apartado = getMockData(id, bloqueId, padreId);
-    final ApartadoOutput data = new ApartadoOutput();
+    final Apartado data = new Apartado();
     data.setId(id);
     data.setBloque(apartado.getBloque());
-    data.setPadre(new ApartadoOutput());
+    data.setPadre(new Apartado());
     data.getPadre().setId(padreId);
     data.setOrden(id.intValue());
     return data;

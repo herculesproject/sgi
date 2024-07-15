@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.framework.i18n.Language;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -36,14 +37,14 @@ import lombok.Setter;
  * La entidad Formly representa un formulario configurable.
  */
 @Entity
-@IdClass(FormlyNombreKey.class)
-@Table(name = "formly_nombre")
+@IdClass(FormlyDefinicionId.class)
+@Table(name = "formly_definicion")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FormlyNombre implements Serializable {
+public class FormlyDefinicion implements Serializable {
   /**
    * Serial version
    */
@@ -54,16 +55,13 @@ public class FormlyNombre implements Serializable {
   /** Formly */
   @Id
   @NotNull
+  @JsonIgnore()
   private Long formlyId;
 
   /** Language. */
   @Id
   @NotNull
   private Language lang;
-
-  /** Nombre */
-  @Column(name = "nombre", length = NOMBRE_LENGTH, nullable = false)
-  private String nombre;
 
   /** Esquema. */
   @Column(name = "esquema", nullable = false, columnDefinition = "clob")
@@ -98,7 +96,7 @@ public class FormlyNombre implements Serializable {
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
-  @JoinColumn(name = "formly_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_FORMLYNOMBRE_FORMLY"))
+  @JoinColumn(name = "formly_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_FORMLYDEFINICION_FORMLY"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Formly formly = null;

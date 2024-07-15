@@ -1,15 +1,11 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.dto.ApartadoTreeOutput;
-import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ApartadoService;
 import org.crue.hercules.sgi.eti.service.BloqueService;
-import org.crue.hercules.sgi.framework.i18n.Language;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,14 +30,12 @@ public class BloqueController {
 
   public static final String PATH_DELIMITER = "/";
   public static final String REQUEST_MAPPING = PATH_DELIMITER + "bloques";
-  public static final String PATH_COMENTARIOS_GENERALES = PATH_DELIMITER + "comentarios-generales/{lang}";
+  public static final String PATH_COMENTARIOS_GENERALES = PATH_DELIMITER + "comentarios-generales";
 
   public static final String PATH_ID = PATH_DELIMITER + "{id}";
-  public static final String PATH_APARTADOS = PATH_ID + PATH_DELIMITER + "apartados/{lang}";
-  public static final String PATH_APARTADOS_TREE = PATH_ID + PATH_DELIMITER + "apartados-tree/{lang}";
-  public static final String PATH_FORMULARIO = PATH_DELIMITER + "{idFormulario}" + PATH_DELIMITER + "formulario/{lang}";
-  public static final String PATH_APARTADOS_ALL_LANGUAGES = PATH_ID + PATH_DELIMITER + "apartados/all-languages";
-  public static final String PATH_COMENTARIOS_GENERALES_ALL_LANGUAGES = PATH_DELIMITER + "comentarios-generales";
+  public static final String PATH_APARTADOS = PATH_ID + PATH_DELIMITER + "apartados";
+  public static final String PATH_APARTADOS_TREE = PATH_ID + PATH_DELIMITER + "apartados-tree";
+  public static final String PATH_FORMULARIO = PATH_DELIMITER + "{idFormulario}" + PATH_DELIMITER + "formulario";
 
   /** Bloque service */
   private final BloqueService service;
@@ -90,19 +84,19 @@ public class BloqueController {
    * @return {@link Bloque} correspondiente al id.
    */
   @GetMapping(PATH_ID)
-  public BloqueOutput one(@PathVariable Long id) {
+  public Bloque one(@PathVariable Long id) {
     log.debug("Bloque one(Long id) - start");
-    BloqueOutput returnValue = service.findByIdAndLanguage(id, SgiLocaleContextHolder.getLanguage());
+    Bloque returnValue = service.findById(id);
     log.debug("Bloque one(Long id) - end");
     return returnValue;
   }
 
   @GetMapping(PATH_APARTADOS)
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR', 'ETI-MEM-INV-ER')")
-  public ResponseEntity<Page<ApartadoOutput>> getApartados(@PathVariable Long id, @PathVariable String lang,
+  public ResponseEntity<Page<Apartado>> getApartados(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("getApartados(Long id, Pageable paging - start");
-    Page<ApartadoOutput> page = apartadoService.findByBloqueId(id, Language.fromCode(lang), paging);
+    Page<Apartado> page = apartadoService.findByBloqueId(id, paging);
     log.debug("getApartados(Long id, Pageable paging - end");
     if (page.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -116,16 +110,15 @@ public class BloqueController {
    * 
    * @param idFormulario Identificador de {@link Formulario}.
    * @param paging       pageable
-   * @param lang         code language
    * @return el listado de entidades {@link Bloque} paginadas.
    */
   @GetMapping(PATH_FORMULARIO)
   @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-eti')) or hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-PEV-INV-VR')")
   @Deprecated
-  public Page<BloqueOutput> findByFormularioId(@PathVariable Long idFormulario, @PathVariable String lang,
+  public Page<Bloque> findByFormularioId(@PathVariable Long idFormulario,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("Bloque findByFormularioId(Long idFormulario, Pageable paging) - start");
-    Page<BloqueOutput> returnValue = service.findByFormularioId(idFormulario, Language.fromCode(lang), paging);
+    Page<Bloque> returnValue = service.findByFormularioId(idFormulario, paging);
     log.debug("Bloque findByFormularioId(Long idFormulario, Pageable paging) - end");
     return returnValue;
   }
@@ -133,14 +126,13 @@ public class BloqueController {
   /**
    * Obtiene el {@link Bloque} de comentarios generales.
    * 
-   * @param lang code language
    * @return el {@link Bloque}.
    */
   @GetMapping(PATH_COMENTARIOS_GENERALES)
-  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-eti'))")
-  public BloqueOutput getBloqueComentariosGenerales(@PathVariable String lang) {
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-eti')) or hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER')")
+  public Bloque getBloqueComentariosGenerales() {
     log.debug("getBloqueComentariosGenerales() - start");
-    BloqueOutput returnValue = service.getBloqueComentariosGenerales(Language.fromCode(lang));
+    Bloque returnValue = service.getBloqueComentariosGenerales();
     log.debug("getBloqueComentariosGenerales() - end");
     return returnValue;
   }
@@ -150,51 +142,16 @@ public class BloqueController {
    * 
    * @param id     El id de la entidad {@link Bloque}.
    * @param paging pageable
-   * @param lang   code language
    * @return el listado de entidades {@link Apartado} paginadas.
    */
   @GetMapping(PATH_APARTADOS_TREE)
   @PreAuthorize("isClient() and hasAuthority('SCOPE_sgi-eti')")
-  public ResponseEntity<Page<ApartadoTreeOutput>> getApartadosTree(@PathVariable Long id, @PathVariable String lang,
+  public ResponseEntity<Page<ApartadoTreeOutput>> getApartadosTree(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug(" getApartadosTree(@PathVariable Long id, @PathVariable String lang, Pageable paging) - start");
-    Page<ApartadoTreeOutput> page = apartadoService.findApartadosTreeByBloqueId(id, Language.fromCode(lang), paging);
+    Page<ApartadoTreeOutput> page = apartadoService.findApartadosTreeByBloqueId(id, paging);
     log.debug(" getApartadosTree(@PathVariable Long id, @PathVariable String lang, Pageable paging) - end");
     return page.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
-   * Obtiene las entidades {@link Apartado} por el id de su {@link Bloque}.
-   * 
-   * @param id     El id de la entidad {@link Bloque}.
-   * @param paging pageable
-   * @return el listado de entidades {@link Apartado} paginadas y filtradas.
-   */
-  @GetMapping(PATH_APARTADOS_ALL_LANGUAGES)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-INV-EVALR', 'ETI-MEM-INV-ER')")
-  public ResponseEntity<Page<Apartado>> getApartadosAllLanguages(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("getApartadosAllLanguages(Long id, Pageable paging - start");
-    Page<Apartado> page = apartadoService.findByBloqueIdAllLanguages(id, paging);
-    log.debug("getApartadosAllLanguages(Long id, Pageable paging - end");
-    if (page.isEmpty()) {
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
-   * Obtiene el {@link Bloque} de comentarios generales.
-   *
-   * @return el {@link Bloque}.
-   */
-  @GetMapping(PATH_COMENTARIOS_GENERALES_ALL_LANGUAGES)
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER')")
-  public Bloque getBloqueComentariosGeneralesAllLanguages() {
-    log.debug("getBloqueComentariosGeneralesAllLanguages() - start");
-    Bloque returnValue = service.getBloqueComentariosGeneralesAllLanguages();
-    log.debug("getBloqueComentariosGeneralesAllLanguages() - end");
-    return returnValue;
   }
 
 }

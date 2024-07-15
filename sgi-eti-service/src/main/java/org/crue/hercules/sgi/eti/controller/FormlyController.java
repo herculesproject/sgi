@@ -67,9 +67,10 @@ public class FormlyController {
    */
   @GetMapping("/{nombre:[^\\d].*}")
   @PreAuthorize("hasAnyAuthority('ETI-CHKLST-MOD-V', 'ETI-CHKLST-MOD-C', 'ETI-CHK-INV-E')")
-  Formly getByNombre(@PathVariable String nombre) {
+  FormlyOutput getByNombre(@PathVariable String nombre) {
     log.debug("getByNombre(@PathVariable String nombre) - start");
-    Formly returnValue = service.findFirstByOrderByVersionDesc(nombre);
+    Formly formly = service.getByNombre(nombre);
+    FormlyOutput returnValue = convert(formly);
     log.debug("getByNombre(@PathVariable String nombre) - end");
     return returnValue;
   }

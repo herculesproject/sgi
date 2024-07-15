@@ -1,14 +1,16 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.converter.ApartadoTreeConverter;
-import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
+import org.crue.hercules.sgi.eti.model.ApartadoDefinicion;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.ApartadoRepository;
@@ -47,12 +49,11 @@ public class ApartadoServiceTest extends BaseServiceTest {
   public void find_WithExistingId_ReturnsApartado() {
 
     // given: Entidad con un determinado Id
-    ApartadoOutput response = getMockDataOutput(1L, 1L, null);
+    Apartado response = getMockDataOutput(1L, 1L, null);
     BDDMockito.given(repository.findById(response.getId())).willReturn(Optional.of(getMockData(1L, 1L, null)));
-    BDDMockito.given(repository.findByApartadoIdAndLanguage(response.getId(), Language.ES)).willReturn(response);
 
     // when: Se busca la entidad por ese Id
-    ApartadoOutput result = service.findByIdAndLanguage(response.getId(), Language.ES);
+    Apartado result = service.findById(response.getId());
 
     // then: Se recupera la entidad con el Id
     Assertions.assertThat(result).isEqualTo(response);
@@ -67,7 +68,7 @@ public class ApartadoServiceTest extends BaseServiceTest {
 
     // when: Se busca entidad con ese id
     // then: Se produce error porque no encuentra la entidad con ese Id
-    Assertions.assertThatThrownBy(() -> service.findByIdAndLanguage(id, Language.ES))
+    Assertions.assertThatThrownBy(() -> service.findById(id))
         .isInstanceOf(ApartadoNotFoundException.class);
   }
 
@@ -158,18 +159,18 @@ public class ApartadoServiceTest extends BaseServiceTest {
   @Test
   public void findByBloqueIdValidId() {
     // given: Entidad con un determinado Id
-    List<ApartadoOutput> response = new LinkedList<ApartadoOutput>();
-    ApartadoOutput apartado = getMockDataOutput(1L, 1L, null);
+    List<Apartado> response = new LinkedList<Apartado>();
+    Apartado apartado = getMockDataOutput(1L, 1L, null);
     Bloque bloque = apartado.getBloque();
     response.add(apartado);
 
-    Page<ApartadoOutput> pageResponse = new PageImpl<>(response.subList(0, 1), Pageable.unpaged(), response.size());
+    Page<Apartado> pageResponse = new PageImpl<>(response.subList(0, 1), Pageable.unpaged(), response.size());
     BDDMockito
-        .given(repository.findByBloqueIdAndPadreIsNullAndLanguage(bloque.getId(), Language.ES, Pageable.unpaged()))
+        .given(repository.findByBloqueIdAndPadreIsNull(bloque.getId(), Pageable.unpaged()))
         .willReturn(pageResponse);
 
     // when: Se busca la entidad por ese Id
-    Page<ApartadoOutput> result = service.findByBloqueId(bloque.getId(), Language.ES, Pageable.unpaged());
+    Page<Apartado> result = service.findByBloqueId(bloque.getId(), Pageable.unpaged());
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result).isEqualTo(pageResponse);
@@ -183,7 +184,7 @@ public class ApartadoServiceTest extends BaseServiceTest {
     Long id = null;
     try {
       // when: se quiera listar sus apartados
-      service.findByBloqueId(id, Language.ES, Pageable.unpaged());
+      service.findByBloqueId(id, Pageable.unpaged());
       Assertions.fail("El id no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
@@ -196,15 +197,15 @@ public class ApartadoServiceTest extends BaseServiceTest {
   public void findByPadreIdValid() {
     // given: Entidad con un determinado Id
     Long id = 123L;
-    List<ApartadoOutput> response = new LinkedList<ApartadoOutput>();
-    ApartadoOutput apartado = getMockDataOutput(1L, 1L, null);
+    List<Apartado> response = new LinkedList<Apartado>();
+    Apartado apartado = getMockDataOutput(1L, 1L, null);
     response.add(apartado);
 
-    Page<ApartadoOutput> pageResponse = new PageImpl<>(response.subList(0, 1), Pageable.unpaged(), response.size());
-    BDDMockito.given(repository.findByPadreIdAndLanguage(id, Language.ES, Pageable.unpaged())).willReturn(pageResponse);
+    Page<Apartado> pageResponse = new PageImpl<>(response.subList(0, 1), Pageable.unpaged(), response.size());
+    BDDMockito.given(repository.findByPadreId(id, Pageable.unpaged())).willReturn(pageResponse);
 
     // when: Se busca la entidad por ese Id
-    Page<ApartadoOutput> result = service.findByPadreId(id, Language.ES, Pageable.unpaged());
+    Page<Apartado> result = service.findByPadreId(id, Pageable.unpaged());
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result).isEqualTo(pageResponse);
@@ -218,7 +219,7 @@ public class ApartadoServiceTest extends BaseServiceTest {
     Long id = null;
     try {
       // when: se quiera listar sus apartados hijos
-      service.findByPadreId(id, Language.ES, Pageable.unpaged());
+      service.findByPadreId(id, Pageable.unpaged());
       Assertions.fail("Id no puede ser null para buscar una apartado por el Id de su padre");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {
@@ -263,22 +264,25 @@ public class ApartadoServiceTest extends BaseServiceTest {
    * @param padreId
    * @return Apartado
    */
-  private ApartadoOutput getMockDataOutput(Long id, Long bloqueId, Long padreId) {
+  private Apartado getMockDataOutput(Long id, Long bloqueId, Long padreId) {
 
     Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
     Bloque bloque = new Bloque(bloqueId, formulario, 1, null);
 
-    ApartadoOutput padre = (padreId != null) ? getMockDataOutput(padreId, bloqueId, null) : null;
+    Apartado padre = (padreId != null) ? getMockDataOutput(padreId, bloqueId, null) : null;
 
     String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
-    final ApartadoOutput data = new ApartadoOutput();
+    final Apartado data = new Apartado();
     data.setId(id);
     data.setBloque(bloque);
     data.setPadre(padre);
     data.setOrden(id.intValue());
-    data.setNombre(txt);
-    data.setEsquema("{}");
+
+    Set<ApartadoDefinicion> definiciones = new HashSet<>();
+    ApartadoDefinicion defi = new ApartadoDefinicion(id, Language.ES, txt, "{}");
+    definiciones.add(defi);
+    data.setDefinicion(definiciones);
 
     return data;
   }

@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import org.crue.hercules.sgi.eti.model.InformeDocumento;
-import org.crue.hercules.sgi.eti.model.InformeDocumentoKey;
+import org.crue.hercules.sgi.eti.model.InformeDocumentoId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface InformeDocumentoRepository
-    extends JpaRepository<InformeDocumento, InformeDocumentoKey>, JpaSpecificationExecutor<InformeDocumento> {
+    extends JpaRepository<InformeDocumento, InformeDocumentoId>, JpaSpecificationExecutor<InformeDocumento> {
 
 }

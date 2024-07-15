@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria.Tipo;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -227,10 +226,9 @@ public interface MemoriaService {
    * 
    * @param nuevaMemoria Nueva {@link Memoria} a crear.
    * @param id           Identificador de {@link Memoria} de la que se parte.
-   * @param lang         El {@link Language} de la memoria.
    * @return {@link Memoria} creada.
    */
-  Memoria createModificada(Memoria nuevaMemoria, Long id, Language lang);
+  Memoria createModificada(Memoria nuevaMemoria, Long id);
 
   /**
    * Comprobación de si están o no los documentos obligatorios aportados para

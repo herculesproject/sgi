@@ -3,12 +3,14 @@ package org.crue.hercules.sgi.eti.integration;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.dto.ApartadoOutput;
 import org.crue.hercules.sgi.eti.model.Apartado;
+import org.crue.hercules.sgi.eti.model.ApartadoDefinicion;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.BloqueNombre;
 import org.crue.hercules.sgi.eti.model.Formulario;
@@ -45,14 +47,14 @@ public class ApartadoIT extends BaseIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String APARTADO_CONTROLLER_BASE_PATH = "/apartados";
 
-  private HttpEntity<ApartadoOutput> buildRequest(HttpHeaders headers, ApartadoOutput entity) throws Exception {
+  private HttpEntity<Apartado> buildRequest(HttpHeaders headers, Apartado entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization",
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-APARTADO-EDITAR", "ETI-APARTADO-VER")));
 
-    HttpEntity<ApartadoOutput> request = new HttpEntity<>(entity, headers);
+    HttpEntity<Apartado> request = new HttpEntity<>(entity, headers);
     return request;
   }
 
@@ -61,12 +63,12 @@ public class ApartadoIT extends BaseIT {
   public void findById_WithExistingId_ReturnsApartado() throws Exception {
 
     // given: Entidad con un determinado Id
-    final ApartadoOutput apartado = getMockDataOutput(1L, 1L, null);
+    final Apartado apartado = getMockDataOutput(1L, 1L, null);
 
     // when: Se busca la entidad por ese Id
-    final ResponseEntity<ApartadoOutput> response = restTemplate.exchange(
+    final ResponseEntity<Apartado> response = restTemplate.exchange(
         APARTADO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), ApartadoOutput.class, apartado.getId());
+        HttpMethod.GET, buildRequest(null, null), Apartado.class, apartado.getId());
 
     // then: Se recupera la entidad con el Id
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -80,9 +82,9 @@ public class ApartadoIT extends BaseIT {
     Long id = 6L;
 
     // when: Se busca la entidad por ese Id
-    final ResponseEntity<ApartadoOutput> response = restTemplate.exchange(
+    final ResponseEntity<Apartado> response = restTemplate.exchange(
         APARTADO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), ApartadoOutput.class, id);
+        HttpMethod.GET, buildRequest(null, null), Apartado.class, id);
 
     // then: Se produce error porque no encuentra la entidad con ese Id
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -99,10 +101,10 @@ public class ApartadoIT extends BaseIT {
     result.add(getMockData(4L, 1L, null));
     result.add(getMockData(5L, 1L, 4L));
 
-    List<BloqueNombre> bloqueNombres = new ArrayList();
+    Set<BloqueNombre> bloqueNombres = new HashSet<>();
     BloqueNombre bloqueLanguage = new BloqueNombre(1L, Language.EN, "Bloque1");
     bloqueNombres.add(bloqueLanguage);
-    result.get(0).getBloque().setBloqueNombres(bloqueNombres);
+    result.get(0).getBloque().setNombre(bloqueNombres);
 
     // when: Se buscan todos los datos
     final ResponseEntity<List<Apartado>> response = restTemplate.exchange(APARTADO_CONTROLLER_BASE_PATH, HttpMethod.GET,
@@ -121,10 +123,10 @@ public class ApartadoIT extends BaseIT {
     List<Apartado> result = new LinkedList<>();
     result.add(getMockData(5L, 1L, 4L));
 
-    List<BloqueNombre> bloqueNombres = new ArrayList();
+    Set<BloqueNombre> bloqueNombres = new HashSet<>();
     BloqueNombre bloqueLanguage = new BloqueNombre(1L, Language.EN, "Bloque1");
     bloqueNombres.add(bloqueLanguage);
-    result.get(0).getBloque().setBloqueNombres(bloqueNombres);
+    result.get(0).getBloque().setNombre(bloqueNombres);
 
     // página 2 con 2 elementos por página
     HttpHeaders headers = new HttpHeaders();
@@ -153,10 +155,10 @@ public class ApartadoIT extends BaseIT {
     // given: Datos existentes
     List<Apartado> result = new LinkedList<>();
     result.add(getMockData(3L, 1L, 1L));
-    List<BloqueNombre> bloqueNombres = new ArrayList();
+    Set<BloqueNombre> bloqueNombres = new HashSet<>();
     BloqueNombre bloqueLanguage = new BloqueNombre(1L, Language.EN, "Bloque1");
     bloqueNombres.add(bloqueLanguage);
-    result.get(0).getBloque().setBloqueNombres(bloqueNombres);
+    result.get(0).getBloque().setNombre(bloqueNombres);
 
     // search by codigo like, id equals
     Long id = 3L;
@@ -212,7 +214,7 @@ public class ApartadoIT extends BaseIT {
   public void findAll_WithPagingSortingAndFiltering_ReturnsApartadoSubList() throws Exception {
 
     // given: Datos existentes
-    List<ApartadoOutput> result = new LinkedList<>();
+    List<Apartado> result = new LinkedList<>();
     result.add(getMockDataOutput(1L, 1L, null));
 
     // página 1 con 2 elementos por página
@@ -230,8 +232,8 @@ public class ApartadoIT extends BaseIT {
         .queryParam("q", query).build(false).toUri();
 
     // when: Se buscan los datos paginados con el filtro y orden indicados
-    final ResponseEntity<List<ApartadoOutput>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ApartadoOutput>>() {
+    final ResponseEntity<List<Apartado>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Apartado>>() {
         });
 
     // then: Se recuperan los datos filtrados, ordenados y paginados
@@ -281,22 +283,25 @@ public class ApartadoIT extends BaseIT {
    * @param padreId
    * @return Apartado
    */
-  private ApartadoOutput getMockDataOutput(Long id, Long bloqueId, Long padreId) {
+  private Apartado getMockDataOutput(Long id, Long bloqueId, Long padreId) {
 
     Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
     Bloque bloque = new Bloque(bloqueId, formulario, bloqueId.intValue(), null);
 
-    ApartadoOutput padre = (padreId != null) ? getMockDataOutput(padreId, bloqueId, null) : null;
+    Apartado padre = (padreId != null) ? getMockDataOutput(padreId, bloqueId, null) : null;
 
     String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
-    final ApartadoOutput data = new ApartadoOutput();
+    final Apartado data = new Apartado();
+    Set<ApartadoDefinicion> definicion = new HashSet<>();
+    ApartadoDefinicion defi = new ApartadoDefinicion(id, Language.ES, "Apartado" + txt,
+        "{\"nombre\":\"EsquemaApartado" + txt + "\"}");
+    definicion.add(defi);
     data.setId(id);
     data.setBloque(bloque);
-    data.setNombre("Apartado" + txt);
+    data.setDefinicion(definicion);
     data.setPadre(padre);
     data.setOrden(id.intValue());
-    data.setEsquema("{\"nombre\":\"EsquemaApartado" + txt + "\"}");
 
     return data;
   }

@@ -19,48 +19,48 @@
     <!-- FORMULARIO M10 -->
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG VALOR SOCIAL Y JUSTIFICACIÓN" />
+      <column name="value_" value="ENG VALOR SOCIAL Y JUSTIFICACIÓN" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M10') and orden=1 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG CUALIFICACIÓN DEL EQUIPO INVESTIGADOR" />
+      <column name="value_" value="ENG CUALIFICACIÓN DEL EQUIPO INVESTIGADOR" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M10') and orden=2 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG VALIDEZ CIENTÍFICA Y METODOLÓGICA" />
+      <column name="value_" value="ENG VALIDEZ CIENTÍFICA Y METODOLÓGICA" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M10') and orden=3 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG ASPECTOS ÉTICOS ESPECÍFICOS" />
+      <column name="value_" value="ENG ASPECTOS ÉTICOS ESPECÍFICOS" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M10') and orden=4 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG CUMPLIMIENTO DE LA DOCUMENTACIÓN" />
+      <column name="value_" value="ENG CUMPLIMIENTO DE LA DOCUMENTACIÓN" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M10') and orden=5 )" />
       <column name="lang" value="en" />
     </insert>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre" value="ENG Valor social del proyecto" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -71,14 +71,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre" value="ENG Justificación del uso de seres humanos" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_1_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -89,7 +89,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -97,7 +97,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_2_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -108,7 +108,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -116,7 +116,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -127,7 +127,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -135,7 +135,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -146,7 +146,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -154,7 +154,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -165,7 +165,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -173,7 +173,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -184,7 +184,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -192,7 +192,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_4_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -203,7 +203,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -211,7 +211,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_4_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -222,7 +222,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -230,7 +230,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_4_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -241,7 +241,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -249,7 +249,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_4_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -260,7 +260,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -268,7 +268,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -279,7 +279,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -287,7 +287,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_5_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -298,7 +298,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -306,7 +306,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_5_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -317,7 +317,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -325,7 +325,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_3_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -336,7 +336,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -344,7 +344,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -355,7 +355,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -363,7 +363,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -374,7 +374,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -382,7 +382,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_1_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -393,7 +393,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -401,7 +401,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_1_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -412,7 +412,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -420,7 +420,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_1_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -431,7 +431,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -439,7 +439,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -450,7 +450,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -458,7 +458,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -469,7 +469,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -477,7 +477,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -488,7 +488,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -496,7 +496,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_4_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -507,7 +507,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -515,7 +515,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_4_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -526,7 +526,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -534,7 +534,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -545,7 +545,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -553,7 +553,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_5_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -564,7 +564,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -572,7 +572,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_5_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -583,7 +583,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -591,7 +591,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_5_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -602,7 +602,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -610,7 +610,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -621,7 +621,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -629,7 +629,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_6_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -640,7 +640,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -648,7 +648,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_6_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -659,7 +659,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -667,7 +667,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_6_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -678,7 +678,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -686,7 +686,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_6_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -697,7 +697,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -705,7 +705,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_6_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -716,7 +716,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -724,7 +724,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_6_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -735,7 +735,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M10'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -743,7 +743,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_4_6_7.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -754,7 +754,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -762,7 +762,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -773,7 +773,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -781,7 +781,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -792,7 +792,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -800,7 +800,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -811,7 +811,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -819,7 +819,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -830,7 +830,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -838,7 +838,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -849,7 +849,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -857,7 +857,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -868,7 +868,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -876,7 +876,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_7.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -887,7 +887,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
 
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 8 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
@@ -896,7 +896,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_8.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -907,7 +907,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 9 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
       <column name="nombre"
@@ -916,7 +916,7 @@
       <column name="lang" value="en" />
     </insert>
 
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m10/m10_apartado_5_9.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -937,48 +937,48 @@
 
     <!-- FORMULARIO M20 -->
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG VALOR SOCIAL Y JUSTIFICACIÓN" />
+      <column name="value_" value="ENG VALOR SOCIAL Y JUSTIFICACIÓN" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M20') and orden=1 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG CUALIFICACIÓN DEL EQUIPO INVESTIGADOR" />
+      <column name="value_" value="ENG CUALIFICACIÓN DEL EQUIPO INVESTIGADOR" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M20') and orden=2 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG VALIDEZ CIENTÍFICA Y METODOLÓGICA" />
+      <column name="value_" value="ENG VALIDEZ CIENTÍFICA Y METODOLÓGICA" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M20') and orden=3 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG ASPECTOS ÉTICOS ESPECÍFICOS" />
+      <column name="value_" value="ENG ASPECTOS ÉTICOS ESPECÍFICOS" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M20') and orden=4 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG CUMPLIMIENTO DE LA DOCUMENTACIÓN" />
+      <column name="value_" value="ENG CUMPLIMIENTO DE LA DOCUMENTACIÓN" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M20') and orden=5 )" />
       <column name="lang" value="en" />
     </insert>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Valor social del proyecto" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -989,7 +989,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 1 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -997,7 +997,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_1_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1008,14 +1008,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Justificación del uso de animales" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_1_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1026,14 +1026,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Personal que llevará a cabo las tareas animales" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_2_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1044,14 +1044,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Objetivos científicos del proyecto" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1062,14 +1062,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Diseño metodológico del proyecto" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1080,14 +1080,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Título descriptivo" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1098,14 +1098,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Tipo de proyecto" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1117,7 +1117,7 @@
     </update>
 
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1125,7 +1125,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1136,14 +1136,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Datos referentes a los animales de experimentación" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1154,7 +1154,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1162,7 +1162,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_6_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1173,7 +1173,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1181,7 +1181,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_6_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1192,7 +1192,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1200,7 +1200,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_6_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1211,7 +1211,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1219,7 +1219,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_6_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1230,7 +1230,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 6 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1238,7 +1238,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_6_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1249,7 +1249,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1257,7 +1257,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1268,7 +1268,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1276,7 +1276,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1287,7 +1287,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1295,7 +1295,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1306,7 +1306,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1314,7 +1314,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1325,7 +1325,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1333,7 +1333,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1344,7 +1344,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1352,7 +1352,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1363,7 +1363,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1371,7 +1371,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1382,7 +1382,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1390,7 +1390,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_7.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1401,7 +1401,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 8 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1409,7 +1409,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_8.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1420,7 +1420,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 9 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1428,7 +1428,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_9.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1439,7 +1439,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 10 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1447,7 +1447,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_10.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1458,7 +1458,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 11 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1466,7 +1466,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_11.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1477,7 +1477,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 12 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1485,7 +1485,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_12.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1496,7 +1496,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 13 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1504,7 +1504,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_13.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1515,7 +1515,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 14 and padre_id = (select id from ${schemaPrefix}apartado where orden = 7 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1523,7 +1523,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_3_7_14.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1534,14 +1534,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Reemplazo" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1552,7 +1552,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1560,7 +1560,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1571,7 +1571,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1579,7 +1579,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_1_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1590,7 +1590,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1598,7 +1598,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_1_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1609,14 +1609,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Refinamiento" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1627,7 +1627,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1635,7 +1635,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_2_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1646,7 +1646,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1654,7 +1654,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_2_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1665,7 +1665,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1673,7 +1673,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_2_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1684,7 +1684,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1692,7 +1692,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_2_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1703,7 +1703,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1711,7 +1711,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_2_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1722,14 +1722,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Reducción" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1740,7 +1740,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1748,7 +1748,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_3_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1759,7 +1759,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1767,7 +1767,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_3_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1778,7 +1778,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M20'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1786,7 +1786,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_4_3_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1797,14 +1797,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Acreditaciones" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_5_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1815,14 +1815,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Informe veterinario" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_5_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1833,14 +1833,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Evaluación retrospectiva" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_5_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1851,7 +1851,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre"
@@ -1859,7 +1859,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_5_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1870,14 +1870,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Resumen no técnico (RNT)" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_5_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1888,14 +1888,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Documentación adicional" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_5_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1906,14 +1906,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M20')))" />
       <column name="nombre" value="ENG Aclaraciones al comité" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m20/m20_apartado_5_7.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1934,48 +1934,48 @@
 
     <!-- FORMULARIO M30 -->
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG VALOR SOCIAL Y JUSTIFICACIÓN" />
+      <column name="value_" value="ENG VALOR SOCIAL Y JUSTIFICACIÓN" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M30') and orden=1 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG CUALIFICACIÓN DEL EQUIPO INVESTIGADOR" />
+      <column name="value_" value="ENG CUALIFICACIÓN DEL EQUIPO INVESTIGADOR" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M30') and orden=2 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG VALIDEZ CIENTÍFICA Y METODOLÓGICA" />
+      <column name="value_" value="ENG VALIDEZ CIENTÍFICA Y METODOLÓGICA" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M30') and orden=3 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG ASPECTOS ÉTICOS ESPECÍFICOS" />
+      <column name="value_" value="ENG ASPECTOS ÉTICOS ESPECÍFICOS" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M30') and orden=4 )" />
       <column name="lang" value="en" />
     </insert>
 
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG CUMPLIMIENTO DE LA DOCUMENTACIÓN" />
+      <column name="value_" value="ENG CUMPLIMIENTO DE LA DOCUMENTACIÓN" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where formulario_id =(select id from ${schemaPrefix}formulario where nombre='M30') and orden=5 )" />
       <column name="lang" value="en" />
     </insert>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Valor social del proyecto" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -1986,7 +1986,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -1994,7 +1994,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_1_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2005,14 +2005,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Personal que llevará a cabo las tareas animales" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_2_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2023,14 +2023,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Objetivos científicos del proyecto" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2041,14 +2041,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Diseño metodológico del proyecto" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2059,14 +2059,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Referencias de publicaciones científicas" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2077,14 +2077,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Tipo de exposición" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2095,7 +2095,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2103,7 +2103,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_4_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2114,7 +2114,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2122,7 +2122,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_4_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2133,7 +2133,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2141,7 +2141,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_4_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2152,7 +2152,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2160,7 +2160,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_4_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2171,7 +2171,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2179,7 +2179,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_4_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2190,7 +2190,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2198,7 +2198,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2209,7 +2209,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2217,7 +2217,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_5_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2228,7 +2228,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2236,7 +2236,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_5_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2247,7 +2247,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2255,7 +2255,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_5_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2266,7 +2266,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2274,7 +2274,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_5_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2285,7 +2285,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2293,7 +2293,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_5_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2304,7 +2304,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2312,7 +2312,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_5_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2323,14 +2323,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Frecuencia y periodicidad de uso" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2341,7 +2341,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 7 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2349,7 +2349,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_3_7.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2360,14 +2360,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Evaluación del riesgo" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2378,7 +2378,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2386,7 +2386,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2397,7 +2397,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2405,7 +2405,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_1_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2416,7 +2416,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2424,7 +2424,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_1_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2435,7 +2435,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2443,7 +2443,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_1_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2454,7 +2454,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2462,7 +2462,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_1_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2473,14 +2473,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Medidas técnicas de seguridad" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2491,7 +2491,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2499,7 +2499,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2510,7 +2510,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2518,7 +2518,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2529,7 +2529,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))))" />
       <column name="nombre"
@@ -2537,7 +2537,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_1_1_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2548,7 +2548,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))))" />
       <column name="nombre"
@@ -2556,7 +2556,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_1_1_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2567,7 +2567,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))))" />
       <column name="nombre"
@@ -2575,7 +2575,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_1_1_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2586,7 +2586,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))))" />
       <column name="nombre"
@@ -2594,7 +2594,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_1_1_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2605,7 +2605,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2613,7 +2613,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_1_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2624,7 +2624,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2632,7 +2632,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2643,7 +2643,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2651,7 +2651,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2662,7 +2662,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2670,7 +2670,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_3_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2681,7 +2681,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2689,7 +2689,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_3_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2700,7 +2700,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2708,7 +2708,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_3_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2719,7 +2719,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2727,7 +2727,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_3_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2738,7 +2738,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id =(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2746,7 +2746,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_2_3_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2757,14 +2757,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Vigilancia y protección de la salud" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2775,7 +2775,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2783,7 +2783,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_3_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2794,7 +2794,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaprefix}formulario where nombre = 'M30'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2802,7 +2802,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_4_3_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2813,14 +2813,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Acreditaciones" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_5_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2831,7 +2831,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2839,7 +2839,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_5_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2850,7 +2850,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2858,7 +2858,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_5_2_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2869,7 +2869,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30'))))" />
       <column name="nombre"
@@ -2877,7 +2877,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_5_2_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2888,14 +2888,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Seguro de accidentes y responsabilidad civil" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_5_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2906,7 +2906,7 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre"
@@ -2914,7 +2914,7 @@
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_5_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2925,14 +2925,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Documentación adicional" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_5_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2943,14 +2943,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 5 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
       <column name="nombre" value="ENG Aclaraciones al comité" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/m30/m30_apartado_5_6.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -2972,42 +2972,42 @@
 
     <!-- FORMULARIO COMENTARIOS GENERALES -->
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG COMENTARIOS GENERALES" />
+      <column name="value_" value="ENG COMENTARIOS GENERALES" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where orden = '0' and formulario_id is null)" />
       <column name="lang" value="en" />
     </insert>
     <!-- FORMULARIO SEGUIMIENTO-ANUAL -->
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG Seguimiento Anual" />
+      <column name="value_" value="ENG Seguimiento Anual" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where orden = '1' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual'))" />
       <column name="lang" value="en" />
     </insert>
     <!-- FORMULARIO SEGUIMIENTO-FINAL -->
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG Seguimiento Final" />
+      <column name="value_" value="ENG Seguimiento Final" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where orden = '1' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Final'))" />
       <column name="lang" value="en" />
     </insert>
     <!-- FORMULARIO RETROSPECTIVA -->
     <insert tableName="bloque_nombre">
-      <column name="nombre" value="ENG Retrospectiva" />
+      <column name="value_" value="ENG Retrospectiva" />
       <column name="bloque_id"
         valueComputed="(select id from ${schemaPrefix}bloque where orden = '1' and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Retrospectiva'))" />
       <column name="lang" value="en" />
     </insert>
 
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = '0' and formulario_id is null))" />
       <column name="nombre" value="ENG Comentarios generales" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/apartado_comentarios_generales.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3018,14 +3018,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual')))" />
       <column name="nombre" value="ENG Fecha de inicio de la actividad de investigación" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/seguimiento_anual_apartado_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3036,14 +3036,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual')))" />
       <column name="nombre" value="ENG Equipo investigador" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/seguimiento_anual_apartado_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3054,14 +3054,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual')))" />
       <column name="nombre" value="ENG Diseño metodológico" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/seguimiento_anual_apartado_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3072,14 +3072,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual')))" />
       <column name="nombre" value="ENG Aspectos éticos específicos" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/seguimiento_anual_apartado_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3090,14 +3090,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Anual')))" />
       <column name="nombre" value="ENG Aclaraciones al comité" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/seguimiento_anual_apartado_5.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3108,14 +3108,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Seguimiento Final')))" />
       <column name="nombre" value="ENG Descripción y resumen" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/seguimiento_final.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3126,14 +3126,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Retrospectiva')))" />
       <column name="nombre" value="ENG Objetivos" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/retrospectiva_apartado_1.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3144,14 +3144,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Retrospectiva')))" />
       <column name="nombre" value="ENG Supervisión" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/retrospectiva_apartado_2.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3162,14 +3162,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Retrospectiva')))" />
       <column name="nombre" value="ENG Severidad" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/retrospectiva_apartado_3.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3180,14 +3180,14 @@
       </whereParams>
     </update>
 
-    <insert tableName="apartado_nombre">
+    <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'Retrospectiva')))" />
       <column name="nombre" value="ENG Reducción, reemplazo y refinamiento" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="apartado_nombre">
+    <update tableName="apartado_definicion">
       <column name="esquema" valueClobFile="clob/en/retrospectiva_apartado_4.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
@@ -3207,19 +3207,18 @@
     </preConditions>
 
     <!-- FORMLY -->
-    <insert tableName="formly_nombre">
+    <insert tableName="formly_definicion">
       <column name="formly_id"
-        valueComputed="(select id from ${schemaPrefix}formly where version = 1)" />
-      <column name="nombre" value="CHECKLIST" />
+        valueComputed="(select id from ${schemaPrefix}formly where nombre = 'CHECKLIST')" />
       <column name="esquema" value="[{}]" />
       <column name="lang" value="en" />
     </insert>
-    <update tableName="formly_nombre">
+    <update tableName="formly_definicion">
       <column name="esquema" valueClobFile="clob/en/checklist.json" />
       <where>:name=:value AND :name=:value</where>
       <whereParams>
         <param name="formly_id"
-          valueComputed="(select id from ${schemaPrefix}formly where version = 1)" />
+          valueComputed="(select id from ${schemaPrefix}formly where nombre = 'CHECKLIST')" />
         <param
           name="lang" value="en" />
       </whereParams>

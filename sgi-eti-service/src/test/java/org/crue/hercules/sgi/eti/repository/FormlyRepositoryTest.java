@@ -1,9 +1,10 @@
 package org.crue.hercules.sgi.eti.repository;
 
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.dto.FormlyOutput;
 import org.crue.hercules.sgi.eti.model.Formly;
-import org.crue.hercules.sgi.eti.model.FormlyNombre;
+import org.crue.hercules.sgi.eti.model.FormlyDefinicion;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,21 +22,21 @@ public class FormlyRepositoryTest extends BaseRepositoryTest {
     final int N_VERS = 3;
     for (int j = 1; j <= N_VERS; j++) {
       Formly formly = entityManager
-          .persistAndFlush(Formly.builder().version(j).build());
+          .persistAndFlush(Formly.builder().version(j).nombre("FRM" + j).build());
       formly = entityManager.persistAndFlush(formly);
 
-      FormlyNombre formlyNombre = entityManager
+      FormlyDefinicion formlyNombre = entityManager
           .persistAndFlush(
-              FormlyNombre.builder().nombre("FRM" + j).formlyId(formly.getId()).esquema("{}")
+              FormlyDefinicion.builder().formlyId(formly.getId()).esquema("{}")
                   .lang(Language.ES).build());
       formlyNombre = entityManager.persistAndFlush(formlyNombre);
     }
 
     // when: find latest formly version named 'FRM1'
-    FormlyOutput dataFound = repository.findByNombreOrderByVersionDesc("FRM3", Language.ES);
+    Optional<Formly> dataFound = repository.findFirstByNombreOrderByVersionDesc("FRM3");
 
     // then: latest formly version is returned
-    Assertions.assertThat(dataFound).isNotNull();
-    Assertions.assertThat(dataFound.getVersion()).isEqualTo(N_VERS);
+    Assertions.assertThat(dataFound).isPresent();
+    Assertions.assertThat(dataFound.get().getVersion()).isEqualTo(N_VERS);
   }
 }

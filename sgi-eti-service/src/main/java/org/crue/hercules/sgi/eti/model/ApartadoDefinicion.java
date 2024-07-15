@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.framework.i18n.Language;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -32,13 +33,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@IdClass(ApartadoNombreKey.class)
-@Table(name = "apartado_nombre")
+@IdClass(ApartadoDefinicionId.class)
+@Table(name = "apartado_definicion")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApartadoNombre implements Serializable {
+public class ApartadoDefinicion implements Serializable {
   /**
    * Serial version
    */
@@ -47,6 +48,7 @@ public class ApartadoNombre implements Serializable {
   /** Apartado */
   @Id
   @NotNull
+  @JsonIgnore()
   private Long apartadoId;
 
   /** Language. */
@@ -91,7 +93,7 @@ public class ApartadoNombre implements Serializable {
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
-  @JoinColumn(name = "apartado_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_APARTADONOMBRE_APARTADO"))
+  @JoinColumn(name = "apartado_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_APARTADODEFINICION_APARTADO"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Apartado apartado = null;

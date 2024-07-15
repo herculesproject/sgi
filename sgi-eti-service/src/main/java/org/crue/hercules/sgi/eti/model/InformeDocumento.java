@@ -27,7 +27,7 @@ import lombok.Setter;
  */
 
 @Entity
-@IdClass(InformeDocumentoKey.class)
+@IdClass(InformeDocumentoId.class)
 @Table(name = "informe_documento")
 @Data
 @EqualsAndHashCode(callSuper = false)

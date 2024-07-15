@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
-import org.crue.hercules.sgi.eti.dto.BloqueOutput;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
@@ -25,6 +24,7 @@ import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
+import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -239,7 +239,7 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   @Transactional
   @Override
-  public Memoria createModificada(Memoria nuevaMemoria, Long id, Language lang) {
+  public Memoria createModificada(Memoria nuevaMemoria, Long id) {
     log.debug("createModificada(Memoria memoria, Long id) - start");
 
     validacionesCreateMemoria(nuevaMemoria);
@@ -284,8 +284,8 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     // Guardamos los ids de los apartados del formulario de retrospectiva
     List<Long> idsApartadosRetrospectiva = new ArrayList<>();
-    Page<BloqueOutput> bloques = bloqueRepository.findByFormularioIdAndLanguage(Constantes.FORMULARIO_RETROSPECTIVA,
-        lang, null);
+    Page<Bloque> bloques = bloqueRepository.findByFormularioId(Constantes.FORMULARIO_RETROSPECTIVA,
+        null);
     bloques.getContent().stream().forEach(bloque -> {
       Page<Apartado> apartados = apartadoRepository.findByBloqueIdAndPadreIsNull(bloque.getId(), null);
       apartados.getContent().stream().forEach(apartado -> idsApartadosRetrospectiva.add(apartado.getId()));

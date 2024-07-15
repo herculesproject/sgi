@@ -9,7 +9,6 @@ import org.crue.hercules.sgi.eti.exceptions.FormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.BloqueService;
 import org.crue.hercules.sgi.eti.service.FormularioService;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -186,7 +185,7 @@ public class FormularioControllerTest extends BaseControllerTest {
         .append(PATH_PARAMETER_BLOQUES).toString();
 
     BDDMockito
-        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Language>any(),
+        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
@@ -212,8 +211,7 @@ public class FormularioControllerTest extends BaseControllerTest {
     }
 
     BDDMockito
-        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(), ArgumentMatchers
-            .<Language>any(),
+        .given(bloqueService.findByFormularioId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Formulario>>() {
           @Override

@@ -11,20 +11,19 @@ import org.crue.hercules.sgi.framework.persistence.LanguageConverter;
 import lombok.EqualsAndHashCode;
 
 /**
- * Acta documento
+ * Apartado Definicion Id
  */
 @EqualsAndHashCode
-public class ActaDocumentoKey implements Serializable {
+public class ApartadoDefinicionId implements Serializable {
   /**
    * Serial version
    */
   private static final long serialVersionUID = 1L;
 
-  @Column(name = "acta_id", nullable = false)
-  private Long actaId;
+  @Column(name = "apartado_id", nullable = false)
+  private Long apartadoId;
 
   @Column(name = "lang", nullable = false, length = 2)
   @Convert(converter = LanguageConverter.class)
   private Language lang;
-
 }

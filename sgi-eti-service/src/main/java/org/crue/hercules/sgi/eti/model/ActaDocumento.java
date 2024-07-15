@@ -27,7 +27,7 @@ import lombok.Setter;
  */
 
 @Entity
-@IdClass(ActaDocumentoKey.class)
+@IdClass(ActaDocumentoId.class)
 @Table(name = "acta_documento")
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -63,5 +63,4 @@ public class ActaDocumento implements Serializable {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final Acta acta = null;
-
 }

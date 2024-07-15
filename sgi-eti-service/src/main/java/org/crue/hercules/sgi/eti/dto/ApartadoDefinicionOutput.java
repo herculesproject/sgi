@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 
-import org.crue.hercules.sgi.eti.model.Bloque;
-import org.crue.hercules.sgi.framework.i18n.Language;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -14,24 +11,25 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApartadoOutput implements Serializable {
-
-  private static final long serialVersionUID = 1L;
-
-  private Long id;
-  private String nombre;
-  private Bloque bloque;
-  private ApartadoOutput padre;
-  private Integer orden;
-  private String esquema;
+public class ApartadoDefinicionOutput implements Serializable {
   private String lang;
+  private String nombre;
+
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private String esquema;
 
   @JsonRawValue
   public String getEsquema() {
@@ -57,29 +55,4 @@ public class ApartadoOutput implements Serializable {
       }
     }
   }
-
-  public ApartadoOutput(Long id, String nombre, Bloque bloque, Integer orden, String esquema, Language lang) {
-    this.id = id;
-    this.nombre = nombre;
-    this.bloque = bloque;
-    this.orden = orden;
-    this.esquema = esquema;
-    this.lang = lang.getCode();
-  }
-
-  public ApartadoOutput(Long id, String nombre, Bloque bloque, Long padreId,
-      Integer padreOrden, Integer orden, String esquema,
-      Language lang) {
-    ApartadoOutput padreOutput = new ApartadoOutput();
-    padreOutput.setId(padreId);
-    padreOutput.setOrden(padreOrden);
-    this.id = id;
-    this.nombre = nombre;
-    this.bloque = bloque;
-    this.padre = padreOutput;
-    this.orden = orden;
-    this.esquema = esquema;
-    this.lang = lang.getCode();
-  }
-
 }

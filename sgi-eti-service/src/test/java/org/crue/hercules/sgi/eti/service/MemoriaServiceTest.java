@@ -51,7 +51,6 @@ import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -415,7 +414,7 @@ class MemoriaServiceTest extends BaseServiceTest {
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     BDDMockito
-        .given(bloqueRepository.findByFormularioIdAndLanguage(Constantes.FORMULARIO_RETROSPECTIVA, Language.ES, null))
+        .given(bloqueRepository.findByFormularioId(Constantes.FORMULARIO_RETROSPECTIVA, null))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     BDDMockito.given(respuestaRepository.findByMemoriaIdAndMemoriaActivoTrue(memoriaOld.getId(), null))
@@ -424,7 +423,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(memoriaRepository.save(memoriaNew)).willReturn(memoria);
 
     // when: Creamos la memoria
-    Memoria memoriaCreado = memoriaService.createModificada(memoriaNew, 2L, Language.ES);
+    Memoria memoriaCreado = memoriaService.createModificada(memoriaNew, 2L);
 
     // then: La memoria se crea correctamente
     Assertions.assertThat(memoriaCreado).isNotNull();
@@ -439,7 +438,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     Memoria memoriaNew = generarMockMemoria(1L, "numRef-5598", "MemoriaNew", 1, 1L);
     // when: Creamos la Memoria
     // then: Lanza una excepcion porque la Memoria ya tiene id
-    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES))
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -450,7 +449,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     try {
       // when: Creamos la memoria
-      memoriaService.createModificada(memoriaNew, 2L, Language.ES);
+      memoriaService.createModificada(memoriaNew, 2L);
       Assertions.fail("Identificador de Memoria debe ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -466,7 +465,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     try {
       // when: Creamos la memoria
-      memoriaService.createModificada(memoriaNew, 2L, Language.ES);
+      memoriaService.createModificada(memoriaNew, 2L);
       Assertions.fail("Identificador de Petición Evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -487,7 +486,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.empty());
 
-    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES))
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L))
         .isInstanceOf(PeticionEvaluacionNotFoundException.class);
 
   }
@@ -506,7 +505,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(comiteRepository.findByIdAndActivoTrue(memoriaNew.getComite().getId()))
         .willReturn(Optional.empty());
 
-    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L, Language.ES))
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L))
         .isInstanceOf(ComiteNotFoundException.class);
 
   }
@@ -528,7 +527,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     try {
       // when: Creamos la memoria
-      memoriaService.createModificada(memoriaNew, 2L, Language.ES);
+      memoriaService.createModificada(memoriaNew, 2L);
       Assertions.fail("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {

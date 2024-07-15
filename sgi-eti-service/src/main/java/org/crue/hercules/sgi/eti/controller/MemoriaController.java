@@ -236,7 +236,7 @@ public class MemoriaController {
   public ResponseEntity<Memoria> newMemoriaModificada(
       @Validated({ BaseEntity.Create.class, Default.class }) @RequestBody Memoria nuevaMemoria, @PathVariable Long id) {
     log.debug("newMemoriaModificada(Memoria nuevaMemoria,  Long id) - start");
-    Memoria returnValue = service.createModificada(nuevaMemoria, id, SgiLocaleContextHolder.getLanguage());
+    Memoria returnValue = service.createModificada(nuevaMemoria, id);
     log.debug("newMemoriaModificada(Memoria nuevaMemoria,  Long id) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
