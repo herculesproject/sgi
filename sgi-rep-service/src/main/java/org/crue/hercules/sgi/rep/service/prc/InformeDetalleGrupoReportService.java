@@ -173,7 +173,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 
@@ -228,7 +228,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 
@@ -289,7 +289,7 @@ public class InformeDetalleGrupoReportService extends SgiReportDocxService {
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 

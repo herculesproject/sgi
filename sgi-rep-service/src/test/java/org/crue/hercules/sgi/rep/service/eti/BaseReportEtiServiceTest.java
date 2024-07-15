@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.rep.dto.eti.ActaDto;
+import org.crue.hercules.sgi.rep.dto.eti.ApartadoDefinicionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ActaDto.TipoEstadoActaDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueDto;
@@ -200,12 +201,19 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
   }
 
   protected ApartadoDto generarMockApartado(Long idApartado, Long idBloque, Long idFormulario) {
-    return ApartadoDto.builder()
+    ApartadoDto value = ApartadoDto.builder()
         .id(idApartado)
-        .nombre("nombre")
         .orden(1)
         .bloque(generarMockBloque(idBloque, idFormulario))
         .build();
+    List<ApartadoDefinicionDto> definicion = new ArrayList<>();
+    ApartadoDefinicionDto defi = new ApartadoDefinicionDto();
+    defi.setNombre("nombre");
+    definicion.add(defi);
+
+    value.setDefinicion(definicion);
+    return value;
+
   }
 
   protected RespuestaDto generarMockRespuesta(Long idApartado) {

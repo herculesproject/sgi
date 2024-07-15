@@ -48,8 +48,8 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
   }
 
   public byte[] getReportInformeEvaluacionRetrospectiva(ReportInformeEvaluacionRetrospectiva sgiReport,
-      InformeEvaluacionReportInput input, Language lang) {
-    getReportFromEvaluacionId(sgiReport, input.getIdEvaluacion(), lang);
+      InformeEvaluacionReportInput input) {
+    getReportFromEvaluacionId(sgiReport, input.getIdEvaluacion());
     return sgiReport.getContent();
   }
 

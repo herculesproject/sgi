@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
@@ -65,11 +65,10 @@ class InformeFavorableMemoriaReportServiceTest extends BaseReportEtiServiceTest 
         .willReturn(getResource("eti/docx/rep-eti-evaluacion-favorable-memoria-nueva.docx"));
     BDDMockito.given(sgiApiConfService.getServiceBaseURL()).willReturn("");
 
-    ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria();
+    ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion,
-        Language.ES);
+    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion);
     assertNotNull(reportContent);
 
   }
@@ -92,11 +91,10 @@ class InformeFavorableMemoriaReportServiceTest extends BaseReportEtiServiceTest 
         .willReturn(getResource("eti/prpt/rep-eti-evaluacion-favorable-memoria-nueva.prpt"));
     BDDMockito.given(sgiApiConfService.getServiceBaseURL()).willReturn("");
 
-    ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria();
+    ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion,
-        Language.ES);
+    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion);
     assertNotNull(reportContent);
 
   }

@@ -80,9 +80,8 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
     return compileReportData(path, dataReport);
   }
 
-  public byte[] getReportInformeFavorableModificacion(ReportInformeFavorableModificacion sgiReport, Long idEvaluacion,
-      Language lang) {
-    getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
+  public byte[] getReportInformeFavorableModificacion(ReportInformeFavorableModificacion sgiReport, Long idEvaluacion) {
+    getReportFromEvaluacionId(sgiReport, idEvaluacion);
     return sgiReport.getContent();
   }
 

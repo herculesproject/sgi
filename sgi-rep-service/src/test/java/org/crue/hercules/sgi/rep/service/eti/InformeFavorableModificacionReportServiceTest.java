@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableModificacion;
@@ -56,11 +56,12 @@ class InformeFavorableModificacionReportServiceTest extends BaseReportEtiService
         .willReturn(getResource("eti/docx/rep-eti-evaluacion-favorable-memoria-modificacion.docx"));
     BDDMockito.given(sgiApiConfService.getServiceBaseURL()).willReturn("");
 
-    ReportInformeFavorableModificacion report = new ReportInformeFavorableModificacion();
+    ReportInformeFavorableModificacion report = new ReportInformeFavorableModificacion(
+        SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeFavorableModificacionReportService.getReportInformeFavorableModificacion(report,
-        idEvaluacion, Language.ES);
+        idEvaluacion);
     assertNotNull(reportContent);
 
   }

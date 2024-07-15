@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.rep.dto.csp;
 
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
 
 /**
@@ -7,8 +8,9 @@ import org.crue.hercules.sgi.rep.dto.SgiReportDto;
  * de investigación
  */
 public class AutorizacionReport extends SgiReportDto {
-  public AutorizacionReport() {
-    this.setPath("rep-csp-certificado-autorizacion-proyecto-externo-docx");
+  public AutorizacionReport(Language lang) {
+    this.setPath("rep-csp-certificado-autorizacion-proyecto-externo-docx-" + lang.getCode());
     this.setName("autorizacionProyectoExterno");
+    this.setLang(lang);
   }
 }

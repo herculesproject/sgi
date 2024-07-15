@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.rep.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -65,21 +67,27 @@ public class EtiReportController {
    * @param lang         Code del language
    * @return Resource
    */
-  @GetMapping("/informe-mxx/{idMemoria}/{idFormulario}/{lang}")
+  @GetMapping("/informe-mxx/{idMemoria}/{idFormulario}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-MEM-INV-ESCR', 'ETI-MEM-INV-ERTR')")
   public ResponseEntity<Resource> getInformeMXX(@PathVariable Long idMemoria, @PathVariable Long idFormulario,
-      @PathVariable String lang) {
+      @RequestParam(name = "l", required = false) String lang) {
 
     log.debug("getInformeMXX({}, {}) - start", idMemoria, idFormulario);
 
-    ReportMXX report = new ReportMXX();
+    Language language = Language.fromCode(lang);
+    if (language == null) {
+      language = SgiLocaleContextHolder.getLanguage();
+    }
+
+    ReportMXX report = new ReportMXX(language);
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = mxxReportService.getReport(report, idMemoria, idFormulario, Language.fromCode(lang));
+    byte[] reportContent = mxxReportService.getReport(report, idMemoria, idFormulario);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
     headers.add(HttpHeaders.CONTENT_TYPE, OUTPUT_TYPE_PDF.getType());
+    headers.add(HttpHeaders.CONTENT_LANGUAGE, language.getCode());
 
     log.debug("getInformeMXX({}, {}) - end", idMemoria, idFormulario);
     return new ResponseEntity<>(archivo, headers, HttpStatus.OK);
@@ -91,17 +99,16 @@ public class EtiReportController {
    * @param idEvaluacion Identificador de la evaluación
    * @return Resource
    */
-  @GetMapping("/informe-evaluacion/{idEvaluacion}/{lang}")
+  @GetMapping("/informe-evaluacion/{idEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR', 'ETI-EVC-EVALR')")
-  public ResponseEntity<Resource> getInformeEvaluacion(@PathVariable Long idEvaluacion, @PathVariable String lang) {
+  public ResponseEntity<Resource> getInformeEvaluacion(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeEvaluacion(idEvaluacion) - start");
 
-    ReportInformeEvaluacion report = new ReportInformeEvaluacion();
+    ReportInformeEvaluacion report = new ReportInformeEvaluacion(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion,
-        Language.fromCode(lang));
+    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -117,17 +124,16 @@ public class EtiReportController {
    * @param idEvaluacion Identificador de la evaluación
    * @return Resource
    */
-  @GetMapping("/informe-ficha-evaluador/{idEvaluacion}/{lang}")
+  @GetMapping("/informe-ficha-evaluador/{idEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR', 'ETI-EVC-EVALR')")
-  public ResponseEntity<Resource> getInformeEvaluador(@PathVariable Long idEvaluacion, @PathVariable String lang) {
+  public ResponseEntity<Resource> getInformeEvaluador(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeEvaluador(idEvaluacion) - start");
 
-    ReportInformeEvaluador report = new ReportInformeEvaluador();
+    ReportInformeEvaluador report = new ReportInformeEvaluador(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion,
-        Language.fromCode(lang));
+    byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -144,18 +150,16 @@ public class EtiReportController {
    * 
    * @return Resource
    */
-  @GetMapping("/informe-favorable-memoria/{idEvaluacion}/{lang}")
+  @GetMapping("/informe-favorable-memoria/{idEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR', 'ETI-EVC-EVALR')")
-  public ResponseEntity<Resource> getInformeFavorableMemoria(@PathVariable Long idEvaluacion,
-      @PathVariable String lang) {
+  public ResponseEntity<Resource> getInformeFavorableMemoria(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeFavorableMemoria(idEvaluacion) - start");
 
-    ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria();
+    ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion,
-        Language.fromCode(lang));
+    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -172,16 +176,21 @@ public class EtiReportController {
    * @param lang   code language
    * @return Resource
    */
-  @GetMapping("/informe-acta/{idActa}/{lang}")
+  @GetMapping("/informe-acta/{idActa}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-DES', 'ETI-ACT-DESR', 'ETI-ACT-INV-DESR')")
-  public ResponseEntity<Resource> getInformeActa(@PathVariable Long idActa, @PathVariable String lang) {
+  public ResponseEntity<Resource> getInformeActa(@PathVariable Long idActa,
+      @RequestParam(name = "l", required = false) String lang) {
 
     log.debug("getInformeActa(idActa) - start");
 
-    ReportInformeActa report = new ReportInformeActa();
+    Language language = Language.fromCode(lang);
+    if (language == null) {
+      language = SgiLocaleContextHolder.getLanguage();
+    }
+    ReportInformeActa report = new ReportInformeActa(language);
     report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa, Language.fromCode(lang));
+    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -198,18 +207,19 @@ public class EtiReportController {
    *              y fecha del informe
    * @return Resource
    */
-  @PostMapping("/informe-evaluacion-retrospectiva/{lang}")
+  @PostMapping("/informe-evaluacion-retrospectiva")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL','ETI-MEM-INV-ERTR')")
   public ResponseEntity<Resource> getInformeEvaluacionRetrospectiva(
-      @Valid @RequestBody InformeEvaluacionReportInput input, @PathVariable String lang) {
+      @Valid @RequestBody InformeEvaluacionReportInput input) {
 
     log.debug("getInformeEvaluacionRetrospectiva(input) - start");
 
-    ReportInformeEvaluacionRetrospectiva report = new ReportInformeEvaluacionRetrospectiva();
+    ReportInformeEvaluacionRetrospectiva report = new ReportInformeEvaluacionRetrospectiva(
+        SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(report,
-        input, Language.fromCode(lang));
+        input);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -226,18 +236,18 @@ public class EtiReportController {
    * 
    * @return Resource
    */
-  @GetMapping("/informe-favorable-modificacion/{idEvaluacion}/{lang}")
+  @GetMapping("/informe-favorable-modificacion/{idEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR')")
-  public ResponseEntity<Resource> getInformeFavorableModificacion(@PathVariable Long idEvaluacion,
-      @PathVariable String lang) {
+  public ResponseEntity<Resource> getInformeFavorableModificacion(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeFavorableModificacion(idEvaluacion) - start");
 
-    ReportInformeFavorableModificacion report = new ReportInformeFavorableModificacion();
+    ReportInformeFavorableModificacion report = new ReportInformeFavorableModificacion(
+        SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeFavorableModificacionReportService.getReportInformeFavorableModificacion(report,
-        idEvaluacion, Language.fromCode(lang));
+        idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -254,18 +264,18 @@ public class EtiReportController {
    * 
    * @return Resource
    */
-  @GetMapping("/informe-favorable-ratificacion/{idEvaluacion}/{lang}")
+  @GetMapping("/informe-favorable-ratificacion/{idEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-INV-EVALR')")
-  public ResponseEntity<Resource> getInformeFavorableRatificacion(@PathVariable Long idEvaluacion,
-      @PathVariable String lang) {
+  public ResponseEntity<Resource> getInformeFavorableRatificacion(@PathVariable Long idEvaluacion) {
 
     log.debug("getInformeFavorableRatificacion(idEvaluacion) - start");
 
-    ReportInformeFavorableRatificacion report = new ReportInformeFavorableRatificacion();
+    ReportInformeFavorableRatificacion report = new ReportInformeFavorableRatificacion(
+        SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(report,
-        idEvaluacion, Language.fromCode(lang));
+        idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();

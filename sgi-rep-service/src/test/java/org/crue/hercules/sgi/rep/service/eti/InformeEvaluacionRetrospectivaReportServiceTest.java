@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.Instant;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
@@ -59,11 +59,12 @@ class InformeEvaluacionRetrospectivaReportServiceTest extends BaseReportEtiServi
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
         .willReturn(getResource("eti/docx/rep-eti-evaluacion-retrospectiva.docx"));
 
-    ReportInformeEvaluacionRetrospectiva report = new ReportInformeEvaluacionRetrospectiva();
+    ReportInformeEvaluacionRetrospectiva report = new ReportInformeEvaluacionRetrospectiva(
+        SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
     byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(report,
-        input, Language.ES);
+        input);
     assertNotNull(reportContent);
 
   }

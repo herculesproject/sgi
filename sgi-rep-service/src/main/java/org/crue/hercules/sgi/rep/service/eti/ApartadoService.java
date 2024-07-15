@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -31,37 +30,36 @@ public class ApartadoService extends BaseRestTemplateService<ApartadoDto> {
     return URL_API;
   }
 
-  public List<ApartadoDto> findByPadreId(Long idPadre, Language lang) {
+  public List<ApartadoDto> findByPadreId(Long idPadre) {
     List<ApartadoDto> result = null;
     try {
       HttpHeaders headers = new HttpHeaders();
       String sort = "orden,asc";
       URI uri = UriComponentsBuilder
-          .fromUriString(getUrlBase() + getUrlApi() + "/" + idPadre + "/hijos/" + lang.getCode())
+          .fromUriString(getUrlBase() + getUrlApi() + "/" + idPadre + "/hijos")
           .queryParam("s", sort).build(false).toUri();
       result = findAllFromURI(uri, headers, new ParameterizedTypeReference<List<ApartadoDto>>() {
       });
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
     return result;
   }
 
-  public List<ApartadoDto> findByBloqueId(Long idBloque, Language lang) {
+  public List<ApartadoDto> findByBloqueId(Long idBloque) {
     List<ApartadoDto> result = null;
     try {
       HttpHeaders headers = new HttpHeaders();
       String sort = "orden,asc";
-      URI uri = UriComponentsBuilder
-          .fromUriString(getUrlBase() + BloqueService.URL_API + "/" + idBloque + URL_API + "/" + lang.getCode())
+      URI uri = UriComponentsBuilder.fromUriString(getUrlBase() + BloqueService.URL_API + "/" + idBloque + URL_API)
           .queryParam("s", sort).build(false).toUri();
       result = findAllFromURI(uri, headers, new ParameterizedTypeReference<List<ApartadoDto>>() {
       });
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
     return result;
   }

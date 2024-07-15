@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.util.HashMap;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
@@ -161,9 +160,7 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
     }
   }
 
-  private XWPFDocument getReportFromAutorizacionProyectoExterno(SgiReportDto sgiReport, Long idAutorizacion,
-      Language lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
+  private XWPFDocument getReportFromAutorizacionProyectoExterno(SgiReportDto sgiReport, Long idAutorizacion) {
     try {
       HashMap<String, Object> dataReport = new HashMap<>();
       AutorizacionDto autorizacionProyectoExterno = autorizacionProyectoExternoService
@@ -172,7 +169,7 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
       dataReport.put("headerImg", getImageHeaderLogo());
 
       XWPFDocument document = getDocument(autorizacionProyectoExterno, dataReport,
-          getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE));
+          getReportDefinitionStream(sgiReport.getPath()));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = createCustomPdfOptions();
@@ -184,13 +181,13 @@ public class AutorizacionProyectoExternoReportService extends SgiReportDocxServi
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 
   public byte[] getReportAutorizacionProyectoExterno(AutorizacionReport sgiReport,
-      Long idAutorizacion, Language lang) {
-    getReportFromAutorizacionProyectoExterno(sgiReport, idAutorizacion, lang);
+      Long idAutorizacion) {
+    getReportFromAutorizacionProyectoExterno(sgiReport, idAutorizacion);
     return sgiReport.getContent();
   }
 }

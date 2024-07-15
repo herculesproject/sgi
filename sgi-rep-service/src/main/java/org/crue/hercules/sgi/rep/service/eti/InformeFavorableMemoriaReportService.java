@@ -106,9 +106,8 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionEvalu
     dataReport.put("equipo", personas);
   }
 
-  public byte[] getReportInformeFavorableMemoria(ReportInformeFavorableMemoria sgiReport, Long idEvaluacion,
-      Language lang) {
-    getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
+  public byte[] getReportInformeFavorableMemoria(ReportInformeFavorableMemoria sgiReport, Long idEvaluacion) {
+    getReportFromEvaluacionId(sgiReport, idEvaluacion);
     return sgiReport.getContent();
   }
 

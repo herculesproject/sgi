@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.AsistentesDto;
@@ -74,10 +74,10 @@ class InformeActaReportServiceTest extends BaseReportEtiServiceTest {
     BDDMockito.given(convocatoriaReunionService
         .findAsistentesByConvocatoriaReunionId(1L)).willReturn((generarMockAsistentes("123456F")));
 
-    ReportInformeActa report = new ReportInformeActa();
+    ReportInformeActa report = new ReportInformeActa(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa, Language.ES);
+    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa);
     assertNotNull(reportContent);
 
   }

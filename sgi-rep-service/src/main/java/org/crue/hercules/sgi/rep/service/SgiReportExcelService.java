@@ -391,7 +391,7 @@ public class SgiReportExcelService {
       return sgiApiConfService.getResource("rep-common-header-logo");
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 

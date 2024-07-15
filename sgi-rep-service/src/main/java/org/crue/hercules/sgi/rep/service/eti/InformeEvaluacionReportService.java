@@ -62,7 +62,8 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
     String pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     dataReport.put("fechaDictamen",
-        formatInstantToString(evaluacion.getConvocatoriaReunion().getFechaEvaluacion(), pattern));
+        formatInstantToString(evaluacion.getConvocatoriaReunion().getFechaEvaluacion(), pattern,
+            lang));
 
     dataReport.put("numeroActa", evaluacion.getConvocatoriaReunion().getNumeroActa());
 
@@ -134,13 +135,13 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
 
     dataReport.put("bloqueApartados",
         generarBloqueApartados(evaluacion.getDictamen().getId(),
-            getInformeEvaluacion(evaluacion.getId(), lang), "rep-eti-bloque-apartado-docx", lang));
+            getInformeEvaluacion(evaluacion.getId(), lang)));
 
     return compileReportData(path, dataReport);
   }
 
-  public byte[] getReportInformeEvaluacion(ReportInformeEvaluacion sgiReport, Long idEvaluacion, Language lang) {
-    getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
+  public byte[] getReportInformeEvaluacion(ReportInformeEvaluacion sgiReport, Long idEvaluacion) {
+    getReportFromEvaluacionId(sgiReport, idEvaluacion);
     return sgiReport.getContent();
   }
 

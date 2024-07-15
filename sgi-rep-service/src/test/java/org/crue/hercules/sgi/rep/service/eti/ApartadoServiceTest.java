@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
@@ -35,7 +34,7 @@ class ApartadoServiceTest extends BaseReportEtiServiceTest {
   void findByPadreId_ReturnsException() throws Exception {
     Long idPadre = 1L;
 
-    Assertions.assertThatThrownBy(() -> apartadoService.findByPadreId(idPadre, Language.ES))
+    Assertions.assertThatThrownBy(() -> apartadoService.findByPadreId(idPadre))
         .isInstanceOf(GetDataReportException.class);
   }
 
@@ -43,7 +42,7 @@ class ApartadoServiceTest extends BaseReportEtiServiceTest {
   void findByBloqueId_ReturnsException() throws Exception {
     Long idBloque = 1L;
 
-    Assertions.assertThatThrownBy(() -> apartadoService.findByBloqueId(idBloque, Language.ES))
+    Assertions.assertThatThrownBy(() -> apartadoService.findByBloqueId(idBloque))
         .isInstanceOf(GetDataReportException.class);
   }
 

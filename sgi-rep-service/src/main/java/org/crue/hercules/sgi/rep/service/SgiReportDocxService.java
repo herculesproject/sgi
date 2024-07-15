@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -21,7 +22,6 @@ import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.util.SgiHtmlRenderPolicy;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +50,12 @@ public class SgiReportDocxService {
 
   private final SgiApiConfService sgiApiConfService;
 
-  protected static final String DATE_PATTERN_DEFAULT = "dd/MM/yyyy";
+  private static final Map<Language, String> DATE_LANGUAGE_PATTERNS = Map.of(
+      Language.ES, "dd/MM/yyyy",
+      Language.EN, "MM/dd/yyyy",
+      Language.EU, "yyyy/MM/dd"
+
+  );
 
   public SgiReportDocxService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService) {
     this.sgiConfigProperties = sgiConfigProperties;
@@ -70,7 +75,7 @@ public class SgiReportDocxService {
       return new ByteArrayInputStream(reportDefinition);
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 
@@ -86,7 +91,7 @@ public class SgiReportDocxService {
       return Pictures.ofBytes(imgByte, PictureType.JPEG).fitSize().create();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 
@@ -130,12 +135,16 @@ public class SgiReportDocxService {
   }
 
   protected String formatInstantToString(Instant instantDate, String pattern) {
+    return formatInstantToString(instantDate, pattern, SgiLocaleContextHolder.getLanguage());
+  }
+
+  protected String formatInstantToString(Instant instantDate, String pattern, Language language) {
     String result = "";
 
     if (null != instantDate) {
-      pattern = StringUtils.hasText(pattern) ? pattern : DATE_PATTERN_DEFAULT;
+      pattern = StringUtils.hasText(pattern) ? pattern : DATE_LANGUAGE_PATTERNS.get(language);
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern)
-          .withZone(sgiConfigProperties.getTimeZone().toZoneId()).withLocale(LocaleContextHolder.getLocale());
+          .withZone(sgiConfigProperties.getTimeZone().toZoneId());// .withLocale(language.getLocale());
 
       result = formatter.format(instantDate);
     }
@@ -143,8 +152,13 @@ public class SgiReportDocxService {
     return result;
   }
 
+  protected String formatInstantToString(Instant instantDate, Language language) {
+    return formatInstantToString(instantDate, DATE_LANGUAGE_PATTERNS.get(language), language);
+  }
+
   protected String formatInstantToString(Instant instantDate) {
-    return formatInstantToString(instantDate, DATE_PATTERN_DEFAULT);
+    return formatInstantToString(instantDate,
+        DATE_LANGUAGE_PATTERNS.get(SgiLocaleContextHolder.getLanguage()), SgiLocaleContextHolder.getLanguage());
   }
 
   protected XWPFDocument compileReportData(InputStream is, HashMap<String, Object> dataReport) {

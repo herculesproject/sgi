@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.rep.controller;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.csp.AutorizacionReport;
 import org.crue.hercules.sgi.rep.service.csp.AutorizacionProyectoExternoReportService;
@@ -40,21 +40,19 @@ public class CspReportController {
    * investigación
    *
    * @param idAutorizacion identificador de la Autorización
-   * @param lang           code language
    * @return Resource
    */
-  @GetMapping("/autorizacion-proyecto-externo/{idAutorizacion}/{lang}")
+  @GetMapping("/autorizacion-proyecto-externo/{idAutorizacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-AUT-E','CSP-AUT-B','CSP-AUT-INV-C', 'CSP-AUT-INV-ER', 'CSP-AUT-INV-BR')")
-  public ResponseEntity<Resource> getAutorizacionProyectoExterno(@PathVariable Long idAutorizacion,
-      @PathVariable String lang) {
+  public ResponseEntity<Resource> getAutorizacionProyectoExterno(@PathVariable Long idAutorizacion) {
 
     log.debug("getAutorizacionProyectoExterno(idAutorizacion) - start");
 
-    AutorizacionReport report = new AutorizacionReport();
+    AutorizacionReport report = new AutorizacionReport(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = autorizacionProyectoExternoReportService.getReportAutorizacionProyectoExterno(report,
-        idAutorizacion, Language.fromCode(lang));
+        idAutorizacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();

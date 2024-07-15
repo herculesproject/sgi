@@ -66,22 +66,20 @@ class EtiReportControllerTest extends BaseControllerTest {
   void getReportInformeEvaluacion_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
 
-    final String url = new StringBuffer(EtiReportController.MAPPING).append("/informe-evaluacion/{idEvaluacion}/{lang}")
+    final String url = new StringBuffer(EtiReportController.MAPPING).append("/informe-evaluacion/{idEvaluacion}")
         .toString();
 
     BDDMockito.given(informeEvaluacionReportService.getReportInformeEvaluacion(
         ArgumentMatchers.<ReportInformeEvaluacion>any(),
         ArgumentMatchers
-            .<Long>any(),
-        ArgumentMatchers
-            .<Language>any()))
+            .<Long>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });
 
     // when: Se genera el informe
     MvcResult requestResult = mockMvc.perform(MockMvcRequestBuilders.get(url,
-        idEvaluacion, Language.ES.getCode()).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        idEvaluacion).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera el informe
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -99,22 +97,20 @@ class EtiReportControllerTest extends BaseControllerTest {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
-        .append("/informe-ficha-evaluador/{idEvaluacion}/{lang}")
+        .append("/informe-ficha-evaluador/{idEvaluacion}")
         .toString();
 
     BDDMockito.given(informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(
         ArgumentMatchers.<ReportInformeEvaluador>any(),
         ArgumentMatchers
-            .<Long>any(),
-        ArgumentMatchers
-            .<Language>any()))
+            .<Long>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });
 
     // when: Se genera el informe
     MvcResult requestResult = mockMvc.perform(MockMvcRequestBuilders.get(url,
-        idEvaluacion, Language.ES.getCode()).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        idEvaluacion).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera el informe
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -132,22 +128,20 @@ class EtiReportControllerTest extends BaseControllerTest {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
-        .append("/informe-favorable-memoria/{idEvaluacion}/{lang}")
+        .append("/informe-favorable-memoria/{idEvaluacion}")
         .toString();
 
     BDDMockito.given(informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(
         ArgumentMatchers.<ReportInformeFavorableMemoria>any(),
         ArgumentMatchers
-            .<Long>any(),
-        ArgumentMatchers
-            .<Language>any()))
+            .<Long>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });
 
     // when: Se genera el informe
     MvcResult requestResult = mockMvc.perform(MockMvcRequestBuilders.get(url,
-        idEvaluacion, Language.ES.getCode()).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        idEvaluacion).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera el informe
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -165,14 +159,13 @@ class EtiReportControllerTest extends BaseControllerTest {
     Long idActa = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
-        .append("/informe-acta/{idActa}/{lang}")
+        .append("/informe-acta/{idActa}?l={lang}")
         .toString();
 
     BDDMockito.given(informeActaReportService.getReportInformeActa(
         ArgumentMatchers.<ReportInformeActa>any(),
         ArgumentMatchers
-            .<Long>any(),
-        ArgumentMatchers.<Language>any()))
+            .<Long>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });
@@ -200,15 +193,13 @@ class EtiReportControllerTest extends BaseControllerTest {
         .idEvaluacion(idEvaluacion).build();
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
-        .append("/informe-evaluacion-retrospectiva/{lang}")
+        .append("/informe-evaluacion-retrospectiva")
         .toString();
 
     BDDMockito.given(informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(
         ArgumentMatchers.<ReportInformeEvaluacionRetrospectiva>any(),
         ArgumentMatchers
-            .<InformeEvaluacionReportInput>any(),
-        ArgumentMatchers
-            .<Language>any()))
+            .<InformeEvaluacionReportInput>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });
@@ -236,21 +227,20 @@ class EtiReportControllerTest extends BaseControllerTest {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
-        .append("/informe-favorable-modificacion/{idEvaluacion}/{lang}")
+        .append("/informe-favorable-modificacion/{idEvaluacion}")
         .toString();
 
     BDDMockito.given(informeFavorableModificacionReportService.getReportInformeFavorableModificacion(
         ArgumentMatchers.<ReportInformeFavorableModificacion>any(),
         ArgumentMatchers
-            .<Long>any(),
-        ArgumentMatchers.<Language>any()))
+            .<Long>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });
 
     // when: Se genera el informe
     MvcResult requestResult = mockMvc.perform(MockMvcRequestBuilders.get(url,
-        idEvaluacion, Language.ES.getCode()).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        idEvaluacion).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Se recupera el informe
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -268,14 +258,13 @@ class EtiReportControllerTest extends BaseControllerTest {
     Long idEvaluacion = 1L;
 
     final String url = new StringBuffer(EtiReportController.MAPPING)
-        .append("/informe-favorable-ratificacion/{idEvaluacion}/lang")
+        .append("/informe-favorable-ratificacion/{idEvaluacion}")
         .toString();
 
     BDDMockito.given(informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(
         ArgumentMatchers.<ReportInformeFavorableRatificacion>any(),
         ArgumentMatchers
-            .<Long>any(),
-        ArgumentMatchers.<Language>any()))
+            .<Long>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });

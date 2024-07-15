@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.rep.service.eti;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.RestApiProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoTreeDto;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueDto;
@@ -23,21 +22,21 @@ public class BloqueService extends SgiApiBaseService {
   private static final String PATH_DELIMITER = "/";
   public static final String URL_API = PATH_DELIMITER + "bloques";
   private static final String PATH_BLOQUE_COMENTARIOS_GENERALES = URL_API + PATH_DELIMITER
-      + "comentarios-generales/{lang}";
+      + "comentarios-generales";
 
   private static final String SORT_ORDEN_ASC = "s=orden,asc";
 
   private static final String PATH_ID = URL_API + PATH_DELIMITER + "{id}";
-  private static final String PATH_APARTADOS_TREE = PATH_ID + PATH_DELIMITER + "apartados-tree/{lang}?"
+  private static final String PATH_APARTADOS_TREE = PATH_ID + PATH_DELIMITER + "apartados-tree?"
       + SORT_ORDEN_ASC;
   private static final String PATH_FORMULARIO = URL_API + PATH_DELIMITER + "{formularioId}" + PATH_DELIMITER
-      + "formulario/{lang}?" + SORT_ORDEN_ASC;
+      + "formulario?" + SORT_ORDEN_ASC;
 
   public BloqueService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
     super(restApiProperties, restTemplate);
   }
 
-  public List<BloqueDto> findByFormularioId(Long idFormulario, Language lang) {
+  public List<BloqueDto> findByFormularioId(Long idFormulario) {
     log.debug("findByFormularioId({}) - start", idFormulario);
     List<BloqueDto> result = new ArrayList<>();
     try {
@@ -49,17 +48,17 @@ public class BloqueService extends SgiApiBaseService {
 
       result = super.<List<BloqueDto>>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<List<BloqueDto>>() {
-          }, idFormulario, lang.getCode()).getBody();
+          }, idFormulario).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
 
     log.debug("findByFormularioId({}) - start", idFormulario);
     return result;
   }
 
-  public BloqueDto getBloqueComentariosGenerales(Language lang) {
+  public BloqueDto getBloqueComentariosGenerales() {
     log.debug("getBloqueComentariosGenerales() - start");
     BloqueDto result = null;
     try {
@@ -70,17 +69,17 @@ public class BloqueService extends SgiApiBaseService {
 
       result = super.<BloqueDto>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<BloqueDto>() {
-          }, lang.getCode()).getBody();
+          }).getBody();
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
     log.debug("getBloqueComentariosGenerales() - end");
     return result;
   }
 
-  public List<ApartadoTreeDto> getApartados(Long id, Language lang) {
+  public List<ApartadoTreeDto> getApartados(Long id) {
     log.debug("getApartados({}) - start", id);
     List<ApartadoTreeDto> result = new ArrayList<>();
     try {
@@ -92,10 +91,10 @@ public class BloqueService extends SgiApiBaseService {
 
       result = super.<List<ApartadoTreeDto>>callEndpoint(mergedURL, httpMethod,
           new ParameterizedTypeReference<List<ApartadoTreeDto>>() {
-          }, id, lang.getCode()).getBody();
+          }, id).getBody();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
 
     log.debug("getApartados({}) - start", id);

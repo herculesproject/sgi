@@ -44,9 +44,8 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     return compileReportData(path, dataReport);
   }
 
-  public byte[] getReportInformeFavorableRatificacion(ReportInformeFavorableRatificacion sgiReport, Long idEvaluacion,
-      Language lang) {
-    getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
+  public byte[] getReportInformeFavorableRatificacion(ReportInformeFavorableRatificacion sgiReport, Long idEvaluacion) {
+    getReportFromEvaluacionId(sgiReport, idEvaluacion);
     return sgiReport.getContent();
   }
 

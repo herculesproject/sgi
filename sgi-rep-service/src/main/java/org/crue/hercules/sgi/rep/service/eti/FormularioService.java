@@ -37,7 +37,7 @@ public class FormularioService extends BaseRestTemplateService<FormularioDto> {
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
 
     return formulario;

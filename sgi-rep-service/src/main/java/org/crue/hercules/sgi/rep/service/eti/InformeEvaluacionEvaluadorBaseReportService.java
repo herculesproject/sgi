@@ -75,8 +75,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     this.baseApartadosRespuestasService = baseApartadosRespuestasService;
   }
 
-  protected XWPFDocument getReportFromEvaluacionId(SgiReportDto sgiReport, Long idEvaluacion, Language lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
+  protected XWPFDocument getReportFromEvaluacionId(SgiReportDto sgiReport, Long idEvaluacion) {
     try {
       HashMap<String, Object> dataReport = new HashMap<>();
       EvaluacionDto evaluacion = evaluacionService.findById(idEvaluacion);
@@ -84,7 +83,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
       dataReport.put("headerImg", getImageHeaderLogo());
 
       XWPFDocument document = getDocument(evaluacion, dataReport,
-          getReportDefinitionStream(sgiReport.getPath() + SUFIJO_LANGUAGE), lang);
+          getReportDefinitionStream(sgiReport.getPath()), sgiReport.getLang());
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = createCustomPdfOptions();
@@ -96,7 +95,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 
@@ -311,9 +310,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
   }
 
   protected RenderData generarBloqueApartados(Long idDictamen,
-      InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput, String namePlantillaDocx,
-      Language lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
+      InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput) {
     Map<String, Object> subDataBloqueApartado = new HashMap<>();
     subDataBloqueApartado.put("idDictamen", idDictamen);
     subDataBloqueApartado.put("idDictamenNoProcedeEvaluar", DICTAMEN_NO_PROCEDE_EVALUAR);
@@ -333,7 +330,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
       subDataBloqueApartado.put("bloques", null);
       return null;
     }
-    return Includes.ofStream(getReportDefinitionStream(namePlantillaDocx + SUFIJO_LANGUAGE))
+    return Includes.ofStream(getReportDefinitionStream(informeEvaluacionEvaluadorReportOutput.getReportName()))
         .setRenderModel(subDataBloqueApartado).create();
   }
 
@@ -345,7 +342,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
    *         informe
    */
   private InformeEvaluacionEvaluadorReportOutput getInformeEvaluadorEvaluacion(Long idEvaluacion,
-      boolean isInformeEvaluacion, Language lang) {
+      boolean isInformeEvaluacion, InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput) {
     log.debug("getInformeEvaluacion(idEvaluacion)- start");
 
     Assert.notNull(idEvaluacion,
@@ -356,7 +353,6 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
                 ApplicationContextSupport.getMessage(EvaluacionDto.class))
             .build());
 
-    InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput = new InformeEvaluacionEvaluadorReportOutput();
     informeEvaluacionEvaluadorReportOutput.setBloques(new ArrayList<>());
 
     try {
@@ -412,7 +408,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
         // @formatter:on
 
         BloquesReportOutput reportOutput = baseApartadosRespuestasService
-            .getDataFromApartadosAndRespuestas(etiBloquesReportInput, lang);
+            .getDataFromApartadosAndRespuestas(etiBloquesReportInput, informeEvaluacionEvaluadorReportOutput.getLang());
 
         final int orden = informeEvaluacionEvaluadorReportOutput.getBloques().size();
         for (BloqueOutput bloque : reportOutput.getBloques()) {
@@ -433,7 +429,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
             .build();
 
         BloquesReportOutput reportOutput = baseApartadosRespuestasService
-            .getDataFromApartadosAndRespuestas(etiBloquesReportInput, lang);
+            .getDataFromApartadosAndRespuestas(etiBloquesReportInput, informeEvaluacionEvaluadorReportOutput.getLang());
 
         if (informeEvaluacionEvaluadorReportOutput.getBloques().isEmpty() && ObjectUtils.isNotEmpty(reportOutput)) {
           informeEvaluacionEvaluadorReportOutput.setBloques(reportOutput.getBloques());
@@ -445,18 +441,24 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
 
     return informeEvaluacionEvaluadorReportOutput;
   }
 
   protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluacion(Long idEvaluacion, Language lang) {
-    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.TRUE, lang);
+    InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput = new InformeEvaluacionEvaluadorReportOutput(
+        "rep-eti-bloque-apartado-docx",
+        lang);
+    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.TRUE, informeEvaluacionEvaluadorReportOutput);
   }
 
   protected InformeEvaluacionEvaluadorReportOutput getInformeEvaluador(Long idEvaluacion, Language lang) {
-    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.FALSE, lang);
+    InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput = new InformeEvaluacionEvaluadorReportOutput(
+        "rep-eti-bloque-apartado-ficha-evaluador-docx",
+        lang);
+    return this.getInformeEvaluadorEvaluacion(idEvaluacion, Boolean.FALSE, informeEvaluacionEvaluadorReportOutput);
   }
 
   protected abstract XWPFDocument getDocument(EvaluacionDto evaluacion, HashMap<String, Object> dataReport,

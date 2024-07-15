@@ -14,8 +14,10 @@ import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
+import org.crue.hercules.sgi.rep.dto.eti.ApartadoDefinicionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoTreeDto;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueDto;
+import org.crue.hercules.sgi.rep.dto.eti.BloqueNombreDto;
 import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaDto;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaPeticionEvaluacionDto;
@@ -83,22 +85,20 @@ public class MXXReportService extends SgiReportDocxService {
    * @param reportMXX    SgiReport
    * @param memoriaId    Id de la memoria
    * @param formularioId Id del formulario
-   * @param lang         Code del language
    * @return byte[] Report
    */
-  public byte[] getReport(ReportMXX reportMXX, Long memoriaId, Long formularioId, Language lang) {
-    final String SUFIJO_LANGUAGE = "-" + lang.getCode();
+  public byte[] getReport(ReportMXX reportMXX, Long memoriaId, Long formularioId) {
     AssertHelper.idNotNull(memoriaId, MemoriaDto.class);
     AssertHelper.idNotNull(formularioId, FormularioDto.class);
 
-    Locale locale = new Locale(lang.getCode());
+    Locale locale = new Locale(reportMXX.getLang().getCode());
     MemoriaDto memoria = memoriaService.findById(memoriaId);
     List<RespuestaInput> respuestas = memoriaService.getRespuestas(memoriaId);
     boolean isMemoriaModificacion = memoria.getMemoriaOriginal() != null;
     List<RespuestaInput> respuestasMemoriaOriginal = isMemoriaModificacion
         ? memoriaService.getRespuestas(memoria.getMemoriaOriginal().getId())
         : Collections.emptyList();
-    List<BloqueDto> bloques = bloqueService.findByFormularioId(formularioId, lang);
+    List<BloqueDto> bloques = bloqueService.findByFormularioId(formularioId);
 
     List<MemoriaPeticionEvaluacionDto> memoriasPeticionEvaluacion = peticionEvaluacionService
         .getMemorias(memoria.getPeticionEvaluacion().getId());
@@ -115,7 +115,7 @@ public class MXXReportService extends SgiReportDocxService {
         .getPersonaRef());
 
     List<ApartadoTreeDto> apartados = new ArrayList<>();
-    bloques.forEach(bloque -> apartados.addAll(bloqueService.getApartados(bloque.getId(), lang)));
+    bloques.forEach(bloque -> apartados.addAll(bloqueService.getApartados(bloque.getId())));
 
     if (!ObjectUtils.isEmpty(memoria.getPeticionEvaluacion())
         && !ObjectUtils.isEmpty(memoria.getPeticionEvaluacion().getTipoActividad())) {
@@ -142,7 +142,7 @@ public class MXXReportService extends SgiReportDocxService {
 
     try {
       HashMap<String, Object> dataReport = getReportModelFormulario(bloques, apartados, respuestas,
-          isMemoriaModificacion, respuestasMemoriaOriginal);
+          isMemoriaModificacion, respuestasMemoriaOriginal, reportMXX.getLang());
       dataReport.put("headerImg", getImageHeaderLogo());
       dataReport.put("formularioId", formularioId);
       dataReport.put("memoria", memoria);
@@ -153,7 +153,7 @@ public class MXXReportService extends SgiReportDocxService {
       dataReport.put("tutor", tutor);
       dataReport.put("zoneId", sgiConfigProperties.getTimeZone().toZoneId().getId());
 
-      XWPFDocument document = getDocument(dataReport, getReportDefinitionStream(reportMXX.getPath() + SUFIJO_LANGUAGE));
+      XWPFDocument document = getDocument(dataReport, getReportDefinitionStream(reportMXX.getPath()));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = createCustomPdfOptions();
@@ -164,7 +164,7 @@ public class MXXReportService extends SgiReportDocxService {
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
   }
 
@@ -192,7 +192,8 @@ public class MXXReportService extends SgiReportDocxService {
   }
 
   private HashMap<String, Object> getReportModelFormulario(List<BloqueDto> bloques, List<ApartadoTreeDto> apartados,
-      List<RespuestaInput> respuestas, boolean isMemoriaModificacion, List<RespuestaInput> respuestasMemoriaOriginal) {
+      List<RespuestaInput> respuestas, boolean isMemoriaModificacion, List<RespuestaInput> respuestasMemoriaOriginal,
+      Language lang) {
     HashMap<String, Object> reportModel = new HashMap<>();
 
     bloques.stream().forEach(bloque -> {
@@ -210,9 +211,9 @@ public class MXXReportService extends SgiReportDocxService {
                 .anyMatch(id -> respuesta.getApartadoId().equals(id)))
             .collect(Collectors.toList());
         reportModel.putAll(getReportModelBloque(bloque, apartadosBloque, respuestasApartadosBloque,
-            respuestasApartadosBloqueMemoriaOriginal));
+            respuestasApartadosBloqueMemoriaOriginal, lang));
       } else {
-        reportModel.putAll(getReportModelBloque(bloque, apartadosBloque, respuestasApartadosBloque));
+        reportModel.putAll(getReportModelBloque(bloque, apartadosBloque, respuestasApartadosBloque, lang));
       }
 
     });
@@ -221,14 +222,16 @@ public class MXXReportService extends SgiReportDocxService {
   }
 
   private HashMap<String, Object> getReportModelBloque(BloqueDto bloque, List<ApartadoTreeDto> apartados,
-      List<RespuestaInput> respuestas) {
+      List<RespuestaInput> respuestas, Language lang) {
     HashMap<String, Object> reportModel = new HashMap<>();
     HashMap<String, Object> bloqueModel = new HashMap<>();
+    Optional<BloqueNombreDto> bloqueNombre = bloque.getNombre().stream()
+        .filter(b -> b.getLang().equalsIgnoreCase(lang.getCode())).findFirst();
     bloqueModel.put("orden", bloque.getOrden());
-    bloqueModel.put("nombre", bloque.getNombre());
+    bloqueModel.put("nombre", bloqueNombre.get().getValue());
     bloqueModel.put("bloque", bloque);
     apartados.forEach(
-        apartado -> bloqueModel.putAll(getReportModelApartado(apartado, respuestas, null)));
+        apartado -> bloqueModel.putAll(getReportModelApartado(apartado, respuestas, null, lang)));
 
     reportModel.put("bloque_" + bloque.getId(), bloqueModel);
 
@@ -236,14 +239,17 @@ public class MXXReportService extends SgiReportDocxService {
   }
 
   private HashMap<String, Object> getReportModelBloque(BloqueDto bloque, List<ApartadoTreeDto> apartados,
-      List<RespuestaInput> respuestas, List<RespuestaInput> respuestasMemoriaOriginal) {
+      List<RespuestaInput> respuestas, List<RespuestaInput> respuestasMemoriaOriginal, Language lang) {
     HashMap<String, Object> reportModel = new HashMap<>();
     HashMap<String, Object> bloqueModel = new HashMap<>();
+    Optional<BloqueNombreDto> bloqueNombre = bloque.getNombre().stream()
+        .filter(b -> b.getLang().equalsIgnoreCase(lang.getCode())).findFirst();
     bloqueModel.put("orden", bloque.getOrden());
-    bloqueModel.put("nombre", bloque.getNombre());
+    bloqueModel.put("nombre", bloqueNombre.get().getValue());
     bloqueModel.put("bloque", bloque);
     apartados.forEach(
-        apartado -> bloqueModel.putAll(getReportModelApartado(apartado, respuestas, respuestasMemoriaOriginal, null)));
+        apartado -> bloqueModel
+            .putAll(getReportModelApartado(apartado, respuestas, respuestasMemoriaOriginal, null, lang)));
 
     reportModel.put("bloque_" + bloque.getId(), bloqueModel);
 
@@ -251,8 +257,8 @@ public class MXXReportService extends SgiReportDocxService {
   }
 
   private HashMap<String, Object> getReportModelApartado(ApartadoTreeDto apartado, List<RespuestaInput> respuestas,
-      JsonObject respuestaPadreJson) {
-    return getReportModelApartado(apartado, respuestas, null, respuestaPadreJson);
+      JsonObject respuestaPadreJson, Language lang) {
+    return getReportModelApartado(apartado, respuestas, null, respuestaPadreJson, lang);
   }
 
   /**
@@ -277,17 +283,20 @@ public class MXXReportService extends SgiReportDocxService {
    */
   private HashMap<String, Object> getReportModelApartado(ApartadoTreeDto apartado, List<RespuestaInput> respuestas,
       List<RespuestaInput> respuestasMemoriaOriginal,
-      JsonObject respuestaPadreJson) {
+      JsonObject respuestaPadreJson, Language lang) {
     HashMap<String, Object> reportModel = new HashMap<>();
     HashMap<String, Object> apartadoModel = new HashMap<>();
 
     GsonHandler provider = new DefaultGsonHandler();
-    JsonArray apartadoJson = new Gson().fromJson(apartado.getEsquema(), JsonArray.class);
+    Optional<ApartadoDefinicionDto> apartadoDefinicion = apartado.getDefinicion().stream()
+        .filter(d -> d.getLang().equalsIgnoreCase(lang.getCode()))
+        .findFirst();
+    JsonArray apartadoJson = new Gson().fromJson(apartadoDefinicion.get().getEsquema(), JsonArray.class);
     if (!ObjectUtils.isEmpty(apartadoJson.get(0).getAsJsonObject().get("key"))) {
       String apartadoKey = apartadoJson.get(0).getAsJsonObject().get("key").getAsString();
       apartadoModel.put("apartado", apartado);
       apartadoModel.put("esquema",
-          provider.parser().fromJson(apartado.getEsquema(), ArrayList.class).get(0));
+          provider.parser().fromJson(apartadoDefinicion.get().getEsquema(), ArrayList.class).get(0));
 
       Optional<RespuestaInput> respuesta = respuestas.stream()
           .filter(r -> r.getApartadoId().equals(apartado.getId())).findFirst();
@@ -328,7 +337,7 @@ public class MXXReportService extends SgiReportDocxService {
       }
 
       for (ApartadoTreeDto apartadoHijo : apartado.getHijos()) {
-        apartadoModel.putAll(getReportModelApartado(apartadoHijo, respuestas, respuestaApartadoJson));
+        apartadoModel.putAll(getReportModelApartado(apartadoHijo, respuestas, respuestaApartadoJson, lang));
       }
 
       reportModel.put(apartadoKey, apartadoModel);

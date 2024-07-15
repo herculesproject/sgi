@@ -3,7 +3,7 @@ package org.crue.hercules.sgi.rep.service.eti;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
@@ -54,14 +54,14 @@ class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
   @Test
   void getInformeEvaluacion_ReturnsEvaluacionMemoriaValidationException() throws Exception {
 
-    ReportInformeEvaluacion report = new ReportInformeEvaluacion();
+    ReportInformeEvaluacion report = new ReportInformeEvaluacion(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
         .willReturn(getResource("eti/docx/rep-eti-evaluacion.docx"));
 
     Assertions
-        .assertThatThrownBy(() -> informeEvaluacionReportService.getReportInformeEvaluacion(report, null, Language.ES))
+        .assertThatThrownBy(() -> informeEvaluacionReportService.getReportInformeEvaluacion(report, null))
         .isInstanceOf(GetDataReportException.class);
   }
 
@@ -76,10 +76,10 @@ class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
         .willReturn(getResource("eti/docx/rep-eti-evaluacion.docx"));
 
-    ReportInformeEvaluacion report = new ReportInformeEvaluacion();
+    ReportInformeEvaluacion report = new ReportInformeEvaluacion(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion, Language.ES);
+    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion);
 
     assertNotNull(reportContent);
   }

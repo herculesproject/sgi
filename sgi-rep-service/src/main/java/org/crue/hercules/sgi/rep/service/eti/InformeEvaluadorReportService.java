@@ -52,8 +52,10 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
     dataReport.put("tipoActividad", tipoActividad);
     dataReport.put("titulo", evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
     dataReport.put("fechaInicio",
-        formatInstantToString(evaluacion.getMemoria().getPeticionEvaluacion().getFechaInicio()));
-    dataReport.put("fechaFin", formatInstantToString(evaluacion.getMemoria().getPeticionEvaluacion().getFechaFin()));
+        formatInstantToString(evaluacion.getMemoria().getPeticionEvaluacion().getFechaInicio(),
+            lang));
+    dataReport.put("fechaFin", formatInstantToString(evaluacion.getMemoria().getPeticionEvaluacion().getFechaFin(),
+        lang));
     dataReport.put("financiacion", evaluacion.getMemoria().getPeticionEvaluacion().getFuenteFinanciacion());
     dataReport.put("resumen", evaluacion.getMemoria().getPeticionEvaluacion().getResumen());
 
@@ -62,20 +64,19 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
 
     Long dictamenId = evaluacion.getDictamen() != null ? evaluacion.getDictamen().getId() : null;
 
-    dataReport.put("bloqueApartados", generarBloqueApartados(dictamenId, getInformeEvaluador(evaluacion.getId(), lang),
-        "rep-eti-bloque-apartado-ficha-evaluador-docx", lang));
+    dataReport.put("bloqueApartados",
+        generarBloqueApartados(dictamenId, getInformeEvaluador(evaluacion.getId(), lang)));
 
     return compileReportData(path, dataReport);
   }
 
-  private XWPFDocument getReportFromEvaluador(SgiReportDto sgiReport, Long idEvaluacion, Language lang) {
-    return this.getReportFromEvaluacionId(sgiReport, idEvaluacion, lang);
+  private XWPFDocument getReportFromEvaluador(SgiReportDto sgiReport, Long idEvaluacion) {
+    return this.getReportFromEvaluacionId(sgiReport, idEvaluacion);
 
   }
 
-  public byte[] getReportInformeEvaluadorEvaluacion(ReportInformeEvaluador sgiReport, Long idEvaluacion,
-      Language lang) {
-    this.getReportFromEvaluador(sgiReport, idEvaluacion, lang);
+  public byte[] getReportInformeEvaluadorEvaluacion(ReportInformeEvaluador sgiReport, Long idEvaluacion) {
+    this.getReportFromEvaluador(sgiReport, idEvaluacion);
     return sgiReport.getContent();
   }
 }

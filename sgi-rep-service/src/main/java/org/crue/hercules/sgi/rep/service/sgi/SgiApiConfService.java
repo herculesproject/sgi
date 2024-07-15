@@ -46,7 +46,7 @@ public class SgiApiConfService extends SgiApiBaseService {
       return resource;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new GetDataReportException();
+      throw new GetDataReportException(e);
     }
 
   }

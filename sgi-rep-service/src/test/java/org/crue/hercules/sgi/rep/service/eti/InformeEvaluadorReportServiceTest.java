@@ -3,7 +3,7 @@ package org.crue.hercules.sgi.rep.service.eti;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluador;
@@ -53,18 +53,18 @@ class InformeEvaluadorReportServiceTest extends BaseReportEtiServiceTest {
   @Test
   void getInformeEvaluacion_ReturnsMemoriaValidationException() throws Exception {
 
-    ReportInformeEvaluador report = new ReportInformeEvaluador();
+    ReportInformeEvaluador report = new ReportInformeEvaluador(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
     Assertions
         .assertThatThrownBy(
-            () -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null, Language.ES))
+            () -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null))
         .isInstanceOf(GetDataReportException.class);
   }
 
   void getInformeEvaluacion_ReturnsEvaluacionMemoriaValidationException() throws Exception {
 
-    ReportInformeEvaluador report = new ReportInformeEvaluador();
+    ReportInformeEvaluador report = new ReportInformeEvaluador(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
@@ -72,7 +72,7 @@ class InformeEvaluadorReportServiceTest extends BaseReportEtiServiceTest {
 
     Assertions
         .assertThatThrownBy(
-            () -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null, Language.ES))
+            () -> informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, null))
         .isInstanceOf(GetDataReportException.class);
   }
 
@@ -87,11 +87,10 @@ class InformeEvaluadorReportServiceTest extends BaseReportEtiServiceTest {
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
         .willReturn(getResource("eti/docx/rep-eti-ficha-evaluador.docx"));
 
-    ReportInformeEvaluador report = new ReportInformeEvaluador();
+    ReportInformeEvaluador report = new ReportInformeEvaluador(SgiLocaleContextHolder.getLanguage());
     report.setOutputType(OutputType.PDF);
 
-    byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion,
-        Language.ES);
+    byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion);
 
     assertNotNull(reportContent);
   }
