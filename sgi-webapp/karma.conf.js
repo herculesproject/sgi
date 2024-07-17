@@ -40,6 +40,13 @@ module.exports = function (config) {
         flags: [
           '--no-sandbox'
         ]
+      },
+      ChromeWayland: {
+        base: 'Chrome',
+        flags: [
+          '--enable-features=UseOzonePlatform',
+          '--ozone-platform=wayland'
+        ]
       }
     },
     singleRun: false,

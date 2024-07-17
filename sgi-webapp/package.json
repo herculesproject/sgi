@@ -7,6 +7,7 @@
     "build": "node ./generate-config.js && ng build",
     "build-prod": "node ./generate-config.js && ng build --prod",
     "test": "node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=4096 ng test",
+    "test-wayland": "node ./generate-config.js && NODE_OPTIONS=--max-old-space-size=4096 ng test --browsers=ChromeWayland",
     "test-ci": "node ./generate-config.js && ng test --watch=false --browsers=ChromeHeadlessCI",
     "lint": "node ./generate-config.js && ng lint",
     "e2e": "node ./generate-config.js && ng e2e",
