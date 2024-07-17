@@ -1,19 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ACTA_CONVERTER } from '@core/converters/eti/acta.converter';
 import { ASISTENTE_CONVERTER } from '@core/converters/eti/asistente.converter';
 import { CONVOCATORIA_REUNION_DATOS_GENERALES_CONVERTER } from '@core/converters/eti/convocatoria-reunion-datos-generales.converter';
 import { CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/convocatoria-reunion.converter';
 import { DOCUMENTACION_CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/documentacion-convocatoria-reunion.converter';
-import { EVALUACION_CONVERTER } from '@core/converters/eti/evaluacion.converter';
 import { IActa } from '@core/models/eti/acta';
 import { IAsistente } from '@core/models/eti/asistente';
-import { IActaBackend } from '@core/models/eti/backend/acta-backend';
 import { IAsistenteBackend } from '@core/models/eti/backend/asistente-backend';
 import { IConvocatoriaReunionBackend } from '@core/models/eti/backend/convocatoria-reunion-backend';
 import { IConvocatoriaReunionDatosGeneralesBackend } from '@core/models/eti/backend/convocatoria-reunion-datos-generales-backend';
 import { IDocumentacionConvocatoriaReunionBackend } from '@core/models/eti/backend/documentacion-convocatoria-reunion-backend';
-import { IEvaluacionBackend } from '@core/models/eti/backend/evaluacion-backend';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IConvocatoriaReunionDatosGenerales } from '@core/models/eti/convocatoria-reunion-datos-generales';
 import { IDocumentacionConvocatoriaReunion } from '@core/models/eti/documentacion-convocatoria-reunion';
@@ -22,6 +18,10 @@ import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IActaResponse } from './acta/acta-response';
+import { ACTA_RESPONSE_CONVERTER } from './acta/acta-response.converter';
+import { IEvaluacionResponse } from './evaluacion/evaluacion-response';
+import { EVALUACION_RESPONSE_CONVERTER } from './evaluacion/evaluacion-response.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -55,10 +55,10 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
    * @param idConvocatoria id convocatoria.
    */
   findEvaluacionesActivas(idConvocatoria: number): Observable<SgiRestListResult<IEvaluacion>> {
-    return this.find<IEvaluacionBackend, IEvaluacion>(
+    return this.find<IEvaluacionResponse, IEvaluacion>(
       `${this.endpointUrl}/${idConvocatoria}/evaluaciones-activas`,
       null,
-      EVALUACION_CONVERTER
+      EVALUACION_RESPONSE_CONVERTER
     );
   }
 
@@ -124,11 +124,11 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
    * @param idConvocatoria id convocatoria.
    */
   public findActaInConvocatoriaReunion(idConvocatoria: number): Observable<IActa> {
-    return this.http.get<IActaBackend>(
+    return this.http.get<IActaResponse>(
       `${this.endpointUrl}/${idConvocatoria}/acta`
     ).pipe(
       map((acta) => {
-        return ACTA_CONVERTER.toTarget(acta);
+        return ACTA_RESPONSE_CONVERTER.toTarget(acta);
       })
     );
   }
@@ -149,10 +149,10 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
  * @param idConvocatoria id convocatoria.
  */
   findEvaluacionesTodas(idConvocatoria: number): Observable<SgiRestListResult<IEvaluacion>> {
-    return this.find<IEvaluacionBackend, IEvaluacion>(
+    return this.find<IEvaluacionResponse, IEvaluacion>(
       `${this.endpointUrl}/${idConvocatoria}/evaluaciones/todas`,
       null,
-      EVALUACION_CONVERTER
+      EVALUACION_RESPONSE_CONVERTER
     );
   }
 

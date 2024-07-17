@@ -1,0 +1,69 @@
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IPersona } from '@core/models/sgp/persona';
+import { IPeticionEvaluacionResponse } from '@core/services/eti/peticion-evaluacion/peticion-evaluacion-response';
+import { LuxonUtils } from '@core/utils/luxon-utils';
+import { SgiBaseConverter } from '@sgi/framework/core';
+
+class PeticionEvaluacionResponseConverter extends SgiBaseConverter<IPeticionEvaluacionResponse, IPeticionEvaluacion> {
+  toTarget(value: IPeticionEvaluacionResponse): IPeticionEvaluacion {
+    if (!value) {
+      return value as unknown as IPeticionEvaluacion;
+    }
+    return {
+      id: value.id,
+      solicitudConvocatoriaRef: value.solicitudConvocatoriaRef,
+      codigo: value.codigo,
+      titulo: value.titulo,
+      tipoActividad: value.tipoActividad,
+      tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
+      existeFinanciacion: value.existeFinanciacion,
+      fuenteFinanciacion: value.fuenteFinanciacion,
+      estadoFinanciacion: value.estadoFinanciacion,
+      importeFinanciacion: value.importeFinanciacion,
+      fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
+      fechaFin: LuxonUtils.fromBackend(value.fechaFin),
+      resumen: value.resumen,
+      valorSocial: value.valorSocial,
+      otroValorSocial: value.otroValorSocial,
+      objetivos: value.objetivos,
+      disMetodologico: value.disMetodologico,
+      tieneFondosPropios: value.tieneFondosPropios,
+      solicitante: { id: value.personaRef } as IPersona,
+      checklistId: value.checklistId,
+      tutor: { id: value.tutorRef } as IPersona,
+      activo: value.activo
+    };
+  }
+
+  fromTarget(value: IPeticionEvaluacion): IPeticionEvaluacionResponse {
+    if (!value) {
+      return value as unknown as IPeticionEvaluacionResponse;
+    }
+    return {
+      id: value.id,
+      solicitudConvocatoriaRef: value.solicitudConvocatoriaRef,
+      codigo: value.codigo,
+      titulo: value.titulo,
+      tipoActividad: value.tipoActividad,
+      tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
+      existeFinanciacion: value.existeFinanciacion,
+      fuenteFinanciacion: value.fuenteFinanciacion,
+      estadoFinanciacion: value.estadoFinanciacion,
+      importeFinanciacion: value.importeFinanciacion,
+      fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
+      fechaFin: LuxonUtils.toBackend(value.fechaFin),
+      resumen: value.resumen,
+      valorSocial: value.valorSocial,
+      otroValorSocial: value.otroValorSocial,
+      objetivos: value.objetivos,
+      disMetodologico: value.disMetodologico,
+      tieneFondosPropios: value.tieneFondosPropios,
+      personaRef: value.solicitante?.id,
+      checklistId: value.checklistId,
+      tutorRef: value.tutor?.id,
+      activo: value.activo
+    };
+  }
+}
+
+export const PETICION_EVALUACION_RESPONSE_CONVERTER = new PeticionEvaluacionResponseConverter();

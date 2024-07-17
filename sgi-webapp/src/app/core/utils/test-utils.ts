@@ -2,7 +2,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Data, ParamMap } from '@angular/router';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { DialogCommonComponent } from '@core/component/dialog-common.component';
-import { Language } from '@core/services/language.service';
+import { Language } from '@core/i18n/language';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateTestingModule } from 'ngx-translate-testing';
 import { Subject } from 'rxjs';

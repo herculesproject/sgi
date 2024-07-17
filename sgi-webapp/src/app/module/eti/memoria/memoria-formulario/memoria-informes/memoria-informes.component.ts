@@ -85,7 +85,7 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
    * @param documentoRef Referencia del informe..
    */
   visualizarInforme(documentos: IInformeDocumento[]) {
-    const documentoRef = documentos.find(doc => doc.lang.toLowerCase() === this.languageService.getLanguage().code).documentoRef;
+    const documentoRef = documentos.find(doc => doc.lang === this.languageService.getLanguage()).documentoRef;
     const documento: IDocumento = {} as IDocumento;
     this.documentoService.getInfoFichero(documentoRef).pipe(
       switchMap((documentoInfo: IDocumento) => {

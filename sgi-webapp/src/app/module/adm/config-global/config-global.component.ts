@@ -2,10 +2,10 @@ import { KeyValue } from '@angular/common';
 import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
+import { Language } from '@core/i18n/language';
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { LANGUAGE_MAP, Language } from '@core/services/language.service';
 import { Observable, of } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 
@@ -53,7 +53,7 @@ export class ConfigGlobalComponent extends AbstractMenuContentComponent {
     [ConfigGlobal.ENTIDAD_IMPLANTACION, { type: ConfigType.TEXT, label: marker(`adm.config.global.ENTIDAD_IMPLANTACION`), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.ID_ENTIDAD_SGEMP, { type: ConfigType.TEXT, label: marker(`adm.config.global.ID_ENTIDAD_SGEMP`), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true, module: ConfigModule.CNF }],
-    [ConfigGlobal.WEB_LANGUAGES_HEADER, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.global.WEB_LANGUAGES_HEADER`), options: of([{ key: Language.ES.code, value: LANGUAGE_MAP.get(Language.ES) }, { key: Language.EN.code, value: LANGUAGE_MAP.get(Language.EN) }, { key: Language.EU.code, value: LANGUAGE_MAP.get(Language.EU) }]), required: true, module: ConfigModule.CNF }],
+    [ConfigGlobal.WEB_LANGUAGES_HEADER, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.global.WEB_LANGUAGES_HEADER`), options: of(Language.values().map(v => { return { key: v.code, value: v.translateKey } })), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.EXP_MAX_NUM_REGISTROS_EXCEL, { type: ConfigType.TEXT, label: marker(`adm.config.global.EXP_MAX_NUM_REGISTROS_EXCEL`), required: false, info: marker(`adm.config.global.EXP_MAX_NUM_REGISTROS_EXCEL_INFO`), module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_NUM_LOGOS_HEADER, { type: ConfigType.SELECT, label: marker(`adm.config.global.WEB_NUM_LOGOS_HEADER`), options: of([{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]), required: true, module: ConfigModule.CNF }],
     [ConfigGlobal.WEB_HEADER_LOGO_MINISTERIO, { type: ConfigType.FILE, label: marker(`adm.config.global.WEB_HEADER_LOGO_MINISTERIO`), module: ConfigModule.CNF }],

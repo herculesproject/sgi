@@ -310,10 +310,6 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
     this.checkedNode = $event.checked ? node : undefined;
   }
 
-  getNombreBloque(bloque: IBloque): string {
-    return bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.value;
-  }
-
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       bloque: new FormControl(this.data?.comentario?.apartado?.bloque, [Validators.required]),
@@ -351,7 +347,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
   }
 
   readonly displayerBloque = (bloque: IBloque): string => {
-    return bloque.orden + ' ' + bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.value;
+    return bloque.orden + ' ' + this.languageService.getFieldValue(bloque.nombre);
   }
 
 }

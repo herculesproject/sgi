@@ -144,17 +144,17 @@ export class ActaComentariosComponent extends FragmentComponent implements OnIni
   }
 
   getApartadoNombre(comentario: IComentario): string {
-    return getApartadoNombre(comentario.apartado, this.languageService.getLanguage().code);
+    return getApartadoNombre(comentario.apartado, this.languageService.getLanguage());
   }
 
   getSubApartadoNombre(comentario: IComentario): string {
-    return getSubApartadoNombre(comentario.apartado, this.languageService.getLanguage().code);
+    return getSubApartadoNombre(comentario.apartado, this.languageService.getLanguage());
   }
 
   getBloqueNombre(comentario: IComentario): string {
     return comentario.apartado?.bloque.orden === 0 ?
-      comentario.apartado?.bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.value : (comentario.apartado?.bloque?.orden
-        + ' ' + comentario.apartado?.bloque.nombre.find(b => b.lang.toLowerCase() === this.languageService.getLanguage().code)?.value)
+      this.languageService.getFieldValue(comentario.apartado?.bloque.nombre) : (comentario.apartado?.bloque?.orden
+        + ' ' + this.languageService.getFieldValue(comentario.apartado?.bloque.nombre))
   }
 
   /**

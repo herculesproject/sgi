@@ -1,7 +1,4 @@
-import { Language } from '@core/services/language.service';
-import { IActa } from './acta';
-import { IMemoria } from './memoria';
-import { TipoEvaluacion } from './tipo-evaluacion';
+import { Language } from '@core/i18n/language';
 
 export interface IInformeDocumento {
   /** Referencia documento */
@@ -9,5 +6,5 @@ export interface IInformeDocumento {
   /** id informe */
   informeId: number;
   /** Language */
-  lang: string;
+  lang: Language;
 }

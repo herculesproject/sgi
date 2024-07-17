@@ -1,5 +1,5 @@
 import { Inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
-import { LocaleId } from '@core/services/language.service';
+import { LocaleId } from '@core/i18n/locale-id';
 import { DateTime, Info } from 'luxon';
 
 @Pipe({ name: 'luxon', pure: false })

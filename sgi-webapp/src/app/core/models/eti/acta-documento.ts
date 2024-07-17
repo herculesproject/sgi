@@ -1,3 +1,4 @@
+import { Language } from "@core/i18n/language";
 
 export interface IActaDocumento {
   /** Referencia documento */
@@ -7,5 +8,5 @@ export interface IActaDocumento {
   /** Referencia a la transacción blockchain */
   transaccionRef: string;
   /** Language */
-  lang: string;
+  lang: Language;
 }

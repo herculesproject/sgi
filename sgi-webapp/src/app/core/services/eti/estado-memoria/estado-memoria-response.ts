@@ -1,9 +1,9 @@
-import { IMemoriaBackend } from "@core/models/eti/backend/memoria-backend";
 import { TipoEstadoMemoria } from "@core/models/eti/tipo-estado-memoria";
+import { IMemoriaResponse } from "@core/services/eti/memoria/memoria-response";
 
 export interface IEstadoMemoriaResponse {
   id: number;
-  memoria: IMemoriaBackend;
+  memoria: IMemoriaResponse;
   tipoEstadoMemoria: TipoEstadoMemoria;
   fechaEstado: string;
   comentario: string;

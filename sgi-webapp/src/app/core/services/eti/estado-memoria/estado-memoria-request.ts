@@ -1,5 +1,5 @@
 import { TipoEstadoMemoria } from '../../../models/eti/tipo-estado-memoria';
-import { IMemoriaBackend } from '../../../models/eti/backend/memoria-backend';
+import { IMemoriaBackend } from '../memoria/memoria-response';
 
 export interface IEstadoMemoriaRequest {
   id: number;

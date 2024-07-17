@@ -28,7 +28,7 @@ interface IDocumentacionMemoriaWithInformeAndFichaEvaluador extends IDocumentaci
 })
 
 export class DocumentacionMemoriaListadoMemoriaComponent
-  extends AbstractTableWithoutPaginationComponent<IDocumentacionMemoriaWithInformeAndFichaEvaluador>  {
+  extends AbstractTableWithoutPaginationComponent<IDocumentacionMemoriaWithInformeAndFichaEvaluador> {
   documentacionMemoria$: Observable<IDocumentacionMemoriaWithInformeAndFichaEvaluador[]>;
   @Input() memoriaId: number;
   @Input() tipoEvaluacion: number;
@@ -118,7 +118,7 @@ export class DocumentacionMemoriaListadoMemoriaComponent
  * @param documentos referencia del los documentos en varios idiomas
  */
   visualizarInformeDocumentos(documentos: IInformeDocumento[]): void {
-    const documentoRef = documentos.find(doc => doc.lang.toLowerCase() === this.languageService.getLanguage().code).documentoRef;
+    const documentoRef = documentos.find(doc => doc.lang === this.languageService.getLanguage()).documentoRef;
     const documento: IDocumento = {} as IDocumento;
     this.documentoService.getInfoFichero(documentoRef).pipe(
       switchMap((documentoInfo: IDocumento) => {

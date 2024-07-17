@@ -7,7 +7,6 @@ import { ResourceService, triggerDownloadToUser } from '@core/services/cnf/resou
 import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiFileUploadComponent } from '@shared/file-upload/file-upload.component';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ResourceUploadComponent } from '../resource-upload/resource-upload.component';

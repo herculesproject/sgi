@@ -1,0 +1,35 @@
+import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
+import { IDocumento } from '@core/models/sgdoc/documento';
+import { SgiBaseConverter } from '@sgi/framework/core';
+import { IDocumentacionMemoriaResponse } from './documentacion-memoria-response';
+import { MEMORIA_RESPONSE_CONVERTER } from './memoria-response.converter';
+
+class DocumentacionMemoriaResponseConverter extends SgiBaseConverter<IDocumentacionMemoriaResponse, IDocumentacionMemoria> {
+  toTarget(value: IDocumentacionMemoriaResponse): IDocumentacionMemoria {
+    if (!value) {
+      return value as unknown as IDocumentacionMemoria;
+    }
+    return {
+      id: value.id,
+      memoria: MEMORIA_RESPONSE_CONVERTER.toTarget(value.memoria),
+      tipoDocumento: value.tipoDocumento,
+      nombre: value.nombre,
+      documento: { documentoRef: value.documentoRef } as IDocumento,
+    };
+  }
+
+  fromTarget(value: IDocumentacionMemoria): IDocumentacionMemoriaResponse {
+    if (!value) {
+      return value as unknown as IDocumentacionMemoriaResponse;
+    }
+    return {
+      id: value.id,
+      memoria: MEMORIA_RESPONSE_CONVERTER.fromTarget(value.memoria),
+      tipoDocumento: value.tipoDocumento,
+      nombre: value.nombre,
+      documentoRef: value.documento.documentoRef,
+    };
+  }
+}
+
+export const DOCUMENTACION_MEMORIA_RESPONSE_CONVERTER = new DocumentacionMemoriaResponseConverter();

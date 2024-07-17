@@ -2,7 +2,7 @@ import { NumberSymbol, formatNumber, getLocaleNumberSymbol } from '@angular/comm
 import { Directive, ElementRef, HostListener, Inject, Input, LOCALE_ID } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MAT_INPUT_VALUE_ACCESSOR } from '@angular/material/input';
-import { LocaleId } from '@core/services/language.service';
+import { LocaleId } from '@core/i18n/locale-id';
 
 @Directive({
   selector: 'input[sgiInputWithThousandSeparator]',

@@ -1,21 +1,15 @@
-import { ThisReceiver } from '@angular/compiler';
 import { FormGroup } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { DIALOG_BUTTON_STYLE } from '@block/dialog/dialog.component';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { IChecklist } from '@core/models/eti/checklist';
 import { IFormly } from '@core/models/eti/formly';
 import { IPersona } from '@core/models/sgp/persona';
 import { Fragment, Group } from '@core/services/action-service';
-import { DialogService } from '@core/services/dialog.service';
 import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
 import { FormlyService } from '@core/services/eti/formly/formly.service';
 import { LanguageService } from '@core/services/language.service';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { BehaviorSubject, Observable, Subject, Subscription, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 
 export interface FormlyData {

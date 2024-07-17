@@ -1,4 +1,4 @@
-import { MEMORIA_CONVERTER } from '@core/converters/eti/memoria.converter';
+import { MEMORIA_RESPONSE_CONVERTER } from '@core/services/eti/memoria/memoria-response.converter';
 import { IEstadoMemoria } from '@core/models/eti/estado-memoria';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -11,7 +11,7 @@ class EstadoMemoriaResponseConverter extends SgiBaseConverter<IEstadoMemoriaResp
     }
     return {
       id: value.id,
-      memoria: MEMORIA_CONVERTER.toTarget(value.memoria),
+      memoria: MEMORIA_RESPONSE_CONVERTER.toTarget(value.memoria),
       tipoEstadoMemoria: value.tipoEstadoMemoria,
       fechaEstado: LuxonUtils.fromBackend(value.fechaEstado),
       comentario: value.comentario
@@ -24,7 +24,7 @@ class EstadoMemoriaResponseConverter extends SgiBaseConverter<IEstadoMemoriaResp
     }
     return {
       id: value.id,
-      memoria: MEMORIA_CONVERTER.fromTarget(value.memoria),
+      memoria: MEMORIA_RESPONSE_CONVERTER.fromTarget(value.memoria),
       tipoEstadoMemoria: value.tipoEstadoMemoria,
       fechaEstado: LuxonUtils.toBackend(value.fechaEstado),
       comentario: value.comentario

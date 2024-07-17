@@ -1,7 +1,7 @@
 import { NgxMatDateAdapter } from '@angular-material-components/datetime-picker';
 import { Inject, Injectable, InjectionToken, OnDestroy, Optional } from '@angular/core';
 import { MatDateFormats, MAT_DATE_LOCALE } from '@angular/material/core';
-import { LocaleId } from '@core/services/language.service';
+import { LocaleId } from '@core/i18n/locale-id';
 import { TIME_ZONE } from '@core/time-zone';
 import { DateTime, DateTimeOptions, Info } from 'luxon';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -83,7 +83,7 @@ export class LuxonDateTimeAdapter extends NgxMatDateAdapter<DateTime> implements
     }
 
     if (dateLocale?.onChange$) {
-      dateLocale.onChange$.pipe(takeUntil(this.destroy$)).subscribe(value => this.setLocale(value));
+      dateLocale.onChange$.pipe(takeUntil(this.destroy$)).subscribe(value => this.setLocale(value.code));
     }
   }
 

@@ -30,6 +30,7 @@ import { FooterCrearComponent } from './footers/footer-crear/footer-crear.compon
 import { FragmentContentComponent } from './fragment-content/fragment-content.component';
 import { FragmentTitleComponent } from './fragment-title/fragment-title.component';
 import { FragmentComponent } from './fragment/fragment.component';
+import { I18nFieldValuePipe } from './i18n-field-value.pipe';
 import { IconChangesComponent } from './icon-changes/icon-changes.component';
 import { IconErrorsComponent } from './icon-errors/icon-errors.component';
 import { IconProblemsComponent } from './icon-problems/icon-problems.component';
@@ -76,6 +77,7 @@ import { SelectComponent } from './select/select.component';
     FragmentComponent,
     FragmentContentComponent,
     FragmentTitleComponent,
+    I18nFieldValuePipe,
     IconChangesComponent,
     IconErrorsComponent,
     IconProblemsComponent,
@@ -131,6 +133,7 @@ import { SelectComponent } from './select/select.component';
     FooterCrearComponent,
     FormAutocompleteOffDirective,
     FragmentComponent,
+    I18nFieldValuePipe,
     IconChangesComponent,
     IconErrorsComponent,
     IconProblemsComponent,

@@ -11,7 +11,9 @@ import { SgiErrorHttpInterceptor } from '@core/error-http-interceptor';
 import { SgiLanguageHttpInterceptor } from '@core/languague-http-interceptor';
 import { SgiRequestHttpInterceptor } from '@core/request-http-interceptor';
 import { ResourcePublicService } from '@core/services/cnf/resource-public.service';
-import { Language, LanguageService, LocaleId } from '@core/services/language.service';
+import { Language } from '@core/i18n/language';
+import { LocaleId } from '@core/i18n/locale-id';
+import { LanguageService } from '@core/services/language.service';
 import { TimeZoneService } from '@core/services/timezone.service';
 import { TIME_ZONE } from '@core/time-zone';
 import { environment } from '@env';
@@ -74,6 +76,12 @@ const appInitializerFn = (appConfig: ConfigService) => {
   };
 };
 
+const bootstrapLanguageService = (languageService: LanguageService) => {
+  return () => {
+    return languageService._bootstrap();
+  };
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -114,6 +122,12 @@ const appInitializerFn = (appConfig: ConfigService) => {
       useFactory: appInitializerFn,
       multi: true,
       deps: [ConfigService]
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: bootstrapLanguageService,
+      multi: true,
+      deps: [LanguageService]
     },
     {
       provide: MatPaginatorIntl,
@@ -162,7 +176,7 @@ const appInitializerFn = (appConfig: ConfigService) => {
           toolbar: defaultConfig.toolbar,
           link: defaultConfig.link,
           get language() {
-            return languageService.getLanguageCode();
+            return languageService.getLanguage().code;
           },
           table: defaultConfig.table
         } as CkEditorConfig

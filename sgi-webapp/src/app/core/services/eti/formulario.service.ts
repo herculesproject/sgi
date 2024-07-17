@@ -3,22 +3,41 @@ import { Injectable } from '@angular/core';
 import { IBloque } from '@core/models/eti/bloque';
 import { IFormulario } from '@core/models/eti/formulario';
 import { environment } from '@env';
-import { SgiReadOnlyRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { IBloqueResponse } from './bloque/bloque-response';
+import { BLOQUE_RESPONSE_CONVERTER } from './bloque/bloque-response.converter';
+import { IFormularioResponse } from './formulario/formulario-response';
+import { FORMULARIO_RESPONSE_CONVERTER } from './formulario/formulario-response.converter';
+
+// tslint:disable-next-line: variable-name
+const _FormularioServiceMixinBase:
+  FindByIdCtor<number, IFormulario, IFormularioResponse> &
+  FindAllCtor<IFormulario, IFormularioResponse> &
+  typeof SgiRestBaseService = mixinFindAll(
+    mixinFindById(
+      SgiRestBaseService,
+      FORMULARIO_RESPONSE_CONVERTER
+    ),
+    FORMULARIO_RESPONSE_CONVERTER
+  );
 
 @Injectable({
   providedIn: 'root'
 })
-export class FormularioService extends SgiReadOnlyRestService<number, IFormulario> {
+export class FormularioService extends _FormularioServiceMixinBase {
 
   private static readonly MAPPING = '/formularios';
 
   constructor(protected http: HttpClient) {
-    super(FormularioService.name, `${environment.serviceServers.eti}${FormularioService.MAPPING}`, http);
+    super(
+      `${environment.serviceServers.eti}${FormularioService.MAPPING}`,
+      http
+    );
   }
 
   getBloques(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IBloque>> {
-    return this.find<IBloque, IBloque>(`${this.endpointUrl}/${id}/bloques`, options);
+    return this.find<IBloqueResponse, IBloque>(`${this.endpointUrl}/${id}/bloques`, options, BLOQUE_RESPONSE_CONVERTER);
   }
 
   /**

@@ -2,7 +2,7 @@ import { IEstadoMemoriaRequest } from '@core/services/eti/estado-memoria/estado-
 import { IEstadoMemoria } from '@core/models/eti/estado-memoria';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { MEMORIA_CONVERTER } from '../../../converters/eti/memoria.converter';
+import { MEMORIA_CONVERTER } from '../memoria/memoria-response.converter';
 
 class EstadoMemoriaRequestConverter extends SgiBaseConverter<IEstadoMemoriaRequest, IEstadoMemoria> {
   toTarget(value: IEstadoMemoriaRequest): IEstadoMemoria {

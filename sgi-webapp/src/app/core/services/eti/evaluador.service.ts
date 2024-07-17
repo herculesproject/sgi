@@ -2,10 +2,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONFLICTO_INTERESES_CONVERTER } from '@core/converters/eti/conflicto-intereses.converter';
-import { EVALUACION_CONVERTER } from '@core/converters/eti/evaluacion.converter';
 import { EVALUADOR_CONVERTER } from '@core/converters/eti/evaluador.converter';
 import { IConflictoInteresBackend } from '@core/models/eti/backend/conflicto-intereses-backend';
-import { IEvaluacionBackend } from '@core/models/eti/backend/evaluacion-backend';
 import { IEvaluadorBackend } from '@core/models/eti/backend/evaluador-backend';
 import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
@@ -16,11 +14,13 @@ import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@s
 import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IEvaluacionResponse } from './evaluacion/evaluacion-response';
+import { EVALUACION_RESPONSE_CONVERTER } from './evaluacion/evaluacion-response.converter';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EvaluadorService extends SgiMutableRestService<number, IEvaluadorBackend, IEvaluador>{
+export class EvaluadorService extends SgiMutableRestService<number, IEvaluadorBackend, IEvaluador> {
   private static readonly MAPPING = '/evaluadores';
 
   constructor(protected http: HttpClient) {
@@ -38,10 +38,10 @@ export class EvaluadorService extends SgiMutableRestService<number, IEvaluadorBa
    * @param options Opciones de filtrado y ordenación
    */
   getEvaluaciones(options?: SgiRestFindOptions): Observable<SgiRestListResult<IEvaluacion>> {
-    return this.find<IEvaluacionBackend, IEvaluacion>(
+    return this.find<IEvaluacionResponse, IEvaluacion>(
       `${this.endpointUrl}/evaluaciones`,
       options,
-      EVALUACION_CONVERTER
+      EVALUACION_RESPONSE_CONVERTER
     );
   }
 
@@ -51,10 +51,10 @@ export class EvaluadorService extends SgiMutableRestService<number, IEvaluadorBa
    * @param options Opciones de filtrado y ordenación
    */
   getSeguimientos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IEvaluacion>> {
-    return this.find<IEvaluacionBackend, IEvaluacion>(
+    return this.find<IEvaluacionResponse, IEvaluacion>(
       `${this.endpointUrl}/evaluaciones-seguimiento`,
       options,
-      EVALUACION_CONVERTER
+      EVALUACION_RESPONSE_CONVERTER
     );
   }
 

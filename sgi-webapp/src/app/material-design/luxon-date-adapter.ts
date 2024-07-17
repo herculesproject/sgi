@@ -1,6 +1,6 @@
 import { Inject, Injectable, InjectionToken, OnDestroy, Optional } from '@angular/core';
-import { DateAdapter, MatDateFormats, MAT_DATE_LOCALE } from '@angular/material/core';
-import { LocaleId } from '@core/services/language.service';
+import { DateAdapter, MAT_DATE_LOCALE, MatDateFormats } from '@angular/material/core';
+import { LocaleId } from '@core/i18n/locale-id';
 import { TIME_ZONE } from '@core/time-zone';
 import { DateTime, DateTimeOptions, Info } from 'luxon';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -101,7 +101,7 @@ export class LuxonDateAdapter extends DateAdapter<DateTime> implements OnDestroy
     }
 
     if (dateLocale?.onChange$) {
-      dateLocale.onChange$.pipe(takeUntil(this.destroy$)).subscribe(value => this.setLocale(value));
+      dateLocale.onChange$.pipe(takeUntil(this.destroy$)).subscribe(value => this.setLocale(value.code));
     }
   }
 

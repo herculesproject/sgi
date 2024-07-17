@@ -1,5 +1,6 @@
 import { SgiFormlyFieldConfig } from '@formly-forms/formly-field-config';
 import { IBloque } from './bloque';
+import { Language } from '@core/i18n/language';
 
 export interface IApartado {
   /** Id */
@@ -20,7 +21,7 @@ export interface IApartado {
 
 export interface IApartadoDefinion {
   /** Language */
-  lang: string;
+  lang: Language;
 
   /** Nombre */
   nombre: string;

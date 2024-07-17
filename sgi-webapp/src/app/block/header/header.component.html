@@ -14,15 +14,17 @@
       <h2 *ngIf="module !== Module.INV">{{module?.title | translate}}</h2>
     </div>
 
-    <div *ngIf="showSelectLanguage" fxLayoutAlign="center center" fxFlex="10%" fxHide.xs fxHide.sm>
-      <mat-select #select ([value])="selectedLanguage" (selectionChange)="selectLanguage($event.value)">
+    <div fxLayoutAlign="center center" fxFlex="10%" fxHide.xs fxHide.sm>
+      <mat-select [value]="selectedLanguage" (selectionChange)="selectLanguage($event.value)">
         <mat-select-trigger>
-          <img class="img-language" [alt]="selectedLanguage?.viewValue | translate" [src]="selectedLanguage?.image">
-          <span class="text-language">{{selectedLanguage?.viewValue | translate}}</span>
+          <img class="img-language" [alt]="selectedLanguage.translateKey | translate"
+            [src]="getUrlResource('web-logo-sgi-' + selectedLanguage.code)">
+          <span class="text-language">{{selectedLanguage.translateKey | translate}}</span>
         </mat-select-trigger>
-        <mat-option class="option-language" *ngFor="let language of languages" [value]="language.value">
-          <img class="img-language" [alt]="language.viewValue | translate" [src]="language.image">
-          <span class="text-language">{{language.viewValue | translate}}</span>
+        <mat-option class="option-language" *ngFor="let language of languages" [value]="language">
+          <img class="img-language" [alt]="language.translateKey | translate"
+            [src]="getUrlResource('web-logo-sgi-' + language.code)">
+          <span class="text-language">{{language.translateKey | translate}}</span>
         </mat-option>
       </mat-select>
     </div>

@@ -1,4 +1,3 @@
-import { IConvocatoriaReunionBackend } from "./convocatoria-reunion-backend";
 
 
 export interface IDocumentacionConvocatoriaReunionBackend {

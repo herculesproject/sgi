@@ -5,6 +5,9 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { ConfigSelectMultipleComponent } from '../config-select-multiple/config-select-multiple.component';
+import { tap } from 'rxjs/operators';
+import { ConfigGlobal } from '../../config-global/config-global.component';
+import { LanguageService } from '@core/services/language.service';
 
 @Component({
   selector: 'sgi-config-select-multiple-cnf',
@@ -17,7 +20,8 @@ export class ConfigSelectMultipleCnfComponent extends ConfigSelectMultipleCompon
   constructor(
     protected readonly translate: TranslateService,
     protected readonly snackBarService: SnackBarService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly languagueService: LanguageService
   ) {
     super(translate, snackBarService);
   }
@@ -39,7 +43,13 @@ export class ConfigSelectMultipleCnfComponent extends ConfigSelectMultipleCompon
   }
 
   protected updateValue(key: string, newValue: string): Observable<IConfigValue> {
-    return this.configService.updateValue(key, newValue);
+    return this.configService.updateValue(key, newValue).pipe(
+      tap(value => {
+        if (value.name == ConfigGlobal.WEB_LANGUAGES_HEADER) {
+          this.languagueService.refresh();
+        }
+      })
+    );
   }
 
 }
