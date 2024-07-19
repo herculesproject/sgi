@@ -15,7 +15,7 @@
         "type": "table-crud",
         "key": "valoracionSeveridadTable",
         "templateOptions": {
-          "entity": "medida correctora",
+          "entity": "corrective measure",
           "gender": "female"
         },
         "expressionProperties": {
@@ -23,7 +23,7 @@
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Medida correctora"
+            "text": "Corrective measure"
           },
           "fieldGroup": [
             {

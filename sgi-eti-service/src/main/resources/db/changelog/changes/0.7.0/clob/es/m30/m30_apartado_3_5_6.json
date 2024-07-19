@@ -13,12 +13,12 @@
         "key": "sustanciasRadiactivasTable",
         "templateOptions": {
           "title": "Sustancia radiactiva",
-          "entity": "sustancia radiactiva",
+          "entity": "substantzia erradioaktiboa",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Sustancia radiactiva"
+            "text": "Substantzia erradioaktiboa"
           },
           "fieldGroup": [
             {
@@ -53,12 +53,12 @@
         "key": "equiposRadiologicosTable",
         "templateOptions": {
           "title": "Equipo radiológico",
-          "entity": "equipo radiológico",
+          "entity": "ekipamendu erradiologikoa",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Equipo radiológico"
+            "text": "Ekipamendu erradiologikoa"
           },
           "fieldGroup": [
             {
@@ -85,12 +85,12 @@
         "key": "instalacionesRadiactivasTable",
         "templateOptions": {
           "title": "Instalación radiactiva",
-          "entity": "instalación radiactiva",
+          "entity": "instalazio erradioaktiboa",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Instalación radiactiva"
+            "text": "Instalazio erradioaktiboa"
           },
           "fieldGroup": [
             {

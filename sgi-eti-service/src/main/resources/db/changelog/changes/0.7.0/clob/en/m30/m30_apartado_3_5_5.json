@@ -15,12 +15,12 @@
         "type": "table-crud",
         "key": "sustanciasQuimicasTable",
         "templateOptions": {
-          "entity": "sustancia química",
+          "entity": "chemical",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Sustancia química"
+            "text": "Chemical"
           },
           "fieldGroup": [
             {

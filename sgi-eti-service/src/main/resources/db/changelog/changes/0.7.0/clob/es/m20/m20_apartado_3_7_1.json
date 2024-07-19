@@ -32,12 +32,12 @@
         "type": "table-crud",
         "key": "procedimientoIntervencionMedidaCorrectoraTable",
         "templateOptions": {
-          "entity": "procedimiento/intervención",
+          "entity": "prozedura/esku hartzea",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Medida correctora"
+            "text": "Neurri zuzentzailea"
           },
           "fieldGroup": [
             {
@@ -102,7 +102,7 @@
           "warn-div"
         ],
         "hideExpression": "!model.procedimientoIntervencionMedidaCorrectoraTable.length > 0",
-        "template": "<p>Si modifica los procedimientos/intervenciones o su severidad, recuerde revisar y actualizar la tabla del apartado 4.2.1</p>"
+        "template": "<p>Prozedurak/esku hartzeak edo haien laztasuna aldatuz gero, ez ahaztu 4.2.1 ataleko taula berrikusi eta eguneratzea.</p>"
       }
     ]
   }

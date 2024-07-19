@@ -13,12 +13,12 @@
         "type": "table-crud",
         "key": "microorganismosParasitosTable",
         "templateOptions": {
-          "entity": "microorganismo/parásito",
+          "entity": "microorganism/parasite",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Microorganismo/Parásito"
+            "text": "Microorganism/parasite"
           },
           "fieldGroup": [
             {

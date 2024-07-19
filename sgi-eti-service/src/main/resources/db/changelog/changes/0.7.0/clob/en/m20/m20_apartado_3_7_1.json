@@ -32,12 +32,12 @@
         "type": "table-crud",
         "key": "procedimientoIntervencionMedidaCorrectoraTable",
         "templateOptions": {
-          "entity": "procedimiento/intervención",
+          "entity": "procedure/intervention",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Medida correctora"
+            "text": "Corrective measure"
           },
           "fieldGroup": [
             {
@@ -102,7 +102,7 @@
           "warn-div"
         ],
         "hideExpression": "!model.procedimientoIntervencionMedidaCorrectoraTable.length > 0",
-        "template": "<p>Si modifica los procedimientos/intervenciones o su severidad, recuerde revisar y actualizar la tabla del apartado 4.2.1</p>"
+        "template": "<p>If you modify the procedures/interventions or their severity, remember to review and update the table in section 4.2.1</p>."
       }
     ]
   }

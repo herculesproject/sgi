@@ -21,12 +21,12 @@
         "type": "table-crud",
         "key": "laboratorioLocalTable",
         "templateOptions": {
-          "entity": "local",
+          "entity": "gela",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Local"
+            "text": "Gela"
           },
           "fieldGroup": [
             {

@@ -18,7 +18,7 @@
         "type": "table-crud",
         "key": "animalesExperimentacionTable",
         "templateOptions": {
-          "entity": "especie animal",
+          "entity": "animalia espeziea",
           "gender": "female"
         },
         "validators": {
@@ -28,7 +28,7 @@
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Experimentación animal"
+            "text": "Esperimentazioa animaliekin"
           },
           "fieldGroup": [
             {

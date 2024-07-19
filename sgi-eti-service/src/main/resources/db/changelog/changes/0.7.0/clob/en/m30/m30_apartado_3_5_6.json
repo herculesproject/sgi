@@ -13,12 +13,12 @@
         "key": "sustanciasRadiactivasTable",
         "templateOptions": {
           "title": "Sustancia radiactiva",
-          "entity": "sustancia radiactiva",
+          "entity": "radioactive substance",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Sustancia radiactiva"
+            "text": "Radioactive substance"
           },
           "fieldGroup": [
             {
@@ -53,12 +53,12 @@
         "key": "equiposRadiologicosTable",
         "templateOptions": {
           "title": "Equipo radiológico",
-          "entity": "equipo radiológico",
+          "entity": "radiological equipment",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Equipo radiológico"
+            "text": "radiological equipment"
           },
           "fieldGroup": [
             {
@@ -85,12 +85,12 @@
         "key": "instalacionesRadiactivasTable",
         "templateOptions": {
           "title": "Instalación radiactiva",
-          "entity": "instalación radiactiva",
+          "entity": "Radioactive facility",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Instalación radiactiva"
+            "text": "radioactive facility"
           },
           "fieldGroup": [
             {

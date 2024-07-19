@@ -15,12 +15,12 @@
         "type": "table-crud",
         "key": "principioActivoTable",
         "templateOptions": {
-          "entity": "principio activo",
+          "entity": "printzipio aktiboa",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Principio activo"
+            "text": "printzipio aktiboa"
           },
           "fieldGroup": [
             {

@@ -42,7 +42,7 @@
             {
               "name": "multicheckbox-restricted",
               "options": {
-                "message": "Las respuestas \"${option1}\" y \"${option2}\" no son compatibles",
+                "message": "The answers \"${option1}\" and \"${option2}\" are not compatible.",
                 "restrictions": {
                   "notValidCombinations": [
                     {

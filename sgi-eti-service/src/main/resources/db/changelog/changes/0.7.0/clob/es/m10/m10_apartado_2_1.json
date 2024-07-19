@@ -21,13 +21,13 @@
         "type": "table-crud",
         "key": "equipoInvestigador",
         "templateOptions": {
-          "entity": "equipo investigador",
+          "entity": "ikertzaile taldea",
           "gender": "male",
           "disabled": true
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Equipo investigador"
+            "text": "Ikertzaile taldea"
           },
           "fieldGroup": [
             {
