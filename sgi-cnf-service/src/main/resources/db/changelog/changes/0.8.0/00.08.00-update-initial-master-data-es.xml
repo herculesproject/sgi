@@ -478,14 +478,6 @@
 
   <changeSet context="!test" author="master" id="00.08.00-resources-web-es">
     <insert tableName="resources">
-      <column name="name" value="web-logo-sgi-es" />
-      <column name="description" value="logo es" />
-      <column name="value" valueBlobFile="blob/web/web-logo-sgi-es.png" />
-      <column name="default_value" valueBlobFile="blob/web/web-logo-sgi-es.png" />
-      <column name="public_access" valueBoolean="true" />
-    </insert>
-
-    <insert tableName="resources">
       <column name="name" value="rep-font-es" />
       <column name="description" value="Fuente para los informes en español" />
       <column name="value" valueBlobFile="blob/fonts/EHUSans.otf" />

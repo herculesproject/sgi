@@ -406,14 +406,6 @@
 
   <changeSet context="!test" author="master" id="00.08.00-resources-web-eu">
     <insert tableName="resources">
-      <column name="name" value="web-logo-sgi-eu" />
-      <column name="description" value="logo eu" />
-      <column name="value" valueBlobFile="blob/web/web-logo-sgi-eu.png" />
-      <column name="default_value" valueBlobFile="blob/web/web-logo-sgi-eu.png" />
-      <column name="public_access" valueBoolean="true" />
-    </insert>
-
-    <insert tableName="resources">
       <column name="name" value="rep-font-eu" />
       <column name="description" value="Fuente para los informes en euskera" />
       <column name="value" valueBlobFile="blob/fonts/EHUSerif.otf" />
