@@ -16,15 +16,13 @@
 
     <div fxLayoutAlign="center center" fxFlex="10%" fxHide.xs fxHide.sm>
       <mat-select [value]="selectedLanguage" (selectionChange)="selectLanguage($event.value)">
-        <mat-select-trigger>
-          <img class="img-language" [alt]="selectedLanguage.translateKey | translate"
-            [src]="getUrlResource('web-logo-sgi-' + selectedLanguage.code)">
-          <span class="text-language">{{selectedLanguage.translateKey | translate}}</span>
+        <mat-select-trigger class="mat-option">
+          <span><mat-icon [svgIcon]="selectedLanguage.icon"></mat-icon>{{selectedLanguage.translateKey |
+            translate}}</span>
         </mat-select-trigger>
-        <mat-option class="option-language" *ngFor="let language of languages" [value]="language">
-          <img class="img-language" [alt]="language.translateKey | translate"
-            [src]="getUrlResource('web-logo-sgi-' + language.code)">
-          <span class="text-language">{{language.translateKey | translate}}</span>
+        <mat-option *ngFor="let language of languages" [value]="language">
+          <span><mat-icon [svgIcon]="language.icon"></mat-icon>{{language.translateKey |
+            translate}}</span>
         </mat-option>
       </mat-select>
     </div>

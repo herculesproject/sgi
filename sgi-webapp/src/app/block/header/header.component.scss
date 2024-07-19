@@ -51,39 +51,6 @@ $border-color: map-get($sgi-custom-colors, divider);
     padding: 15px;
   }
 
-  .text-language {
-    float: left;
-    margin-left: 20px;
-    line-height: 2;
-  }
-
-  .img-language {
-    float: left;
-    top: 20px;
-    margin-left: 20px;
-    width: 30px;
-    height: 25px;
-  }
-
-  .logo-language {
-    width: 50px;
-  }
-}
-
-.option-language {
-  .text-language {
-    float: left;
-    margin-left: 20px;
-    line-height: 2;
-  }
-
-  .img-language {
-    float: left;
-    top: 20px;
-    margin-left: 20px;
-    width: 30px;
-    height: 25px;
-  }
 }
 
 /* FIN HEADER */

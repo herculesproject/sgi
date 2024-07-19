@@ -33,6 +33,7 @@ import { AppComponent } from './app.component';
 import { BlockModule } from './block/block.module';
 import { ConfigService } from './core/services/config.service';
 import { HomeComponent } from './home/home.component';
+import { IconModule } from '@material/icon.module';
 
 export class SgiTranslateLoader implements TranslateLoader {
   constructor(
@@ -94,6 +95,7 @@ const bootstrapLanguageService = (languageService: LanguageService) => {
     CoreModule,
     LoggerModule.forRoot(environment.loggerConfig),
     MaterialDesignModule,
+    IconModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
