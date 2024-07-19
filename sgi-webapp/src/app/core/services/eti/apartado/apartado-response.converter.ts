@@ -12,7 +12,7 @@ class ApartadoResponseConverter
     }
     return {
       bloque: BLOQUE_RESPONSE_CONVERTER.toTarget(value.bloque),
-      definicion: APARTADO_DEFINICION_RESPONSE_CONVERTER.toTargetArray(value.definicion),
+      definicion: value.definicion ? APARTADO_DEFINICION_RESPONSE_CONVERTER.toTargetArray(value.definicion) : null,
       id: value.id,
       orden: value.orden,
       padre: value.padre ? APARTADO_RESPONSE_CONVERTER.toTarget(value.padre) : null
@@ -25,7 +25,7 @@ class ApartadoResponseConverter
     }
     return {
       bloque: BLOQUE_RESPONSE_CONVERTER.fromTarget(value.bloque),
-      definicion: APARTADO_DEFINICION_RESPONSE_CONVERTER.fromTargetArray(value.definicion),
+      definicion: value.definicion ? APARTADO_DEFINICION_RESPONSE_CONVERTER.fromTargetArray(value.definicion) : null,
       id: value.id,
       orden: value.orden,
       padre: value.padre ? APARTADO_RESPONSE_CONVERTER.fromTarget(value.padre) : null

@@ -13,7 +13,7 @@ class BloqueResponseConverter
     return {
       formulario: FORMULARIO_RESPONSE_CONVERTER.toTarget(value.formulario),
       id: value.id,
-      nombre: I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre),
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       orden: value.orden
     };
   }
@@ -25,7 +25,7 @@ class BloqueResponseConverter
     return {
       formulario: FORMULARIO_RESPONSE_CONVERTER.fromTarget(value.formulario),
       id: value.id,
-      nombre: I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre),
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : null,
       orden: value.orden
     };
   }
