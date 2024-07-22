@@ -1,7 +1,6 @@
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { IPersona } from '@core/models/sgp/persona';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PETICION_EVALUACION_RESPONSE_CONVERTER } from '../peticion-evaluacion/peticion-evaluacion-response.converter';
 import { IEquipoTrabajoWithIsEliminableResponse } from './equipo-trabajo-with-is-eliminable-response';
 
 class EquipoTrabajoWithIsEliminableResponseConverter
@@ -13,7 +12,7 @@ class EquipoTrabajoWithIsEliminableResponseConverter
     return {
       id: value.id,
       persona: { id: value.personaRef } as IPersona,
-      peticionEvaluacion: PETICION_EVALUACION_RESPONSE_CONVERTER.toTarget(value.peticionEvaluacion),
+      peticionEvaluacionId: value.peticionEvaluacionId,
       eliminable: value.eliminable
     };
   }
@@ -25,7 +24,7 @@ class EquipoTrabajoWithIsEliminableResponseConverter
     return {
       id: value.id,
       personaRef: value.persona?.id,
-      peticionEvaluacion: PETICION_EVALUACION_RESPONSE_CONVERTER.fromTarget(value.peticionEvaluacion),
+      peticionEvaluacionId: value.peticionEvaluacionId,
       eliminable: value.eliminable
     };
   }

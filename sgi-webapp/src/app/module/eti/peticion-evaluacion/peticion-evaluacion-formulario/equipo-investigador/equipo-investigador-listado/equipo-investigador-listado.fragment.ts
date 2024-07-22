@@ -1,6 +1,5 @@
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
@@ -142,7 +141,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
    * @param equipoTrabajo un equipoTrabajo
    */
   addEquipoTrabajo(equipoTrabajo: IEquipoTrabajoWithIsEliminable): void {
-    equipoTrabajo.peticionEvaluacion = { id: this.getKey() as number } as IPeticionEvaluacion;
+    equipoTrabajo.peticionEvaluacionId = this.getKey() as number;
     const wrapped = new StatusWrapper<IEquipoTrabajoWithIsEliminable>(equipoTrabajo);
     wrapped.setCreated();
     const current = this.equiposTrabajo$.value;
@@ -199,7 +198,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
         map((persona) => {
           return {
             id: null,
-            peticionEvaluacion: null,
+            peticionEvaluacionId: null,
             persona,
             eliminable: false
           };
@@ -214,7 +213,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
     return from(this.deletedEquiposTrabajo).pipe(
       mergeMap((wrappedEquipoTrabajo) => {
         return this.peticionEvaluacionService
-          .deleteEquipoTrabajoPeticionEvaluacion(wrappedEquipoTrabajo.value.peticionEvaluacion.id, wrappedEquipoTrabajo.value.id)
+          .deleteEquipoTrabajoPeticionEvaluacion(wrappedEquipoTrabajo.value.peticionEvaluacionId, wrappedEquipoTrabajo.value.id)
           .pipe(
             tap(_ => {
               this.deletedEquiposTrabajo = this.deletedEquiposTrabajo.filter(deletedEquipoTrabajo =>

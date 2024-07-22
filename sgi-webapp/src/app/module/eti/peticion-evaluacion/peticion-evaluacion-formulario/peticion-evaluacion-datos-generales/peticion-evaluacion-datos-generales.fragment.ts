@@ -3,8 +3,6 @@ import { IChecklist } from '@core/models/eti/checklist';
 import { IConfiguracion } from '@core/models/eti/configuracion';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { IPeticionEvaluacion, TipoValorSocial } from '@core/models/eti/peticion-evaluacion';
-import { ITipoActividad } from '@core/models/eti/tipo-actividad';
-import { ITipoInvestigacionTutelada } from '@core/models/eti/tipo-investigacion-tutelada';
 import { IPersona } from '@core/models/sgp/persona';
 import { FormFragment } from '@core/services/action-service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
@@ -12,6 +10,7 @@ import { ChecklistService } from '@core/services/eti/checklist/checklist.service
 import { ConfiguracionService } from '@core/services/eti/configuracion.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { SgiAuthService } from '@sgi/framework/auth/public-api';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -56,7 +55,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     const form = this.fb.group({
       codigo: [{ value: '', disabled: true }, Validators.required],
       solicitudConvocatoriaRef: [{ value: '', disabled: true }],
-      titulo: [{ value: '', disabled: this.readonly }, [Validators.required, Validators.maxLength(1000)]],
+      titulo: [{ value: [], disabled: this.readonly }, [I18nValidators.required, I18nValidators.maxLength(1000)]],
       tipoActividad: [{ value: null, disabled: this.readonly }, Validators.required],
       tipoInvestigacionTutelada: [{ value: null, disabled: this.readonly }],
       existeFinanciacion: [{ value: null, disabled: this.readonly }, Validators.required],

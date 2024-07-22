@@ -202,14 +202,17 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         }),
         switchMap(() => {
           return this.respuestaService.findLastByMemoriaId(this.memoria.id).pipe(
-            map(respuesta => {
+            switchMap(respuesta => {
               if (!!respuesta?.id) {
-                this.lastCompletedBlock = respuesta.apartado.bloque.orden - 1;
+                return this.apartadoService.findById(respuesta.apartadoId).pipe(
+                  map(apartado => apartado.bloque.orden - 1)
+                )
               }
               else {
-                this.lastCompletedBlock = 0;
+                return of(0);
               }
-            })
+            }),
+            map(lastBlock => this.lastCompletedBlock = lastBlock)
           );
         }),
         switchMap(() => {
@@ -344,8 +347,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     respuestas.push(question.apartado.respuesta);
 
     if (!question.apartado.respuesta.id) {
-      question.apartado.respuesta.memoria = { id: this.getKey() as number } as IMemoria;
-      question.apartado.respuesta.apartado = { id: question.apartado.id } as IApartado;
+      question.apartado.respuesta.memoriaId = this.getKey() as number;
+      question.apartado.respuesta.apartadoId = question.apartado.id;
     }
 
     const fieldDocumentacion = this.fieldsDocumentacion.get(question.apartado.id);

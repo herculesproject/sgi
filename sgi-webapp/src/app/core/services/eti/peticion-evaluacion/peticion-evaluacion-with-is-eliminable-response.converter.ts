@@ -3,6 +3,7 @@ import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IPeticionEvaluacionWithIsEliminableResponse } from './peticion-evaluacion-with-is-eliminable-response';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class PeticionEvaluacionWithIsEliminableResponseConverter
   extends SgiBaseConverter<IPeticionEvaluacionWithIsEliminableResponse, IPeticionEvaluacionWithIsEliminable> {
@@ -14,7 +15,7 @@ class PeticionEvaluacionWithIsEliminableResponseConverter
       id: value.id,
       solicitudConvocatoriaRef: value.solicitudConvocatoriaRef,
       codigo: value.codigo,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       tipoActividad: value.tipoActividad,
       tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
       existeFinanciacion: value.existeFinanciacion,
@@ -45,7 +46,7 @@ class PeticionEvaluacionWithIsEliminableResponseConverter
       id: value.id,
       solicitudConvocatoriaRef: value.solicitudConvocatoriaRef,
       codigo: value.codigo,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       tipoActividad: value.tipoActividad,
       tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
       existeFinanciacion: value.existeFinanciacion,

@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { EstadoFinanciacion, TipoValorSocial } from '../../../models/eti/peticion-evaluacion';
 import { ITipoActividad } from '../../../models/eti/tipo-actividad';
 import { ITipoInvestigacionTutelada } from '../../../models/eti/tipo-investigacion-tutelada';
@@ -10,7 +11,7 @@ export interface IPeticionEvaluacionResponse {
   /** Código */
   codigo: string;
   /** Título */
-  titulo: string;
+  titulo: I18nFieldValueResponse[];
   /** Tipo de actividad */
   tipoActividad: ITipoActividad;
   /** Tipo de investigacion tutelada */

@@ -1,8 +1,6 @@
-import { IRespuestaResponse } from '@core/services/eti/respuesta/respuesta-response';
 import { IRespuesta } from '@core/models/eti/respuesta';
+import { IRespuestaResponse } from '@core/services/eti/respuesta/respuesta-response';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { APARTADO_RESPONSE_CONVERTER } from '../apartado/apartado-response.converter';
-import { MEMORIA_RESPONSE_CONVERTER } from '../memoria/memoria-response.converter';
 
 
 class RespuestaResponseConverter extends SgiBaseConverter<IRespuestaResponse, IRespuesta> {
@@ -12,8 +10,8 @@ class RespuestaResponseConverter extends SgiBaseConverter<IRespuestaResponse, IR
     }
     return {
       id: value.id,
-      memoria: MEMORIA_RESPONSE_CONVERTER.toTarget(value.memoria),
-      apartado: APARTADO_RESPONSE_CONVERTER.toTarget(value.apartado),
+      memoriaId: value.memoriaId,
+      apartadoId: value.apartadoId,
       tipoDocumento: value.tipoDocumento,
       valor: value.valor
     };
@@ -25,8 +23,8 @@ class RespuestaResponseConverter extends SgiBaseConverter<IRespuestaResponse, IR
     }
     return {
       id: value.id,
-      memoria: MEMORIA_RESPONSE_CONVERTER.fromTarget(value.memoria),
-      apartado: APARTADO_RESPONSE_CONVERTER.fromTarget(value.apartado),
+      memoriaId: value.memoriaId,
+      apartadoId: value.apartadoId,
       tipoDocumento: value.tipoDocumento,
       valor: value.valor
     };

@@ -63,7 +63,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'eti.peticion-evaluacion.proyecto-titulo' | translate}}
         </th>
-        <td mat-cell *matCellDef="let peticionEvaluacion">{{peticionEvaluacion.titulo}}</td>
+        <td mat-cell *matCellDef="let peticionEvaluacion">{{peticionEvaluacion.titulo | i18nFieldValue}}</td>
       </ng-container>
 
       <!-- Financiación -->

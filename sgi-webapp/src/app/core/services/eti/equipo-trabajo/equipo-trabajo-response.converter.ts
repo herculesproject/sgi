@@ -1,7 +1,6 @@
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IPersona } from '@core/models/sgp/persona';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { PETICION_EVALUACION_RESPONSE_CONVERTER } from '../peticion-evaluacion/peticion-evaluacion-response.converter';
 import { IEquipoTrabajoResponse } from './equipo-trabajo-response';
 
 class EquipoTrabajoResponseConverter extends SgiBaseConverter<IEquipoTrabajoResponse, IEquipoTrabajo> {
@@ -12,7 +11,7 @@ class EquipoTrabajoResponseConverter extends SgiBaseConverter<IEquipoTrabajoResp
     return {
       id: value.id,
       persona: { id: value.personaRef } as IPersona,
-      peticionEvaluacion: PETICION_EVALUACION_RESPONSE_CONVERTER.toTarget(value.peticionEvaluacion)
+      peticionEvaluacionId: value.peticionEvaluacionId
     };
   }
 
@@ -23,7 +22,7 @@ class EquipoTrabajoResponseConverter extends SgiBaseConverter<IEquipoTrabajoResp
     return {
       id: value.id,
       personaRef: value.persona?.id,
-      peticionEvaluacion: PETICION_EVALUACION_RESPONSE_CONVERTER.fromTarget(value.peticionEvaluacion)
+      peticionEvaluacionId: value.peticionEvaluacionId
     };
   }
 }

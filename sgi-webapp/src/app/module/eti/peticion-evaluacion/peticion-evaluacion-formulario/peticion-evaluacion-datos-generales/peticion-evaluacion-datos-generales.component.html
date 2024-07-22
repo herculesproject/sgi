@@ -25,8 +25,8 @@
     <!-- Título-->
     <mat-form-field class="input-form m-bottom-10">
       <mat-label>{{'eti.peticion-evaluacion.titulo' | translate}}</mat-label>
-      <textarea #titulo matInput formControlName="titulo" required></textarea>
-      <mat-hint>{{titulo.value?.length}} / 1000</mat-hint>
+      <sgi-i18n-textarea #titulo formControlName="titulo" required></sgi-i18n-textarea>
+      <mat-hint>{{titulo.editingValue?.length}} / 1000</mat-hint>
       <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
         {{'error.required.entity' | translate:msgParamTituloEntity}}
       </mat-error>

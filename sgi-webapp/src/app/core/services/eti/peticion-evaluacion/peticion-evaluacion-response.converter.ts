@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { IPeticionEvaluacionResponse } from '@core/services/eti/peticion-evaluacion/peticion-evaluacion-response';
@@ -13,7 +14,7 @@ class PeticionEvaluacionResponseConverter extends SgiBaseConverter<IPeticionEval
       id: value.id,
       solicitudConvocatoriaRef: value.solicitudConvocatoriaRef,
       codigo: value.codigo,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       tipoActividad: value.tipoActividad,
       tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
       existeFinanciacion: value.existeFinanciacion,
@@ -43,7 +44,7 @@ class PeticionEvaluacionResponseConverter extends SgiBaseConverter<IPeticionEval
       id: value.id,
       solicitudConvocatoriaRef: value.solicitudConvocatoriaRef,
       codigo: value.codigo,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       tipoActividad: value.tipoActividad,
       tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
       existeFinanciacion: value.existeFinanciacion,

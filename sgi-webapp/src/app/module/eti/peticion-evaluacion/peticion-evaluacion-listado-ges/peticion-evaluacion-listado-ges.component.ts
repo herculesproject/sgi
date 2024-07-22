@@ -11,6 +11,7 @@ import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -26,7 +27,6 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { PeticionEvaluacionListadoExportModalComponent } from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
-import { ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
 
 const MSG_BUTTON_SAVE = marker('btn.add.entity');
 const PETICION_EVALUACION_KEY = marker('eti.peticion-evaluacion-etica-proyecto');
@@ -91,6 +91,12 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
+    this.resolveSortProperty = (column: string) => {
+      if (column == 'titulo') {
+        return 'titulo.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -221,7 +227,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     return new RSQLSgiRestFilter('numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.referenciaMemoria.value)
-      .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('peticionEvaluacion.titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
       .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.toString())
       .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id);

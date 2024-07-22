@@ -1,4 +1,5 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DateTime } from 'luxon';
 import { IPersona } from '../sgp/persona';
 import { ITipoActividad } from './tipo-actividad';
@@ -12,7 +13,7 @@ export interface IPeticionEvaluacion {
   /** Código */
   codigo: string;
   /** Título */
-  titulo: string;
+  titulo: I18nFieldValue[];
   /** Tipo de actividad */
   tipoActividad: ITipoActividad;
   /** Tipo de investigacion tutelada */

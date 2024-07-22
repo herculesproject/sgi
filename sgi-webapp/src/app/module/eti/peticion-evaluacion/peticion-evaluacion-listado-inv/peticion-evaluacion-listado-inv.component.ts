@@ -76,6 +76,13 @@ export class PeticionEvaluacionListadoInvComponent
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.resolveSortProperty = (column: string) => {
+      if (column == 'titulo') {
+        return 'titulo.value';
+      }
+      return column;
+    }
   }
 
 
@@ -145,7 +152,7 @@ export class PeticionEvaluacionListadoInvComponent
     const controls = this.formGroup.controls;
     return new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
       .and('peticionEvaluacion.codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
-      .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value);
+      .and('peticionEvaluacion.titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value);
   }
 
   protected loadTable(reset?: boolean) {

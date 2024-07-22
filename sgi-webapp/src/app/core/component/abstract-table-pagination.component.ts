@@ -28,6 +28,8 @@ export abstract class AbstractTablePaginationComponent<T> extends AbstractMenuCo
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
+  protected resolveSortProperty: (string) => string = (column: string) => column;
+
   protected constructor(translateService?: TranslateService) {
     super(translateService);
     this.elementosPagina = [5, 10, 25, 100];
@@ -135,7 +137,7 @@ export abstract class AbstractTablePaginationComponent<T> extends AbstractMenuCo
         index: reset ? 0 : this.paginator?.pageIndex,
         size: this.paginator?.pageSize,
       },
-      sort: new RSQLSgiRestSort(this.sort?.active, SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
+      sort: new RSQLSgiRestSort(this.resolveSortProperty(this.sort?.active), SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
       filter: this.filter,
     };
     this.findOptions = options;

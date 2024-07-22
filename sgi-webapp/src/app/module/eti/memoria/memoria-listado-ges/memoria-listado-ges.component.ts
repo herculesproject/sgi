@@ -187,7 +187,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     return new RSQLSgiRestFilter('comite.id', SgiRestFilterOperator.EQUALS, controls.comite.value?.id?.toString())
-      .and('peticionEvaluacion.titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('peticionEvaluacion.titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('numReferencia', SgiRestFilterOperator.LIKE_ICASE, controls.numReferencia.value)
       .and('estadoActual.id', SgiRestFilterOperator.EQUALS, controls.tipoEstadoMemoria.value?.id?.toString())
       .and('peticionEvaluacion.personaRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value.id)
