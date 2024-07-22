@@ -2,7 +2,9 @@ package org.crue.hercules.sgi.rep.dto.eti;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.rep.dto.BaseRestDto;
 
 import lombok.AllArgsConstructor;
@@ -54,7 +56,7 @@ public class PeticionEvaluacionDto extends BaseRestDto {
 
   private String solicitudConvocatoriaRef;
   private String codigo;
-  private String titulo;
+  private List<I18nFieldValueDto> titulo;
   private transient TipoActividadDto tipoActividad;
   private transient TipoInvestigacionTuteladaDto tipoInvestigacionTutelada;
   private Boolean existeFinanciacion;

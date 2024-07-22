@@ -5,13 +5,14 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
-import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.DictamenI18n;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
+import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.DictamenI18n;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.crue.hercules.sgi.rep.util.AssertHelper;
@@ -57,7 +58,8 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
 
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), dataReport);
 
-    dataReport.put("titulo", evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
+    dataReport.put("titulo",
+        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
 
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
     String pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);

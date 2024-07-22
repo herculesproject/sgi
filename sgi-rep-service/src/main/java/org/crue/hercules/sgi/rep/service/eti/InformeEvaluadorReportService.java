@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.SgiReportDto;
@@ -50,7 +51,8 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
           .getI18nMessageFromEnum(evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId());
     }
     dataReport.put("tipoActividad", tipoActividad);
-    dataReport.put("titulo", evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
+    dataReport.put("titulo",
+        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
     dataReport.put("fechaInicio",
         formatInstantToString(evaluacion.getMemoria().getPeticionEvaluacion().getFechaInicio(),
             lang));

@@ -75,7 +75,7 @@ public class InformeFavorableModificacionReportService extends InformeEvaluacion
 
     dataReport.put("referenciaMemoria", evaluacion.getMemoria().getNumReferencia());
 
-    addDataEvaluacion(evaluacion, dataReport);
+    addDataEvaluacion(evaluacion, dataReport, lang);
 
     return compileReportData(path, dataReport);
   }

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -198,8 +199,9 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     }
   }
 
-  protected void addDataEvaluacion(EvaluacionDto evaluacion, HashMap<String, Object> dataReport) {
-    dataReport.put("tituloProyecto", evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
+  protected void addDataEvaluacion(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, Language lang) {
+    dataReport.put("tituloProyecto",
+        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
     dataReport.put("referenciaProyecto", evaluacion.getMemoria().getPeticionEvaluacion().getCodigo());
     dataReport.put("comite", evaluacion.getMemoria().getComite().getComite());
     try {

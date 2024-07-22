@@ -58,7 +58,7 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionEvalu
         + "/" + evaluacion.getConvocatoriaReunion().getComite().getComite() + ")";
     dataReport.put("numeroActa", codigoActa);
 
-    addDataEvaluacion(evaluacion, dataReport);
+    addDataEvaluacion(evaluacion, dataReport, lang);
 
     addDataEquipoTrabajo(evaluacion, dataReport);
 

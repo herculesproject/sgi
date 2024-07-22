@@ -39,7 +39,7 @@ public class InformeFavorableRatificacionReportService extends InformeEvaluacion
     Instant fechaEvaluacion = evaluacion.getConvocatoriaReunion().getFechaEvaluacion();
     dataReport.put("fechaEvaluacion", formatInstantToString(fechaEvaluacion, pattern));
 
-    addDataEvaluacion(evaluacion, dataReport);
+    addDataEvaluacion(evaluacion, dataReport, lang);
 
     return compileReportData(path, dataReport);
   }

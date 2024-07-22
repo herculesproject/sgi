@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
@@ -34,7 +35,8 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
 
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(),
         dataReport);
-    dataReport.put("tituloProyecto", evaluacion.getMemoria().getPeticionEvaluacion().getTitulo());
+    dataReport.put("tituloProyecto",
+        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
 
     dataReport.put("lugar", evaluacion.getConvocatoriaReunion().getNumeroActa());
 
@@ -42,7 +44,7 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
 
     dataReport.put("comite", evaluacion.getMemoria().getComite().getComite());
 
-    addDataEvaluacion(evaluacion, dataReport);
+    addDataEvaluacion(evaluacion, dataReport, lang);
 
     return compileReportData(path, dataReport);
   }
