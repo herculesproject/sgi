@@ -8,8 +8,10 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
@@ -30,6 +32,7 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -43,14 +46,17 @@ import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.FormularioRepository;
 import org.crue.hercules.sgi.eti.repository.InformeDocumentoRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
+import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -130,6 +136,10 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   @Mock
   private InformeDocumentoRepository informeDocumentoRepository;
+  @Mock
+  private FormularioRepository formularioRepository;
+  @Mock
+  private SgiApiCnfService cnfService;
 
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
@@ -140,7 +150,7 @@ class MemoriaServiceTest extends BaseServiceTest {
         evaluacionRepository, comentarioRepository, informeService,
         peticionEvaluacionRepository, comiteRepository, documentacionMemoriaRepository, respuestaRepository,
         tareaRepository, configuracionService, reportService, sgdocService, bloqueRepository, apartadoRepository,
-        comunicadosService, retrospectivaService, informeDocumentoRepository);
+        comunicadosService, retrospectivaService, informeDocumentoRepository, formularioRepository, cnfService);
   }
 
   @Test
@@ -1218,6 +1228,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> tit = new HashSet<>();
+    tit.add(new PeticionEvaluacionTitulo(Language.ES, titulo));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
@@ -1230,7 +1242,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(tit);
     peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -1334,6 +1346,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
+    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo1");
@@ -1346,7 +1360,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);

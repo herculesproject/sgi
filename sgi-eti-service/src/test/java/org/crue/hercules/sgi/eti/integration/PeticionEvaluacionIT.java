@@ -4,7 +4,9 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
@@ -15,9 +17,12 @@ import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -117,7 +122,8 @@ public class PeticionEvaluacionIT extends BaseIT {
     final PeticionEvaluacion tipoActividad = response.getBody();
 
     Assertions.assertThat(tipoActividad.getId()).isEqualTo(2L);
-    Assertions.assertThat(tipoActividad.getTitulo()).isEqualTo("PeticionEvaluacion2");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoActividad.getTitulo(), Language.ES))
+        .isEqualTo("PeticionEvaluacion2");
   }
 
   @Test
@@ -206,7 +212,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // Contiene de titulo='PeticionEvaluacion6' a 'PeticionEvaluacion8'
     List<String> titulos = new ArrayList<>();
     for (int i = 0; i < 2; i++) {
-      titulos.add(peticionEvaluaciones.get(i).getTitulo());
+      titulos.add(I18nHelper.getValueForLanguage(peticionEvaluaciones.get(i).getTitulo(), Language.ES));
     }
     Assertions.assertThat(titulos).contains("PeticionEvaluacion7", "PeticionEvaluacion8");
   }
@@ -215,7 +221,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
     // when: Búsqueda por titulo like e id equals
     Long id = 2L;
-    String query = "peticionEvaluacion.titulo=ke=PeticionEvaluacion";
+    String query = "peticionEvaluacion.titulo.value=ke=PeticionEvaluacion";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -231,13 +237,15 @@ public class PeticionEvaluacionIT extends BaseIT {
     final List<PeticionEvaluacion> peticionEvaluaciones = response.getBody();
     Assertions.assertThat(peticionEvaluaciones.size()).isEqualTo(1);
     Assertions.assertThat(peticionEvaluaciones.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(peticionEvaluaciones.get(0).getTitulo()).startsWith("PeticionEvaluacion");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(peticionEvaluaciones.get(0).getTitulo(), Language.ES))
+        .startsWith(
+            "PeticionEvaluacion");
   }
 
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedPeticionEvaluacionList() throws Exception {
     // when: Ordenación por titulo desc
-    String query = "titulo,desc";
+    String query = "titulo.value,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -255,7 +263,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     for (int i = 0; i < 7; i++) {
       PeticionEvaluacion peticionEvaluacion = peticionEvaluaciones.get(i);
       Assertions.assertThat(peticionEvaluacion.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(peticionEvaluacion.getTitulo())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(peticionEvaluacion.getTitulo(), Language.ES))
           .isEqualTo("PeticionEvaluacion" + String.format("%d", 8 - i));
     }
   }
@@ -267,9 +275,9 @@ public class PeticionEvaluacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por titulo desc
-    String sort = "titulo,desc";
+    String sort = "titulo.value,desc";
     // when: Filtra por titulo like e id equals
-    String filter = "peticionEvaluacion.titulo=ke=Peticion";
+    String filter = "peticionEvaluacion.titulo.value=ke=Peticion";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -290,9 +298,8 @@ public class PeticionEvaluacionIT extends BaseIT {
 
     // Contiene titulo='PeticionEvaluacion1', 'PeticionEvaluacion2',
     // 'PeticionEvaluacion3'
-    Assertions.assertThat(peticionEvaluaciones.get(0).getTitulo())
+    Assertions.assertThat(I18nHelper.getValueForLanguage(peticionEvaluaciones.get(0).getTitulo(), Language.ES))
         .isEqualTo("PeticionEvaluacion" + String.format("%d", 2));
-
   }
 
   @Test
@@ -390,7 +397,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     final EquipoTrabajo equipoTrabajo = response.getBody();
 
     Assertions.assertThat(equipoTrabajo.getId()).isNotNull();
-    Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getId()).isEqualTo(2);
+    Assertions.assertThat(equipoTrabajo.getPeticionEvaluacionId()).isEqualTo(2);
     Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo("user-001");
   }
 
@@ -466,7 +473,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // when: Ordena por id desc
     String sort = "id,desc";
     // when: Filtra por numReferencia like
-    String filter = "peticionEvaluacion.titulo=ke=PeticionEvaluacion2";
+    String filter = "peticionEvaluacion.titulo.value=ke=PeticionEvaluacion2";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/memorias")
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
@@ -486,7 +493,8 @@ public class PeticionEvaluacionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
 
     // Contiene titulo='PeticionEvaluacion1'
-    Assertions.assertThat(peticionesEvaluacion.get(0).getTitulo()).isEqualTo("PeticionEvaluacion2");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(peticionesEvaluacion.get(0).getTitulo(), Language.ES))
+        .isEqualTo("PeticionEvaluacion2");
   }
 
   /**
@@ -503,6 +511,8 @@ public class PeticionEvaluacionIT extends BaseIT {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> tit = new HashSet<>();
+    tit.add(new PeticionEvaluacionTitulo(Language.ES, titulo));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
@@ -515,7 +525,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(tit);
     peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -534,7 +544,7 @@ public class PeticionEvaluacionIT extends BaseIT {
 
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
-    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPeticionEvaluacionId(peticionEvaluacion.getId());
     equipoTrabajo.setPersonaRef("user-00" + (id == null ? 1 : id));
 
     return equipoTrabajo;

@@ -115,7 +115,7 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
     AssertHelper.idNotNull(equipoTrabajoActualizar.getId(), EquipoTrabajo.class);
 
     return equipoTrabajoRepository.findById(equipoTrabajoActualizar.getId()).map(equipoTrabajo -> {
-      equipoTrabajo.setPeticionEvaluacion(equipoTrabajoActualizar.getPeticionEvaluacion());
+      equipoTrabajo.setPeticionEvaluacionId(equipoTrabajoActualizar.getPeticionEvaluacionId());
       equipoTrabajo.setPersonaRef(equipoTrabajoActualizar.getPersonaRef());
 
       EquipoTrabajo returnValue = equipoTrabajoRepository.save(equipoTrabajo);

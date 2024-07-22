@@ -2,11 +2,15 @@ package org.crue.hercules.sgi.eti.model;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +20,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -93,8 +99,11 @@ public class PeticionEvaluacion extends BaseEntity {
   private String codigo;
 
   /** Título */
-  @Column(name = "titulo", length = 1000)
-  private String titulo;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "peticion_evaluacion_titulo", joinColumns = @JoinColumn(name = "peticion_evaluacion_id"))
+  @NotEmpty
+  @Valid
+  private Set<PeticionEvaluacionTitulo> titulo;
 
   /** Tipo Actividad */
   @ManyToOne

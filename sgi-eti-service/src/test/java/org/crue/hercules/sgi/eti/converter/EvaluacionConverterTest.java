@@ -3,7 +3,9 @@ package org.crue.hercules.sgi.eti.converter;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
@@ -18,6 +20,7 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -26,6 +29,7 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.service.BaseServiceTest;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -163,6 +167,8 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
+    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo1");
@@ -175,7 +181,7 @@ public class EvaluacionConverterTest extends BaseServiceTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);

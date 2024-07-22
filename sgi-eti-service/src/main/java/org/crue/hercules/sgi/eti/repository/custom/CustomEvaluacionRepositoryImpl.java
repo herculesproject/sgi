@@ -501,7 +501,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
       Root<EquipoTrabajo> subqRootEquipoTrabajo = queryPersonaRefEquipoTrabajo.from(EquipoTrabajo.class);
 
       queryPersonaRefEquipoTrabajo.select(subqRootEquipoTrabajo.get(EquipoTrabajo_.personaRef)).where(
-          cb.equal(subqRootEquipoTrabajo.get(EquipoTrabajo_.peticionEvaluacion).get(PeticionEvaluacion_.id),
+          cb.equal(subqRootEquipoTrabajo.get(EquipoTrabajo_.peticionEvaluacionId),
               joinMemoria.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id)));
 
       Subquery<Long> queryConflictosInteres = cq.subquery(Long.class);
@@ -640,7 +640,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
       Root<EquipoTrabajo> subqRootEquipoTrabajo = queryPersonaRefEquipoTrabajo.from(EquipoTrabajo.class);
 
       queryPersonaRefEquipoTrabajo.select(subqRootEquipoTrabajo.get(EquipoTrabajo_.personaRef)).where(
-          cb.equal(subqRootEquipoTrabajo.get(EquipoTrabajo_.peticionEvaluacion).get(PeticionEvaluacion_.id),
+          cb.equal(subqRootEquipoTrabajo.get(EquipoTrabajo_.peticionEvaluacionId),
               joinMemoria.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id)));
 
       Subquery<Long> queryConflictosInteres = cq.subquery(Long.class);
@@ -711,7 +711,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Root<EquipoTrabajo> subqRootEquipoTrabajo = queryPersonaRefEquipoTrabajo.from(EquipoTrabajo.class);
 
     queryPersonaRefEquipoTrabajo.select(subqRootEquipoTrabajo.get(EquipoTrabajo_.personaRef)).where(
-        cb.equal(subqRootEquipoTrabajo.get(EquipoTrabajo_.peticionEvaluacion).get(PeticionEvaluacion_.id),
+        cb.equal(subqRootEquipoTrabajo.get(EquipoTrabajo_.peticionEvaluacionId),
             root.get(Evaluacion_.memoria).get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id)));
 
     Subquery<Long> queryConflictosInteres = cq.subquery(Long.class);

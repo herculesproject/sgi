@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.Formulario.Tipo;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.repository.FormularioRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RespuestaService;
@@ -42,12 +43,15 @@ public class RespuestaServiceImpl implements RespuestaService {
   private final RespuestaRepository respuestaRepository;
   private final MemoriaService memoriaService;
   private final RetrospectivaService retrospectivaService;
+  private final FormularioRepository formularioRepository;
 
   public RespuestaServiceImpl(RespuestaRepository respuestaRepository,
-      MemoriaService memoriaService, RetrospectivaService retrospectivaService) {
+      MemoriaService memoriaService, RetrospectivaService retrospectivaService,
+      FormularioRepository formularioRepository) {
     this.respuestaRepository = respuestaRepository;
     this.memoriaService = memoriaService;
     this.retrospectivaService = retrospectivaService;
+    this.formularioRepository = formularioRepository;
   }
 
   /**
@@ -149,8 +153,8 @@ public class RespuestaServiceImpl implements RespuestaService {
     AssertHelper.idNotNull(respuestaActualizar.getId(), Respuesta.class);
 
     return respuestaRepository.findById(respuestaActualizar.getId()).map(respuesta -> {
-      respuesta.setMemoria(respuestaActualizar.getMemoria());
-      respuesta.setApartado(respuestaActualizar.getApartado());
+      respuesta.setMemoriaId(respuestaActualizar.getMemoriaId());
+      respuesta.setApartadoId(respuestaActualizar.getApartadoId());
       respuesta.setValor(respuestaActualizar.getValor());
       respuesta.setTipoDocumento(respuestaActualizar.getTipoDocumento());
 
@@ -184,8 +188,8 @@ public class RespuestaServiceImpl implements RespuestaService {
   public void updateDatosRetrospectiva(Long id)
       throws RespuestaNotFoundException, RespuestaRetrospectivaFormularioNotValidException {
     Respuesta respuesta = respuestaRepository.findById(id).orElseThrow(() -> new RespuestaNotFoundException(id));
-    Formulario formulario = respuesta.getApartado().getBloque().getFormulario();
-    Memoria memoria = respuesta.getMemoria();
+    Formulario formulario = formularioRepository.findByMemoriaId(respuesta.getMemoriaId());
+    Memoria memoria = memoriaService.findById(respuesta.getMemoriaId());
 
     if (!formulario.getTipo().equals(Tipo.M20)) {
       return;
@@ -233,7 +237,7 @@ public class RespuestaServiceImpl implements RespuestaService {
       requiereRetrospectivaUpdated = false;
     }
 
-    memoriaService.updateDatosRetrospectiva(respuesta.getMemoria().getId(), requiereRetrospectivaUpdated,
+    memoriaService.updateDatosRetrospectiva(respuesta.getMemoriaId(), requiereRetrospectivaUpdated,
         retrospectivaUpdated);
 
   }

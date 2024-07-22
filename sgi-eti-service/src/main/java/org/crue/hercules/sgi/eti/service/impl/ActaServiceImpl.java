@@ -651,7 +651,7 @@ public class ActaServiceImpl implements ActaService {
   }
 
   private void generarDocumentosActa(Long idActa) {
-    for (Language language : Language.values()) {
+    for (Language language : configService.getAvailableLanguages()) {
       ActaDocumento actaDocumento = null;
       Resource informePdf = reportService.getInformeActa(idActa, language);
       // Se sube el informe a sgdoc

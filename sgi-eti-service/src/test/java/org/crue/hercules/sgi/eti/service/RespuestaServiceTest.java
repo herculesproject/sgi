@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Respuesta;
+import org.crue.hercules.sgi.eti.repository.FormularioRepository;
 import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.service.impl.RespuestaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,13 +40,15 @@ public class RespuestaServiceTest extends BaseServiceTest {
   private MemoriaService memoriaService;
   @Mock
   private RetrospectivaService retrospectivaService;
+  @Mock
+  private FormularioRepository formularioRepository;
 
   private RespuestaService respuestaService;
 
   @BeforeEach
   public void setUp() throws Exception {
     respuestaService = new RespuestaServiceImpl(respuestaRepository, memoriaService,
-        retrospectivaService);
+        retrospectivaService, formularioRepository);
   }
 
   @Test
@@ -55,7 +58,7 @@ public class RespuestaServiceTest extends BaseServiceTest {
     Respuesta respuesta = respuestaService.findById(1L);
 
     Assertions.assertThat(respuesta.getId()).isEqualTo(1L);
-    Assertions.assertThat(respuesta.getMemoria().getId()).isEqualTo(1L);
+    Assertions.assertThat(respuesta.getMemoriaId()).isEqualTo(1L);
     Assertions.assertThat(respuesta.getValor()).isEqualTo("{\"valor\":\"Valor1\"}");
 
   }
@@ -263,7 +266,7 @@ public class RespuestaServiceTest extends BaseServiceTest {
     Assertions.assertThat(respuesta).isPresent();
 
     Assertions.assertThat(respuesta.get().getId()).isEqualTo(1L);
-    Assertions.assertThat(respuesta.get().getMemoria().getId()).isEqualTo(1L);
+    Assertions.assertThat(respuesta.get().getMemoriaId()).isEqualTo(1L);
     Assertions.assertThat(respuesta.get().getValor()).isEqualTo("{\"valor\":\"Valor1\"}");
   }
 
@@ -294,8 +297,8 @@ public class RespuestaServiceTest extends BaseServiceTest {
 
     Respuesta respuesta = new Respuesta();
     respuesta.setId(id);
-    respuesta.setMemoria(memoria);
-    respuesta.setApartado(apartado);
+    respuesta.setMemoriaId(memoria.getId());
+    respuesta.setApartadoId(apartado.getId());
     respuesta.setValor("{\"valor\":\"Valor" + id + "\"}");
 
     return respuesta;
@@ -311,7 +314,6 @@ public class RespuestaServiceTest extends BaseServiceTest {
    * @return Apartado
    */
   private Apartado getMockApartado(Long id, Long bloqueId, Long padreId) {
-
     Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
     Bloque Bloque = new Bloque(bloqueId, formulario, bloqueId.intValue(), null);
 

@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -102,7 +101,7 @@ public class ApartadoIT extends BaseIT {
     result.add(getMockData(5L, 1L, 4L));
 
     Set<BloqueNombre> bloqueNombres = new HashSet<>();
-    BloqueNombre bloqueLanguage = new BloqueNombre(1L, Language.EN, "Bloque1");
+    BloqueNombre bloqueLanguage = new BloqueNombre(Language.EN, "Bloque1");
     bloqueNombres.add(bloqueLanguage);
     result.get(0).getBloque().setNombre(bloqueNombres);
 
@@ -124,7 +123,7 @@ public class ApartadoIT extends BaseIT {
     result.add(getMockData(5L, 1L, 4L));
 
     Set<BloqueNombre> bloqueNombres = new HashSet<>();
-    BloqueNombre bloqueLanguage = new BloqueNombre(1L, Language.EN, "Bloque1");
+    BloqueNombre bloqueLanguage = new BloqueNombre(Language.EN, "Bloque1");
     bloqueNombres.add(bloqueLanguage);
     result.get(0).getBloque().setNombre(bloqueNombres);
 
@@ -156,7 +155,7 @@ public class ApartadoIT extends BaseIT {
     List<Apartado> result = new LinkedList<>();
     result.add(getMockData(3L, 1L, 1L));
     Set<BloqueNombre> bloqueNombres = new HashSet<>();
-    BloqueNombre bloqueLanguage = new BloqueNombre(1L, Language.EN, "Bloque1");
+    BloqueNombre bloqueLanguage = new BloqueNombre(Language.EN, "Bloque1");
     bloqueNombres.add(bloqueLanguage);
     result.get(0).getBloque().setNombre(bloqueNombres);
 

@@ -2,9 +2,9 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
@@ -26,6 +27,8 @@ import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
 import org.crue.hercules.sgi.eti.service.TareaService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -44,6 +47,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * PeticionEvaluacionControllerTest
@@ -80,7 +85,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("PeticionEvaluacion1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("PeticionEvaluacion1"));
   }
 
   @Test
@@ -100,7 +105,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-MOD-C" })
   public void newPeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
     // given: Un peticionEvaluacion nuevo
-    String nuevoPeticionEvaluacionJson = "{\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
+    String nuevoPeticionEvaluacionJson = "{\"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}], \"activo\": \"true\"}";
 
     PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1");
 
@@ -115,14 +120,15 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo peticionEvaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("PeticionEvaluacion1"));
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("titulo[0].value").value("PeticionEvaluacion1"));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-MOD-C" })
   public void newPeticionEvaluacion_Error_Returns400() throws Exception {
     // given: Un peticionEvaluacion nuevo que produce un error al crearse
-    String nuevoPeticionEvaluacionJson = "{\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
+    String nuevoPeticionEvaluacionJson = "{\"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}], \"activo\": \"true\"}";
 
     BDDMockito.given(peticionEvaluacionService.create(ArgumentMatchers.<PeticionEvaluacion>any()))
         .willThrow(new IllegalArgumentException());
@@ -142,7 +148,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER", "ETI-PEV-MOD-C" })
   public void replacePeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
     // given: Un peticionEvaluacion a modificar
-    String replacePeticionEvaluacionJson = "{\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"}";
+    String replacePeticionEvaluacionJson = "{\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]}";
 
     PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "Replace PeticionEvaluacion1");
 
@@ -156,7 +162,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el peticionEvaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Replace PeticionEvaluacion1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("Replace PeticionEvaluacion1"));
 
   }
 
@@ -164,7 +170,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-ER", "ETI-PEV-MOD-C" })
   public void replacePeticionEvaluacion_NotFound() throws Exception {
     // given: Un peticionEvaluacion a modificar
-    String replacePeticionEvaluacionJson = "{\"id\": 1, \"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
+    String replacePeticionEvaluacionJson = "{\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}], \"activo\": \"true\"}";
 
     BDDMockito.given(peticionEvaluacionService.update(ArgumentMatchers.<PeticionEvaluacion>any()))
         .will((InvocationOnMock invocation) -> {
@@ -283,7 +289,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     // containing titulo='PeticionEvaluacion031' to 'PeticionEvaluacion040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       PeticionEvaluacion peticionEvaluacion = actual.get(i);
-      Assertions.assertThat(peticionEvaluacion.getTitulo()).isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(peticionEvaluacion.getTitulo(), Language.ES))
+          .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
     }
   }
 
@@ -306,7 +313,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
           public Page<PeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
             List<PeticionEvaluacion> content = new ArrayList<>();
             for (PeticionEvaluacion peticionEvaluacion : peticionEvaluaciones) {
-              if (peticionEvaluacion.getTitulo().startsWith("PeticionEvaluacion")
+              if (I18nHelper.getValueForLanguage(peticionEvaluacion.getTitulo(), Language.ES)
+                  .startsWith("PeticionEvaluacion")
                   && peticionEvaluacion.getId().equals(5L)) {
                 content.add(peticionEvaluacion);
               }
@@ -361,8 +369,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     // 'PeticionEvaluacion010'
     for (int i = 0, j = 1; i < 10 & j <= 10; i++, j++) {
       EquipoTrabajo equipoTrabajo = actual.get(i);
-      Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
-          .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
+      Assertions.assertThat(equipoTrabajo.getPeticionEvaluacionId())
+          .isEqualTo(j);
     }
   }
 
@@ -559,7 +567,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
       "ETI-PEV-MOD-C" })
   public void newEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
     // given: Un equipo de trabajo nuevo
-    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacionId\": 1}";
 
     PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "peticionEvaluacion1");
 
@@ -579,7 +587,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         // then: Crea el nuevo EquipoTrabajo y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
-        .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacion.titulo").value("PeticionEvaluacion1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacionId").value(1));
   }
 
   @Test
@@ -587,12 +595,12 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
       "ETI-PEV-MOD-C" })
   public void newEquipoTrabajo_PeticionEvaluacionIsNull_ReturnsNotFound() throws Exception {
     // given: Un equipo de trabajo nuevo con peticionEvaluacion null
-    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacionId\": 1}";
 
     EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
         generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
 
-    BDDMockito.given(peticionEvaluacionService.findById(1L)).willReturn(null);
+    BDDMockito.doThrow(new PeticionEvaluacionNotFoundException(1L)).when(peticionEvaluacionService).existsById(1L);
     BDDMockito.given(equipoTrabajoService.create(ArgumentMatchers.<EquipoTrabajo>any())).willReturn(equipoTrabajo);
     // when: Creamos un EquipoTrabajo
     mockMvc
@@ -608,7 +616,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
       "ETI-PEV-MOD-C" })
   public void newEquipoTrabajo_Error_Returns400() throws Exception {
     // given: Un equipo de trabajo nuevo que produce un error al crearse
-    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]}, \"activo\": \"true\"}}";
 
     PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "peticionEvaluacion1");
     BDDMockito.given(peticionEvaluacionService.findById(1L)).willReturn(peticionEvaluacion);
@@ -801,7 +809,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     // containing titulo='PeticionEvaluacion031' to 'PeticionEvaluacion040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       PeticionEvaluacion peticionEvaluacion = actual.get(i);
-      Assertions.assertThat(peticionEvaluacion.getTitulo()).isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(peticionEvaluacion.getTitulo(), Language.ES))
+          .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
     }
   }
 
@@ -873,7 +882,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     // containing titulo='PeticionEvaluacion031' to 'PeticionEvaluacion040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       PeticionEvaluacion peticionEvaluacion = actual.get(i);
-      Assertions.assertThat(peticionEvaluacion.getTitulo()).isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(peticionEvaluacion.getTitulo(), Language.ES))
+          .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
     }
   }
 
@@ -897,7 +907,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
           public Page<PeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
             List<PeticionEvaluacion> content = new ArrayList<>();
             for (PeticionEvaluacion peticionEvaluacion : peticionEvaluaciones) {
-              if (peticionEvaluacion.getTitulo().startsWith("PeticionEvaluacion")
+              if (I18nHelper.getValueForLanguage(peticionEvaluacion.getTitulo(), Language.ES)
+                  .startsWith("PeticionEvaluacion")
                   && peticionEvaluacion.getId().equals(5L)) {
                 content.add(peticionEvaluacion);
               }
@@ -930,6 +941,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> tit = new HashSet<>();
+    tit.add(new PeticionEvaluacionTitulo(Language.ES, titulo));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
@@ -942,7 +955,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(tit);
     peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -984,7 +997,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
-    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPeticionEvaluacionId(peticionEvaluacion.getId());
     equipoTrabajo.setPersonaRef("user-00" + id);
 
     return equipoTrabajo;
@@ -1002,7 +1015,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     EquipoTrabajoWithIsEliminable equipoTrabajo = new EquipoTrabajoWithIsEliminable();
     equipoTrabajo.setId(id);
-    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPeticionEvaluacionId(peticionEvaluacion.getId());
     equipoTrabajo.setPersonaRef("user-00" + id);
     equipoTrabajo.setEliminable(true);
 
@@ -1022,7 +1035,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
-    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPeticionEvaluacionId(peticionEvaluacion.getId());
 
     Memoria memoria = new Memoria();
     memoria.setId(200L);
@@ -1057,12 +1070,9 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
    * @return el objeto TareaWithIsEliminable
    */
   public TareaWithIsEliminable generarMockTareaWithIsEliminable(Long id, String descripcion) {
-    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
-    peticionEvaluacion.setId(id);
-
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
-    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPeticionEvaluacionId(id);
 
     Memoria memoria = new Memoria();
     memoria.setId(200L);

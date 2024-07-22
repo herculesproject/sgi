@@ -2,26 +2,27 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.InformeNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.service.InformeService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * InformeControllerTest
@@ -309,6 +312,8 @@ public class InformeControllerTest extends BaseControllerTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
+    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo1");
@@ -321,7 +326,7 @@ public class InformeControllerTest extends BaseControllerTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);

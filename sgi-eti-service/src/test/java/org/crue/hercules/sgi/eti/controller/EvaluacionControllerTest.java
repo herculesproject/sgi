@@ -4,7 +4,9 @@ import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
@@ -23,6 +25,7 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
@@ -33,6 +36,7 @@ import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -110,7 +114,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EVC-C", "ETI-CNV-C", "ETI-CNV-E" })
   public void newEvaluacion_ReturnsEvaluacion() throws Exception {
     // given: Una evaluacion nueva
-    String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
+    String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
         + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
@@ -137,7 +141,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EVC-C", "ETI-CNV-C", "ETI-CNV-E" })
   public void newEvaluacion_Error_Returns400() throws Exception {
     // given: Una evaluacion nueva que produce un error al crearse
-    String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
+    String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\"}";
 
@@ -159,7 +163,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
   public void replaceEvaluacion_ReturnsEvaluacion() throws Exception {
     // given: Una evaluacion a modificar
-    String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
+    String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
         + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
@@ -187,7 +191,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
   public void replaceEvaluacion_NotFound() throws Exception {
     // given: Una evaluacion a modificar
-    String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
+    String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
         + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
@@ -881,6 +885,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
+    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo1");
@@ -893,7 +899,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -1005,6 +1011,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
+    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo1");
@@ -1017,7 +1025,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);

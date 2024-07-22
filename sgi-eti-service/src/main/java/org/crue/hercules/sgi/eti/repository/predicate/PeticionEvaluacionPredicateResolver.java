@@ -9,6 +9,7 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 
@@ -23,7 +24,7 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
   private static final String LIKE_WILDCARD_PERCENT = "%";
 
   private enum Property {
-    TITULO("peticionEvaluacion.titulo"),
+    TITULO("peticionEvaluacion.titulo.value"),
     COMITE("comite.id"),
     PERSONA("peticionEvaluacion.personaRef"),
     ESTADO("estadoActual.id"),
@@ -70,7 +71,8 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
     String tituloFilter = node.getArguments().get(0);
-    Predicate titulo = cb.like(root.get(PeticionEvaluacion_.titulo), tituloFilter);
+    Predicate titulo = cb.like(root.join(PeticionEvaluacion_.titulo).get(PeticionEvaluacionTitulo_.VALUE),
+        tituloFilter);
     return cb.and(titulo);
   }
 

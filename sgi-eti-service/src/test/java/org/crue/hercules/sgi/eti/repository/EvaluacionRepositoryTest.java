@@ -1,13 +1,16 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -16,6 +19,8 @@ import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -23,8 +28,7 @@ import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoInvestigacionTutelada;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
-import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -453,7 +457,9 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
    */
   public PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad,
       TipoInvestigacionTutelada tipoInvestigacionTutelada) {
-    return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
+    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
+    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion"));
+    return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", titulo,
         tipoActividad, tipoInvestigacionTutelada, false, "Fuente financiación", null, null, Instant.now(),
         Instant.now(), "Resumen", TipoValorSocial.ENSENIANZA_SUPERIOR, "Otro valor social", "Objetivos",
         "DiseñoMetodologico", Boolean.FALSE, "user-001", null, null, Boolean.TRUE);

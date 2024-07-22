@@ -11,10 +11,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * EquipoTrabajo
@@ -44,9 +47,13 @@ public class EquipoTrabajo extends BaseEntity {
   @Column(name = "persona_ref", length = 250, nullable = false)
   private String personaRef;
 
-  /** Peticion Evaluación */
-  @ManyToOne
-  @JoinColumn(name = "peticion_evaluacion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_EQUIPOTRABAJO_PETICIONEVALUACION"))
-  private PeticionEvaluacion peticionEvaluacion;
+  @Column(name = "peticion_evaluacion_id", nullable = false)
+  Long peticionEvaluacionId;
 
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne
+  @JoinColumn(name = "peticion_evaluacion_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_EQUIPOTRABAJO_PETICIONEVALUACION"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final PeticionEvaluacion peticionEvaluacion = null;
 }

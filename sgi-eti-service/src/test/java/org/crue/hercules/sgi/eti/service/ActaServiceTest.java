@@ -69,9 +69,9 @@ public class ActaServiceTest extends BaseServiceTest {
   private RetrospectivaRepository retrospectivaRepository;
   @Mock
   private RetrospectivaService retrospectivaService;
-  @Mock
+  @Mock(lenient = true)
   private SgiApiRepService reportService;
-  @Mock
+  @Mock(lenient = true)
   private SgdocService sgdocService;
   @Mock
   private ComunicadosService comunicadosService;

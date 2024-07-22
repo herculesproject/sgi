@@ -1,14 +1,18 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -97,6 +101,8 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
    */
   public PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad) {
 
+    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
+    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "Titulo"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setCodigo("Codigo");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico");
@@ -108,7 +114,7 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo("Titulo");
+    peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -124,7 +130,7 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
    */
   public EquipoTrabajo generarMockEquipoTrabajo(PeticionEvaluacion peticionEvaluacion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
-    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPeticionEvaluacionId(peticionEvaluacion.getId());
     equipoTrabajo.setPersonaRef("user-00");
 
     return equipoTrabajo;

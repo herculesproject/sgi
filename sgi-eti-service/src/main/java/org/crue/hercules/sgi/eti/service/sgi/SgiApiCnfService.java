@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service.sgi;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.dto.cnf.ConfigOutput;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.core.ParameterizedTypeReference;
@@ -30,6 +32,7 @@ public class SgiApiCnfService extends SgiApiBaseService {
 
   public static final String CLIENT_REGISTRATION_ID = "eti-service";
   private static final String CONFIG_ETI_BLOCKCHAIN_ENABLE = "eti-blockchain-enable";
+  private static final String CONFIG_SGI_AVAILABLE_LANGUAGES = "web-languages-header";
 
   private final ObjectMapper mapper;
 
@@ -80,7 +83,7 @@ public class SgiApiCnfService extends SgiApiBaseService {
     return valueList;
   }
 
-  public Boolean isBlockchainEnable() throws JsonProcessingException {
+  public Boolean isBlockchainEnable() {
     log.debug("isBlockchainEnable() - start");
     String value = findByName(CONFIG_ETI_BLOCKCHAIN_ENABLE);
     Boolean valueBoolean = false;
@@ -92,4 +95,25 @@ public class SgiApiCnfService extends SgiApiBaseService {
     return valueBoolean;
   }
 
+  /**
+   * Obtiene la lista de idiomas habilitados en el SGI.
+   * 
+   * @return listaa de idiomas
+   */
+  public List<Language> getAvailableLanguages() {
+    String config = findByName(CONFIG_SGI_AVAILABLE_LANGUAGES);
+    List<Language> languages = new ArrayList<>();
+    if (config == null) {
+      return languages;
+    }
+    String[] values = config.split(",");
+    for (String value : values) {
+      Language language = Language.fromCode(value);
+      if (language != null) {
+        languages.add(language);
+      }
+    }
+
+    return languages;
+  }
 }

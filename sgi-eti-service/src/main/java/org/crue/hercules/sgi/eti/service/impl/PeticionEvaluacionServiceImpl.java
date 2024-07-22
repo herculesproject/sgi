@@ -146,6 +146,18 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public void existsById(final Long id) throws PeticionEvaluacionNotFoundException {
+    log.debug("Petición a get PeticionEvaluacion : {}  - start", id);
+    boolean exists = peticionEvaluacionRepository.existsById(id);
+    if (!exists) {
+      throw new PeticionEvaluacionNotFoundException(id);
+    }
+    log.debug("Petición a get PeticionEvaluacion : {}  - end", id);
+  }
+
+  /**
    * Elimina una entidad {@link PeticionEvaluacion} por id.
    *
    * @param id el id de la entidad {@link PeticionEvaluacion}.
@@ -219,7 +231,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     log.debug("update(PeticionEvaluacion peticionEvaluacionActualizar) - start");
 
     AssertHelper.idNotNull(peticionEvaluacionActualizar.getId(), PeticionEvaluacion.class);
-    AssertHelper.fieldNotNull(peticionEvaluacionActualizar.getTitulo(), PeticionEvaluacion.class, MSG_FIELD_TITULO);
+    AssertHelper.i18nFieldNotNull(peticionEvaluacionActualizar.getTitulo(), PeticionEvaluacion.class, MSG_FIELD_TITULO);
 
     if (peticionEvaluacionActualizar.getExisteFinanciacion().booleanValue()) {
       AssertHelper.fieldNotNull(peticionEvaluacionActualizar.getFuenteFinanciacion(), PeticionEvaluacion.class,

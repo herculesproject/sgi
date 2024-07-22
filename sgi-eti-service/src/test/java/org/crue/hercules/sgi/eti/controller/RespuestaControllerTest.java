@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.RespuestaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
@@ -32,6 +30,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * RespuestaControllerTest
@@ -342,8 +342,8 @@ public class RespuestaControllerTest extends BaseControllerTest {
 
     Respuesta respuesta = new Respuesta();
     respuesta.setId(id);
-    respuesta.setMemoria(memoria);
-    respuesta.setApartado(apartado);
+    respuesta.setMemoriaId(memoria.getId());
+    respuesta.setApartadoId(apartado.getId());
     respuesta.setValor("{\"valor\":\"Valor" + id + "\"}");
 
     return respuesta;

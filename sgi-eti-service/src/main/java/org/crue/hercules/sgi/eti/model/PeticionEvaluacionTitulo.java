@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -19,13 +20,12 @@ import lombok.NoArgsConstructor;
 /**
  * Bloque Nombre
  */
-
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class BloqueNombre implements Serializable, I18nFieldValue {
+public class PeticionEvaluacionTitulo implements Serializable, I18nFieldValue {
   /**
    * Serial version
    */
@@ -38,7 +38,8 @@ public class BloqueNombre implements Serializable, I18nFieldValue {
   private Language lang;
 
   /** Nombre */
-  @Column(name = "value_", length = 2000, nullable = false)
+  @Column(name = "value_", length = 1000, nullable = false)
   @NotNull
+  @Size(max = 1000)
   private String value;
 }

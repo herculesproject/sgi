@@ -3,9 +3,11 @@ package org.crue.hercules.sgi.eti.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Collection;
 
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoInvestigacionTutelada;
 
@@ -33,7 +35,7 @@ public class PeticionEvaluacionWithIsEliminable implements Serializable {
   private String codigo;
 
   /** Título */
-  private String titulo;
+  private Collection<PeticionEvaluacionTitulo> titulo;
 
   /** Tipo Actividad */
   private TipoActividad tipoActividad;

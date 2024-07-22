@@ -278,8 +278,8 @@ public class RespuestaIT extends BaseIT {
 
     Respuesta respuesta = new Respuesta();
     respuesta.setId(id);
-    respuesta.setMemoria(memoria);
-    respuesta.setApartado(apartado);
+    respuesta.setMemoriaId(memoria.getId());
+    respuesta.setApartadoId(apartado.getId());
     respuesta.setValor("{\"valor\":\"Valor" + id + "\"}");
 
     return respuesta;

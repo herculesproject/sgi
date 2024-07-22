@@ -2,7 +2,9 @@ package org.crue.hercules.sgi.eti.model;
 
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -11,9 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +24,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 /**
  * Bloque
@@ -58,10 +60,10 @@ public class Bloque extends BaseEntity {
   @NotNull
   private Integer orden;
 
-  @OneToMany(fetch = FetchType.EAGER)
-  @JoinColumn(name = "bloque_id")
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "bloque_nombre", joinColumns = @JoinColumn(name = "bloque_id"))
+  @NotEmpty
+  @Valid
   private Set<BloqueNombre> nombre;
 
 }

@@ -52,6 +52,7 @@ import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.FormularioRepository;
 import org.crue.hercules.sgi.eti.repository.InformeDocumentoRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
@@ -65,6 +66,7 @@ import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
+import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -168,6 +170,8 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   /** Informe documento repository */
   private final InformeDocumentoRepository informeDocumentoRepository;
+  private final FormularioRepository formularioRepository;
+  private final SgiApiCnfService cnfService;
 
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
@@ -179,7 +183,8 @@ public class MemoriaServiceImpl implements MemoriaService {
       RespuestaRepository respuestaRepository, TareaRepository tareaRepository,
       ConfiguracionService configuracionService, SgiApiRepService reportService, SgdocService sgdocService,
       BloqueRepository bloqueRepository, ApartadoRepository apartadoRepository, ComunicadosService comunicadosService,
-      RetrospectivaService retrospectivaService, InformeDocumentoRepository informeDocumentoRepository) {
+      RetrospectivaService retrospectivaService, InformeDocumentoRepository informeDocumentoRepository,
+      FormularioRepository formularioRepository, SgiApiCnfService cnfService) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -199,6 +204,8 @@ public class MemoriaServiceImpl implements MemoriaService {
     this.comunicadosService = comunicadosService;
     this.retrospectivaService = retrospectivaService;
     this.informeDocumentoRepository = informeDocumentoRepository;
+    this.formularioRepository = formularioRepository;
+    this.cnfService = cnfService;
   }
 
   /**
@@ -297,8 +304,9 @@ public class MemoriaServiceImpl implements MemoriaService {
      * no guardar las respuestas en caso de que exista
      */
     List<Respuesta> respuestaList = respuestasPage.getContent().stream()
-        .filter(r -> idsApartadosRetrospectiva.indexOf(r.getApartado().getId()) == -1)
-        .map(respuesta -> new Respuesta(null, memoriaCreada, respuesta.getApartado(), respuesta.getTipoDocumento(),
+        .filter(r -> idsApartadosRetrospectiva.indexOf(r.getApartadoId()) == -1)
+        .map(respuesta -> new Respuesta(null, memoriaCreada.getId(), respuesta.getApartadoId(),
+            respuesta.getTipoDocumento(),
             respuesta.getValor()))
         .collect(Collectors.toList());
 
@@ -952,7 +960,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   private void createInformeAllLanguages(String tituloInforme, Informe informe, Long idMemoria, Long idFormulario) {
-    for (Language lang : Language.values()) {
+    for (Language lang : cnfService.getAvailableLanguages()) {
       Resource informePdf = reportService.getMXX(idMemoria, idFormulario, lang);
       // Se sube el informe a sgdoc
       String fileName = tituloInforme + "_" + idMemoria + LocalDate.now() + ".pdf";
@@ -1273,10 +1281,10 @@ public class MemoriaServiceImpl implements MemoriaService {
     Boolean[] arr = { true };
     if (returnValue.hasContent()) {
       List<Respuesta> respuestas = returnValue.getContent();
-      Long idFormulario = respuestas.get(0).getApartado().getBloque().getFormulario().getId();
+      Formulario formulario = formularioRepository.findByMemoriaId(idMemoria);
       respuestas.stream().map(Respuesta::getTipoDocumento).forEach(tipoDocumento -> {
         if (!documentacionMemoriaRepository.existsByMemoriaIdAndTipoDocumentoIdAndTipoDocumentoFormularioId(idMemoria,
-            tipoDocumento.getId(), idFormulario)) {
+            tipoDocumento.getId(), formulario.getId())) {
           arr[0] = false;
         }
       });

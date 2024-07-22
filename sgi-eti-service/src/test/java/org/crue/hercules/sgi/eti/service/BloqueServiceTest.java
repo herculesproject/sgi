@@ -186,7 +186,7 @@ public class BloqueServiceTest extends BaseServiceTest {
 
     Bloque bloque = new Bloque();
     Set<BloqueNombre> nombres = new HashSet<>();
-    BloqueNombre blnombre = new BloqueNombre(id, Language.ES, nombre);
+    BloqueNombre blnombre = new BloqueNombre(Language.ES, nombre);
     nombres.add(blnombre);
     bloque.setId(id);
     bloque.setFormulario(formulario);

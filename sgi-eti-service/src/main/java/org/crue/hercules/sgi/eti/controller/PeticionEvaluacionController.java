@@ -9,7 +9,6 @@ import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
-import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -277,12 +276,8 @@ public class PeticionEvaluacionController {
       @Valid @RequestBody EquipoTrabajo nuevoEquipoTrabajo) {
     log.debug("createEquipoTrabajo(Long id, EquipoTrabajo nuevoEquipoTrabajo) - start");
 
-    PeticionEvaluacion peticionEvaluacion = service.findById(id);
-    if (peticionEvaluacion == null) {
-      throw new PeticionEvaluacionNotFoundException(id);
-    }
-
-    nuevoEquipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    service.existsById(id);
+    nuevoEquipoTrabajo.setPeticionEvaluacionId(id);
 
     EquipoTrabajo returnValue = equipoTrabajoService.create(nuevoEquipoTrabajo);
     log.debug("createEquipoTrabajo(Long id, EquipoTrabajo nuevoEquipoTrabajo) - end");
@@ -309,7 +304,7 @@ public class PeticionEvaluacionController {
       throw new EquipoTrabajoNotFoundException(idEquipoTrabajo);
     }
 
-    Assert.isTrue(equipoTrabajo.getPeticionEvaluacion().getId().equals(idPeticionEvaluacion),
+    Assert.isTrue(equipoTrabajo.getPeticionEvaluacionId().equals(idPeticionEvaluacion),
         () -> ProblemMessage.builder()
             .key(MSG_NO_PERTENECE)
             .parameter(MSG_KEY_ENTITY, MSG_MODEL_EQUIPO_TRABAJO)
@@ -340,7 +335,7 @@ public class PeticionEvaluacionController {
       throw new EquipoTrabajoNotFoundException(idEquipoTrabajo);
     }
 
-    Assert.isTrue(equipoTrabajo.getPeticionEvaluacion().getId().equals(idPeticionEvaluacion),
+    Assert.isTrue(equipoTrabajo.getPeticionEvaluacionId().equals(idPeticionEvaluacion),
         () -> ProblemMessage.builder()
             .key(MSG_NO_PERTENECE)
             .parameter(MSG_KEY_ENTITY, MSG_MODEL_EQUIPO_TRABAJO)
@@ -379,7 +374,7 @@ public class PeticionEvaluacionController {
             .parameter(MSG_KEY_ANOTHER_ENTITY, MSG_MODEL_EQUIPO_TRABAJO)
             .build());
 
-    Assert.isTrue(tarea.getEquipoTrabajo().getPeticionEvaluacion().getId().equals(idPeticionEvaluacion),
+    Assert.isTrue(tarea.getEquipoTrabajo().getPeticionEvaluacionId().equals(idPeticionEvaluacion),
         () -> ProblemMessage.builder()
             .key(MSG_NO_PERTENECE)
             .parameter(MSG_KEY_ENTITY, MSG_MODEL_TAREA)

@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +26,10 @@ import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -78,7 +81,8 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite,
-      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String referenciaMemoria, String tipoActividad, Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+      String solicitanteRef)
       throws JsonProcessingException {
     log.debug(
         "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
@@ -91,7 +95,7 @@ public class ComunicadosService {
               .generoComite(generoComite)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(tituloSolicitudEvaluacion))
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -104,7 +108,9 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoDictamenEvaluacionRevMinima(String nombreInvestigacion, String generoComite,
-      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String referenciaMemoria, String tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+      String solicitanteRef)
       throws JsonProcessingException {
     log.debug(
         "enviarComunicadoDictamenEvaluacionRevMinima(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
@@ -117,7 +123,8 @@ public class ComunicadosService {
               .generoComite(generoComite)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -130,7 +137,9 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(String nombreInvestigacion, String generoComite,
-      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String referenciaMemoria, String tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+      String solicitanteRef)
       throws JsonProcessingException {
     log.debug(
         "enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
@@ -143,7 +152,8 @@ public class ComunicadosService {
               .generoComite(generoComite)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -156,7 +166,9 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoInformeRetrospectivaCeeaPendiente(String nombreInvestigacion, String generoComite,
-      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String referenciaMemoria, String tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+      String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - start");
 
@@ -169,7 +181,8 @@ public class ComunicadosService {
               .generoComite(generoComite)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -182,7 +195,7 @@ public class ComunicadosService {
 
   public void enviarComunicadoCambiosEvaluacionEti(String evaluador1Ref, String evaluador2Ref,
       String nombreInvestigacion, String referenciaMemoria,
-      String tituloSolicitudEvaluacion) throws JsonProcessingException {
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion) throws JsonProcessingException {
     log.debug("enviarComunicadoCambiosEvaluacionEti(Evaluacion evaluacion) - start");
 
     List<String> idsPersonaRef = new ArrayList<>();
@@ -205,7 +218,8 @@ public class ComunicadosService {
           EtiComEvaluacionModificadaData.builder()
               .nombreInvestigacion(nombreInvestigacion)
               .referenciaMemoria(referenciaMemoria)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -216,7 +230,8 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoInformeSeguimientoAnual(String nombreInvestigacion, String referenciaMemoria,
-      String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoInformeSeguimientoAnual() - start");
 
@@ -228,7 +243,8 @@ public class ComunicadosService {
               .nombreInvestigacion(nombreInvestigacion)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -240,7 +256,8 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoInformeSeguimientoFinal(String nombreInvestigacion, String referenciaMemoria,
-      String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoInformeSeguimientoFinal() - start");
 
@@ -252,7 +269,8 @@ public class ComunicadosService {
               .nombreInvestigacion(nombreInvestigacion)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -264,7 +282,8 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoMemoriaRevisionMinimaArchivada(String nombreInvestigacion, String referenciaMemoria,
-      String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoMemoriaRevisionMinimaArchivada() - start");
 
@@ -275,7 +294,8 @@ public class ComunicadosService {
               .nombreInvestigacion(nombreInvestigacion)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -288,7 +308,8 @@ public class ComunicadosService {
 
   public void enviarComunicadoMemoriaArchivadaAutomaticamentePorInactividad(String nombreInvestigacion,
       String referenciaMemoria,
-      String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
 
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
@@ -299,7 +320,8 @@ public class ComunicadosService {
               .nombreInvestigacion(nombreInvestigacion)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -311,7 +333,9 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoIndicarSubsanacion(String nombreInvestigacion, String comentarioEstado,
-      String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String solicitanteRef)
+      String referenciaMemoria, String tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+      String solicitanteRef)
       throws JsonProcessingException {
     log.debug(
         "enviarComunicadoIndicarSubsanacion(String nombreInvestigacion, String comentarioEstado, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
@@ -325,7 +349,8 @@ public class ComunicadosService {
               .nombreInvestigacion(nombreInvestigacion)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  tituloSolicitudEvaluacion))
               .build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -362,7 +387,9 @@ public class ComunicadosService {
           EtiComAsignacionEvaluacionData.builder()
               .fechaConvocatoriaReunion(evaluacion.getConvocatoriaReunion().getFechaEvaluacion())
               .referenciaMemoria(evaluacion.getMemoria().getNumReferencia())
-              .tituloSolicitudEvaluacion(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo())
+              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
+                  evaluacion.getMemoria().getPeticionEvaluacion()
+                      .getTitulo()))
               .nombreApellidosEvaluador1(evaluador1.getNombre() + " " + evaluador1.getApellidos())
               .nombreApellidosEvaluador2(evaluador2.getNombre() + " " + evaluador2.getApellidos())
               .nombreInvestigacion(evaluacion.getConvocatoriaReunion().getComite().getNombreInvestigacion())

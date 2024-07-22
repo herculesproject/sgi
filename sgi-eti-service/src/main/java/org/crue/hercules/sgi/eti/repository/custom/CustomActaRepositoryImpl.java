@@ -360,7 +360,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     Root<EquipoTrabajo> subqRootEquipoTrabajo = queryPersonaRefEquipoTrabajo.from(EquipoTrabajo.class);
 
     queryPersonaRefEquipoTrabajo.select(subqRootEquipoTrabajo.get(EquipoTrabajo_.personaRef)).where(
-        cb.equal(subqRootEquipoTrabajo.get(EquipoTrabajo_.peticionEvaluacion).get(PeticionEvaluacion_.id),
+        cb.equal(subqRootEquipoTrabajo.get(EquipoTrabajo_.peticionEvaluacionId),
             rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id)));
 
     Subquery<Long> queryConflictosInteres = cq.subquery(Long.class);

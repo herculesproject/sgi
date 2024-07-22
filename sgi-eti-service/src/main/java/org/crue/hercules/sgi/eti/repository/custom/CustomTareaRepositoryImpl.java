@@ -20,7 +20,6 @@ import org.crue.hercules.sgi.eti.model.FormacionEspecifica_;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
-import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.Tarea_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
@@ -78,7 +77,7 @@ public class CustomTareaRepositoryImpl implements CustomTareaRepository {
             .alias("eliminable"));
 
     // Where
-    cq.where(cb.equal(root.get(Tarea_.equipoTrabajo).get(EquipoTrabajo_.peticionEvaluacion).get(PeticionEvaluacion_.id),
+    cq.where(cb.equal(root.get(Tarea_.equipoTrabajo).get(EquipoTrabajo_.peticionEvaluacionId),
         idPeticionEvaluacion));
 
     TypedQuery<TareaWithIsEliminable> typedQuery = entityManager.createQuery(cq);

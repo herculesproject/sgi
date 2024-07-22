@@ -2,17 +2,19 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * EquipoTrabajoControllerTest
@@ -56,7 +60,7 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
-        .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacion.titulo").value("PeticionEvaluacion1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacionId").value(1));
     ;
   }
 
@@ -159,8 +163,8 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
     // 'PeticionEvaluacion040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       EquipoTrabajo equipoTrabajo = actual.get(i);
-      Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
-          .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
+      Assertions.assertThat(equipoTrabajo.getPeticionEvaluacionId())
+          .isEqualTo(j);
     }
   }
 
@@ -214,6 +218,8 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
+    Set<PeticionEvaluacionTitulo> tit = new HashSet<>();
+    tit.add(new PeticionEvaluacionTitulo(Language.ES, titulo));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
@@ -226,7 +232,7 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(tit);
     peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -246,7 +252,7 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
 
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
-    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPeticionEvaluacionId(peticionEvaluacion.getId());
     equipoTrabajo.setPersonaRef("user-00" + id);
 
     return equipoTrabajo;
