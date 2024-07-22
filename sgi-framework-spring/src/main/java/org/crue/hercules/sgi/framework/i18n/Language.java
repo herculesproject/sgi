@@ -5,14 +5,14 @@ import java.util.Locale;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * SGI Language
+ * Languages supported
  */
 public enum Language {
-  /* Code lang español */
+  /* Spanish */
   ES("es"),
-  /* Code lang inglés */
+  /* English */
   EN("en"),
-  /* Code lang euskera */
+  /* Basque */
   EU("eu");
 
   private String code;
@@ -23,15 +23,31 @@ public enum Language {
     this.locale = new Locale.Builder().setLanguage(code).build();
   }
 
+  /**
+   * Gets the ISO-639-1 code associated
+   * 
+   * @return the code
+   */
   @JsonValue
   public String getCode() {
     return code;
   }
 
+  /**
+   * Gets the {@link Locale} associated
+   * 
+   * @return the {@link Locale}
+   */
   public Locale getLocale() {
     return locale;
   }
 
+  /**
+   * Gets the {@link Language} associated to a IS0-639-1 code, if exists.
+   * 
+   * @param code the language code
+   * @return the {@link Language} or null
+   */
   public static Language fromCode(String code) {
     for (Language lang : Language.values()) {
       if (lang.code.equals(code)) {
