@@ -142,8 +142,10 @@ public class PeticionEvaluacion extends BaseEntity {
   private Instant fechaFin;
 
   /** Resumen */
-  @Column(name = "resumen", length = 4000)
-  private String resumen;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "peticion_evaluacion_resumen", joinColumns = @JoinColumn(name = "peticion_evaluacion_id"))
+  @Valid
+  private Set<PeticionEvaluacionResumen> resumen;
 
   /** Valor social */
   @Column(name = "valor_social", length = 2000)

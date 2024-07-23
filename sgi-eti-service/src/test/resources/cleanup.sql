@@ -13,6 +13,7 @@ DELETE FROM test.conflicto_interes
 DELETE FROM test.evaluador
 DELETE FROM test.equipo_trabajo
 DELETE FROM test.peticion_evaluacion_titulo
+DELETE FROM test.peticion_evaluacion_resumen
 DELETE FROM test.peticion_evaluacion
 DELETE FROM test.tipo_actividad
 DELETE FROM test.tipo_investigacion_tutelada

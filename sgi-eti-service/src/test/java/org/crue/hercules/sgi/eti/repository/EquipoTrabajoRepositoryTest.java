@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -103,6 +104,8 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
 
     Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
     titulo.add(new PeticionEvaluacionTitulo(Language.ES, "Titulo"));
+    Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
+    resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setCodigo("Codigo");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico");
@@ -110,7 +113,7 @@ public class EquipoTrabajoRepositoryTest extends BaseRepositoryTest {
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos");
-    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);

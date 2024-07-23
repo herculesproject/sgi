@@ -34,7 +34,6 @@ import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Evaluador_;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
-import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
@@ -305,16 +304,15 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     Root<Acta> rootActa = cq.from(Acta.class);
 
     Join<Evaluacion, Memoria> joinMemoria = root.join(Evaluacion_.memoria, JoinType.LEFT);
-    Join<Memoria, PeticionEvaluacion> joinPeticionEvaluacion = joinMemoria.join(Memoria_.peticionEvaluacion,
-        JoinType.LEFT);
 
     cq.multiselect(
         joinMemoria.get(Memoria_.id),
         root.get(Evaluacion_.id),
-        joinMemoria.get(Memoria_.numReferencia), joinPeticionEvaluacion.get(PeticionEvaluacion_.personaRef),
-        root.get(Evaluacion_.dictamen).get(Dictamen_.id), root.get(Evaluacion_.version),
+        joinMemoria.get(Memoria_.numReferencia),
+        root.get(Evaluacion_.dictamen).get(Dictamen_.id),
+        root.get(Evaluacion_.version),
         root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id),
-        joinPeticionEvaluacion.get(PeticionEvaluacion_.titulo));
+        joinMemoria.get(Memoria_.peticionEvaluacion));
 
     // Where
     cq.where(

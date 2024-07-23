@@ -153,7 +153,7 @@
   </changeSet>
 
   <changeSet author="user (generated)" id="00.07.00-6">
-
+    <!-- Título -->
     <createTable tableName="peticion_evaluacion_titulo">
       <column name="peticion_evaluacion_id" type="BIGINT">
         <constraints nullable="false" />
@@ -178,6 +178,33 @@
       SELECT id, '${defaultLang}', titulo FROM ${schemaPrefix}peticion_evaluacion</sql>
 
     <dropColumn columnName="titulo" tableName="peticion_evaluacion" />
+
+    <!-- Resumen -->
+    <createTable tableName="peticion_evaluacion_resumen">
+      <column name="peticion_evaluacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(4000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="peticion_evaluacion_resumen"
+      columnNames="peticion_evaluacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id"
+      baseTableName="peticion_evaluacion_resumen"
+      constraintName="FK_PETICIONEVALUACIONRESUMEN_PETICIONEVALUACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}peticion_evaluacion_resumen(peticion_evaluacion_id, lang,
+      value_) SELECT id, '${defaultLang}', resumen FROM ${schemaPrefix}peticion_evaluacion</sql>
+
+    <dropColumn columnName="resumen" tableName="peticion_evaluacion" />
   </changeSet>
 
 </databaseChangeLog>

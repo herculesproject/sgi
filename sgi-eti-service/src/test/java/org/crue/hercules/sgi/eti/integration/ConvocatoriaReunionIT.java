@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
@@ -813,6 +814,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
     titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
+    Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
+    resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(2L);
     peticionEvaluacion.setCodigo("Codigo");
@@ -821,7 +824,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setFechaInicio(Instant.parse("2020-07-09T00:00:00Z"));
     peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos");
-    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
@@ -888,6 +891,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
     titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
+    Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
+    resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(2L);
     peticionEvaluacion.setCodigo("Codigo");
@@ -896,7 +901,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setFechaInicio(Instant.parse("2020-07-09T00:00:00Z"));
     peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos");
-    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
@@ -968,6 +973,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
     titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
+    Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
+    resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(1L);
     peticionEvaluacion.setCodigo("Codigo1");
@@ -976,7 +983,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setFechaInicio(Instant.parse("2020-08-01T00:00:00Z"));
     peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos1");
-    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);

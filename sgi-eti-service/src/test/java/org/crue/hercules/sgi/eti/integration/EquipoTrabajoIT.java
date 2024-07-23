@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -199,6 +200,8 @@ public class EquipoTrabajoIT extends BaseIT {
 
     Set<PeticionEvaluacionTitulo> tit = new HashSet<>();
     tit.add(new PeticionEvaluacionTitulo(Language.ES, titulo));
+    Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
+    resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen" + id));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
@@ -207,7 +210,7 @@ public class EquipoTrabajoIT extends BaseIT {
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
-    peticionEvaluacion.setResumen("Resumen" + id);
+    peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
