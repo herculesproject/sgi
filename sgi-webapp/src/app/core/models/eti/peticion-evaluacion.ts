@@ -31,7 +31,7 @@ export interface IPeticionEvaluacion {
   /** Fecha Fin. */
   fechaFin: DateTime;
   /** Resumen */
-  resumen: string;
+  resumen: I18nFieldValue[];
   /** Valor social */
   valorSocial: TipoValorSocial;
   /** Otro valor social */

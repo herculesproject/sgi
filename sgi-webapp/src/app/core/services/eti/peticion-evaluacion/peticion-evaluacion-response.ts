@@ -29,7 +29,7 @@ export interface IPeticionEvaluacionResponse {
   /** Fecha Fin. */
   fechaFin: string;
   /** Resumen */
-  resumen: string;
+  resumen: I18nFieldValueResponse[];
   /** Valor social */
   valorSocial: TipoValorSocial;
   /** Otro valor social */
