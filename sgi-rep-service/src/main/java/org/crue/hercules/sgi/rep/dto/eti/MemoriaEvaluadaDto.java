@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.rep.dto.eti;
 
 import java.io.Serializable;
+import java.util.List;
 
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +29,6 @@ public class MemoriaEvaluadaDto implements Serializable {
   private Long dictamenId;
   private Integer version;
   private Long tipoEvaluacionId;
-  private String titulo;
+  private List<I18nFieldValue> titulo;
   private PersonaDto responsable;
 }

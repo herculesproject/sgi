@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,10 +26,8 @@ import org.crue.hercules.sgi.rep.dto.eti.RespuestaInput;
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto.VinculacionDto;
-import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoActividadI18n;
-import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoEstadoMemoriaI18n;
-import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoInvestigacionTuteladaI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.report.data.MXXReportData;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
@@ -91,7 +89,6 @@ public class MXXReportService extends SgiReportDocxService {
     AssertHelper.idNotNull(memoriaId, MemoriaDto.class);
     AssertHelper.idNotNull(formularioId, FormularioDto.class);
 
-    Locale locale = new Locale(reportMXX.getLang().getCode());
     MemoriaDto memoria = memoriaService.findById(memoriaId);
     List<RespuestaInput> respuestas = memoriaService.getRespuestas(memoriaId);
     boolean isMemoriaModificacion = memoria.getMemoriaOriginal() != null;
@@ -117,43 +114,22 @@ public class MXXReportService extends SgiReportDocxService {
     List<ApartadoTreeDto> apartados = new ArrayList<>();
     bloques.forEach(bloque -> apartados.addAll(bloqueService.getApartados(bloque.getId())));
 
-    if (!ObjectUtils.isEmpty(memoria.getPeticionEvaluacion())
-        && !ObjectUtils.isEmpty(memoria.getPeticionEvaluacion().getTipoActividad())) {
-      memoria.getPeticionEvaluacion().getTipoActividad().setNombre(TipoActividadI18n.getI18nMessageFromEnumAndLocale(
-          memoria.getPeticionEvaluacion().getTipoActividad().getId(), locale));
-    }
-
-    if (!ObjectUtils.isEmpty(memoria.getPeticionEvaluacion())
-        && !ObjectUtils.isEmpty(memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada())) {
-      memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada()
-          .setNombre(TipoInvestigacionTuteladaI18n.getI18nMessageFromEnumAndLocale(
-              memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId(), locale));
-    }
-
-    if (!memoriasPeticionEvaluacion.isEmpty()) {
-      memoriasPeticionEvaluacion.forEach(mem -> {
-        if (!ObjectUtils.isEmpty(mem.getEstadoActual())) {
-          mem.getEstadoActual()
-              .setNombre(TipoEstadoMemoriaI18n.getI18nMessageFromEnumAndLocale(mem.getEstadoActual().getId(),
-                  locale));
-        }
-      });
-    }
-
     try {
-      HashMap<String, Object> dataReport = getReportModelFormulario(bloques, apartados, respuestas,
+      Map<String, Object> dataReport = getReportModelFormulario(bloques, apartados, respuestas,
           isMemoriaModificacion, respuestasMemoriaOriginal, reportMXX.getLang());
-      dataReport.put("headerImg", getImageHeaderLogo());
-      dataReport.put("formularioId", formularioId);
-      dataReport.put("memoria", memoria);
-      dataReport.put("memoriasPeticionEvaluacion", memoriasPeticionEvaluacion);
-      dataReport.put("solicitante", solicitante);
-      dataReport.put("solicitanteDatosContacto", solicitanteDatosContacto);
-      dataReport.put("solicitanteVinculacion", solicitanteVinculacion);
-      dataReport.put("tutor", tutor);
-      dataReport.put("zoneId", sgiConfigProperties.getTimeZone().toZoneId().getId());
 
-      XWPFDocument document = getDocument(dataReport, getReportDefinitionStream(reportMXX.getPath()));
+      MXXReportData reportData = new MXXReportData(dataReport, reportMXX.getLang());
+      reportData.setHeaderLogo(getImageHeaderLogo());
+      reportData.setFormularioId(formularioId);
+      reportData.setMemoria(memoria);
+      reportData.setMemoriasPeticionEvaluacion(memoriasPeticionEvaluacion);
+      reportData.setSolicitante(solicitante);
+      reportData.setSolicitanteDatosContacto(solicitanteDatosContacto);
+      reportData.setSolicitanteVinculacion(solicitanteVinculacion);
+      reportData.setTutor(tutor);
+      reportData.setZoneId(sgiConfigProperties.getTimeZone());
+
+      XWPFDocument document = getDocument(reportData.getDataReport(), getReportDefinitionStream(reportMXX.getPath()));
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = createCustomPdfOptions();
@@ -168,7 +144,7 @@ public class MXXReportService extends SgiReportDocxService {
     }
   }
 
-  protected XWPFDocument getDocument(HashMap<String, Object> modelReport, InputStream path) {
+  protected XWPFDocument getDocument(Map<String, Object> modelReport, InputStream path) {
     Configure config = Configure.builder()
         .useSpringEL(false)
         .addPreRenderDataCastor(new GsonPreRenderDataCastor())
@@ -191,10 +167,10 @@ public class MXXReportService extends SgiReportDocxService {
     return compileReportData(path, config, modelReport);
   }
 
-  private HashMap<String, Object> getReportModelFormulario(List<BloqueDto> bloques, List<ApartadoTreeDto> apartados,
+  private Map<String, Object> getReportModelFormulario(List<BloqueDto> bloques, List<ApartadoTreeDto> apartados,
       List<RespuestaInput> respuestas, boolean isMemoriaModificacion, List<RespuestaInput> respuestasMemoriaOriginal,
       Language lang) {
-    HashMap<String, Object> reportModel = new HashMap<>();
+    Map<String, Object> reportModel = new HashMap<>();
 
     bloques.stream().forEach(bloque -> {
       List<ApartadoTreeDto> apartadosBloque = apartados.stream()
@@ -221,10 +197,10 @@ public class MXXReportService extends SgiReportDocxService {
     return reportModel;
   }
 
-  private HashMap<String, Object> getReportModelBloque(BloqueDto bloque, List<ApartadoTreeDto> apartados,
+  private Map<String, Object> getReportModelBloque(BloqueDto bloque, List<ApartadoTreeDto> apartados,
       List<RespuestaInput> respuestas, Language lang) {
-    HashMap<String, Object> reportModel = new HashMap<>();
-    HashMap<String, Object> bloqueModel = new HashMap<>();
+    Map<String, Object> reportModel = new HashMap<>();
+    Map<String, Object> bloqueModel = new HashMap<>();
     Optional<BloqueNombreDto> bloqueNombre = bloque.getNombre().stream()
         .filter(b -> b.getLang().equalsIgnoreCase(lang.getCode())).findFirst();
     bloqueModel.put("orden", bloque.getOrden());
@@ -238,10 +214,10 @@ public class MXXReportService extends SgiReportDocxService {
     return reportModel;
   }
 
-  private HashMap<String, Object> getReportModelBloque(BloqueDto bloque, List<ApartadoTreeDto> apartados,
+  private Map<String, Object> getReportModelBloque(BloqueDto bloque, List<ApartadoTreeDto> apartados,
       List<RespuestaInput> respuestas, List<RespuestaInput> respuestasMemoriaOriginal, Language lang) {
-    HashMap<String, Object> reportModel = new HashMap<>();
-    HashMap<String, Object> bloqueModel = new HashMap<>();
+    Map<String, Object> reportModel = new HashMap<>();
+    Map<String, Object> bloqueModel = new HashMap<>();
     Optional<BloqueNombreDto> bloqueNombre = bloque.getNombre().stream()
         .filter(b -> b.getLang().equalsIgnoreCase(lang.getCode())).findFirst();
     bloqueModel.put("orden", bloque.getOrden());
@@ -256,7 +232,7 @@ public class MXXReportService extends SgiReportDocxService {
     return reportModel;
   }
 
-  private HashMap<String, Object> getReportModelApartado(ApartadoTreeDto apartado, List<RespuestaInput> respuestas,
+  private Map<String, Object> getReportModelApartado(ApartadoTreeDto apartado, List<RespuestaInput> respuestas,
       JsonObject respuestaPadreJson, Language lang) {
     return getReportModelApartado(apartado, respuestas, null, respuestaPadreJson, lang);
   }
@@ -281,11 +257,11 @@ public class MXXReportService extends SgiReportDocxService {
    *                                  partir del 3 nivel
    * @return el model del apartado
    */
-  private HashMap<String, Object> getReportModelApartado(ApartadoTreeDto apartado, List<RespuestaInput> respuestas,
+  private Map<String, Object> getReportModelApartado(ApartadoTreeDto apartado, List<RespuestaInput> respuestas,
       List<RespuestaInput> respuestasMemoriaOriginal,
       JsonObject respuestaPadreJson, Language lang) {
-    HashMap<String, Object> reportModel = new HashMap<>();
-    HashMap<String, Object> apartadoModel = new HashMap<>();
+    Map<String, Object> reportModel = new HashMap<>();
+    Map<String, Object> apartadoModel = new HashMap<>();
 
     GsonHandler provider = new DefaultGsonHandler();
     Optional<ApartadoDefinicionDto> apartadoDefinicion = apartado.getDefinicion().stream()

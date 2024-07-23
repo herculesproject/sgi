@@ -35,10 +35,10 @@ public class TiposEnumI18n {
 
     public static String getI18nMessageFromEnum(final Long id) {
       String message = "";
-      if (!StringUtils.isEmpty(id)) {
+      if (id != null) {
         TipoActividadI18n tipoBusq = Stream.of(TipoActividadI18n.values())
             .filter(ta -> id.equals(ta.getId())).findFirst().orElse(null);
-        if (!ObjectUtils.isEmpty(tipoBusq)) {
+        if (tipoBusq != null) {
           message = ApplicationContextSupport.getMessage(tipoBusq.i18nMessage);
         }
       }
@@ -47,10 +47,10 @@ public class TiposEnumI18n {
 
     public static String getI18nMessageFromEnumAndLocale(final Long id, Locale locale) {
       String message = "";
-      if (!StringUtils.isEmpty(id)) {
+      if (id != null) {
         TipoActividadI18n tipoBusq = Stream.of(TipoActividadI18n.values())
             .filter(ta -> id.equals(ta.getId())).findFirst().orElse(null);
-        if (!ObjectUtils.isEmpty(tipoBusq)) {
+        if (tipoBusq != null) {
           message = ApplicationContextSupport.getApplicationContext().getMessage(tipoBusq.i18nMessage, null, locale);
         }
       }
@@ -84,10 +84,10 @@ public class TiposEnumI18n {
 
     public static String getI18nMessageFromEnum(final Long id) {
       String message = "";
-      if (!StringUtils.isEmpty(id)) {
+      if (id != null) {
         TipoInvestigacionTuteladaI18n tipoBusq = Stream.of(TipoInvestigacionTuteladaI18n.values())
             .filter(tit -> id.equals(tit.getId())).findFirst().orElse(null);
-        if (!ObjectUtils.isEmpty(tipoBusq)) {
+        if (tipoBusq != null) {
           message = ApplicationContextSupport.getMessage(tipoBusq.i18nMessage);
         }
       }
@@ -96,10 +96,10 @@ public class TiposEnumI18n {
 
     public static String getI18nMessageFromEnumAndLocale(final Long id, Locale locale) {
       String message = "";
-      if (!StringUtils.isEmpty(id)) {
+      if (id != null) {
         TipoInvestigacionTuteladaI18n tipoBusq = Stream.of(TipoInvestigacionTuteladaI18n.values())
             .filter(ta -> id.equals(ta.getId())).findFirst().orElse(null);
-        if (!ObjectUtils.isEmpty(tipoBusq)) {
+        if (tipoBusq != null) {
           message = ApplicationContextSupport.getApplicationContext().getMessage(tipoBusq.i18nMessage, null, locale);
         }
       }
@@ -182,10 +182,10 @@ public class TiposEnumI18n {
 
     public static String getI18nMessageFromEnum(final Long id) {
       String message = "";
-      if (!StringUtils.isEmpty(id)) {
+      if (id != null) {
         TipoEstadoMemoriaI18n tipoBusq = Stream.of(TipoEstadoMemoriaI18n.values())
             .filter(tit -> id.equals(tit.getId())).findFirst().orElse(null);
-        if (!ObjectUtils.isEmpty(tipoBusq)) {
+        if (tipoBusq != null) {
           message = ApplicationContextSupport.getMessage(tipoBusq.i18nMessage);
         }
       }
@@ -194,10 +194,10 @@ public class TiposEnumI18n {
 
     public static String getI18nMessageFromEnumAndLocale(final Long id, Locale locale) {
       String message = "";
-      if (!StringUtils.isEmpty(id)) {
+      if (id != null) {
         TipoEstadoMemoriaI18n tipoBusq = Stream.of(TipoEstadoMemoriaI18n.values())
             .filter(ta -> id.equals(ta.getId())).findFirst().orElse(null);
-        if (!ObjectUtils.isEmpty(tipoBusq)) {
+        if (tipoBusq != null) {
           message = ApplicationContextSupport.getApplicationContext().getMessage(tipoBusq.i18nMessage, null, locale);
         }
       }

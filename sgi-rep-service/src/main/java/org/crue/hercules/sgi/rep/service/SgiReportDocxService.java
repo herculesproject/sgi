@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -161,7 +160,7 @@ public class SgiReportDocxService {
         DATE_LANGUAGE_PATTERNS.get(SgiLocaleContextHolder.getLanguage()), SgiLocaleContextHolder.getLanguage());
   }
 
-  protected XWPFDocument compileReportData(InputStream is, HashMap<String, Object> dataReport) {
+  protected XWPFDocument compileReportData(InputStream is, Map<String, Object> dataReport) {
 
     Configure config = Configure.builder()
         .useSpringEL()
@@ -171,7 +170,7 @@ public class SgiReportDocxService {
     return compileReportData(is, config, dataReport);
   }
 
-  protected XWPFDocument compileReportData(InputStream is, Configure config, HashMap<String, Object> dataReport) {
+  protected XWPFDocument compileReportData(InputStream is, Configure config, Map<String, Object> dataReport) {
     return XWPFTemplate.compile(is, config).render(dataReport).getXWPFDocument();
   }
 

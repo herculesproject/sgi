@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -245,7 +246,7 @@ public class InformeActaReportService extends SgiReportDocxService {
       memoriaEvaluada.setPersonaRef(memoria.getPersonaRef());
       memoriaEvaluada
           .setTipoEvaluacion(TipoEvaluacionI18n.getI18nMessageFromEnumAndLocale(memoria.getTipoEvaluacionId(), locale));
-      memoriaEvaluada.setTitulo(memoria.getTitulo());
+      memoriaEvaluada.setTitulo(I18nHelper.getValueForCurrentLanguage(memoria.getTitulo()));
       memoriaEvaluada.setVersion(memoria.getVersion());
       try {
         PersonaDto persona = personaService.findById(memoria.getPersonaRef());
@@ -293,7 +294,7 @@ public class InformeActaReportService extends SgiReportDocxService {
           .forEach(memoria -> {
             ActaComentariosMemoriaReportOutput comentariosMemoriaReportOutput = new ActaComentariosMemoriaReportOutput();
             comentariosMemoriaReportOutput.setNumReferenciaMemoria(memoria.getNumReferencia());
-            comentariosMemoriaReportOutput.setTituloProyecto(memoria.getTitulo());
+            comentariosMemoriaReportOutput.setTituloProyecto(I18nHelper.getValueForLanguage(memoria.getTitulo(), lang));
             comentariosMemoriaReportOutput
                 .setDictamen(DictamenI18n.getI18nMessageFromEnumAndLocale(memoria.getDictamenId(), locale));
             comentariosMemoriaReportOutput.setBloques(new ArrayList<>());
