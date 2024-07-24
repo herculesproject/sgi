@@ -26,14 +26,11 @@ import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.com.Status;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.util.AssertHelper;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -48,9 +45,6 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String MSG_FIELD_ASUNTO = "email.asunto";
   private static final String MSG_FIELD_CONTENIDO = "email.contenido";
   private static final String MSG_FIELD_DESTINATARIOS = "email.destinatarios";
-  private static final String MSG_KEY_ENTITY = "entity";
-  private static final String MSG_KEY_FIELD = "field";
-  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
 
   private static final String EMPTY_LUGAR = "videoconferencia";
   private static final String PATH_SEPARATOR = "/";
@@ -435,18 +429,8 @@ public class SgiApiComService extends SgiApiBaseService {
   private void validateComunicados(String subject, String content, List<Recipient> recipients) {
     AssertHelper.fieldNotNull(subject, EmailOutput.class, MSG_FIELD_ASUNTO);
     AssertHelper.fieldNotNull(content, EmailOutput.class, MSG_FIELD_CONTENIDO);
-    Assert.notEmpty(recipients,
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_DESTINATARIOS))
-            .parameter(MSG_KEY_ENTITY,
-                EmailOutput.class)
-            .build());
-    Assert.noNullElements(recipients,
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_DESTINATARIOS))
-            .parameter(MSG_KEY_ENTITY,
-                EmailOutput.class)
-            .build());
+    AssertHelper.fieldNotEmpty(recipients, EmailOutput.class, MSG_FIELD_DESTINATARIOS);
+    AssertHelper.fieldNoNullElements(recipients, EmailOutput.class, MSG_FIELD_DESTINATARIOS);
   }
 
 }

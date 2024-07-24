@@ -13,14 +13,13 @@ import org.crue.hercules.sgi.eti.repository.DictamenRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.DictamenSpecifications;
 import org.crue.hercules.sgi.eti.service.DictamenService;
-import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

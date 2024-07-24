@@ -66,12 +66,12 @@ import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
-import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -1421,12 +1421,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Transactional
   @Override
   public Memoria desactivar(Long id) {
-    Assert.notNull(id,
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(PROBLEM_MESSAGE_PARAMETER_FIELD, ApplicationContextSupport.getMessage("id"))
-            .parameter(PROBLEM_MESSAGE_PARAMETER_ENTITY,
-                ApplicationContextSupport.getMessage(Memoria.class))
-            .build());
+    AssertHelper.idNotNull(id, Memoria.class);
 
     return this.memoriaRepository.findById(id).map(memoria -> {
 

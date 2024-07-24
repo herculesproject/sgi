@@ -5,14 +5,13 @@ import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.repository.CargoComiteRepository;
 import org.crue.hercules.sgi.eti.repository.specification.CargoComiteSpecifications;
 import org.crue.hercules.sgi.eti.service.CargoComiteService;
-import org.crue.hercules.sgi.eti.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 

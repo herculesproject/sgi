@@ -10,13 +10,12 @@ import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
 import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.repository.TipoMemoriaComiteRepository;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaComiteService;
-import org.crue.hercules.sgi.eti.util.AssertHelper;
+import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 

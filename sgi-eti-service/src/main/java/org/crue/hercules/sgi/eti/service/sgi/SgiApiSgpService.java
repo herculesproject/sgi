@@ -7,13 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
-import org.crue.hercules.sgi.eti.util.AssertHelper;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class SgiApiSgpService extends SgiApiBaseService {
-  private static final String MSG_KEY_ENTITY = "entity";
-  private static final String MSG_KEY_FIELD = "field";
-  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
 
   public SgiApiSgpService(RestApiProperties restApiProperties, RestTemplate restTemplate) {
     super(restApiProperties, restTemplate);
@@ -38,7 +32,7 @@ public class SgiApiSgpService extends SgiApiBaseService {
   public PersonaOutput findById(String id) {
     log.debug("findById({}) - start", id);
 
-    AssertHelper.fieldNotNull(id, PersonaOutput.class, AssertHelper.MESSAGE_KEY_ID);
+    AssertHelper.idNotNull(id, PersonaOutput.class);
 
     ServiceType serviceType = ServiceType.SGP;
     String relativeUrl = "/personas/{id}";
@@ -61,19 +55,8 @@ public class SgiApiSgpService extends SgiApiBaseService {
    */
   public List<PersonaOutput> findAllByIdIn(List<String> ids) {
     log.debug("findAllByIdIn({}) - start", ids);
-
-    Assert.notEmpty(ids,
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(AssertHelper.MESSAGE_KEY_ID))
-            .parameter(MSG_KEY_ENTITY,
-                PersonaOutput.class)
-            .build());
-    Assert.noNullElements(ids,
-        () -> ProblemMessage.builder().key(Assert.class, PROBLEM_MESSAGE_NOTNULL)
-            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(AssertHelper.MESSAGE_KEY_ID))
-            .parameter(MSG_KEY_ENTITY,
-                PersonaOutput.class)
-            .build());
+    AssertHelper.fieldNotEmpty(ids, PersonaOutput.class, "id");
+    AssertHelper.fieldNoNullElements(ids, PersonaOutput.class, "id");
 
     String in = ids.stream().map(id -> StringUtils.wrap(id, "\"")).collect(Collectors.joining(","));
 

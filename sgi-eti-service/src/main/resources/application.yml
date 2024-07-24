@@ -60,6 +60,9 @@ spring:
     # Set Liquibase changeLog parameters
     parameters:
       schemaPrefix: ${spring.jpa.properties.hibernate.[default_schema]}.
+  messages:
+    # Register framework messages and project properties. Project properties takes precedende.
+    basename: "messages,org/crue/hercules/sgi/framework/messages"
   mvc:
     # Retain ant path controller definitions
     pathmatch:
