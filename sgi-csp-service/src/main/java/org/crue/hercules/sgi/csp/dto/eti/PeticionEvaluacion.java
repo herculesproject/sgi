@@ -54,7 +54,7 @@ public class PeticionEvaluacion implements Serializable {
   /** Otro valor social */
   private List<I18nFieldValueDto> otroValorSocial;
   /** Objetivos */
-  private String objetivos;
+  private List<I18nFieldValueDto> objetivos;
   /** Diseño metodológico */
   private String disMetodologico;
   /** Externo */

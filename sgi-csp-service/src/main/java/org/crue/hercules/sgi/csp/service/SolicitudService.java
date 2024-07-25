@@ -747,7 +747,7 @@ public class SolicitudService {
                   // de los registros de la tabla "SolicitudProyectoPresupuesto" cuyo campo
                   // finanicacionAjena = false)
                   .importeFinanciacion(getImporteAutoFinanciacion(solicitud))
-                  .resumen(getResumen(solicitudProyecto)).objetivos(solicitudProyecto.getObjetivos())
+                  .resumen(getResumen(solicitudProyecto)).objetivos(getObjetivos(solicitudProyecto))
                   .build();
 
               // Guardar el PeticionEvaluacion.id
@@ -1472,6 +1472,14 @@ public class SolicitudService {
     List<I18nFieldValueDto> value = new ArrayList<>();
     if (StringUtils.isNotBlank(solicitudProyecto.getResultadosPrevistos())) {
       value.add(new I18nFieldValueDto(Language.ES, solicitudProyecto.getResultadosPrevistos()));
+    }
+    return value;
+  }
+
+  private List<I18nFieldValueDto> getObjetivos(SolicitudProyecto solicitudProyecto) {
+    List<I18nFieldValueDto> value = new ArrayList<>();
+    if (StringUtils.isNotBlank(solicitudProyecto.getObjetivos())) {
+      value.add(new I18nFieldValueDto(Language.ES, solicitudProyecto.getObjetivos()));
     }
     return value;
   }
