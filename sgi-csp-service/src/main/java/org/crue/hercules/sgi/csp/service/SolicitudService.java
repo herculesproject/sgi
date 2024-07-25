@@ -3,12 +3,14 @@ package org.crue.hercules.sgi.csp.service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
@@ -66,6 +68,8 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -726,7 +730,7 @@ public class SolicitudService {
               // Se creará un registro en la tabla "PeticionEvaluacion" del módulo de ética
               PeticionEvaluacion peticionEvaluacionRequest = PeticionEvaluacion.builder()
                   .solicitudConvocatoriaRef(solicitud.getId().toString()).checklistId(checklistOutput.getId())
-                  .personaRef(solicitud.getSolicitanteRef()).titulo(solicitud.getTitulo())
+                  .personaRef(solicitud.getSolicitanteRef()).titulo(getTitulo(solicitud))
                   // Si hay entidades financiadoras (registros en la tabla "Convocatoria
                   // Entidad Financiadora" de la convocatoria asociada a la solicitud) valor "Sí",
                   // en otro caso valor "No"
@@ -743,7 +747,7 @@ public class SolicitudService {
                   // de los registros de la tabla "SolicitudProyectoPresupuesto" cuyo campo
                   // finanicacionAjena = false)
                   .importeFinanciacion(getImporteAutoFinanciacion(solicitud))
-                  .resumen(solicitudProyecto.getResultadosPrevistos()).objetivos(solicitudProyecto.getObjetivos())
+                  .resumen(getResumen(solicitudProyecto)).objetivos(solicitudProyecto.getObjetivos())
                   .build();
 
               // Guardar el PeticionEvaluacion.id
@@ -890,7 +894,7 @@ public class SolicitudService {
         .map(solicitudProyectoEquipo -> {
           log.debug("Copy SolicitudProyectoEquipo with id: {}", solicitudProyectoEquipo.getId());
           EquipoTrabajo.EquipoTrabajoBuilder equipoTrabajo = EquipoTrabajo.builder();
-          equipoTrabajo.peticionEvaluacion(peticionEvaluacion);
+          equipoTrabajo.peticionEvaluacionId(peticionEvaluacion.getId());
           equipoTrabajo.personaRef(solicitudProyectoEquipo.getPersonaRef());
           return equipoTrabajo.build();
         })
@@ -1426,6 +1430,14 @@ public class SolicitudService {
     log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
   }
 
+  private List<I18nFieldValueDto> getTitulo(Solicitud solicitud) {
+    List<I18nFieldValueDto> value = new ArrayList<>();
+    if (StringUtils.isNotBlank(solicitud.getTitulo())) {
+      value.add(new I18nFieldValueDto(Language.ES, solicitud.getTitulo()));
+    }
+    return value;
+  }
+
   private boolean isEntidadFinanciadora(Solicitud solicitud) {
     // Si hay entidades financiadoras (registros en la tabla "Convocatoria
     // Entidad Financiadora" de la convocatoria asociada a la solicitud) valor "Sí",
@@ -1454,6 +1466,14 @@ public class SolicitudService {
     return entidadesFinanciadoras.stream()
         .map(entidadFinanciadora -> entidadFinanciadora.getFuenteFinanciacion().getNombre())
         .collect(Collectors.joining(", "));
+  }
+
+  private List<I18nFieldValueDto> getResumen(SolicitudProyecto solicitudProyecto) {
+    List<I18nFieldValueDto> value = new ArrayList<>();
+    if (StringUtils.isNotBlank(solicitudProyecto.getResultadosPrevistos())) {
+      value.add(new I18nFieldValueDto(Language.ES, solicitudProyecto.getResultadosPrevistos()));
+    }
+    return value;
   }
 
   private BigDecimal getImporteAutoFinanciacion(Solicitud solicitud) {
