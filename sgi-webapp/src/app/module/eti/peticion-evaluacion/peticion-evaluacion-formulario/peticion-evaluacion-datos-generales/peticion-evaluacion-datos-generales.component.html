@@ -169,8 +169,9 @@
     <ng-container *ngIf="peticionEvaluacionFragment.mostrarCampoEspecificarValorSocial$.getValue()">
       <mat-form-field class="m-bottom-10">
         <mat-label>{{'eti.peticion-evaluacion.otro-valor-social' | translate}}</mat-label>
-        <textarea #otroValorSocial matInput formControlName="otroValorSocial" required></textarea>
-        <mat-hint *ngIf="!formGroup.controls.otroValorSocial.errors">{{otroValorSocial.value?.length}} / 2000</mat-hint>
+        <sgi-i18n-textarea #otroValorSocial formControlName="otroValorSocial" required></sgi-i18n-textarea>
+        <mat-hint *ngIf="!formGroup.controls.otroValorSocial.errors">{{otroValorSocial.editingValue?.length}} /
+          2000</mat-hint>
         <mat-error *ngIf="formGroup.controls.otroValorSocial.errors?.required">
           {{'error.required.entity' | translate:msgParamOtroValorSocialEntity}}
         </mat-error>

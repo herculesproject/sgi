@@ -66,7 +66,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       fechaFin: [{ value: null, disabled: this.readonly }, Validators.required],
       resumen: [{ value: [], disabled: this.readonly }, [I18nValidators.required, I18nValidators.maxLength(4000)]],
       valorSocial: [{ value: null, disabled: this.readonly }, Validators.required],
-      otroValorSocial: [{ value: '', disabled: this.readonly }],
+      otroValorSocial: [{ value: [], disabled: this.readonly }],
       objetivosCientificos: [{ value: '', disabled: this.readonly }, [Validators.required, Validators.maxLength(4000)]],
       disenioMetodologico: [{ value: '', disabled: this.readonly }, [Validators.required, Validators.maxLength(4000)]],
       tieneFondosPropios: [{ value: '', disabled: this.readonly }],
@@ -77,7 +77,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       this.addFinanciacionValidations(value);
     }));
 
-    this.subscriptions.push(form.controls.valorSocial.valueChanges.subscribe((value: string) => {
+    this.subscriptions.push(form.controls.valorSocial.valueChanges.subscribe((value: TipoValorSocial) => {
       this.addValorSocialValidations(value);
     }));
 
@@ -132,7 +132,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
 
   protected buildPatch(value: IPeticionEvaluacion): { [key: string]: any; } {
     this.addFinanciacionValidations(value.existeFinanciacion);
-    this.addValorSocialValidations(value.otroValorSocial);
+    this.addValorSocialValidations(value.valorSocial);
     this.addTieneFondosPropiosValidations(value.solicitudConvocatoriaRef);
     this.addDuracionValidations();
     return {
@@ -183,7 +183,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     if (this.peticionEvaluacion.valorSocial === TipoValorSocial.OTRA_FINALIDAD) {
       this.peticionEvaluacion.otroValorSocial = form.otroValorSocial;
     } else {
-      this.peticionEvaluacion.otroValorSocial = null;
+      this.peticionEvaluacion.otroValorSocial = [];
     }
     this.peticionEvaluacion.objetivos = form.objetivosCientificos;
     this.peticionEvaluacion.disMetodologico = form.disenioMetodologico;
@@ -252,11 +252,11 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     }
   }
 
-  private addValorSocialValidations(value: string) {
+  private addValorSocialValidations(value: TipoValorSocial) {
     const form = this.getFormGroup().controls;
     if (value === TipoValorSocial.OTRA_FINALIDAD) {
       this.mostrarCampoEspecificarValorSocial$.next(true);
-      form.otroValorSocial.setValidators([Validators.required]);
+      form.otroValorSocial.setValidators([I18nValidators.required]);
     } else {
       this.mostrarCampoEspecificarValorSocial$.next(false);
       form.otroValorSocial.clearValidators();
