@@ -5,8 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -18,14 +18,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Petición Evaluación -> Otro Valor Social
+ * Petición Evaluación -> Objetivos
  */
 @Data
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class PeticionEvaluacionOtroValorSocial implements Serializable, I18nFieldValue {
+public class PeticionEvaluacionObjetivos implements Serializable, I18nFieldValue {
   /**
    * Serial version
    */
@@ -38,8 +38,8 @@ public class PeticionEvaluacionOtroValorSocial implements Serializable, I18nFiel
   private Language lang;
 
   /** Nombre */
-  @Column(name = "value_", length = 2000, nullable = false)
+  @Column(name = "value_", nullable = false)
   @NotNull
-  @Size(max = 2000)
+  @Lob
   private String value;
 }

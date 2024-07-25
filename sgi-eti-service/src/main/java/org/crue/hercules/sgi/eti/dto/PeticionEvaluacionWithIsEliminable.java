@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
@@ -60,7 +61,7 @@ public class PeticionEvaluacionWithIsEliminable implements Serializable {
   private TipoValorSocial valorSocial;
 
   /** Objetivos */
-  private String objetivos;
+  private Collection<PeticionEvaluacionObjetivos> objetivos;
 
   /** Diseño metodológico */
   private String disMetodologico;

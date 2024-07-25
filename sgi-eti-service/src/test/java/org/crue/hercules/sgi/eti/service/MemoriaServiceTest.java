@@ -32,6 +32,7 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -1233,6 +1234,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     tit.add(new PeticionEvaluacionTitulo(Language.ES, titulo));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen" + id));
+    Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
+    objetivos.add(new PeticionEvaluacionObjetivos(Language.ES, "Objetivos" + id));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
@@ -1240,7 +1243,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);
-    peticionEvaluacion.setObjetivos("Objetivos" + id);
+    peticionEvaluacion.setObjetivos(objetivos);
     peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
@@ -1353,6 +1356,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
+    Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
+    objetivos.add(new PeticionEvaluacionObjetivos(Language.ES, "Objetivos1"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo1");
@@ -1360,7 +1365,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);
-    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setObjetivos(objetivos);
     peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);

@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -254,6 +255,8 @@ public class InformeIT extends BaseIT {
     titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
+    Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
+    objetivos.add(new PeticionEvaluacionObjetivos(Language.ES, "Objetivos"));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(2L);
     peticionEvaluacion.setCodigo("Codigo");
@@ -261,7 +264,7 @@ public class InformeIT extends BaseIT {
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);
-    peticionEvaluacion.setObjetivos("Objetivos");
+    peticionEvaluacion.setObjetivos(objetivos);
     peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);

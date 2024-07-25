@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
  * Petición Evaluación -> Resumen
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable

@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
@@ -223,6 +224,8 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
     tit.add(new PeticionEvaluacionTitulo(Language.ES, titulo));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen" + id));
+    Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
+    objetivos.add(new PeticionEvaluacionObjetivos(Language.ES, "Objetivos" + id));
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
     peticionEvaluacion.setCodigo("Codigo" + id);
@@ -230,7 +233,7 @@ public class EquipoTrabajoControllerTest extends BaseControllerTest {
     peticionEvaluacion.setFechaFin(Instant.now());
     peticionEvaluacion.setFechaInicio(Instant.now());
     peticionEvaluacion.setExisteFinanciacion(false);
-    peticionEvaluacion.setObjetivos("Objetivos" + id);
+    peticionEvaluacion.setObjetivos(objetivos);
     peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
