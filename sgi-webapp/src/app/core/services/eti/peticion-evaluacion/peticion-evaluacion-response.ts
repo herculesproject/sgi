@@ -35,7 +35,7 @@ export interface IPeticionEvaluacionResponse {
   /** Otro valor social */
   otroValorSocial: I18nFieldValueResponse[];
   /** Objetivos */
-  objetivos: string;
+  objetivos: I18nFieldValueResponse[];
   /** Diseño metodológico */
   disMetodologico: string;
   /** Tiene fondos propios */

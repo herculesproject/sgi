@@ -206,12 +206,12 @@
         translate:msgParamObjetivoCientificoEntity}}<span
           [class]="(formGroup.controls.objetivosCientificos.touched && formGroup.controls.objetivosCientificos.errors?.required) ? 'warn' : ''">
           *</span></span>
-      <ckeditor
+      <sgi-i18n-ckeditor #objetivos
         [class]="formGroup.controls.objetivosCientificos.touched && formGroup.controls.objetivosCientificos.errors ? 'ck-editor-border-warn' : ''"
-        [editor]="CkEditor" [config]="configCkEditor" formControlName="objetivosCientificos" required>
-      </ckeditor>
+        formControlName="objetivosCientificos" required>
+      </sgi-i18n-ckeditor>
       <span *ngIf="!formGroup.controls.objetivosCientificos.errors"
-        class="ckeditor-hint">{{formGroup.controls.objetivosCientificos?.value?.length}} / 4000</span>
+        class="ckeditor-hint">{{objetivos.editingValue?.length}} / 4000</span>
       <span class="ckeditor-error"
         *ngIf="formGroup.controls.objetivosCientificos.touched && formGroup.controls.objetivosCientificos.errors?.required">
         {{'error.required.entity' | translate:msgParamObjetivoCientificoEntity}}
