@@ -62,7 +62,9 @@ public class PeticionEvaluacionObject {
       this.fechaFin = dto.getFechaFin();
       this.resumen = I18nHelper.getValueForLanguage(dto.getResumen(), lang);
       this.valorSocial = dto.getValorSocial();
-      this.otroValorSocial = dto.getOtroValorSocial();
+      if (dto.getOtroValorSocial() != null) {
+        this.otroValorSocial = I18nHelper.getValueForLanguage(dto.getOtroValorSocial(), lang);
+      }
       this.objetivos = dto.getObjetivos();
       this.disMetodologico = dto.getDisMetodologico();
       this.externo = dto.getExterno();

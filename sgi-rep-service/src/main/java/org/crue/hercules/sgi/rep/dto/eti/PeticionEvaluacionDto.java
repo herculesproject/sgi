@@ -67,7 +67,7 @@ public class PeticionEvaluacionDto extends BaseRestDto {
   private Instant fechaFin;
   private List<I18nFieldValueDto> resumen;
   private TipoValorSocial valorSocial;
-  private String otroValorSocial;
+  private List<I18nFieldValueDto> otroValorSocial;
   private String objetivos;
   private String disMetodologico;
   private Boolean externo;
