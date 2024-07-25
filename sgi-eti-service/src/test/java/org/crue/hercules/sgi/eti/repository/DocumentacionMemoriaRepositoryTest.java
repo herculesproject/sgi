@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionOtroValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
@@ -89,9 +90,11 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
     titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
+    Set<PeticionEvaluacionOtroValorSocial> otroValorSocial = new HashSet<>();
+    otroValorSocial.add(new PeticionEvaluacionOtroValorSocial(Language.ES, "otro valor social"));
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", titulo,
         tipoActividad, null, false, "Fuente financiación", null, null, Instant.now(), Instant.now(), resumen,
-        TipoValorSocial.ENSENIANZA_SUPERIOR, "otro valor social", "Objetivos", "DiseñoMetodologico", Boolean.FALSE,
+        TipoValorSocial.ENSENIANZA_SUPERIOR, otroValorSocial, "Objetivos", "DiseñoMetodologico", Boolean.FALSE,
         "user-001", null, null, Boolean.TRUE);
   }
 

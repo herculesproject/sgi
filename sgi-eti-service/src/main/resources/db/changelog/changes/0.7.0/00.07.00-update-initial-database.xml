@@ -175,7 +175,8 @@
       referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
 
     <sql>INSERT INTO ${schemaPrefix}peticion_evaluacion_titulo(peticion_evaluacion_id, lang, value_)
-      SELECT id, '${defaultLang}', titulo FROM ${schemaPrefix}peticion_evaluacion</sql>
+      SELECT id, '${defaultLang}', titulo FROM ${schemaPrefix}peticion_evaluacion WHERE titulo IS
+      NOT NULL</sql>
 
     <dropColumn columnName="titulo" tableName="peticion_evaluacion" />
 
@@ -187,7 +188,7 @@
       <column name="lang" type="VARCHAR(2)">
         <constraints nullable="false" />
       </column>
-      <column name="value_" type="VARCHAR(4000)">
+      <column name="value_" type="CLOB">
         <constraints nullable="false" />
       </column>
     </createTable>
@@ -202,9 +203,38 @@
       referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
 
     <sql>INSERT INTO ${schemaPrefix}peticion_evaluacion_resumen(peticion_evaluacion_id, lang,
-      value_) SELECT id, '${defaultLang}', resumen FROM ${schemaPrefix}peticion_evaluacion</sql>
+      value_) SELECT id, '${defaultLang}', resumen FROM ${schemaPrefix}peticion_evaluacion WHERE
+      resumen IS NOT NULL</sql>
 
     <dropColumn columnName="resumen" tableName="peticion_evaluacion" />
+
+    <!-- Otro Valor Social -->
+    <createTable tableName="peticion_evaluacion_otrovalorsocial">
+      <column name="peticion_evaluacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="peticion_evaluacion_otrovalorsocial"
+      columnNames="peticion_evaluacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id"
+      baseTableName="peticion_evaluacion_otrovalorsocial"
+      constraintName="FK_PETICIONEVALUACIONOTROVALORSOCIAL_PETICIONEVALUACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}peticion_evaluacion_otrovalorsocial(peticion_evaluacion_id,
+      lang, value_) SELECT id, '${defaultLang}', otro_valor_social FROM
+      ${schemaPrefix}peticion_evaluacion WHERE otro_valor_social IS NOT NULL</sql>
+
+    <dropColumn columnName="otro_valor_social" tableName="peticion_evaluacion" />
   </changeSet>
 
 </databaseChangeLog>

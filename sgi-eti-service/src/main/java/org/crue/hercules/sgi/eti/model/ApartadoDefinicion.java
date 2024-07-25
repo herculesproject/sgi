@@ -10,6 +10,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -62,6 +63,7 @@ public class ApartadoDefinicion implements Serializable {
 
   /** Esquema. */
   @Column(name = "esquema", nullable = false, columnDefinition = "clob")
+  @Lob
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private String esquema;

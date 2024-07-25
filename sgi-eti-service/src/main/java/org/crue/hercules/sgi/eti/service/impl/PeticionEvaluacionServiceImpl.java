@@ -102,7 +102,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
 
     if (peticionEvaluacion.getValorSocial() != null
         && peticionEvaluacion.getValorSocial().equals(TipoValorSocial.OTRA_FINALIDAD)) {
-      AssertHelper.fieldNotNull(peticionEvaluacion.getOtroValorSocial(), PeticionEvaluacion.class,
+      AssertHelper.i18nFieldNotNull(peticionEvaluacion.getOtroValorSocial(), PeticionEvaluacion.class,
           MSG_FIELD_OTRO_VALOR_SOCIAL);
     }
 
@@ -244,7 +244,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
 
     if (peticionEvaluacionActualizar.getValorSocial() != null
         && peticionEvaluacionActualizar.getValorSocial().equals(TipoValorSocial.OTRA_FINALIDAD)) {
-      AssertHelper.fieldNotNull(peticionEvaluacionActualizar.getOtroValorSocial(), PeticionEvaluacion.class,
+      AssertHelper.i18nFieldNotNull(peticionEvaluacionActualizar.getOtroValorSocial(), PeticionEvaluacion.class,
           MSG_FIELD_OTRO_VALOR_SOCIAL);
     }
 

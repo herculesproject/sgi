@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -22,7 +23,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -101,9 +101,8 @@ public class PeticionEvaluacion extends BaseEntity {
   /** Título */
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "peticion_evaluacion_titulo", joinColumns = @JoinColumn(name = "peticion_evaluacion_id"))
-  @NotEmpty
   @Valid
-  private Set<PeticionEvaluacionTitulo> titulo;
+  private Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
 
   /** Tipo Actividad */
   @ManyToOne
@@ -145,7 +144,7 @@ public class PeticionEvaluacion extends BaseEntity {
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "peticion_evaluacion_resumen", joinColumns = @JoinColumn(name = "peticion_evaluacion_id"))
   @Valid
-  private Set<PeticionEvaluacionResumen> resumen;
+  private Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
 
   /** Valor social */
   @Column(name = "valor_social", length = 2000)
@@ -153,8 +152,10 @@ public class PeticionEvaluacion extends BaseEntity {
   private TipoValorSocial valorSocial;
 
   /** Otro valor social */
-  @Column(name = "otro_valor_social", length = 2000)
-  private String otroValorSocial;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "peticion_evaluacion_otrovalorsocial", joinColumns = @JoinColumn(name = "peticion_evaluacion_id"))
+  @Valid
+  private Set<PeticionEvaluacionOtroValorSocial> otroValorSocial = new HashSet<>();
 
   /** Objetivos */
   @Column(name = "objetivos", length = 4000, columnDefinition = "clob")
