@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
-import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
@@ -40,6 +39,5 @@ public class PeticionEvaluacionObjetivos implements Serializable, I18nFieldValue
   /** Nombre */
   @Column(name = "value_", nullable = false)
   @NotNull
-  @Lob
   private String value;
 }
