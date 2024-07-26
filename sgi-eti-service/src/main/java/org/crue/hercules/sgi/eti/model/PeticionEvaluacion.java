@@ -164,8 +164,10 @@ public class PeticionEvaluacion extends BaseEntity {
   private Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
 
   /** Diseño metodológico */
-  @Column(name = "dis_metodologico", length = 4000, columnDefinition = "clob")
-  private String disMetodologico;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "peticion_evaluacion_dismetodologico", joinColumns = @JoinColumn(name = "peticion_evaluacion_id"))
+  @Valid
+  private Set<PeticionEvaluacionDisMetodologico> disMetodologico = new HashSet<>();
 
   /** Tiene fondos propios */
   @Column(name = "tiene_fondos_propios", columnDefinition = "boolean default false")

@@ -16,6 +16,7 @@ DELETE FROM test.peticion_evaluacion_titulo
 DELETE FROM test.peticion_evaluacion_resumen
 DELETE FROM test.peticion_evaluacion_otrovalorsocial
 DELETE FROM test.peticion_evaluacion_objetivos
+DELETE FROM test.peticion_evaluacion_dismetodologico
 DELETE FROM test.peticion_evaluacion
 DELETE FROM test.tipo_actividad
 DELETE FROM test.tipo_investigacion_tutelada
