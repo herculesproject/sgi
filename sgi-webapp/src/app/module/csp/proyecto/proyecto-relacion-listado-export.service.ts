@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IGrupo } from '@core/models/csp/grupo';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IInvencion } from '@core/models/pii/invencion';
 import { IRelacion, TipoEntidad } from '@core/models/rel/relacion';
@@ -9,6 +10,7 @@ import { FieldOrientation } from '@core/models/rep/field-orientation.enum';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
@@ -16,8 +18,9 @@ import { AbstractTableExportFillService } from '@core/services/rep/abstract-tabl
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { from, Observable, of } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
+import { IGrupoWithTitulo } from './proyecto-formulario/proyecto-relaciones/proyecto-relaciones.fragment';
 import { IProyectoReportData, IProyectoReportOptions } from './proyecto-listado-export.service';
 
 const RELACION_KEY = marker('csp.proyecto-relacion');
@@ -28,7 +31,7 @@ const RELACION_FIELD = 'relacion';
 const RELACION_TIPO_FIELD = 'relacionTipo';
 const RELACION_TITULO_FIELD = 'relacionTitulo';
 
-type EntidadRelacionada = IConvocatoria | IInvencion | IProyecto;
+type EntidadRelacionada = IConvocatoria | IInvencion | IProyecto | IGrupoWithTitulo;
 
 export interface ProyectoRelacionListadoExport {
   id: number;
@@ -46,7 +49,8 @@ export class ProyectoRelacionListadoExportService extends AbstractTableExportFil
     private relacionService: RelacionService,
     private convocatoriaService: ConvocatoriaService,
     private invencionService: InvencionService,
-    private proyectoService: ProyectoService
+    private proyectoService: ProyectoService,
+    private grupoService: GrupoService
   ) {
     super(translate);
   }
@@ -100,6 +104,9 @@ export class ProyectoRelacionListadoExportService extends AbstractTableExportFil
         break;
       case TipoEntidad.PROYECTO:
         observable$ = this.proyectoService.findById(proyectoRelacion.entidadRelacionada.id);
+        break;
+      case TipoEntidad.GRUPO:
+        observable$ = this.grupoService.findById(proyectoRelacion.entidadRelacionada.id).pipe(map(grupo => this.createGrupoWithTitulo(grupo)));
         break;
       default:
         this.logger.error('Entidad relacionada not found');
@@ -219,5 +226,12 @@ export class ProyectoRelacionListadoExportService extends AbstractTableExportFil
       elementsRow.push('');
       elementsRow.push('');
     }
+  }
+
+  private createGrupoWithTitulo(grupo: IGrupo): IGrupoWithTitulo {
+    return {
+      ...grupo,
+      titulo: grupo.nombre
+    };
   }
 }

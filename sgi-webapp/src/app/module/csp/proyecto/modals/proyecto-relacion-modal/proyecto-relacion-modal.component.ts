@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { TipoEntidad, TIPO_ENTIDAD_MAP } from '@core/models/rel/relacion';
+import { TIPO_ENTIDAD_MAP, TipoEntidad } from '@core/models/rel/relacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { ProyectoRelacionValidator } from '@core/validators/proyecto-relacion-validator';
 import { TranslateService } from '@ngx-translate/core';

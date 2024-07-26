@@ -16,6 +16,7 @@ import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.se
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { ProyectoAgrupacionGastoService } from '@core/services/csp/proyecto-agrupacion-gasto/proyecto-agrupacion-gasto.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
@@ -313,7 +314,8 @@ export class ProyectoActionService extends ActionService {
     private readonly tipoFinalidadService: TipoFinalidadService,
     private readonly translate: TranslateService,
     private readonly unidadGestionService: UnidadGestionService,
-    private readonly viculacionService: VinculacionService
+    private readonly viculacionService: VinculacionService,
+    private readonly grupoService: GrupoService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -488,7 +490,7 @@ export class ProyectoActionService extends ActionService {
           proyectoAnualidadService, periodoAmortizacionService, configService);
         this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(this.data?.proyecto?.id, this.proyectoService);
         this.relaciones = new ProyectoRelacionFragment(
-          id, this.data.proyecto, this.readonly, relacionService, convocatoriaService, invencionService, proyectoService, sgiAuthService);
+          id, this.data.proyecto, this.readonly, relacionService, convocatoriaService, invencionService, proyectoService, grupoService, sgiAuthService);
         this.proyectoCalendarioFacturacion = new ProyectoCalendarioFacturacionFragment(
           this.data?.proyecto?.id,
           this.data?.proyecto,
