@@ -22,6 +22,7 @@ class GrupoResponseConverter
       tipo: value.tipo,
       especialInvestigacion: value.especialInvestigacion,
       departamentoOrigenRef: undefined,
+      resumen: value.resumen,
       activo: value.activo
     };
   }
@@ -40,6 +41,7 @@ class GrupoResponseConverter
       codigo: value.codigo,
       tipo: value.tipo,
       especialInvestigacion: value.especialInvestigacion,
+      resumen: value.resumen,
       activo: value.activo
     };
   }

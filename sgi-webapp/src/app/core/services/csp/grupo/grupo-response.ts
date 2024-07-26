@@ -10,5 +10,6 @@ export interface IGrupoResponse {
   codigo: string;
   tipo: Tipo;
   especialInvestigacion: boolean;
+  resumen: string;
   activo: boolean;
 }

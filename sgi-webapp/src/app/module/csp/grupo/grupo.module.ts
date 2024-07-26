@@ -1,6 +1,7 @@
 import { CommonModule, PercentPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
@@ -59,6 +60,7 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoResponsableEconomicoModalComponent
   ],
   imports: [
+    CKEditorModule,
     CommonModule,
     CspSharedModule,
     FormsModule,

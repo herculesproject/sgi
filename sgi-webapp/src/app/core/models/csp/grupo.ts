@@ -14,5 +14,6 @@ export interface IGrupo {
   tipo: Tipo;
   especialInvestigacion: boolean;
   departamentoOrigenRef: string;
+  resumen: string;
   activo: boolean;
 }

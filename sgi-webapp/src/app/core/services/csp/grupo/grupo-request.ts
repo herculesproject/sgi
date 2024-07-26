@@ -9,5 +9,6 @@ export interface IGrupoRequest {
   codigo: string;
   tipo: Tipo;
   especialInvestigacion: boolean;
+  resumen: string;
   departamentoOrigenRef: string;
 }

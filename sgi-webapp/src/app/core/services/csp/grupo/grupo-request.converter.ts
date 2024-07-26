@@ -22,6 +22,7 @@ class GrupoRequestConverter
       tipo: value.tipo,
       especialInvestigacion: value.especialInvestigacion,
       departamentoOrigenRef: value.departamentoOrigenRef,
+      resumen: value.resumen,
       activo: undefined
     };
   }
@@ -39,6 +40,7 @@ class GrupoRequestConverter
       codigo: value.codigo,
       tipo: value.tipo,
       especialInvestigacion: value.especialInvestigacion,
+      resumen: value.resumen,
       departamentoOrigenRef: value.departamentoOrigenRef
     };
   }

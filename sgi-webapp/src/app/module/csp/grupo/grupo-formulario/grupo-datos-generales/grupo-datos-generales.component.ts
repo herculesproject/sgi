@@ -1,6 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
@@ -11,6 +9,8 @@ import { IGrupoTipo, TIPO_MAP } from '@core/models/csp/grupo-tipo';
 import { RolProyectoColectivoService } from '@core/services/csp/rol-proyecto-colectivo/rol-proyecto-colectivo.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { CKEDITOR_CONFIG, CkEditorConfig } from '@shared/sgi-ckeditor-config';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { Subscription } from 'rxjs';
 import { GrupoActionService } from '../../grupo.action.service';
 import { GrupoDatosGeneralesFragment } from './grupo-datos-generales.fragment';
@@ -20,6 +20,7 @@ const GRUPO_INVESTIGADOR_PRINCIPAL_KEY = marker('csp.grupo.investigador-principa
 const GRUPO_CODIGO_KEY = marker('csp.grupo.codigo');
 const GRUPO_FECHA_INICIO_KEY = marker('label.fecha-inicio');
 const GRUPO_ESPECIAL_INVESTIGACION_KEY = marker('csp.grupo.especial-investigacion');
+const GRUPO_RESUMEN_KEY = marker('csp.grupo.resumen');
 
 @Component({
   selector: 'sgi-grupo-datos-generales',
@@ -27,6 +28,8 @@ const GRUPO_ESPECIAL_INVESTIGACION_KEY = marker('csp.grupo.especial-investigacio
   styleUrls: ['./grupo-datos-generales.component.scss']
 })
 export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> implements OnInit {
+  public readonly CkEditor = Editor;
+
   formPart: GrupoDatosGeneralesFragment;
 
   colectivosBusqueda: string[];
@@ -39,6 +42,7 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
   msgParamCodigoEntity = {};
   msgParamFechaInicioEntity = {};
   msgParamEspecialInvestigacionEntity = {};
+  msgParamResumenEntity = {};
 
   tiposGrupo = new MatTableDataSource<IGrupoTipo>();
   columnsTipo = ['tipo', 'fechaInicioTipo', 'fechaFinTipo'];
@@ -58,7 +62,8 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
     protected actionService: GrupoActionService,
     public authService: SgiAuthService,
     private rolProyectoColectivoService: RolProyectoColectivoService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    @Inject(CKEDITOR_CONFIG) public readonly configCkEditor: CkEditorConfig
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as GrupoDatosGeneralesFragment;
@@ -106,6 +111,11 @@ export class GrupoDatosGeneralesComponent extends FormFragmentComponent<IGrupo> 
       GRUPO_ESPECIAL_INVESTIGACION_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamEspecialInvestigacionEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      GRUPO_RESUMEN_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamResumenEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
   }
 
