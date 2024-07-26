@@ -146,6 +146,7 @@ public class GrupoService {
       data.setProyectoSgeRef(grupoActualizar.getProyectoSgeRef());
       data.setFechaInicio(grupoActualizar.getFechaInicio());
       data.setFechaFin(grupoActualizar.getFechaFin());
+      data.setResumen(grupoActualizar.getResumen());
 
       data = this.updateTipo(data, grupoActualizar);
 

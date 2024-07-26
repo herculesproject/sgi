@@ -44,6 +44,9 @@ public class GrupoInput implements Serializable {
 
   private Boolean especialInvestigacion;
 
+  @Size(max = Grupo.RESUMEN_LENGTH)
+  private String resumen;
+
   private String departamentoOrigenRef;
 
 }

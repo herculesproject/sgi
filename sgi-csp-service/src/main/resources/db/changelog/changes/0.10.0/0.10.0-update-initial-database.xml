@@ -29,4 +29,10 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.10.0-4">
+    <addColumn tableName="grupo">
+      <column name="resumen" type="CLOB" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

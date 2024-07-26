@@ -51,6 +51,7 @@ public class Grupo extends BaseActivableEntity {
   public static final int PROYECTO_SGE_REF_LENGTH = 50;
   public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
   public static final int CODIGO_LENGTH = 50;
+  public static final int RESUMEN_LENGTH = 4000;
 
   /** Id */
   @Id
@@ -102,6 +103,11 @@ public class Grupo extends BaseActivableEntity {
   @OneToOne()
   @JoinColumn(name = "grupo_especial_investigacion_id", nullable = true, foreignKey = @ForeignKey(name = "FK_GRUPO_GRUPOESPECIALINVESTIGACION"))
   private GrupoEspecialInvestigacion especialInvestigacion;
+
+  /** Resumen */
+  @Column(name = "resumen", length = Grupo.RESUMEN_LENGTH, nullable = true, columnDefinition = "clob")
+  @Size(max = SolicitudRrhh.RESUMEN_LENGTH)
+  private String resumen;
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
