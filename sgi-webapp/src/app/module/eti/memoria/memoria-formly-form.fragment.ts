@@ -1,5 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IApartado } from '@core/models/eti/apartado';
 import { IBloque } from '@core/models/eti/bloque';
 import { IComentario } from '@core/models/eti/comentario';
@@ -57,6 +58,20 @@ interface IApartadoWithRespuestaAndComentario extends IApartado {
   respuesta: IRespuesta;
   comentario: IComentario;
   respuestaAnterior: IRespuesta;
+}
+
+function isValidI18nFieldValue(field: any): field is I18nFieldValue[] {
+  if (Array.isArray(field) && field.length) {
+    return field.every(f => isValidI18nValue(f));
+  }
+  return false;
+}
+
+function isValidI18nValue(field: any): field is I18nFieldValue {
+  if ('lang' in field && 'value' in field) {
+    return true;
+  }
+  return false;
 }
 
 export abstract class MemoriaFormlyFormFragment extends Fragment {
@@ -743,6 +758,13 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     this.setErrors(errors);
   }
 
+  private getSafeI18nValue(type: string, value: any): any {
+    if ((type === 'ckeditor' || type === 'textarea' || type === 'input') && isValidI18nFieldValue(value)) {
+      return this.languageService.getFieldValue(value);
+    }
+    return value;
+  }
+
   private evalExpressionModelValue(fieldConfig: SgiFormlyFieldConfig[], model: any, formState: any, parentKey?: string) {
     fieldConfig.forEach(fg => {
       if (fg.key && fg.templateOptions?.expressionModelValue) {
@@ -750,7 +772,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
           this.evalKeyParentExpressionModelValue(model, parentKey, fg, formState);
         } else {
           const f = this.evalStringExpression(fg.templateOptions.expressionModelValue, ['model', 'formState', 'field']);
-          model[fg.key as string] = this.evalExpression(f, { fg }, [{ model }, formState, fg]);
+          model[fg.key as string] = this.getSafeI18nValue(fg.type, this.evalExpression(f, { fg }, [{ model }, formState, fg]));
         }
       }
       if (fg.key && (fg.fieldGroup || fg.fieldArray)) {
@@ -790,7 +812,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
             model[parentKey][i] = {};
           }
 
-          model[parentKey][i][fg.key as string] = this.evalExpression(f, { fg }, [{ model }, formState, fg]);
+          model[parentKey][i][fg.key as string] = this.getSafeI18nValue(fg.type, this.evalExpression(f, { fg }, [{ model }, formState, fg]));
         });
 
       }
