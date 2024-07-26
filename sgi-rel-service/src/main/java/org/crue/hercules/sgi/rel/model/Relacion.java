@@ -35,7 +35,9 @@ public class Relacion extends BaseEntity {
     /** Convocatoria */
     CONVOCATORIA,
     /** Invencion */
-    INVENCION
+    INVENCION,
+    /** GRUPO */
+    GRUPO
   }
 
   /** Id */
