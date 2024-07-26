@@ -37,7 +37,7 @@ export interface IPeticionEvaluacionResponse {
   /** Objetivos */
   objetivos: I18nFieldValueResponse[];
   /** Diseño metodológico */
-  disMetodologico: string;
+  disMetodologico: I18nFieldValueResponse[];
   /** Tiene fondos propios */
   tieneFondosPropios: boolean;
   /** Referencia persona solicitante */

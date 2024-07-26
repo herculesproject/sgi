@@ -226,12 +226,12 @@
       <span class="ckeditor-label">{{'eti.peticion-evaluacion.disenio-metodologico' | translate}}<span
           [class]="(formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors?.required) ? 'warn' : ''">
           *</span></span>
-      <ckeditor
+      <sgi-i18n-ckeditor #disenioMetodologico
         [class]="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors ? 'ck-editor-border-warn' : ''"
-        [editor]="CkEditor" [config]="configCkEditor" formControlName="disenioMetodologico" required>
-      </ckeditor>
+        formControlName="disenioMetodologico" required>
+      </sgi-i18n-ckeditor>
       <span *ngIf="!formGroup.controls.disenioMetodologico.errors"
-        class="ckeditor-hint">{{formGroup.controls.disenioMetodologico?.value?.length}} / 4000</span>
+        class="ckeditor-hint">{{disenioMetodologico.editingValue?.length}} / 4000</span>
       <span class="ckeditor-error"
         *ngIf="formGroup.controls.disenioMetodologico.touched && formGroup.controls.disenioMetodologico.errors?.required">
         {{'error.required.entity' | translate:msgParamDisenioMetodologicoEntity}}
