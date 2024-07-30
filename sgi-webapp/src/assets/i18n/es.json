@@ -2593,6 +2593,8 @@
   "msg.csp.convocatoria.registrar": "¿Desea registrar la convocatoria?",
   "msg.csp.convocatoria.registrar.success": "La convocatoria ha sido registrada correctamente",
   "msg.csp.deactivate.success": "{entity} desactivad{gender,select,male{o} female{a} other{a/o}} correctamente",
+  "msg.csp.grupo.create.grupo-especial": "El grupo se ha marcado como 'especial'. No se aplicarán comprobaciones sobre la dedicación del equipo. Una vez que se guarde el grupo, no se podrá modificar esta condición de 'grupo especial'. ¿Desea continuar?",
+  "msg.csp.grupo.create.grupo-no-especial": "El Grupo se ha creado sin la condición de 'especial'. Se aplicarán comprobaciones sobre la dedicación del equipo. Una vez que se guarde el grupo, no se podrá modificar esta condición de 'grupo especial'. ¿Desea continuar?",
   "msg.csp.grupo.linea-investigador.sin-vigencia": "No se puede añadir un miembro cuando el existente no tiene una fecha de inicio establecida",
   "msg.csp.grupo.persona-autorizada.sin-vigencia": "No se puede añadir una persona autorizada cuando el existente no tiene una fecha de inicio establecida",
   "msg.csp.hito.fecha.duplicate": "Ya existe ese hito para la fecha indicada",

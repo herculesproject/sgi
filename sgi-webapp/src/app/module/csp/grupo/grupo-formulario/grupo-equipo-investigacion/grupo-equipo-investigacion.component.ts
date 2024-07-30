@@ -171,7 +171,8 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
       fechaInicioMin: this.actionService.grupo.fechaInicio,
       fechaFinMax: this.actionService.grupo.fechaFin,
       dedicacionMinimaGrupo: this.getDedicacionMinima(),
-      grupo: this.actionService.grupo
+      grupo: this.actionService.grupo,
+      isGrupoEspecialInvestigacion: this.formPart.isGrupoEspecialInvestigacion
     };
 
     if (wrapper) {
