@@ -53,6 +53,8 @@ import { SelectEntityComponent } from './select-entity/select-entity.component';
 import { SelectEnumComponent } from './select-enum/select-enum.component';
 import { SelectMultipleComponent } from './select-multiple/select-multiple.component';
 import { SelectComponent } from './select/select.component';
+import { I18nTextareaComponent } from './i18n-textarea/i18n-textarea.component';
+import { I18nInputComponent } from './i18n-input/i18n-input.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +106,9 @@ import { SelectComponent } from './select/select.component';
     SelectMultipleComponent,
     SgiFileUploadComponent,
     SgiInputWithThousandSeparator,
-    SgiTooltipDirective
+    SgiTooltipDirective,
+    I18nTextareaComponent,
+    I18nInputComponent
   ],
   imports: [
     CommonModule,
@@ -161,7 +165,9 @@ import { SelectComponent } from './select/select.component';
     SelectMultipleComponent,
     SgiFileUploadComponent,
     SgiInputWithThousandSeparator,
-    SgiTooltipDirective
+    SgiTooltipDirective,
+    I18nTextareaComponent,
+    I18nInputComponent
   ]
 })
 export class SharedModule { }
