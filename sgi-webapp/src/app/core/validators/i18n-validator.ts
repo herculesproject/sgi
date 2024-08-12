@@ -1,42 +1,29 @@
-import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 export class I18nValidators {
 
-  static required: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    if (!control.value) {
-      return null;
-    }
-
-    if (control.value instanceof Array && control.value.length > 0) {
-      var data = control.value as I18nFieldValue[];
-      for (const element of data) {
-        if (element.value && element.value.length > 0) {
-          return null;
-        }
-      }
-    }
-
-    return { required: true } as ValidationErrors;
-  };
-
-  static maxLength(maxLength: number): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (!control.value) {
+  static required(control: AbstractControl): ValidationErrors | null {
+    if (Array.isArray(control.value) && control.value.length > 0) {
+      const data = control.value as I18nFieldValue[];
+      if (data.every(v => v.value != null && v.value.length > 0)) {
         return null;
       }
+    }
 
-      if (control.value instanceof Array && control.value.length > 0) {
-        var data = control.value as I18nFieldValue[];
-        for (const element of data) {
-          if (element.value && element.value.length > maxLength) {
-            return { maxlength: true } as ValidationErrors;
-          }
+    return { 'required': true };
+  };
+
+  public static maxLength(maxLength: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (Array.isArray(control.value) && control.value.length > 0) {
+        const data = control.value as I18nFieldValue[];
+        if (data.some(v => v.value != null && v.value.length > maxLength)) {
+          return { 'maxlength': { 'requiredLength': maxLength, 'actualLength': control.value.length } };
         }
-      }
 
-      return null;
-    };
+        return null;
+      };
+    }
   }
-
 }

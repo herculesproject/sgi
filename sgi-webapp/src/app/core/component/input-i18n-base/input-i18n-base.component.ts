@@ -1,43 +1,42 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
-  Component,
   Directive,
   DoCheck,
   ElementRef,
-  Inject,
   Input,
   OnDestroy,
+  OnInit,
   Optional,
-  Self,
-  ViewChild
+  Self
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALIDATORS, NgControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
+import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { Subject, Subscription } from 'rxjs';
-import { LanguageService } from '@core/services/language.service';
-import { Language } from '@core/i18n/language';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
-import { MatInput } from '@angular/material/input';
-import { MatSelect } from '@angular/material/select';
+import { Language } from '@core/i18n/language';
+import { LanguageService } from '@core/services/language.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Directive()
-export abstract class InputI18nBaseComponent implements
-  OnDestroy, AfterViewInit, DoCheck, CanUpdateErrorState, ControlValueAccessor, MatFormFieldControl<I18nFieldValue[]> {
+export abstract class InputI18nBaseComponent
+  implements ControlValueAccessor, MatFormFieldControl<I18nFieldValue[]>, OnInit, OnDestroy, DoCheck {
 
-  /** True when the component is initialized and ready  */
-  private ready = false;
-
-  abstract get id(): string;
-
-  /** Store subscriptions to be unsuscribed onDestroy */
-  private subscriptions: Subscription[] = [];
+  protected abstract uid: string;
 
   readonly stateChanges: Subject<void> = new Subject<void>();
+
+  /** Unique id of the element. */
+  @Input()
+  get id(): string { return this._id; }
+  set id(value: string) {
+    this._id = value || this.uid;
+  }
+  // tslint:disable-next-line: variable-name
+  private _id: string;
 
   /** Value of the component. */
   @Input()
@@ -49,13 +48,11 @@ export abstract class InputI18nBaseComponent implements
       this._value = [];
     }
     else {
-      this._value = [...newValue];
+      this._value = newValue;
     }
+    this.editingValue = this.getCurrentEditingValue();
 
-    this.selectLanguage(this.selectedLang);
-
-    this.propagateChanges(this._value)
-
+    this.propagateChanges()
   }
   // tslint:disable-next-line: variable-name
   private _value: I18nFieldValue[] = [];
@@ -104,20 +101,58 @@ export abstract class InputI18nBaseComponent implements
   // tslint:disable-next-line: variable-name
   private _errorStateMatcher: ErrorStateMatcher;
 
-
-  _languages = Language.values();
-
-  get languages(): Language[] {
-    return this._languages;
+  get availableLanguages(): Language[] {
+    return this._availableLanguages;
   }
+  // tslint:disable-next-line: variable-name
+  _availableLanguages = Language.values();
 
-  selectedLang = this._languages[0];
-  valueToEdit = "";
+  set selectedLanguage(value: Language) {
+    if (this._selectedLanguage != value) {
+      this._selectedLanguage = value;
+      this.editingValue = this.getCurrentEditingValue();
+    }
+  }
+  get selectedLanguage(): Language {
+    return this._selectedLanguage;
+  }
+  // tslint:disable-next-line: variable-name
+  _selectedLanguage = null;
+
+  set editingValue(value: string) {
+    if (this._editingValue === value) {
+      return;
+    }
+    this._editingValue = value;
+    const currentI18nValue = this.getCurrentI18nFieldValue();
+    const newI18nValue: I18nFieldValue = { value: value, lang: this.selectedLanguage };
+    const newValue = [...this.value];
+    const idxCurrrentI18nValue = newValue.indexOf(currentI18nValue);
+    if (value.length > 0) {
+      if (!currentI18nValue) {
+        newValue.push(newI18nValue);
+      } else {
+
+        newValue[idxCurrrentI18nValue] = newI18nValue;
+      }
+      this.value = newValue;
+    } else if (currentI18nValue) {
+      newValue.splice(idxCurrrentI18nValue, 1);
+      this.value = newValue;
+    }
+  }
+  get editingValue(): string {
+    return this._editingValue;
+  }
+  // tslint:disable-next-line: variable-name
+  _editingValue = "";
 
   /** Whether the component is focused. */
   get focused(): boolean {
-    return (this.matInput?.focused || this.matSelect?.focused) ?? false;
+    return this._focused;
   }
+  // tslint:disable-next-line: variable-name
+  private _focused = false;
 
   get errorState(): boolean {
     return this._errorState;
@@ -126,10 +161,11 @@ export abstract class InputI18nBaseComponent implements
     if (this._errorState !== value) {
       this._errorState = value;
       this.stateChanges.next();
+      this.changeDetectorRef.markForCheck();
     }
   }
   // tslint:disable-next-line: variable-name
-  private _errorState = true;
+  private _errorState = false;
 
   get shouldLabelFloat(): boolean {
     return !this.empty || this.focused;
@@ -137,11 +173,10 @@ export abstract class InputI18nBaseComponent implements
 
   /** Whether the component has a value. */
   get empty(): boolean {
-    return this.inputComponent.nativeElement.value.length < 1;
+    return this.editingValue?.length <= 0;
   }
 
   get tabIndex(): number { return 1; }
-
 
   /** `View -> model callback called when value changes` */
   // tslint:disable-next-line: variable-name
@@ -152,109 +187,40 @@ export abstract class InputI18nBaseComponent implements
 
   @Input('aria-describedby') userAriaDescribedBy: string;
 
-  @ViewChild('inputI18nControl', { static: true }) private inputComponent: ElementRef;
-
-  @ViewChild(MatInput) protected readonly matInput: MatInput;
-
-  @ViewChild(MatSelect) protected readonly matSelect: MatSelect;
+  private readonly _destroy = new Subject<void>()
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private elementRef: ElementRef,
     @Self() @Optional() public ngControl: NgControl,
     private defaultErrorStateMatcher: ErrorStateMatcher,
     private readonly languageService: LanguageService, // Subscribirse a los idiomas disponibles
-    @Optional() @Self() @Inject(NG_VALIDATORS) private validators: any[],
-    public dialog: MatDialog
+    private focusMonitor: FocusMonitor
   ) {
     if (this.ngControl) {
       // Note: we provide the value accessor through here, instead of
       // the `providers` to avoid running into a circular import.
       this.ngControl.valueAccessor = this;
-      this._languages = this.languageService.getAvailableLanguages();
-      this.selectedLang = this.languageService.getLanguage();
+      this._availableLanguages = this.languageService.getAvailableLanguages();
+      this._selectedLanguage = this.languageService.getLanguage();
     }
+    this.errorStateMatcher = this._errorStateMatcher || this.defaultErrorStateMatcher;
   }
 
-  ngAfterViewInit(): void {
-
-    // Defer setting the value in order to avoid the "Expression
-    // has changed after it was checked" errors from Angular.
-
-    Promise.resolve().then(() => {
-      this.subscriptions.push(this.matInput.ngControl.valueChanges.subscribe(cambio => {
-        let i18nFieldValue: I18nFieldValue = this.getValueToEditLang();
-        if (cambio.length > 0) {
-          if (i18nFieldValue == null) {
-            i18nFieldValue = { value: cambio, lang: this.selectedLang } as I18nFieldValue
-            this._value.push(i18nFieldValue);
-          } else {
-            i18nFieldValue.value = cambio;
+  ngOnInit(): void {
+    this.focusMonitor.monitor(this.elementRef, true)
+      .pipe(
+        takeUntil(this._destroy)
+      ).subscribe(
+        (value) => {
+          this._focused = !!value;
+          if (!value) {
+            this._onTouched();
           }
-        } else {
-          if (i18nFieldValue != null) {
-            this.remove(i18nFieldValue)
-          }
+          this.stateChanges.next();
         }
-        this.propagateChanges(this._value)
-
-      }));
-
-      this.errorStateMatcher = this._errorStateMatcher || this.defaultErrorStateMatcher;
-
-      this.matInput.onContainerClick = () => {
-        this._onTouched();
-      }
-      this.selectLanguage(this.selectedLang);
-
-      this.ready = true;
-      this.stateChanges.next();
-    });
-
+      );
   }
-
-  private getValueToEditLang(): I18nFieldValue {
-    for (var i = 0; i < this._value.length; i++) {
-      if (this._value[i].lang.code == this.selectedLang.code) {
-        return this._value[i];
-      }
-    }
-    return null;
-  }
-
-  private getValueToEdit(): string {
-    var i18nFieldValue = this.getValueToEditLang();
-    if (i18nFieldValue == null) { return "" }
-    return i18nFieldValue.value;
-  }
-
-  private remove(element: I18nFieldValue): void {
-    const index = this.value.indexOf(element);
-
-    if (index >= 0) {
-      const current = [...this.value];
-      current.splice(index, 1);
-      this.propagateChanges(current);
-    }
-  }
-
-  private propagateChanges(value: I18nFieldValue[]) {
-    this._value = value;
-    this._onChange(this._value);
-    this.changeDetectorRef.markForCheck();
-  }
-
-  selectLanguage(language: Language): void {
-    this.selectedLang = language;
-    this.valueToEdit = this.getValueToEdit();
-    this.propagateChanges(this._value)
-  }
-
-
-  // CanUpdateErrorState interface ***************************
-  updateErrorState(): void {
-    this.errorState = this.ngControl.invalid;
-  }
-
 
   ngDoCheck(): void {
     if (this.ngControl) {
@@ -263,22 +229,46 @@ export abstract class InputI18nBaseComponent implements
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this._destroy.next();
+  }
+
+  private getCurrentI18nFieldValue(): I18nFieldValue {
+    return this.value.find(v => v.lang === this.selectedLanguage);
+  }
+
+  private getCurrentEditingValue(): string {
+    let i18nFieldValue = this.getCurrentI18nFieldValue();
+    return i18nFieldValue?.value ?? '';
+  }
+
+  private propagateChanges() {
+    this._onChange(this._value);
+    this._onTouched();
+    this.stateChanges.next();
+  }
+
+  private updateErrorState(): void {
+    const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+    const control = this.ngControl ? this.ngControl.control as FormControl : null;
+    this.errorState = matcher.isErrorState(control, null);
   }
 
   // MatFormField interface ***************************
   onContainerClick(event: MouseEvent): void {
-    this.inputComponent.nativeElement.focus();
+    // Do nothing, managed from focusMonitor
   }
 
   setDescribedByIds(ids: string[]) {
-    this.inputComponent.nativeElement.setAttribute('aria-describedby', ids.join(' '));
+    if (ids.length) {
+      this.elementRef.nativeElement.setAttribute('aria-describedby', ids.join(' '));
+    } else {
+      this.elementRef.nativeElement.removeAttribute('aria-describedby');
+    }
   }
 
   // Value Accesor ***************************
   writeValue(value: any): void {
     this.value = value;
-    this.propagateChanges(this.value);
   }
 
   registerOnChange(fn: (value: any) => void): void {
@@ -292,6 +282,5 @@ export abstract class InputI18nBaseComponent implements
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
-
 
 }

@@ -1,17 +1,15 @@
 <div class="input-multilang">
-  <mat-select matPrefix #selectLang [(ngModel)]="selectedLang" (selectionChange)="selectLanguage($event.value)"
-    *ngIf="!disabled">
+  <mat-select matPrefix [(ngModel)]="selectedLanguage" *ngIf="!disabled">
     <mat-select-trigger class="select-trigger">
-      <mat-icon [svgIcon]="selectedLang.icon"></mat-icon>
-      <span class="text-language">{{selectedLang.translateKey| translate}}</span>
+      <mat-icon [svgIcon]="selectedLanguage.icon"></mat-icon>
+      <span class="text-language">{{selectedLanguage.translateKey| translate}}</span>
     </mat-select-trigger>
-    <mat-option *ngFor="let language of languages" [value]="language">
+    <mat-option *ngFor="let language of availableLanguages" [value]="language">
       <span><mat-icon [svgIcon]="language.icon"></mat-icon>{{language.translateKey |
         translate}}</span>
     </mat-option>
   </mat-select>
 
-  <textarea matInput #inputI18nControl [(ngModel)]="valueToEdit" [disabled]="disabled"
-    [placeholder]="placeholder"></textarea>
+  <textarea matInput [(ngModel)]="editingValue" [disabled]="disabled" [placeholder]="placeholder"></textarea>
 
 </div>
