@@ -22,6 +22,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.model.TareaFormacion;
 import org.crue.hercules.sgi.eti.model.TareaNombre;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
@@ -380,7 +381,8 @@ public class PeticionEvaluacionIT extends BaseIT {
     Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(2L);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getNombre(), Language.ES)).as("nombre")
         .isEqualTo("Tarea");
-    Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getFormacion(), Language.ES)).as("formacion")
+        .isEqualTo("Formacion");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
     Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo");
@@ -585,13 +587,15 @@ public class PeticionEvaluacionIT extends BaseIT {
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));
+    Set<TareaFormacion> formacion = new HashSet<>();
+    formacion.add(new TareaFormacion(Language.ES, "Formacion" + (id != null ? id : "")));
 
     Tarea tarea = new Tarea();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
     tarea.setNombre(nombre);
-    tarea.setFormacion("Formacion" + (id != null ? id : ""));
+    tarea.setFormacion(formacion);
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + (id != null ? id : ""));
     tarea.setAnio(2020);

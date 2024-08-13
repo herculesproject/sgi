@@ -61,8 +61,10 @@ public class Tarea extends BaseEntity {
   private Set<TareaNombre> nombre = new HashSet<>();
 
   /** Formacion */
-  @Column(name = "formacion", length = 250, nullable = true)
-  private String formacion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tarea_formacion", joinColumns = @JoinColumn(name = "tarea_id"))
+  @Valid
+  private Set<TareaFormacion> formacion = new HashSet<>();
 
   /** Formacion especifica */
   @ManyToOne

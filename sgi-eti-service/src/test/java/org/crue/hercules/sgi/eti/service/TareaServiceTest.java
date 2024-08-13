@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.model.TareaFormacion;
 import org.crue.hercules.sgi.eti.model.TareaNombre;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
@@ -291,13 +292,15 @@ public class TareaServiceTest extends BaseServiceTest {
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));
+    Set<TareaFormacion> formacion = new HashSet<>();
+    formacion.add(new TareaFormacion(Language.ES, "Formacion" + id));
 
     Tarea tarea = new Tarea();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
     tarea.setNombre(nombre);
-    tarea.setFormacion("Formacion" + id);
+    tarea.setFormacion(formacion);
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + id);
     tarea.setAnio(2020);
@@ -330,13 +333,15 @@ public class TareaServiceTest extends BaseServiceTest {
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));
+    Set<TareaFormacion> formacion = new HashSet<>();
+    formacion.add(new TareaFormacion(Language.ES, "Formacion" + id));
 
     TareaWithIsEliminable tarea = new TareaWithIsEliminable();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
     tarea.setNombre(nombre);
-    tarea.setFormacion("Formacion" + id);
+    tarea.setFormacion(formacion);
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + id);
     tarea.setEliminable(true);

@@ -321,6 +321,32 @@
       '${defaultLang}', tarea FROM ${schemaPrefix}tarea WHERE tarea IS NOT NULL</sql>
 
     <dropColumn columnName="tarea" tableName="tarea" />
+
+    <!-- Formacion -->
+    <createTable tableName="tarea_formacion">
+      <column name="tarea_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tarea_formacion" columnNames="tarea_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tarea_id"
+      baseTableName="tarea_formacion"
+      constraintName="FK_TAREAFORMACION_TAREA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tarea" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tarea_formacion(tarea_id, lang, value_) SELECT id,
+      '${defaultLang}', formacion FROM ${schemaPrefix}tarea WHERE formacion IS NOT NULL</sql>
+
+    <dropColumn columnName="formacion" tableName="tarea" />
   </changeSet>
 
 </databaseChangeLog>

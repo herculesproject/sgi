@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.model.TareaFormacion;
 import org.crue.hercules.sgi.eti.model.TareaNombre;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -84,7 +85,8 @@ public class TareaIT extends BaseIT {
     Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(3L);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getNombre(), Language.ES)).as("nombre")
         .isEqualTo("Tarea2");
-    Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion2");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getFormacion(), Language.ES)).as("formacion")
+        .isEqualTo("Formacion2");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
     Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo2");
@@ -110,7 +112,8 @@ public class TareaIT extends BaseIT {
     Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(2L);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getNombre(), Language.ES)).as("nombre")
         .isEqualTo("Tarea1");
-    Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getFormacion(), Language.ES)).as("formacion")
+        .isEqualTo("Formacion1");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
     Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
     Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo1");
@@ -256,13 +259,15 @@ public class TareaIT extends BaseIT {
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));
+    Set<TareaFormacion> formacion = new HashSet<>();
+    formacion.add(new TareaFormacion(Language.ES, "Formacion" + (id != null ? id : "")));
 
     Tarea tarea = new Tarea();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
     tarea.setNombre(nombre);
-    tarea.setFormacion("Formacion" + (id != null ? id : ""));
+    tarea.setFormacion(formacion);
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + (id != null ? id : ""));
     tarea.setAnio(2020);
