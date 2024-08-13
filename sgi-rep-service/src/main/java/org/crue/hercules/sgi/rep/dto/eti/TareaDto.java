@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.rep.dto.eti;
 
 import java.io.Serializable;
+import java.util.List;
 
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.rep.dto.BaseRestDto;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +22,7 @@ public class TareaDto extends BaseRestDto {
 
   private EquipoTrabajoDto equipoTrabajo;
   private MemoriaDto memoria;
-  private String tarea;
+  private List<I18nFieldValueDto> nombre;
   private String formacion;
   private FormacionEspecificaDto formacionEspecifica;
   private String organismo;
