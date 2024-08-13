@@ -25,7 +25,7 @@ public class TareaDto extends BaseRestDto {
   private List<I18nFieldValueDto> nombre;
   private List<I18nFieldValueDto> formacion;
   private FormacionEspecificaDto formacionEspecifica;
-  private String organismo;
+  private List<I18nFieldValueDto> organismo;
   private Integer anio;
   private TipoTareaDto tipoTarea;
 
