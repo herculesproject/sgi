@@ -1,11 +1,12 @@
 ::ng-deep {
   sgi-i18n-input+.mat-form-field-label-wrapper {
     margin-left: 45px;
+    width: calc(100% - 45px);
   }
 
 
   .mat-form-field-should-float {
-    sgi-i18n+.mat-form-field-label-wrapper {
+    sgi-i18n-input+.mat-form-field-label-wrapper {
       margin-left: 0px;
     }
   }
