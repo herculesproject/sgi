@@ -17,7 +17,7 @@ class TareaResponseConverter extends SgiBaseConverter<ITareaResponse, ITarea> {
       formacionEspecifica: value.formacionEspecifica,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       formacion: value.formacion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.formacion) : [],
-      organismo: value.organismo,
+      organismo: value.organismo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.organismo) : [],
       anio: value.anio,
       tipoTarea: value.tipoTarea
     };
@@ -34,7 +34,7 @@ class TareaResponseConverter extends SgiBaseConverter<ITareaResponse, ITarea> {
       formacionEspecifica: value.formacionEspecifica,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       formacion: value.formacion ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.formacion) : [],
-      organismo: value.organismo,
+      organismo: value.organismo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.organismo) : [],
       anio: value.anio,
       tipoTarea: value.tipoTarea
     };

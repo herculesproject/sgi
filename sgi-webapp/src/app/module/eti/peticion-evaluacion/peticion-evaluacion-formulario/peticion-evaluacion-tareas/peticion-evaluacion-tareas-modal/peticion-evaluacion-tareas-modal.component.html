@@ -90,9 +90,10 @@
     <div fxLayout="row">
       <mat-form-field [ngClass]="mostrarOrganismoYanio ? '' : 'ocultarCampo'">
         <mat-label>{{'eti.peticion-evaluacion.tarea.organismo' | translate}}</mat-label>
-        <input #organismo matInput formControlName="organismo" type="text"
-          [placeholder]="'eti.peticion-evaluacion.tarea.organismo' | translate" [required]="mostrarOrganismoYanio" />
-        <mat-hint align="end">{{organismo.value?.length || 0}} / 250</mat-hint>
+        <sgi-i18n-input #organismo formControlName="organismo"
+          [placeholder]="'eti.peticion-evaluacion.tarea.organismo' | translate"
+          [required]="mostrarOrganismoYanio"></sgi-i18n-input>
+        <mat-hint align="end">{{organismo.editingValue?.length || 0}} / 250</mat-hint>
         <mat-error *ngIf="formGroup.controls.organismo.errors?.required">
           {{'error.required.entity' | translate:msgParamOrganismoEntity}}
         </mat-error>

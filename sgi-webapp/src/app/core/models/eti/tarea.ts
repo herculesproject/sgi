@@ -18,7 +18,7 @@ export interface ITarea {
   /** Formación */
   formacion: I18nFieldValue[];
   /** Organismo */
-  organismo: string;
+  organismo: I18nFieldValue[];
   /** Año */
   anio: number;
   /** Tipo tarea */
