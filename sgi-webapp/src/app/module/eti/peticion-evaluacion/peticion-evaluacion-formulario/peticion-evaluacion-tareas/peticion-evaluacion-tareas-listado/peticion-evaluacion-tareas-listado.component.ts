@@ -11,10 +11,12 @@ import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-ev
 import { ITarea } from '@core/models/eti/tarea';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
 import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
+import { TIPO_TAREA_MAP } from '@core/models/eti/tipo-tarea';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
+import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,7 +25,6 @@ import { switchMap } from 'rxjs/operators';
 import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
 import { PeticionEvaluacionTareasModalComponent, PeticionEvaluacionTareasModalComponentData } from '../peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-tareas-listado.fragment';
-import { TIPO_TAREA_MAP } from '@core/models/eti/tipo-tarea';
 
 const MSG_CONFIRM_DELETE = marker('msg.delete.entity');
 const TAREA_KEY = marker('eti.peticion-evaluacion.tarea');
@@ -66,7 +67,8 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     protected matDialog: MatDialog,
     protected readonly snackBarService: SnackBarService,
     actionService: PeticionEvaluacionActionService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.TAREAS, actionService, translate);
     this.tareas$ = (this.fragment as PeticionEvaluacionTareasFragment).tareas$;
@@ -95,7 +97,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
           case 'numReferencia':
             return wrapper.value.memoria?.numReferencia;
           case 'tarea':
-            return wrapper.value.tipoTarea ? wrapper.value.tipoTarea?.nombre : wrapper.value.tarea;
+            return wrapper.value.tipoTarea ? wrapper.value.tipoTarea?.nombre : this.languageService.getFieldValue(wrapper.value.nombre);
           case 'formacionEspecifica':
             return wrapper.value.formacionEspecifica ? wrapper.value.formacionEspecifica?.nombre : wrapper.value.formacion;
           default:

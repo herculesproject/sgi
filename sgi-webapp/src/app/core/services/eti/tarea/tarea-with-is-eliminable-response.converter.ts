@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
 import { ITareaWithIsEliminableResponse } from '@core/services/eti/tarea/tarea-with-is-eliminable-response';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -14,7 +15,7 @@ class TareaWithIsEliminableResponseConverter extends SgiBaseConverter<ITareaWith
       equipoTrabajo: EQUIPO_TRABAJO_RESPONSE_CONVERTER.toTarget(value.equipoTrabajo),
       memoria: MEMORIA_RESPONSE_CONVERTER.toTarget(value.memoria),
       formacionEspecifica: value.formacionEspecifica,
-      tarea: value.tarea,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       formacion: value.formacion,
       organismo: value.organismo,
       anio: value.anio,
@@ -32,7 +33,7 @@ class TareaWithIsEliminableResponseConverter extends SgiBaseConverter<ITareaWith
       equipoTrabajo: EQUIPO_TRABAJO_RESPONSE_CONVERTER.fromTarget(value.equipoTrabajo),
       memoria: MEMORIA_RESPONSE_CONVERTER.fromTarget(value.memoria),
       formacionEspecifica: value.formacionEspecifica,
-      tarea: value.tarea,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       formacion: value.formacion,
       organismo: value.organismo,
       anio: value.anio,

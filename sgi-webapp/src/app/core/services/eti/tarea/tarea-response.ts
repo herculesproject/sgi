@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { FormacionEspecifica } from '../../../models/eti/formacion-especifica';
 import { TipoTarea } from '../../../models/eti/tipo-tarea';
 import { IEquipoTrabajoResponse } from '../equipo-trabajo/equipo-trabajo-response';
@@ -12,8 +13,8 @@ export interface ITareaResponse {
   memoria: IMemoriaResponse;
   /** Formación específica */
   formacionEspecifica: FormacionEspecifica;
-  /** Tarea */
-  tarea: string;
+  /** Nombre */
+  nombre: I18nFieldValueResponse[];
   /** Formación */
   formacion: string;
   /** Organismo */

@@ -1,3 +1,4 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IEquipoTrabajo } from './equipo-trabajo';
 import { FormacionEspecifica } from './formacion-especifica';
 import { IMemoria } from './memoria';
@@ -12,8 +13,8 @@ export interface ITarea {
   memoria: IMemoria;
   /** Formación específica */
   formacionEspecifica: FormacionEspecifica;
-  /** Tarea */
-  tarea: string;
+  /** Nombre */
+  nombre: I18nFieldValue[];
   /** Formación */
   formacion: string;
   /** Organismo */

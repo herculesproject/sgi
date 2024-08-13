@@ -19,6 +19,7 @@ import { MemoriaService } from '@core/services/eti/memoria.service';
 import { TareaService } from '@core/services/eti/tarea.service';
 import { TipoTareaService } from '@core/services/eti/tipo-tarea.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -228,7 +229,7 @@ export class PeticionEvaluacionTareasModalComponent
 
     if (memoria?.comite?.id === COMITE.CEI || memoria?.comite?.id === COMITE.CBE) {
       this.tareaYformacionTexto$.next(true);
-      this.formGroup.controls.tarea.setValidators([Validators.required, Validators.maxLength(250)]);
+      this.formGroup.controls.nombre.setValidators([I18nValidators.required, I18nValidators.maxLength(250)]);
       this.formGroup.controls.formacion.setValidators([Validators.required, Validators.maxLength(250)]);
       this.formGroup.controls.tipoTarea.clearValidators();
       this.formGroup.controls.formacionEspecifica.clearValidators();
@@ -236,7 +237,7 @@ export class PeticionEvaluacionTareasModalComponent
       this.tareaYformacionTexto$.next(false);
       this.formGroup.controls.tipoTarea.setValidators(Validators.required);
       this.formGroup.controls.formacionEspecifica.setValidators(Validators.required);
-      this.formGroup.controls.tarea.clearValidators();
+      this.formGroup.controls.nombre.clearValidators();
       this.formGroup.controls.formacion.clearValidators();
     }
 
@@ -254,7 +255,7 @@ export class PeticionEvaluacionTareasModalComponent
     this.formGroup.controls.formacion.updateValueAndValidity();
     this.formGroup.controls.formacionEspecifica.updateValueAndValidity();
     this.formGroup.controls.organismo.updateValueAndValidity();
-    this.formGroup.controls.tarea.updateValueAndValidity();
+    this.formGroup.controls.nombre.updateValueAndValidity();
     this.formGroup.controls.tipoTarea.updateValueAndValidity();
   }
 
@@ -317,10 +318,10 @@ export class PeticionEvaluacionTareasModalComponent
     if (this.tareaYformacionTexto) {
       this.data.tarea.tipoTarea = null;
       this.data.tarea.formacionEspecifica = null;
-      this.data.tarea.tarea = this.formGroup.controls.tarea.value;
+      this.data.tarea.nombre = this.formGroup.controls.nombre.value;
       this.data.tarea.formacion = this.formGroup.controls.formacion.value;
     } else {
-      this.data.tarea.tarea = null;
+      this.data.tarea.nombre = [];
       this.data.tarea.formacion = null;
       this.data.tarea.tipoTarea = this.formGroup.controls.tipoTarea.value;
       this.data.tarea.formacionEspecifica = this.formGroup.controls.formacionEspecifica.value;
@@ -337,7 +338,7 @@ export class PeticionEvaluacionTareasModalComponent
 
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      tarea: new FormControl(this.data.tarea?.tarea),
+      nombre: new FormControl(this.data.tarea?.nombre ?? []),
       tipoTarea: new FormControl(this.data.tarea?.tipoTarea),
       organismo: new FormControl(this.data.tarea?.organismo),
       anio: new FormControl(this.data.tarea?.anio),

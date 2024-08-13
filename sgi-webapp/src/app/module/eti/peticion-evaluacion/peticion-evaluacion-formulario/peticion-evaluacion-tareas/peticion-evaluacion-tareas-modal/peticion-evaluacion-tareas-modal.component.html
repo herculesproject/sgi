@@ -39,14 +39,14 @@
       </mat-form-field>
       <mat-form-field [ngClass]="tareaYformacionTexto ? '' : 'ocultarCampo'">
         <mat-label>{{'eti.peticion-evaluacion.tarea' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
-        <input #tarea matInput formControlName="tarea" type="text"
+        <sgi-i18n-input #tarea formControlName="nombre"
           [placeholder]="'eti.peticion-evaluacion.tarea' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR"
-          [required]="tareaYformacionTexto" />
-        <mat-hint align="end">{{tarea.value?.length || 0}} / 250</mat-hint>
-        <mat-error *ngIf="formGroup.controls.tarea.errors?.required">
+          [required]="tareaYformacionTexto"></sgi-i18n-input>
+        <mat-hint align="end">{{tarea.editingValue?.length || 0}} / 250</mat-hint>
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
           {{'error.required.entity' | translate:msgParamTareaEntity}}
         </mat-error>
-        <mat-error *ngIf="formGroup.controls.tarea.errors?.maxlength">
+        <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamTareaEntity}}
         </mat-error>
       </mat-form-field>
