@@ -99,7 +99,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
           case 'tarea':
             return wrapper.value.tipoTarea ? wrapper.value.tipoTarea?.nombre : this.languageService.getFieldValue(wrapper.value.nombre);
           case 'formacionEspecifica':
-            return wrapper.value.formacionEspecifica ? wrapper.value.formacionEspecifica?.nombre : wrapper.value.formacion;
+            return wrapper.value.formacionEspecifica ? wrapper.value.formacionEspecifica?.nombre : this.languageService.getFieldValue(wrapper.value.formacion);
           default:
             return wrapper.value[property];
         }

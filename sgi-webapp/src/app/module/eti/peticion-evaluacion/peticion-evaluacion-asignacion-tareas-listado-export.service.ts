@@ -65,7 +65,7 @@ export class PeticionEvaluacionAsignacionTareasListadoExportService extends
           apellidos: persona.apellidos,
           memoria: tarea.memoria.numReferencia,
           tarea: tarea.memoria.comite.id in [1, 3] ? this.languageService.getFieldValue(tarea.nombre) : tarea.memoria.comite.id === 2 ? tarea.tipoTarea.nombre : '',
-          experiencia: tarea.memoria.comite.id in [1, 3] ? tarea.formacion : tarea.memoria.comite.id === 2 ?
+          experiencia: tarea.memoria.comite.id in [1, 3] ? this.languageService.getFieldValue(tarea.formacion) : tarea.memoria.comite.id === 2 ?
             tarea.formacionEspecifica.nombre : ''
         });
         return peticionData;

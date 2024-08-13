@@ -64,9 +64,9 @@
       </mat-form-field>
       <mat-form-field [ngClass]="tareaYformacionTexto ? '' : 'ocultarCampo'">
         <mat-label>{{textoFormacionExperiencia$ | async}}</mat-label>
-        <input #formacion matInput formControlName="formacion" type="text"
-          [placeholder]="textoFormacionExperiencia$ | async" [required]="tareaYformacionTexto" />
-        <mat-hint align="end">{{formacion.value?.length || 0}} / 250</mat-hint>
+        <sgi-i18n-input #formacion formControlName="formacion" [placeholder]="textoFormacionExperiencia$ | async"
+          [required]="tareaYformacionTexto"></sgi-i18n-input>
+        <mat-hint align="end">{{formacion.editingValue?.length || 0}} / 250</mat-hint>
         <mat-error *ngIf="formGroup.controls.formacion.errors?.required">
           {{'error.required.entity' | translate:msgParamFormacionEntity}}
         </mat-error>

@@ -16,7 +16,7 @@ class TareaResponseConverter extends SgiBaseConverter<ITareaResponse, ITarea> {
       memoria: MEMORIA_RESPONSE_CONVERTER.toTarget(value.memoria),
       formacionEspecifica: value.formacionEspecifica,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
-      formacion: value.formacion,
+      formacion: value.formacion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.formacion) : [],
       organismo: value.organismo,
       anio: value.anio,
       tipoTarea: value.tipoTarea
@@ -33,7 +33,7 @@ class TareaResponseConverter extends SgiBaseConverter<ITareaResponse, ITarea> {
       memoria: MEMORIA_RESPONSE_CONVERTER.fromTarget(value.memoria),
       formacionEspecifica: value.formacionEspecifica,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
-      formacion: value.formacion,
+      formacion: value.formacion ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.formacion) : [],
       organismo: value.organismo,
       anio: value.anio,
       tipoTarea: value.tipoTarea

@@ -34,7 +34,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'eti.peticion-evaluacion.tarea.formacion-especifica' | translate}} </th>
         <td mat-cell *matCellDef="let wrapper">
-          {{wrapper.value.formacionEspecifica ? wrapper.value.formacionEspecifica.nombre:wrapper.value.formacion}} </td>
+          {{wrapper.value.formacionEspecifica ? wrapper.value.formacionEspecifica.nombre : wrapper.value.formacion |
+          i18nFieldValue}} </td>
       </ng-container>
 
       <!--Organismo Column -->

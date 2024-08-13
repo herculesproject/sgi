@@ -16,7 +16,7 @@ export interface ITarea {
   /** Nombre */
   nombre: I18nFieldValue[];
   /** Formación */
-  formacion: string;
+  formacion: I18nFieldValue[];
   /** Organismo */
   organismo: string;
   /** Año */

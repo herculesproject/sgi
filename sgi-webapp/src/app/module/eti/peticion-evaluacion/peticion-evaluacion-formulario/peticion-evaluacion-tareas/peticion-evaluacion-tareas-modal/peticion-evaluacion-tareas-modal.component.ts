@@ -230,7 +230,7 @@ export class PeticionEvaluacionTareasModalComponent
     if (memoria?.comite?.id === COMITE.CEI || memoria?.comite?.id === COMITE.CBE) {
       this.tareaYformacionTexto$.next(true);
       this.formGroup.controls.nombre.setValidators([I18nValidators.required, I18nValidators.maxLength(250)]);
-      this.formGroup.controls.formacion.setValidators([Validators.required, Validators.maxLength(250)]);
+      this.formGroup.controls.formacion.setValidators([I18nValidators.required, I18nValidators.maxLength(250)]);
       this.formGroup.controls.tipoTarea.clearValidators();
       this.formGroup.controls.formacionEspecifica.clearValidators();
     } else {
@@ -322,7 +322,7 @@ export class PeticionEvaluacionTareasModalComponent
       this.data.tarea.formacion = this.formGroup.controls.formacion.value;
     } else {
       this.data.tarea.nombre = [];
-      this.data.tarea.formacion = null;
+      this.data.tarea.formacion = [];
       this.data.tarea.tipoTarea = this.formGroup.controls.tipoTarea.value;
       this.data.tarea.formacionEspecifica = this.formGroup.controls.formacionEspecifica.value;
     }
@@ -343,7 +343,7 @@ export class PeticionEvaluacionTareasModalComponent
       organismo: new FormControl(this.data.tarea?.organismo),
       anio: new FormControl(this.data.tarea?.anio),
       formacionEspecifica: new FormControl(this.data.tarea?.formacionEspecifica),
-      formacion: new FormControl(this.data.tarea?.formacion),
+      formacion: new FormControl(this.data.tarea?.formacion ?? []),
       memoria: new FormControl(this.data.tarea?.memoria, [Validators.required]),
       equipoTrabajo: new FormControl(this.data.tarea?.equipoTrabajo == null ? '' :
         this.data.tarea?.equipoTrabajo.persona, [Validators.required])
