@@ -84,7 +84,7 @@
               "templateOptions": {
                 "label": "Zeregina",
                 "order": 60,
-                "expressionModelValue": "formState.tareas[$1].tarea"
+                "expressionModelValue": "formState.tareas[$1].nombre"
               }
             },
             {

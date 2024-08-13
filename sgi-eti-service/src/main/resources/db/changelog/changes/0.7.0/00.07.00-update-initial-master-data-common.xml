@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+  <property name="defaultLang" value="es" />
+
+  <changeSet context="!test" author="master" id="00.07.00-bloques-apartados-m10">
+    <update tableName="apartado_definicion">
+      <column name="esquema" valueClobFile="clob/${defaultLang}/m10/m10_apartado_2_1.json" />
+      <where>:name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="apartado_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M10')))" />
+        <param
+          name="lang" value="${defaultLang}" />
+      </whereParams>
+    </update>
+  </changeSet>
+
+  <changeSet context="!test" author="master" id="00.07.00-bloques-apartados-m30">
+    <update tableName="apartado_definicion">
+      <column name="esquema" valueClobFile="clob/${defaultLang}/m30/m30_apartado_2_1.json" />
+      <where>:name=:value AND :name=:value</where>
+      <whereParams>
+        <param name="apartado_id"
+          valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where nombre = 'M30')))" />
+        <param
+          name="lang" value="${defaultLang}" />
+      </whereParams>
+    </update>
+  </changeSet>
+</databaseChangeLog>

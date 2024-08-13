@@ -22,6 +22,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.model.TareaNombre;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -377,7 +378,8 @@ public class PeticionEvaluacionIT extends BaseIT {
     Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(2L);
     Assertions.assertThat(tarea.getMemoria()).as("memoria").isNotNull();
     Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(2L);
-    Assertions.assertThat(tarea.getTarea()).as("tarea").isEqualTo("Tarea");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getNombre(), Language.ES)).as("nombre")
+        .isEqualTo("Tarea");
     Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
     Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
@@ -581,11 +583,14 @@ public class PeticionEvaluacionIT extends BaseIT {
     tipoTarea.setNombre("Eutanasia");
     tipoTarea.setActivo(Boolean.TRUE);
 
+    Set<TareaNombre> nombre = new HashSet<>();
+    nombre.add(new TareaNombre(Language.ES, descripcion));
+
     Tarea tarea = new Tarea();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
-    tarea.setTarea(descripcion);
+    tarea.setNombre(nombre);
     tarea.setFormacion("Formacion" + (id != null ? id : ""));
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + (id != null ? id : ""));

@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacionObjetivos;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionResumen;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.model.TareaNombre;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
@@ -423,7 +424,8 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     for (int i = 0, j = 1; i < 10; i++, j++) {
       TareaWithIsEliminable tarea = actual.get(i);
-      Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getNombre(), Language.ES))
+          .isEqualTo("Tarea" + String.format("%03d", j));
     }
   }
 
@@ -497,7 +499,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
   public void newTarea_ReturnsTarea() throws Exception {
     // given: Una tarea nueva
-    String nuevaTareaJson = "{\"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
+    String nuevaTareaJson = "{\"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
 
     Tarea tarea = generarMockTarea(1L, "Tarea1");
     EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
@@ -516,14 +518,14 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea la nueva tarea y la devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("tarea").value("Tarea1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("Tarea1"));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
   public void newTarea_EquipoTrabajoIsNull_ReturnsNotFound() throws Exception {
     // given: Una tarea con equipoTrabajo null
-    String nuevaTareaJson = "{\"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
+    String nuevaTareaJson = "{\"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
 
     Tarea tarea = generarMockTarea(1L, "Tarea1");
 
@@ -546,7 +548,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-INV-C", "ETI-PEV-INV-ER" })
   public void newTarea_Error_Returns400() throws Exception {
     // given: Una tarea nueva que produce un error al crearse
-    String nuevaTareaJson = "{\"id\": 1, \"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
+    String nuevaTareaJson = "{\"id\": 1, \"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
 
     EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
         generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
@@ -1057,11 +1059,14 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     tipoTarea.setNombre("Eutanasia");
     tipoTarea.setActivo(Boolean.TRUE);
 
+    Set<TareaNombre> nombre = new HashSet<>();
+    nombre.add(new TareaNombre(Language.ES, descripcion));
+
     Tarea tarea = new Tarea();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
-    tarea.setTarea(descripcion);
+    tarea.setNombre(nombre);
     tarea.setFormacion("Formacion" + id);
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + id);
@@ -1094,11 +1099,14 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     tipoTarea.setNombre("Eutanasia");
     tipoTarea.setActivo(Boolean.TRUE);
 
+    Set<TareaNombre> nombre = new HashSet<>();
+    nombre.add(new TareaNombre(Language.ES, descripcion));
+
     TareaWithIsEliminable tarea = new TareaWithIsEliminable();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
-    tarea.setTarea(descripcion);
+    tarea.setNombre(nombre);
     tarea.setFormacion("Formacion" + id);
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + id);

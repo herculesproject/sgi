@@ -1,8 +1,10 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
@@ -11,9 +13,12 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.model.TareaNombre;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.TareaServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -50,7 +55,7 @@ public class TareaServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(tarea.getId()).isEqualTo(1L);
 
-    Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getNombre(), Language.ES)).isEqualTo("Tarea1");
 
   }
 
@@ -76,7 +81,7 @@ public class TareaServiceTest extends BaseServiceTest {
     // then: la tarea se crea correctamente
     Assertions.assertThat(tareaCreada).isNotNull();
     Assertions.assertThat(tareaCreada.getId()).isEqualTo(1L);
-    Assertions.assertThat(tareaCreada.getTarea()).isEqualTo("TareaNew");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tareaCreada.getNombre(), Language.ES)).isEqualTo("TareaNew");
   }
 
   @Test
@@ -103,7 +108,8 @@ public class TareaServiceTest extends BaseServiceTest {
 
     // then: La tarea se actualiza correctamente.
     Assertions.assertThat(tareaActualizada.getId()).isEqualTo(1L);
-    Assertions.assertThat(tareaActualizada.getTarea()).isEqualTo("Tarea1 actualizada");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tareaActualizada.getNombre(), Language.ES))
+        .isEqualTo("Tarea1 actualizada");
   }
 
   @Test
@@ -235,7 +241,8 @@ public class TareaServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Tarea tarea = page.getContent().get(i);
-      Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getNombre(), Language.ES))
+          .isEqualTo("Tarea" + String.format("%03d", j));
     }
   }
 
@@ -255,7 +262,8 @@ public class TareaServiceTest extends BaseServiceTest {
     Assertions.assertThat(result.size()).isEqualTo(10);
     for (int i = 0, j = 1; i < 10; i++, j++) {
       TareaWithIsEliminable tarea = result.get(i);
-      Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getNombre(), Language.ES))
+          .isEqualTo("Tarea" + String.format("%03d", j));
     }
   }
 
@@ -281,11 +289,14 @@ public class TareaServiceTest extends BaseServiceTest {
     tipoTarea.setNombre("Eutanasia");
     tipoTarea.setActivo(Boolean.TRUE);
 
+    Set<TareaNombre> nombre = new HashSet<>();
+    nombre.add(new TareaNombre(Language.ES, descripcion));
+
     Tarea tarea = new Tarea();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
-    tarea.setTarea(descripcion);
+    tarea.setNombre(nombre);
     tarea.setFormacion("Formacion" + id);
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + id);
@@ -317,11 +328,14 @@ public class TareaServiceTest extends BaseServiceTest {
     tipoTarea.setNombre("Eutanasia");
     tipoTarea.setActivo(Boolean.TRUE);
 
+    Set<TareaNombre> nombre = new HashSet<>();
+    nombre.add(new TareaNombre(Language.ES, descripcion));
+
     TareaWithIsEliminable tarea = new TareaWithIsEliminable();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
     tarea.setMemoria(memoria);
-    tarea.setTarea(descripcion);
+    tarea.setNombre(nombre);
     tarea.setFormacion("Formacion" + id);
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + id);

@@ -11,9 +11,9 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.TareaService;
-import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -143,7 +143,7 @@ public class TareaServiceImpl implements TareaService {
     return tareaRepository.findById(tareaActualizar.getId()).map(tarea -> {
       tarea.setEquipoTrabajo(tareaActualizar.getEquipoTrabajo());
       tarea.setMemoria(tareaActualizar.getMemoria());
-      tarea.setTarea(tareaActualizar.getTarea());
+      tarea.setNombre(tareaActualizar.getNombre());
       tarea.setFormacion(tareaActualizar.getFormacion());
       tarea.setFormacionEspecifica(tareaActualizar.getFormacionEspecifica());
       tarea.setOrganismo(tareaActualizar.getOrganismo());

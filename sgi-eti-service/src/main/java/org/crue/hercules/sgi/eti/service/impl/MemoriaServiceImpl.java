@@ -317,7 +317,7 @@ public class MemoriaServiceImpl implements MemoriaService {
         .findAllByMemoriaId(memoria.getId());
     if (!tareasMemoriaOriginal.isEmpty()) {
       List<Tarea> tareasMemoriaCopy = tareasMemoriaOriginal.stream()
-          .map(tarea -> new Tarea(null, tarea.getEquipoTrabajo(), nuevaMemoria, tarea.getTarea(), tarea.getFormacion(),
+          .map(tarea -> new Tarea(null, tarea.getEquipoTrabajo(), nuevaMemoria, tarea.getNombre(), tarea.getFormacion(),
               tarea.getFormacionEspecifica(), tarea.getOrganismo(), tarea.getAnio(), tarea.getTipoTarea()))
           .collect(Collectors.toList());
       tareaRepository.saveAll(tareasMemoriaCopy);

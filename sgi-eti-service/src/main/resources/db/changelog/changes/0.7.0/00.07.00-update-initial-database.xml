@@ -152,6 +152,7 @@
 
   </changeSet>
 
+  <!-- Petición Evaluacion -->
   <changeSet author="user (generated)" id="00.07.00-6">
     <!-- Título -->
     <createTable tableName="peticion_evaluacion_titulo">
@@ -291,6 +292,35 @@
       ${schemaPrefix}peticion_evaluacion WHERE dis_metodologico IS NOT NULL</sql>
 
     <dropColumn columnName="dis_metodologico" tableName="peticion_evaluacion" />
+  </changeSet>
+
+  <!-- Tarea -->
+  <changeSet author="user (generated)" id="00.07.00-7">
+    <!-- Nombre -->
+    <createTable tableName="tarea_nombre">
+      <column name="tarea_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tarea_nombre" columnNames="tarea_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tarea_id"
+      baseTableName="tarea_nombre"
+      constraintName="FK_TAREANOMBRE_TAREA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tarea" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tarea_nombre(tarea_id, lang, value_) SELECT id,
+      '${defaultLang}', tarea FROM ${schemaPrefix}tarea WHERE tarea IS NOT NULL</sql>
+
+    <dropColumn columnName="tarea" tableName="tarea" />
   </changeSet>
 
 </databaseChangeLog>
