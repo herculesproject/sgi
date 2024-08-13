@@ -23,7 +23,7 @@ public class TareaDto extends BaseRestDto {
   private EquipoTrabajoDto equipoTrabajo;
   private MemoriaDto memoria;
   private List<I18nFieldValueDto> nombre;
-  private String formacion;
+  private List<I18nFieldValueDto> formacion;
   private FormacionEspecificaDto formacionEspecifica;
   private String organismo;
   private Integer anio;
