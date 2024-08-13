@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TareaFormacion;
 import org.crue.hercules.sgi.eti.model.TareaNombre;
+import org.crue.hercules.sgi.eti.model.TareaOrganismo;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -89,7 +90,8 @@ public class TareaIT extends BaseIT {
         .isEqualTo("Formacion2");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
     Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
-    Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo2");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getOrganismo(), Language.ES)).as("organismo")
+        .isEqualTo("Organismo2");
     Assertions.assertThat(tarea.getAnio()).as("anio").isEqualTo(2020);
   }
 
@@ -116,7 +118,8 @@ public class TareaIT extends BaseIT {
         .isEqualTo("Formacion1");
     Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
     Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(1L);
-    Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tarea.getOrganismo(), Language.ES)).as("organismo")
+        .isEqualTo("Organismo1");
     Assertions.assertThat(tarea.getAnio()).as("anio").isEqualTo(2020);
   }
 
@@ -261,6 +264,8 @@ public class TareaIT extends BaseIT {
     nombre.add(new TareaNombre(Language.ES, descripcion));
     Set<TareaFormacion> formacion = new HashSet<>();
     formacion.add(new TareaFormacion(Language.ES, "Formacion" + (id != null ? id : "")));
+    Set<TareaOrganismo> organismo = new HashSet<>();
+    organismo.add(new TareaOrganismo(Language.ES, "Organismo" + (id != null ? id : "")));
 
     Tarea tarea = new Tarea();
     tarea.setId(id);
@@ -269,7 +274,7 @@ public class TareaIT extends BaseIT {
     tarea.setNombre(nombre);
     tarea.setFormacion(formacion);
     tarea.setFormacionEspecifica(formacionEspecifica);
-    tarea.setOrganismo("Organismo" + (id != null ? id : ""));
+    tarea.setOrganismo(organismo);
     tarea.setAnio(2020);
     tarea.setTipoTarea(tipoTarea);
 

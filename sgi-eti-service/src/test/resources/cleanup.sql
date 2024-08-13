@@ -3,6 +3,7 @@ DELETE FROM test.respuesta
 DELETE FROM test.documentacion_memoria
 DELETE FROM test.tarea_nombre
 DELETE FROM test.tarea_formacion
+DELETE FROM test.tarea_organismo
 DELETE FROM test.tarea
 DELETE FROM test.informe
 DELETE FROM test.estado_memoria

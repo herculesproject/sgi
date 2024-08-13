@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TareaFormacion;
 import org.crue.hercules.sgi.eti.model.TareaNombre;
+import org.crue.hercules.sgi.eti.model.TareaOrganismo;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.repository.custom.CustomTareaRepository;
 
@@ -33,7 +34,7 @@ public class TareaWithIsEliminable implements Serializable {
   private Set<TareaFormacion> formacion;
   private FormacionEspecifica formacionEspecifica;
   private TipoTarea tipoTarea;
-  private String organismo;
+  private Set<TareaOrganismo> organismo;
   private Integer anio;
   private boolean eliminable;
 

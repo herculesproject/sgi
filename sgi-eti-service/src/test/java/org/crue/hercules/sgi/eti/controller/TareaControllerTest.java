@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TareaFormacion;
 import org.crue.hercules.sgi.eti.model.TareaNombre;
+import org.crue.hercules.sgi.eti.model.TareaOrganismo;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -80,7 +81,7 @@ public class TareaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
   public void replaceTarea_ReturnsTarea() throws Exception {
     // given: Una tarea a modificar
-    String replaceTareaJson = "{\"id\": 1, \"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1 actualizada\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": [{\"lang\": \"es\", \"value\": \"Formacion1\"}], \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
+    String replaceTareaJson = "{\"id\": 1, \"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1 actualizada\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": [{\"lang\": \"es\", \"value\": \"Formacion1\"}], \"formacionEspecifica\": {\"id\": 300}, \"organismo\": [{\"lang\": \"es\", \"value\": \"Organismo1\"}], \"anio\": 2020}";
 
     Tarea tareaActualizada = generarMockTarea(1L, "Tarea1 actualizada");
 
@@ -100,7 +101,7 @@ public class TareaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
   public void replaceTarea_NotFound() throws Exception {
     // given: Una tarea a modificar
-    String replaceTareaJson = "{\"id\": 1, \"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1 actualizada\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": [{\"lang\": \"es\", \"value\": \"Formacion1\"}], \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
+    String replaceTareaJson = "{\"id\": 1, \"nombre\": [{\"lang\": \"es\", \"value\": \"Tarea1 actualizada\"}], \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": [{\"lang\": \"es\", \"value\": \"Formacion1\"}], \"formacionEspecifica\": {\"id\": 300}, \"organismo\": [{\"lang\": \"es\", \"value\": \"Organismo1\"}], \"anio\": 2020}";
 
     BDDMockito.given(tareaService.update(ArgumentMatchers.<Tarea>any())).will((InvocationOnMock invocation) -> {
       throw new TareaNotFoundException(((Tarea) invocation.getArgument(0)).getId());
@@ -265,6 +266,8 @@ public class TareaControllerTest extends BaseControllerTest {
     nombre.add(new TareaNombre(Language.ES, descripcion));
     Set<TareaFormacion> formacion = new HashSet<>();
     formacion.add(new TareaFormacion(Language.ES, "Formacion" + id));
+    Set<TareaOrganismo> organismo = new HashSet<>();
+    organismo.add(new TareaOrganismo(Language.ES, "Organismo" + id));
 
     Tarea tarea = new Tarea();
     tarea.setId(id);
@@ -273,7 +276,7 @@ public class TareaControllerTest extends BaseControllerTest {
     tarea.setNombre(nombre);
     tarea.setFormacion(formacion);
     tarea.setFormacionEspecifica(formacionEspecifica);
-    tarea.setOrganismo("Organismo" + id);
+    tarea.setOrganismo(organismo);
     tarea.setAnio(2020);
     tarea.setTipoTarea(tipoTarea);
 

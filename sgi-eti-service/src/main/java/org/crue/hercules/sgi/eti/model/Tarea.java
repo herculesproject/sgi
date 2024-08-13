@@ -71,9 +71,11 @@ public class Tarea extends BaseEntity {
   @JoinColumn(name = "formacion_especifica_id", nullable = true, foreignKey = @ForeignKey(name = "FK_TAREA_FORMACIONESPECIFICA"))
   private FormacionEspecifica formacionEspecifica;
 
-  /** Formacion */
-  @Column(name = "organismo", length = 250, nullable = true)
-  private String organismo;
+  /** Organismo */
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tarea_organismo", joinColumns = @JoinColumn(name = "tarea_id"))
+  @Valid
+  private Set<TareaOrganismo> organismo = new HashSet<>();
 
   /** Anio */
   @Column(name = "anio", nullable = true)
