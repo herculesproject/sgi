@@ -30,7 +30,10 @@ import { FooterCrearComponent } from './footers/footer-crear/footer-crear.compon
 import { FragmentContentComponent } from './fragment-content/fragment-content.component';
 import { FragmentTitleComponent } from './fragment-title/fragment-title.component';
 import { FragmentComponent } from './fragment/fragment.component';
+import { I18nCkeditorComponent } from './i18n-ckeditor/i18n-ckeditor.component';
 import { I18nFieldValuePipe } from './i18n-field-value.pipe';
+import { I18nInputComponent } from './i18n-input/i18n-input.component';
+import { I18nTextareaComponent } from './i18n-textarea/i18n-textarea.component';
 import { IconChangesComponent } from './icon-changes/icon-changes.component';
 import { IconErrorsComponent } from './icon-errors/icon-errors.component';
 import { IconProblemsComponent } from './icon-problems/icon-problems.component';
@@ -53,8 +56,6 @@ import { SelectEntityComponent } from './select-entity/select-entity.component';
 import { SelectEnumComponent } from './select-enum/select-enum.component';
 import { SelectMultipleComponent } from './select-multiple/select-multiple.component';
 import { SelectComponent } from './select/select.component';
-import { I18nTextareaComponent } from './i18n-textarea/i18n-textarea.component';
-import { I18nInputComponent } from './i18n-input/i18n-input.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,10 @@ import { I18nInputComponent } from './i18n-input/i18n-input.component';
     FragmentComponent,
     FragmentContentComponent,
     FragmentTitleComponent,
+    I18nCkeditorComponent,
     I18nFieldValuePipe,
+    I18nInputComponent,
+    I18nTextareaComponent,
     IconChangesComponent,
     IconErrorsComponent,
     IconProblemsComponent,
@@ -106,9 +110,7 @@ import { I18nInputComponent } from './i18n-input/i18n-input.component';
     SelectMultipleComponent,
     SgiFileUploadComponent,
     SgiInputWithThousandSeparator,
-    SgiTooltipDirective,
-    I18nTextareaComponent,
-    I18nInputComponent
+    SgiTooltipDirective
   ],
   imports: [
     CommonModule,
@@ -137,7 +139,10 @@ import { I18nInputComponent } from './i18n-input/i18n-input.component';
     FooterCrearComponent,
     FormAutocompleteOffDirective,
     FragmentComponent,
+    I18nCkeditorComponent,
     I18nFieldValuePipe,
+    I18nInputComponent,
+    I18nTextareaComponent,
     IconChangesComponent,
     IconErrorsComponent,
     IconProblemsComponent,
@@ -165,9 +170,7 @@ import { I18nInputComponent } from './i18n-input/i18n-input.component';
     SelectMultipleComponent,
     SgiFileUploadComponent,
     SgiInputWithThousandSeparator,
-    SgiTooltipDirective,
-    I18nTextareaComponent,
-    I18nInputComponent
+    SgiTooltipDirective
   ]
 })
 export class SharedModule { }
