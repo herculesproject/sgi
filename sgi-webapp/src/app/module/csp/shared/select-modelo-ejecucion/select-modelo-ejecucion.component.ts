@@ -8,8 +8,8 @@ import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { Module } from '@core/module';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
@@ -69,12 +69,13 @@ export class SelectModeloEjecucionComponent extends SelectServiceExtendedCompone
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     private service: ModeloEjecucionService,
     private authService: SgiAuthService,
     private unidadGestionService: UnidadGestionService,
   ) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation);
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation);
     this.addTarget = `/${Module.CSP.path}/${CSP_ROUTE_NAMES.MODELO_EJECUCION}/${ROUTE_NAMES.NEW}`;
 
   }

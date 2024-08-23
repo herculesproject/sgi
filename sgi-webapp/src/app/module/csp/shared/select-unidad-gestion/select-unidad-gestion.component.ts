@@ -6,6 +6,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceComponent } from '@core/component/select-service/select-service.component';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -62,10 +63,12 @@ export class SelectUnidadGestionComponent extends SelectServiceComponent<IUnidad
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     private service: UnidadGestionService,
     private authService: SgiAuthService,
-    @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl);
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService);
   }
 
   protected loadServiceOptions(): Observable<IUnidadGestion[]> {

@@ -11,6 +11,7 @@ import { Module } from '@core/module';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
@@ -86,6 +87,7 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
     private service: TipoFinalidadService,
@@ -93,7 +95,7 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
     private authService: SgiAuthService,
     private unidadGestionService: UnidadGestionService,
   ) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.disableWith = (option) => {
       if (this.excluded.length) {

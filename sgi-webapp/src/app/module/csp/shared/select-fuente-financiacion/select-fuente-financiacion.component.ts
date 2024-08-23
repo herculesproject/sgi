@@ -7,6 +7,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -39,12 +40,13 @@ export class SelectFuenteFinanciacionComponent extends SelectServiceExtendedComp
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
     private service: FuenteFinanciacionService,
     private authService: SgiAuthService
   ) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = FuenteFinanciacionModalComponent;
   }

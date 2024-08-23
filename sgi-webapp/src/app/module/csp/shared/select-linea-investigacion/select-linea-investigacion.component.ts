@@ -7,6 +7,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { ILineaInvestigacion } from '@core/models/csp/linea-investigacion';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -39,12 +40,13 @@ export class SelectLineaInvestigacionComponent extends SelectServiceExtendedComp
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
     private service: LineaInvestigacionService,
     private authService: SgiAuthService
   ) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = LineaInvestigacionModalComponent;
   }

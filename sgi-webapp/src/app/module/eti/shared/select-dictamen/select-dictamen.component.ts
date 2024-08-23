@@ -6,8 +6,8 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceComponent } from '@core/component/select-service/select-service.component';
 import { DICTAMEN_MAP, IDictamen } from '@core/models/eti/dictamen';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -37,10 +37,12 @@ export class SelectDictamenComponent extends SelectServiceComponent<IDictamen> {
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     private evaluacionService: EvaluacionService,
-    private translateService: TranslateService,
-    @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl);
+    private translateService: TranslateService
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService);
     this.displayWith = (option) => option?.id ? (DICTAMEN_MAP.get(option.id) ? this.translateService.instant(DICTAMEN_MAP.get(option.id)) : (option?.nombre ?? '')) : (option?.nombre ?? '');
     this.subscriptions.push(this.translateService.onLangChange.subscribe(() => this.refreshDisplayValue()));
   }

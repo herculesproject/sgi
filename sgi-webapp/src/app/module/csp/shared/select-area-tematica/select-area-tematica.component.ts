@@ -5,6 +5,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceComponent } from '@core/component/select-service/select-service.component';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
+import { LanguageService } from '@core/services/language.service';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -34,9 +35,11 @@ export class SelectAreaTematicaComponent extends SelectServiceComponent<IAreaTem
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
-    private service: AreaTematicaService,
-    @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl);
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
+    private service: AreaTematicaService
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService);
   }
 
   protected loadServiceOptions(): Observable<IAreaTematica[]> {

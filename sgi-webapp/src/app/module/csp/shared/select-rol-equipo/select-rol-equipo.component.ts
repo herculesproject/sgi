@@ -8,6 +8,7 @@ import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { Module } from '@core/module';
 import { ROUTE_NAMES } from '@core/route.names';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -29,11 +30,13 @@ export class SelectRolEquipoComponent extends SelectServiceExtendedComponent<IRo
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
-    private service: RolProyectoService,
-    private authService: SgiAuthService,
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
-    @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation);
+    private service: RolProyectoService,
+    private authService: SgiAuthService
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation);
 
     this.addTarget = `/${Module.CSP.path}/${CSP_ROUTE_NAMES.ROL_EQUIPO}/${ROUTE_NAMES.NEW}`;
   }

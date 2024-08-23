@@ -1,5 +1,4 @@
 import { PlatformLocation } from '@angular/common';
-import { InstantiateExpr } from '@angular/compiler';
 import { Component, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -11,6 +10,7 @@ import { IMemoria } from '@core/models/eti/memoria';
 import { Module } from '@core/module';
 import { ROUTE_NAMES } from '@core/route.names';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
+import { LanguageService } from '@core/services/language.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { DateTime } from 'luxon';
@@ -78,13 +78,14 @@ export class SelectEvaluadorComponent extends SelectServiceExtendedComponent<IEv
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
     private evaluadorService: EvaluadorService,
     private personaService: PersonaService,
     private authService: SgiAuthService,
   ) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.displayWith = (evaluador: IEvaluador) => `${evaluador?.persona?.nombre} ${evaluador?.persona?.apellidos}`;
     this.addTarget = `/${Module.ETI.path}/${ETI_ROUTE_NAMES.EVALUADORES}/${ROUTE_NAMES.NEW}`;

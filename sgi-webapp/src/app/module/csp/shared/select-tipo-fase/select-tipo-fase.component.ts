@@ -10,6 +10,7 @@ import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { Module } from '@core/module';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
@@ -81,13 +82,14 @@ export class SelectTipoFaseComponent extends SelectServiceExtendedComponent<ITip
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
     private service: TipoFaseService,
     private modeloEjecucionService: ModeloEjecucionService,
     private authService: SgiAuthService
   ) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.disableWith = (option) => {
       if (this.excluded.length) {

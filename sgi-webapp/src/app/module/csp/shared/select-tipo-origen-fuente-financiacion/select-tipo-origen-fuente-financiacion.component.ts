@@ -7,6 +7,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { TipoOrigenFuenteFinanciacionService } from '@core/services/csp/tipo-origen-fuente-financiacion/tipo-origen-fuente-financiacion.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -28,12 +29,14 @@ export class SelectTipoOrigenFuenteFinanciacionComponent extends SelectServiceEx
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
-    private service: TipoOrigenFuenteFinanciacionService,
-    private authService: SgiAuthService,
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
-    @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    private service: TipoOrigenFuenteFinanciacionService,
+    private authService: SgiAuthService,
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = TipoOrigenFuenteFinanciacionModalComponent;
   }

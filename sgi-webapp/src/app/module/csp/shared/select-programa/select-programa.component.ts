@@ -5,6 +5,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceComponent } from '@core/component/select-service/select-service.component';
 import { IPrograma } from '@core/models/csp/programa';
 import { ProgramaService } from '@core/services/csp/programa.service';
+import { LanguageService } from '@core/services/language.service';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -24,9 +25,11 @@ export class SelectProgramaComponent extends SelectServiceComponent<IPrograma> {
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     private service: ProgramaService,
-    @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl);
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService);
   }
 
   protected loadServiceOptions(): Observable<IPrograma[]> {

@@ -7,6 +7,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -28,12 +29,14 @@ export class SelectRolSocioComponent extends SelectServiceExtendedComponent<IRol
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
-    private service: RolSocioService,
-    private authService: SgiAuthService,
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
-    @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    private authService: SgiAuthService,
+    private service: RolSocioService
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = RolSocioModalComponent;
   }

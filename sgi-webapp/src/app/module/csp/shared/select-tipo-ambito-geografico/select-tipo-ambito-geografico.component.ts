@@ -7,6 +7,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -28,12 +29,14 @@ export class SelectTipoAmbitoGeograficoComponent extends SelectServiceExtendedCo
 
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
-    private service: TipoAmbitoGeograficoService,
-    private authService: SgiAuthService,
+    @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
-    @Self() @Optional() ngControl: NgControl) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    private service: TipoAmbitoGeograficoService,
+    private authService: SgiAuthService
+  ) {
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = TipoAmbitoGeograficoModalComponent;
   }

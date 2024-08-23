@@ -10,6 +10,7 @@ import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { Module } from '@core/module';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { TipoDocumentoService } from '@core/services/csp/tipo-documento.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
@@ -88,13 +89,14 @@ export class SelectTipoDocumentoComponent extends SelectServiceExtendedComponent
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
+    languageService: LanguageService,
     platformLocation: PlatformLocation,
     dialog: MatDialog,
     private service: TipoDocumentoService,
     private modeloEjecucionService: ModeloEjecucionService,
     private authService: SgiAuthService
   ) {
-    super(defaultErrorStateMatcher, ngControl, platformLocation, dialog);
+    super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.disableWith = (option) => {
       if (this.excluded.length) {
