@@ -365,7 +365,9 @@ export class GrupoEquipoModalComponent extends DialogFormComponent<GrupoEquipoMo
   private findGruposEquipoFromOthersGruposByPersonaRef(personaRef: string): Observable<IGrupoEquipo[]> {
     const options: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('personaRef', SgiRestFilterOperator.EQUALS, personaRef)
-        .and('grupo.activo', SgiRestFilterOperator.EQUALS, 'true'),
+        .and('grupo.activo', SgiRestFilterOperator.EQUALS, 'true')
+        .and('grupo.especialInvestigacion', SgiRestFilterOperator.EQUALS, 'false')
+        .and('participacion', SgiRestFilterOperator.IS_NOT_NULL, 'true'),
     };
     return this.grupoEquipoService.findAll(options)
       .pipe(
