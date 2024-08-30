@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "3.5.2 Destination of samples of human origin"
     },
     "hideExpression": "!formState.mainModel.ap3_5.muestrasBiologicasRadio || formState.mainModel.ap3_5.muestrasBiologicasRadio === 'no'",
@@ -46,7 +46,7 @@
       },
       {
         "key": "especificarCesionBiobanco",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'cesionBiobanco')",
         "templateOptions": {
           "label": "Please specify transfer to Biobank",
@@ -59,7 +59,7 @@
       },
       {
         "key": "especificarUsoColeccionMuestras",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'usoColeccionMuestras')",
         "templateOptions": {
           "label": "Please specify collection and record",
@@ -72,7 +72,7 @@
       },
       {
         "key": "especificarIncorporacionColeccionMuestras",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'incorporacionColeccionMuestras')",
         "templateOptions": {
           "label": "Please specify addition to collection",

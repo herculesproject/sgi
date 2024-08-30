@@ -55,7 +55,7 @@
       },
       {
         "key": "describirPrivacion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "hideExpression": "!model.privacionRadio || model.privacionRadio === 'no'",
         "templateOptions": {
           "name": "Describir",

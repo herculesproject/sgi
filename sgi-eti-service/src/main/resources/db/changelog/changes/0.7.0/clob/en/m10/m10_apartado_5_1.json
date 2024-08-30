@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "5.1 Consent document"
     },
     "fieldGroup": [
@@ -24,7 +24,7 @@
               "label": "No"
             },
             {
-              "value": 4,
+              "value": "CONSENTIMIENTO",
               "label": "Yes"
             }
           ]

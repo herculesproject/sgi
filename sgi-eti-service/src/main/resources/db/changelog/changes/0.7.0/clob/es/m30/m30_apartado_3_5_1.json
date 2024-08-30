@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.5.1 Mikroorganismoak/parasitoak"
+      "label": "3.5.1 Microorganismos/parásitos"
     },
     "hideExpression": "!formState.mainModel.ap3_4.ap3_4_2.tareasAgentesBiologicosRadio || formState.mainModel.ap3_4.ap3_4_2.tareasAgentesBiologicosRadio === 'no'",
     "fieldGroup": [
@@ -13,19 +13,19 @@
         "type": "table-crud",
         "key": "microorganismosParasitosTable",
         "templateOptions": {
-          "entity": "mikroorganismoa/parasitoa",
+          "entity": "microorganismo/parásito",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Mikroorganismoa/parasitoa"
+            "text": "Microorganismo/Parásito"
           },
           "fieldGroup": [
             {
               "key": "nombre",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Izena",
+                "label": "Nombre",
                 "order": 10
               }
             },
@@ -33,24 +33,24 @@
               "key": "tipo",
               "type": "select",
               "templateOptions": {
-                "label": "Mota",
+                "label": "Tipo",
                 "order": 20,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Bakterioak eta antzekoak"
+                    "label": "Bacterias y afines"
                   },
                   {
                     "value": "2",
-                    "label": "Birusak"
+                    "label": "Virus"
                   },
                   {
                     "value": "3",
-                    "label": "Parasitoak"
+                    "label": "Parásitos"
                   },
                   {
                     "value": "4",
-                    "label": "Onddoak"
+                    "label": "Hongos"
                   }
                 ]
               }
@@ -59,24 +59,24 @@
               "key": "grupoRiesgo",
               "type": "select",
               "templateOptions": {
-                "label": "Arrisku taldea",
+                "label": "Grupo de riesgo",
                 "order": 30,
                 "options": [
                   {
                     "value": "1",
-                    "label": "1. taldea"
+                    "label": "Grupo 1"
                   },
                   {
                     "value": "2",
-                    "label": "2. taldea"
+                    "label": "Grupo 2"
                   },
                   {
                     "value": "3",
-                    "label": "3. taldea"
+                    "label": "Grupo 3"
                   },
                   {
                     "value": "4",
-                    "label": "4. taldea"
+                    "label": "Grupo 4"
                   }
                 ]
               }
@@ -85,7 +85,7 @@
               "type": "multicheckbox",
               "key": "notasAdicionalesCheck",
               "templateOptions": {
-                "label": "Ohar osagarriak",
+                "label": "Notas adicionales",
                 "type": "array",
                 "order": 40,
                 "options": [
@@ -110,9 +110,9 @@
             },
             {
               "key": "volumenMaximo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Kultibo bakoitzaren gehienezko bolumena",
+                "label": "Volumen máximo de cada cultivo",
                 "order": 50
               }
             }
@@ -123,7 +123,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "* Ohar osagarriak: <strong>A</strong>: Ondorio alergiko posibleak; <strong>D</strong>: Agentearen eraginpean egondako langileen zerrenda gorde egin behar da azken esposiziotik hamar urte baino gehiago igaro arte; <strong>T</strong>: Toxina ekoizpena; <strong>V</strong>: Txerto eraginkorra eskuragai"
+        "template": "* Notas adicionales: <strong>A</strong>: Posibles efectos alérgicos; <strong>D</strong>: La lista de los trabajadores expuestos al agente debe conservarse durante más de diez años después de la última exposición; <strong>T</strong>: Producción de toxinas; <strong>V</strong>: Vacuna eficaz disponible"
       }
     ]
   }

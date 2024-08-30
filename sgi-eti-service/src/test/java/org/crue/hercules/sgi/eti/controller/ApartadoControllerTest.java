@@ -318,12 +318,12 @@ public class ApartadoControllerTest extends BaseControllerTest {
    */
   private Apartado getMockData(Long id, Long bloqueId, Long padreId) {
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
     Bloque bloque = new Bloque(padreId, formulario, 1, null);
 
     Apartado padre = (padreId != null) ? getMockData(padreId, bloqueId, null) : null;
-
-    String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
     final Apartado data = new Apartado();
     data.setId(id);

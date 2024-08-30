@@ -14,7 +14,7 @@
       },
       {
         "key": "numAnimalesUtilizados",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Erabilitako animalia kopurua",
           "placeholder": "",
@@ -27,7 +27,7 @@
       },
       {
         "key": "numAnimalesFinal",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Amaierako animalia kopurua",
           "placeholder": "",
@@ -40,7 +40,7 @@
       },
       {
         "key": "nivelSeveridadSufrido",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",
@@ -55,7 +55,7 @@
       },
       {
         "key": "numAnimalesRetirados",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Baztertutako animalia kopurua",
           "placeholder": "",
@@ -68,7 +68,7 @@
       },
       {
         "key": "nivelSeveridadAlcanzado",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",
@@ -83,7 +83,7 @@
       },
       {
         "key": "numAnimalesPuntoFinal",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Amaierako puntua aplikatu zaien animalien kopurua",
           "placeholder": "",
@@ -96,7 +96,7 @@
       },
       {
         "key": "aplicacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",
@@ -111,7 +111,7 @@
       },
       {
         "key": "descripcion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",
@@ -126,7 +126,7 @@
       },
       {
         "key": "medidas",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",

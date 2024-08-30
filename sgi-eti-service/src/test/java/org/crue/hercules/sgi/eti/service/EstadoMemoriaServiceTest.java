@@ -12,10 +12,8 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.EstadoMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
@@ -26,7 +24,6 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.service.impl.EstadoMemoriaServiceImpl;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -278,12 +275,22 @@ public class EstadoMemoriaServiceTest extends BaseServiceTest {
    */
 
   private Memoria generarMockMemoria(Long id, String numReferencia, String titulo, Integer version) {
+    Memoria memoria = new Memoria();
+    memoria.setId(id);
+    memoria.setNumReferencia(numReferencia);
+    memoria.setPeticionEvaluacion(generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id));
+    memoria.setComite(generarMockComite(id, "comite" + id, true));
+    memoria.setTitulo(titulo);
+    memoria.setPersonaRef("user-00" + id);
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.TRUE);
+    memoria.setRetrospectiva(generarMockRetrospectiva(1L));
+    memoria.setVersion(version);
+    memoria.setActivo(Boolean.TRUE);
 
-    return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
-        generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
-        generarMockTipoMemoria(1L, "TipoMemoria1", true),
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, Boolean.TRUE, null);
+    return memoria;
   }
 
   /**
@@ -335,22 +342,13 @@ public class EstadoMemoriaServiceTest extends BaseServiceTest {
    * @param activo indicador de activo.
    * @return nuevo comite.
    */
-  private Comite generarMockComite(Long id, String comite, Boolean activo) {
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    return new Comite(id, comite, "nombreInvestigacion", Genero.M, formulario, activo);
+  private Comite generarMockComite(Long id, String codigo, Boolean activo) {
+    Comite comite = new Comite();
+    comite.setId(id);
+    comite.setCodigo(codigo);
+    comite.setActivo(activo);
 
-  }
-
-  /**
-   * Función que devuelve un objeto tipo memoria.
-   * 
-   * @param id     identificador del tipo memoria.
-   * @param nombre nobmre.
-   * @param activo indicador de activo.
-   * @return tipo memoria.
-   */
-  private TipoMemoria generarMockTipoMemoria(Long id, String nombre, Boolean activo) {
-    return new TipoMemoria(id, nombre, activo);
+    return comite;
 
   }
 

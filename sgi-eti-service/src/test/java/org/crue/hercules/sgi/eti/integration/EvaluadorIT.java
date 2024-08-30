@@ -10,8 +10,6 @@ import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -36,7 +34,6 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/comite.sql", 
   "classpath:scripts/cargo_comite.sql", 
   "classpath:scripts/tipo_actividad.sql",
-  "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/estado_retrospectiva.sql",
   "classpath:scripts/tipo_convocatoria_reunion.sql", 
   "classpath:scripts/tipo_evaluacion.sql",
@@ -93,11 +90,14 @@ public class EvaluadorIT extends BaseIT {
 
   @Test
   public void addEvaluador_ReturnsEvaluador() throws Exception {
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
     Evaluador nuevoEvaluador = new Evaluador();
     nuevoEvaluador.setResumen("Evaluador1");
-    nuevoEvaluador.setComite(new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M,
-        new Formulario(1L, "M10", "Descripcion"), Boolean.TRUE));
+    nuevoEvaluador.setComite(comite);
     nuevoEvaluador.setCargoComite(new CargoComite(1L, "CargoComite1", Boolean.TRUE));
     nuevoEvaluador.setPersonaRef("user-001");
     nuevoEvaluador.setActivo(Boolean.TRUE);
@@ -319,11 +319,6 @@ public class EvaluadorIT extends BaseIT {
   }
 
   @Test
-  @Sql(scripts = {
-  // @formatter:off  
-  "classpath:scripts/evaluacion_seguimiento.sql",
-// @formatter:on  
-  })
   public void findEvaluacionesEnSeguimiento_Unlimited_ReturnsEvaluacionList() throws Exception {
     // when: Obtiene la page=0 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
@@ -402,14 +397,16 @@ public class EvaluadorIT extends BaseIT {
    * @return el objeto Evaluador
    */
 
-  public Evaluador generarMockEvaluador(Long id, String resumen) {
+  private Evaluador generarMockEvaluador(Long id, String resumen) {
     CargoComite cargoComite = new CargoComite();
     cargoComite.setId(1L);
     cargoComite.setNombre("CargoComite1");
     cargoComite.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);

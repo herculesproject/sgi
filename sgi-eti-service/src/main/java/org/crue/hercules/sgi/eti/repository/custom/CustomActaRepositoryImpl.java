@@ -123,7 +123,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
 
     // Execute query
     cq.multiselect(root.get(Acta_.id).alias("id"),
-        convocatoriaJoin.get(ConvocatoriaReunion_.comite).get(Comite_.comite).alias("comite"),
+        convocatoriaJoin.get(ConvocatoriaReunion_.comite).get(Comite_.codigo).alias("comite"),
         convocatoriaJoin.get(ConvocatoriaReunion_.fechaEvaluacion).alias("fechaEvaluacion"),
         root.get(Acta_.numero).alias("numeroActa"),
         tipoConvocatoriaJoin.get(TipoConvocatoriaReunion_.id).alias("tipoConvocatoriaId"),
@@ -368,7 +368,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
         cb.in(subqRootConflictosInteres.get(ConflictoInteres_.personaConflictoRef))
             .value(queryPersonaRefEquipoTrabajo));
 
-    Subquery<String> queryEvaluadoresComite = cq.subquery(String.class);
+    Subquery<Long> queryEvaluadoresComite = cq.subquery(Long.class);
     Root<Evaluador> subqRootEvaluadores = queryEvaluadoresComite.from(Evaluador.class);
 
     Predicate predicateEvaluacion = cb.and(
@@ -378,7 +378,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
         cb.equal(subqRootEvaluadores.get(Evaluador_.activo), Boolean.TRUE),
         cb.not(subqRootEvaluadores.get(Evaluador_.id).in(queryConflictosInteres)));
 
-    queryEvaluadoresComite.select(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.comite)).where(
+    queryEvaluadoresComite.select(subqRootEvaluadores.get(Evaluador_.comite).get(Comite_.id)).where(
         predicateEvaluacion,
         cb.or(cb.isNull(subqRootEvaluadores.get(Evaluador_.fechaBaja)),
             cb.greaterThan(subqRootEvaluadores.get(Evaluador_.fechaBaja), Instant.now())));
@@ -387,7 +387,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
         .where(cb.and(cb.equal(root.get(Acta_.activo), Boolean.TRUE),
             cb.equal(rootEvaluacion.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.id),
                 root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
-            cb.in(root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.comite).get(Comite_.comite))
+            cb.in(root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.comite).get(Comite_.id))
                 .value(queryEvaluadoresComite)));
 
     TypedQuery<Long> typedQuery = entityManager.createQuery(cq);

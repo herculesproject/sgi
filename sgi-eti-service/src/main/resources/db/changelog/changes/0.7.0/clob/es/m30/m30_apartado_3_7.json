@@ -5,54 +5,54 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.7 Agente biologikoen, genetikoki eraldatutako organismoen, substantzia kimiko arriskutsuen, substantzia erradioaktiboen edo/eta nanopartikulen ibilbide osoa"
+      "label": "3.7 Trayectoria completa de los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
     },
     "fieldGroup": [
       {
-        "template": "<p>Jarraian, deskribatu zer ibilbide egiten duten agente biologikoek, genetikoki eraldatutako organismoek, substantzia kimiko arriskutsuek, substantzia erradioaktiboek edo/eta nanopartikulek eskuratzen direnetik ezabatzen diren arte:</p>"
+        "template": "<p>Describir a continuación el recorrido que siguen los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartícula desde su obtención hasta su eliminación:</p>"
       },
       {
         "key": "mododeObtencion",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Nola eskuratzen diren",
+          "name": "Modo de obtención",
           "required": true
         }
       },
       {
         "key": "transporte",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Nola garraiatzen diren",
+          "name": "Transporte",
           "required": true
         }
       },
       {
         "key": "recepcion",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Nola hartzen diren",
+          "name": "Recepción",
           "required": true
         }
       },
       {
         "key": "almacenamiento",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Nola biltegiratzen diren",
+          "name": "Almacenamiento",
           "required": true
         }
       },
       {
         "key": "eliminacion",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Nola ezabatzen diren",
+          "name": "Eliminación",
           "required": true
         }
       }

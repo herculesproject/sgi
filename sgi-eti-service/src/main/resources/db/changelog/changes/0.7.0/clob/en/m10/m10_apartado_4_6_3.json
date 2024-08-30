@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "4.6.3 Academic link with the research team"
     },
     "hideExpression": "!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no'",
@@ -37,7 +37,7 @@
       },
       {
         "key": "especificarVinculacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si'",
         "templateOptions": {
           "label": "Please specify",
@@ -93,7 +93,7 @@
       },
       {
         "key": "especificarOtras",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vinculacionAcademicaEquipoInvestigadorRadio || model.vinculacionAcademicaEquipoInvestigadorRadio !== 'si' || !model.medidasEspecialesEquipoInvestigadorRadio || model.medidasEspecialesEquipoInvestigadorRadio !== 'otras'",
         "templateOptions": {
           "label": "Please specify",

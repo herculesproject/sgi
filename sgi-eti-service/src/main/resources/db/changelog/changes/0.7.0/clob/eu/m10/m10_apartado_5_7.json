@@ -5,26 +5,26 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.7 Documentación adicional"
+      "label": "5.7 Dokumentazio osagarria"
     },
     "fieldGroup": [
       {
-        "template": "¿Dispone de alguna otra documentación adicional para su proyecto?"
+        "template": "Baduzu beste dokumentazio osagarririk proiekturako?"
       },
       {
         "key": "documentacionAdicional",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
-              "value": 11,
-              "label": "Sí"
+              "value": "ADICIONAL",
+              "label": "Bai"
             }
           ]
         }

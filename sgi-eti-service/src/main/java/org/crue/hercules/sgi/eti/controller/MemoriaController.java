@@ -11,9 +11,9 @@ import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.eti.converter.RespuestaConverter;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.dto.MemoriaInput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.dto.RespuestaOutput;
-import org.crue.hercules.sgi.eti.model.BaseEntity;
 import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -34,7 +34,6 @@ import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RespuestaService;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -211,16 +210,16 @@ public class MemoriaController {
   /**
    * Crea nueva {@link Memoria}.
    * 
-   * @param nuevaMemoria {@link Memoria}. que se quiere crear.
+   * @param nuevaMemoria {@link MemoriaInput}. que se quiere crear.
    * @return Nueva {@link Memoria} creada.
    */
   @PostMapping
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-MEM-INV-CR', 'ETI-MEM-INV-ER')")
   public ResponseEntity<Memoria> newMemoria(
-      @Validated({ BaseEntity.Create.class, Default.class }) @RequestBody Memoria nuevaMemoria) {
-    log.debug("newMemoria(Memoria nuevaMemoria) - start");
+      @Validated @RequestBody MemoriaInput nuevaMemoria) {
+    log.debug("newMemoria(MemoriaInput nuevaMemoria) - start");
     Memoria returnValue = service.create(nuevaMemoria);
-    log.debug("newMemoria(Memoria nuevaMemoria) - end");
+    log.debug("newMemoria(MemoriaInput nuevaMemoria) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 
@@ -228,13 +227,14 @@ public class MemoriaController {
    * Crea nueva {@link Memoria} de tipo modificada.
    * 
    * @param id           Identificador de la memoria a copiar.
-   * @param nuevaMemoria {@link Memoria}. que se quiere crear.
+   * @param nuevaMemoria {@link MemoriaInput}. que se quiere crear.
    * @return Nueva {@link Memoria} creada.
    */
   @PostMapping("/{id}/crear-memoria-modificada")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-MEM-INV-CR', 'ETI-MEM-INV-ER')")
   public ResponseEntity<Memoria> newMemoriaModificada(
-      @Validated({ BaseEntity.Create.class, Default.class }) @RequestBody Memoria nuevaMemoria, @PathVariable Long id) {
+      @Validated @RequestBody MemoriaInput nuevaMemoria,
+      @PathVariable Long id) {
     log.debug("newMemoriaModificada(Memoria nuevaMemoria,  Long id) - start");
     Memoria returnValue = service.createModificada(nuevaMemoria, id);
     log.debug("newMemoriaModificada(Memoria nuevaMemoria,  Long id) - end");

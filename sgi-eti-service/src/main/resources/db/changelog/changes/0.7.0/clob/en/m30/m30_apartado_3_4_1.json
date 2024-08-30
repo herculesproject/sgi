@@ -67,7 +67,7 @@
       },
       {
         "key": "tipoMaterialBiologico",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!((model.agentesBiologicosRadio && model.agentesBiologicosRadio === 'si') && (model.muestrasBiologicasCheck && model.muestrasBiologicasCheck.find((m) => m === 'otros')))",
         "templateOptions": {
           "label": "Please indicate:",

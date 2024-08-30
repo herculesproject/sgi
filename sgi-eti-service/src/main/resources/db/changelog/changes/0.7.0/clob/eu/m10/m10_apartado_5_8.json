@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.8 Aclaraciones al comité"
+      "label": "5.8 Batzordearentzako azalpenak"
     },
     "fieldGroup": [
       {
-        "template": "Incluir a continuación cualquier otra aclaración que se considere necesaria para el comité"
+        "template": "Idatzi hemen Batzordearentzat beharrezkoa iruditzen zaizun beste edozein azalpen."
       },
       {
         "key": "aclaracionesComite",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Aclaraciones"
+          "name": "Azalpenak"
         }
       }
     ]

@@ -95,7 +95,7 @@
       },
       {
         "key": "tipoEfectoNocivo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))",
         "templateOptions": {
           "label": "Please indicate:",

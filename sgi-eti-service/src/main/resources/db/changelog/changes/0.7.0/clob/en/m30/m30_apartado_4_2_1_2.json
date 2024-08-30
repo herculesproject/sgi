@@ -31,7 +31,7 @@
       },
       {
         "key": "especificarAgenteBiologico",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
         "templateOptions": {
           "name": "Please specify",
@@ -44,7 +44,7 @@
       },
       {
         "key": "justificarTareas",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
         "templateOptions": {
           "name": "Justify",
@@ -57,7 +57,7 @@
       },
       {
         "key": "disponeAcreditacion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "hideExpression": "!model.tareasAgentesBiologicos || model.tareasAgentesBiologicos === 'no'",
         "templateOptions": {
           "name": "Please indicate:",

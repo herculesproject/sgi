@@ -13,7 +13,7 @@
       },
       {
         "key": "protocoloSupervision",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Supervision protocol",
           "required": true

@@ -25,7 +25,7 @@
           "fieldGroup": [
             {
               "key": "nombreProducto",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Product name",
                 "order": 10
@@ -33,7 +33,7 @@
             },
             {
               "key": "numeroCas",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "CAS No.",
                 "order": 20
@@ -41,7 +41,7 @@
             },
             {
               "key": "clasificacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Classification",
                 "order": 30
@@ -49,7 +49,7 @@
             },
             {
               "key": "episDisponibles",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "PPE available",
                 "order": 40
@@ -57,7 +57,7 @@
             },
             {
               "key": "medidasProteccion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "protective measures",
                 "order": 50

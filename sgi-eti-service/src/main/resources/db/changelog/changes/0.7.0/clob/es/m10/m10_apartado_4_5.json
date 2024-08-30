@@ -5,39 +5,39 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.5 Azterketa genetikoak"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.5 Estudios genéticos"
     },
     "fieldGroup": [
       {
-        "template": "<p>Proba prediktibo genetikoren bat egingo da?</p>"
+        "template": "<p>¿Se va a realizar algún tipo de prueba predictiva genética?</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p><strong>Azterketa genetikoetan errespetatu beharreko mugak.</strong> Proba prediktibo genetikoak honako hauetarako bakarrik egin ahal izango dira: </p><ul><li>Gaixotasun genetikoak aztertzeko, edo subjektua gaixotasun bat eragiten duen gene baten eramaile gisa identifikatzeko, edo gaixotasun baterako joera edo harekiko sentikortasuna hautemateko, helburu medikoak edo ikerketa medikoko helburuak izanik eta aholkularitza genetikoa jasota, egokia denean.</li><li>Norbanakoek farmakoekiko erantzunari begira dituzten desberdintasunak aztertzeko.</li><li>Genetikaren eta ingurumenaren arteko interakzioak aztertzeko.</li><li>Gaixotasunen oinarri molekularrak aztertzeko.</li></ul><p>Azterketa genetikoen erregulazioarekin lotutako oro, haren mugak, printzipio gidariak, informazio eta abar hemen jasota dago: <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=2' target='_blank'>Ikerketa Biomedikoaren 14/2007 Legea</a> (kontsultatu <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a9' target='_blank'>9. artikulua</a>, <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#tv' target='_blank'>V. titulua</a>)</p>"
+        "template": "<p><strong>Límites que deben respetarse en los análisis genéticos.</strong> Sólo podrán hacerse pruebas predictivas genéticas para el estudio de:</p><ul><li>enfermedades genéticas o que permitan identificar al sujeto como portador de un gen responsable de una enfermedad, o detectar una predisposición o una susceptibilidad genética a una enfermedad, con fines médicos o de investigación médica y con un asesoramiento genético, cuando esté indicado</li><li>diferencias inter-individuales en la respuesta a los fármacos</li><li>interacciones genético-ambientales</li><li>bases moleculares de las enfermedades</li></ul><p>Todo lo relacionado con la regulación de los análisis genéticos, sus límites, principios rectores, información etc, se halla contenido en la <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=2' target='_blank'>Ley de Investigación Biomédica</a> 14/2007 (consultar el <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a9' target='_blank'>artículo 9</a>, <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#tv' target='_blank'>Título V</a>)</p>"
       },
       {
         "key": "estudiosGeneticosRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción:",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
-        "template": "<p>Proba prediktibo mota</p>",
+        "template": "<p>Tipo de prueba predictiva</p>",
         "hideExpression": "!(model.estudiosGeneticosRadio && model.estudiosGeneticosRadio === 'si')"
       },
       {
@@ -47,33 +47,33 @@
         "hideExpression": "!(model.estudiosGeneticosRadio && model.estudiosGeneticosRadio === 'si')",
         "required": true,
         "templateOptions": {
-          "label": "Mota",
+          "label": "Tipo",
           "options": [
             {
               "value": "enfermedadGenetica",
-              "label": "Gaixotasun genetikoa"
+              "label": "Enfermedad genética"
             },
             {
               "value": "genResponsable",
-              "label": "Gaixotasun baten gene erantzulearen identifikazioa"
+              "label": "Identificación de un gen responsable de enfermedad"
             },
             {
               "value": "predisposicionSusceptibilidad",
-              "label": "Gaixotasun bati begirako joera edo sentikortasuna"
+              "label": "Predisposición o susceptibilidad a una enfermedad"
             },
             {
               "value": "otra",
-              "label": "Beste bat"
+              "label": "Otra"
             }
           ]
         }
       },
       {
         "key": "otraPruebaPredictiva",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!(model.estudiosGeneticosRadio && model.estudiosGeneticosRadio === 'si' && model.pruebaPredectivaRadio && model.pruebaPredectivaRadio === 'otra')",
         "templateOptions": {
-          "label": "Zehaztu",
+          "label": "Especificar",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -81,7 +81,7 @@
         }
       },
       {
-        "template": "<p>Helburuak</p>",
+        "template": "<p>Fines</p>",
         "hideExpression": "!(model.estudiosGeneticosRadio && model.estudiosGeneticosRadio === 'si')"
       },
       {
@@ -90,33 +90,33 @@
         "hideExpression": "!(model.estudiosGeneticosRadio && model.estudiosGeneticosRadio === 'si')",
         "className": "vertical-radio",
         "templateOptions": {
-          "label": "Helburuak",
+          "label": "Fines",
           "options": [
             {
               "value": "terapeutico",
-              "label": "Terapeutikoa"
+              "label": "Terapéutico"
             },
             {
               "value": "investigacionMedica",
-              "label": "Ikerketa medikoa"
+              "label": "Investigación médica"
             },
             {
               "value": "investigacionBasica",
-              "label": "Oinarrizko ikerketa"
+              "label": "Investigación básica"
             },
             {
               "value": "otros",
-              "label": "Beste batzuk"
+              "label": "Otros"
             }
           ]
         }
       },
       {
         "key": "otrosFines",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!(model.estudiosGeneticosRadio && model.estudiosGeneticosRadio === 'si' && model.finesRadio && model.finesRadio === 'otros')",
         "templateOptions": {
-          "label": "Zehaztu",
+          "label": "Especificar",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

@@ -10,7 +10,6 @@ DELETE FROM test.estado_memoria
 DELETE FROM test.comentario
 DELETE FROM test.evaluacion
 DELETE FROM test.memoria
-DELETE FROM test.tipo_memoria_comite
 DELETE FROM test.asistentes
 DELETE FROM test.conflicto_interes
 DELETE FROM test.evaluador
@@ -23,7 +22,6 @@ DELETE FROM test.peticion_evaluacion_dismetodologico
 DELETE FROM test.peticion_evaluacion
 DELETE FROM test.tipo_actividad
 DELETE FROM test.tipo_investigacion_tutelada
-DELETE FROM test.tipo_memoria
 DELETE FROM test.tipo_documento
 DELETE FROM test.estado_acta
 DELETE FROM test.acta

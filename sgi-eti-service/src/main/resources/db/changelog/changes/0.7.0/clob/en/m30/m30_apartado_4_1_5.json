@@ -31,7 +31,7 @@
       },
       {
         "key": "especificarVacunaEficaz",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vacunaEficaz || model.vacunaEficaz === 'no'",
         "templateOptions": {
           "label": "Please specify",

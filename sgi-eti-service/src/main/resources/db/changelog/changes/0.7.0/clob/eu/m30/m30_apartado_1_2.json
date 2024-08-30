@@ -5,24 +5,24 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "1.2 Justificación del uso de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias Radiactivas y/o nanopartículas"
+      "label": "1.2 Agente biologikoen, genetikoki eraldatutako organismoen, substantzia kimiko arriskutsuen, substantzia erradioaktiboen edo/eta nanopartikulen erabileraren justifikazioa"
     },
     "fieldGroup": [
       {
-        "template": "<p>Exponer brevemente (máximo diez líneas) la necesidad de utilización de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas.</p>"
+        "template": " <p>Azaldu labur-labur (gehienez hamar lerro) zergatik den beharrezkoa agente biologikoak, genetikoki eraldatutako organismoak, substantzia arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak erabiltzea.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Sustancias químicas peligrosas (SQP*),* según el Reglamento (CE) nº1272/2008 sobre clasificación, etiquetado y envasado de sustancias y mezclas (CLP).</p><p>Sustancias radiactivas e instalaciones radiactivas, según la normativa recogida en el R.D 1836/1999 y en el R.D. 783/2001. Equipos radiológicos, según el RD 1085/2009, de 3 de julio, por el que se aprueba el Reglamento sobre instalación y utilización de aparatos de Rayos X con fines de diagnóstico médico.</p>"
+        "template": "<p>Substantzia kimiko arriskutsuak (SKA*),* substantziak eta nahasteak sailkatu, etiketatu eta ontziratzeari buruzko 1271/2008 (EE) Erregelamenduaren (CLP) arabera.</p><p>Substantzia erradioaktiboak eta instalazio erradioaktiboak, 1836/1999 EDn eta 738/2001 EDn jasotako araudiaren arabera. Ekipamendu erradiologikoak, uztailaren 3ko 1085/2009 EDren arabera, zeinaren bidez onartzen den diagnostiko medikoetarako X izpien aparatuak instalatu eta erabiltzeari buruzko erregelamendua. </p>"
       },
       {
         "key": "justificacion",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Justificación",
+          "name": "Justifikazioa",
           "required": true
         }
       }

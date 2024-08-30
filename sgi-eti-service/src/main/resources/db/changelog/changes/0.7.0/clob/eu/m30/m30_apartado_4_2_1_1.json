@@ -5,35 +5,35 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1.1 Laboratorio de la Universidad"
+      "label": "4.2.1.1 Unibertsitateko laborategia"
     },
     "fieldGroup": [
       {
-        "template": "<p>A continuación especificar en qué local de la Universidad se realizarán las tareas con agentes, material biológico, organismos modificados genéticamente, sustancias químicas peligrosas , sustancias radiactivas y/o nanopartículas</p>"
+        "template": "<p>Jarraian, zehaztu Unibertsitateko zer gelatan lan egingo den agente edo material biologikoarekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "No necesita rellenar el código patrimonial en caso de haber indicado un laboratorio de los servicios y secciones del Área Científica y Técnica de Investigación (ACTI).</p>"
+        "template": "Ikerketako Arlo Zientifiko eta Teknikoaren (IAZT) zerbitzu eta ataletako laborategi bat adierazi baduzu, ez duzu ondare kodea bete beharrik.</p>"
       },
       {
         "type": "table-crud",
         "key": "laboratorioLocalTable",
         "templateOptions": {
-          "entity": "local",
+          "entity": "gela",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Local"
+            "text": "Gela"
           },
           "fieldGroup": [
             {
               "key": "codPatrimonial",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Código Patrimonial",
+                "label": "Ondare kodea",
                 "order": 10
               }
             },
@@ -41,33 +41,33 @@
               "key": "nivelContencion",
               "type": "select",
               "templateOptions": {
-                "label": "Nivel contención",
+                "label": "Euste maila",
                 "order": 20,
                 "options": [
                   {
                     "value": "1",
-                    "label": "C1"
+                    "label": "E1"
                   },
                   {
                     "value": "2",
-                    "label": "C2"
+                    "label": "E2"
                   },
                   {
                     "value": "3",
-                    "label": "C3"
+                    "label": "E3"
                   },
                   {
                     "value": "4",
-                    "label": "C4"
+                    "label": "E4"
                   }
                 ]
               }
             },
             {
               "key": "ubicacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Ubicación",
+                "label": "Kokapena",
                 "order": 30
               }
             },
@@ -75,25 +75,25 @@
               "key": "certificadoIdoneidad",
               "type": "select",
               "templateOptions": {
-                "label": "Certificado idoneidad",
+                "label": "Egokitasun ziurtagiria",
                 "order": 40,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Sí"
+                    "label": "Bai"
                   },
                   {
                     "value": "2",
-                    "label": "No"
+                    "label": "Ez"
                   }
                 ]
               }
             },
             {
               "key": "numeroRegistroServicioPrevencion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "No. Reg. Servicio Prevención",
+                "label": "Ez. Erreg. Prebentzio Zerbitzuan",
                 "order": 50
               }
             },
@@ -101,7 +101,7 @@
               "key": "fecha",
               "type": "datepicker",
               "templateOptions": {
-                "label": "Fecha",
+                "label": "Data",
                 "luxonFormat": "shortDate",
                 "order": 60
               }

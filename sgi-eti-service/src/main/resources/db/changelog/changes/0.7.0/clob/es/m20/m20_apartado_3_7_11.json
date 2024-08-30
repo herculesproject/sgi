@@ -42,7 +42,7 @@
       },
       {
         "key": "justificarMantenimiento",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "hideExpression": "!model.destinoFinalCheck || !model.destinoFinalCheck.some(destino => destino === 'mantenimiento')",
         "templateOptions": {
           "name": "Justificar",

@@ -23,7 +23,7 @@
           "fieldGroup": [
             {
               "key": "radioisotopo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Radioisotope(s)",
                 "order": 10
@@ -31,7 +31,7 @@
             },
             {
               "key": "compuestosMarcados",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Labelled compounds",
                 "order": 20
@@ -39,7 +39,7 @@
             },
             {
               "key": "actividadExperimento",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Activity per experiment (μCi or kBq)",
                 "order": 30
@@ -63,7 +63,7 @@
           "fieldGroup": [
             {
               "key": "equipoRadiologico",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "radiological equipment",
                 "order": 10
@@ -71,7 +71,7 @@
             },
             {
               "key": "ubicacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Location",
                 "order": 20
@@ -95,7 +95,7 @@
           "fieldGroup": [
             {
               "key": "instalacionRadiactiva",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "radioactive facility",
                 "order": 10
@@ -103,7 +103,7 @@
             },
             {
               "key": "ubicacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Location",
                 "order": 20

@@ -12,7 +12,6 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -106,8 +105,11 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
    * 
    * @return el objeto Formulario
    */
-  public Formulario generarMockFormulario() {
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+  private Formulario generarMockFormulario() {
+    Formulario formulario = new Formulario();
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+    formulario.setCodigo("M10/2020/002");
+
     return formulario;
   }
 
@@ -117,8 +119,24 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
    * @param formulario el formulario
    * @return el objeto Comite
    */
-  public Comite generarMockComite(Formulario formulario) {
-    return new Comite(null, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+  private Comite generarMockComite(Formulario formulario) {
+    Comite comite = new Comite();
+    comite.setCodigo("Comite1");
+    comite.setNombre("NombreComite1");
+    comite.setGenero(Comite.Genero.M);
+    comite.setFormularioMemoriaId(formulario.getId());
+    comite.setFormularioSeguimientoAnualId(formulario.getId());
+    comite.setFormularioSeguimientoFinalId(formulario.getId());
+    comite.setRequiereRetrospectiva(Boolean.FALSE);
+    comite.setPermitirRatificacion(Boolean.FALSE);
+    comite.setPrefijoReferencia("M10");
+    comite.setTareaNombreLibre(Boolean.TRUE);
+    comite.setTareaExperienciaLibre(Boolean.TRUE);
+    comite.setTareaExperienciaDetalle(Boolean.TRUE);
+    comite.setMemoriaTituloLibre(Boolean.TRUE);
+    comite.setActivo(Boolean.TRUE);
+
+    return comite;
   }
 
   /**
@@ -126,7 +144,7 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
    * 
    * @return el objeto TipoConvocatoriaReunion
    */
-  public TipoConvocatoriaReunion generarMockTipoConvocatoriaReunion() {
+  private TipoConvocatoriaReunion generarMockTipoConvocatoriaReunion() {
     return new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
   }
 
@@ -137,7 +155,7 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
    * @param tipoConvocatoriaReunion el objeto TipoConvocatoriaReunion
    * @return el objeto Asistentes
    */
-  public ConvocatoriaReunion generarMockConvocatoriaReunion(Comite comite,
+  private ConvocatoriaReunion generarMockConvocatoriaReunion(Comite comite,
       TipoConvocatoriaReunion tipoConvocatoriaReunion) {
 
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
@@ -165,7 +183,7 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
    * 
    * @return el objeto CargoComite
    */
-  public CargoComite generarMockCargoComite() {
+  private CargoComite generarMockCargoComite() {
     return new CargoComite(1L, "CargoComite1", Boolean.TRUE);
   }
 

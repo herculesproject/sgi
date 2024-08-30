@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Bloque;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -50,8 +49,7 @@ public class BloqueIT extends BaseIT {
 
   }
 
-  // @Test
-  // TODO Revisar
+  @Test
   public void getBloque_WithId_ReturnsBloque() throws Exception {
     final ResponseEntity<Bloque> response = restTemplate.exchange(BLOQUE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.GET, buildRequest(null, null), Bloque.class, 1L);
@@ -125,8 +123,8 @@ public class BloqueIT extends BaseIT {
     final List<Bloque> bloques = response.getBody();
     Assertions.assertThat(bloques.size()).isEqualTo(8);
     for (int i = 0; i < 8; i++) {
-      Bloque Bloque = bloques.get(i);
-      Assertions.assertThat(Bloque.getId()).isEqualTo(8 - i);
+      Bloque bloque = bloques.get(i);
+      Assertions.assertThat(bloque.getId()).isEqualTo(8 - i);
     }
   }
 
@@ -159,29 +157,6 @@ public class BloqueIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
 
-  }
-
-  /**
-   * Función que devuelve un objeto Bloque
-   * 
-   * @param id     id del Bloque
-   * @param nombre el nombre de Bloque
-   * @return el objeto Bloque
-   */
-
-  public Bloque generarMockBloque(Long id, String nombre) {
-
-    Formulario formulario = new Formulario();
-    formulario.setId(1L);
-    formulario.setNombre("Formulario1");
-    formulario.setDescripcion("Descripcion formulario 1");
-
-    Bloque Bloque = new Bloque();
-    Bloque.setId(id);
-    Bloque.setFormulario(formulario);
-    Bloque.setOrden(1);
-
-    return Bloque;
   }
 
 }

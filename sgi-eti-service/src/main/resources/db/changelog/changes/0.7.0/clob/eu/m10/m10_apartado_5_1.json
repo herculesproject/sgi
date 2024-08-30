@@ -5,27 +5,27 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.1 Documento de consentimiento"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "5.1 Baimen dokumentua"
     },
     "fieldGroup": [
       {
-        "template": "¿Su proyecto requiere documento de consentimiento del sujeto fuente y/o su representante?"
+        "template": "Zure proiektuak informazio iturri den subjektuaren edo/eta haren ordezkariaren baimen dokumentua behar du?"
       },
       {
         "key": "documentoConsentimiento",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
-              "value": 4,
-              "label": "Sí"
+              "value": "CONSENTIMIENTO",
+              "label": "Bai"
             }
           ]
         }
@@ -34,7 +34,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: ver apartado '4.4 Información y consentimiento'.</p>"
+        "template": "<p>Oharra: ikusi ‘4.4 Informazioa eta baimena’ atala. </p>"
       }
     ]
   }

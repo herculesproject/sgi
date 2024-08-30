@@ -164,31 +164,32 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
     AssertHelper.idNotNull(idMemoria, Memoria.class);
     AssertHelper.entityNotNull(tipoEvaluacion, DocumentacionMemoria.class, TipoEvaluacion.class);
 
+    Memoria memoria = memoriaRepository.findById(idMemoria).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
     Page<DocumentacionMemoria> returnValue = null;
 
     // TipoEvaluación Retrospectiva muestra la documentación de tipo Retrospectiva
     if (tipoEvaluacion == TipoEvaluacion.Tipo.RETROSPECTIVA) {
       returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoFormularioId(idMemoria,
-          Formulario.Tipo.RETROSPECTIVA.getId(), pageable);
+          memoria.getFormularioRetrospectiva() != null ? memoria.getFormularioRetrospectiva().getId() : null, pageable);
     }
     // TipoEvaluación Memoria muestra todas la documentación que no sea de tipo
     // Retrospectiva, Seguimiento Anual o Seguimiento Final
     if (tipoEvaluacion == TipoEvaluacion.Tipo.MEMORIA) {
-      Formulario formulario = formularioRepository.findByMemoriaId(idMemoria);
       returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoFormularioId(idMemoria,
-          formulario.getId(), pageable);
+          memoria.getFormulario().getId(), pageable);
     }
     // TipoEvaluación Seguimiento Anual muestra la documentación de tipo Seguimiento
     // Anual
     if (tipoEvaluacion == TipoEvaluacion.Tipo.SEGUIMIENTO_ANUAL) {
       returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoFormularioId(idMemoria,
-          Formulario.Tipo.SEGUIMIENTO_ANUAL.getId(), pageable);
+          memoria.getFormularioSeguimientoAnual().getId(), pageable);
     }
     // TipoEvaluación Seguimiento Final muestra la documentación de tipo Seguimiento
     // Final
     if (tipoEvaluacion == TipoEvaluacion.Tipo.SEGUIMIENTO_FINAL) {
       returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoFormularioId(idMemoria,
-          Formulario.Tipo.SEGUIMIENTO_FINAL.getId(), pageable);
+          memoria.getFormularioSeguimientoFinal().getId(), pageable);
     }
 
     log.debug(
@@ -213,9 +214,8 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
       Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
 
-      Formulario formulario = formularioRepository.findByMemoriaId(idMemoria);
       Specification<DocumentacionMemoria> specTipoDocumentoNotIn = DocumentacionMemoriaSpecifications
-          .tipoDocumentoFormularioId(formulario.getId());
+          .tipoDocumentoFormularioId(memoria.getFormulario().getId());
 
       Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumentoNotIn);
 
@@ -245,7 +245,8 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
       Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
 
       // Aquellos que no son del tipo 1: Seguimiento Anual
-      Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications.tipoDocumento(1L);
+      Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications
+          .tipoDocumentoFormularioId(memoria.getFormularioSeguimientoAnual().getId());
 
       Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumento);
 
@@ -275,7 +276,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
       Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
 
       Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications
-          .tipoDocumentoFormularioId(Formulario.Tipo.SEGUIMIENTO_FINAL.getId());
+          .tipoDocumentoFormularioId(memoria.getFormularioSeguimientoFinal().getId());
 
       Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumento);
 
@@ -301,15 +302,18 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
     AssertHelper.idNotNull(idMemoria, Memoria.class);
 
     return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+      Page<DocumentacionMemoria> returnValue = Page.empty(pageable);
+      if (memoria.getFormularioRetrospectiva() != null && memoria.getFormularioRetrospectiva().getId() != null) {
 
-      Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
+        Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
 
-      Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications
-          .tipoDocumentoFormularioId(Formulario.Tipo.RETROSPECTIVA.getId());
+        Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications
+            .tipoDocumentoFormularioId(memoria.getFormularioRetrospectiva().getId());
 
-      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumento);
+        Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumento);
 
-      Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
+        returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
+      }
 
       log.debug("findDocumentacionRetrospectiva(Long idMemoria, Pageable pageable) - end");
       return returnValue;
@@ -341,7 +345,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
       documentacionMemoria.setMemoria(memoria);
       List<TipoDocumento> tiposDocumento = tipoDocumentoRepository
-          .findByFormularioIdAndActivoTrue(Formulario.Tipo.SEGUIMIENTO_ANUAL.getId());
+          .findByFormularioIdAndActivoTrue(memoria.getFormularioSeguimientoAnual().getId());
       if (tiposDocumento.size() != 1) {
         throw new TipoDocumentoNotFoundException(null);
       }
@@ -376,7 +380,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
       documentacionMemoria.setMemoria(memoria);
 
       List<TipoDocumento> tiposDocumento = tipoDocumentoRepository
-          .findByFormularioIdAndActivoTrue(Formulario.Tipo.SEGUIMIENTO_FINAL.getId());
+          .findByFormularioIdAndActivoTrue(memoria.getFormularioSeguimientoFinal().getId());
       if (tiposDocumento.size() != 1) {
         throw new TipoDocumentoNotFoundException(null);
       }
@@ -412,7 +416,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
       documentacionMemoria.setMemoria(memoria);
       List<TipoDocumento> tiposDocumento = tipoDocumentoRepository
-          .findByFormularioIdAndActivoTrue(Formulario.Tipo.RETROSPECTIVA.getId());
+          .findByFormularioIdAndActivoTrue(memoria.getFormularioRetrospectiva().getId());
       if (tiposDocumento.size() != 1) {
         throw new TipoDocumentoNotFoundException(null);
       }
@@ -449,7 +453,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
     DocumentacionMemoria documentacionMemoria = documentacionMemoriaRepository
         .findByIdAndMemoriaIdAndTipoDocumentoFormularioIdAndMemoriaActivoTrue(idDocumentacionMemoria, idMemoria,
-            Formulario.Tipo.SEGUIMIENTO_ANUAL.getId())
+            memoria.getFormularioSeguimientoAnual().getId())
         .orElseThrow(() -> new DocumentacionMemoriaNotFoundException(idDocumentacionMemoria));
 
     documentacionMemoriaRepository.delete(documentacionMemoria);
@@ -482,7 +486,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
     DocumentacionMemoria documentacionMemoria = documentacionMemoriaRepository
         .findByIdAndMemoriaIdAndTipoDocumentoFormularioIdAndMemoriaActivoTrue(idDocumentacionMemoria, idMemoria,
-            Formulario.Tipo.SEGUIMIENTO_FINAL.getId())
+            memoria.getFormularioSeguimientoFinal().getId())
         .orElseThrow(() -> new DocumentacionMemoriaNotFoundException(idDocumentacionMemoria));
 
     documentacionMemoriaRepository.delete(documentacionMemoria);
@@ -515,7 +519,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
     DocumentacionMemoria documentacionMemoria = documentacionMemoriaRepository
         .findByIdAndMemoriaIdAndTipoDocumentoFormularioIdAndMemoriaActivoTrue(idDocumentacionMemoria, idMemoria,
-            Formulario.Tipo.RETROSPECTIVA.getId())
+            memoria.getFormularioRetrospectiva().getId())
         .orElseThrow(() -> new DocumentacionMemoriaNotFoundException(idDocumentacionMemoria));
 
     documentacionMemoriaRepository.delete(documentacionMemoria);
@@ -559,10 +563,9 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
               .getMessage(MSG_LA_MEMORIA_NO_SE_ENCUENTRA_EN_UN_ESTADO_ADECUADO));
     }
 
-    Formulario formulario = formularioRepository.findByMemoriaId(idMemoria);
     DocumentacionMemoria documentacionMemoria = documentacionMemoriaRepository
         .findByIdAndMemoriaIdAndTipoDocumentoFormularioIdAndMemoriaActivoTrue(idDocumentacionMemoria, idMemoria,
-            formulario.getId())
+            memoria.getFormulario().getId())
         .orElseThrow(() -> new DocumentacionMemoriaNotFoundException(idDocumentacionMemoria));
 
     documentacionMemoriaRepository.delete(documentacionMemoria);

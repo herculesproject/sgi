@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "1.2 Justification for the use of human beings"
     },
     "fieldGroup": [
@@ -15,7 +15,7 @@
       {
         "key": "justificacion",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Supporting evidence",
           "required": true

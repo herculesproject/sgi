@@ -362,10 +362,10 @@ public class ActaServiceTest extends BaseServiceTest {
    * @param numero numero del acta
    * @return el objeto Acta
    */
-  public Acta generarMockActa(Long id, Integer numero) {
+  private Acta generarMockActa(Long id, Integer numero) {
     Comite comite = new Comite();
     comite.setId(1L);
-    comite.setComite("CEEA");
+    comite.setCodigo("CEEA");
     comite.setGenero(Genero.M);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
@@ -403,14 +403,14 @@ public class ActaServiceTest extends BaseServiceTest {
    * @param numero numero del acta
    * @return el objeto Acta
    */
-  public ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
+  private ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
     Acta acta = generarMockActa(id, numero);
     TipoConvocatoriaOutput tipoConvocatoria = generarMockTipoConvocatoriaOutput(
         acta.getConvocatoriaReunion().getTipoConvocatoriaReunion());
 
     ActaWithNumEvaluaciones returnValue = new ActaWithNumEvaluaciones();
     returnValue.setId(acta.getId());
-    returnValue.setComite(acta.getConvocatoriaReunion().getComite().getComite());
+    returnValue.setComite(acta.getConvocatoriaReunion().getComite().getCodigo());
     returnValue.setFechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion());
     returnValue.setNumeroActa(acta.getNumero());
     returnValue.setTipoConvocatoria(tipoConvocatoria);

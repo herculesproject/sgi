@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,11 +51,6 @@ public class TipoDocumentoIT extends BaseIT {
   @Test
   public void getTipoDocumento_WithId_ReturnsTipoDocumento() throws Exception {
 
-    Formulario formulario = new Formulario();
-    formulario.setId(4L);
-    formulario.setNombre("Seguimiento Anual");
-    formulario.setDescripcion("Descripcion");
-
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
         TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
         TipoDocumento.class, 1L);
@@ -67,7 +61,7 @@ public class TipoDocumentoIT extends BaseIT {
 
     Assertions.assertThat(tipoDocumento.getId()).isEqualTo(1L);
     Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento1");
-    Assertions.assertThat(tipoDocumento.getFormulario()).isEqualTo(formulario);
+    Assertions.assertThat(tipoDocumento.getFormularioId()).isEqualTo(4L);
   }
 
   @Test
@@ -192,30 +186,6 @@ public class TipoDocumentoIT extends BaseIT {
     Assertions.assertThat(tipoDocumentos.get(1).getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 8));
     Assertions.assertThat(tipoDocumentos.get(2).getNombre()).isEqualTo("TipoDocumento" + String.format("%d", 7));
 
-  }
-
-  /**
-   * Función que devuelve un objeto TipoDocumento
-   * 
-   * @param id     id del tipoDocumento
-   * @param nombre la descripción del tipoDocumento
-   * @return el objeto tipoDocumento
-   */
-
-  public TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
-
-    Formulario formulario = new Formulario();
-    formulario.setId(1L);
-    formulario.setNombre("M10");
-    formulario.setDescripcion("Formulario M10");
-
-    TipoDocumento tipoDocumento = new TipoDocumento();
-    tipoDocumento.setId(id);
-    tipoDocumento.setNombre(nombre);
-    tipoDocumento.setFormulario(formulario);
-    tipoDocumento.setActivo(Boolean.TRUE);
-
-    return tipoDocumento;
   }
 
 }

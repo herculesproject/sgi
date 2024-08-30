@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "4.3 Protection of particularly vulnerable groups"
     },
     "fieldGroup": [
@@ -43,7 +43,7 @@
       {
         "key": "especificarColectivoVulnerables",
         "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Please specify",
           "required": true
@@ -56,7 +56,7 @@
       {
         "key": "justificarPersonasMenosVulnerables",
         "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Justify",
           "required": true
@@ -69,7 +69,7 @@
       {
         "key": "especificarBeneficiosInvestigacionVulnerables",
         "hideExpression": "!model.gruposVulnerablesRadio || model.gruposVulnerablesRadio === 'no'",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Please specify",
           "required": true

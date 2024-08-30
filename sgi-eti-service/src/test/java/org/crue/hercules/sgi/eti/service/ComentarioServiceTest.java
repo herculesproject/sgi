@@ -14,7 +14,6 @@ import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -389,10 +388,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, formularioId)));
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.RETROSPECTIVA);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
@@ -421,10 +422,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, formularioId)));
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
@@ -453,10 +456,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, formularioId)));
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
@@ -485,10 +490,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, formularioId)));
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.SEGUIMIENTO_ANUAL);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
@@ -517,10 +524,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, formularioId)));
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.SEGUIMIENTO_FINAL);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     apartado.setId(1L);
@@ -762,20 +771,16 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(4L, "Seguimiento Final", Boolean.TRUE);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
-    Formulario formulario = new Formulario(5L, "Formulario", "Descripcion");
-    Comite comite = new Comite(1L, "CEISH", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
-    Memoria memoria = new Memoria();
     TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
     estadoMemoria.setId(estadoMemoriaId);
-    memoria.setEstadoActual(estadoMemoria);
-    memoria.setComite(comite);
-    evaluacion.setMemoria(memoria);
+    evaluacion.getMemoria().setEstadoActual(estadoMemoria);
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId)).willReturn(Optional.of(evaluacion));
 
     final Comentario comentario = generarMockComentario(null, "texto", 1L);
-    comentario.getApartado().getBloque().getFormulario().setId(5L);
+    comentario.getApartado().getBloque().getFormulario()
+        .setId(evaluacion.getMemoria().getFormularioSeguimientoFinal().getId());
     comentario.setEvaluacion(null);
     final Comentario comentarioNew = generarMockComentario(12L, "texto", 1L);
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
@@ -797,20 +802,16 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(4L, "Seguimiento Final", Boolean.TRUE);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
-    Formulario formulario = new Formulario(5L, "Formulario", "Descripcion");
-    Comite comite = new Comite(1L, "CEISH", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
-    Memoria memoria = new Memoria();
     TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
     estadoMemoria.setId(estadoMemoriaId);
-    memoria.setEstadoActual(estadoMemoria);
-    memoria.setComite(comite);
-    evaluacion.setMemoria(memoria);
+    evaluacion.getMemoria().setEstadoActual(estadoMemoria);
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId)).willReturn(Optional.of(evaluacion));
 
     final Comentario comentario = generarMockComentario(null, "texto", 1L);
-    comentario.getApartado().getBloque().getFormulario().setId(5L);
+    comentario.getApartado().getBloque().getFormulario().setId(
+        evaluacion.getMemoria().getFormularioSeguimientoFinal().getId());
     comentario.setEvaluacion(null);
     final Comentario comentarioNew = generarMockComentario(12L, "texto", 1L);
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
@@ -832,20 +833,16 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(4L, "Seguimiento Final", Boolean.TRUE);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
-    Formulario formulario = new Formulario(5L, "Formulario", "Descripcion");
-    Comite comite = new Comite(1L, "CEISH", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
-    Memoria memoria = new Memoria();
     TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
     estadoMemoria.setId(estadoMemoriaId);
-    memoria.setEstadoActual(estadoMemoria);
-    memoria.setComite(comite);
-    evaluacion.setMemoria(memoria);
+    evaluacion.getMemoria().setEstadoActual(estadoMemoria);
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId)).willReturn(Optional.of(evaluacion));
 
     final Comentario comentario = generarMockComentario(null, "texto", 1L);
-    comentario.getApartado().getBloque().getFormulario().setId(5L);
+    comentario.getApartado().getBloque().getFormulario().setId(
+        evaluacion.getMemoria().getFormularioSeguimientoFinal().getId());
     comentario.setEvaluacion(null);
     final Comentario comentarioNew = generarMockComentario(12L, "texto", 1L);
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
@@ -867,20 +864,16 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(4L, "Seguimiento Final", Boolean.TRUE);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
-    Formulario formulario = new Formulario(5L, "Formulario", "Descripcion");
-    Comite comite = new Comite(1L, "CEISH", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
-    Memoria memoria = new Memoria();
     TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
     estadoMemoria.setId(estadoMemoriaId);
-    memoria.setEstadoActual(estadoMemoria);
-    memoria.setComite(comite);
-    evaluacion.setMemoria(memoria);
+    evaluacion.getMemoria().setEstadoActual(estadoMemoria);
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId)).willReturn(Optional.of(evaluacion));
 
     final Comentario comentario = generarMockComentario(null, "texto", 1L);
-    comentario.getApartado().getBloque().getFormulario().setId(5L);
+    comentario.getApartado().getBloque().getFormulario().setId(
+        evaluacion.getMemoria().getFormularioSeguimientoFinal().getId());
     comentario.setEvaluacion(null);
     final Comentario comentarioNew = generarMockComentario(12L, "texto", 1L);
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
@@ -902,20 +895,16 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(4L, "Seguimiento Final", Boolean.TRUE);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
-    Formulario formulario = new Formulario(5L, "Formulario", "Descripcion");
-    Comite comite = new Comite(1L, "CEISH", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
-    Memoria memoria = new Memoria();
     TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
     estadoMemoria.setId(estadoMemoriaId);
-    memoria.setEstadoActual(estadoMemoria);
-    memoria.setComite(comite);
-    evaluacion.setMemoria(memoria);
+    evaluacion.getMemoria().setEstadoActual(estadoMemoria);
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId)).willReturn(Optional.of(evaluacion));
 
     final Comentario comentario = generarMockComentario(null, "texto", 1L);
-    comentario.getApartado().getBloque().getFormulario().setId(5L);
+    comentario.getApartado().getBloque().getFormulario().setId(
+        evaluacion.getMemoria().getFormularioSeguimientoFinal().getId());
     comentario.setEvaluacion(null);
     final Comentario comentarioNew = generarMockComentario(12L, "texto", 1L);
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
@@ -936,27 +925,24 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long evaluacionId = 12L;
     Evaluacion evaluacion = generarMockEvaluacion(evaluacionId);
 
-    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(4L, "Seguimiento Final", Boolean.TRUE);
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(1L, "Retrospectiva", Boolean.TRUE);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
-    Formulario formulario = new Formulario(5L, "Formulario", "Descripcion");
-    Comite comite = new Comite(1L, "CEISH", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
 
-    Memoria memoria = new Memoria();
     TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
     estadoMemoria.setId(estadoMemoriaId);
     Retrospectiva retrospectiva = new Retrospectiva();
     EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
     estadoRetrospectiva.setId(estadoRetrospectivaId);
     retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
-    memoria.setEstadoActual(estadoMemoria);
-    memoria.setComite(comite);
-    memoria.setRetrospectiva(retrospectiva);
-    evaluacion.setMemoria(memoria);
+
+    evaluacion.getMemoria().setRetrospectiva(retrospectiva);
+    evaluacion.getMemoria().setEstadoActual(estadoMemoria);
 
     BDDMockito.given(evaluacionRepository.findById(evaluacionId)).willReturn(Optional.of(evaluacion));
 
     final Comentario comentario = generarMockComentario(null, "texto", 1L);
-    comentario.getApartado().getBloque().getFormulario().setId(5L);
+    comentario.getApartado().getBloque().getFormulario().setId(
+        evaluacion.getMemoria().getFormularioRetrospectiva().getId());
     comentario.setEvaluacion(null);
     final Comentario comentarioNew = generarMockComentario(12L, "texto", 1L);
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
@@ -1074,10 +1060,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long formularioId = 6L;
 
     Evaluacion evaluacion = generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId, comiteId,
-        estadoRetrospectivaId);
+        estadoRetrospectivaId, formularioId);
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.RETROSPECTIVA);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
@@ -1107,10 +1095,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long formularioId = 2L;
 
     Evaluacion evaluacion = generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId, comiteId,
-        estadoRetrospectivaId);
+        estadoRetrospectivaId, formularioId);
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
@@ -1140,10 +1130,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long formularioId = 3L;
 
     Evaluacion evaluacion = generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId, comiteId,
-        estadoRetrospectivaId);
+        estadoRetrospectivaId, formularioId);
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
@@ -1173,10 +1165,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long formularioId = 4L;
 
     Evaluacion evaluacion = generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId, comiteId,
-        estadoRetrospectivaId);
+        estadoRetrospectivaId, formularioId);
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.SEGUIMIENTO_ANUAL);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
@@ -1206,10 +1200,12 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Long formularioId = 5L;
 
     Evaluacion evaluacion = generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId, comiteId,
-        estadoRetrospectivaId);
+        estadoRetrospectivaId, formularioId);
 
     final Comentario comentario = new Comentario();
-    Formulario formulario = new Formulario(formularioId, "Nombre", "Descripcion");
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.SEGUIMIENTO_FINAL);
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     Apartado apartado = new Apartado();
     TipoComentario tipoComentario = new TipoComentario(1L, "GESTOR", Boolean.TRUE);
@@ -1514,7 +1510,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(12L))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, 1L)));
 
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 1L)));
@@ -1539,7 +1535,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(12L))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, 1L)));
 
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 1L)));
@@ -1564,7 +1560,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(12L))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, 1L)));
 
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 1L)));
@@ -1589,7 +1585,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(12L))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, 1L)));
 
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 1L)));
@@ -1614,7 +1610,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(12L))
         .willReturn(Optional.of(generarMockEvaluacionVariable(evaluacionId, tipoEvaluacionId, estadoMemoriaId,
-            comiteId, estadoRetrospectivaId)));
+            comiteId, estadoRetrospectivaId, 1L)));
 
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 1L)));
@@ -1885,14 +1881,16 @@ public class ComentarioServiceTest extends BaseServiceTest {
    * @param texto texto del comentario
    * @return el objeto Comentario
    */
-  public Comentario generarMockComentario(final Long id, final String texto, Long tipoComentarioId) {
+  private Comentario generarMockComentario(final Long id, final String texto, Long tipoComentarioId) {
     final Apartado apartado = new Apartado();
     apartado.setId(100L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
 
-    Bloque Bloque = new Bloque(1L, formulario, 1, null);
-    apartado.setBloque(Bloque);
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
+    apartado.setBloque(bloque);
 
     final Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(200L);
@@ -1912,14 +1910,33 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
   private Evaluacion generarMockEvaluacion(final Long id) {
     final Memoria memoria = new Memoria();
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+    Formulario formularioSeguimientoAnual = new Formulario();
+    formularioSeguimientoAnual.setId(4L);
+    formularioSeguimientoAnual.setTipo(Formulario.Tipo.MEMORIA);
+    Formulario formularioSeguimientoFinal = new Formulario();
+    formularioSeguimientoFinal.setId(5L);
+    formularioSeguimientoFinal.setTipo(Formulario.Tipo.MEMORIA);
+    Formulario formularioRetrospectiva = new Formulario();
+    formularioRetrospectiva.setId(6L);
+    formularioRetrospectiva.setTipo(Formulario.Tipo.MEMORIA);
+
     final TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
     final Evaluador evaluador = new Evaluador();
     evaluador.setPersonaRef("user-002");
     estadoMemoria.setId(TipoEstadoMemoria.Tipo.EN_EVALUACION.getId());
     memoria.setEstadoActual(estadoMemoria);
+    memoria.setFormulario(formulario);
+    memoria.setFormularioSeguimientoAnual(formularioSeguimientoAnual);
+    memoria.setFormularioSeguimientoFinal(formularioSeguimientoFinal);
+    memoria.setFormularioRetrospectiva(formularioRetrospectiva);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "CEI", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("CEI");
+    comite.setActivo(Boolean.TRUE);
     memoria.setComite(comite);
 
     final Evaluacion evaluacion = new Evaluacion();
@@ -1935,7 +1952,7 @@ public class ComentarioServiceTest extends BaseServiceTest {
   }
 
   private Evaluacion generarMockEvaluacionVariable(final Long id, final Long tipoEvaluacionId,
-      final Long estadoMemoriaId, final Long comiteId, final Long estadoRetrospectivaId) {
+      final Long estadoMemoriaId, final Long comiteId, final Long estadoRetrospectivaId, Long formularioId) {
 
     final Memoria memoria = new Memoria();
     final TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
@@ -1949,24 +1966,24 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final Retrospectiva retrospectiva = new Retrospectiva(1L, estadoRetrospectiva, Instant.now());
     memoria.setRetrospectiva(retrospectiva);
 
-    Formulario formulario = new Formulario(1L, "Nombre", "Descripcion");
-    Comite comite = new Comite(comiteId, "nombreComite", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
-    Bloque bloque = new Bloque(1L, formulario, 1, null);
-    Apartado apartado = new Apartado();
-    apartado.setId(1L);
-    apartado.setBloque(bloque);
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+    Comite comite = new Comite();
+    comite.setId(comiteId);
+    comite.setCodigo("nombreComite");
+    comite.setActivo(Boolean.TRUE);
 
-    Comentario comentario = new Comentario();
-    comentario.setId(null);
-    comentario.setApartado(apartado);
-
+    memoria.setFormulario(formulario);
+    memoria.setFormularioSeguimientoAnual(formulario);
+    memoria.setFormularioSeguimientoFinal(formulario);
+    memoria.setFormularioRetrospectiva(formulario);
     memoria.setComite(comite);
 
     final Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setMemoria(memoria);
     evaluacion.setEvaluador1(evaluador);
-    // comentario.setEvaluacion(evaluacion);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(tipoEvaluacionId, "Nombre", Boolean.TRUE);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);

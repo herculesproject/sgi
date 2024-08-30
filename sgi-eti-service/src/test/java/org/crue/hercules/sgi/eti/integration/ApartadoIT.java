@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.ApartadoDefinicion;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.BloqueNombre;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.model.Formulario.SeguimientoAnualDocumentacionTitle;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -257,12 +258,15 @@ public class ApartadoIT extends BaseIT {
    */
   private Apartado getMockData(Long id, Long bloqueId, Long padreId) {
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setCodigo("M10/2020/001");
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+    formulario.setSeguimientoAnualDocumentacionTitle(SeguimientoAnualDocumentacionTitle.TITULO_1);
+
     Bloque bloque = new Bloque(bloqueId, formulario, bloqueId.intValue(), null);
 
     Apartado padre = (padreId != null) ? getMockData(padreId, bloqueId, null) : null;
-
-    String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
     final Apartado data = new Apartado();
     data.setId(id);
@@ -284,7 +288,10 @@ public class ApartadoIT extends BaseIT {
    */
   private Apartado getMockDataOutput(Long id, Long bloqueId, Long padreId) {
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
     Bloque bloque = new Bloque(bloqueId, formulario, bloqueId.intValue(), null);
 
     Apartado padre = (padreId != null) ? getMockDataOutput(padreId, bloqueId, null) : null;

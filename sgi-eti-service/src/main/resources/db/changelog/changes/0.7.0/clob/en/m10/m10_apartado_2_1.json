@@ -77,7 +77,7 @@
             },
             {
               "key": "tarea",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Task",
                 "order": 60,
@@ -86,7 +86,7 @@
             },
             {
               "key": "experiencia",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Experience",
                 "order": 70,

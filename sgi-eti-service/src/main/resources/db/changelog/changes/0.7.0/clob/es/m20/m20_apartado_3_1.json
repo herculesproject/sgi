@@ -22,7 +22,7 @@
       },
       {
         "key": "objetivosCientificos",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Objetivos cientificos",
           "disabled": true,

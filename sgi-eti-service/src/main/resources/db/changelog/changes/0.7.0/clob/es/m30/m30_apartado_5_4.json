@@ -5,28 +5,28 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.4 Istripu biologiko bat edo substantzia kimiko arriskutsuekin istripu bat gertatuz gero jarduteko protokoloa"
+      "label": "5.4 Protocolo de actuación en caso de accidente biológico o con sustancias químicas peligrosas"
     },
     "fieldGroup": [
       {
-        "template": "Jarraian, istripu biologiko bat edo substantzia kimiko arriskutsuekin istripu bat gertatuz gero jarduteko protokoloa idatzi behar duzu; memoria honetarako espezifikoa izan behar du, eta 'Dokumentazioa' atalean dagokion eremuan erantsi behar duzu."
+        "template": "A continuación debe redactar un Protocolo de actuación en caso de accidente biológico o de accidente con sustancias químicas peligrosas, específico para esta memoria y aportarlo en el apartado correspondiente de 'Documentación'"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Informazio gehiagorako, kontsultatu <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Unibertsitateko Batzordearen</a> orria.</p>"
+        "template": "<p>Para más información puede consultar la página del <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Comité de la Universidad.</a></p>"
       },
       {
         "key": "protocoloActuacion",
         "type": "documento",
         "templateOptions": {
-          "label": "Adierazi",
+          "label": "Indicar",
           "required": true,
           "options": [
             {
-              "value": 20,
-              "label": "Bai"
+              "value": "PROTOCOLO_ACTUACION",
+              "label": "Sí"
             }
           ]
         }

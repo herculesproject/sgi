@@ -51,7 +51,7 @@ public class BloqueControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-Bloque-VER" })
   public void getBloque_WithId_ReturnsBloque() throws Exception {
     BDDMockito.given(bloqueService.findById(ArgumentMatchers.anyLong()))
-        .willReturn((generarMockBloqueOutput(1L, "Bloque1")));
+        .willReturn((generarMockBloqueOutput(1L)));
 
     mockMvc
         .perform(MockMvcRequestBuilders.get(BLOQUE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
@@ -261,12 +261,11 @@ public class BloqueControllerTest extends BaseControllerTest {
    * @return el objeto Bloque
    */
 
-  public Bloque generarMockBloque(Long id, String nombre) {
+  private Bloque generarMockBloque(Long id, String nombre) {
 
     Formulario formulario = new Formulario();
     formulario.setId(1L);
-    formulario.setNombre("Formulario1");
-    formulario.setDescripcion("Descripcion formulario 1");
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
 
     Bloque bloque = new Bloque();
     bloque.setId(id);
@@ -284,12 +283,11 @@ public class BloqueControllerTest extends BaseControllerTest {
    * @return el objeto Bloque
    */
 
-  public Bloque generarMockBloqueOutput(Long id, String nombre) {
+  private Bloque generarMockBloqueOutput(Long id) {
 
     Formulario formulario = new Formulario();
     formulario.setId(1L);
-    formulario.setNombre("Formulario1");
-    formulario.setDescripcion("Descripcion formulario 1");
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
 
     Bloque bloque = new Bloque();
     bloque.setId(id);
@@ -310,12 +308,12 @@ public class BloqueControllerTest extends BaseControllerTest {
    */
   private Apartado getMockApartado(Long id, Long bloqueId, Long padreId) {
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
     Bloque bloque = new Bloque(bloqueId, formulario, 1, null);
 
     Apartado padre = (padreId != null) ? getMockApartado(padreId, bloqueId, null) : null;
-
-    String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
     final Apartado data = new Apartado();
     data.setId(id);

@@ -37,7 +37,7 @@
       },
       {
         "key": "tipoAgenteBiologico",
-        "type": "input",
+        "type": "i18n-input",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
         "templateOptions": {
           "label": "Type of biological agent",
@@ -47,7 +47,7 @@
       },
       {
         "key": "nivelBioseguridad",
-        "type": "input",
+        "type": "i18n-input",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
         "templateOptions": {
           "label": "Biosafety level",
@@ -57,7 +57,7 @@
       },
       {
         "key": "administracion",
-        "type": "input",
+        "type": "i18n-input",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
         "templateOptions": {
           "label": "Dosage and route of administration",

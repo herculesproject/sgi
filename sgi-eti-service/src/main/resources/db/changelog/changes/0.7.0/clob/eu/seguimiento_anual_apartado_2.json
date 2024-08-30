@@ -20,7 +20,7 @@
       },
       {
         "key": "equipoInvestigador",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",

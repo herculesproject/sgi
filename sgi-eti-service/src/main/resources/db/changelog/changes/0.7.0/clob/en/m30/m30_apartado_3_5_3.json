@@ -49,7 +49,7 @@
             },
             {
               "key": "descripcionCaracteristicas",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Description/Characteristics",
                 "order": 20
@@ -83,7 +83,7 @@
             },
             {
               "key": "volumenMaximo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Maximum sample volume to be handled at any one time or number of animals",
                 "order": 40

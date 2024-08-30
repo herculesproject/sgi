@@ -5,48 +5,48 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.5.1 Laginen jatorria"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.5.1 Origen de las muestras"
     },
     "hideExpression": "!formState.mainModel.ap3_5.muestrasBiologicasRadio || formState.mainModel.ap3_5.muestrasBiologicasRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "Nola lortu dira laginak?"
+        "template": "¿Cómo se han obtenido las muestras?"
       },
       {
         "type": "multicheckbox",
         "key": "origenMuestrasCheck",
         "templateOptions": {
-          "label": "Jatorria",
+          "label": "Origen",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "recogidasExpresamente",
-              "label": "Berariaz proiektu honetarako bildu dira, aztergai den subjektuaren esku hartzearekin (3.4 galderari baietz erantzun behar diozu). "
+              "label": "Recogidas expresamente para este proyecto con intervención del sujeto de estudio (debe contestar afirmativamente a la pregunta 3.4)"
             },
             {
               "value": "recogidasApartirDeMuestras",
-              "label": "Beste prozesu batean lortutako laginetatik bildu dira (adib., kliniko-asistentziala, autopsia).*"
+              "label": "Recogidas a partir de muestras ya obtenidas en otro proceso (ej. clínico-asistencial, autopsia)*"
             },
             {
               "value": "procedentesBiobanco",
-              "label": "Biobancotik lortu dira.*"
+              "label": "Procedentes de Biobanco*"
             },
             {
               "value": "procedentesColeccion",
-              "label": "Lagin bilduma batetik lortu dira.*"
+              "label": "Procedentes de una colección de muestras*"
             }
           ]
         }
       },
       {
         "key": "especificarRecogidasApartirDeMuestras",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'recogidasApartirDeMuestras')",
         "templateOptions": {
-          "label": "Beste prozesu batean lortutako laginetatik bildu dira: zehaztu.",
-          "placeholder": "Beste prozesu batean lortutako laginetatik bildu dira: zehaztu.",
+          "label": "Especificar recogidas a partir de muestras ya obtenidas",
+          "placeholder": "Especificar recogidas a partir de muestras ya obtenidas",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -55,11 +55,11 @@
       },
       {
         "key": "especificarProcedentesBiobanco",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'procedentesBiobanco')",
         "templateOptions": {
-          "label": "Biobancotik lortu dira: zehaztu.",
-          "placeholder": "Biobancotik lortu dira: zehaztu.",
+          "label": "Especificar procedentes de Biobanco",
+          "placeholder": "Especificar procedentes de Biobanco",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -68,11 +68,11 @@
       },
       {
         "key": "especificarProcedentesColeccion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'procedentesColeccion')",
         "templateOptions": {
-          "label": "Lagin bilduma batetik lortu dira: zehaztu.",
-          "placeholder": "Lagin bilduma batetik lortu dira: zehaztu.",
+          "label": "Especificar procedentes de una colección de muestras",
+          "placeholder": "Especificar procedentes de una colección de muestras",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -83,7 +83,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Oharra: Izartxoz (*) markatuta dauden aukeretan beharrezkoa da MTA edo hitzarmena, eta 5.5 atalean erantsi behar da. </p>"
+        "template": "<p>Nota: Las opciones marcadas con (*) requiren MTA o convenio que debe aportarse en el apartado 5.5.</p>"
       }
     ]
   }

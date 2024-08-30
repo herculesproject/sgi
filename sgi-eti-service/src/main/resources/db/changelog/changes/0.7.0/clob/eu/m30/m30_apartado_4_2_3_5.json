@@ -5,74 +5,74 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.3.5 Gestión de residuos"
+      "label": "4.2.3.5 Hondakinen kudeaketa"
     },
     "fieldGroup": [
       {
-        "template": "<p>Con respecto a la gestión de residuos biológicos, organismos modificados genéticamente, químicos y radiactivos, ¿conoce, aplica y tiene a su disposición el <a href='https://www.um.es/web/acti/contenido/servicios/radioproteccion-residuos/normas' target='_blank'>'Manual de Gestión de Residuos Peligrosos, Biológicos y Radiactivos de la Universidad'</a>?</p>"
+        "template": "<p>Hondakin biologikoen, genetikoki eraldatutako organismoen, substantzia kimikoen eta substantzia erradioaktiboen kudeaketari dagokionez, ezagutzen duzu, aplikatzen duzu eta eskura daukazu <a href='https://www.um.es/web/acti/contenido/servicios/radioproteccion-residuos/normas' target='_blank'>'Unibertsitateko hondakin arriskutsu, biologiko eta erradioaktiboak kudeatzeko gidaliburua'</a>?</p>"
       },
       {
         "key": "manualGestionResiduos",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
       },
       {
-        "template": "<p>¿Dispone de registro como unidad productora de residuos peligrosos y biológicos en la Universidad?</p>"
+        "template": "<p>Unibertsitatean erregistratuta zaude hondakin arriskutsu eta biologikoak ekoizten dituen unitate gisa?</p>"
       },
       {
         "key": "productoraResiduosPeligrosos",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
       },
       {
-        "template": "<p>¿Se contempla gestión externa de residuos peligrosos o biológicos?</p>"
+        "template": "<p>Hondakin arriskutsuen edo biologikoen kanpo kudeaketa aurreikusten da?</p>"
       },
       {
         "key": "gestionResiduos",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }
       },
       {
-        "template": "Especificar gestión externa o justificar en caso positivo",
+        "template": "Erantzuna baiezkoa bada, zehaztu edo justifikatu kanpo kudeaketa.",
         "hideExpression": "!model.gestionResiduos || model.gestionResiduos === 'no'"
       },
       {
@@ -80,40 +80,40 @@
         "type": "multicheckbox",
         "hideExpression": "!model.gestionResiduos || model.gestionResiduos === 'no'",
         "templateOptions": {
-          "label": "Cuáles",
+          "label": "Hauetako zein?",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "biosanitarios",
-              "label": "Residuos biosanitarios"
+              "label": "Hondakin biosanitarioak"
             },
             {
               "value": "quimicos",
-              "label": "Residuos de origen químico"
+              "label": "Jatorri kimikoko hondakinak"
             },
             {
               "value": "radiactivos",
-              "label": "Residuos radiactivos"
+              "label": "Hondakin erradioaktiboak"
             },
             {
               "value": "animales",
-              "label": "Residuos de animales de experimentación"
+              "label": "Esperimentazio animalien hondakinak"
             },
             {
               "value": "otros",
-              "label": "Otros. Especificar"
+              "label": "Beste batzuk. Zehaztu"
             }
           ]
         }
       },
       {
         "key": "otrasTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "model.gestionResiduos === 'no' || (!model.residuosGenerar || !model.residuosGenerar.find((c) => c === 'otros'))",
         "templateOptions": {
-          "placeholder": "Otros. Especificar",
-          "label": "Otros. Especificar",
+          "placeholder": "Beste batzuk. Zehaztu",
+          "label": "Beste batzuk. Zehaztu",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -124,7 +124,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Un residuo peligroso es el que presenta una o varias de las siguientes características de peligrosidad: explosivo, cancerígeno, comburente, corrosivo, inflamable, infeccioso, irritante, tóxico, nocivo, mutagénico y/o ecotóxico. Si un residuo no presenta alguna de las anteriores características, no será considerado residuo peligroso y, por tanto, su gestión se realizará junto al resto de residuos urbanos.<br><br>Dentro de los residuos peligrosos que se producen en los laboratorios de docencia y de investigación de la Universidad destacan los residuos de origen químico, residuos biosanitarios del grupo III o biológicos, residuos radiactivos y residuos de animales de experimentación <strong>(SANDACH)</strong>.<br><br>La gestión de los residuos peligrosos de la Universidad se realiza a través de la Sección de Radioprotección y Residuos del ACTI con una empresa de gestión externa.</p>"
+        "template": "<p>Hondakin bat arriskutsutzat hartzen dugu, baldin eta arriskugarritasun ezaugarri hauetako bat edo batzuk baditu: leherkorra, kantzerigenoa, erregarria, korrosiboa, sukoia, infekziosoa, narritagarria, toxikoa, kaltegarria, mutagenoa edo/eta ekotoxikoa. Hondakin batek ez badu ezaugarri horietako bat bera ere, ez da hondakin arriskutsutzat joko, eta, horrenbestez, gainerako hiri hondakinekin batera kudeatuko da. <br><br>Unibertsitateko irakaskuntza eta ikerketa laborategietan sortzen diren hondakin arriskutsuen barruan, nabarmentzekoak dira jatorri kimikoko hondakinak, III. taldeko hondakin biosanitarioak edo biologikoak, hondakin erradioaktiboak eta esperimentazio animalien hondakinak <strong>(SANDACH)</strong>.<br><br>Unibertsitateko hondakin arriskutsuak IZTAren Erradiobabes eta Hondakinen Sailak kudeatzen ditu, kanpo kudeaketako enpresa batekin. </p>"
       }
     ]
   }

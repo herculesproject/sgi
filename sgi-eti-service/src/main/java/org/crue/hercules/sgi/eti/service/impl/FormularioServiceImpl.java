@@ -5,16 +5,18 @@ import java.util.Objects;
 import org.crue.hercules.sgi.eti.exceptions.FormularioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.model.Formulario.Tipo;
+import org.crue.hercules.sgi.eti.model.FormularioReport;
+import org.crue.hercules.sgi.eti.model.FormularioReportPK;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.repository.FormularioReportRepository;
 import org.crue.hercules.sgi.eti.repository.FormularioRepository;
 import org.crue.hercules.sgi.eti.service.FormularioService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -34,28 +36,17 @@ public class FormularioServiceImpl implements FormularioService {
   private final FormularioRepository formularioRepository;
   private final MemoriaService memoriaService;
   private final RetrospectivaService retrospectivaService;
+  private final FormularioReportRepository formularioReportRepository;
 
   public FormularioServiceImpl(
       FormularioRepository formularioRepository,
       MemoriaService memoriaService,
-      RetrospectivaService retrospectivaService) {
+      RetrospectivaService retrospectivaService,
+      FormularioReportRepository formularioReportRepository) {
     this.formularioRepository = formularioRepository;
     this.memoriaService = memoriaService;
     this.retrospectivaService = retrospectivaService;
-  }
-
-  /**
-   * Guarda la entidad {@link Formulario}.
-   *
-   * @param formulario la entidad {@link Formulario} a guardar.
-   * @return la entidad {@link Formulario} persistida.
-   */
-  @Transactional
-  public Formulario create(Formulario formulario) {
-    log.debug("Petición a create Formulario : {} - start", formulario);
-    AssertHelper.idNotNull(formulario.getId(), Formulario.class);
-
-    return formularioRepository.save(formulario);
+    this.formularioReportRepository = formularioReportRepository;
   }
 
   /**
@@ -92,86 +83,44 @@ public class FormularioServiceImpl implements FormularioService {
   }
 
   /**
-   * Obtiene {@link Formulario} por id de la memoria.
-   *
-   * @param idMemoria el id de la memoria
-   * @return la entidad {@link Formulario}.
-   * @return Formulario
-   */
-  public Formulario findByMemoriaId(Long idMemoria) {
-    log.debug("findByMemoriaId : {}  - start", idMemoria);
-    final Formulario formulario = formularioRepository.findByMemoriaId(idMemoria);
-    log.debug("findByMemoriaId : {}  - end", idMemoria);
-    return formulario;
-  }
-
-  /**
-   * Elimina una entidad {@link Formulario} por id.
-   *
-   * @param id el id de la entidad {@link Formulario}.
-   */
-  @Transactional
-  public void delete(Long id) throws FormularioNotFoundException {
-    log.debug("Petición a delete Formulario : {}  - start", id);
-    AssertHelper.idNotNull(id, Formulario.class);
-    if (!formularioRepository.existsById(id)) {
-      throw new FormularioNotFoundException(id);
-    }
-    formularioRepository.deleteById(id);
-    log.debug("Petición a delete Formulario : {}  - end", id);
-  }
-
-  /**
-   * Elimina todos los registros {@link Formulario}.
-   */
-  @Transactional
-  public void deleteAll() {
-    log.debug("Petición a deleteAll de Formulario: {} - start");
-    formularioRepository.deleteAll();
-    log.debug("Petición a deleteAll de Formulario: {} - end");
-
-  }
-
-  /**
-   * Actualiza los datos del {@link Formulario}.
+   * Obtiene el report asociado al {@link Formulario} en el idioma especificado
    * 
-   * @param formularioActualizar {@link Formulario} con los datos actualizados.
-   * @return El {@link Formulario} actualizado.
-   * @throws FormularioNotFoundException Si no existe ningún {@link Formulario}
-   *                                     con ese id.
-   * @throws IllegalArgumentException    Si el {@link Formulario} no tiene id.
+   * @param id       el id de la entidad {@link Formulario}.
+   * @param language Idioma
+   * @return Report asociado
    */
+  public byte[] getReport(Long id, Language language) throws FormularioNotFoundException {
+    FormularioReport report = formularioReportRepository.findById(new FormularioReportPK(id, language))
+        .orElseThrow(() -> new FormularioNotFoundException(id));
+    return report.getValue();
+  }
 
-  @Transactional
-  public Formulario update(final Formulario formularioActualizar) {
-    log.debug("update(Formulario FormularioActualizar) - start");
-
-    AssertHelper.idNotNull(formularioActualizar.getId(), Formulario.class);
-
-    return formularioRepository.findById(formularioActualizar.getId()).map(formulario -> {
-      formulario.setNombre(formularioActualizar.getNombre());
-      formulario.setDescripcion(formularioActualizar.getDescripcion());
-
-      Formulario returnValue = formularioRepository.save(formulario);
-      log.debug("update(Formulario FormularioActualizar) - end");
-      return returnValue;
-    }).orElseThrow(() -> new FormularioNotFoundException(formularioActualizar.getId()));
+  /**
+   * Comprueba si existe un report asociado al {@link Formulario} en el idioma
+   * especificado
+   * 
+   * @param id       el id de la entidad {@link Formulario}.
+   * @param language Idioma
+   * @return <code>true</code> si existe un report asociado
+   */
+  public boolean existReport(Long id, Language language) {
+    return formularioReportRepository.existsById(new FormularioReportPK(id, language));
   }
 
   /**
    * Actualiza el estado de la memoria o de la retrospectiva al estado final
    * correspondiente al tipo de formulario completado.
    *
-   * @param memoriaId        Identificador de la {@link Memoria}.
-   * @param tipoFormularioId {@link Formulario.Tipo}
+   * @param memoriaId      Identificador de la {@link Memoria}.
+   * @param formularioTipo Tipo de formulario {@link Formulario.Tipo}
    * @throws MemoriaNotFoundException Si no existe ningún {@link Memoria} con ese
    *                                  id.
    */
   @Transactional
-  public void completado(Long memoriaId, Long tipoFormularioId) throws MemoriaNotFoundException {
+  public void completado(Long memoriaId, Formulario.Tipo formularioTipo) throws MemoriaNotFoundException {
     Memoria memoria = memoriaService.findById(memoriaId);
 
-    switch (Tipo.fromId(tipoFormularioId)) {
+    switch (formularioTipo) {
       case SEGUIMIENTO_ANUAL:
         if (memoria.getEstadoActual().getId() < TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_ANUAL.getId()) {
           memoriaService.updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.COMPLETADA_SEGUIMIENTO_ANUAL.getId());

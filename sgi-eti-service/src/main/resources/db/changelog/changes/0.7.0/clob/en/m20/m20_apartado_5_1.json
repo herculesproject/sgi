@@ -19,7 +19,7 @@
           "required": true,
           "options": [
             {
-              "value": 12,
+              "value": "ACREDITACIONES",
               "label": "Yes"
             }
           ]

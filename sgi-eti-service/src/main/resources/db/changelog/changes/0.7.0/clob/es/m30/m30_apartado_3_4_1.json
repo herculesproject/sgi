@@ -5,32 +5,32 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.4.1 Nahigabeko edo ustekabeko esposizioa"
+      "label": "3.4.1 Exposición no intencionada o incidental"
     },
     "fieldGroup": [
       {
-        "template": "<p>Jarduera honetan, agente biologikoekiko nahigabeko edo ustekabeko esposizioa ekar dezaketen zereginak egiten dira?</p>"
+        "template": "<p>En esta actividad ¿se realizan tareas en las que puede haber exposición no intencionada o incidental a agentes biológicos?</p>"
       },
       {
         "key": "agentesBiologicosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
-        "template": "Erabiltzen den material biologiko mota",
+        "template": "Tipo de material biológico que se utiliza",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'"
       },
       {
@@ -38,39 +38,39 @@
         "key": "muestrasBiologicasCheck",
         "hideExpression": "!model.agentesBiologicosRadio || model.agentesBiologicosRadio === 'no'",
         "templateOptions": {
-          "label": "Aukerak:",
+          "label": "Opciones:",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "criaymanejoanimales",
-              "label": "Animalien hazkuntza eta erabilera"
+              "label": "Cría y manejo de animales"
             },
             {
               "value": "tejidossangrefluidosanimales",
-              "label": "Animalien ehunak/odola/jariakinak"
+              "label": "Tejidos/sangre/fluidos animales"
             },
             {
               "value": "tejidossangrefluidoshumanos",
-              "label": "Gizakien ehunak/odola/jariakinak"
+              "label": "Tejidos/sangre/fluidos humanos"
             },
             {
               "value": "otros",
-              "label": "Beste batzuk"
+              "label": "Otros"
             }
           ]
         }
       },
       {
-        "template": "Adierazi material biologiko mota",
+        "template": "Indicar el tipo de material biológico",
         "hideExpression": "!((model.agentesBiologicosRadio && model.agentesBiologicosRadio === 'si') && (model.muestrasBiologicasCheck && model.muestrasBiologicasCheck.find((m) => m === 'otros')))"
       },
       {
         "key": "tipoMaterialBiologico",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!((model.agentesBiologicosRadio && model.agentesBiologicosRadio === 'si') && (model.muestrasBiologicasCheck && model.muestrasBiologicasCheck.find((m) => m === 'otros')))",
         "templateOptions": {
-          "label": "Adierazi:",
+          "label": "Indicar:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

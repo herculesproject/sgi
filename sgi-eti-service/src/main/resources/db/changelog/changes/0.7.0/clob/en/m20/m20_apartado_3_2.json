@@ -19,7 +19,7 @@
       },
       {
         "key": "disenoMetodologico",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Methodological design",
           "disabled": true,

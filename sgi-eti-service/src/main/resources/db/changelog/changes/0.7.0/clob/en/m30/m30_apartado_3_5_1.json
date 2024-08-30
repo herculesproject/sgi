@@ -23,7 +23,7 @@
           "fieldGroup": [
             {
               "key": "nombre",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Name",
                 "order": 10
@@ -110,7 +110,7 @@
             },
             {
               "key": "volumenMaximo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Maximum volume of each culture",
                 "order": 50

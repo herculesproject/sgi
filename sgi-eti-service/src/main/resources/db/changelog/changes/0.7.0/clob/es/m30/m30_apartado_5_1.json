@@ -5,22 +5,22 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.1 Akreditazioak"
+      "label": "5.1 Acreditaciones"
     },
     "fieldGroup": [
       {
-        "template": "Gogoratu ikertzaile taldearen akreditazio guztien kopiak aurkeztu behar dituzula, proiektuaren memoriarekin batera artxibatuta gera daitezen."
+        "template": "Recuerde que debe aportar copia de todas las acreditaciones del equipo investigador para que queden archivadas junto con la memoria del proyecto."
       },
       {
         "key": "acreditaciones",
         "type": "documento",
         "templateOptions": {
-          "label": "Adierazi",
+          "label": "Indicar",
           "required": true,
           "options": [
             {
-              "value": 17,
-              "label": "Bai"
+              "value": "ACREDITACIONES",
+              "label": "Sí"
             }
           ]
         }

@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "4.5 Genetic studies"
     },
     "fieldGroup": [
@@ -70,7 +70,7 @@
       },
       {
         "key": "otraPruebaPredictiva",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!(model.estudiosGeneticosRadio && model.estudiosGeneticosRadio === 'si' && model.pruebaPredectivaRadio && model.pruebaPredectivaRadio === 'otra')",
         "templateOptions": {
           "label": "Please specify",
@@ -113,7 +113,7 @@
       },
       {
         "key": "otrosFines",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!(model.estudiosGeneticosRadio && model.estudiosGeneticosRadio === 'si' && model.finesRadio && model.finesRadio === 'otros')",
         "templateOptions": {
           "label": "Please specify",

@@ -10,9 +10,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.InformeNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -25,7 +23,6 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.InformeRepository;
 import org.crue.hercules.sgi.eti.service.impl.InformeServiceImpl;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -34,8 +31,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -214,112 +214,106 @@ public class InformeServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
   }
 
-  // @Test
-  // public void findAll_WithPaging_ReturnsPage() {
-  // // given: One hundred Informes
-  // List<Informe> informes = new ArrayList<>();
-  // for (int i = 1; i <= 100; i++) {
-  // informes.add(generarMockInforme(Long.valueOf(i), "DocumentoFormulario" +
-  // String.format("%03d", i)));
-  // }
+  @Test
+  public void findAll_WithPaging_ReturnsPage() {
+    // given: One hundred Informes
+    List<Informe> informes = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      informes.add(generarMockInforme(Long.valueOf(i), "DocumentoFormulario" +
+          String.format("%03d", i)));
+    }
 
-  // BDDMockito
-  // .given(
-  // informeRepository.findAll(ArgumentMatchers.<Specification<Informe>>any(),
-  // ArgumentMatchers.<Pageable>any()))
-  // .willAnswer(new Answer<Page<Informe>>() {
-  // @Override
-  // public Page<Informe> answer(InvocationOnMock invocation) throws Throwable {
-  // Pageable pageable = invocation.getArgument(1, Pageable.class);
-  // int size = pageable.getPageSize();
-  // int index = pageable.getPageNumber();
-  // int fromIndex = size * index;
-  // int toIndex = fromIndex + size;
-  // List<Informe> content = informes.subList(fromIndex, toIndex);
-  // Page<Informe> page = new PageImpl<>(content, pageable, informes.size());
-  // return page;
-  // }
-  // });
+    BDDMockito.given(
+        informeRepository.findAll(ArgumentMatchers.<Specification<Informe>>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Informe>>() {
+          @Override
+          public Page<Informe> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<Informe> content = informes.subList(fromIndex, toIndex);
+            Page<Informe> page = new PageImpl<>(content, pageable, informes.size());
+            return page;
+          }
+        });
 
-  // // when: Get page=3 with pagesize=10
-  // Pageable paging = PageRequest.of(3, 10);
-  // Page<Informe> page = informeService.findAll(null, paging);
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<Informe> page = informeService.findAll(null, paging);
 
-  // // then: A Page with ten Informes are returned containing
-  // // descripcion='Informe031' to 'Informe040'
-  // Assertions.assertThat(page.getContent().size()).isEqualTo(10);
-  // Assertions.assertThat(page.getNumber()).isEqualTo(3);
-  // Assertions.assertThat(page.getSize()).isEqualTo(10);
-  // Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
-  // for (int i = 0, j = 31; i < 10; i++, j++) {
-  // Informe informe = page.getContent().get(i);
-  // Assertions.assertThat(informe.getDocumentoRef()).isEqualTo("DocumentoFormulario"
-  // + String.format("%03d", j));
-  // }
-  // }
+    // then: A Page with ten Informes are returned containing
+    // descripcion='Informe031' to 'Informe040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      Informe informe = page.getContent().get(i);
+      Assertions.assertThat(informe.getId()).isEqualTo(j);
+    }
+  }
 
-  // @Test
-  // public void findAllByMemoriaId_ReturnsInformes() {
+  @Test
+  public void findAllByMemoriaId_ReturnsInformes() {
 
-  // Long informeId = 1L;
-  // final String lang = "es";
-  // // given: 10 Informes
-  // List<Informe> informes = new ArrayList<>();
-  // for (int i = 1; i <= 10; i++) {
-  // informes.add(generarMockInforme(Long.valueOf(i), "Informe" +
-  // String.format("%03d", i)));
-  // }
+    Long informeId = 1L;
+    // given: 10 Informes
+    List<Informe> informes = new ArrayList<>();
+    for (int i = 1; i <= 10; i++) {
+      informes.add(generarMockInforme(Long.valueOf(i), "Informe" +
+          String.format("%03d", i)));
+    }
 
-  // BDDMockito
-  // .given(informeRepository.findByMemoriaIdAndLang(ArgumentMatchers.anyLong(),
-  // ArgumentMatchers.any(),
-  // ArgumentMatchers.<Pageable>any()))
-  // .willReturn(new PageImpl<>(informes));
+    BDDMockito
+        .given(informeRepository.findByMemoriaId(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(informes));
 
-  // // when: Se buscan todos las datos
-  // Page<Informe> result = informeService.findByMemoriaAndLanguage(informeId,
-  // lang, Pageable.unpaged());
+    // when: Se buscan todos las datos
+    Page<Informe> result = informeService.findByMemoria(informeId,
+        Pageable.unpaged());
 
-  // // then: Se recuperan todos los datos
-  // Assertions.assertThat(result.getContent()).isEqualTo(informes);
-  // Assertions.assertThat(result.getSize()).isEqualTo(10);
-  // Assertions.assertThat(result.getSize()).isEqualTo(informes.size());
-  // Assertions.assertThat(result.getTotalElements()).isEqualTo(informes.size());
-  // }
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(result.getContent()).isEqualTo(informes);
+    Assertions.assertThat(result.getSize()).isEqualTo(10);
+    Assertions.assertThat(result.getSize()).isEqualTo(informes.size());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(informes.size());
+  }
 
-  // @Test
-  // public void deleteInformeMemoria() {
+  @Test
+  public void deleteInformeMemoria() {
 
-  // BDDMockito
-  // .given(informeRepository.findFirstByMemoriaIdAndLangOrderByVersionDesc(ArgumentMatchers.anyLong(),
-  // ArgumentMatchers.<Language>any()))
-  // .willReturn(Optional.of(generarMockInforme(1L, "DocumentoFormulario1")));
+    BDDMockito
+        .given(informeRepository.findFirstByMemoriaIdOrderByVersionDesc(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockInforme(1L, "DocumentoFormulario1")));
 
-  // BDDMockito.doNothing().when(informeRepository).delete(ArgumentMatchers.<Informe>any());
+    BDDMockito.doNothing().when(informeRepository).delete(ArgumentMatchers.<Informe>any());
 
-  // Assertions.assertThatCode(
-  // // when: Delete con id existente
-  // () -> informeService.deleteLastInformeMemoria(1L))
-  // // then: No se lanza ninguna excepción
-  // .doesNotThrowAnyException();
+    Assertions.assertThatCode(
+        // when: Delete con id existente
+        () -> informeService.deleteLastInformeMemoria(1L))
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
 
-  // }
+  }
 
-  // @Test
-  // public void deleteInformeMemoria_informeNull() {
+  @Test
+  public void deleteInformeMemoria_informeNull() {
 
-  // BDDMockito
-  // .given(informeRepository.findFirstByMemoriaIdAndLangOrderByVersionDesc(ArgumentMatchers.anyLong(),
-  // ArgumentMatchers.<Language>any()))
-  // .willReturn(Optional.empty());
+    BDDMockito
+        .given(informeRepository.findFirstByMemoriaIdOrderByVersionDesc(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.empty());
 
-  // Assertions.assertThatCode(
-  // // when: Delete con id existente
-  // () -> informeService.deleteLastInformeMemoria(1L))
-  // // then: No se lanza ninguna excepción
-  // .doesNotThrowAnyException();
+    Assertions.assertThatCode(
+        // when: Delete con id existente
+        () -> informeService.deleteLastInformeMemoria(1L))
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
 
-  // }
+  }
 
   /**
    * Función que devuelve un objeto Informe
@@ -329,7 +323,7 @@ public class InformeServiceTest extends BaseServiceTest {
    * @return el objeto Informe
    */
 
-  public Informe generarMockInforme(Long id, String documentoRef) {
+  private Informe generarMockInforme(Long id, String documentoRef) {
     TipoActividad tipoActividad = new TipoActividad();
     tipoActividad.setId(1L);
     tipoActividad.setNombre("TipoActividad1");
@@ -360,18 +354,40 @@ public class InformeServiceTest extends BaseServiceTest {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
-    TipoMemoria tipoMemoria = new TipoMemoria();
-    tipoMemoria.setId(id);
-    tipoMemoria.setNombre("TipoMemoria1");
-    tipoMemoria.setActivo(Boolean.TRUE);
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(1L);
+    tipoEstadoMemoria.setNombre("En elaboración");
+    tipoEstadoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria1", "user-001", tipoMemoria,
-        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
-        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), Instant.now()), 3, Boolean.TRUE,
-        null);
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setId(1L);
+    estadoRetrospectiva.setNombre("Pendiente");
+    estadoRetrospectiva.setActivo(Boolean.TRUE);
+
+    Retrospectiva retrospectiva = new Retrospectiva();
+    retrospectiva.setId(id);
+    retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
+    retrospectiva.setFechaRetrospectiva(Instant.now());
+
+    Memoria memoria = new Memoria();
+    memoria.setId(1L);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setPeticionEvaluacion(peticionEvaluacion);
+    memoria.setComite(comite);
+    memoria.setTitulo("Memoria1");
+    memoria.setPersonaRef("user-001");
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.FALSE);
+    memoria.setRetrospectiva(retrospectiva);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
     tipoEvaluacion.setId(1L);

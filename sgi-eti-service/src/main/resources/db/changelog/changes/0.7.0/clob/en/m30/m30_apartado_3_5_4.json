@@ -23,7 +23,7 @@
           "fieldGroup": [
             {
               "key": "organismoModificadoNombre",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Name",
                 "order": 10,
@@ -36,7 +36,7 @@
             },
             {
               "key": "organismoModificadoHuesped",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Host",
                 "order": 20,
@@ -49,7 +49,7 @@
             },
             {
               "key": "organismoModificadoVectorUtilizado",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Vector used",
                 "order": 30,
@@ -62,7 +62,7 @@
             },
             {
               "key": "organismoModificadoInsertoEspecie",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Insert and species of origin of the insert",
                 "order": 40,
@@ -75,7 +75,7 @@
             },
             {
               "key": "organismoModificadoProteina",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Protein it encodes",
                 "order": 50,
@@ -114,7 +114,7 @@
             },
             {
               "key": "organismoModificadoVolumenMaximo",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Maximum sample volume to be handled at any one time or number of animals",
                 "order": 70,

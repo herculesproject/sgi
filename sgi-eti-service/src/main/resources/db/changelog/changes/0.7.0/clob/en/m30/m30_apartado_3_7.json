@@ -14,7 +14,7 @@
       {
         "key": "mododeObtencion",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Date obtained",
           "required": true
@@ -23,7 +23,7 @@
       {
         "key": "transporte",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Transport",
           "required": true
@@ -32,7 +32,7 @@
       {
         "key": "recepcion",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Reception",
           "required": true
@@ -41,7 +41,7 @@
       {
         "key": "almacenamiento",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Storage",
           "required": true
@@ -50,7 +50,7 @@
       {
         "key": "eliminacion",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Disposal",
           "required": true

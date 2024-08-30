@@ -14,7 +14,7 @@
       },
       {
         "key": "excepcionReutilizacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "label": "Justifikatu",
           "required": true,

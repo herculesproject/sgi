@@ -19,7 +19,7 @@
       },
       {
         "key": "duracionProcesoExperimentacion",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Tiempo (días)",
           "placeholder": "Tiempo en días"

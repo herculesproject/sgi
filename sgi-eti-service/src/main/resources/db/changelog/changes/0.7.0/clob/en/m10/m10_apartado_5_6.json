@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "5.6 Sample transfer agreement"
     },
     "fieldGroup": [
@@ -24,7 +24,7 @@
               "label": "No"
             },
             {
-              "value": 9,
+              "value": "ACUERDO_TRANSFERENCIA",
               "label": "Yes"
             }
           ]

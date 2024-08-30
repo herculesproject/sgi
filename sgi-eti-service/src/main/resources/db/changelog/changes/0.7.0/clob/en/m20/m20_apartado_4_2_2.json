@@ -19,7 +19,7 @@
       },
       {
         "key": "justificarRazon",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Justify",
           "required": true

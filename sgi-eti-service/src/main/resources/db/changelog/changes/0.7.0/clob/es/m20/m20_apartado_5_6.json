@@ -23,7 +23,7 @@
               "label": "No"
             },
             {
-              "value": 16,
+              "value": "ADICIONAL",
               "label": "Sí"
             }
           ]
@@ -31,7 +31,7 @@
       },
       {
         "key": "documentacionAdicionalDescripcion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.documentacionAdicional || model.documentacionAdicional === 0",
         "templateOptions": {
           "label": "Especificar",

@@ -5,12 +5,12 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1.1.4 Instalazioak"
+      "label": "4.2.1.1.4 Instalaciones"
     },
     "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
     "fieldGroup": [
       {
-        "template": "<p>Arropa gordetzeko armairudun aldagelak daude.</p>",
+        "template": "<p>Se dispone de vestuarios con taquillas para la ropa</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -19,26 +19,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_disponeVestuarios",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "template": "<p>Leiho zabalgarriak badaude, intsektuak ez sartzeko babesgarria dute.</p>",
+        "template": "<p>En caso de ventanas practicables, éstas llevan protección frente a la entrada de insectos</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -56,26 +56,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_ventanasPracticables",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -84,7 +84,7 @@
         }
       },
       {
-        "template": "<p>Materialak eta erreaktiboak gordetzeko behar beste espazio dago.</p>",
+        "template": "<p>Se dispone de espacio suficiente para el almacenamiento de materiales y reactivos</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -93,26 +93,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_espacioAlmacenamiento",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -121,7 +121,7 @@
         }
       },
       {
-        "template": "<p>Laborategiak aireztapen egokia du.</p>",
+        "template": "<p>El laboratorio dispone de ventilación adecuada</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -130,26 +130,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_ventilacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -158,7 +158,7 @@
         }
       },
       {
-        "template": "<p>Laborategiak argiztapen egokia du (larrialdikoa barne).</p>",
+        "template": "<p>El laboratorio dispone de iluminación adecuada (incluida la de emergencia)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -167,26 +167,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_iluminacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -195,7 +195,7 @@
         }
       },
       {
-        "template": "<p>Laborategiak botikina du: bai/ez. Oharrak – Laborategiak eskuak eta begiak garbitzeko konketak ditu.</p>",
+        "template": "<p>El laboratorio cuenta con un botiquín: si/no. Observaciones-El laboratorio dispone de lavamanos y lavaojos</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -204,26 +204,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_lavamanos",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -232,7 +232,7 @@
         }
       },
       {
-        "template": "<p>Laborategiak larrialdiko dutxa dauka.</p>",
+        "template": "<p>El laboratorio dispone de ducha de emergencia</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -241,26 +241,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_ducha",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,

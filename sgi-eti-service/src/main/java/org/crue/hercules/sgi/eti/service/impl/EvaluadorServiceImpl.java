@@ -105,7 +105,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     }
     Specification<Evaluador> specInFechas = EvaluadorSpecifications.inFechas(evaluador.getFechaAlta(),
         evaluador.getFechaBaja());
-    Specification<Evaluador> specComite = EvaluadorSpecifications.byComite(evaluador.getComite().getComite());
+    Specification<Evaluador> specComite = EvaluadorSpecifications.byComiteId(evaluador.getComite().getId());
     Specification<Evaluador> specs = Specification.where(specActivos).and(
         specPresidentesOrSecretarios).and(specInFechas)
         .and(specComite);
@@ -146,7 +146,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     Specification<Evaluador> specInFechas = EvaluadorSpecifications.inFechas(evaluador.getFechaAlta(),
         evaluador.getFechaBaja());
     Specification<Evaluador> specPersonaRef = EvaluadorSpecifications.byPersonaRef(evaluador.getPersonaRef());
-    Specification<Evaluador> specComite = EvaluadorSpecifications.byComite(evaluador.getComite().getComite());
+    Specification<Evaluador> specComite = EvaluadorSpecifications.byComiteId(evaluador.getComite().getId());
     Specification<Evaluador> specs = Specification.where(specActivos).and(specPersonaRef).and(specInFechas)
         .and(specComite);
 
@@ -303,13 +303,13 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * @return lista de evaluadores
    */
   @Override
-  public List<Evaluador> findAllByComite(String comite) {
+  public List<Evaluador> findAllByComiteId(Long comiteId) {
     log.debug("findAllByComite(String comite) - start");
     Instant fechaActual = Instant.now();
     Specification<Evaluador> specActivos = EvaluadorSpecifications.activos();
     Specification<Evaluador> specInFechas = EvaluadorSpecifications.inFechas(fechaActual, fechaActual);
     Specification<Evaluador> specFechaBajaNull = EvaluadorSpecifications.byFechaBajaNull();
-    Specification<Evaluador> specComite = EvaluadorSpecifications.byComite(comite);
+    Specification<Evaluador> specComite = EvaluadorSpecifications.byComiteId(comiteId);
 
     Specification<Evaluador> specs = Specification.where(specActivos).and(
         specComite).and((specInFechas).or(specFechaBajaNull));
@@ -327,14 +327,14 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * @return el secretario {@link Evaluador}
    */
   @Override
-  public Evaluador findSecretarioInFechaAndComite(Instant fecha, String comite) {
+  public Evaluador findSecretarioInFechaAndComiteId(Instant fecha, Long comiteId) {
     log.debug("findSecretarioInFechaAndComite(Instant fecha, String comite) - start");
     Evaluador secretario = null;
     Specification<Evaluador> specActivos = EvaluadorSpecifications.activos();
     Specification<Evaluador> specSecretarios = EvaluadorSpecifications.secretarios();
     Specification<Evaluador> specFecha = EvaluadorSpecifications.between(fecha);
     Specification<Evaluador> specFechaBajaNull = EvaluadorSpecifications.byFechaBajaNull();
-    Specification<Evaluador> specComite = EvaluadorSpecifications.byComite(comite);
+    Specification<Evaluador> specComite = EvaluadorSpecifications.byComiteId(comiteId);
 
     Specification<Evaluador> specsFechaBajaNull = Specification.where(specActivos).and(specSecretarios)
         .and(specFechaBajaNull).and(specComite);
@@ -353,7 +353,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     } else {
       secretario = secretarioFechaBajaNull.get();
     }
-    log.info("fecha: " + fecha + "comite: " + comite + (secretario != null ? secretario.getPersonaRef() : null));
+    log.info("fecha: " + fecha + "comite: " + comiteId + (secretario != null ? secretario.getPersonaRef() : null));
     log.debug("findSecretarioInFechaAndComite(Instant fecha, String comite) - end");
     return secretario;
   }

@@ -37,7 +37,7 @@
       },
       {
         "key": "especificarRealizarseInvestigacion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "hideExpression": "!(model.realizarseInvestigacion && model.realizarseInvestigacion === 'si')",
         "templateOptions": {
           "name": "Please justify:",

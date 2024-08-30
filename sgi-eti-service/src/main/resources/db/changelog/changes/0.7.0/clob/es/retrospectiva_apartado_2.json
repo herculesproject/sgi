@@ -14,7 +14,7 @@
       },
       {
         "key": "describir",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Descripción",
           "label": "Descripción",

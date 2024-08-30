@@ -10,7 +10,7 @@
     "fieldGroup": [
       {
         "key": "totalAnimalesUtilizar",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "required": true,
           "label": "Total",

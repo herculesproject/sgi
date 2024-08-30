@@ -5,6 +5,8 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.service.BloqueService;
 import org.crue.hercules.sgi.eti.service.FormularioService;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,20 +83,6 @@ public class FormularioController {
     return returnValue;
   }
 
-  /**
-   * Devuelve el {@link Formulario} a través del id de la memoria.
-   * 
-   * @param idMemoria Identificador de {@link Memoria}.
-   * @return {@link Formulario} correspondiente al id de la memoria.
-   */
-  @GetMapping("/{idMemoria}/memoria")
-  Formulario findByMemoriaId(@PathVariable Long idMemoria) {
-    log.debug("Formulario findByMemoriaId(Long idMemoria) - start");
-    Formulario returnValue = formularioService.findByMemoriaId(idMemoria);
-    log.debug("Formulario findByMemoriaId(Long idMemoria) - end");
-    return returnValue;
-  }
-
   @GetMapping("/{id}/bloques")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-PEV-INV-C', 'ETI-PEV-INV-ER')")
   ResponseEntity<Page<Bloque>> getBloques(@PathVariable Long id,
@@ -109,6 +97,34 @@ public class FormularioController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  @GetMapping("/{id}/report")
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-cnf')) or hasAuthority('ADM-CNF-E')")
+  public ResponseEntity<byte[]> getReport(@PathVariable Long id,
+      @RequestParam(name = "l", required = false) String lang) {
+    log.debug("getResource({}) - start", id);
+    Language language = Language.fromCode(lang);
+    if (language == null) {
+      language = SgiLocaleContextHolder.getLanguage();
+    }
+
+    byte[] returnValue = formularioService.getReport(id, language);
+    log.debug("getResource({}) - end", id);
+
+    return ResponseEntity.ok().body(returnValue);
+  }
+
+  @RequestMapping(path = "/{id}/report", method = RequestMethod.HEAD)
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-cnf')) or hasAuthority('ADM-CNF-E')")
+  public ResponseEntity<Void> existsReport(@PathVariable Long id,
+      @RequestParam(name = "l", required = false) String lang) {
+    Language language = Language.fromCode(lang);
+    if (language == null) {
+      language = SgiLocaleContextHolder.getLanguage();
+    }
+    boolean returnValue = formularioService.existReport(id, language);
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
   /**
    * Actualiza el estado de la memoria o de la retrospectiva al estado final
    * correspondiente al tipo de formulario completado.
@@ -119,7 +135,7 @@ public class FormularioController {
    * @return {@link HttpStatus#NO_CONTENT}
    */
   @RequestMapping(path = "/completado", method = RequestMethod.HEAD)
-  public ResponseEntity<Void> completado(@RequestParam Long memoriaId, @RequestParam Long tipoFormulario) {
+  public ResponseEntity<Void> completado(@RequestParam Long memoriaId, @RequestParam Formulario.Tipo tipoFormulario) {
     log.debug("completado(Long memoriaId, Long tipoFormulario) - start");
     formularioService.completado(memoriaId, tipoFormulario);
     log.debug("completado(Long memoriaId, Long tipoFormulario) - end");

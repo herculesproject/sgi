@@ -144,7 +144,7 @@
             },
             {
               "key": "nombreCientifico",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Scientific name",
                 "required": true,
@@ -154,7 +154,7 @@
             },
             {
               "key": "cepa",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Strain/s",
                 "placeholder": "Strain/s",
@@ -194,7 +194,7 @@
             },
             {
               "key": "edadPeso",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Age or weight",
                 "order": 50,

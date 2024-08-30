@@ -258,10 +258,10 @@ public class SgiApiComService extends SgiApiBaseService {
     request.setParams(Arrays.asList(
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_NOMBRE_INVESTIGACION,
-            convocatoriaReunion.getComite().getNombreInvestigacion()),
+            convocatoriaReunion.getComite().getNombre()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_COMITE,
-            convocatoriaReunion.getComite().getComite()),
+            convocatoriaReunion.getComite().getCodigo()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_FECHA_EVALUACION,
             fechaEvaluacion),

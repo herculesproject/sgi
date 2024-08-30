@@ -11,7 +11,7 @@
     "fieldGroup": [
       {
         "key": "aclaraciones",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Descripción",
           "label": "",

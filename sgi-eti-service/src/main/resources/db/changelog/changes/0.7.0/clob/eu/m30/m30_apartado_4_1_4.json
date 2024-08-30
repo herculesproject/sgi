@@ -5,18 +5,18 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.4 Efectos nocivos que puedan derivarse del uso de agentes, material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "4.1.4 Agenteak, material biologikoa, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak erabiltzeak eragin ditzakeen efektu kaltegarriak "
     },
     "fieldGroup": [
       {
-        "template": "<p>Describir brevemente la enfermedad o efectos nocivos que puedan derivarse del uso de agentes y/o material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas</p>"
+        "template": "<p>Deskribatu labur-labur zer gaixotasun edo efektu kaltegarri eragin ditzakeen agente edo/eta material biologikoa, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak erabiltzeak.</p>"
       },
       {
         "key": "efectosNocivos",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Describir",
+          "name": "Deskribatu ",
           "required": true
         }
       }

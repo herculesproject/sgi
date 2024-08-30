@@ -49,7 +49,7 @@
             },
             {
               "key": "efectoBuscado",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Intended effect",
                 "order": 30
@@ -57,7 +57,7 @@
             },
             {
               "key": "efectoColateral",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Collateral effect",
                 "order": 40
@@ -65,7 +65,7 @@
             },
             {
               "key": "medidasCorrectoras",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Corrective measures",
                 "order": 50

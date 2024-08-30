@@ -14,7 +14,7 @@
       },
       {
         "key": "reduccion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",
@@ -29,7 +29,7 @@
       },
       {
         "key": "reemplazo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",
@@ -44,7 +44,7 @@
       },
       {
         "key": "refinamiento",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Deskribapena",
           "label": "Deskribapena",

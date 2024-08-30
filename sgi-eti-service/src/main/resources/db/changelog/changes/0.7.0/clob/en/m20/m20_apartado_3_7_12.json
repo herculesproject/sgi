@@ -19,7 +19,7 @@
       },
       {
         "key": "explicarMetodoEutanasia",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "label": "Please explain",
           "required": true,
@@ -39,7 +39,7 @@
       },
       {
         "key": "confirmarMuerte",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "label": "Please explain",
           "required": true,
@@ -59,7 +59,7 @@
       },
       {
         "key": "tiempoProceso",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "label": "Time",
           "required": true,

@@ -33,7 +33,6 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/tipo_actividad.sql", 
   "classpath:scripts/formulario.sql",
   "classpath:scripts/comite.sql",
-  "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/tipo_estado_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/bloque.sql", 
@@ -267,7 +266,7 @@ public class RespuestaIT extends BaseIT {
    * @return el objeto Respuesta
    */
 
-  public Respuesta generarMockRespuesta(Long id) {
+  private Respuesta generarMockRespuesta(Long id) {
     Memoria memoria = new Memoria();
     memoria.setId(id);
 
@@ -296,16 +295,17 @@ public class RespuestaIT extends BaseIT {
    */
   private Apartado getMockApartado(Long id, Long bloqueId, Long padreId) {
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(bloqueId, formulario, 1, null);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
+    Bloque bloque = new Bloque(bloqueId, formulario, 1, null);
 
     Apartado padre = (padreId != null) ? getMockApartado(padreId, bloqueId, null) : null;
 
-    String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
-
     final Apartado data = new Apartado();
     data.setId(id);
-    data.setBloque(Bloque);
+    data.setBloque(bloque);
     data.setPadre(padre);
     data.setOrden(id.intValue());
 

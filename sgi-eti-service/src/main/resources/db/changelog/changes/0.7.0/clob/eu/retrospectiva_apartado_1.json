@@ -5,44 +5,44 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Objetivos",
+      "label": "Helburuak",
       "expanded": true
     },
     "fieldGroup": [
       {
-        "template": "<p>Señale si se han alcanzado los objetivos del proyecto de investigación.</p>"
+        "template": "<p>Adierazi ea erdietsi diren ikerketa proiektuaren helburuak.</p>"
       },
       {
         "key": "cumpleObjetivosRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             },
             {
               "value": "parcialmente",
-              "label": "Parcialmente"
+              "label": "Partzialki"
             }
           ]
         }
       },
       {
-        "template": "<p>Justifique la respuesta:</p>"
+        "template": "<p>Justifikatu erantzuna:</p>"
       },
       {
         "key": "justificar",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
-          "placeholder": "Justificación",
-          "label": "Justificación",
+          "placeholder": "Justifikazioa",
+          "label": "Justifikazioa",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

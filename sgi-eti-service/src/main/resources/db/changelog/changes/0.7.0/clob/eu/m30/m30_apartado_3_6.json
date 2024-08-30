@@ -5,18 +5,18 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "3.6 Frecuencia y periodicidad de uso"
+      "label": "3.6 Erabilera maiztasuna eta aldizkakotasuna"
     },
     "fieldGroup": [
       {
-        "template": "<p>Describir a continuación la frecuencia de uso de los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas especificados, es decir, número de veces al día o a la semana que se accederá a la muestra para manipulación, cultivo etc., duración de esa manipulación, y si esa acción se repetirá de forma periódica (por ejemplo número de veces a la semana o al mes, número de meses al año, etc).</p>"
+        "template": "<p>Jarraian, deskribatu zer maiztasunekin erabiltzen diren zehaztutako agente biologiko, genetikoki eraldatutako organismo, substantzia kimiko arriskutsu, substantzia erradioaktibo edo/eta nanopartikulak, hau da, lagina egunean edo astean zenbat aldiz erabiliko den manipulatzeko, kultibatzeko eta abarrerako, zenbat iraungo duen manipulazioak eta ea ekintza hori aldian behin errepikatuko den (adibidez, astean edo hilabetean zenbat aldiz, urtean zenbat hilabetez, etab.).</p>"
       },
       {
         "key": "frecuenciaPeriodicidad",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Describir",
+          "name": "Deskribatu ",
           "required": true
         }
       }

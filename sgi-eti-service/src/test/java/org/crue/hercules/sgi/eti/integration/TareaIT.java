@@ -40,7 +40,6 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/formulario.sql", 
   "classpath:scripts/comite.sql", 
   "classpath:scripts/tipo_actividad.sql",
-  "classpath:scripts/tipo_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/retrospectiva.sql",
   "classpath:scripts/formacion_especifica.sql", 
@@ -245,7 +244,7 @@ public class TareaIT extends BaseIT {
    * @param descripcion descripcion de la tarea
    * @return el objeto Tarea
    */
-  public Tarea generarMockTarea(Long id, String descripcion) {
+  private Tarea generarMockTarea(Long id, String descripcion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(2L);
 

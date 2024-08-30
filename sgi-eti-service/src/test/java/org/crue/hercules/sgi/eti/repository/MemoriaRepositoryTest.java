@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -22,7 +21,6 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoInvestigacionTutelada;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +46,11 @@ public class MemoriaRepositoryTest extends BaseRepositoryTest {
         .persistAndFlush(generarMockTipoInvestigacionTutelada());
     PeticionEvaluacion peticionEvaluacion = entityManager
         .persistAndFlush(generarMockPeticionEvaluacion(tipoActividad, tipoInvestigacionTutelada));
-    TipoMemoria tipoMemoria = entityManager.persistAndFlush(generarMockTipoMemoria());
     TipoEstadoMemoria tipoEstadoMemoria = entityManager.persistAndFlush(generarMockTipoEstadoMemoria());
     EstadoRetrospectiva estadoRetrospectiva = entityManager.persistAndFlush(generarMockEstadoRetrospectiva());
     Retrospectiva retrospectiva = entityManager.persistAndFlush(generarMockRetrospectiva(estadoRetrospectiva));
     Memoria memoria = entityManager
-        .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
+        .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoEstadoMemoria, retrospectiva, formulario));
 
     // when: Se buscan los datos
     Optional<Memoria> result = repository.findByIdAndActivoTrue(memoria.getId());
@@ -85,8 +82,11 @@ public class MemoriaRepositoryTest extends BaseRepositoryTest {
    * 
    * @return el objeto Formulario
    */
-  public Formulario generarMockFormulario() {
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+  private Formulario generarMockFormulario() {
+    Formulario formulario = new Formulario();
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+    formulario.setCodigo("M10/2020/002");
+
     return formulario;
   }
 
@@ -96,8 +96,24 @@ public class MemoriaRepositoryTest extends BaseRepositoryTest {
    * @param formulario el formulario
    * @return el objeto Comite
    */
-  public Comite generarMockComite(Formulario formulario) {
-    return new Comite(null, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+  private Comite generarMockComite(Formulario formulario) {
+    Comite comite = new Comite();
+    comite.setCodigo("Comite1");
+    comite.setNombre("NombreComite1");
+    comite.setGenero(Comite.Genero.M);
+    comite.setFormularioMemoriaId(formulario.getId());
+    comite.setFormularioSeguimientoAnualId(formulario.getId());
+    comite.setFormularioSeguimientoFinalId(formulario.getId());
+    comite.setRequiereRetrospectiva(Boolean.FALSE);
+    comite.setPermitirRatificacion(Boolean.FALSE);
+    comite.setPrefijoReferencia("M10");
+    comite.setTareaNombreLibre(Boolean.TRUE);
+    comite.setTareaExperienciaLibre(Boolean.TRUE);
+    comite.setTareaExperienciaDetalle(Boolean.TRUE);
+    comite.setMemoriaTituloLibre(Boolean.TRUE);
+    comite.setActivo(Boolean.TRUE);
+
+    return comite;
   }
 
   /**
@@ -153,15 +169,6 @@ public class MemoriaRepositoryTest extends BaseRepositoryTest {
   }
 
   /**
-   * Función que devuelve un objeto TipoMemoria
-   * 
-   * @return el objeto TipoMemoria
-   */
-  private TipoMemoria generarMockTipoMemoria() {
-    return new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
-  }
-
-  /**
    * Función que devuelve un objeto EstadoRetrospectiva
    * 
    * @return el objeto EstadoRetrospectiva
@@ -190,10 +197,27 @@ public class MemoriaRepositoryTest extends BaseRepositoryTest {
    * @param retrospectiva      el objeto Retrospectiva
    * @return Memoria
    */
-  private Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite, TipoMemoria tipoMemoria,
-      TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva) {
-    return new Memoria(null, "numRef-001", peticionEvaluacion, comite, "Memoria", "user-001", tipoMemoria,
-        tipoEstadoMemoria, Instant.now(), Boolean.TRUE, retrospectiva, 3, Boolean.TRUE, null);
+  private Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite,
+      TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva, Formulario formulario) {
+    Memoria memoria = new Memoria();
+    memoria.setId(null);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setPeticionEvaluacion(peticionEvaluacion);
+    memoria.setComite(comite);
+    memoria.setFormulario(formulario);
+    memoria.setFormularioSeguimientoAnual(formulario);
+    memoria.setFormularioSeguimientoFinal(formulario);
+    memoria.setTitulo("Memoria");
+    memoria.setPersonaRef("user-001");
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.TRUE);
+    memoria.setRetrospectiva(retrospectiva);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
+
+    return memoria;
   }
 
 }

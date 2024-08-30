@@ -71,7 +71,7 @@
             },
             {
               "key": "producto",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Produktua (printzipio aktiboa)",
                 "order": 20
@@ -79,7 +79,7 @@
             },
             {
               "key": "viaAdministracion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Emateko modua",
                 "order": 30
@@ -87,7 +87,7 @@
             },
             {
               "key": "dosis",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Dosia",
                 "order": 40
@@ -95,7 +95,7 @@
             },
             {
               "key": "volumen",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Bolumena",
                 "order": 50
@@ -103,7 +103,7 @@
             },
             {
               "key": "pauta",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Pauta",
                 "order": 60

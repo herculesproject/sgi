@@ -636,7 +636,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         informePdf = reportService.getInformeEvaluacionRetrospectiva(evaluacion.getId(), Instant.now());
         tituloInforme = TITULO_INFORME_EVALUACION_RETROSPECTIVA;
       } else {
-        switch (evaluacion.getMemoria().getTipoMemoria().getTipo()) {
+        switch (evaluacion.getMemoria().getTipo()) {
           case NUEVA:
             informePdf = reportService.getInformeFavorableMemoria(evaluacion.getId());
             break;
@@ -854,7 +854,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
       }
       this.comunicadosService.enviarComunicadoDictamenEvaluacionRevMinima(
-          evaluacion.getMemoria().getComite().getNombreInvestigacion(),
+          evaluacion.getMemoria().getComite().getNombre(),
           evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
           tipoActividad,
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
@@ -877,7 +877,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
       }
       this.comunicadosService.enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(
-          evaluacion.getMemoria().getComite().getNombreInvestigacion(),
+          evaluacion.getMemoria().getComite().getNombre(),
           evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
           tipoActividad,
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
@@ -905,7 +905,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         }
         try {
           this.comunicadosService.enviarComunicadoInformeSeguimientoAnual(
-              evaluacion.getMemoria().getComite().getNombreInvestigacion(),
+              evaluacion.getMemoria().getComite().getNombre(),
               evaluacion.getMemoria().getNumReferencia(),
               tipoActividad,
               evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
@@ -958,9 +958,9 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Evaluador findSecretarioEvaluacion(Long idEvaluacion) {
     log.debug("findSecretarioEvaluacion(Long idEvaluacion) - start");
     Evaluacion evaluacion = this.findById(idEvaluacion);
-    Evaluador secretario = evaluadorService.findSecretarioInFechaAndComite(
+    Evaluador secretario = evaluadorService.findSecretarioInFechaAndComiteId(
         evaluacion.getConvocatoriaReunion().getFechaEvaluacion(),
-        evaluacion.getConvocatoriaReunion().getComite().getComite());
+        evaluacion.getConvocatoriaReunion().getComite().getId());
     log.debug("findSecretarioEvaluacion(Long idEvaluacion) - end");
     return secretario;
   }

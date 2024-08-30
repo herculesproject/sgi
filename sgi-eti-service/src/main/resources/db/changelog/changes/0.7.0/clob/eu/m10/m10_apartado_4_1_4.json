@@ -5,44 +5,44 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.1.4 Aseguramiento del daño"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.1.4 Kaltearen aseguramendua"
     },
     "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
     "fieldGroup": [
       {
-        "template": "<p>Participar en una actividad de investigación puede suponer riesgos, y por ello la Universidad dispone de un Seguro de Responsabilidad civil que cubre los daños derivados de dichas actividades profesionales.</p>"
+        "template": "<p>Ikerketa jarduera batean parte hartzeak arriskuak ekar ditzake, eta, horrexegatik, Unibertsitateak erantzukizun zibileko asegurua du, jarduera profesional horietatik eratorritako kalteak estaltzeko.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>En seres humanos, el seguro de responsabilidad civil no cubre los daños que puedan producirse en la investigación si es un ensayo clínico (LIB 14/2007), si el personal investigador no forma parte de la Universidad o si la actividad investigadora no dispone del informe favorable del CEI.</p>"
+        "template": "<p>Gizakien kasuan, erantzukizun zibileko aseguruak ez ditu ikerketan sor daitezkeen kalteak estaltzen kasu hauetan: entsegu kliniko bat bada (14/2007 IBL), ikertzaileak ez badira Unibertsitateko kideak edo ikerketa jarduerak ez badu IEBren aldeko txostena.</p>"
       },
       {
         "key": "aseguramientoDanoRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "¿Cuenta con el seguro correspondiente para realizar dicha actividad?",
+          "label": "Ba al duzu jarduera egiteko beharrezkoa den asegurua?",
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí (si responde sí, debe adjuntar el certificado de la compañía de seguros)"
+              "label": "Bai (baietz erantzunez gero, aseguru etxearen ziurtagiria erantsi behar duzu)"
             }
           ]
         }
       },
       {
         "key": "numPoliza",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.aseguramientoDanoRadio || model.aseguramientoDanoRadio === 'no'",
         "templateOptions": {
-          "label": "Nº de póliza",
+          "label": "Poliza zk.",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -53,7 +53,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: añadir en el apartado '5.7 Documentación adicional' la póliza de seguro, en el caso de que la actividad de investigación necesite un seguro específico.</p>"
+        "template": "<p>Oharra: ikerketa jarduerak aseguru espezifiko bat behar badu, erantsi aseguru poliza '5.7 Dokumentazio osagarria' atalean. </p>"
       }
     ]
   }

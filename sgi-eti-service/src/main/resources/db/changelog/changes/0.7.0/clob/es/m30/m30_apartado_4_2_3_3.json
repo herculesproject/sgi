@@ -5,38 +5,38 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.3.3 Babes neurriak"
+      "label": "4.2.3.3 Medidas de protección"
     },
     "fieldGroup": [
       {
-        "template": "<p> Agente biologikoak, genetikoki eraldatutako organismoak, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak manipulatzeko segurtasun neurriak aurreikusten dira?</p>"
+        "template": "<p> ¿Se contemplan medidas seguras para la manipulación de los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?</p>"
       },
       {
         "key": "medidasSeguras",
         "type": "radio",
         "templateOptions": {
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
-        "template": "Zehaztu neurriak, edo aurreikusten ez badira, justifikatu zergatik:"
+        "template": "Especificar las medidas o justificar por qué no se contemplan en caso negativo:"
       },
       {
         "key": "especificarLimitar",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
-          "label": "Zehaztu:",
+          "label": "Especificar:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

@@ -65,7 +65,7 @@
       },
       {
         "key": "especificarMotivo",
-        "type": "input",
+        "type": "i18n-input",
         "hideExpression": "!model.motivoEvaluacionRetrospectivaCheck || !model.motivoEvaluacionRetrospectivaCheck.find((m) => m === 'otros')",
         "templateOptions": {
           "label": "Especificar",

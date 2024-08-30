@@ -10,7 +10,7 @@
     "fieldGroup": [
       {
         "key": "justificacionMuestraEstadistica",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Justifikazioa",
           "required": true

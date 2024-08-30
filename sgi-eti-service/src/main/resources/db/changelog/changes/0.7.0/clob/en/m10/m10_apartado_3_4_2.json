@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "3.4.2 Recruitment carried out by personnel outside the research team"
     },
     "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
@@ -56,7 +56,7 @@
       },
       {
         "key": "tipoCompensacionTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "(!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'no') || ((!model.reclutamientoPersonalAjenoRadio || model.reclutamientoPersonalAjenoRadio === 'si') && (!model.tipoCompensacionRadio || model.tipoCompensacionRadio === 'no'))",
         "templateOptions": {
           "label": "Type of compensation",

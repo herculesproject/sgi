@@ -98,7 +98,7 @@
             },
             {
               "key": "tarea",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Zeregina",
                 "order": 60,
@@ -107,7 +107,7 @@
             },
             {
               "key": "experiencia",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Formakuntza espezifikoa edo esperientzia",
                 "order": 70,
@@ -116,7 +116,7 @@
             },
             {
               "key": "organismo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Erakunde akreditatzailea",
                 "order": 80,
@@ -125,7 +125,7 @@
             },
             {
               "key": "anio",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Urtea",
                 "order": 90,

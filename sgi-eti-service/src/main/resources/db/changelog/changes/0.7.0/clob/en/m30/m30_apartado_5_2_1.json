@@ -28,7 +28,7 @@
               "label": "No"
             },
             {
-              "value": 18,
+              "value": "USO_AGENTES",
               "label": "Yes"
             }
           ]
@@ -46,7 +46,7 @@
       },
       {
         "key": "especificarNegativo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "model.comunicacionAgentesBiologicos !== 0",
         "templateOptions": {
           "label": "Supporting evidence",

@@ -14,7 +14,7 @@
       },
       {
         "key": "numAnimalesUtilizados",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Number of animals used",
           "placeholder": "",
@@ -27,7 +27,7 @@
       },
       {
         "key": "numAnimalesFinal",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Final number of animals",
           "placeholder": "",
@@ -40,7 +40,7 @@
       },
       {
         "key": "nivelSeveridadSufrido",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Description",
           "label": "Description",
@@ -55,7 +55,7 @@
       },
       {
         "key": "numAnimalesRetirados",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Number of animals removed",
           "placeholder": "",
@@ -68,7 +68,7 @@
       },
       {
         "key": "nivelSeveridadAlcanzado",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Description",
           "label": "Description",
@@ -83,7 +83,7 @@
       },
       {
         "key": "numAnimalesPuntoFinal",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Number of endpoint animals",
           "placeholder": "",
@@ -96,7 +96,7 @@
       },
       {
         "key": "aplicacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Description",
           "label": "Description",
@@ -111,7 +111,7 @@
       },
       {
         "key": "descripcion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Description",
           "label": "Description",
@@ -126,7 +126,7 @@
       },
       {
         "key": "medidas",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Description",
           "label": "Description",

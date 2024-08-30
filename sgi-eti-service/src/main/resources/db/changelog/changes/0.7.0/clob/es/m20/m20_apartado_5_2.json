@@ -23,7 +23,7 @@
               "label": "No"
             },
             {
-              "value": 13,
+              "value": "INFORME_VETERINARIO",
               "label": "Sí"
             }
           ]

@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -33,7 +32,6 @@ import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,7 +58,6 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/bloque.sql", 
   "classpath:scripts/apartado.sql",
   "classpath:scripts/tipo_actividad.sql", 
-  "classpath:scripts/tipo_memoria.sql",
   "classpath:scripts/tipo_estado_memoria.sql", 
   "classpath:scripts/estado_retrospectiva.sql",
   "classpath:scripts/tipo_convocatoria_reunion.sql", 
@@ -228,7 +225,7 @@ public class EvaluacionIT extends BaseIT {
     Assertions.assertThat(evaluaciones.size()).isEqualTo(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("11");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("12");
 
     Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria014");
     Assertions.assertThat(evaluaciones.get(1).getMemoria().getTitulo()).isEqualTo("Memoria007");
@@ -286,10 +283,10 @@ public class EvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Evaluacion> evaluaciones = response.getBody();
-    Assertions.assertThat(evaluaciones.size()).isEqualTo(11);
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(12);
     for (int i = 0; i < 11; i++) {
       Evaluacion evaluacion = evaluaciones.get(i);
-      Assertions.assertThat(evaluacion.getId()).isEqualTo(12 - i);
+      Assertions.assertThat(evaluacion.getId()).isEqualTo(13 - i);
     }
   }
 
@@ -458,11 +455,6 @@ public class EvaluacionIT extends BaseIT {
   }
 
   @Test
-  @Sql(scripts = {
-  // @formatter:off  
-  "classpath:scripts/evaluacion_seguimiento.sql",
-// @formatter:on  
-  })
   public void findByEvaluacionesEnSeguimientoFinal_ReturnsEvaluacionList() throws Exception {
     // when: Obtiene la page=0 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
@@ -488,7 +480,7 @@ public class EvaluacionIT extends BaseIT {
 
     // Contiene de memoria.titulo='Memoria010'
 
-    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria016");
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria017");
 
   }
 
@@ -536,9 +528,12 @@ public class EvaluacionIT extends BaseIT {
     Apartado apartado = new Apartado();
     apartado.setId(1L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, 1, null);
-    apartado.setBloque(Bloque);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
+    apartado.setBloque(bloque);
 
     Memoria memoria = new Memoria();
     memoria.setId(2L);
@@ -567,9 +562,12 @@ public class EvaluacionIT extends BaseIT {
     Apartado apartado = new Apartado();
     apartado.setId(1L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, 1, null);
-    apartado.setBloque(Bloque);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
+    apartado.setBloque(bloque);
 
     Comentario comentario = new Comentario();
     comentario.setApartado(apartado);
@@ -595,9 +593,12 @@ public class EvaluacionIT extends BaseIT {
     Apartado apartado = new Apartado();
     apartado.setId(1L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, 1, null);
-    apartado.setBloque(Bloque);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
+    apartado.setBloque(bloque);
 
     Memoria memoria = new Memoria();
     memoria.setId(2L);
@@ -627,9 +628,12 @@ public class EvaluacionIT extends BaseIT {
     Apartado apartado = new Apartado();
     apartado.setId(1L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, 1, null);
-    apartado.setBloque(Bloque);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
+    apartado.setBloque(bloque);
 
     Comentario comentario = new Comentario();
     comentario.setApartado(apartado);
@@ -655,9 +659,12 @@ public class EvaluacionIT extends BaseIT {
     Apartado apartado = new Apartado();
     apartado.setId(1L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, 1, null);
-    apartado.setBloque(Bloque);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
+    apartado.setBloque(bloque);
 
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(1L);
@@ -693,9 +700,12 @@ public class EvaluacionIT extends BaseIT {
     Apartado apartado = new Apartado();
     apartado.setId(1L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Bloque Bloque = new Bloque(1L, formulario, 1, null);
-    apartado.setBloque(Bloque);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
+    Bloque bloque = new Bloque(1L, formulario, 1, null);
+    apartado.setBloque(bloque);
 
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(2L);
@@ -768,7 +778,7 @@ public class EvaluacionIT extends BaseIT {
    * @return el objeto Evaluacion
    */
 
-  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+  private Evaluacion generarMockEvaluacion(Long id, String sufijo) {
 
     String sufijoStr = (sufijo == null ? id.toString() : sufijo);
 
@@ -813,18 +823,40 @@ public class EvaluacionIT extends BaseIT {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "CEI", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("CEI");
+    comite.setActivo(Boolean.TRUE);
 
-    TipoMemoria tipoMemoria = new TipoMemoria();
-    tipoMemoria.setId(1L);
-    tipoMemoria.setNombre("TipoMemoria001");
-    tipoMemoria.setActivo(Boolean.TRUE);
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(1L);
+    tipoEstadoMemoria.setNombre("En elaboración");
+    tipoEstadoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(11L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
-        new Retrospectiva(3L, new EstadoRetrospectiva(3L, "En evaluación", Boolean.TRUE), Instant.now()), 3,
-        Boolean.TRUE, null);
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setId(3L);
+    estadoRetrospectiva.setNombre("En evaluación");
+    estadoRetrospectiva.setActivo(Boolean.TRUE);
+
+    Retrospectiva retrospectiva = new Retrospectiva();
+    retrospectiva.setId(3L);
+    retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
+    retrospectiva.setFechaRetrospectiva(Instant.now());
+
+    Memoria memoria = new Memoria();
+    memoria.setId(11L);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setPeticionEvaluacion(peticionEvaluacion);
+    memoria.setComite(comite);
+    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setPersonaRef("user-00" + id);
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.FALSE);
+    memoria.setRetrospectiva(retrospectiva);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

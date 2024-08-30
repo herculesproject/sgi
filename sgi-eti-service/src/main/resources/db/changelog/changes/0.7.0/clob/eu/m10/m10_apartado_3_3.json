@@ -5,18 +5,18 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.3 Referencias de publicaciones científicas"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.3 Argitalpen zientifikoen erreferentziak"
     },
     "fieldGroup": [
       {
-        "template": "<p>Citar de forma completa (autor, título, publicación, fecha, etc) las referencias más relevantes utilizadas para la redacción del proyecto (máximo 10 referencias)</p>"
+        "template": "<p>Aipatu modu osatuan (egilea, izenburua, argitalpena, data, etab.) proiektua idazteko erabilitako erreferentzia esanguratsuenak (gehienez 10 erreferentzia).</p>"
       },
       {
         "key": "referenciasPublicaciones",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Referencias",
+          "name": "Erreferentziak",
           "required": true
         }
       }

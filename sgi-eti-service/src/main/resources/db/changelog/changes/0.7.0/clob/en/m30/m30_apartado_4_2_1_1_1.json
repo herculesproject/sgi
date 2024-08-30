@@ -34,7 +34,7 @@
       },
       {
         "key": "observaciones_lugarTrabajoSeparado",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -71,7 +71,7 @@
       },
       {
         "key": "observaciones_filtroAltaEficacia",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -108,7 +108,7 @@
       },
       {
         "key": "observaciones_accesoPersonal",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -145,7 +145,7 @@
       },
       {
         "key": "observaciones_lugarTrabajo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -182,7 +182,7 @@
       },
       {
         "key": "observaciones_procedimientosDesinfeccion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -219,7 +219,7 @@
       },
       {
         "key": "observaciones_presionNegativa",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -256,7 +256,7 @@
       },
       {
         "key": "observaciones_roedoresInsectos",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -293,7 +293,7 @@
       },
       {
         "key": "observaciones_superficiesImpermeables",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -330,7 +330,7 @@
       },
       {
         "key": "observaciones_superficiesResistentes",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -367,7 +367,7 @@
       },
       {
         "key": "observaciones_almacenamientoSeguridad",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -404,7 +404,7 @@
       },
       {
         "key": "observaciones_ventanillaObservacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -441,7 +441,7 @@
       },
       {
         "key": "observaciones_laboratorioEquipo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -478,7 +478,7 @@
       },
       {
         "key": "observaciones_materialInfectado",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",
@@ -515,7 +515,7 @@
       },
       {
         "key": "observaciones_animalesMuertos",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "label": "Remarks",

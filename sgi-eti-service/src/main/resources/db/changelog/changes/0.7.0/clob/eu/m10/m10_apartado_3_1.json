@@ -5,27 +5,27 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.1 Objetivos científicos del proyecto"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.1 Proiektuaren helburu zientifikoak"
     },
     "fieldGroup": [
       {
-        "template": "<p>Describir brevemente los principales objetivos que se pretende alcanzar con este proyecto</p>"
+        "template": "<p>Deskribatu labur-labur proiektuarekin lortu nahi diren helburu nagusiak.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el campo <b>Objetivos científicos</b> del apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>Datos generales</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.",
+        "template": "Atal hau automatikoki betetzen da, <b>Ebaluazio eskaerako</b> <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/datos-generales' target='_blank'><b>Datu orokorrak</b></a> ataleko <b>Helburu zientifikoak</b> eremuan sartutako datuetatik abiatuta. Beharrezko aldaketak egiteko, joan menuko puntu horretara.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
       },
       {
         "key": "objetivosCientificos",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Objetivos cientificos",
+          "name": "Helburu zientifikoak",
           "disabled": true,
           "required": true,
           "expressionModelValue": "formState.memoria.peticionEvaluacion.objetivos"

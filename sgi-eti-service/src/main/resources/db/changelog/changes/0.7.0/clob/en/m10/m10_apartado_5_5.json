@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "5.5 Report of the Guarantees Commission"
     },
     "fieldGroup": [
@@ -30,7 +30,7 @@
               "label": "No"
             },
             {
-              "value": 8,
+              "value": "INFORME_GARANTIAS",
               "label": "Yes"
             }
           ]

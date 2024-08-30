@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.2 Agente biologikoen edo/eta material biologikoaren, substantzia kimiko arriskutsuen, substantzia erradioaktiboen edo/eta nanopartikulen arriskuaren ezaugarriak "
+      "label": "4.1.2 Características del riesgo de los agentes biológicos y/o material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
     },
     "fieldGroup": [
       {
-        "template": "<p>Erabiltzen diren agente biologikoek, material biologikoak, substantzia kimiko arriskutsuek, substantzia erradioaktiboek edo/eta nanopartikulek efektu potentzialki kaltegarriren bat dakarte?</p>"
+        "template": "<p>Los agentes biológicos, material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas que se utilizan ¿implican algún tipo de efecto potencialmente nocivo?</p>"
       },
       {
         "key": "agentesBiologicos",
         "type": "radio",
         "templateOptions": {
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
@@ -34,27 +34,27 @@
         "type": "multicheckbox",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'",
         "templateOptions": {
-          "label": "Jomugako taldea:",
+          "label": "Grupo diana:",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "serHumamno",
-              "label": "Gizakiak"
+              "label": "Ser humano"
             },
             {
               "value": "animales",
-              "label": "Animaliak"
+              "label": "Animales"
             },
             {
               "value": "medioambiente",
-              "label": "Ingurumena"
+              "label": "Medio ambiente"
             }
           ]
         }
       },
       {
-        "template": "Efektu kaltegarri mota",
+        "template": "Tipo de efecto nocivo",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'"
       },
       {
@@ -62,43 +62,43 @@
         "type": "multicheckbox",
         "hideExpression": "!model.agentesBiologicos || model.agentesBiologicos === 'no'",
         "templateOptions": {
-          "label": "Mota:",
+          "label": "Tipo:",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "infeccioso",
-              "label": "Infekziosoa"
+              "label": "Infeccioso"
             },
             {
               "value": "toxico",
-              "label": "Toxikoa"
+              "label": "Tóxico"
             },
             {
               "value": "alergico",
-              "label": "Alergikoa"
+              "label": "Alérgico"
             },
             {
               "value": "radiactivo",
-              "label": "Erradioaktiboa"
+              "label": "Radiactivo"
             },
             {
               "value": "otro",
-              "label": "Beste bat"
+              "label": "Otro"
             }
           ]
         }
       },
       {
-        "template": "Adierazi zer motatako efektu kaltegarria den",
+        "template": "Indicar el tipo de efecto nocivo",
         "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))"
       },
       {
         "key": "tipoEfectoNocivo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!((model.agentesBiologicos && model.agentesBiologicos === 'si') && (model.efectoNocivo && model.efectoNocivo.find((m) => m === 'otro')))",
         "templateOptions": {
-          "label": "Adierazi:",
+          "label": "Indicar:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "3.4.3 Description of interventions or tests"
     },
     "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
@@ -15,7 +15,7 @@
       },
       {
         "key": "descripcionIntervenciones",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Interventions or tests",
           "required": true

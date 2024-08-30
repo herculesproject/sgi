@@ -23,7 +23,7 @@
               "label": "No"
             },
             {
-              "value": 19,
+              "value": "SEGURO_RESPONSABILIDAD",
               "label": "Yes"
             }
           ]
@@ -31,7 +31,7 @@
       },
       {
         "key": "especificarResposabilidad",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "label": "Please specify insurance or justify its absence",
           "placeholder": "Please specify insurance or justify its absence",

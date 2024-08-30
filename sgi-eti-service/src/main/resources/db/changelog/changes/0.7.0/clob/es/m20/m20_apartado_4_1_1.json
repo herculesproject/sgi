@@ -40,7 +40,7 @@
       },
       {
         "key": "especificarMotivo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.metodoAlternativoMotivoRadio || model.metodoAlternativoMotivoRadio === 'sonMetodosAlternativos' || model.metodoAlternativoMotivoRadio === 'existen' || model.metodoAlternativoMotivoRadio === 'noValidados'",
         "templateOptions": {
           "label": "Especificar",

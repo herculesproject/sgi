@@ -52,7 +52,6 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/tipo_actividad.sql", 
   "classpath:scripts/formulario.sql",
   "classpath:scripts/comite.sql",
-  "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/tipo_estado_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/formacion_especifica.sql",
@@ -351,7 +350,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = response.getBody();
-    Assertions.assertThat(memoriasPeticionEvaluacion.size()).isEqualTo(15);
+    Assertions.assertThat(memoriasPeticionEvaluacion.size()).isEqualTo(16);
 
     // Contiene de id='7' a '8'
     List<Long> ids = new ArrayList<>();
@@ -514,7 +513,7 @@ public class PeticionEvaluacionIT extends BaseIT {
    * @return el objeto PeticionEvaluacion
    */
 
-  public PeticionEvaluacion generarMockPeticionEvaluacion(Long id, String titulo) {
+  private PeticionEvaluacion generarMockPeticionEvaluacion(Long id, String titulo) {
     TipoActividad tipoActividad = new TipoActividad();
     tipoActividad.setId(1L);
     tipoActividad.setNombre("TipoActividad1");
@@ -555,7 +554,7 @@ public class PeticionEvaluacionIT extends BaseIT {
    * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
    * @return el objeto EquipoTrabajo
    */
-  public EquipoTrabajo generarMockEquipoTrabajo(Long id, PeticionEvaluacion peticionEvaluacion) {
+  private EquipoTrabajo generarMockEquipoTrabajo(Long id, PeticionEvaluacion peticionEvaluacion) {
 
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
@@ -572,7 +571,7 @@ public class PeticionEvaluacionIT extends BaseIT {
    * @param descripcion descripcion de la tarea
    * @return el objeto Tarea
    */
-  public Tarea generarMockTarea(Long id, String descripcion) {
+  private Tarea generarMockTarea(Long id, String descripcion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(2L);
 

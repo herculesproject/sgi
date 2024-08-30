@@ -5,30 +5,30 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.4.1 Proceso de reclutamiento"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.4.1 Parte hartzaileak biltzeko prozesua"
     },
     "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>Describir el proceso de reclutamiento: presentación del proyecto y obtención de consentimiento del sujeto fuente y/o su representante legal de acuerdo al siguiente esquema:</p><ul><li>quién (persona/s encargada/s)</li><li>cómo (conversación, vídeo, folleto..)</li><li>dónde (lugar de información y de firma de documentos)</li><li>cuándo se van a realizar (momento en que se llevan a cabo; por ejemplo: cuando la persona participante acuda a la consulta).</li></ul>"
+        "template": "<p>Deskribatu parte hartzaileak biltzeko prozesua: proiektua aurkeztea eta informazio iturri den subjektuaren edo/eta haren legezko ordezkariaren baimena lortzea, eskema honen arabera: </p><ul><li>nork (arduraduna, bat edo batzuk)</li><li>nola (elkarrizketa, bideoa, liburuxka..) </li><li>non (informazioa eman eta dokumentuak sinatzeko lekua)</li><li>noiz egingo diren (adibidez, parte hartzailea kontsultara joatean). </li></ul>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Se entiende por 'proceso de reclutamiento' todas aquellas acciones encaminadas a captar las personas que participarán en el estudio como sujetos de investigación.</p><p>Este proceso incluye la información al posible participante, su convencimiento y posterior obtención y firma del consentimiento.</p><p>El proceso de reclutamiento es posterior a la definición de la muestra con los criterios de inclusión y exclusión al hacer el diseño metodológico.</p><p>El proceso de reclutamiento es una parte esencial de la investigación porque afecta directamente a aspectos éticos como la voluntariedad, la equidad y el respeto.</p>"
+        "template": "<p>Azterketan ikerketako subjektu gisa parte hartuko duten pertsonak lortzeko egiten diren ekintza guztiek osatzen dute ‘parte hartzaileak biltzeko prozesua’. </p><p>Prozesu horretan sartzen da balizko parte hartzaileari informazioa ematea, hura konbentzitzea eta ondoren baimena lortu eta sinatzea. </p><p>Diseinu metodologikoa prestatzean inklusio eta bazterketa irizpideak erabiliz lagina definitu ostean egiten da prozesua. </p><p>Parte hartzaileak biltzeko prozesua ikerketaren funtsezko zatia da, eragin zuzena baitu zenbait alderdi etikotan, hala nola borondatezkotasunean, ekitatean eta errespetuan. </p>"
       },
       {
         "key": "descripcionProcesoReclutamiento",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
-          "name": "Proceso de reclutamiento",
+          "name": "Parte hartzaileak biltzeko prozesua",
           "required": true
         }
       },
       {
-        "template": "<p>Fecha prevista de inicio del reclutamiento</p>"
+        "template": "<p>Prozesua hasteko aurreikusitako data</p>"
       },
       {
         "key": "fechaReclutamiento",
@@ -36,7 +36,7 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Fecha prevista"
+          "label": "Aurreikusitako data"
         },
         "validators": {
           "validation": [
@@ -55,7 +55,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Añadir en el apartado '5.7 Documentación adicional' todos los documentos que vayan a utilizarse para reclutamiento de sujetos de estudio (por ejemplo anuncios, trípticos, etc., con el texto íntegro).</p><p>Si el proceso va a realizarse fuera de las instalaciones de la universidad añadir en el apartado '5.3' el Documento de autorización del centro o local (hospitales, centros educativos, centros de salud, etc).</p><p>Recuerde que el proyecto <strong>no puede iniciarse sin haber obtenido el informe favorable</strong> del comité; por tanto, las fechas deben ser coherentes. La fecha de inicio de reclutamiento no puede ser anterior a la fecha de obtención del informe favorable.</p></div>"
+        "template": "<p>Oharra: Erantsi '5.7 Dokumentazio osagarria' atalean azterketarako subjektuak biltzeko erabiliko diren dokumentu guztiak (adibidez, iragarkiak, triptikoak eta abar, testua osorik ageri dela). </p><p>Prozesua unibertsitateko instalazioetatik kanpo egingo bada, erantsi '5.3' atalean dagokion zentro edo aretoaren (ospitaleak, hezkuntza zentroak, osasun zentroak, etab.) baimen dokumentua. </p><p>Gogoratu proiektua <strong>ezin dela hasi batzordearen aldeko txostena jaso gabe</strong>; hortaz, datek koherenteak izan behar dute. Parte hartzaileak biltzeko prozesuaren hasiera data ezin da izan aldeko txostenaren lorpen data baino lehenagokoa. </p></div>"
       }
     ]
   }

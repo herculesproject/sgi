@@ -8,9 +8,7 @@ import java.util.Set;
 
 import org.crue.hercules.sgi.eti.exceptions.InformeNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -23,7 +21,6 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
@@ -63,7 +60,7 @@ public class InformeControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-VER" })
   public void getInforme_WithId_ReturnsInforme() throws Exception {
     BDDMockito.given(informeService.findById(ArgumentMatchers.anyLong()))
-        .willReturn((generarMockInforme(1L, "Documento1")));
+        .willReturn((generarMockInforme(1L)));
 
     mockMvc
         .perform(MockMvcRequestBuilders.get(INFORME_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
@@ -91,7 +88,7 @@ public class InformeControllerTest extends BaseControllerTest {
     // given: Un informe nuevo
     String nuevoInformeJson = "{\"documentoRef\": \"Documento1\", \"version\": \"2\", \"idTipoEvaluacion\": \"1\"}";
 
-    Informe informe = generarMockInforme(1L, "Documento1");
+    Informe informe = generarMockInforme(1L);
 
     BDDMockito.given(informeService.create(ArgumentMatchers.<Informe>any())).willReturn(informe);
 
@@ -130,7 +127,7 @@ public class InformeControllerTest extends BaseControllerTest {
     // given: Un informe a modificar
     String replaceInformeJson = "{\"id\": 1, \"documentoRef\": \"Documento1\", \"version\": \"2\", \"idTipoEvaluacion\": \"1\"}";
 
-    Informe informe = generarMockInforme(1L, "Replace Documento1");
+    Informe informe = generarMockInforme(1L);
 
     BDDMockito.given(informeService.update(ArgumentMatchers.<Informe>any())).willReturn(informe);
 
@@ -165,7 +162,7 @@ public class InformeControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void removeInforme_ReturnsOk() throws Exception {
     BDDMockito.given(informeService.findById(ArgumentMatchers.anyLong()))
-        .willReturn(generarMockInforme(1L, "Documento1"));
+        .willReturn(generarMockInforme(1L));
 
     mockMvc
         .perform(MockMvcRequestBuilders.delete(INFORME_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
@@ -179,7 +176,7 @@ public class InformeControllerTest extends BaseControllerTest {
     // given: One hundred Informe
     List<Informe> informes = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      informes.add(generarMockInforme(Long.valueOf(i), "Documento" + String.format("%03d", i)));
+      informes.add(generarMockInforme(Long.valueOf(i)));
     }
 
     BDDMockito.given(informeService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
@@ -201,7 +198,7 @@ public class InformeControllerTest extends BaseControllerTest {
     // given: One hundred Informe
     List<Informe> informes = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      informes.add(generarMockInforme(Long.valueOf(i), "Documento" + String.format("%03d", i)));
+      informes.add(generarMockInforme(Long.valueOf(i)));
     }
 
     BDDMockito.given(informeService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
@@ -254,7 +251,7 @@ public class InformeControllerTest extends BaseControllerTest {
     // given: One hundred Informe and a search query
     List<Informe> informes = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      informes.add(generarMockInforme(Long.valueOf(i), "Documento" + String.format("%03d", i)));
+      informes.add(generarMockInforme(Long.valueOf(i)));
     }
     String query = "documentoRef~Documento%,id:5";
 
@@ -309,7 +306,7 @@ public class InformeControllerTest extends BaseControllerTest {
    * @return el objeto Informe
    */
 
-  public Informe generarMockInforme(Long id, String documentoRef) {
+  private Informe generarMockInforme(Long id) {
     TipoActividad tipoActividad = new TipoActividad();
     tipoActividad.setId(1L);
     tipoActividad.setNombre("TipoActividad1");
@@ -340,18 +337,39 @@ public class InformeControllerTest extends BaseControllerTest {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
-    TipoMemoria tipoMemoria = new TipoMemoria();
-    tipoMemoria.setId(id);
-    tipoMemoria.setNombre("TipoMemoria1");
-    tipoMemoria.setActivo(Boolean.TRUE);
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(1L);
+    tipoEstadoMemoria.setNombre("En elaboración");
+    tipoEstadoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + id, "user-00" + id,
-        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
-        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), Instant.now()), 3, Boolean.TRUE,
-        null);
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setId(1L);
+    estadoRetrospectiva.setNombre("Pendiente");
+    estadoRetrospectiva.setActivo(Boolean.TRUE);
+
+    Retrospectiva retrospectiva = new Retrospectiva();
+    retrospectiva.setId(id);
+    retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
+    retrospectiva.setFechaRetrospectiva(Instant.now());
+
+    Memoria memoria = new Memoria();
+    memoria.setId(1L);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setPeticionEvaluacion(peticionEvaluacion);
+    memoria.setComite(comite);
+    memoria.setTitulo("Memoria" + id);
+    memoria.setPersonaRef("user-00" + id);
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.FALSE);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
     tipoEvaluacion.setId(1L);
@@ -360,7 +378,6 @@ public class InformeControllerTest extends BaseControllerTest {
 
     Informe informe = new Informe();
     informe.setId(id);
-    // informe.setDocumentoRef(documentoRef);
     informe.setMemoria(memoria);
     informe.setVersion(3);
     informe.setTipoEvaluacion(tipoEvaluacion);

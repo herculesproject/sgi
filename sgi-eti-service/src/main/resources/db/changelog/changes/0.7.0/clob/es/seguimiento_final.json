@@ -5,19 +5,19 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "Deskribapena eta laburpena",
+      "label": "Descripción y resumen",
       "expanded": true
     },
     "fieldGroup": [
       {
-        "template": "<p>Ikerketa proiektuari esker lortutako ezagutzen deskribapena</p>"
+        "template": "<p>Descripción de los conocimientos obtenidos con el proyecto de investigación</p>"
       },
       {
         "key": "descripcion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
-          "placeholder": "Deskribapena",
-          "label": "Deskribapena",
+          "placeholder": "Descripción",
+          "label": "Descripción",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -29,14 +29,14 @@
         }
       },
       {
-        "template": "<p>Azaldu labur-labur amaitutako proiektuari esker lortutako emaitzak</p>"
+        "template": "<p>Haga un breve resumen de los resultados obtenidos con el proyecto finalizado</p>"
       },
       {
         "key": "resumen",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
-          "placeholder": "Laburpena",
-          "label": "Laburpena",
+          "placeholder": "Resumen",
+          "label": "Resumen",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

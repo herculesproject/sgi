@@ -5,12 +5,12 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1.1.2 Segurtasun ekipoak"
+      "label": "4.2.1.1.2 Equipos de seguridad"
     },
     "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
     "fieldGroup": [
       {
-        "template": "<p>Pipeteatzeko sistema mekanikoak daude.</p>",
+        "template": "<p>Se dispone de sistemas mecánicos de pipeteo</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -19,26 +19,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_pipeteo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "template": "<p>Arrisku motarako egokia den segurtasun biologikoko kabina dago.</p>",
+        "template": "<p>Se dispone de CSB adecuada a la clase de riesgo</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -56,26 +56,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_claseRiesgo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -84,7 +84,7 @@
         }
       },
       {
-        "template": "<p>Norbera babesteko ekipamenduak daude, hala nola segurtasun biologikoko kabinen barruan material potentzialki infekziosoa manipulatzeko eskularru iragazgaitzak, eta lan mahaian material infekziosoekin lan egiteko eskularru, betaurreko eta maskarak, lan horietan aerosolak, zipriztinak edo proiekzioak izan badaitezke.</p>",
+        "template": "<p>Se dispone de equipos de protección individual, como guantes impermeables para la manipulación de material potencialmenteinfeccioso en el interior de las CSB y guantes, gafas y mascarilla para trabajos con material infeccioso realizados en el banco de trabajoy en los que se puedan generar aerosoles, salpicaduras o proyecciones</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -93,26 +93,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_equiposProteccion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,

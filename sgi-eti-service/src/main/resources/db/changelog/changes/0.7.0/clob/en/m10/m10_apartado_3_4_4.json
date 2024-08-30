@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "3.4.4 Incentives for participation"
     },
     "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
@@ -37,7 +37,7 @@
       },
       {
         "key": "incentivosParticipacionTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.incentivosParticipacionRadio || model.incentivosParticipacionRadio === 'no'",
         "templateOptions": {
           "label": "Incentives",

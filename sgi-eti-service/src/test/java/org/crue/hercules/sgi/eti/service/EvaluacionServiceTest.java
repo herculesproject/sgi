@@ -19,14 +19,11 @@ import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
-import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
@@ -39,7 +36,6 @@ import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
@@ -853,8 +849,15 @@ class EvaluacionServiceTest extends BaseServiceTest {
   void findAllByMemoriaId_ReturnsFullEvaluacionList() {
 
     // given: Datos existentes con memoriaId = 1
-    Memoria memoria = new Memoria(1L, "numRef-001", null, null, "Memoria", "user-001", null, null, Instant.now(),
-        Boolean.TRUE, null, 3, Boolean.TRUE, null);
+    Memoria memoria = new Memoria();
+    memoria.setId(1L);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setTitulo("Memoria");
+    memoria.setPersonaRef("user-001");
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.TRUE);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
 
     Long memoriaId = 1L;
     List<Evaluacion> response = new LinkedList<Evaluacion>();
@@ -879,8 +882,16 @@ class EvaluacionServiceTest extends BaseServiceTest {
   @Test
   void findAllByMemoriaId_ReturnEmptyPage() {
 
-    Memoria memoria = new Memoria(1L, "numRef-001", null, null, "Memoria", "user-001", null, null, Instant.now(),
-        Boolean.TRUE, null, 3, Boolean.TRUE, null);
+    Memoria memoria = new Memoria();
+    memoria.setId(1L);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setTitulo("Memoria");
+    memoria.setPersonaRef("user-001");
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.TRUE);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
+
     // given: No hay datos con memoriaId = 1
     Long memoriaId = 1L;
 
@@ -925,7 +936,7 @@ class EvaluacionServiceTest extends BaseServiceTest {
    * @return el objeto Evaluacion
    */
 
-  public Evaluacion generarMockEvaluacion(final Long id, final String sufijo, final Long idTipoEstadoMemoria,
+  private Evaluacion generarMockEvaluacion(final Long id, final String sufijo, final Long idTipoEstadoMemoria,
       final Long idEstadoRetrospectiva) {
 
     final String sufijoStr = (sufijo == null ? id.toString() : sufijo);
@@ -965,13 +976,10 @@ class EvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    final Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    final Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
-
-    final TipoMemoria tipoMemoria = new TipoMemoria();
-    tipoMemoria.setId(1L); // Nueva
-    tipoMemoria.setNombre("TipoMemoria1");
-    tipoMemoria.setActivo(Boolean.TRUE);
+    final Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
     final TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
     tipoEstadoMemoria.setId(idTipoEstadoMemoria); // En elaboración
@@ -979,9 +987,25 @@ class EvaluacionServiceTest extends BaseServiceTest {
     final EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
     estadoRetrospectiva.setId(idEstadoRetrospectiva); // Pendiente
 
-    final Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr,
-        "user-00" + id, tipoMemoria, tipoEstadoMemoria, Instant.now(), Boolean.TRUE,
-        new Retrospectiva(id, estadoRetrospectiva, Instant.now()), 3, Boolean.TRUE, null);
+    final Retrospectiva retrospectiva = new Retrospectiva();
+    retrospectiva.setId(id);
+    retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
+    retrospectiva.setFechaRetrospectiva(Instant.now());
+
+    final Memoria memoria = new Memoria();
+    memoria.setId(1L);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setPeticionEvaluacion(peticionEvaluacion);
+    memoria.setComite(comite);
+    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setPersonaRef("user-00" + id);
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.TRUE);
+    memoria.setRetrospectiva(retrospectiva);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
 
     final TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
@@ -1028,7 +1052,7 @@ class EvaluacionServiceTest extends BaseServiceTest {
     return evaluacion;
   }
 
-  public Evaluacion generarMockEvaluacion_ConvocatoriaReuSeguimiento(final Long id, final String sufijo,
+  private Evaluacion generarMockEvaluacion_ConvocatoriaReuSeguimiento(final Long id, final String sufijo,
       final Long idTipoEstadoMemoria, final Long idEstadoRetrospectiva) {
 
     String sufijoStr = (sufijo == null ? id.toString() : sufijo);
@@ -1068,13 +1092,10 @@ class EvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
-
-    TipoMemoria tipoMemoria = new TipoMemoria();
-    tipoMemoria.setId(1L);
-    tipoMemoria.setNombre("TipoMemoria1");
-    tipoMemoria.setActivo(Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
     tipoEstadoMemoria.setId(idTipoEstadoMemoria);
@@ -1082,9 +1103,25 @@ class EvaluacionServiceTest extends BaseServiceTest {
     EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
     estadoRetrospectiva.setId(idEstadoRetrospectiva);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, tipoEstadoMemoria, Instant.now(), Boolean.TRUE,
-        new Retrospectiva(id, estadoRetrospectiva, Instant.now()), 3, Boolean.TRUE, null);
+    Retrospectiva retrospectiva = new Retrospectiva();
+    retrospectiva.setId(id);
+    retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
+    retrospectiva.setFechaRetrospectiva(Instant.now());
+
+    Memoria memoria = new Memoria();
+    memoria.setId(1L);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setPeticionEvaluacion(peticionEvaluacion);
+    memoria.setComite(comite);
+    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setPersonaRef("user-00" + id);
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.TRUE);
+    memoria.setRetrospectiva(retrospectiva);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(3L, "Seguimiento", Boolean.TRUE);
 
@@ -1131,23 +1168,6 @@ class EvaluacionServiceTest extends BaseServiceTest {
     return evaluacion;
   }
 
-  public List<EstadoMemoria> generarEstadosMemoria(Long id) {
-    List<EstadoMemoria> estadosMemoria = new ArrayList<EstadoMemoria>();
-    EstadoMemoria estadoMemoria = new EstadoMemoria();
-    estadoMemoria.setFechaEstado(Instant.now());
-    estadoMemoria.setId(id);
-    estadoMemoria.setMemoria(new Memoria());
-    estadosMemoria.add(estadoMemoria);
-    return estadosMemoria;
-  }
-
-  public EstadoRetrospectiva generarEstadoRetrospectiva(Long id) {
-    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
-    estadoRetrospectiva.setActivo(true);
-    estadoRetrospectiva.setId(id);
-    return estadoRetrospectiva;
-  }
-
   /**
    * Función que devuelve un objeto Memoria.
    * 
@@ -1161,11 +1181,22 @@ class EvaluacionServiceTest extends BaseServiceTest {
   private Memoria generarMockMemoria(Long id, String numReferencia, String titulo, Integer version,
       Long idTipoEstadoMemoria) {
 
-    return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
-        generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
-        generarMockTipoMemoria(1L, "TipoMemoria1", true),
-        generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE), Instant.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, Boolean.TRUE, null);
+    Memoria memoria = new Memoria();
+    memoria.setId(id);
+    memoria.setNumReferencia(numReferencia);
+    memoria.setPeticionEvaluacion(generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id));
+    memoria.setComite(generarMockComite(id, "comite" + id, true));
+    memoria.setTitulo(titulo);
+    memoria.setPersonaRef("user-00" + id);
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE));
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.TRUE);
+    memoria.setRetrospectiva(generarMockRetrospectiva(1L));
+    memoria.setVersion(version);
+    memoria.setActivo(Boolean.TRUE);
+
+    return memoria;
   }
 
   /**
@@ -1175,21 +1206,13 @@ class EvaluacionServiceTest extends BaseServiceTest {
    * @param comite comité.
    * @param activo indicador de activo.
    */
-  private Comite generarMockComite(Long id, String comite, Boolean activo) {
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    return new Comite(id, comite, "nombreInvestigacion", Genero.M, formulario, activo);
+  private Comite generarMockComite(Long id, String codigo, Boolean activo) {
+    Comite comite = new Comite();
+    comite.setId(id);
+    comite.setCodigo(codigo);
+    comite.setActivo(activo);
 
-  }
-
-  /**
-   * Función que devuelve un objeto tipo memoria.
-   * 
-   * @param id     identificador del tipo memoria.
-   * @param nombre nobmre.
-   * @param activo indicador de activo.
-   */
-  private TipoMemoria generarMockTipoMemoria(Long id, String nombre, Boolean activo) {
-    return new TipoMemoria(id, nombre, activo);
+    return comite;
 
   }
 

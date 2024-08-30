@@ -38,7 +38,7 @@
       },
       {
         "key": "tipoIsotopo",
-        "type": "input",
+        "type": "i18n-input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",
         "templateOptions": {
           "label": "Type of isotope",
@@ -48,7 +48,7 @@
       },
       {
         "key": "administracionIsotopo",
-        "type": "input",
+        "type": "i18n-input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",
         "templateOptions": {
           "label": "Dosage and route of administration",

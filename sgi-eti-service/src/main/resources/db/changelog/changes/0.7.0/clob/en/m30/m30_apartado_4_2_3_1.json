@@ -35,7 +35,7 @@
       },
       {
         "key": "especificarQuienes",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.riesgoExposicion",
         "templateOptions": {
           "label": "Please specify:",

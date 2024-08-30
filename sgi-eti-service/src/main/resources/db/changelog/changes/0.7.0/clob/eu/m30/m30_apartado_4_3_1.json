@@ -5,23 +5,23 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.3.1 Vacunación"
+      "label": "4.3.1 Txertaketa"
     },
     "fieldGroup": [
       {
-        "template": "<p>¿Qué vacunación se ofrece al personal que manejará los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?</p>"
+        "template": "<p>Zer txerto eskaintzen zaizkie agente biologikoekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin lan egingo duten langileei?</p>"
       },
       {
         "key": "vacunacionCheck",
         "type": "multicheckbox",
         "templateOptions": {
-          "label": "Cuáles",
+          "label": "Hauetako zein?",
           "required": true,
           "type": "array",
           "options": [
             {
               "value": "tetanos",
-              "label": "Tétanos"
+              "label": "Tetanos"
             },
             {
               "value": "hepatitis",
@@ -29,11 +29,11 @@
             },
             {
               "value": "otras",
-              "label": "Otras"
+              "label": "Beste batzuk"
             },
             {
               "value": "noNecesariaVacunacion",
-              "label": "No es necesaria vacunación"
+              "label": "Txertaketa ez da beharrezkoa"
             }
           ]
         },
@@ -42,7 +42,7 @@
             {
               "name": "multicheckbox-restricted",
               "options": {
-                "message": "Las respuestas \"${option1}\" y \"${option2}\" no son compatibles",
+                "message": "\"${option1}\" eta \"${option2}\" erantzunak ez dira bateragarriak",
                 "restrictions": {
                   "notValidCombinations": [
                     {
@@ -80,11 +80,11 @@
       },
       {
         "key": "otrasTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.some((c) => c === 'otras') || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
-          "placeholder": "Especificar",
-          "label": "Especificar",
+          "placeholder": "Zehaztu",
+          "label": "Zehaztu",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -93,11 +93,11 @@
       },
       {
         "key": "noNecesariaVacunacionTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vacunacionCheck || model.vacunacionCheck.length>1 || !model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
-          "placeholder": "Justificar",
-          "label": "Justificar",
+          "placeholder": "Justifikatu",
+          "label": "Justifikatu",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -105,15 +105,15 @@
         }
       },
       {
-        "template": "Organismo responsable de la vacunación",
+        "template": "Txertaketaz arduratzen den erakundea",
         "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.length>0 || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')"
       },
       {
         "key": "organismoSanitario",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.length>0 || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
-          "label": "Organismo:",
+          "label": "Erakundea:",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

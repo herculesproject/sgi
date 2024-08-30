@@ -42,7 +42,7 @@
       },
       {
         "key": "especificarDirectriz",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "hideExpression": "!model.siguenDirectrizOficialRadio || model.siguenDirectrizOficialRadio === 'noSinDisenioSimilar'",
         "templateOptions": {
           "name": "Especificar",

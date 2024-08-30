@@ -5,26 +5,26 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.4.5 Sustancias radiactivas"
+      "label": "3.4.5 Substantzia erradioaktiboak"
     },
     "fieldGroup": [
       {
-        "template": "<p>En esta actividad ¿se utilizan Sustancias Radiactivas?</p>"
+        "template": "<p>Jarduera honetan substantzia erradioaktiboak erabiltzen dira?</p>"
       },
       {
         "key": "sustanciasRadiactivas",
         "type": "radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "No"
+              "label": "Ez"
             },
             {
               "value": "si",
-              "label": "Sí"
+              "label": "Bai"
             }
           ]
         }

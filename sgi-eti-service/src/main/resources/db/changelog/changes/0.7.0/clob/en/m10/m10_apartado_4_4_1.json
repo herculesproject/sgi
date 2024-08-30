@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "4.4.1 Type of consent"
     },
     "hideExpression": "!formState.mainModel.ap4_4.informacionConsentimientoRadio || formState.mainModel.ap4_4.informacionConsentimientoRadio === 'no'",

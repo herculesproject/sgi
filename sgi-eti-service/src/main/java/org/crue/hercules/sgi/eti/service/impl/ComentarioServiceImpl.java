@@ -13,11 +13,10 @@ import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
-import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
@@ -27,7 +26,6 @@ import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluadorSpecifications;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
-import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.framework.util.AssertHelper;
@@ -95,7 +93,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
-          evaluacion.getMemoria().getComite().getId(),
+          evaluacion.getMemoria(),
           comentario.getApartado().getBloque());
 
       validateEstadoEvaluacion(evaluacion);
@@ -126,14 +124,14 @@ public class ComentarioServiceImpl implements ComentarioService {
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
-          evaluacion.getMemoria().getComite().getId(),
+          evaluacion.getMemoria(),
           comentario.getApartado().getBloque());
 
       Assert.isTrue(
           (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
               || evaluacion.getEvaluador2().getPersonaRef().equals(personaRef) || isMiembroComite(personaRef,
                   evaluacion.getMemoria().getComite()
-                      .getComite()),
+                      .getId()),
           MSG_EL_USUARIO_NO_COINCIDE_CON_NINGUNO_DE_LOS_EVALUADORES_DE_LA_EVALUACION);
 
       comentario.setEstado(TipoEstadoComentario.ABIERTO);
@@ -149,13 +147,13 @@ public class ComentarioServiceImpl implements ComentarioService {
    * Comprueba si la persona es miembro activo del comité
    * 
    * @param personaRef identificador de la persona
-   * @param comite     nombre del comité
+   * @param comite     Id del comité
    * @return true si es miembro activo del comité / false si no lo es
    */
-  private Boolean isMiembroComite(String personaRef, String comite) {
+  private Boolean isMiembroComite(String personaRef, Long comiteId) {
     Specification<Evaluador> specActivos = EvaluadorSpecifications.activos();
     Specification<Evaluador> specPersonaRef = EvaluadorSpecifications.byPersonaRef(personaRef);
-    Specification<Evaluador> specComite = EvaluadorSpecifications.byComite(comite);
+    Specification<Evaluador> specComite = EvaluadorSpecifications.byComiteId(comiteId);
 
     Specification<Evaluador> specs = Specification.where(specActivos).and(specPersonaRef).and(specComite);
 
@@ -182,7 +180,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
-          evaluacion.getMemoria().getComite().getId(),
+          evaluacion.getMemoria(),
           comentario.getApartado().getBloque());
 
       validateEstadoEvaluacion(evaluacion);
@@ -214,7 +212,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
-          evaluacion.getMemoria().getComite().getId(),
+          evaluacion.getMemoria(),
           comentario.getApartado().getBloque());
 
       validateEstadoEvaluacion(evaluacion);
@@ -294,7 +292,7 @@ public class ComentarioServiceImpl implements ComentarioService {
         (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
             || evaluacion.getEvaluador2().getPersonaRef().equals(personaRef) || isMiembroComite(personaRef,
                 evaluacion.getMemoria().getComite()
-                    .getComite()),
+                    .getId()),
         MSG_EL_USUARIO_NO_COINCIDE_CON_NINGUNO_DE_LOS_EVALUADORES_DE_LA_EVALUACION);
 
     deleteComentarioEvaluacion(evaluacionId, comentarioId, TipoComentario.Tipo.EVALUADOR.getId());
@@ -377,7 +375,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
-          evaluacion.getMemoria().getComite().getId(),
+          evaluacion.getMemoria(),
           comentarioActualizar.getApartado().getBloque());
 
       validateEstadoEvaluacion(evaluacion);
@@ -418,14 +416,14 @@ public class ComentarioServiceImpl implements ComentarioService {
     return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
-          evaluacion.getMemoria().getComite().getId(),
+          evaluacion.getMemoria(),
           comentarioActualizar.getApartado().getBloque());
 
       Assert.isTrue(
           (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
               || evaluacion.getEvaluador2().getPersonaRef().equals(personaRef) || isMiembroComite(personaRef,
                   evaluacion.getMemoria().getComite()
-                      .getComite()),
+                      .getId()),
           MSG_EL_USUARIO_NO_COINCIDE_CON_NINGUNO_DE_LOS_EVALUADORES_DE_LA_EVALUACION);
 
       return updateComentarioEvaluacion(evaluacionId, comentarioActualizar);
@@ -664,10 +662,10 @@ public class ComentarioServiceImpl implements ComentarioService {
    * de evaluación.
    * 
    * @param idTipoEvaluacion Identificador {@link TipoEvaluacion}.
-   * @param idComite         Identificador del {@link Comite}.
-   * @param idFormulario     Identificador de {@link Formulario}
+   * @param memoria          {@link Memoria} asociada la evaluación.
+   * @param bloque           {@link Bloque} a validar
    */
-  private void validarTipoEvaluacionAndFormulario(Long idTipoEvaluacion, Long idComite, Bloque bloque) {
+  private void validarTipoEvaluacionAndFormulario(Long idTipoEvaluacion, Memoria memoria, Bloque bloque) {
     Long idFormulario = null;
 
     if (bloque.getFormulario() != null) {
@@ -678,22 +676,20 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     switch (TipoEvaluacion.Tipo.fromId(idTipoEvaluacion)) {
       case RETROSPECTIVA: {
-        isValid = idFormulario == null || Constantes.FORMULARIO_RETROSPECTIVA.equals(idFormulario);
+        isValid = idFormulario == null || (memoria.getFormularioRetrospectiva() != null
+            && idFormulario.equals(memoria.getFormularioRetrospectiva().getId()));
         break;
       }
       case MEMORIA: {
-        isValid = idFormulario == null
-            || (Constantes.FORMULARIO_M10.equals(idFormulario) && Constantes.COMITE_CEI.equals(idComite))
-            || (Constantes.FORMULARIO_M20.equals(idFormulario) && Constantes.COMITE_CEEA.equals(idComite))
-            || (Constantes.FORMULARIO_M30.equals(idFormulario) && Constantes.COMITE_CBE.equals(idComite));
+        isValid = idFormulario == null || idFormulario.equals(memoria.getFormulario().getId());
         break;
       }
       case SEGUIMIENTO_ANUAL: {
-        isValid = idFormulario == null || Constantes.FORMULARIO_ANUAL.equals(idFormulario);
+        isValid = idFormulario == null || idFormulario.equals(memoria.getFormularioSeguimientoAnual().getId());
         break;
       }
       case SEGUIMIENTO_FINAL: {
-        isValid = idFormulario == null || Constantes.FORMULARIO_FINAL.equals(idFormulario);
+        isValid = idFormulario == null || idFormulario.equals(memoria.getFormularioSeguimientoFinal().getId());
         break;
       }
       default:

@@ -31,7 +31,7 @@
           "fieldGroup": [
             {
               "key": "codPatrimonial",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Asset Code",
                 "order": 10
@@ -65,7 +65,7 @@
             },
             {
               "key": "ubicacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Location",
                 "order": 30
@@ -91,7 +91,7 @@
             },
             {
               "key": "numeroRegistroServicioPrevencion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Reg. No. Prevention Service",
                 "order": 50

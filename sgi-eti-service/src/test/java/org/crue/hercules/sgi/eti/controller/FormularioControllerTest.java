@@ -50,15 +50,14 @@ public class FormularioControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-VER" })
   public void getFormulario_WithId_ReturnsFormulario() throws Exception {
     BDDMockito.given(formularioService.findById(ArgumentMatchers.anyLong()))
-        .willReturn((generarMockFormulario(1L, "Formulario1", "Descripcion1")));
+        .willReturn((generarMockFormulario(1L, "Formulario1")));
 
     mockMvc
         .perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Formulario1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("Descripcion1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value("Formulario1"));
     ;
   }
 
@@ -80,7 +79,7 @@ public class FormularioControllerTest extends BaseControllerTest {
     // given: One hundred Formulario
     List<Formulario> Formularioes = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      Formularioes.add(generarMockFormulario(Long.valueOf(i), "Formulario" + String.format("%03d", i), "Descripcion"));
+      Formularioes.add(generarMockFormulario(Long.valueOf(i), "Formulario" + String.format("%03d", i)));
     }
 
     BDDMockito.given(formularioService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
@@ -121,7 +120,7 @@ public class FormularioControllerTest extends BaseControllerTest {
     // containing nombre='Formulario031' to 'Formulario040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Formulario formulario = actual.get(i);
-      Assertions.assertThat(formulario.getNombre()).isEqualTo("Formulario" + String.format("%03d", j));
+      Assertions.assertThat(formulario.getId()).isEqualTo(j);
     }
   }
 
@@ -131,7 +130,7 @@ public class FormularioControllerTest extends BaseControllerTest {
     // given: One hundred Formulario and a search query
     List<Formulario> formularios = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      formularios.add(generarMockFormulario(Long.valueOf(i), "Formulario" + String.format("%03d", i), "Descripcion"));
+      formularios.add(generarMockFormulario(Long.valueOf(i), "Formulario" + String.format("%03d", i)));
     }
     String query = "nombre~Formulario%,id:5";
 
@@ -141,7 +140,7 @@ public class FormularioControllerTest extends BaseControllerTest {
           public Page<Formulario> answer(InvocationOnMock invocation) throws Throwable {
             List<Formulario> content = new ArrayList<>();
             for (Formulario formulario : formularios) {
-              if (formulario.getNombre().startsWith("Formulario") && formulario.getId().equals(5L)) {
+              if (formulario.getId().equals(5L)) {
                 content.add(formulario);
               }
             }
@@ -206,7 +205,7 @@ public class FormularioControllerTest extends BaseControllerTest {
 
     List<Formulario> formularios = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      Formulario formulario = generarMockFormulario(Long.valueOf(i), String.valueOf(id), String.valueOf(id));
+      Formulario formulario = generarMockFormulario(Long.valueOf(i), String.valueOf(id));
       formularios.add(formulario);
     }
 
@@ -242,12 +241,12 @@ public class FormularioControllerTest extends BaseControllerTest {
    * @return el objeto Formulario
    */
 
-  public Formulario generarMockFormulario(Long id, String nombre, String descripcion) {
+  private Formulario generarMockFormulario(Long id, String nombre) {
 
     Formulario formulario = new Formulario();
     formulario.setId(id);
-    formulario.setNombre(nombre);
-    formulario.setDescripcion(descripcion);
+    formulario.setCodigo(nombre);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
 
     return formulario;
   }

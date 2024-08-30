@@ -61,7 +61,7 @@
       },
       {
         "key": "codigoRefProyectoAnterior",
-        "type": "input",
+        "type": "i18n-input",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'anterior')",
         "templateOptions": {
           "label": "Code",
@@ -104,7 +104,7 @@
       },
       {
         "key": "codigoRefProyectoPosterior",
-        "type": "input",
+        "type": "i18n-input",
         "hideExpression": "!model.reutilizacionRadio || model.reutilizacionRadio === 'no' || !model.anteriorPosteriorCheck || !model.anteriorPosteriorCheck.some(option => option == 'posterior')",
         "templateOptions": {
           "label": "Code",

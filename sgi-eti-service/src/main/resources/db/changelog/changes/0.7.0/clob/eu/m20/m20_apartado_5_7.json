@@ -13,7 +13,7 @@
       },
       {
         "key": "aclaracionesComite",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "label": "Azalpenak",
           "autosize": true,

@@ -5,33 +5,33 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.3 Documento de autorización"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "5.3 Baimen dokumentua"
     },
     "fieldGroup": [
       {
-        "template": "Si parte de su proyecto se realiza fuera de las instalaciones de la Universidad ¿dispone del correspondiente documento de autorización emitido por la persona responsable del centro o lugar?"
+        "template": "Zure proiektuaren zati bat Unibertsitateko instalazioetatik kanpo gauzatzen bada, badaukazu zentro edo leku horretako arduradunak egindako baimen dokumentua?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>En general cualquier faceta de un estudio que se realice fuera de las instalaciones de la Universidad requerirá de la autorización o acuerdo firmado por parte del/la responsable del Centro o instalaciones donde se vaya a realizar esa fase del proyecto, incluido el reclutamiento de sujetos para el estudio, distribución de información sobre el proyecto, toma de muestras, realización de encuestas, realización de pruebas físicas o psicológicas, recopilación de datos, etc.</p>"
+        "template": "<p>Oro har, Unibertsitateko instalazioetatik kanpo egiten den azterketa baten edozein alderditarako beharrezkoa izango da proiektuaren fase hori gauzatuko den leku edo zentroko arduradunak baimena edo akordioa sinatzea, honako hauetarako barne: azterketarako subjektuak biltzeko, proiektuari buruzko informazioa banatzeko, laginak hartzeko, inkestak egiteko, proba fisiko edo psikologikoak egiteko, datuak biltzeko, etab.</p>"
       },
       {
         "key": "documentoAutorizacion",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
-              "value": 6,
-              "label": "Sí"
+              "value": "AUTORIZACION",
+              "label": "Bai"
             }
           ]
         }
@@ -40,7 +40,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: describir en los apartados '3.4.1 Proceso de reclutamiento y/o 3.5.3 Descripción de las intervenciones'.</p>"
+        "template": "<p>Oharra: deskribatu '3.4.1 Parte hartzaileak biltzeko prozesua' edo/eta ‘3.5.3 Esku hartzeen deskribapena’ ataletan. </p>"
       }
     ]
   }

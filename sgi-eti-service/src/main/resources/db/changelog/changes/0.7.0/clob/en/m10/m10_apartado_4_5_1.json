@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "4.5.1 Result of the genetic study"
     },
     "hideExpression": "!formState.mainModel.ap4_5.estudiosGeneticosRadio || formState.mainModel.ap4_5.estudiosGeneticosRadio === 'no'",
@@ -37,7 +37,7 @@
       },
       {
         "key": "especificarResultadoEstudioGenetico",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.resultadoEstudioGeneticoRadio || model.resultadoEstudioGeneticoRadio === 'no'",
         "templateOptions": {
           "label": "Please specify",

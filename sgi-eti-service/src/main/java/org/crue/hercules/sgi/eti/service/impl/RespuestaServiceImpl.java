@@ -7,8 +7,6 @@ import org.crue.hercules.sgi.eti.dto.RespuestaRetrospectivaFormulario;
 import org.crue.hercules.sgi.eti.exceptions.RespuestaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.RespuestaRetrospectivaFormularioNotValidException;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
-import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.model.Formulario.Tipo;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -188,10 +186,9 @@ public class RespuestaServiceImpl implements RespuestaService {
   public void updateDatosRetrospectiva(Long id)
       throws RespuestaNotFoundException, RespuestaRetrospectivaFormularioNotValidException {
     Respuesta respuesta = respuestaRepository.findById(id).orElseThrow(() -> new RespuestaNotFoundException(id));
-    Formulario formulario = formularioRepository.findByMemoriaId(respuesta.getMemoriaId());
     Memoria memoria = memoriaService.findById(respuesta.getMemoriaId());
 
-    if (!formulario.getTipo().equals(Tipo.M20)) {
+    if (!memoria.getComite().getRequiereRetrospectiva().equals(Boolean.TRUE)) {
       return;
     }
 

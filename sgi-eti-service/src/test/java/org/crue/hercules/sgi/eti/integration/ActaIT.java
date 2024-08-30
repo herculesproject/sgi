@@ -7,15 +7,13 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
-import org.crue.hercules.sgi.eti.dto.TipoConvocatoriaOutput;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -351,13 +349,11 @@ public class ActaIT extends BaseIT {
    * @param numero numero del acta
    * @return el objeto Acta
    */
-  public Acta generarMockActa(Long id, Integer numero) {
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+  private Acta generarMockActa(Long id, Integer numero) {
     Comite comite = new Comite();
     comite.setId(1L);
-    comite.setComite("CEEA");
+    comite.setCodigo("CEEA");
     comite.setGenero(Genero.F);
-    comite.setFormulario(formulario);
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(2L);
@@ -384,39 +380,6 @@ public class ActaIT extends BaseIT {
     acta.setActivo(true);
 
     return acta;
-  }
-
-  /**
-   * Función que devuelve un objeto ActaWithNumEvaluaciones
-   * 
-   * @param id     id del acta
-   * @param numero numero del acta
-   * @return el objeto Acta
-   */
-  public ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
-    Acta acta = generarMockActa(id, numero);
-    TipoConvocatoriaOutput tipoConvocatoria = generarMockTipoConvocatoriaOutput(
-        acta.getConvocatoriaReunion().getTipoConvocatoriaReunion());
-
-    ActaWithNumEvaluaciones returnValue = new ActaWithNumEvaluaciones();
-    returnValue.setId(acta.getId());
-    returnValue.setComite(acta.getConvocatoriaReunion().getComite().getComite());
-    returnValue.setFechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion());
-    returnValue.setNumeroActa(acta.getNumero());
-    returnValue.setTipoConvocatoria(tipoConvocatoria);
-    returnValue.setNumEvaluaciones(1);
-    returnValue.setNumRevisiones(2);
-    returnValue.setNumTotal(returnValue.getNumEvaluaciones() + returnValue.getNumRevisiones());
-    returnValue.setEstadoActa(acta.getEstadoActual());
-    return returnValue;
-  }
-
-  private TipoConvocatoriaOutput generarMockTipoConvocatoriaOutput(TipoConvocatoriaReunion tipoConvocatoria) {
-    TipoConvocatoriaOutput tipoConvocatoriaOutput = new TipoConvocatoriaOutput();
-    tipoConvocatoriaOutput.setId(tipoConvocatoria.getId());
-    tipoConvocatoriaOutput.setNombre(tipoConvocatoria.getNombre());
-    tipoConvocatoriaOutput.setActivo(tipoConvocatoria.getActivo());
-    return tipoConvocatoriaOutput;
   }
 
 }

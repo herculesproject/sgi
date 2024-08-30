@@ -5,12 +5,12 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.6 Datos de carácter personal"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.6 Datu pertsonalak"
     },
     "fieldGroup": [
       {
-        "template": "<p>Para dar debido cumplimiento a lo referido a la protección de datos de carácter personal, deberá rellenar la siguiente <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>encuesta</a> (las preguntas y respuestas son almacenadas en la herramienta de encuestas de la Universidad, de forma independiente al SGI)</p>"
+        "template": "<p>Datu pertsonalen babesari dagokionez ezarrita dagoena betetzeko, honako <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>galdetegi</a> hau bete beharko duzu (galdera-erantzunak Unibertsitatearen galdetegien tresnan gordeko dira, SGItik bereizita).</p>"
       }
     ]
   }

@@ -5,52 +5,52 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.5.2 Destino de las muestras de origen humano"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.5.2 Zer egingo den giza jatorriko laginekin"
     },
     "hideExpression": "!formState.mainModel.ap3_5.muestrasBiologicasRadio || formState.mainModel.ap3_5.muestrasBiologicasRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "¿Qué va a hacer con las muestras de origen humano una vez que ya no sean necesarias para este proyecto?"
+        "template": "Zer egingo duzu giza jatorriko laginekin, behin proiekturako beharrezkoak ez direnean?"
       },
       {
         "type": "multicheckbox",
         "key": "destinoMuestrasCheck",
         "templateOptions": {
-          "label": "Destino",
+          "label": "Zer egin?",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "destruccion",
-              "label": "Destrucción"
+              "label": "Suntsitu"
             },
             {
               "value": "conservacion",
-              "label": "Conservación anonimizada para utilización posterior"
+              "label": "Modu anonimoan gorde, aurrerago erabiltzeko"
             },
             {
               "value": "cesionBiobanco",
-              "label": "Cesión gratuita a Biobanco"
+              "label": "Biobancori doan eman"
             },
             {
               "value": "usoColeccionMuestras",
-              "label": "Uso integrado en colección de muestras"
+              "label": "Modu integratuan erabili laginen bilduman"
             },
             {
               "value": "incorporacionColeccionMuestras",
-              "label": "Incorporación a una colección de muestras"
+              "label": "Lagin bilduma batean sartu"
             }
           ]
         }
       },
       {
         "key": "especificarCesionBiobanco",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'cesionBiobanco')",
         "templateOptions": {
-          "label": "Especificar cesión a Biobanco",
-          "placeholder": "Especificar cesión a Biobanco",
+          "label": "Zehaztu Biobancori egingo zaion lagapena",
+          "placeholder": "Zehaztu Biobancori egingo zaion lagapena",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -59,11 +59,11 @@
       },
       {
         "key": "especificarUsoColeccionMuestras",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'usoColeccionMuestras')",
         "templateOptions": {
-          "label": "Especificar colección y registro",
-          "placeholder": "Especificar colección y registro",
+          "label": "Zehaztu bilduma eta erregistroa",
+          "placeholder": "Zehaztu bilduma eta erregistroa",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -72,11 +72,11 @@
       },
       {
         "key": "especificarIncorporacionColeccionMuestras",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.destinoMuestrasCheck || !model.destinoMuestrasCheck.some(destino => destino === 'incorporacionColeccionMuestras')",
         "templateOptions": {
-          "label": "Especificar incorporación a colección",
-          "placeholder": "Especificar incorporación a colección",
+          "label": "Zehaztu zer bildumatan sartuko den",
+          "placeholder": "Zehaztu zer bildumatan sartuko den",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",
@@ -87,7 +87,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Recuerde que el/la participante tiene derecho a conocer y decidir el destino de sus muestras y debe ser informado de ello en el <strong>documento de consentimiento</strong> (apartado 4.4.8 Derecho a decidir sobre el destino de las muestras').</p><p>Para obtener más información sobre la información mínima exigida consulta el <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a59' target='_blank'>articulo 59</a> de la LIB 14/2007.</p>"
+        "template": "<p>Oharra: gogoratu parte hartzailearen eskubidea dela bere laginekin zer egingo den jakin eta erabakitzea, eta horren berri jaso behar duela <strong>baimen dokumentuan</strong> (‘4.4.8 Laginekin zer egingo den erabakitzeko eskubidea' atala). </p><p>Nahitaez eman behar den gutxieneko informazioari buruz gehiago jakiteko, kontsultatu <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a59' target='_blank'>14/2007 IBLren 59. artikulua</a>. </p>"
       }
     ]
   }

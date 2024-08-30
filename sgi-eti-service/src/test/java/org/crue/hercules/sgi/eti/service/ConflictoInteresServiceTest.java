@@ -9,10 +9,8 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ConflictoInteresNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.ConflictoInteresRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.service.impl.ConflictoInteresServiceImpl;
@@ -225,14 +223,16 @@ public class ConflictoInteresServiceTest extends BaseServiceTest {
    * @param resumen el resumen de Evaluador
    * @return el objeto Evaluador
    */
-  public Evaluador generarMockEvaluador(Long id, String resumen) {
+  private Evaluador generarMockEvaluador(Long id, String resumen) {
     CargoComite cargoComite = new CargoComite();
     cargoComite.setId(1L);
     cargoComite.setNombre("CargoComite1");
     cargoComite.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
@@ -254,7 +254,7 @@ public class ConflictoInteresServiceTest extends BaseServiceTest {
    * @param personaConflictoRef la persona del conflicto de interés
    * @return el objeto ConflictoInteres
    */
-  public ConflictoInteres generarMockConflictoInteres(Long id, String personaConflictoInteres) {
+  private ConflictoInteres generarMockConflictoInteres(Long id, String personaConflictoInteres) {
     ConflictoInteres conflicto = new ConflictoInteres();
     conflicto.setId(id);
     conflicto.setEvaluador(generarMockEvaluador(id, "Resumen" + (id != null ? id : "1")));

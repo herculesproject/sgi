@@ -109,7 +109,7 @@
       },
       {
         "key": "otrasTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "model.gestionResiduos === 'no' || (!model.residuosGenerar || !model.residuosGenerar.find((c) => c === 'otros'))",
         "templateOptions": {
           "placeholder": "Other. Please specify",

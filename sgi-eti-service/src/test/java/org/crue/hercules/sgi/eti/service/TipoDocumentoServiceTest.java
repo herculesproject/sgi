@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.eti.service.impl.TipoDocumentoServiceImpl;
@@ -128,17 +127,12 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
    * @return el objeto tipoDocumento
    */
 
-  public TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
-
-    Formulario formulario = new Formulario();
-    formulario.setId(1L);
-    formulario.setNombre("M10");
-    formulario.setDescripcion("Formulario M10");
+  private TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
     tipoDocumento.setNombre(nombre);
-    tipoDocumento.setFormulario(formulario);
+    tipoDocumento.setFormularioId(1L);
     tipoDocumento.setActivo(Boolean.TRUE);
 
     return tipoDocumento;

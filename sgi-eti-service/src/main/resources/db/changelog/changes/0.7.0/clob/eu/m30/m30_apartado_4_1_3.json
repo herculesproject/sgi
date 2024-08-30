@@ -5,44 +5,44 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.3 Características del riesgo de los organismos modificados genéticamente"
+      "label": "4.1.3 Genetikoki eraldatutako organismoen arriskuaren ezaugarriak"
     },
     "hideExpression": "!formState.mainModel.ap3_4 || !formState.mainModel.ap3_4.ap3_4_3 || !formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio || formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>¿Los organismos modificados genéticamente que se utilizan implican algún tipo de efecto potencialmente nocivo?</p>"
+        "template": "<p>Erabiltzen diren genetikoki eraldatutako organismoek efektu potentzialki kaltegarriren bat izan dezakete?</p>"
       },
       {
         "key": "agentesBiologicos",
         "type": "radio",
         "className": "vertical-radio",
         "templateOptions": {
-          "label": "Elige opción:",
+          "label": "Hautatu aukera bat:",
           "required": true,
           "options": [
             {
               "value": "niguno",
-              "label": "Ninguno o insignificante."
+              "label": "Bat ere ez edo hutsala."
             },
             {
               "value": "afectenPersonas",
-              "label": "Enfermedades que afecten a las personas, incluidos los efectos alérgicos o tóxicos."
+              "label": "Gizakiei erasaten dieten gaixotasunak, efektu alergiko edo toxikoak barne."
             },
             {
               "value": "afectecAnimales",
-              "label": "Enfermedades que afecten a los animales o a los vegetales."
+              "label": "Animaliei edo landareei erasaten dieten gaixotasunak."
             },
             {
               "value": "imposibilidad",
-              "label": "Efectos deletéreos debidos a la imposibilidad de tratar una enfermedad o de realizar una profilaxis eficaz."
+              "label": "Efektu hilgarriak, gaixotasun bat tratatzeko edo profilaxi eraginkorra gauzatzeko ezintasunagatik."
             },
             {
               "value": "diseminacion",
-              "label": "Efectos deletéreos debidos al establecimiento o a la diseminación en el medio ambiente."
+              "label": "Efektu hilgarriak, ingurunean ezarri edo barreiatzeagatik."
             },
             {
               "value": "transferenciaNatural",
-              "label": "Efectos deletéreos debidos a la transferencia natural de material genético insertado a otros organismos."
+              "label": "Efektu hilgarriak, beste organismo batzuei txertatutako material genetikoaren transferentzia naturalagatik."
             }
           ]
         }

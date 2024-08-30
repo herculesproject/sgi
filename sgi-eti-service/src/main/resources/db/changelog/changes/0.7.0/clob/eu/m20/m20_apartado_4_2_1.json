@@ -49,7 +49,7 @@
             },
             {
               "key": "efectoBuscado",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Nahita lortu nahi den ondorioa",
                 "order": 30
@@ -57,7 +57,7 @@
             },
             {
               "key": "efectoColateral",
-              "type": "textarea",
+              "type": "i18n-textarea",
               "templateOptions": {
                 "label": "Albo ondorioa",
                 "order": 40
@@ -65,7 +65,7 @@
             },
             {
               "key": "medidasCorrectoras",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Neurri zuzentzaileak",
                 "order": 50

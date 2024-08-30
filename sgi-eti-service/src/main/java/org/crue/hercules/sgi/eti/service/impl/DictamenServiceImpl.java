@@ -8,7 +8,7 @@ import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.DictamenRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.DictamenSpecifications;
@@ -206,7 +206,7 @@ public class DictamenServiceImpl implements DictamenService {
         } else {
           listaDictamenes = dictamenRepository.findByTipoEvaluacionId(evaluacion.getTipoEvaluacion().getId());
 
-          if (evaluacion.getMemoria().getTipoMemoria().getTipo().equals(TipoMemoria.Tipo.RATIFICACION)
+          if (evaluacion.getMemoria().getTipo() == Memoria.Tipo.RATIFICACION
               || evaluacion.getVersion() > 1) {
             listaDictamenes.removeIf(dictamen -> dictamen.getId().equals(Dictamen.Tipo.DESFAVORABLE.getId()));
           }

@@ -3,11 +3,8 @@ package org.crue.hercules.sgi.eti.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
@@ -28,6 +25,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * TipoDocumentoControllerTest
@@ -200,17 +199,12 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
    * @return el objeto tipoDocumento
    */
 
-  public TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
-
-    Formulario formulario = new Formulario();
-    formulario.setId(1L);
-    formulario.setNombre("M10");
-    formulario.setDescripcion("Formulario M10");
+  private TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
     tipoDocumento.setNombre(nombre);
-    tipoDocumento.setFormulario(formulario);
+    tipoDocumento.setFormularioId(1L);
     tipoDocumento.setActivo(Boolean.TRUE);
 
     return tipoDocumento;

@@ -5,37 +5,37 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.5 Documentación adicional"
+      "label": "5.5 Dokumentazio osagarria"
     },
     "fieldGroup": [
       {
-        "template": "¿Dispone de alguna otra documentación adicional para su proyecto?"
+        "template": "Baduzu beste dokumentazio osagarririk zure proiekturako?"
       },
       {
         "key": "documentacionAdicional",
         "type": "documento",
         "templateOptions": {
           "required": true,
-          "label": "Indicar",
+          "label": "Adierazi",
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
-              "value": 21,
-              "label": "Sí"
+              "value": "ADICIONAL",
+              "label": "Bai"
             }
           ]
         }
       },
       {
         "key": "especificarDocumenAdicional",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.documentacionAdicional || model.documentacionAdicional === 0",
         "templateOptions": {
-          "label": "Especificar",
-          "placeholder": "Especificar",
+          "label": "Zehaztu",
+          "placeholder": "Zehaztu",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

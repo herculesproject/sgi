@@ -331,7 +331,7 @@ public class RespuestaControllerTest extends BaseControllerTest {
    * @return el objeto Respuesta
    */
 
-  public Respuesta generarMockRespuesta(Long id) {
+  private Respuesta generarMockRespuesta(Long id) {
     Memoria memoria = new Memoria();
     memoria.setId(id);
 
@@ -360,16 +360,17 @@ public class RespuestaControllerTest extends BaseControllerTest {
    */
   private Apartado getMockApartado(Long id, Long bloqueId, Long padreId) {
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion1");
-    Bloque Bloque = new Bloque(bloqueId, formulario, 1, null);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
+
+    Bloque bloque = new Bloque(bloqueId, formulario, 1, null);
 
     Apartado padre = (padreId != null) ? getMockApartado(padreId, bloqueId, null) : null;
 
-    String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
-
     final Apartado data = new Apartado();
     data.setId(id);
-    data.setBloque(Bloque);
+    data.setBloque(bloque);
     data.setPadre(padre);
     data.setOrden(id.intValue());
 

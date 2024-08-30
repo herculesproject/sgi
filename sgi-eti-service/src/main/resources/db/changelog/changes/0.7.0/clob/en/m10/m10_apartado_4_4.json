@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "4.4 Information and consent"
     },
     "fieldGroup": [
@@ -68,7 +68,7 @@
       },
       {
         "key": "informacionConsentimientoMotivoTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!((model.informacionConsentimientoRadio && model.informacionConsentimientoRadio === 'no') && (model.informacionConsentimientoMotivoRadio && model.informacionConsentimientoMotivoRadio === 'otros'))",
         "templateOptions": {
           "label": "Please specify or justify",

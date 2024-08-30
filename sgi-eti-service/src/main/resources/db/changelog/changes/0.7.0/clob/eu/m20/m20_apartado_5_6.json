@@ -23,7 +23,7 @@
               "label": "Ez"
             },
             {
-              "value": 16,
+              "value": "ADICIONAL",
               "label": "Bai"
             }
           ]
@@ -31,7 +31,7 @@
       },
       {
         "key": "documentacionAdicionalDescripcion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.documentacionAdicional || model.documentacionAdicional === 0",
         "templateOptions": {
           "label": "Zehaztu",

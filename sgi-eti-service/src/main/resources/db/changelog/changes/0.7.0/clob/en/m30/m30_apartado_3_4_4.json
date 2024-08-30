@@ -79,7 +79,7 @@
       },
       {
         "key": "otraTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "model.sustanciasQuimicasPeligrosas==='no' || (!model.tiposSustanciasQuimicas || !model.tiposSustanciasQuimicas.find((c) => c === 'otra'))",
         "templateOptions": {
           "placeholder": "Please specify",

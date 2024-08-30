@@ -57,7 +57,7 @@ public class ComunicadosService {
       throws JsonProcessingException {
     log.debug("enviarComunicadoConvocatoriaReunionEti(ConvocatoriaReunion convocatoriaReunion) - start");
     List<Evaluador> evaluadoresConvocatoriaReunion = evaluadorService
-        .findAllByComite(convocatoriaReunion.getComite().getComite());
+        .findAllByComiteId(convocatoriaReunion.getComite().getId());
 
     List<String> idsPersonaRef = evaluadoresConvocatoriaReunion.stream().map(Evaluador::getPersonaRef)
         .collect(Collectors.toList());
@@ -392,7 +392,7 @@ public class ComunicadosService {
                       .getTitulo()))
               .nombreApellidosEvaluador1(evaluador1.getNombre() + " " + evaluador1.getApellidos())
               .nombreApellidosEvaluador2(evaluador2.getNombre() + " " + evaluador2.getApellidos())
-              .nombreInvestigacion(evaluacion.getConvocatoriaReunion().getComite().getNombreInvestigacion())
+              .nombreInvestigacion(evaluacion.getConvocatoriaReunion().getComite().getNombre())
               .generoComite(evaluacion.getMemoria().getComite().getGenero()
                   .toString())
               .fechaEvaluacionAnterior(fechaEvaluacionAnterior)
@@ -424,8 +424,8 @@ public class ComunicadosService {
       EmailOutput emailOutput = emailService.createComunicadoRevisionActa(
           EtiComRevisionActaData.builder()
               .enlaceAplicacion(enlaceAplicacion)
-              .nombreInvestigacion(acta.getConvocatoriaReunion().getComite().getNombreInvestigacion())
-              .nombreComite(acta.getConvocatoriaReunion().getComite().getComite())
+              .nombreInvestigacion(acta.getConvocatoriaReunion().getComite().getNombre())
+              .nombreComite(acta.getConvocatoriaReunion().getComite().getCodigo())
               .fechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion())
               .generoComite(acta.getConvocatoriaReunion().getComite().getGenero().name())
               .build(),

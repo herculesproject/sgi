@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "3.5.1 Origin of the samples"
     },
     "hideExpression": "!formState.mainModel.ap3_5.muestrasBiologicasRadio || formState.mainModel.ap3_5.muestrasBiologicasRadio === 'no'",
@@ -42,7 +42,7 @@
       },
       {
         "key": "especificarRecogidasApartirDeMuestras",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'recogidasApartirDeMuestras')",
         "templateOptions": {
           "label": "Please specify collections from samples already obtained",
@@ -55,7 +55,7 @@
       },
       {
         "key": "especificarProcedentesBiobanco",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'procedentesBiobanco')",
         "templateOptions": {
           "label": "Please specify from Biobanco",
@@ -68,7 +68,7 @@
       },
       {
         "key": "especificarProcedentesColeccion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.origenMuestrasCheck || !model.origenMuestrasCheck.some(origen => origen === 'procedentesColeccion')",
         "templateOptions": {
           "label": "Please specify from a sample collection",

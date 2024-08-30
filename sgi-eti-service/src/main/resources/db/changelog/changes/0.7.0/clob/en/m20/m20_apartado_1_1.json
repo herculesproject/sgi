@@ -33,7 +33,7 @@
       },
       {
         "key": "otroValorSocial",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "formState.memoria.peticionEvaluacion.valorSocial !== 'OTRA_FINALIDAD'",
         "templateOptions": {
           "placeholder": "Please specify",

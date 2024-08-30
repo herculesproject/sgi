@@ -14,7 +14,7 @@
       {
         "key": "frecuenciaPeriodicidad",
         "className": "descripcion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Please describe",
           "required": true

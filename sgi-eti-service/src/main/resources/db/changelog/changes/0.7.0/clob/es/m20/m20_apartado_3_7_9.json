@@ -44,7 +44,7 @@
           "fieldGroup": [
             {
               "key": "lugarAnatomico",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Lugar anatómico",
                 "order": 10
@@ -52,7 +52,7 @@
             },
             {
               "key": "volumen",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Volumen",
                 "order": 20
@@ -60,7 +60,7 @@
             },
             {
               "key": "pauta",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Pauta",
                 "order": 30

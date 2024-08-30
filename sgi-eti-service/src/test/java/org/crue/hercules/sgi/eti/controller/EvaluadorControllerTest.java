@@ -10,14 +10,12 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.EvaluadorNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
@@ -30,7 +28,6 @@ import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.ConflictoInteresService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
@@ -542,14 +539,16 @@ public class EvaluadorControllerTest extends BaseControllerTest {
    * @return el objeto Evaluador
    */
 
-  public Evaluador generarMockEvaluador(Long id, String resumen) {
+  private Evaluador generarMockEvaluador(Long id, String resumen) {
     CargoComite cargoComite = new CargoComite();
     cargoComite.setId(1L);
     cargoComite.setNombre("CargoComite1");
     cargoComite.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
@@ -572,7 +571,7 @@ public class EvaluadorControllerTest extends BaseControllerTest {
    * @return el objeto Evaluacion
    */
 
-  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+  private Evaluacion generarMockEvaluacion(Long id, String sufijo) {
 
     String sufijoStr = (sufijo == null ? id.toString() : sufijo);
 
@@ -611,18 +610,39 @@ public class EvaluadorControllerTest extends BaseControllerTest {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
-    TipoMemoria tipoMemoria = new TipoMemoria();
-    tipoMemoria.setId(1L);
-    tipoMemoria.setNombre("TipoMemoria1");
-    tipoMemoria.setActivo(Boolean.TRUE);
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(1L);
+    tipoEstadoMemoria.setNombre("En elaboración");
+    tipoEstadoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
-        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), Instant.now()), 3, Boolean.TRUE,
-        null);
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setId(1L);
+    estadoRetrospectiva.setNombre("Pendiente");
+    estadoRetrospectiva.setActivo(Boolean.TRUE);
+
+    Retrospectiva retrospectiva = new Retrospectiva();
+    retrospectiva.setId(id);
+    retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
+    retrospectiva.setFechaRetrospectiva(Instant.now());
+
+    Memoria memoria = new Memoria();
+    memoria.setId(1L);
+    memoria.setNumReferencia("numRef-001");
+    memoria.setPeticionEvaluacion(peticionEvaluacion);
+    memoria.setComite(comite);
+    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setPersonaRef("user-00" + id);
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.FALSE);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
@@ -668,7 +688,7 @@ public class EvaluadorControllerTest extends BaseControllerTest {
    * @param personaConflictoRef la persona del conflicto de interés
    * @return el objeto ConflictoInteres
    */
-  public ConflictoInteres generarMockConflictoInteres(Long id, String sufijo) {
+  private ConflictoInteres generarMockConflictoInteres(Long id, String sufijo) {
 
     String sufijoStr = (sufijo == null ? id.toString() : sufijo);
 

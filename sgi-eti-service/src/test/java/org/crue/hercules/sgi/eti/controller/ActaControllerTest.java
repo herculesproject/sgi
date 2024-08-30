@@ -4,18 +4,16 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.dto.TipoConvocatoriaOutput;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
@@ -36,6 +34,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ActaControllerTest
@@ -341,7 +341,7 @@ public class ActaControllerTest extends BaseControllerTest {
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setGenero(Genero.M);
-    comite.setComite("CEEA");
+    comite.setCodigo("CEEA");
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
@@ -385,7 +385,7 @@ public class ActaControllerTest extends BaseControllerTest {
 
     ActaWithNumEvaluaciones returnValue = new ActaWithNumEvaluaciones();
     returnValue.setId(acta.getId());
-    returnValue.setComite(acta.getConvocatoriaReunion().getComite().getComite());
+    returnValue.setComite(acta.getConvocatoriaReunion().getComite().getCodigo());
     returnValue.setFechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion());
     returnValue.setNumeroActa(acta.getNumero());
     returnValue.setTipoConvocatoria(tipoConvocatoria);

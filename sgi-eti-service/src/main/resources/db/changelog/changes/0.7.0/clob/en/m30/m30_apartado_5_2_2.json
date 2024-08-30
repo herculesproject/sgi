@@ -22,7 +22,7 @@
               "label": "No"
             },
             {
-              "value": 22,
+              "value": "AUTORIZACION_CONFINADA",
               "label": "Yes"
             }
           ]
@@ -40,7 +40,7 @@
       },
       {
         "key": "especificarNegativo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "model.autorizacionOMG !== 0",
         "templateOptions": {
           "label": "Supporting evidence",

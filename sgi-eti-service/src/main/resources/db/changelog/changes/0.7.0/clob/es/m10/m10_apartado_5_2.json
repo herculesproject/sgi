@@ -5,27 +5,27 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "5.2 Datuak lagatzeko dokumentua"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "5.2 Documento de cesión de datos"
     },
     "fieldGroup": [
       {
-        "template": "<p>Datuak lagatzeko dokumentuak badaude, erantsi egin behar dira. Datuak laga diezazkioke, adibidez, irakasleak ikasleari, tutoretzapeko ikerketa egiteko, edo langile klinikoek Unibertsitateko ikertzaileei, edo bio-bankuek ikertzaileei, etab.</p>"
+        "template": "<p>Si existen documentos de cesión de datos, como pueden ser del profesor al alumno para realizar la investigación tutelada, de personal clínico al personal investigador de la Universidad, de biobancos, etc. se deben de incluir.</p>"
       },
       {
         "key": "documentoCesion",
         "type": "documento",
         "templateOptions": {
-          "label": "Adierazi",
+          "label": "Indicar",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "Ez"
+              "label": "No"
             },
             {
-              "value": 5,
-              "label": "Bai"
+              "value": "CESION_DATOS",
+              "label": "Sí"
             }
           ]
         }

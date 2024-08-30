@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.MemoriaInput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -23,10 +24,10 @@ public interface MemoriaService {
   /**
    * Guardar {@link Memoria}.
    *
-   * @param memoria la entidad {@link Memoria} a guardar.
+   * @param memoria la entidad {@link MemoriaInput} a guardar.
    * @return la entidad {@link Memoria} persistida.
    */
-  Memoria create(Memoria memoria);
+  Memoria create(MemoriaInput memoria);
 
   /**
    * Actualizar {@link Memoria}.
@@ -224,11 +225,11 @@ public interface MemoriaService {
    * Crea una memoria del tipo modificada a partir de la recibida por parámetro en
    * el idioma indicado.
    * 
-   * @param nuevaMemoria Nueva {@link Memoria} a crear.
+   * @param nuevaMemoria Nueva {@link MemoriaInput} a crear.
    * @param id           Identificador de {@link Memoria} de la que se parte.
    * @return {@link Memoria} creada.
    */
-  Memoria createModificada(Memoria nuevaMemoria, Long id);
+  Memoria createModificada(MemoriaInput nuevaMemoria, Long id);
 
   /**
    * Comprobación de si están o no los documentos obligatorios aportados para

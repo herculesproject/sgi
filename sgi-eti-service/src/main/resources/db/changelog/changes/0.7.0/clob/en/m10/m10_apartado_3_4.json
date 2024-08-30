@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "3.4 Interventions or tests in humans"
     },
     "fieldGroup": [
@@ -81,7 +81,7 @@
       },
       {
         "key": "otrasTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!((model.intervencionesSeresHumanosRadio && model.intervencionesSeresHumanosRadio === 'si') && (model.intervencionesSeresHumanosCheck && model.intervencionesSeresHumanosCheck.find((c)=> c === 'otras')))",
         "templateOptions": {
           "placeholder": "Others. Please specify",

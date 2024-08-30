@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.5.6 Substantzia erradioaktiboak, ekipamendu erradiologikoa, instalazio erradioaktiboa"
+      "label": "3.5.6 Sustancias radiactivas, equipo radiológico, instalación radiactiva"
     },
     "fieldGroup": [
       {
@@ -13,35 +13,35 @@
         "key": "sustanciasRadiactivasTable",
         "templateOptions": {
           "title": "Sustancia radiactiva",
-          "entity": "substantzia erradioaktiboa",
+          "entity": "sustancia radiactiva",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Substantzia erradioaktiboa"
+            "text": "Sustancia radiactiva"
           },
           "fieldGroup": [
             {
               "key": "radioisotopo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Erradioisotopoa (s)",
+                "label": "Radioisótopo (s)",
                 "order": 10
               }
             },
             {
               "key": "compuestosMarcados",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Konposatu markatuak",
+                "label": "Compuestos marcados",
                 "order": 20
               }
             },
             {
               "key": "actividadExperimento",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Esperimentuagatiko jarduera (μCi edo kBq)",
+                "label": "Actividad por experimento (μCi o kBq)",
                 "order": 30
               }
             }
@@ -53,27 +53,27 @@
         "key": "equiposRadiologicosTable",
         "templateOptions": {
           "title": "Equipo radiológico",
-          "entity": "ekipamendu erradiologikoa",
+          "entity": "equipo radiológico",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Ekipamendu erradiologikoa"
+            "text": "Equipo radiológico"
           },
           "fieldGroup": [
             {
               "key": "equipoRadiologico",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Ekipamendu erradiologikoa",
+                "label": "Equipo radiológico",
                 "order": 10
               }
             },
             {
               "key": "ubicacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Kokapena",
+                "label": "Ubicación",
                 "order": 20
               }
             }
@@ -85,27 +85,27 @@
         "key": "instalacionesRadiactivasTable",
         "templateOptions": {
           "title": "Instalación radiactiva",
-          "entity": "instalazio erradioaktiboa",
+          "entity": "instalación radiactiva",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Instalazio erradioaktiboa"
+            "text": "Instalación radiactiva"
           },
           "fieldGroup": [
             {
               "key": "instalacionRadiactiva",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Instalazio erradioaktiboa",
+                "label": "Instalación radiactiva",
                 "order": 10
               }
             },
             {
               "key": "ubicacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Kokapena",
+                "label": "Ubicación",
                 "order": 20
               }
             }

@@ -13,7 +13,7 @@
       },
       {
         "key": "puntoFinal",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Criterios de punto final",
           "required": true

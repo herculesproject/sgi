@@ -5,61 +5,61 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.5.5 Sustancias químicas peligrosas"
+      "label": "3.5.5 Substantzia kimiko arriskutsuak"
     },
     "fieldGroup": [
       {
-        "template": "<p>La información aportada debe estar contenida en la ficha de datos de seguridad de los productos actualizada según el Reglamento 1272/2008 (CLP)</p>"
+        "template": "<p>Emandako informazioak jasota egon behar du produktuen segurtasun datuei buruzko fitxan, zeina eguneratuta egongo baita 1271/2008 Erregelamenduaren (CLP) arabera</p>"
       },
       {
         "type": "table-crud",
         "key": "sustanciasQuimicasTable",
         "templateOptions": {
-          "entity": "sustancia química",
+          "entity": "substantzia kimikoa",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Sustancia química"
+            "text": "Substantzia kimikoa"
           },
           "fieldGroup": [
             {
               "key": "nombreProducto",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Nombre producto",
+                "label": "Produktuaren izena",
                 "order": 10
               }
             },
             {
               "key": "numeroCas",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Nº CAS",
+                "label": "KAS. ZK.",
                 "order": 20
               }
             },
             {
               "key": "clasificacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Clasificación",
+                "label": "Sailkapena",
                 "order": 30
               }
             },
             {
               "key": "episDisponibles",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "EPIs disponibles",
+                "label": "NBE erabilgarriak",
                 "order": 40
               }
             },
             {
               "key": "medidasProteccion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Medidas de protección",
+                "label": "Babes neurriak",
                 "order": 50
               }
             }
@@ -70,13 +70,13 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>* <b>Clasificación</b>: Clasificación según el Reglamento CLP Frases H (Indicar el significado correspondiente)</p><p>* <b>Epis disponibles</b>: EPIs disponibles (equipos de protección individual</p><p>* <b>Medidas de protección</b>: Medidas de protección colectiva y minimización de riesgos a terceros</p>"
+        "template": "<p>* <b>Sailkapena</b>: CLP Erregelamenduko H esaldien araberako sailkapena (Adierazi dagokion esanahia)</p><p>* <b>NBE erabilgarriak</b>: NBE erabilgarriak (Norbera babesteko ekipamenduak)</p><p>* <b>Babes neurriak</b>: Babes kolektiboko neurriak eta hirugarrenentzako arriskuak txikiagotzekoak</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Nota: recuerde que hay que aportar copia de la ficha técnica en el apartado '5.5 Documentación adicional' para que quede archivada junto con la memoria del proyecto."
+        "template": "Oharra: gogoratu fitxa teknikoaren kopia erantsi behar dela ‘5.5 Dokumentazio osagarria’ atalean, proiektuaren memoriarekin batera artxibatuta gera dadin."
       }
     ]
   }

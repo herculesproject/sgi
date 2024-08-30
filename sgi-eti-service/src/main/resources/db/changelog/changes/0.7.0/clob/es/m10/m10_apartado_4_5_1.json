@@ -5,42 +5,42 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.5.1 Azterketa genetikoaren emaitza"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.5.1 Resultado del estudio genético"
     },
     "hideExpression": "!formState.mainModel.ap4_5.estudiosGeneticosRadio || formState.mainModel.ap4_5.estudiosGeneticosRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>Subjektu parte hartzailearen bizitzarako edo osasunerako garrantzitsua den informazioren bat lor daiteke?</p>"
+        "template": "<p>¿Se puede obtener alguna información relevante para la vida o la salud del sujeto participante?</p>"
       },
       {
         "key": "resultadoEstudioGeneticoRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción:",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
-        "template": "<p>Erantzuna baiezkoa bada, zehaztu.</p>",
+        "template": "<p>En caso afirmativo especificar</p>",
         "hideExpression": "!model.resultadoEstudioGeneticoRadio || model.resultadoEstudioGeneticoRadio === 'no'"
       },
       {
         "key": "especificarResultadoEstudioGenetico",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.resultadoEstudioGeneticoRadio || model.resultadoEstudioGeneticoRadio === 'no'",
         "templateOptions": {
-          "label": "Zehaztu",
+          "label": "Especificar",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

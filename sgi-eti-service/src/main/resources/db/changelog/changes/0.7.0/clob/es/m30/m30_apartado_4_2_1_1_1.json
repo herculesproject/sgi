@@ -5,12 +5,12 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.2.1.1.1 Euste neurriak"
+      "label": "4.2.1.1.1 Medidas de contención"
     },
     "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
     "fieldGroup": [
       {
-        "template": "<p>Lanerako lekua eraikin berean garatzen den jarduera orotatik bereizita egongo da (<b>664/97 EDren</b> gidaren araberako eskakizunak).</p>",
+        "template": "<p>El lugar de trabajo se encontrará separado de toda actividad que se desarrolle en el mismo edificio (Exigencias según la Guía del <b>R.D.664/97</b>)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -18,27 +18,27 @@
         "type": "radio",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_lugarTrabajoSeparado",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "template": "<p>Lanerako lekuan sartu eta ateratzen den airea iragazi egingo da, aireko partikuletarako eraginkortasun handia duten iragazkiak (HEPA) erabiliz edo antzeko moduren batean.(<b>664/97 EDren</b> gidaren araberako eskakizunak: Ez</b>)</p>",
+        "template": "<p>El aire introducido y extraído del lugar de trabajo se filtrará mediante la utilización de filtros de alta eficacia para partículas en elaire (HEPA) ode forma similar.(Exigencias según la Guía del <b>R.D. 664/97:No</b>)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -56,26 +56,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_filtroAltaEficacia",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -84,7 +84,7 @@
         }
       },
       {
-        "template": "<p>Zehaztutako langileek bakarrik izango dute sartzeko baimena. (<b>664/97 EDren</b> gidaren araberako eskakizunak: Gomendagarria.) </p>",
+        "template": "<p>Solamente se permitirá el acceso al personal designado. (Exigencias según la Guía del <b>R.D. 664/97</b>:Aconsejable.)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -93,26 +93,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_accesoPersonal",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -121,7 +121,7 @@
         }
       },
       {
-        "template": "<p>Lanerako lekua zigilatu egin ahal izango da, desinfektatu ahal izateko.(<b>664/97 EDren</b> gidaren araberako eskakizunak: Ez)</p>",
+        "template": "<p>El lugar de trabajo deberá poder precintarse para permitir su desinfección.(Exigencias según la Guía del <b>R.D. 664/97</b>:No)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -130,26 +130,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_lugarTrabajo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -158,7 +158,7 @@
         }
       },
       {
-        "template": "<p>Desinfekzio prozedurak zehaztuta. (<b>664/97 EDren</b> gidaren araberako eskakizunak: Bai)</p>",
+        "template": "<p>Procedimientos de desinfección especificados. (Exigencias según la Guía del <b>R.D. 664/97</b>:Si)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -167,26 +167,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_procedimientosDesinfeccion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -195,7 +195,7 @@
         }
       },
       {
-        "template": "<p>Lanerako lekuan presio atmosferikoarekiko presio negatiboa mantenduko da. (<b>664/97 EDren</b> gidaren araberako eskakizunak: Bai)</p>",
+        "template": "<p>El lugar de trabajo se mantendrá con una presión negativa respecto a la presión atmosférica. (Exigencias según la Guía del <b>R.D. 664/97</b>:Si)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -204,26 +204,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_presionNegativa",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -232,7 +232,7 @@
         }
       },
       {
-        "template": "<p>Bektoreen kontrol eraginkorra, adibidez, karraskari eta intsektuena. (<b>664/97 EDren</b> gidaren araberako eskakizunak: Gomendagarria)</p>",
+        "template": "<p>Control eficiente de vectores, por ejemplo, de roedores e insectos. (Exigencias según la Guía del <b>R.D. 664/97</b>:Aconsejable)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -241,26 +241,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_roedoresInsectos",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -269,7 +269,7 @@
         }
       },
       {
-        "template": "<p>Urarekiko iragazgaitzak diren gainaldeak, eta erraz garbitzekoak.( <b>664/97 EDren</b> gidaren araberako eskakizunak: Bai, entsegu bankurako edo lan mahairako)</p>",
+        "template": "<p>Superficies impermeables al agua y de fácil limpieza.(Exigencias según la Guía del <b>R.D. 664/97</b>:Sí, para el banco de pruebas o mesa de trabajo)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -278,26 +278,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_superficiesImpermeables",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -306,7 +306,7 @@
         }
       },
       {
-        "template": "<p>Azido, alkali, disolbatzaile eta desinfektatzaileekiko erresistenteak diren gainaldeak.(<b>664/97 EDren</b> gidaren araberako eskakizunak: Gomendagarria)</p>",
+        "template": "<p>Superficies resistentes a ácidos, álcalis, disolventes y desinfectantes.(Exigencias según la Guía del <b>R.D. 664/97</b>:Aconsejable)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -315,26 +315,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_superficiesResistentes",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -343,7 +343,7 @@
         }
       },
       {
-        "template": "<p>Agente biologikoak gortzeko segurtasun biltegia.(<b>664/97 EDren</b> gidaren araberako eskakizunak: Bai)</p>",
+        "template": "<p>Almacenamiento de seguridad para agentes biológicos.(Exigencias según la Guía del <b>R.D. 664/97</b>:Si)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -352,26 +352,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_almacenamientoSeguridad",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -380,7 +380,7 @@
         }
       },
       {
-        "template": "<p>Behatzeko leiho bat edo gailu alternatibo bat instalatuko da zonetan, bertan daudenak ikusi ahal izateko.(<b>664/97 EDren</b> gidaren araberako eskakizunak: Gomendagarria)</p>",
+        "template": "<p>Se instalará una ventanilla de observación o un dispositivo alternativo en las zonas de manera que se pueda ver a sus ocupantes.(Exigenciassegún la Guía del <b>R.D. 664/97</b>:Aconsejable)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -389,26 +389,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_ventanillaObservacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -417,7 +417,7 @@
         }
       },
       {
-        "template": "<p>Ekipamendu propioa duen laborategia. (<b>664/97 EDren</b> gidaren araberako eskakizunak: Ez)</p>",
+        "template": "<p>Laboratorio con equipo propio.(Exigencias según la Guía del <b>R.D. 664/97</b>:No)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -426,26 +426,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_laboratorioEquipo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -454,7 +454,7 @@
         }
       },
       {
-        "template": "<p>Material infektatua, animaliak barne, segurtasun biologikoko kabina batean, isolagailu batean edo beste euste sistema egoki batean manipulatu beharko da.(<b>664/97 EDren</b> gidaren araberako eskakizunak: Dagokionean)</p>",
+        "template": "<p>El material infectado, animales incluidos, deberá manejarse en una cabina de seguridad biológica o en un aislador u otra contenciónapropiada.(Exigencias según la <b>Guía del R.D. 664/97</b>:cuando proceda)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -463,26 +463,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_materialInfectado",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,
@@ -491,7 +491,7 @@
         }
       },
       {
-        "template": "<p>Animalia hilak suntsitzeko errauskailua.(<b>664/97 EDren</b> gidaren araberako eskakizunak: Gomendagarria)</p>",
+        "template": "<p>Incinerador para destrucción de animales muertos.(Exigencias según la <b>Guía del R.D. 664/97</b>:Aconsejable)</p>",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')"
       },
       {
@@ -500,26 +500,26 @@
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
         "key": "observaciones_animalesMuertos",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1 || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable || !formState.mainModel.ap4_2.ap4_2_1.ap4_2_1_1.laboratorioLocalTable.some(localTable => localTable.nivelContencion !== '1')",
         "templateOptions": {
-          "label": "Oharrak",
-          "placeholder": "Oharrak",
+          "label": "Observaciones",
+          "placeholder": "Observaciones",
           "required": false,
           "disabled": false,
           "autosize": true,

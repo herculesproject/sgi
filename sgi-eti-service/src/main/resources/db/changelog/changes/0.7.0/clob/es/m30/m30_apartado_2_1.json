@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "2.1 Agente biologikoekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin lotutako zereginak egingo dituzten langileak"
+      "label": "2.1 Personal que llevará a cabo las tareas con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
     },
     "fieldGroup": [
       {
-        "template": "<p>Jarraian, ikertzaile taldeko kide guztiak ageri dira. Erantsi atal honetan agente biologikoekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin lotutako zereginak eginez proiektuan laguntzen duen beste edozein pertsona. <br><br>Zehaztu honako hauek pertsona bakoitzarentzat: <br><ul><li>Identifikazio datuak (izena, e-maila, Unibertsitatearekiko lotura). </li><li>Berariazko formakuntza arrisku biologikoetan. </li><li>Erakunde akreditatzailea (zehaztu unibertsitatea edo erakundea). </li><li>Urtea. </li></ul></p>"
+        "template": "<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas.<br><br>Especificar por cada persona:<br><ul><li>Datos identificativos (nombre, E-mail, vinculación con la Universidad).</li><li>Formación específica en riesgos biológicos.</li><li>Organismo acreditador (especificar universidad u organismo).</li><li>Año.</li></ul></p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "Atal hau automatikoki betetzen da, <b>Ebaluazio eskaerako</b> <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Zereginen esleipena</b></a> atalean sartutako datuetatik abiatuta. Beharrezko aldaketak egiteko, joan menuko puntu horretara.",
+        "template": "Esta sección se cumplimenta automáticamente a partir de los datos introducidos en el apartado <a href='#MODULE_PATH#/peticiones-evaluacion/#PETICION_EVALUACION_ID#/tareas' target='_blank'><b>Asignación de tareas</b></a> de la <b>Solicitud de Evaluación</b>. Acceda a este punto del menú para realizar las modificaciones necesarias.",
         "templateOptions": {
           "replaceTemplatePlaceholders": true
         }
@@ -24,20 +24,20 @@
         "type": "table-crud",
         "key": "equipoInvestigador",
         "templateOptions": {
-          "entity": "ikertzaile taldea",
+          "entity": "equipo investigador",
           "gender": "male",
           "disabled": true
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Ikertzaile taldea"
+            "text": "Equipo investigador"
           },
           "fieldGroup": [
             {
               "key": "nombre",
               "type": "input",
               "templateOptions": {
-                "label": "Izena",
+                "label": "Nombre",
                 "order": 10,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.nombre"
               }
@@ -46,7 +46,7 @@
               "key": "apellidos",
               "type": "input",
               "templateOptions": {
-                "label": "Abizenak",
+                "label": "Apellidos",
                 "order": 20,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.apellidos"
               }
@@ -55,7 +55,7 @@
               "key": "email",
               "type": "input",
               "templateOptions": {
-                "label": "E-maila",
+                "label": "E-mail",
                 "order": 30,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.emails?.find((e)=>e.principal)?.email"
               }
@@ -64,7 +64,7 @@
               "key": "vinculacion",
               "type": "input",
               "templateOptions": {
-                "label": "Lotura",
+                "label": "Vinculación",
                 "order": 40,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.vinculacion?.categoriaProfesional?.nombre"
               }
@@ -73,43 +73,43 @@
               "key": "nivelAcademico",
               "type": "input",
               "templateOptions": {
-                "label": "Maila akademikoa",
+                "label": "Nivel académico",
                 "order": 50,
                 "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona.datosAcademicos?.nivelAcademico?.nombre"
               }
             },
             {
               "key": "tarea",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Zeregina",
+                "label": "Tarea",
                 "order": 60,
                 "expressionModelValue": "formState.tareas[$1].nombre"
               }
             },
             {
               "key": "experiencia",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Formakuntza arrisku biologikoetan",
+                "label": "Formación en riesgo biológico",
                 "order": 70,
                 "expressionModelValue": "formState.tareas[$1].formacion"
               }
             },
             {
               "key": "organismo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Erakunde akreditatzailea",
+                "label": "Organismo acreditador",
                 "order": 80,
                 "expressionModelValue": "formState.tareas[$1].organismo"
               }
             },
             {
               "key": "anio",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Urtea",
+                "label": "Año",
                 "order": 90,
                 "expressionModelValue": "formState.tareas[$1].anio"
               }

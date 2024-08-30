@@ -5,43 +5,43 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.4.4 Parte hartzeko pizgarriak"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.4.4 Incentivos para la participación"
     },
     "hideExpression": "!formState.mainModel.ap3_4.intervencionesSeresHumanosRadio || formState.mainModel.ap3_4.intervencionesSeresHumanosRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>Proiektuan parte hartzeagatik pizgarririk edo ordainik emango al zaio azterketako subjektuari?</p>"
+        "template": "<p>¿Se va a dar algún tipo de incentivo o compensación al sujeto de estudio por su participación?</p>"
       },
       {
         "key": "incentivosParticipacionRadio",
         "type": "radio",
         "templateOptions": {
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción:",
           "required": true,
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
       },
       {
-        "template": "<p>Zehaztu pizgarri mota, zenbatekoa eta justifikazioa.</p>",
+        "template": "<p>Especificar tipo de incentivo, cuantía y justificación</p>",
         "hideExpression": "!model.incentivosParticipacionRadio || model.incentivosParticipacionRadio === 'no'"
       },
       {
         "key": "incentivosParticipacionTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.incentivosParticipacionRadio || model.incentivosParticipacionRadio === 'no'",
         "templateOptions": {
-          "label": "Pizgarriak",
-          "placeholder": "Pizgarriak",
+          "label": "Incentivos",
+          "placeholder": "Incentivos",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

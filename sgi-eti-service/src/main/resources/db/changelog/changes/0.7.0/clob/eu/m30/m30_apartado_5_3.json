@@ -5,36 +5,36 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "5.3 Seguro de accidentes y responsabilidad civil"
+      "label": "5.3 Istripu eta erantzukizun zibileko asegurua"
     },
     "fieldGroup": [
       {
-        "template": "¿Dispone de Seguro de Responsabilidad Civil?"
+        "template": "Baduzu erantzukizun zibileko asegururik?"
       },
       {
         "key": "seguroResponsabilidadCivil",
         "type": "documento",
         "templateOptions": {
-          "label": "Indicar",
+          "label": "Adierazi",
           "required": true,
           "options": [
             {
               "value": 0,
-              "label": "No"
+              "label": "Ez"
             },
             {
-              "value": 19,
-              "label": "Sí"
+              "value": "SEGURO_RESPONSABILIDAD",
+              "label": "Bai"
             }
           ]
         }
       },
       {
         "key": "especificarResposabilidad",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
-          "label": "Especificar seguro o justificar su ausencia",
-          "placeholder": "Especificar seguro o justificar su ausencia",
+          "label": "Zehaztu asegurua, edo justifikatu halakorik ez izatea.",
+          "placeholder": "Zehaztu asegurua, edo justifikatu halakorik ez izatea.",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

@@ -5,47 +5,47 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "4.4.1 Baimen mota"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "4.4.1 Tipo de consentimiento"
     },
     "hideExpression": "!formState.mainModel.ap4_4.informacionConsentimientoRadio || formState.mainModel.ap4_4.informacionConsentimientoRadio === 'no'",
     "fieldGroup": [
       {
-        "template": "<p>Zer zereginetarako eskatzen da baimena?</p>"
+        "template": "<p>Tarea para la que se solicita el consentimiento</p>"
       },
       {
         "type": "multicheckbox",
         "key": "tipoConsentimientoCheck",
         "templateOptions": {
-          "label": "Zeregina",
+          "label": "Tarea",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "intervencionesInvasivas",
-              "label": "Parte hartzaileari esku hartze inbaditzaileak egiteko."
+              "label": "Para realizar a la persona participante intervenciones invasivas"
             },
             {
               "value": "intervencionesNoInvasivas",
-              "label": "Parte hartzaileari esku hartze ez-inbaditzaileak egiteko."
+              "label": "Para realizar a la persona participante intervenciones no invasivas"
             },
             {
               "value": "usoMuestrasProyectoActual",
-              "label": "Parte hartzailearen laginak edo/eta datuak proiektu honetan erabiltzeko."
+              "label": "Para el uso de las muestras y/o los datos de la persona participante en el proyecto actual"
             },
             {
               "value": "usoMuestrasProyectosPosteriores",
-              "label": "Laginak edo/eta datuak gorde eta geroagoko proiektuetan erabiltzeko."
+              "label": "Para almacenamiento y uso de las muestras y/o los datos en proyectos posteriores"
             },
             {
               "value": "cesion",
-              "label": "Lagatzeko."
+              "label": "Para cesión"
             }
           ]
         }
       },
       {
-        "template": "<p>Hurrengo ataletan, subjektu parte hartzaileari zer informazio emango zaion berrikusiko da, eta kontrol zerrenda gisa balio dezake ikertzaile arduradunarentzat.</p>"
+        "template": "<p>En los siguientes apartados se hace un repaso a la información que va a facilitarse al sujeto participante y puede servir de lista de chequeo para el investigador responsable.</p>"
       }
     ]
   }

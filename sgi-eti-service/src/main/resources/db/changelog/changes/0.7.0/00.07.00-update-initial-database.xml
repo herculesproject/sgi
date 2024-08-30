@@ -8,6 +8,8 @@
                       http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
   <property name="schemaPrefix" value="" />
   <property name="defaultLang" value="es" />
+  <property name="blob_type" value="BYTEA" dbms="postgresql,h2" />
+  <property name="blob_type" value="BLOB" dbms="!postgresql,!h2" />
 
   <changeSet author="user (generated)" id="00.07.00-1">
 
@@ -373,6 +375,471 @@
       '${defaultLang}', organismo FROM ${schemaPrefix}tarea WHERE organismo IS NOT NULL</sql>
 
     <dropColumn columnName="organismo" tableName="tarea" />
+  </changeSet>
+
+  <!-- Comite -->
+  <changeSet author="user (generated)" id="00.07.00-8">
+    <dropSequence sequenceName="comite_seq" />
+    <createSequence incrementBy="1" sequenceName="comite_seq" startValue="4" />
+    <dropForeignKeyConstraint
+      baseTableName="comite"
+      constraintName="FK_COMITE_FORMULARIO" />
+    <renameColumn
+      newColumnName="codigo"
+      oldColumnName="comite"
+      tableName="comite" />
+    <renameColumn
+      newColumnName="nombre"
+      oldColumnName="nombre_investigacion"
+      tableName="comite" />
+    <renameColumn
+      newColumnName="formulario_memoria_id"
+      oldColumnName="formulario_id"
+      tableName="comite" />
+    <addColumn tableName="comite">
+      <column name="formulario_seguimiento_anual_id"
+        type="BIGINT" />
+      <column name="formulario_seguimiento_final_id"
+        type="BIGINT"> </column>
+      <column name="formulario_retrospectiva_id"
+        type="BIGINT"> </column>
+      <column name="requiere_retrospectiva"
+        type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false" />
+      </column>
+      <column name="prefijo_referencia"
+        type="VARCHAR(50)"> </column>
+      <column name="permitir_ratificacion"
+        type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false" />
+      </column>
+      <column name="tarea_nombre_libre"
+        type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false" />
+      </column>
+      <column name="tarea_experiencia_libre"
+        type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false" />
+      </column>
+      <column name="tarea_experiencia_detalle"
+        type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false" />
+      </column>
+      <column name="memoria_titulo_libre"
+        type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false" />
+      </column>
+    </addColumn>
+    <update tableName="comite">
+      <column name="formulario_seguimiento_anual_id" valueNumeric="4" />
+      <column
+        name="formulario_seguimiento_final_id" valueNumeric="5" />
+      <column
+        name="requiere_retrospectiva" valueBoolean="false" />
+    </update>
+    <update tableName="comite">
+      <column name="formulario_retrospectiva_id" valueNumeric="6" />
+      <column
+        name="requiere_retrospectiva" valueBoolean="true" />
+      <where>id=2</where>
+    </update>
+    <update tableName="comite">
+      <column name="prefijo_referencia" value="M10" />
+      <column name="permitir_ratificacion"
+        valueBoolean="true" /> 
+      <column name="tarea_nombre_libre"
+        valueBoolean="true" /> 
+      <column name="tarea_experiencia_libre"
+        valueBoolean="true" /> 
+      <column name="tarea_experiencia_detalle" valueBoolean="false" />
+      <column
+        name="memoria_titulo_libre"
+        valueBoolean="false" /> 
+      <where>id=1</where>
+    </update>
+    <update tableName="comite">
+      <column name="prefijo_referencia" value="M20" />
+      <column name="permitir_ratificacion"
+        valueBoolean="false" /> 
+      <column name="tarea_nombre_libre"
+        valueBoolean="false" /> 
+      <column name="tarea_experiencia_libre"
+        valueBoolean="false" />
+        <column name="tarea_experiencia_detalle" valueBoolean="true" />
+      <column
+        name="memoria_titulo_libre"
+        valueBoolean="true" /> 
+      <where>id=2</where>
+    </update>
+    <update tableName="comite">
+      <column name="prefijo_referencia" value="M30" />
+      <column name="permitir_ratificacion"
+        valueBoolean="true" /> 
+      <column name="tarea_nombre_libre" valueBoolean="true" />
+      <column
+        name="tarea_experiencia_libre"
+        valueBoolean="true" /> 
+      <column name="tarea_experiencia_detalle" valueBoolean="true" />
+      <column
+        name="memoria_titulo_libre"
+        valueBoolean="false" /> 
+      <where>id=3</where>
+    </update>
+    <addNotNullConstraint
+      columnDataType="BIGINT"
+      columnName="formulario_seguimiento_anual_id"
+      tableName="comite" />
+    <addNotNullConstraint
+      columnDataType="BIGINT"
+      columnName="formulario_seguimiento_final_id"
+      tableName="comite" />
+    <addNotNullConstraint
+      columnDataType="VARCHAR(50)"
+      columnName="prefijo_referencia"
+      tableName="comite" />
+    <addForeignKeyConstraint baseColumnNames="formulario_memoria_id" baseTableName="comite"
+      constraintName="FK_COMITE_FORMULARIOMEMORIA" referencedColumnNames="id"
+      referencedTableName="formulario" />
+    <addForeignKeyConstraint baseColumnNames="formulario_seguimiento_anual_id"
+      baseTableName="comite" constraintName="FK_COMITE_FORMULARIOMEMORIASEGUIMIENTOANUAL"
+      referencedColumnNames="id" referencedTableName="formulario" />
+    <addForeignKeyConstraint baseColumnNames="formulario_seguimiento_final_id"
+      baseTableName="comite" constraintName="FK_COMITE_FORMULARIOMEMORIASEGUIMIENTOFINAL"
+      referencedColumnNames="id" referencedTableName="formulario" />
+  </changeSet>
+
+  <!-- Memoria -->
+  <changeSet author="user (generated)" id="00.07.00-9">
+    <addColumn tableName="memoria">
+      <column name="tipo"
+        type="VARCHAR(50)" />
+      <column name="formulario_id"
+        type="BIGINT" />
+      <column name="formulario_seguimiento_anual_id"
+        type="BIGINT" />
+      <column name="formulario_seguimiento_final_id"
+        type="BIGINT"> </column>
+      <column name="formulario_retrospectiva_id"
+        type="BIGINT"> </column>
+    </addColumn>
+    <update tableName="memoria">
+      <column name="formulario_id" valueNumeric="1" />
+      <column name="formulario_seguimiento_anual_id"
+        valueNumeric="4" />
+      <column
+        name="formulario_seguimiento_final_id" valueNumeric="5" />
+      <where>comite_id=1</where>
+    </update>
+    <update tableName="memoria">
+      <column name="formulario_id" valueNumeric="2" />
+      <column name="formulario_seguimiento_anual_id"
+        valueNumeric="4" />
+      <column
+        name="formulario_seguimiento_final_id" valueNumeric="5" />
+      <column
+        name="formulario_retrospectiva_id"
+        valueNumeric="6" />
+      <where>comite_id=2</where>
+    </update>
+    <update tableName="memoria">
+      <column name="formulario_id" valueNumeric="3" />
+      <column name="formulario_seguimiento_anual_id"
+        valueNumeric="4" />
+      <column
+        name="formulario_seguimiento_final_id" valueNumeric="5" />
+      <where>comite_id=3</where>
+    </update>
+    <update tableName="memoria">
+      <column name="tipo" value="NUEVA" />
+      <where>tipo_memoria_id=1</where>
+    </update>
+    <update tableName="memoria">
+      <column name="tipo" value="MODIFICACION" />
+      <where>tipo_memoria_id=2</where>
+    </update>
+    <update tableName="memoria">
+      <column name="tipo" value="RATIFICACION" />
+      <where>tipo_memoria_id=3</where>
+    </update>
+    <addNotNullConstraint
+      columnDataType="BIGINT"
+      columnName="formulario_id"
+      tableName="memoria" />
+    <addNotNullConstraint
+      columnDataType="BIGINT"
+      columnName="formulario_seguimiento_anual_id"
+      tableName="memoria" />
+    <addNotNullConstraint
+      columnDataType="BIGINT"
+      columnName="formulario_seguimiento_final_id"
+      tableName="memoria" />
+    <addNotNullConstraint
+      columnDataType="VARCHAR(50)"
+      columnName="tipo"
+      tableName="memoria" />
+    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="memoria"
+      constraintName="FK_MEMORIA_FORMULARIOMEMORIA" referencedColumnNames="id"
+      referencedTableName="formulario" />
+    <addForeignKeyConstraint baseColumnNames="formulario_seguimiento_anual_id"
+      baseTableName="memoria" constraintName="FK_MEMORIA_FORMULARIOMEMORIASEGUIMIENTOANUAL"
+      referencedColumnNames="id" referencedTableName="formulario" />
+    <addForeignKeyConstraint baseColumnNames="formulario_seguimiento_final_id"
+      baseTableName="memoria" constraintName="FK_MEMORIA_FORMULARIOMEMORIASEGUIMIENTOFINAL"
+      referencedColumnNames="id" referencedTableName="formulario" />
+    <dropForeignKeyConstraint
+      baseTableName="memoria"
+      constraintName="FK_MEMORIA_TIPOMEMORIA" />
+    <dropColumn
+      columnName="tipo_memoria_id"
+      tableName="memoria">
+    </dropColumn>
+    <dropTable cascadeConstraints="true"
+      tableName="tipo_memoria_comite" />
+    <dropTable cascadeConstraints="true"
+      tableName="tipo_memoria" />
+  </changeSet>
+
+  <!-- Formulario -->
+  <changeSet author="user (generated)" id="00.07.00-10">
+    <createSequence incrementBy="1" sequenceName="formulario_seq" startValue="7" />
+    <addColumn tableName="formulario">
+      <column name="tipo"
+        type="VARCHAR(50)" />
+      <column name="codigo"
+        type="VARCHAR(50)" />
+      <column name="seguimiento_anual_documentacion_title"
+        type="VARCHAR(50)" />
+    </addColumn>
+    <update tableName="formulario">
+      <column name="tipo" value="MEMORIA" />
+      <where>id=1 OR id=2 OR id=3</where>
+    </update>
+    <update tableName="formulario">
+      <column name="seguimiento_anual_documentacion_title" value="TITULO_1" />
+      <column name="codigo"
+        value="M10/2024/001" />
+      <where>id=1</where>
+    </update>
+    <update tableName="formulario">
+      <column name="seguimiento_anual_documentacion_title" value="TITULO_2" />
+      <column name="codigo"
+        value="M20/2024/001" />
+      <where>id=2</where>
+    </update>
+    <update tableName="formulario">
+      <column name="seguimiento_anual_documentacion_title" value="TITULO_3" />
+      <column name="codigo"
+        value="M30/2024/001" />
+      <where>id=3</where>
+    </update>
+    <update tableName="formulario">
+      <column name="tipo" value="SEGUIMIENTO_ANUAL" />
+      <column name="codigo"
+        value="SA/2024/001" />
+      <where>id=4</where>
+    </update>
+    <update tableName="formulario">
+      <column name="tipo" value="SEGUIMIENTO_FINAL" />
+      <column name="codigo"
+        value="SF/2024/001" />
+      <where>id=5</where>
+    </update>
+    <update tableName="formulario">
+      <column name="tipo" value="RETROSPECTIVA" />
+      <column name="codigo"
+        value="R/2024/001" />
+      <where>id=6</where>
+    </update>
+    <dropColumn
+      columnName="nombre"
+      tableName="formulario">
+    </dropColumn>
+    <dropColumn
+      columnName="descripcion"
+      tableName="formulario">
+    </dropColumn>
+    <addNotNullConstraint
+      columnDataType="VARCHAR(50)"
+      columnName="tipo"
+      tableName="formulario" />
+    <addNotNullConstraint
+      columnDataType="VARCHAR(50)"
+      columnName="codigo"
+      tableName="formulario" />
+
+    <addUniqueConstraint
+      columnNames="codigo"
+      constraintName="UK_FORMULARIO_CODIGO"
+      tableName="formulario" />
+  </changeSet>
+
+  <!-- Tipo Documento -->
+  <changeSet author="user (generated)" id="00.07.00-11">
+    <createSequence incrementBy="1" sequenceName="tipo_documento_seq" startValue="24" />
+    <addColumn tableName="tipo_documento">
+      <column name="codigo"
+        type="VARCHAR(50)" />
+      <column name="adicional"
+        type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false" />
+      </column>
+    </addColumn>
+    <!--M10 -->
+    <update tableName="tipo_documento">
+      <column name="codigo" value="CONSENTIMIENTO" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=4</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="CESION_DATOS" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=5</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="AUTORIZACION" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=6</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ACEPTACION_COLABORACION" />
+      <column name="adicional"
+        valueBoolean="false" />
+      <where>id=7</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="INFORME_GARANTIAS" />
+      <column name="adicional"
+        valueBoolean="false" />
+      <where>id=8</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ACUERDO_TRANSFERENCIA" />
+      <column name="adicional"
+        valueBoolean="false" />
+      <where>id=9</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="REGISTRO_RGPD" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=10</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="INFORME_EXTERNO" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=23</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ADICIONAL" />
+      <column name="adicional" valueBoolean="true" />
+      <where>id=11</where>
+    </update>
+    <!--M20 -->
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ACREDITACIONES" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=12</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="INFORME_VETERINARIO" />
+      <column name="adicional"
+        valueBoolean="false" />
+      <where>id=13</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="SOLICITUD_RAZONADA" />
+      <column name="adicional"
+        valueBoolean="false" />
+      <where>id=14</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="RESUMEN_RNT" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=15</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ADICIONAL" />
+      <column name="adicional" valueBoolean="true" />
+      <where>id=16</where>
+    </update>
+    <!-- M30 -->
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ACREDITACIONES" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=17</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="USO_AGENTES" />
+      <column name="adicional" valueBoolean="false" />
+      <where>id=18</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="SEGURO_RESPONSABILIDAD" />
+      <column name="adicional"
+        valueBoolean="false" />
+      <where>id=19</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="PROTOCOLO_ACTUACION" />
+      <column name="adicional"
+        valueBoolean="false" />
+      <where>id=20</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="AUTORIZACION_CONFINADA" />
+      <column name="adicional"
+        valueBoolean="false" />
+      <where>id=22</where>
+    </update>
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ADICIONAL" />
+      <column name="adicional" valueBoolean="true" />
+      <where>id=21</where>
+    </update>
+    <!-- Seguimiento anual -->
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ADICIONAL" />
+      <column name="adicional" valueBoolean="true" />
+      <where>id=1</where>
+    </update>
+    <!-- Seguimiento final -->
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ADICIONAL" />
+      <column name="adicional" valueBoolean="true" />
+      <where>id=2</where>
+    </update>
+    <!-- Retrospectiva -->
+    <update tableName="tipo_documento">
+      <column name="codigo" value="ADICIONAL" />
+      <column name="adicional" valueBoolean="true" />
+      <where>id=3</where>
+    </update>
+
+    <addNotNullConstraint
+      columnDataType="VARCHAR(50)"
+      columnName="codigo"
+      tableName="tipo_documento" />
+    <addUniqueConstraint
+      columnNames="formulario_id,codigo"
+      constraintName="UK_TIPODOCUMENTO_CODIGOFORMULARIO"
+      tableName="tipo_documento" />
+  </changeSet>
+
+  <!-- Formulario Report  -->
+  <changeSet author="user (generated)" id="00.07.00-12">
+    <createTable tableName="formulario_report">
+      <column name="formulario_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="${blob_type}">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="formulario_report" columnNames="formulario_id,lang"
+      constraintName="PK_FORMULARIOREPORT" />
+
+    <addForeignKeyConstraint baseColumnNames="formulario_id"
+      baseTableName="formulario_report"
+      constraintName="FK_FORMULARIOREPORT_FORMULARIO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="formulario" validate="true" />
+
   </changeSet>
 
 </databaseChangeLog>

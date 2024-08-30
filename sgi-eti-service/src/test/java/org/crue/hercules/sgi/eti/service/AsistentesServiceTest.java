@@ -12,10 +12,8 @@ import org.crue.hercules.sgi.eti.exceptions.AsistentesNotFoundException;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.AsistentesRepository;
 import org.crue.hercules.sgi.eti.service.impl.AsistentesServiceImpl;
@@ -364,8 +362,10 @@ public class AsistentesServiceTest extends BaseServiceTest {
     cargoComite.setNombre("CargoComite1");
     cargoComite.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
@@ -389,9 +389,10 @@ public class AsistentesServiceTest extends BaseServiceTest {
    */
   private ConvocatoriaReunion getMockConvocatoriaReunion(Long id, Long comiteId) {
 
-    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
-    Comite comite = new Comite(comiteId, "Comite" + comiteId, "nombreInvestigacion", Genero.M, formulario,
-        Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(comiteId);
+    comite.setCodigo("Comite" + comiteId);
+    comite.setActivo(Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

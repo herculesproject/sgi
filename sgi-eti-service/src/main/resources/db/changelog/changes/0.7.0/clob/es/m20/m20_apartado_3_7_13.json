@@ -20,7 +20,7 @@
       },
       {
         "key": "mantenimientoConVida",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Descripción",
           "required": true

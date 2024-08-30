@@ -545,7 +545,7 @@ public class ActaServiceImpl implements ActaService {
         tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
       }
       this.comunicadosService.enviarComunicadoActaEvaluacionFinalizada(
-          evaluacion.getMemoria().getComite().getNombreInvestigacion(),
+          evaluacion.getMemoria().getComite().getNombre(),
           evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
           tipoActividad,
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),

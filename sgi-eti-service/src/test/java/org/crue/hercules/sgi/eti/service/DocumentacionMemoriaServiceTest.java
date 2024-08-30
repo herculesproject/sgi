@@ -94,9 +94,7 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     // given: EL id de la memoria es valido
     Long memoriaId = 12L;
     Memoria memoria = generarMockMemoria(memoriaId, "Titulo", 1L);
-    Formulario formulario = generarMockFormulario(1L);
 
-    BDDMockito.given(formularioRepository.findByMemoriaId(ArgumentMatchers.anyLong())).willReturn(formulario);
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(memoria));
 
@@ -758,7 +756,7 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
   @Test
   public void deleteDocumentacionSeguimientoAnual_throwTipoDocumentoNotFound() {
     // given: memoria
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 9L);
+    Memoria memoria = generarMockMemoria(1L, "Memoria1", 9L, 4L);
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
 
@@ -840,7 +838,7 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
   @Test
   public void deleteDocumentacionSeguimientoFinal_throwTipoDocumentoNotFound() {
     // given: memoria
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 14L);
+    Memoria memoria = generarMockMemoria(1L, "Memoria1", 14L, 5L);
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
 
@@ -922,7 +920,7 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
   @Test
   public void deleteDocumentacionRetrospectiva_throwTipoDocumentoNotFound() {
     // given: memoria
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 14L);
+    Memoria memoria = generarMockMemoria(1L, "Memoria1", 14L, 6L);
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
 
@@ -1007,7 +1005,7 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
   @Test
   public void deleteDocumentacionInicial_throwTipoDocumentoNotFound() {
     // given: memoria
-    Memoria memoria = generarMockMemoria(1L, "Memoria1", 9L);
+    Memoria memoria = generarMockMemoria(1L, "Memoria1", 9L, 4L);
 
     BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
 
@@ -1050,7 +1048,7 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
    * @return el objeto DocumentacionMemoria
    */
 
-  public DocumentacionMemoria generarMockDocumentacionMemoria(Long id, Memoria memoria, TipoDocumento tipoDocumento) {
+  private DocumentacionMemoria generarMockDocumentacionMemoria(Long id, Memoria memoria, TipoDocumento tipoDocumento) {
 
     DocumentacionMemoria documentacionMemoria = new DocumentacionMemoria();
     documentacionMemoria.setId(id);
@@ -1065,17 +1063,25 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
   /**
    * Función que devuelve un objeto Memoria
    * 
-   * @param id       id del Memoria
-   * @param titulo   título de la memoria
-   * @param estadoId id del estado actual
+   * @param id           id del Memoria
+   * @param titulo       título de la memoria
+   * @param estadoId     id del estado actual
+   * @param formularioId id del formulario
    * @return el objeto Memoria
    */
+  private Memoria generarMockMemoria(Long id, String titulo, Long estadoId, Long formularioId) {
 
-  public Memoria generarMockMemoria(Long id, String titulo, Long estadoId) {
+    Formulario formulario = new Formulario();
+    formulario.setId(formularioId);
+    formulario.setCodigo("M10/2020/001");
 
     Memoria memoria = new Memoria();
     memoria.setId(id);
     memoria.setTitulo(titulo);
+    memoria.setFormulario(formulario);
+    memoria.setFormularioSeguimientoAnual(formulario);
+    memoria.setFormularioSeguimientoFinal(formulario);
+    memoria.setFormularioRetrospectiva(formulario);
 
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
     tipoEstadoMemoria.setId(estadoId);
@@ -1093,13 +1099,17 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     return memoria;
   }
 
+  private Memoria generarMockMemoria(Long id, String titulo, Long estadoId) {
+    return generarMockMemoria(id, titulo, estadoId, 1L);
+  }
+
   /**
    * Función que devuelve un objeto TipoDocumento
    * 
    * @param id id del TipoDocumento
    * @return el objeto TipoDocumento
    */
-  public TipoDocumento generarMockTipoDocumento(Long id) {
+  private TipoDocumento generarMockTipoDocumento(Long id) {
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
@@ -1108,7 +1118,4 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     return tipoDocumento;
   }
 
-  private Formulario generarMockFormulario(Long id) {
-    return new Formulario(id, "Nombre", "Descripcion");
-  }
 }

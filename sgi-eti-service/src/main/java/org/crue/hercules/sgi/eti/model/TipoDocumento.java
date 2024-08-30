@@ -2,10 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -31,15 +28,22 @@ public class TipoDocumento extends BaseEntity {
   @Column(name = "id", nullable = false)
   private Long id;
 
+  /** Codigo */
+  @Column(name = "codigo", length = 50, nullable = false)
+  private String codigo;
+
   /** Nombre. */
   @Column(name = "nombre", length = 250, nullable = false)
   private String nombre;
 
-  /** Formulario. */
-  @ManyToOne
-  @JoinColumn(name = "formulario_id", nullable = false, foreignKey = @ForeignKey(name = "FK_TIPODOCUMENTO_FORMULARIO"))
+  /** Formulario Id */
+  @Column(name = "formulario_id", nullable = false)
   @NotNull
-  private Formulario formulario;
+  private Long formularioId;
+
+  /** Adicional */
+  @Column(name = "adicional", columnDefinition = "boolean default false", nullable = false)
+  private boolean adicional = false;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "4.1.2 Assessment of risks or discomforts"
     },
     "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
@@ -33,7 +33,7 @@
       },
       {
         "key": "riesgoSuperiorTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.valoracionRiesgosMolestiasCheck || !model.valoracionRiesgosMolestiasCheck.find((c) => c === 'riesgoSuperior')",
         "templateOptions": {
           "label": "Please justify the relevance of the study as well as the non-existence or non-use of alternatives of comparable efficacy",

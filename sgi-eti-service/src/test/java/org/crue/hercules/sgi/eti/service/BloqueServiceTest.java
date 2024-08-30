@@ -44,11 +44,11 @@ public class BloqueServiceTest extends BaseServiceTest {
 
   @Test
   public void find_WithId_ReturnsBloque() {
-    BDDMockito.given(bloqueRepository.findById(1L)).willReturn(Optional.of(generarMockBloque(1L, "Bloque1")));
+    BDDMockito.given(bloqueRepository.findById(1L)).willReturn(Optional.of(generarMockBloque(1L)));
 
-    Bloque Bloque = bloqueService.findById(1L);
+    Bloque bloque = bloqueService.findById(1L);
 
-    Assertions.assertThat(Bloque.getId()).isEqualTo(1L);
+    Assertions.assertThat(bloque.getId()).isEqualTo(1L);
 
   }
 
@@ -65,7 +65,7 @@ public class BloqueServiceTest extends BaseServiceTest {
     // given: One hundred Bloque
     List<Bloque> bloques = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      bloques.add(generarMockBloque(Long.valueOf(i), "Bloque" + String.format("%03d", i)));
+      bloques.add(generarMockBloque(Long.valueOf(i)));
     }
 
     BDDMockito
@@ -88,7 +88,7 @@ public class BloqueServiceTest extends BaseServiceTest {
     // given: One hundred Bloques
     List<Bloque> bloques = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      bloques.add(generarMockBloque(Long.valueOf(i), "Bloque" + String.format("%03d", i)));
+      bloques.add(generarMockBloque(Long.valueOf(i)));
     }
 
     BDDMockito
@@ -154,12 +154,11 @@ public class BloqueServiceTest extends BaseServiceTest {
    * @return el objeto Bloque
    */
 
-  private Bloque generarMockBloque(Long id, String nombre) {
+  private Bloque generarMockBloque(Long id) {
 
     Formulario formulario = new Formulario();
     formulario.setId(1L);
-    formulario.setNombre("Formulario1");
-    formulario.setDescripcion("Descripcion formulario 1");
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
 
     Bloque bloque = new Bloque();
     bloque.setId(id);
@@ -181,8 +180,7 @@ public class BloqueServiceTest extends BaseServiceTest {
 
     Formulario formulario = new Formulario();
     formulario.setId(1L);
-    formulario.setNombre("Formulario1");
-    formulario.setDescripcion("Descripcion formulario 1");
+    formulario.setTipo(Formulario.Tipo.MEMORIA);
 
     Bloque bloque = new Bloque();
     Set<BloqueNombre> nombres = new HashSet<>();

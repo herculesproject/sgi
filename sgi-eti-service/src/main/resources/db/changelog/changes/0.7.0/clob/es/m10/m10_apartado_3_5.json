@@ -5,27 +5,27 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
-      "label": "3.5 Giza jatorriko lagin biologikoak"
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
+      "label": "3.5 Muestras biológicas de origen humano"
     },
     "fieldGroup": [
       {
-        "template": "<p>Jarduera honetan giza jatorriko lagin biologikoak erabiltzen dira?</p>"
+        "template": "<p>¿En esta actividad se utilizan muestras biológicas de origen humano?</p>"
       },
       {
         "key": "muestrasBiologicasRadio",
         "type": "radio",
         "templateOptions": {
           "required": true,
-          "label": "Hautatu aukera bat:",
+          "label": "Elige opción:",
           "options": [
             {
               "value": "no",
-              "label": "Ez"
+              "label": "No"
             },
             {
               "value": "si",
-              "label": "Bai"
+              "label": "Sí"
             }
           ]
         }
@@ -35,45 +35,45 @@
         "key": "muestrasBiologicasCheck",
         "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'",
         "templateOptions": {
-          "label": "Hauetako zein?",
+          "label": "Cuales",
           "type": "array",
           "required": true,
           "options": [
             {
               "value": "celulasgerminales",
-              "label": "Hozi zelulak"
+              "label": "Células germinales"
             },
             {
               "value": "celulassomaticas",
-              "label": "Zelula somatikoak"
+              "label": "Células somáticas"
             },
             {
               "value": "sangre",
-              "label": "Odola"
+              "label": "Sangre"
             },
             {
               "value": "fluidos",
-              "label": "Jariakinak"
+              "label": "Fluidos"
             },
             {
               "value": "organos",
-              "label": "Organoak"
+              "label": "Órganos"
             },
             {
               "value": "tejidos",
-              "label": "Ehunak"
+              "label": "Tejidos"
             },
             {
               "value": "lineasCelulares",
-              "label": "Enbrioien enborreko zelula lerroak*"
+              "label": "Líneas celulares troncales embrionarias*"
             },
             {
               "value": "celulasTejidos",
-              "label": "Giza enbrioietatik ateratako zelulak eta ehunak*"
+              "label": "Células y tejidos de origen embrionario humano*"
             },
             {
               "value": "embrionesFetos",
-              "label": "Giza enbrioiak eta fetuak*"
+              "label": "Embriones y fetos humanos*"
             }
           ]
         }
@@ -82,7 +82,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Oharra: gogoratu giza ehunak/odola/jariakinak manipulatzeko EBBren ebaluazioa behar dela. </p><p>Izartxoz (*) markatuta dauden aukerak erabiltzeko, Berme Batzordearen aldeko txostena lortu behar da aldez aurretik.</p>",
+        "template": "<p>Nota: Recuerde que la manipulación de tejidos/sangre/fluidos humanos requiere de evaluación del CBE.</p><p>Las opciones marcadas con asterisco (*) requieren el informe previo favorable de la Comisión de Garantías antes de su utilización</p>",
         "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'"
       }
     ]

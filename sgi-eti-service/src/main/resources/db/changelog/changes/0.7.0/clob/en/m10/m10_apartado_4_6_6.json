@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "4.6.6 Alternative activities"
     },
     "hideExpression": "(!formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio || formState.mainModel.ap4_6.estudiantesSujetosInvestigacionRadio === 'no') || (formState.mainModel.ap4_6.ap4_6_5 && formState.mainModel.ap4_6.ap4_6_5.usoTiempoLectivoRadio && formState.mainModel.ap4_6.ap4_6_5.usoTiempoLectivoRadio === 'no')",
@@ -15,7 +15,7 @@
       },
       {
         "key": "actividadesAlternativas",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "label": "Activities",
           "placeholder": "Activities",

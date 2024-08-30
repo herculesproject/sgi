@@ -14,7 +14,7 @@
       },
       {
         "key": "numAnimalesUtilizados",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Número de animales utilizados",
           "placeholder": "",
@@ -27,7 +27,7 @@
       },
       {
         "key": "numAnimalesFinal",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Número de animales final",
           "placeholder": "",
@@ -40,7 +40,7 @@
       },
       {
         "key": "nivelSeveridadSufrido",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Descripción",
           "label": "Descripción",
@@ -55,7 +55,7 @@
       },
       {
         "key": "numAnimalesRetirados",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Número de animales retirados",
           "placeholder": "",
@@ -68,7 +68,7 @@
       },
       {
         "key": "nivelSeveridadAlcanzado",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Descripción",
           "label": "Descripción",
@@ -83,7 +83,7 @@
       },
       {
         "key": "numAnimalesPuntoFinal",
-        "type": "input",
+        "type": "i18n-input",
         "templateOptions": {
           "label": "Número de animales punto final",
           "placeholder": "",
@@ -96,7 +96,7 @@
       },
       {
         "key": "aplicacion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Descripción",
           "label": "Descripción",
@@ -111,7 +111,7 @@
       },
       {
         "key": "descripcion",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Descripción",
           "label": "Descripción",
@@ -126,7 +126,7 @@
       },
       {
         "key": "medidas",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "placeholder": "Descripción",
           "label": "Descripción",

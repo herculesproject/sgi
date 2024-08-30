@@ -5,17 +5,17 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "5.2.1 Agente biologikoen, substantzia kimiko arriskutsuen, substantzia erradioaktiboen edo/eta nanopartikulen erabilera jakinaraztea"
+      "label": "5.2.1 Comunicación de uso de agentes biológicos, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
     },
     "fieldGroup": [
       {
-        "template": "Jakinarazi zaio Prebentzio Zerbitzuari agente/material biologikoa, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak erabiliko direla?"
+        "template": "¿Se ha comunicado al Servicio de Prevención que se va a trabajar con agentes/material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Ikerketa jarduera batean lehenengo aldiz erabiltzen direnean 2., 3. edo 4. taldeetako agente biologikoak, jakinarazi egin behar da.</p><p>Era berean, lan prozesuren batean funtsezko aldaketak sartzen badira eta horiek segurtasun eta osasun baldintzetan dituzten ondorioek aurreko jakinarazpena baliogabetzen badute, beste jakinarazpen bat egingo da <b><a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a10' target='_blank'>( 664/1997 EDren 10. artikulua)</a></b>.</p>"
+        "template": "<p>La utilización de agentes biológicos del grupo 2, 3 ó 4 por primera vez en una actividad investigadora debe notificarse.</p><p>Se efectuará una nueva notificación siempre que se introduzcan cambios sustanciales en algún proceso de trabajo cuyas repercusiones en las condiciones de seguridad y salud invaliden la notificación anterior <b><a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144&p=19980330&tn=1#a10' target='_blank'>(Artículo 10 RD664/1997)</a></b>.</p>"
       },
       {
         "key": "comunicacionAgentesBiologicos",
@@ -25,11 +25,11 @@
           "options": [
             {
               "value": 0,
-              "label": "Ez"
+              "label": "No"
             },
             {
-              "value": 18,
-              "label": "Bai"
+              "value": "USO_AGENTES",
+              "label": "Sí"
             }
           ]
         }
@@ -41,16 +41,16 @@
         "templateOptions": {
           "required": true,
           "type": "text",
-          "label": "Data"
+          "label": "Fecha"
         }
       },
       {
         "key": "especificarNegativo",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "model.comunicacionAgentesBiologicos !== 0",
         "templateOptions": {
-          "label": "Justifikazioa",
-          "placeholder": "Justifikazioa",
+          "label": "Justificación",
+          "placeholder": "Justificación",
           "required": true,
           "autosize": true,
           "autosizeMinRows": "1",

@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "3.3 References from scientific publications"
     },
     "fieldGroup": [
@@ -14,7 +14,7 @@
       },
       {
         "key": "referenciasPublicaciones",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "References",
           "required": true

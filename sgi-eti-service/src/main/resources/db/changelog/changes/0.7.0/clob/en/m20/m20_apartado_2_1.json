@@ -98,7 +98,7 @@
             },
             {
               "key": "tarea",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Task",
                 "order": 60,
@@ -107,7 +107,7 @@
             },
             {
               "key": "experiencia",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Specific training or experience",
                 "order": 70,
@@ -116,7 +116,7 @@
             },
             {
               "key": "organismo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Accrediting agency",
                 "order": 80,
@@ -127,6 +127,7 @@
               "key": "anio",
               "type": "input",
               "templateOptions": {
+                "type": "number",
                 "label": "Year",
                 "order": 90,
                 "expressionModelValue": "formState.tareas[$1].anio"

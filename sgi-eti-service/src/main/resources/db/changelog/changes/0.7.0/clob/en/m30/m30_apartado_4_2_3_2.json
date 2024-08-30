@@ -34,7 +34,7 @@
       },
       {
         "key": "especificarLimitar",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "templateOptions": {
           "label": "Please specify:",
           "required": true,

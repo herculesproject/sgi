@@ -5,7 +5,7 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "3.5.3 Material biológico"
+      "label": "3.5.3 Material biologikoa"
     },
     "hideExpression": "!formState.mainModel.ap3_4.ap3_4_1 || !formState.mainModel.ap3_4.ap3_4_1.agentesBiologicosRadio || formState.mainModel.ap3_4.ap3_4_1.agentesBiologicosRadio === 'no'",
     "fieldGroup": [
@@ -13,45 +13,45 @@
         "type": "table-crud",
         "key": "materialBiologicoTable",
         "templateOptions": {
-          "entity": "material biológico",
+          "entity": "material biologikoa",
           "gender": "male"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Material biológico"
+            "text": "Material biologikoa"
           },
           "fieldGroup": [
             {
               "key": "tipoMaterial",
               "type": "select",
               "templateOptions": {
-                "label": "Tipo de material",
+                "label": "Material mota",
                 "order": 10,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Cría y manejo de animales"
+                    "label": "Animalien hazkuntza eta erabilera"
                   },
                   {
                     "value": "2",
-                    "label": "Tejido, sangre y/o fluidos animales"
+                    "label": "Animalien ehuna, odola edo/eta jariakinak"
                   },
                   {
                     "value": "3",
-                    "label": "Tejido, sangre y/o fluidos humanos"
+                    "label": "Gizakien ehuna, odola edo/eta jariakinak"
                   },
                   {
                     "value": "4",
-                    "label": "Otros"
+                    "label": "Beste batzuk"
                   }
                 ]
               }
             },
             {
               "key": "descripcionCaracteristicas",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Descripción/Características",
+                "label": "Deskribapena/Ezaugarriak",
                 "order": 20
               }
             },
@@ -59,33 +59,33 @@
               "key": "grupoRiesgo",
               "type": "select",
               "templateOptions": {
-                "label": "Grupo de riesgo",
+                "label": "Arrisku taldea",
                 "order": 30,
                 "options": [
                   {
                     "value": "1",
-                    "label": "Grupo 1"
+                    "label": "1. taldea"
                   },
                   {
                     "value": "2",
-                    "label": "Grupo 2"
+                    "label": "2. taldea"
                   },
                   {
                     "value": "3",
-                    "label": "Grupo 3"
+                    "label": "3. taldea"
                   },
                   {
                     "value": "4",
-                    "label": "Grupo 4"
+                    "label": "4. taldea"
                   }
                 ]
               }
             },
             {
               "key": "volumenMaximo",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
-                "label": "Volumen máximo de muestra que se maneja en cada vez o número de animales",
+                "label": "Aldi bakoitzean erabiltzen den gehienezko lagin bolumena edo animalia kopurua",
                 "order": 40
               }
             }

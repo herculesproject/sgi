@@ -19,7 +19,7 @@
       },
       {
         "key": "descripcionProcedimientoIntervencion",
-        "type": "ckeditor",
+        "type": "i18n-ckeditor",
         "templateOptions": {
           "name": "Description of the procedure/intervention",
           "required": false
@@ -51,7 +51,7 @@
             },
             {
               "key": "frecuenciaRealizacion",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Frequency of implementation",
                 "required": true,
@@ -60,7 +60,7 @@
             },
             {
               "key": "numeroAnimales",
-              "type": "input",
+              "type": "i18n-input",
               "templateOptions": {
                 "label": "Number of animals",
                 "required": true,

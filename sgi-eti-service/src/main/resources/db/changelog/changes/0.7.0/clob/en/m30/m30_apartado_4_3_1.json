@@ -80,7 +80,7 @@
       },
       {
         "key": "otrasTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.some((c) => c === 'otras') || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
           "placeholder": "Please specify",
@@ -93,7 +93,7 @@
       },
       {
         "key": "noNecesariaVacunacionTexto",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vacunacionCheck || model.vacunacionCheck.length>1 || !model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
           "placeholder": "Justify",
@@ -110,7 +110,7 @@
       },
       {
         "key": "organismoSanitario",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "!model.vacunacionCheck || !model.vacunacionCheck.length>0 || model.vacunacionCheck.some((c) => c === 'noNecesariaVacunacion')",
         "templateOptions": {
           "label": "Agency:",

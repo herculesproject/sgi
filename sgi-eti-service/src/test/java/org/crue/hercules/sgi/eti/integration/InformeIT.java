@@ -9,9 +9,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
-import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -24,7 +22,6 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,7 +46,6 @@ import org.springframework.web.util.UriComponentsBuilder;
   "classpath:scripts/formulario.sql", 
   "classpath:scripts/comite.sql",
   "classpath:scripts/tipo_actividad.sql",
-  "classpath:scripts/tipo_memoria.sql", 
   "classpath:scripts/tipo_estado_memoria.sql",
   "classpath:scripts/estado_retrospectiva.sql", 
   "classpath:scripts/retrospectiva.sql",
@@ -88,7 +84,6 @@ public class InformeIT extends BaseIT {
     final Informe informe = response.getBody();
 
     Assertions.assertThat(informe.getId()).isEqualTo(1L);
-    // Assertions.assertThat(informe.getDocumentoRef()).isEqualTo("DocumentoFormulario1");
   }
 
   @Test
@@ -99,7 +94,6 @@ public class InformeIT extends BaseIT {
     tipoEvaluacion.setNombre("Memoria");
 
     Informe nuevoInforme = new Informe();
-    // nuevoInforme.setDocumentoRef("DocumentoFormulario1");
     nuevoInforme.setTipoEvaluacion(tipoEvaluacion);
 
     restTemplate.exchange(INFORME_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(null, nuevoInforme),
@@ -133,7 +127,7 @@ public class InformeIT extends BaseIT {
   public void replaceInforme_ReturnsInforme() throws Exception {
 
     long id = 1L;
-    Informe replaceInforme = generarMockInforme(id, "DocumentoFormulario1");
+    Informe replaceInforme = generarMockInforme(id);
 
     final ResponseEntity<Informe> response = restTemplate.exchange(INFORME_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(null, replaceInforme), Informe.class, id);
@@ -143,7 +137,6 @@ public class InformeIT extends BaseIT {
     final Informe informe = response.getBody();
 
     Assertions.assertThat(informe.getId()).isNotNull();
-    // Assertions.assertThat(informe.getDocumentoRef()).isEqualTo(replaceInforme.getDocumentoRef());
   }
 
   @Test
@@ -246,7 +239,7 @@ public class InformeIT extends BaseIT {
    * @return el objeto Informe
    */
 
-  public Informe generarMockInforme(Long id, String documentoRef) {
+  private Informe generarMockInforme(Long id) {
     TipoActividad tipoActividad = new TipoActividad();
     tipoActividad.setId(1L);
     tipoActividad.setNombre("TipoActividad1");
@@ -277,18 +270,40 @@ public class InformeIT extends BaseIT {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
-    Comite comite = new Comite(1L, "Comite1", "nombreInvestigacion", Genero.M, formulario, Boolean.TRUE);
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setCodigo("Comite1");
+    comite.setActivo(Boolean.TRUE);
 
-    TipoMemoria tipoMemoria = new TipoMemoria();
-    tipoMemoria.setId(id);
-    tipoMemoria.setNombre("TipoMemoria001");
-    tipoMemoria.setActivo(Boolean.TRUE);
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(1L);
+    tipoEstadoMemoria.setNombre("En elaboración");
+    tipoEstadoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(2L, "numRef-002", peticionEvaluacion, comite, "Memoria" + id, "user-00" + id,
-        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), Instant.now(), Boolean.FALSE,
-        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), Instant.now()), 3, Boolean.TRUE,
-        null);
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setId(1L);
+    estadoRetrospectiva.setNombre("Pendiente");
+    estadoRetrospectiva.setActivo(Boolean.TRUE);
+
+    Retrospectiva retrospectiva = new Retrospectiva();
+    retrospectiva.setId(id);
+    retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
+    retrospectiva.setFechaRetrospectiva(Instant.now());
+
+    Memoria memoria = new Memoria();
+    memoria.setId(2L);
+    memoria.setNumReferencia("numRef-002");
+    memoria.setPeticionEvaluacion(peticionEvaluacion);
+    memoria.setComite(comite);
+    memoria.setTitulo("Memoria" + id);
+    memoria.setPersonaRef("user-00" + id);
+    memoria.setTipo(Memoria.Tipo.NUEVA);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setFechaEnvioSecretaria(Instant.now());
+    memoria.setRequiereRetrospectiva(Boolean.FALSE);
+    memoria.setRetrospectiva(retrospectiva);
+    memoria.setVersion(3);
+    memoria.setActivo(Boolean.TRUE);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
     tipoEvaluacion.setId(1L);

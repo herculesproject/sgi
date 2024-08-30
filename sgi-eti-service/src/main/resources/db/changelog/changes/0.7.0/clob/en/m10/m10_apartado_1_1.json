@@ -5,7 +5,7 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "expressionLock": "formState.memoria.tipoMemoria.id === 3",
+      "expressionLock": "formState.memoria.tipo === 'RATIFICACION'",
       "label": "1.1 Social value of the project"
     },
     "fieldGroup": [
@@ -34,7 +34,7 @@
       },
       {
         "key": "otroValorSocial",
-        "type": "textarea",
+        "type": "i18n-textarea",
         "hideExpression": "formState.memoria.peticionEvaluacion.valorSocial !== 'OTRA_FINALIDAD'",
         "templateOptions": {
           "placeholder": "Please specify",
