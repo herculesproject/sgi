@@ -1,4 +1,4 @@
-import { ITipoDocumento } from '../../../models/eti/tipo-documento';
+import { ITipoDocumentoResponse } from '../tipo-documento/tipo-documento-response';
 import { IMemoriaResponse } from './memoria-response';
 
 export interface IDocumentacionMemoriaResponse {
@@ -7,7 +7,7 @@ export interface IDocumentacionMemoriaResponse {
   /** Memoria */
   memoria: IMemoriaResponse;
   /** TIpo de documento */
-  tipoDocumento: ITipoDocumento;
+  tipoDocumento: ITipoDocumentoResponse;
   /** Nombre */
   nombre: string;
   /** Ref del documento */

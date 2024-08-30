@@ -2,6 +2,7 @@ import { NgxMatDatetimePickerModule } from '@angular-material-components/datetim
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { I18nComponentsModule } from '@components/i18n/i18n-components.module';
 import { requiredRowTable } from '@formly-forms/validators/utils.validator';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FormlyModule } from '@ngx-formly/core';
@@ -41,6 +42,7 @@ import { MatCardGroupWrapperComponent } from './wrappers/mat-card-group/mat-card
     FormlyMatDatepickerModule,
     FormlySelectModule,
     FormlyMaterialModule,
+    I18nComponentsModule,
     FormlyModule.forChild({
       types: [
         {

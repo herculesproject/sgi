@@ -1,4 +1,4 @@
-import { ITipoDocumento } from '../../../models/eti/tipo-documento';
+import { ITipoDocumentoResponse } from '../tipo-documento/tipo-documento-response';
 
 export interface IRespuestaResponse {
   /** ID */
@@ -8,7 +8,7 @@ export interface IRespuestaResponse {
   /** apartado */
   apartadoId: number;
   /** Tipo de documento */
-  tipoDocumento: ITipoDocumento;
+  tipoDocumento: ITipoDocumentoResponse;
   /** valor */
   valor: {
     [name: string]: any;

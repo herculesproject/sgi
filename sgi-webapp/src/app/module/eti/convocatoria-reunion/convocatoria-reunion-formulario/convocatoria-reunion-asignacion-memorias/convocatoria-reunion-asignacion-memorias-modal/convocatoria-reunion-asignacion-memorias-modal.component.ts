@@ -242,7 +242,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
 
             if (!isActivo) {
               const comite = (this.formGroup.controls.memoria.value as IMemoriaWithLastEvaluacionModal)?.evaluacion.convocatoriaReunion.comite;
-              this.msgParamEvaludador1Asignacion.comite = comite.nombreInvestigacion;
+              this.msgParamEvaludador1Asignacion.comite = comite.nombre;
               this.msgParamEvaludador1Asignacion.generoComite = comite.genero === 'F' ? MSG_PARAMS.GENDER.FEMALE.gender : MSG_PARAMS.GENDER.MALE.gender;
             }
           })
@@ -271,7 +271,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
 
             if (!isActivo) {
               const comite = (this.formGroup.controls.memoria.value as IMemoriaWithLastEvaluacionModal)?.evaluacion.convocatoriaReunion.comite;
-              this.msgParamEvaludador2Asignacion.comite = comite.nombreInvestigacion;
+              this.msgParamEvaludador2Asignacion.comite = comite.nombre;
               this.msgParamEvaludador2Asignacion.generoComite = comite.genero === 'F' ? MSG_PARAMS.GENDER.FEMALE.gender : MSG_PARAMS.GENDER.MALE.gender;
             }
           })

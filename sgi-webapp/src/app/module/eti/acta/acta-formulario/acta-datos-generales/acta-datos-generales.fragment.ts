@@ -65,7 +65,7 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
     return this.service.findById(key).pipe(
       switchMap((value) => {
         this.acta = value;
-        this.acta.convocatoriaReunion.codigo = `ACTA${value.numero}/${value.convocatoriaReunion.fechaEvaluacion.year}/${value.convocatoriaReunion.comite.comite}`;
+        this.acta.convocatoriaReunion.codigo = `ACTA${value.numero}/${value.convocatoriaReunion.fechaEvaluacion.year}/${value.convocatoriaReunion.comite.codigo}`;
         return of(this.acta);
       }),
       catchError(() => {
@@ -112,7 +112,7 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
     return obs.pipe(
       map((value) => {
         this.acta = value;
-        this.acta.convocatoriaReunion.codigo = `ACTA${value.numero}/${value.convocatoriaReunion.fechaEvaluacion.year}/${value.convocatoriaReunion.comite.comite}`;
+        this.acta.convocatoriaReunion.codigo = `ACTA${value.numero}/${value.convocatoriaReunion.fechaEvaluacion.year}/${value.convocatoriaReunion.comite.codigo}`;
         return this.acta.id;
       })
     );

@@ -10,6 +10,7 @@ import { FormularioService } from '@core/services/eti/formulario.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
+import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { LanguageService } from '@core/services/language.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -40,7 +41,8 @@ export class MemoriaRetrospectivaFragment extends MemoriaFormlyFormFragment {
     translateService: TranslateService,
     dialogService: DialogService,
     router: Router,
-    languageService: LanguageService
+    languageService: LanguageService,
+    tipoDocumentoService: TipoDocumentoService
   ) {
     super(
       logger,
@@ -62,7 +64,8 @@ export class MemoriaRetrospectivaFragment extends MemoriaFormlyFormFragment {
       translateService,
       dialogService,
       router,
-      languageService
+      languageService,
+      tipoDocumentoService
     );
 
   }

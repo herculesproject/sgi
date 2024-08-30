@@ -4,10 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { DICTAMEN_MAP } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { MEMORIA_TIPO_MAP } from '@core/models/eti/memoria';
 import { TIPO_CONVOCATORIA_REUNION } from '@core/models/eti/tipo-convocatoria-reunion';
 import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
-import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConfigService } from '@core/services/cnf/config.service';
@@ -22,7 +23,6 @@ import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { TipoComentario } from '../evaluacion-listado-export.service';
 import { EvaluacionListadoExportModalComponent, IEvaluacionListadoModalData } from '../modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
-import { DICTAMEN_MAP } from '@core/models/eti/dictamen';
 
 @Component({
   selector: 'sgi-evaluacion-listado',
@@ -57,8 +57,8 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     return TIPO_EVALUACION_MAP;
   }
 
-  get TIPO_MEMORIA_MAP() {
-    return TIPO_MEMORIA_MAP;
+  get MEMORIA_TIPO_MAP() {
+    return MEMORIA_TIPO_MAP;
   }
 
   get DICTAMEN_MAP() {
@@ -117,7 +117,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   }
 
   protected initColumns(): void {
-    this.displayedColumns = ['memoria.comite.comite', 'tipoEvaluacion', 'memoria.tipoMemoria.nombre', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
+    this.displayedColumns = ['memoria.comite.comite', 'tipoEvaluacion', 'memoria.tipo', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
       'dictamen.nombre', 'version', 'acciones'];
   }
 

@@ -1,8 +1,8 @@
-import { IComite } from '../comite';
-import { TipoEstadoMemoria } from '../tipo-estado-memoria';
-import { IRetrospectivaBackend } from './retrospectiva-backend';
+import { IComiteResponse } from '@core/services/eti/comite/comite-response';
+import { TipoEstadoMemoria } from '../../../models/eti/tipo-estado-memoria';
+import { IRetrospectivaResponse } from '../retrospectiva/retrospectiva-response';
 
-export interface IMemoriaPeticionEvaluacionBackend {
+export interface IMemoriaPeticionEvaluacionResponse {
   /** Id */
   id: number;
   /** Respnsable Ref */
@@ -12,13 +12,13 @@ export interface IMemoriaPeticionEvaluacionBackend {
   /** Título */
   titulo: string;
   /** Comité */
-  comite: IComite;
+  comite: IComiteResponse;
   /** Estado Memoria Actual */
   estadoActual: TipoEstadoMemoria;
   /** Indicador require retrospectiva */
   requiereRetrospectiva: boolean;
   /** Retrospectiva */
-  retrospectiva: IRetrospectivaBackend;
+  retrospectiva: IRetrospectivaResponse;
   /** Fecha evaluación. */
   fechaEvaluacion: string;
   /** 	Fecha límite. */

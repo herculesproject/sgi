@@ -15,6 +15,7 @@ import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { Language } from '@core/i18n/language';
 import { LanguageService } from '@core/services/language.service';
 import { Subject } from 'rxjs';
@@ -23,7 +24,7 @@ import { takeUntil } from 'rxjs/operators';
 
 @Directive()
 export abstract class InputI18nBaseComponent
-  implements ControlValueAccessor, MatFormFieldControl<I18nFieldValue[]>, OnInit, OnDestroy, DoCheck {
+  implements ControlValueAccessor, MatFormFieldControl<(I18nFieldValue | I18nFieldValueResponse)[]>, OnInit, OnDestroy, DoCheck {
 
   protected abstract uid: string;
 
@@ -38,12 +39,22 @@ export abstract class InputI18nBaseComponent
   // tslint:disable-next-line: variable-name
   private _id: string;
 
+  @Input()
+  get plainValue(): boolean {
+    return this._plainValue;
+  }
+  set plainValue(value: boolean) {
+    this._plainValue = coerceBooleanProperty(value);
+  }
+  // tslint:disable-next-line: variable-name
+  private _plainValue = false;
+
   /** Value of the component. */
   @Input()
-  get value(): I18nFieldValue[] {
+  get value(): (I18nFieldValue | I18nFieldValueResponse)[] {
     return this._value;
   }
-  set value(newValue: I18nFieldValue[]) {
+  set value(newValue: (I18nFieldValue | I18nFieldValueResponse)[]) {
     if (newValue === null || !(newValue instanceof Array)) {
       this._value = [];
     }
@@ -55,7 +66,7 @@ export abstract class InputI18nBaseComponent
     this.propagateChanges()
   }
   // tslint:disable-next-line: variable-name
-  private _value: I18nFieldValue[] = [];
+  private _value: (I18nFieldValue | I18nFieldValueResponse)[] = [];
 
   /** Whether the component is required. */
   @Input()
@@ -125,7 +136,7 @@ export abstract class InputI18nBaseComponent
     }
     this._editingValue = value;
     const currentI18nValue = this.getCurrentI18nFieldValue();
-    const newI18nValue: I18nFieldValue = { value: value, lang: this.selectedLanguage };
+    const newI18nValue: I18nFieldValue | I18nFieldValueResponse = this.plainValue ? { value: value, lang: this.selectedLanguage.code } : { value: value, lang: this.selectedLanguage };
     const newValue = [...this.value];
     const idxCurrrentI18nValue = newValue.indexOf(currentI18nValue);
     if (value.length > 0) {
@@ -238,8 +249,13 @@ export abstract class InputI18nBaseComponent
     this._destroy.next();
   }
 
-  private getCurrentI18nFieldValue(): I18nFieldValue {
-    return this.value.find(v => v.lang === this.selectedLanguage);
+  private getCurrentI18nFieldValue(): I18nFieldValue | I18nFieldValueResponse {
+    if (this.plainValue) {
+      return this.value.find(v => v.lang === this.selectedLanguage.code);
+    }
+    else {
+      return this.value.find(v => v.lang === this.selectedLanguage);
+    }
   }
 
   private getCurrentEditingValue(): string {

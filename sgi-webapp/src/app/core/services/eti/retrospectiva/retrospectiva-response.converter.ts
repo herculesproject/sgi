@@ -1,10 +1,11 @@
-import { IRetrospectivaBackend } from '@core/models/eti/backend/retrospectiva-backend';
+
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { IRetrospectivaResponse } from './retrospectiva-response';
 
-class RetrospectivaConverter extends SgiBaseConverter<IRetrospectivaBackend, IRetrospectiva> {
-  toTarget(value: IRetrospectivaBackend): IRetrospectiva {
+class RetrospectivaResponseConverter extends SgiBaseConverter<IRetrospectivaResponse, IRetrospectiva> {
+  toTarget(value: IRetrospectivaResponse): IRetrospectiva {
     if (!value) {
       return value as unknown as IRetrospectiva;
     }
@@ -15,9 +16,9 @@ class RetrospectivaConverter extends SgiBaseConverter<IRetrospectivaBackend, IRe
     };
   }
 
-  fromTarget(value: IRetrospectiva): IRetrospectivaBackend {
+  fromTarget(value: IRetrospectiva): IRetrospectivaResponse {
     if (!value) {
-      return value as unknown as IRetrospectivaBackend;
+      return value as unknown as IRetrospectivaResponse;
     }
     return {
       id: value.id,
@@ -27,4 +28,4 @@ class RetrospectivaConverter extends SgiBaseConverter<IRetrospectivaBackend, IRe
   }
 }
 
-export const RETROSPECTIVA_CONVERTER = new RetrospectivaConverter();
+export const RETROSPECTIVA_RESPONSE_CONVERTER = new RetrospectivaResponseConverter();

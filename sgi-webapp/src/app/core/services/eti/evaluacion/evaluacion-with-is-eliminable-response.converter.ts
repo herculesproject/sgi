@@ -4,6 +4,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { CONVOCATORIA_REUNION_CONVERTER } from '../../../converters/eti/convocatoria-reunion.converter';
 import { EVALUADOR_CONVERTER } from '../../../converters/eti/evaluador.converter';
+import { COMITE_RESPONSE_CONVERTER } from '../comite/comite-response.converter';
 import { MEMORIA_RESPONSE_CONVERTER } from '../memoria/memoria-response.converter';
 
 class EvaluacionWithIsEliminableResponseConverter extends SgiBaseConverter<IEvaluacionWithIsEliminableResponse, IEvaluacionWithIsEliminable> {
@@ -14,7 +15,7 @@ class EvaluacionWithIsEliminableResponseConverter extends SgiBaseConverter<IEval
     return {
       id: value.id,
       memoria: MEMORIA_RESPONSE_CONVERTER.toTarget(value.memoria),
-      comite: value.comite,
+      comite: COMITE_RESPONSE_CONVERTER.toTarget(value.comite),
       convocatoriaReunion: CONVOCATORIA_REUNION_CONVERTER.toTarget(value.convocatoriaReunion),
       tipoEvaluacion: value.tipoEvaluacion,
       version: value.version,
@@ -36,7 +37,7 @@ class EvaluacionWithIsEliminableResponseConverter extends SgiBaseConverter<IEval
     return {
       id: value.id,
       memoria: MEMORIA_RESPONSE_CONVERTER.fromTarget(value.memoria),
-      comite: value.comite,
+      comite: COMITE_RESPONSE_CONVERTER.fromTarget(value.comite),
       convocatoriaReunion: CONVOCATORIA_REUNION_CONVERTER.fromTarget(value.convocatoriaReunion),
       tipoEvaluacion: value.tipoEvaluacion,
       version: value.version,

@@ -1,6 +1,6 @@
-import { IEstadoRetrospectiva } from '../estado-retrospectiva';
+import { IEstadoRetrospectiva } from '../../../models/eti/estado-retrospectiva';
 
-export interface IRetrospectivaBackend {
+export interface IRetrospectivaResponse {
   /** ID */
   id: number;
   /** estadoRetrospectiva */

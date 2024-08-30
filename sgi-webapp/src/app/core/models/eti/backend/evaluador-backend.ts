@@ -1,11 +1,11 @@
+import { IComiteResponse } from '@core/services/eti/comite/comite-response';
 import { CargoComite } from '../cargo-comite';
-import { IComite } from '../comite';
 
 export interface IEvaluadorBackend {
   /** Id */
   id: number;
   /** Comité */
-  comite: IComite;
+  comite: IComiteResponse;
   /** Cargo comité */
   cargoComite: CargoComite;
   /** Resumen */

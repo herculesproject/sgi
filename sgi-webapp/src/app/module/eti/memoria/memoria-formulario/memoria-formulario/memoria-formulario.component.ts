@@ -52,7 +52,7 @@ export class MemoriaFormularioComponent extends FragmentComponent implements OnI
         if (index <= lastBlock) {
           if (block.loaded$.value) {
 
-            const mapGroup = new Map<String, Group>();
+            const mapGroup = new Map<string, Group>();
             block.formlyData.fields.forEach(f => {
               mapGroup.set(f.key.toString(), f.group);
             });

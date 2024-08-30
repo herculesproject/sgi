@@ -1,11 +1,11 @@
-import { IComite } from '../comite';
+import { IComiteResponse } from '@core/services/eti/comite/comite-response';
 import { TipoConvocatoriaReunion } from '../tipo-convocatoria-reunion';
 
 export interface IConvocatoriaReunionBackend {
   /** ID */
   id: number;
   /** Comite */
-  comite: IComite;
+  comite: IComiteResponse;
   /** Tipo Convocatoria Reunion */
   tipoConvocatoriaReunion: TipoConvocatoriaReunion;
   /** Fecha evaluación */

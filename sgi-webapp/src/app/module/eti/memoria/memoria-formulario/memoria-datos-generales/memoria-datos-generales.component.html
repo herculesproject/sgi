@@ -30,9 +30,8 @@
       <div fxFlex="15">
         <mat-form-field>
           <mat-label>{{'eti.memoria.tipo' | translate}}</mat-label>
-          <sgi-select-entity #selectTipoMemoria formControlName="tipoMemoria" required
-            [resetOnChange]="selectComite.selectionChange" [options]="tiposMemoria$ | async"
-            [displayWith]="displayerTipoMemoria"></sgi-select-entity>
+          <sgi-select-enum formControlName="tipoMemoria" required [resetOnChange]="selectComite.selectionChange"
+            [enumMap]="tiposMemoria$ | async"></sgi-select-enum>
           <mat-error *ngIf="formGroup.controls.tipoMemoria.errors?.required">
             {{'error.required.entity' | translate:msgParamTipoMemoriaEntity}}
           </mat-error>

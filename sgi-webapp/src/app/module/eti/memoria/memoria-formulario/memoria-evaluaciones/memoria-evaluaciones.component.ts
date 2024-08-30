@@ -8,6 +8,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IActa } from '@core/models/eti/acta';
 import { DICTAMEN, DICTAMEN_MAP } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { MemoriaTipo } from '@core/models/eti/memoria';
 import { TIPO_EVALUACION, TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -156,6 +157,15 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
     ).subscribe(response => {
       triggerDownloadToUser(response, documento.nombre);
     });
+  }
+
+  /**
+   * Comprueba si la se ha de deshabilitar la visualización del informe
+   * @param wrapper Elemento del listado
+   * @returns true si se ha de deshabilitar la visualización del informe
+   */
+  isVisualizarInformeDisabled(wrapper: StatusWrapper<IEvaluacion>): boolean {
+    return (wrapper.value?.memoria?.tipo === MemoriaTipo.NUEVA || wrapper.value?.memoria?.tipo === MemoriaTipo.RATIFICACION) && (wrapper.value?.dictamen?.id !== 1 && wrapper.value?.dictamen?.id !== 9)
   }
 
   /**

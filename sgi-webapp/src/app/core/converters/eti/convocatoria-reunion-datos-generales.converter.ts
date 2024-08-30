@@ -1,5 +1,6 @@
 import { IConvocatoriaReunionDatosGeneralesBackend } from '@core/models/eti/backend/convocatoria-reunion-datos-generales-backend';
 import { IConvocatoriaReunionDatosGenerales } from '@core/models/eti/convocatoria-reunion-datos-generales';
+import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
@@ -11,7 +12,7 @@ class ConvocatoriaReunionDatosGeneralesConverter
     }
     return {
       id: value.id,
-      comite: value.comite,
+      comite: COMITE_RESPONSE_CONVERTER.toTarget(value.comite),
       tipoConvocatoriaReunion: value.tipoConvocatoriaReunion,
       fechaEvaluacion: LuxonUtils.fromBackend(value.fechaEvaluacion),
       horaInicio: value.horaInicio,
@@ -26,7 +27,7 @@ class ConvocatoriaReunionDatosGeneralesConverter
       numeroActa: value.numeroActa,
       fechaEnvio: LuxonUtils.fromBackend(value.fechaEnvio),
       activo: value.activo,
-      codigo: `ACTA${value.numeroActa}/${LuxonUtils.fromBackend(value.fechaEvaluacion).year}/${value.comite.comite}`,
+      codigo: `ACTA${value.numeroActa}/${LuxonUtils.fromBackend(value.fechaEvaluacion).year}/${value.comite.codigo}`,
       numEvaluaciones: value.numEvaluaciones,
       idActa: value.idActa
     };
@@ -38,7 +39,7 @@ class ConvocatoriaReunionDatosGeneralesConverter
     }
     return {
       id: value.id,
-      comite: value.comite,
+      comite: COMITE_RESPONSE_CONVERTER.fromTarget(value.comite),
       tipoConvocatoriaReunion: value.tipoConvocatoriaReunion,
       fechaEvaluacion: LuxonUtils.toBackend(value.fechaEvaluacion),
       horaInicio: value.horaInicio,

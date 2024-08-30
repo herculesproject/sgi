@@ -10,9 +10,10 @@ class FormularioResponseConverter
     }
     return {
       activo: value.activo,
-      descripcion: value.descripcion,
+      codigo: value.codigo,
       id: value.id,
-      nombre: value.nombre
+      tipo: value.tipo,
+      seguimientoAnualDocumentacionTitle: value.seguimientoAnualDocumentacionTitle
     };
   }
 
@@ -22,9 +23,10 @@ class FormularioResponseConverter
     }
     return {
       activo: value.activo,
-      descripcion: value.descripcion,
+      codigo: value.codigo,
       id: value.id,
-      nombre: value.nombre
+      tipo: value.tipo,
+      seguimientoAnualDocumentacionTitle: value.seguimientoAnualDocumentacionTitle
     };
   }
 }

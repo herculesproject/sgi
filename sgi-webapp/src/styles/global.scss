@@ -414,7 +414,8 @@ mat-form-field {
 /**/
 /** I18N Components */
 /**/
-.mat-form-field-type-sgi-i18n-textarea {
+.mat-form-field-type-sgi-i18n-textarea,
+.mat-form-field-type-i18n-textarea {
   .mat-form-field-label-wrapper {
     margin-left: 45px;
     width: calc(100% - 45px);
@@ -427,7 +428,8 @@ mat-form-field {
   }
 }
 
-.mat-form-field-type-sgi-i18n-input {
+.mat-form-field-type-sgi-i18n-input,
+.mat-form-field-type-i18n-input {
   .mat-form-field-label-wrapper {
     margin-left: 45px;
     width: calc(100% - 45px);

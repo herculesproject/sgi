@@ -24,7 +24,7 @@ export class SeguimientoDatosMemoriaFragment extends FormFragment<IMemoria> {
 
   protected buildFormGroup(): FormGroup {
     const fb = this.fb.group({
-      comite: [{ value: this.memoria?.comite?.comite, disabled: true }],
+      comite: [{ value: null, disabled: true }],
       fechaEvaluacion: [{ value: null, disabled: true }],
       referenciaMemoria: [{ value: '', disabled: true }],
       solicitante: [{ value: '', disabled: true }],
@@ -62,7 +62,7 @@ export class SeguimientoDatosMemoriaFragment extends FormFragment<IMemoria> {
 
   buildPatch(value: IMemoria): { [key: string]: any } {
     const patch = {
-      comite: value.comite.comite,
+      comite: value.comite,
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,

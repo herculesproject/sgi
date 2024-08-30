@@ -8,12 +8,13 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
+import { EtiSharedModule } from '../../shared/eti-shared.module';
+import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 import {
   EvaluacionListadoAnteriorMemoriaComponent,
 } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionDatosMemoriaComponent } from './evaluacion-datos-memoria.component';
-import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
-import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 
 describe('EvaluacionDatosMemoriaComponent', () => {
   let component: EvaluacionDatosMemoriaComponent;
@@ -33,7 +34,8 @@ describe('EvaluacionDatosMemoriaComponent', () => {
         TestUtils.getIdiomas(),
         RouterTestingModule,
         ReactiveFormsModule,
-        SgiAuthModule
+        SgiAuthModule,
+        EtiSharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

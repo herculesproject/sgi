@@ -211,7 +211,7 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
   private loadBloques(evaluacion: IEvaluacion): void {
     this.bloques$ = forkJoin({
       bloquesFormulario: this.formularioService.getBloques(resolveFormularioByTipoEvaluacionAndComite
-        (evaluacion?.tipoEvaluacion?.id, evaluacion?.memoria?.comite)),
+        (evaluacion?.tipoEvaluacion?.id, evaluacion?.memoria).id),
       bloqueComentariosGenerales: this.bloqueService.getBloqueComentariosGenerales()
     }).pipe(
       map(({ bloquesFormulario, bloqueComentariosGenerales }) => bloquesFormulario.items.concat([bloqueComentariosGenerales])),

@@ -6,8 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { DICTAMEN_MAP } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { MEMORIA_TIPO_MAP } from '@core/models/eti/memoria';
 import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
-import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConfigService } from '@core/services/cnf/config.service';
@@ -49,6 +49,14 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
     return DICTAMEN_MAP;
   }
 
+  get TIPO_EVALUACION_MAP() {
+    return TIPO_EVALUACION_MAP;
+  }
+
+  get MEMORIA_TIPO_MAP() {
+    return MEMORIA_TIPO_MAP;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly evaluacionesService: EvaluacionService,
@@ -74,14 +82,6 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
     this.fxLayoutProperties.xs = 'column';
   }
 
-  get TIPO_EVALUACION_MAP() {
-    return TIPO_EVALUACION_MAP;
-  }
-
-  get TIPO_MEMORIA_MAP() {
-    return TIPO_MEMORIA_MAP;
-  }
-
   ngOnInit(): void {
     super.ngOnInit();
     this.formGroup = new FormGroup({
@@ -104,7 +104,7 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
   }
 
   protected initColumns(): void {
-    this.displayedColumns = ['memoria.comite.comite', 'tipoEvaluacion', 'memoria.tipoMemoria.nombre', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
+    this.displayedColumns = ['memoria.comite.comite', 'tipoEvaluacion', 'memoria.tipo', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
       'dictamen.nombre', 'version', 'acciones'];
   }
 

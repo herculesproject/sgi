@@ -33,7 +33,7 @@ export class EvaluacionEvaluacionFragment extends FormFragment<IMemoria> {
 
   protected buildFormGroup(): FormGroup {
     const form = this.fb.group({
-      comite: [{ value: '', disabled: true }],
+      comite: [{ value: null, disabled: true }],
       fechaEvaluacion: [{ value: null, disabled: true }],
       referenciaMemoria: [{ value: '', disabled: true }],
       solicitante: [{ value: '', disabled: true }],
@@ -75,7 +75,7 @@ export class EvaluacionEvaluacionFragment extends FormFragment<IMemoria> {
 
   buildPatch(value: IMemoria): { [key: string]: any } {
     return {
-      comite: value.comite.comite,
+      comite: value.comite,
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,

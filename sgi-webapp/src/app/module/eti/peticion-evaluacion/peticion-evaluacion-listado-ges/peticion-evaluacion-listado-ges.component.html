@@ -91,7 +91,7 @@
       <ng-container *ngFor="let comite of comites">
         <ng-container [matColumnDef]="'memoriaComite' + comite.id">
           <th mat-header-cell *matHeaderCellDef>
-            {{'eti.peticion-evaluacion.memoria' | translate}} {{comite.comite}}
+            {{'eti.peticion-evaluacion.memoria' | translate}} {{comite.codigo}}
           </th>
           <td mat-cell *matCellDef="let peticionEvaluacion"
             matTooltip="{{getMemoriasComite(peticionEvaluacion.memorias, comite.id)}}">

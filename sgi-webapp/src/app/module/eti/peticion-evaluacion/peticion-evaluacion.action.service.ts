@@ -19,6 +19,7 @@ import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
 import { TareaService } from '@core/services/eti/tarea.service';
+import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { LanguageService } from '@core/services/language.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -86,7 +87,8 @@ export class PeticionEvaluacionActionService extends ActionService {
     protected readonly translateService: TranslateService,
     protected readonly dialogService: DialogService,
     protected readonly router: Router,
-    protected readonly languageService: LanguageService
+    protected readonly languageService: LanguageService,
+    protected readonly tipoDocumentoService: TipoDocumentoService
   ) {
     super();
 
@@ -239,7 +241,8 @@ export class PeticionEvaluacionActionService extends ActionService {
               this.translateService,
               this.dialogService,
               this.router,
-              this.languageService
+              this.languageService,
+              this.tipoDocumentoService
             );
             fragment.initialize();
             return fragment.initialized$.pipe(filter((value) => value), take(1), map((v) => fragment));

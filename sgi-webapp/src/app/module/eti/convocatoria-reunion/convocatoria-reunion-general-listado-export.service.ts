@@ -18,7 +18,7 @@ const CONVOCATORIA_REUNION_REPORT_ORDEN_DEL_DIA_KEY = marker('eti.convocatoria-r
 
 @Injectable()
 export class ConvocatoriaReunionGeneralListadoExportService extends
-  AbstractTableExportFillService<IConvocatoriaReunionReportData, IConvocatoriaReunionReportOptions>{
+  AbstractTableExportFillService<IConvocatoriaReunionReportData, IConvocatoriaReunionReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -70,7 +70,7 @@ export class ConvocatoriaReunionGeneralListadoExportService extends
     const convocatoriaData = convocatorias[index];
 
     return [
-      convocatoriaData.comite?.comite ?? '',
+      convocatoriaData.comite?.codigo ?? '',
       LuxonUtils.toBackend(convocatoriaData.fechaEvaluacion) ?? '',
       convocatoriaData.codigo ?? '',
       convocatoriaData.tipoConvocatoriaReunion?.id ? TIPO_CONVOCATORIA_REUNION_MAP.get(convocatoriaData.tipoConvocatoriaReunion?.id) : '',

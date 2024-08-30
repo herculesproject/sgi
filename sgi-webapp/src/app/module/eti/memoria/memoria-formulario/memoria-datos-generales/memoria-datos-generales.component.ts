@@ -3,8 +3,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IComite } from '@core/models/eti/comite';
-import { IMemoria } from '@core/models/eti/memoria';
-import { ITipoMemoria, TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
+import { IMemoria, MEMORIA_TIPO_MAP, MemoriaTipo } from '@core/models/eti/memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,7 +27,7 @@ const INFO_TITLE_DESCRIPTIVO = marker('eti.memoria.info.titulo-descriptivo');
 })
 export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemoria> implements OnInit, OnDestroy {
 
-  tiposMemoria$: Subject<ITipoMemoria[]> = new BehaviorSubject<ITipoMemoria[]>([]);
+  tiposMemoria$: Subject<Map<MemoriaTipo, string>> = new BehaviorSubject<Map<MemoriaTipo, string>>(new Map<MemoriaTipo, string>());
   memorias$: Subject<IMemoria[]> = new BehaviorSubject<IMemoria[]>([]);
 
   datosGeneralesFragment: MemoriaDatosGeneralesFragment;
@@ -44,18 +43,6 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
 
   private subscriptions: Subscription[] = [];
 
-  get TIPO_MEMORIA_MAP() {
-    return TIPO_MEMORIA_MAP;
-  }
-
-  readonly displayerTipoMemoria = (option: ITipoMemoria): string => {
-    return option?.id
-      ? (TIPO_MEMORIA_MAP.get(option.id)
-        ? this.translate.instant(TIPO_MEMORIA_MAP.get(option.id))
-        : option?.nombre ?? '')
-      : option?.nombre ?? '';
-  };
-
   constructor(
     private readonly comiteService: ComiteService,
     public actionService: MemoriaActionService,
@@ -69,22 +56,22 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     super.ngOnInit();
 
     this.subscriptions.push(this.formGroup.controls.comite.valueChanges.subscribe(
-      (comite) => {
+      (comite: IComite) => {
         this.datosGeneralesFragment.onComiteChange(comite);
         if (comite) {
-          this.subscriptions.push(this.comiteService.findTipoMemoria(comite.id).subscribe(
-            (res) => {
-              this.tiposMemoria$.next(res.items)
-            }
-          ));
+          const tipos = new Map<MemoriaTipo, string>(MEMORIA_TIPO_MAP.entries());
+          if (!comite.permitirRatificacion) {
+            tipos.delete(MemoriaTipo.RATIFICACION);
+          }
+          this.tiposMemoria$.next(tipos);
         }
         else {
-          this.tiposMemoria$.next([]);
+          this.tiposMemoria$.next(new Map<MemoriaTipo, string>());
         }
       }
     ));
     this.subscriptions.push(this.formGroup.controls.tipoMemoria.valueChanges.subscribe(
-      (tipoMemoria) => {
+      (tipoMemoria: MemoriaTipo) => {
         this.datosGeneralesFragment.onTipoMemoriaChange(tipoMemoria);
         if (this.datosGeneralesFragment.showMemoriaOriginal) {
           this.comiteService.findMemoriasComitePeticionEvaluacion(
@@ -160,7 +147,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   }
 
   displayerComite(comite: IComite): string {
-    return comite?.nombreInvestigacion;
+    return comite?.nombre;
   }
 
 }

@@ -100,12 +100,12 @@
       </ng-container>
 
       <!-- Tipo de memoria -->
-      <ng-container matColumnDef="memoria.tipoMemoria.nombre">
+      <ng-container matColumnDef="memoria.tipo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'eti.evaluacion.tipo-memoria' | translate}}
         </th>
         <td mat-cell *matCellDef="let evaluacion">
-          {{TIPO_MEMORIA_MAP.get(evaluacion?.memoria?.tipoMemoria?.id) | translate}}
+          {{MEMORIA_TIPO_MAP.get(evaluacion?.memoria?.tipo) | translate}}
         </td>
       </ng-container>
 

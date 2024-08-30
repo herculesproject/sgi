@@ -6,7 +6,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
-import { COMITE } from '@core/models/eti/comite';
 import { ESTADO_RETROSPECTIVA } from '@core/models/eti/estado-retrospectiva';
 import { IMemoria } from '@core/models/eti/memoria';
 import { ESTADO_MEMORIA, ESTADO_MEMORIA_MAP } from '@core/models/eti/tipo-estado-memoria';
@@ -115,7 +114,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
       (wrapper: StatusWrapper<IMemoriaPeticionEvaluacionWithLastEvaluacion>, property: string) => {
         switch (property) {
           case 'comite':
-            return wrapper.value.comite?.comite;
+            return wrapper.value.comite?.codigo;
           case 'estadoActual':
             return wrapper.value.estadoActual?.nombre;
           default:
@@ -270,7 +269,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   hasPermisoEnviarSecretariaRetrospectiva(memoria: IMemoria): boolean {
     // Si la retrospectiva ya está 'En secretaría' no se muestra el botón.
     // El estado de la memoria debe de ser mayor a FIN_EVALUACION
-    return this.isUserSolicitantePeticionEvaluacion() && (memoria.estadoActual.id >= ESTADO_MEMORIA.FIN_EVALUACION && memoria.comite.id === COMITE.CEEA && memoria.requiereRetrospectiva
+    return this.isUserSolicitantePeticionEvaluacion() && (memoria.estadoActual.id >= ESTADO_MEMORIA.FIN_EVALUACION && memoria.comite.requiereRetrospectiva && memoria.requiereRetrospectiva
       && memoria.retrospectiva.estadoRetrospectiva.id === ESTADO_RETROSPECTIVA.COMPLETADA);
   }
 

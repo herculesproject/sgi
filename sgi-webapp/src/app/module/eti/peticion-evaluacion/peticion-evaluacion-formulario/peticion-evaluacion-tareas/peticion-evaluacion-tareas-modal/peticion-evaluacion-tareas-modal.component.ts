@@ -4,24 +4,20 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { COMITE } from '@core/models/eti/comite';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { FormacionEspecifica } from '@core/models/eti/formacion-especifica';
-import { FORMULARIO } from '@core/models/eti/formulario';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
 import { TIPO_TAREA_MAP, TipoTarea } from '@core/models/eti/tipo-tarea';
 import { IPersona } from '@core/models/sgp/persona';
-import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { FormacionEspecificaService } from '@core/services/eti/formacion-especifica.service';
-import { MemoriaService } from '@core/services/eti/memoria.service';
 import { TareaService } from '@core/services/eti/tarea.service';
 import { TipoTareaService } from '@core/services/eti/tipo-tarea.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 const TITLE_NEW_ENTITY = marker('title.new.entity');
@@ -54,17 +50,9 @@ export class PeticionEvaluacionTareasModalComponent
   personas$: Subject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
   tipoTareas$: Subject<TipoTarea[]> = new BehaviorSubject<TipoTarea[]>([]);
 
-  mostrarOrganismo: boolean;
-  mostrarOrganismo$ = new BehaviorSubject(false);
-  mostrarOrganismoSubscription: Subscription;
-
-  mostrarOrganismoYanio: boolean;
-  mostrarOrganismoYanio$ = new BehaviorSubject(false);
-  mostrarOrganismoYanioSubscription: Subscription;
-
-  tareaYformacionTexto: boolean;
-  tareaYformacionTexto$ = new BehaviorSubject(false);
-  tareaYformacionTextoSubscription: Subscription;
+  tareaLibre = false;
+  formacionLibre = false;
+  detalleFormacion = false;
 
   title: string;
   textoAceptar: string;
@@ -73,10 +61,9 @@ export class PeticionEvaluacionTareasModalComponent
   msgParamMemoriaEntity = {};
   msgParamTareaEntity = {};
   msgParamFormacionEntity = {};
+  msgParamFormacionEspecificaEntity = {};
   msgParamAnioEntity = {};
   msgParamOrganismoEntity = {};
-
-  textoFormacionExperiencia$ = new BehaviorSubject(null);
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -89,8 +76,6 @@ export class PeticionEvaluacionTareasModalComponent
     @Inject(MAT_DIALOG_DATA) public data: PeticionEvaluacionTareasModalComponentData,
     protected readonly tareaService: TareaService,
     protected readonly formacionService: FormacionEspecificaService,
-    protected readonly memoriaService: MemoriaService,
-    protected readonly equipoTrabajoService: EquipoTrabajoService,
     protected readonly personaService: PersonaService,
     protected readonly tipoTareaService: TipoTareaService,
     private readonly translate: TranslateService
@@ -101,12 +86,7 @@ export class PeticionEvaluacionTareasModalComponent
   ngOnInit(): void {
     super.ngOnInit();
     this.setupI18N();
-    this.mostrarOrganismoYanioSubscription = this.mostrarOrganismoYanio$.subscribe(mostrar => {
-      this.mostrarOrganismoYanio = mostrar;
-    });
-    this.tareaYformacionTextoSubscription = this.tareaYformacionTexto$.subscribe(mostrar => {
-      this.tareaYformacionTexto = mostrar;
-    });
+
     this.onChangeMemoria(this.data.tarea?.memoria);
     this.loadFormaciones();
     this.loadTipoTareas();
@@ -124,15 +104,6 @@ export class PeticionEvaluacionTareasModalComponent
         BTN_OK,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.textoAceptar = value);
-      if (this.data.tarea?.memoria.comite.formulario.id === FORMULARIO.M10) {
-        this.translate.get(
-          TAREA_EXPERIENCIA_KEY
-        ).subscribe((value) => this.textoFormacionExperiencia$.next(value));
-      } else {
-        this.translate.get(
-          TAREA_FORMACION_ESPECIFICA_KEY
-        ).subscribe((value) => this.textoFormacionExperiencia$.next(value));
-      }
 
     } else {
       this.translate.get(
@@ -151,11 +122,6 @@ export class PeticionEvaluacionTareasModalComponent
         BTN_ADD,
         MSG_PARAMS.CARDINALIRY.SINGULAR
       ).subscribe((value) => this.textoAceptar = value);
-
-      this.translate.get(
-        TAREA_FORMACION_ESPECIFICA_KEY,
-        MSG_PARAMS.CARDINALIRY.SINGULAR
-      ).subscribe((value) => this.textoFormacionExperiencia$.next(value));
     }
 
     this.translate.get(
@@ -175,9 +141,15 @@ export class PeticionEvaluacionTareasModalComponent
     ).subscribe((value) => this.msgParamTareaEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
-      TAREA_FORMACION_ESPECIFICA_KEY,
+      TAREA_EXPERIENCIA_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamFormacionEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      TAREA_FORMACION_ESPECIFICA_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamFormacionEspecificaEntity =
       { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
@@ -217,46 +189,33 @@ export class PeticionEvaluacionTareasModalComponent
    * muestra y oculta los campos oportunos
    */
   private onChangeMemoria(memoria: IMemoria): void {
-    if (memoria?.comite?.id === COMITE.CBE || memoria?.comite?.id === COMITE.CEEA) {
-      this.mostrarOrganismoYanio$.next(true);
-      this.formGroup.controls.organismo.setValidators([I18nValidators.required, I18nValidators.maxLength(250)]);
-      this.formGroup.controls.anio.setValidators(Validators.required);
-    } else {
-      this.mostrarOrganismoYanio$.next(false);
-      this.formGroup.controls.organismo.clearValidators();
-      this.formGroup.controls.anio.clearValidators();
+    this.tareaLibre = !!memoria?.comite?.tareaNombreLibre;
+    this.formacionLibre = !!memoria?.comite?.tareaExperienciaLibre;
+    this.detalleFormacion = !!memoria?.comite?.tareaExperienciaDetalle;
+    if (this.tareaLibre) {
+      this.formGroup.controls.tipoTarea.disable();
+      this.formGroup.controls.nombre.enable();
     }
-
-    if (memoria?.comite?.id === COMITE.CEI || memoria?.comite?.id === COMITE.CBE) {
-      this.tareaYformacionTexto$.next(true);
-      this.formGroup.controls.nombre.setValidators([I18nValidators.required, I18nValidators.maxLength(250)]);
-      this.formGroup.controls.formacion.setValidators([I18nValidators.required, I18nValidators.maxLength(250)]);
-      this.formGroup.controls.tipoTarea.clearValidators();
-      this.formGroup.controls.formacionEspecifica.clearValidators();
-    } else {
-      this.tareaYformacionTexto$.next(false);
-      this.formGroup.controls.tipoTarea.setValidators(Validators.required);
-      this.formGroup.controls.formacionEspecifica.setValidators(Validators.required);
-      this.formGroup.controls.nombre.clearValidators();
-      this.formGroup.controls.formacion.clearValidators();
+    else {
+      this.formGroup.controls.tipoTarea.enable();
+      this.formGroup.controls.nombre.disable();
     }
-
-    if (memoria?.comite?.formulario.id === FORMULARIO.M10 || memoria?.comite?.formulario.id === FORMULARIO.M30) {
-      this.translate.get(
-        TAREA_EXPERIENCIA_KEY
-      ).subscribe((value) => this.textoFormacionExperiencia$.next(value));
-    } else {
-      this.translate.get(
-        TAREA_FORMACION_ESPECIFICA_KEY
-      ).subscribe((value) => this.textoFormacionExperiencia$.next(value));
+    if (this.formacionLibre) {
+      this.formGroup.controls.formacionEspecifica.disable();
+      this.formGroup.controls.formacion.enable();
     }
-
-    this.formGroup.controls.anio.updateValueAndValidity();
-    this.formGroup.controls.formacion.updateValueAndValidity();
-    this.formGroup.controls.formacionEspecifica.updateValueAndValidity();
-    this.formGroup.controls.organismo.updateValueAndValidity();
-    this.formGroup.controls.nombre.updateValueAndValidity();
-    this.formGroup.controls.tipoTarea.updateValueAndValidity();
+    else {
+      this.formGroup.controls.formacionEspecifica.enable();
+      this.formGroup.controls.formacion.disable();
+    }
+    if (this.detalleFormacion) {
+      this.formGroup.controls.anio.enable();
+      this.formGroup.controls.organismo.enable();
+    }
+    else {
+      this.formGroup.controls.anio.disable();
+      this.formGroup.controls.organismo.disable();
+    }
   }
 
   /**
@@ -307,43 +266,30 @@ export class PeticionEvaluacionTareasModalComponent
   }
 
   protected getValue(): PeticionEvaluacionTareasModalComponentData {
-    if (this.mostrarOrganismoYanio) {
-      this.data.tarea.organismo = this.formGroup.controls.organismo.value;
-      this.data.tarea.anio = this.formGroup.controls.anio.value;
-    } else {
-      this.data.tarea.organismo = [];
-      this.data.tarea.anio = null;
-    }
-
-    if (this.tareaYformacionTexto) {
-      this.data.tarea.tipoTarea = null;
-      this.data.tarea.formacionEspecifica = null;
-      this.data.tarea.nombre = this.formGroup.controls.nombre.value;
-      this.data.tarea.formacion = this.formGroup.controls.formacion.value;
-    } else {
-      this.data.tarea.nombre = [];
-      this.data.tarea.formacion = [];
-      this.data.tarea.tipoTarea = this.formGroup.controls.tipoTarea.value;
-      this.data.tarea.formacionEspecifica = this.formGroup.controls.formacionEspecifica.value;
-    }
-
-    this.data.tarea.memoria = this.formGroup.controls.memoria.value;
     this.data.tarea.equipoTrabajo = {} as IEquipoTrabajo;
     this.data.equiposTrabajo.filter(equipo => equipo.persona.id === this.formGroup.controls.equipoTrabajo.value.id)
       .forEach(equipoTrabajo => this.data.tarea.equipoTrabajo = equipoTrabajo);
     this.data.tarea.equipoTrabajo.persona = this.formGroup.controls.equipoTrabajo.value;
+
+    this.data.tarea.memoria = this.formGroup.controls.memoria.value;
+    this.data.tarea.nombre = this.tareaLibre ? this.formGroup.controls.nombre.value : [];
+    this.data.tarea.tipoTarea = this.tareaLibre ? null : this.formGroup.controls.tipoTarea.value;
+    this.data.tarea.formacion = this.formacionLibre ? this.formGroup.controls.formacion.value : [];
+    this.data.tarea.formacionEspecifica = this.formacionLibre ? null : this.formGroup.controls.formacionEspecifica.value;
+    this.data.tarea.organismo = this.detalleFormacion ? this.formGroup.controls.organismo.value : [];
+    this.data.tarea.anio = this.detalleFormacion ? this.formGroup.controls.anio.value : null;
 
     return this.data;
   }
 
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      nombre: new FormControl(this.data.tarea?.nombre ?? []),
-      tipoTarea: new FormControl(this.data.tarea?.tipoTarea),
-      organismo: new FormControl(this.data.tarea?.organismo ?? []),
-      anio: new FormControl(this.data.tarea?.anio),
-      formacionEspecifica: new FormControl(this.data.tarea?.formacionEspecifica),
-      formacion: new FormControl(this.data.tarea?.formacion ?? []),
+      nombre: new FormControl(this.data.tarea?.nombre ?? [], [Validators.required]),
+      tipoTarea: new FormControl(this.data.tarea?.tipoTarea, [Validators.required]),
+      organismo: new FormControl(this.data.tarea?.organismo ?? [], [I18nValidators.required, I18nValidators.maxLength(250)]),
+      anio: new FormControl(this.data.tarea?.anio, [Validators.required]),
+      formacionEspecifica: new FormControl(this.data.tarea?.formacionEspecifica, [Validators.required]),
+      formacion: new FormControl(this.data.tarea?.formacion ?? [], [I18nValidators.required]),
       memoria: new FormControl(this.data.tarea?.memoria, [Validators.required]),
       equipoTrabajo: new FormControl(this.data.tarea?.equipoTrabajo == null ? '' :
         this.data.tarea?.equipoTrabajo.persona, [Validators.required])

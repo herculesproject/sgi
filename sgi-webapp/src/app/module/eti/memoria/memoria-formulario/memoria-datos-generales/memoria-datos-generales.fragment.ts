@@ -1,10 +1,9 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { COMITE, IComite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IEstadoMemoria } from '@core/models/eti/estado-memoria';
-import { IMemoria } from '@core/models/eti/memoria';
+import { IMemoria, MemoriaTipo } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
-import { ITipoMemoria, TIPO_MEMORIA } from '@core/models/eti/tipo-memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { FormFragment } from '@core/services/action-service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
@@ -13,7 +12,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
+export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> {
   private memoria: IMemoria;
   public readonly: boolean;
   public showTitulo = false;
@@ -75,7 +74,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
         Validators.required
       ],
       tipoMemoria: [
-        { value: this.isEdit() ? this.memoria.tipoMemoria : null, disabled: (this.isEdit() || this.readonly) },
+        { value: this.isEdit() ? this.memoria.tipo : null, disabled: (this.isEdit() || this.readonly) },
         Validators.required
       ],
       titulo: [
@@ -97,12 +96,12 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   buildPatch(value: IMemoria): { [key: string]: any } {
     this.memoria = value;
     this.onComiteChange(value.comite);
-    this.onTipoMemoriaChange(value.tipoMemoria);
+    this.onTipoMemoriaChange(value.tipo);
 
     return {
       numReferencia: value.numReferencia,
       comite: value.comite,
-      tipoMemoria: value.tipoMemoria,
+      tipoMemoria: value.tipo,
       titulo: value.titulo,
       personaResponsable: value.responsable?.id ? value.responsable : null,
       memoriaOriginal: value.memoriaOriginal,
@@ -113,7 +112,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   getValue(): IMemoria {
     const form = this.getFormGroup().controls;
     this.memoria.comite = form.comite.value;
-    this.memoria.tipoMemoria = form.tipoMemoria.value;
+    this.memoria.tipo = form.tipoMemoria.value;
 
     if (this.showTitulo) {
       this.memoria.titulo = form.titulo.value;
@@ -123,13 +122,13 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   }
 
   public onComiteChange(comite: IComite) {
-    this.showTitulo = comite.id === COMITE.CEEA;
+    this.showTitulo = comite.memoriaTituloLibre;
 
     this.getFormGroup().controls.tipoMemoria.markAsTouched();
   }
 
-  public onTipoMemoriaChange(tipoMemoria: ITipoMemoria) {
-    this.showMemoriaOriginal = tipoMemoria?.id === TIPO_MEMORIA.MODIFICACION;
+  public onTipoMemoriaChange(tipoMemoria: MemoriaTipo) {
+    this.showMemoriaOriginal = tipoMemoria === MemoriaTipo.MODIFICACION;
     if (this.isInvestigador) {
       this.checkShowInfoRatificacion(tipoMemoria);
     } else {
@@ -152,7 +151,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
     datosGenerales.peticionEvaluacion.id = this.idPeticionEvaluacion;
     const obs = this.isEdit()
       ? this.service.update(this.getKey() as number, datosGenerales)
-      : datosGenerales.tipoMemoria.id === TIPO_MEMORIA.MODIFICACION
+      : datosGenerales.tipo === MemoriaTipo.MODIFICACION
         ? this.service.createMemoriaModificada(datosGenerales, this.getFormGroup().controls.memoriaOriginal.value.id)
         : this.service.create(datosGenerales);
     return obs.pipe(
@@ -202,17 +201,17 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
     }
   }
 
-  private checkShowInfoRatificacion(tipoMemoria: ITipoMemoria) {
-    if (tipoMemoria?.id === TIPO_MEMORIA.RATIFICACION && this.memoria.estadoActual) {
+  private checkShowInfoRatificacion(tipoMemoria: MemoriaTipo) {
+    if (tipoMemoria === MemoriaTipo.RATIFICACION && this.memoria.estadoActual) {
       const estado = this.memoria.estadoActual.id as ESTADO_MEMORIA;
       if (estado === ESTADO_MEMORIA.COMPLETADA || estado === ESTADO_MEMORIA.EN_ELABORACION
         || estado === ESTADO_MEMORIA.FAVORABLE_PENDIENTE_MODIFICACIONES_MINIMAS
         || estado === ESTADO_MEMORIA.PENDIENTE_CORRECCIONES) {
         this.showInfoRatificacion = true;
       }
-    } else if (tipoMemoria?.id === TIPO_MEMORIA.RATIFICACION && !this.memoria.estadoActual) {
+    } else if (tipoMemoria === MemoriaTipo.RATIFICACION && !this.memoria.estadoActual) {
       this.showInfoRatificacion = true;
-    } else if (tipoMemoria?.id !== TIPO_MEMORIA.RATIFICACION) {
+    } else if (tipoMemoria !== MemoriaTipo.RATIFICACION) {
       this.showInfoRatificacion = false;
     }
   }

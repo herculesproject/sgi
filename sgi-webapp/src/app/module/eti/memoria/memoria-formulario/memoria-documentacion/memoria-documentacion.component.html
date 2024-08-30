@@ -56,13 +56,13 @@
 
   <div class="separation-button">
     <h2>{{'title.eti.memoria.documentacion.seguimiento-anual' | translate}}</h2>
-    <ng-container *ngIf="formularioComite === FORMULARIO.M10">
+    <ng-container *ngIf="formulario.seguimientoAnualDocumentacionTitle === FORMULARIO_SEGUIMIENTO_ANUAL_TITLE.TITULO_1">
       <span>{{'eti.memoria.documentacion.seguimiento-anual.formulario.M10' | translate}}</span>
     </ng-container>
-    <ng-container *ngIf="formularioComite === FORMULARIO.M20">
+    <ng-container *ngIf="formulario.seguimientoAnualDocumentacionTitle === FORMULARIO_SEGUIMIENTO_ANUAL_TITLE.TITULO_2">
       <span>{{'eti.memoria.documentacion.seguimiento-anual.formulario.M20' | translate}}</span>
     </ng-container>
-    <ng-container *ngIf="formularioComite === FORMULARIO.M30">
+    <ng-container *ngIf="formulario.seguimientoAnualDocumentacionTitle === FORMULARIO_SEGUIMIENTO_ANUAL_TITLE.TITULO_2">
       <span>{{'eti.memoria.documentacion.seguimiento-anual.formulario.M30' | translate}}</span>
     </ng-container>
     <div class="separation-button">

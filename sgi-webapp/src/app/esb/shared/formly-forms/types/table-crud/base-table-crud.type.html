@@ -51,6 +51,14 @@
             {{model[i][currentField.key]['nombre']}}
           </p>
 
+          <p *ngSwitchCase="'i18n-input'">
+            {{model[i][currentField.key] | i18nFieldValue}}
+          </p>
+
+          <p *ngSwitchCase="'i18n-textarea'">
+            {{model[i][currentField.key] | i18nFieldValue}}
+          </p>
+
           <p *ngSwitchDefault>{{model[i][currentField.key]}}</p>
         </td>
       </ng-container>

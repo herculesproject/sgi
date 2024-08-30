@@ -5,9 +5,9 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IConfiguracion } from '@core/models/eti/configuracion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { MEMORIA_TIPO_MAP } from '@core/models/eti/memoria';
 import { TIPO_CONVOCATORIA_REUNION } from '@core/models/eti/tipo-convocatoria-reunion';
 import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
-import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -64,8 +64,8 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     return TIPO_EVALUACION_MAP;
   }
 
-  get TIPO_MEMORIA_MAP() {
-    return TIPO_MEMORIA_MAP;
+  get MEMORIA_TIPO_MAP() {
+    return MEMORIA_TIPO_MAP;
   }
 
   constructor(
@@ -136,7 +136,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
   }
 
   protected initColumns() {
-    this.columnas = ['memoria.comite.comite', 'tipoEvaluacion', 'memoria.tipoMemoria.nombre',
+    this.columnas = ['memoria.comite.comite', 'tipoEvaluacion', 'memoria.tipo',
       'memoria.numReferencia', 'version', 'solicitante', 'convocatoriaReunion.fechaEvaluacion', 'enviada', 'acciones'];
   }
 

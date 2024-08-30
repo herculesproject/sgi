@@ -1,7 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MEMORIA_PETICION_EVALUACION_CONVERTER } from '@core/converters/eti/memoria-peticion-evaluacion.converter';
-import { IMemoriaPeticionEvaluacionBackend } from '@core/models/eti/backend/memoria-peticion-evaluacion-backend';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
@@ -22,6 +20,8 @@ import { IEquipoTrabajoResponse } from './equipo-trabajo/equipo-trabajo-response
 import { EQUIPO_TRABAJO_RESPONSE_CONVERTER } from './equipo-trabajo/equipo-trabajo-response.converter';
 import { IEquipoTrabajoWithIsEliminableResponse } from './equipo-trabajo/equipo-trabajo-with-is-eliminable-response';
 import { EQUIPO_TRABAJO_WITH_IS_ELIMINABLE_RESPONSE_CONVERTER } from './equipo-trabajo/equipo-trabajo-with-is-eliminable-response.converter';
+import { IMemoriaPeticionEvaluacionResponse } from './memoria/memoria-peticion-evaluacion-response';
+import { MEMORIA_PETICION_EVALUACION_RESPONSE_CONVERTER } from './memoria/memoria-peticion-evaluacion-response.converter';
 import { ITareaResponse } from './tarea/tarea-response';
 import { TAREA_RESPONSE_CONVERTER } from './tarea/tarea-response.converter';
 import { ITareaWithIsEliminableResponse } from './tarea/tarea-with-is-eliminable-response';
@@ -112,10 +112,10 @@ export class PeticionEvaluacionService extends _PeticionEvaluacionServiceMixinBa
    * @return las memorias de la PeticionEvaluacion.
    */
   findMemorias(idPeticionEvaluacion: number): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
-    return this.find<IMemoriaPeticionEvaluacionBackend, IMemoriaPeticionEvaluacion>(
+    return this.find<IMemoriaPeticionEvaluacionResponse, IMemoriaPeticionEvaluacion>(
       `${this.endpointUrl}/${idPeticionEvaluacion}/memorias`,
       null,
-      MEMORIA_PETICION_EVALUACION_CONVERTER
+      MEMORIA_PETICION_EVALUACION_RESPONSE_CONVERTER
     );
   }
 

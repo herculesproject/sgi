@@ -3,12 +3,13 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
-import { COMITE, IComite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { Module } from '@core/module';
 import { ActionService } from '@core/services/action-service';
+import { DialogService } from '@core/services/dialog.service';
 import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
@@ -16,13 +17,17 @@ import { FormularioService } from '@core/services/eti/formulario.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
+import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormlyConfig, FormlyFormBuilder } from '@ngx-formly/core';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, from, of, throwError } from 'rxjs';
+import { Observable, from, throwError } from 'rxjs';
 import { catchError, concatMap, filter, map, switchMap, take, takeLast } from 'rxjs/operators';
 import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
 import { MemoriaDatosGeneralesFragment } from './memoria-formulario/memoria-datos-generales/memoria-datos-generales.fragment';
@@ -33,10 +38,6 @@ import { MemoriaInformesFragment } from './memoria-formulario/memoria-informes/m
 import { MemoriaRetrospectivaFragment } from './memoria-formulario/memoria-retrospectiva/memoria-retrospectiva.fragment';
 import { MemoriaSeguimientoAnualFragment } from './memoria-formulario/memoria-seguimiento-anual/memoria-seguimiento-anual.fragment';
 import { MemoriaSeguimientoFinalFragment } from './memoria-formulario/memoria-seguimiento-final/memoria-seguimiento-final.fragment';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { DialogService } from '@core/services/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_PETICIONES_EVALUACION = marker('eti.peticion-evaluacion-link');
 const MSG_ERROR_FORMULARIO = marker('eti.memoria.formulario.error');
@@ -93,7 +94,8 @@ export class MemoriaActionService extends ActionService {
     translateService: TranslateService,
     dialogService: DialogService,
     router: Router,
-    languageService: LanguageService
+    languageService: LanguageService,
+    tipoDocumentoService: TipoDocumentoService
   ) {
     super();
     this.formlyFormBuilder = new FormlyFormBuilder(formlyConfig, componentFactoryResolver, injector);
@@ -138,7 +140,8 @@ export class MemoriaActionService extends ActionService {
       translateService,
       dialogService,
       router,
-      languageService
+      languageService,
+      tipoDocumentoService
     );
     this.documentacion = new MemoriaDocumentacionFragment(this.memoria?.id, this.isInvestigador, service, documentoService);
     this.seguimientoAnual = new MemoriaSeguimientoAnualFragment(
@@ -160,7 +163,8 @@ export class MemoriaActionService extends ActionService {
       translateService,
       dialogService,
       router,
-      languageService
+      languageService,
+      tipoDocumentoService
     );
     this.seguimientoFinal = new MemoriaSeguimientoFinalFragment(
       logger,
@@ -181,7 +185,8 @@ export class MemoriaActionService extends ActionService {
       translateService,
       dialogService,
       router,
-      languageService
+      languageService,
+      tipoDocumentoService
     );
     this.retrospectiva = new MemoriaRetrospectivaFragment(
       logger,
@@ -202,7 +207,8 @@ export class MemoriaActionService extends ActionService {
       translateService,
       dialogService,
       router,
-      languageService
+      languageService,
+      tipoDocumentoService
     );
     this.evaluaciones = new MemoriaEvaluacionesFragment(this.memoria?.id, service);
     this.versiones = new MemoriaInformesFragment(this.memoria?.id, service);
@@ -222,7 +228,7 @@ export class MemoriaActionService extends ActionService {
         take(1)
       ).subscribe(
         (value) => {
-          if (value && this.getComite()?.id === COMITE.CEEA) {
+          if (value && this.getComite()?.memoriaTituloLibre) {
             this.subscriptions.push(this.datosGenerales.getFormGroup().controls.titulo.valueChanges.pipe(
             ).subscribe(
               () => {
@@ -296,7 +302,7 @@ export class MemoriaActionService extends ActionService {
   }
 
   saveOrUpdate(action?: any): Observable<void> {
-    const neeeMemoryUpdate = this.getComite()?.id === COMITE.CEEA
+    const neeeMemoryUpdate = this.getComite()?.memoriaTituloLibre
       && this.isEdit()
       && this.datosGenerales.hasChanges()
       && !this.formularios.hasChanges()

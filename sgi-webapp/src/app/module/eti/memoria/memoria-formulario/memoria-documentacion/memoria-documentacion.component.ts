@@ -6,10 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { COMITE } from '@core/models/eti/comite';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { ESTADO_RETROSPECTIVA, IEstadoRetrospectiva } from '@core/models/eti/estado-retrospectiva';
-import { FORMULARIO } from '@core/models/eti/formulario';
+import { FormularioSeguimientoAnualDocumentacionTitle, IFormulario } from '@core/models/eti/formulario';
 import { ESTADO_MEMORIA, TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -82,8 +81,8 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     }
   }
 
-  get formularioComite(): FORMULARIO {
-    return this.actionService.getComite().id;
+  get formulario(): IFormulario {
+    return this.actionService.getMemoria().formulario;
   }
 
   private get estadoMemoria(): TipoEstadoMemoria {
@@ -94,8 +93,8 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     return this.actionService.getRetrospectiva()?.estadoRetrospectiva;
   }
 
-  get FORMULARIO() {
-    return FORMULARIO;
+  get FORMULARIO_SEGUIMIENTO_ANUAL_TITLE() {
+    return FormularioSeguimientoAnualDocumentacionTitle;
   }
 
   get TIPO_DOCUMENTACION() {
@@ -103,7 +102,7 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
   }
 
   get showRetrospectiva(): boolean {
-    return this.actionService.getComite().id === COMITE.CEEA;
+    return this.actionService.getComite().requiereRetrospectiva;
   }
 
   constructor(
@@ -192,7 +191,7 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
         break;
     }
     const data: MemoriaDocumentacionMemoriaModalData = {
-      memoriaId: this.fragment.getKey() as number,
+      memoria: this.actionService.getMemoria(),
       tipoEvaluacion,
       showTipoDocumentos: this.formPart.isInvestigador && !this.actionService.readonly,
       comite: this.actionService.getComite()

@@ -30,7 +30,7 @@ export class SeguimientoEvaluacionFragment extends FormFragment<IMemoria> {
 
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
-      comite: [{ value: '', disabled: true }],
+      comite: [{ value: null, disabled: true }],
       fechaEvaluacion: [{ value: null, disabled: true }],
       referenciaMemoria: [{ value: '', disabled: true }],
       solicitante: [{ value: '', disabled: true }],
@@ -42,7 +42,7 @@ export class SeguimientoEvaluacionFragment extends FormFragment<IMemoria> {
   protected initializer(key: number): Observable<IMemoria> {
     return this.service.findById(key).pipe(
       map((evaluacion) => {
-        this.memoria = evaluacion.memoria as IMemoria;
+        this.memoria = evaluacion.memoria;
         this.evaluacion$.next(evaluacion);
         this.evaluacion = evaluacion;
         return this.memoria;
@@ -66,7 +66,7 @@ export class SeguimientoEvaluacionFragment extends FormFragment<IMemoria> {
 
   buildPatch(value: IMemoria): { [key: string]: any } {
     return {
-      comite: value.comite.comite,
+      comite: value.comite,
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,

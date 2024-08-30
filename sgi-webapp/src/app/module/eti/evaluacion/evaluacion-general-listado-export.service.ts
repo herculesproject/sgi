@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MEMORIA_TIPO_MAP } from '@core/models/eti/memoria';
+import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
@@ -10,8 +12,6 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IEvaluacionReportData, IEvaluacionReportOptions } from './evaluacion-listado-export.service';
-import { TIPO_MEMORIA_MAP } from '@core/models/eti/tipo-memoria';
-import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
 
 const EVALUACION_COMITE_KEY = marker('eti.evaluacion.report.comite');
 const EVALUACION_TIPO_EVALUACION_KEY = marker('eti.evaluacion.report.tipo-evaluacion');
@@ -26,7 +26,7 @@ const EVALUACION_TIPO_MEMORIA_KEY = marker('eti.evaluacion.report.tipo-memoria')
 
 @Injectable()
 export class EvaluacionGeneralListadoExportService extends
-  AbstractTableExportFillService<IEvaluacionReportData, IEvaluacionReportOptions>{
+  AbstractTableExportFillService<IEvaluacionReportData, IEvaluacionReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -107,9 +107,9 @@ export class EvaluacionGeneralListadoExportService extends
     const convocatoriaData = convocatorias[index];
 
     return [
-      convocatoriaData.memoria?.comite?.comite ?? '',
+      convocatoriaData.memoria?.comite?.codigo ?? '',
       convocatoriaData.tipoEvaluacion?.id ? this.translate.instant(TIPO_EVALUACION_MAP.get(convocatoriaData.tipoEvaluacion?.id)) : '',
-      convocatoriaData.memoria?.tipoMemoria?.id ? this.translate.instant(TIPO_MEMORIA_MAP.get(convocatoriaData.memoria?.tipoMemoria?.id)) : '',
+      convocatoriaData.memoria?.tipo ? this.translate.instant(MEMORIA_TIPO_MAP.get(convocatoriaData.memoria?.tipo)) : '',
       LuxonUtils.toBackend(convocatoriaData.fechaDictamen) ?? '',
       convocatoriaData.memoria?.numReferencia ?? '',
       convocatoriaData.solicitante?.nombre ?? '',

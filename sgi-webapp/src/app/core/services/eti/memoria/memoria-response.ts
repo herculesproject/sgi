@@ -1,24 +1,33 @@
-import { IComite } from '../../../models/eti/comite';
+import { MemoriaTipo } from '@core/models/eti/memoria';
 import { TipoEstadoMemoria } from '../../../models/eti/tipo-estado-memoria';
-import { ITipoMemoria } from '../../../models/eti/tipo-memoria';
+import { IComiteResponse } from '../comite/comite-response';
+import { IFormularioResponse } from '../formulario/formulario-response';
 import { IPeticionEvaluacionResponse } from '../peticion-evaluacion/peticion-evaluacion-response';
-import { IRetrospectivaBackend } from '../../../models/eti/backend/retrospectiva-backend';
+import { IRetrospectivaResponse } from '../retrospectiva/retrospectiva-response';
 
 export interface IMemoriaResponse {
   /** Id */
   id: number;
-
+  /** Referencia */
   numReferencia: string;
   /** Petición evaluación */
   peticionEvaluacion: IPeticionEvaluacionResponse;
   /** Comité */
-  comite: IComite;
+  comite: IComiteResponse;
+  /** Formulario de la memoria */
+  formulario: IFormularioResponse;
+  /** Formulario del Seguimiento Anual */
+  formularioSeguimientoAnual: IFormularioResponse;
+  /** Formulario del Seguimiento Final */
+  formularioSeguimientoFinal: IFormularioResponse;
+  /** Formulario de la Retrospectiva */
+  formularioRetrospectiva: IFormularioResponse;
   /** Título */
   titulo: string;
-  /** Referencia persona responsable */
+  //** Referencia persona responsable */
   personaRef: string;
   /** Tipo Memoria */
-  tipoMemoria: ITipoMemoria;
+  tipo: MemoriaTipo;
   /** Fecha envio secretaria. */
   fechaEnvioSecretaria: string;
   /** Indicador require retrospectiva */
@@ -30,7 +39,7 @@ export interface IMemoriaResponse {
   /** Responsable de memoria */
   isResponsable: boolean;
   /** Retrospectiva */
-  retrospectiva: IRetrospectivaBackend;
+  retrospectiva: IRetrospectivaResponse;
   /** Memoria original */
   memoriaOriginal: IMemoriaResponse;
   /** Activo */

@@ -1,12 +1,13 @@
-import { IMemoriaPeticionEvaluacionBackend } from '@core/models/eti/backend/memoria-peticion-evaluacion-backend';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
+import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { RETROSPECTIVA_CONVERTER } from './retrospectiva.converter';
+import { RETROSPECTIVA_RESPONSE_CONVERTER } from '../retrospectiva/retrospectiva-response.converter';
+import { IMemoriaPeticionEvaluacionResponse } from './memoria-peticion-evaluacion-response';
 
-class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPeticionEvaluacionBackend, IMemoriaPeticionEvaluacion> {
-  toTarget(value: IMemoriaPeticionEvaluacionBackend): IMemoriaPeticionEvaluacion {
+class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPeticionEvaluacionResponse, IMemoriaPeticionEvaluacion> {
+  toTarget(value: IMemoriaPeticionEvaluacionResponse): IMemoriaPeticionEvaluacion {
     if (!value) {
       return value as unknown as IMemoriaPeticionEvaluacion;
     }
@@ -15,10 +16,10 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
       responsableRef: value.responsableRef,
       numReferencia: value.numReferencia,
       titulo: value.titulo,
-      comite: value.comite,
+      comite: COMITE_RESPONSE_CONVERTER.toTarget(value.comite),
       estadoActual: value.estadoActual,
       requiereRetrospectiva: value.requiereRetrospectiva,
-      retrospectiva: RETROSPECTIVA_CONVERTER.toTarget(value.retrospectiva),
+      retrospectiva: RETROSPECTIVA_RESPONSE_CONVERTER.toTarget(value.retrospectiva),
       fechaEvaluacion: LuxonUtils.fromBackend(value.fechaEvaluacion),
       fechaLimite: LuxonUtils.fromBackend(value.fechaLimite),
       isResponsable: value.isResponsable,
@@ -28,19 +29,19 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
     };
   }
 
-  fromTarget(value: IMemoriaPeticionEvaluacion): IMemoriaPeticionEvaluacionBackend {
+  fromTarget(value: IMemoriaPeticionEvaluacion): IMemoriaPeticionEvaluacionResponse {
     if (!value) {
-      return value as unknown as IMemoriaPeticionEvaluacionBackend;
+      return value as unknown as IMemoriaPeticionEvaluacionResponse;
     }
     return {
       id: value.id,
       responsableRef: value.responsableRef,
       numReferencia: value.numReferencia,
       titulo: value.titulo,
-      comite: value.comite,
+      comite: COMITE_RESPONSE_CONVERTER.fromTarget(value.comite),
       estadoActual: value.estadoActual,
       requiereRetrospectiva: value.requiereRetrospectiva,
-      retrospectiva: RETROSPECTIVA_CONVERTER.fromTarget(value.retrospectiva),
+      retrospectiva: RETROSPECTIVA_RESPONSE_CONVERTER.fromTarget(value.retrospectiva),
       fechaEvaluacion: LuxonUtils.toBackend(value.fechaEvaluacion),
       fechaLimite: LuxonUtils.toBackend(value.fechaLimite),
       isResponsable: value.isResponsable,
@@ -51,4 +52,4 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
   }
 }
 
-export const MEMORIA_PETICION_EVALUACION_CONVERTER = new MemoriaPeticionEvaluacionConverter();
+export const MEMORIA_PETICION_EVALUACION_RESPONSE_CONVERTER = new MemoriaPeticionEvaluacionConverter();

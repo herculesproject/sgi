@@ -30,7 +30,7 @@ export class SelectComiteComponent extends SelectServiceComponent<IComite> {
   ) {
     super(defaultErrorStateMatcher, ngControl, languageService);
 
-    this.displayWith = (comite: IComite) => comite?.comite;
+    this.displayWith = (comite: IComite) => comite?.codigo;
   }
 
   protected loadServiceOptions(): Observable<IComite[]> {

@@ -1,15 +1,15 @@
-import { IFormulario } from './formulario';
 
 export interface ITipoDocumento {
   /** Id */
   id: number;
-
+  /** Codigo */
+  codigo: string;
   /** Nombre */
   nombre: string;
-
-  /** Formulario */
-  formulario: IFormulario;
-
+  /** Formulario Id */
+  formularioId: number;
+  /** Documentación adicional */
+  adicional: boolean;
   /** Activo */
   activo: boolean;
 }

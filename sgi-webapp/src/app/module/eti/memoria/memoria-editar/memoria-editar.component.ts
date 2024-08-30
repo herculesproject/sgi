@@ -5,7 +5,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
-import { COMITE } from '@core/models/eti/comite';
 import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -47,10 +46,6 @@ export class MemoriaEditarComponent extends ActionComponent implements OnInit {
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
-  }
-
-  get COMITE() {
-    return COMITE;
   }
 
   constructor(

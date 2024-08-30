@@ -1,12 +1,12 @@
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
-import { IApartado } from '@core/models/eti/apartado';
+import { IApartado, IApartadoDefinion } from '@core/models/eti/apartado';
 import { IBloque } from '@core/models/eti/bloque';
 import { IComentario } from '@core/models/eti/comentario';
 import { IComite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { FORMULARIO, resolveFormularioByTipoEvaluacionAndComite } from '@core/models/eti/formulario';
+import { IFormulario, resolveFormularioByTipoEvaluacionAndComite } from '@core/models/eti/formulario';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IRespuesta } from '@core/models/eti/respuesta';
 import { ITarea } from '@core/models/eti/tarea';
@@ -23,6 +23,7 @@ import { FormularioService } from '@core/services/eti/formulario.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { RespuestaService } from '@core/services/eti/respuesta.service';
+import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { LanguageService } from '@core/services/language.service';
 import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -86,6 +87,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   public selectedIndex$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
 
   private fieldsDocumentacion = new Map<number, SgiFormlyFieldConfig>();
+  /** Mapa con la relación de códigos de tipos de documento y el identificador del mismo */
+  private tipoDocumentosFormulario = new Map<string, number>();
 
   private readonly: boolean;
 
@@ -94,7 +97,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
 
   private lastCompletedBlock: number;
 
-  private formularioTipo: FORMULARIO;
+  private formulario: IFormulario;
 
   get comentariosGenerales(): IComentario[] {
     return this._comentariosGenerales;
@@ -125,6 +128,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     protected dialogService: DialogService,
     protected router: Router,
     protected languageService: LanguageService,
+    protected tipoDocumentoService: TipoDocumentoService
   ) {
     super(key);
     this.comite = comite;
@@ -231,7 +235,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
           );
         }),
         switchMap(() => {
-          return this.loadFormulario(this.tipoEvaluacion, this.comite);
+          return this.loadFormulario(this.tipoEvaluacion, this.memoria);
         })
       );
     }
@@ -291,7 +295,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     ).pipe(
       takeLast(1),
       switchMap(() => {
-        if (this.isFormularioM20()) {
+        if (this.memoria.comite.requiereRetrospectiva) {
           const respuestaEvaluacionRetrospectiva = respuestas.find(respuesta =>
             this.isRespuestaEvaluacionRetrospectivaAndFilled(respuesta));
 
@@ -306,7 +310,7 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
         this.refreshBlockChanges();
 
         if ((formLoadComplete && !hasLastBloqueSavedRespuestas) || this.isFormularioMemoriaModificacion(this.memoria) || this.memoria.estadoActual.id === ESTADO_MEMORIA.SUBSANACION) {
-          return this.formularioService.completado(this.memoria.id, this.formularioTipo);
+          return this.formularioService.completado(this.memoria.id, this.formulario.tipo);
         }
 
         return of(void 0);
@@ -329,6 +333,19 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     });
   }
 
+  /**
+   * Obtiene el apartado definición del idioma actual, si es que existe, sino el que corresponda según la priorización de idiomas
+   * @param definicionField Listado de definiciones de un apartado
+   * @returns Definición en el idioma adecuado.
+   */
+  private getApartadoDefinicion(definicionField: IApartadoDefinion[]): IApartadoDefinion {
+    const element = definicionField.find(a => a.lang === this.languageService.getLanguage());
+    if (!element) {
+      return definicionField[0];
+    }
+    return element;
+  }
+
   private refreshFormlyModelValues(
     firstLevel: boolean,
     model: any,
@@ -337,12 +354,13 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     questions: IQuestion[]
   ): void {
     questions.forEach(question => {
-      const firstFieldConfig = question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema ? question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema[0] : {};
+      const definicion = this.getApartadoDefinicion(question.apartado.definicion);
+      const firstFieldConfig = definicion?.esquema ? definicion?.esquema[0] : {};
       const key = firstFieldConfig.key as string;
       const fieldConfig = firstFieldConfig.fieldGroup;
       if (firstLevel && key) {
         if (this.isEditable()) {
-          this.evalExpressionModelValue(question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema, model[key], formState);
+          this.evalExpressionModelValue(definicion?.esquema, model[key], formState);
         }
         if (question.childs.length) {
           const isFirstLevel = !firstLevel ? question.childs.length > 0 : firstLevel;
@@ -355,7 +373,8 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   private getRespuestas(question: IQuestion): IRespuesta[] {
     const respuestas: IRespuesta[] = [];
     let respuesta = {};
-    question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema.forEach((field) => {
+    const definicion = this.getApartadoDefinicion(question.apartado.definicion);
+    definicion?.esquema.forEach((field) => {
       respuesta = Object.assign(respuesta, field.model);
     });
     question.apartado.respuesta.valor = respuesta;
@@ -369,11 +388,28 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     const fieldDocumentacion = this.fieldsDocumentacion.get(question.apartado.id);
     if (fieldDocumentacion) {
       const id = fieldDocumentacion.model[fieldDocumentacion.key as string];
-      if (id) {
-        question.apartado.respuesta.tipoDocumento = { id } as ITipoDocumento;
-      }
-      else {
-        question.apartado.respuesta.tipoDocumento = null;
+      if (typeof id === "string") {
+        if (id?.length) {
+          if (isNaN(+id)) {
+            //Tipo documento por código
+            const idDocumento = this.tipoDocumentosFormulario.get(id);
+            question.apartado.respuesta.tipoDocumento = { 'id': idDocumento } as ITipoDocumento;
+          }
+          else {
+            //Tipo documento por id
+            question.apartado.respuesta.tipoDocumento = { 'id': +id } as ITipoDocumento;
+          }
+        } else {
+          question.apartado.respuesta.tipoDocumento = null;
+        }
+      } else if (typeof id === "number") {
+        if (id) {
+          //Tipo documento por id
+          question.apartado.respuesta.tipoDocumento = { id } as ITipoDocumento;
+        }
+        else {
+          question.apartado.respuesta.tipoDocumento = null;
+        }
       }
     }
     else {
@@ -411,11 +447,12 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     );
   }
 
-  private loadFormulario(tipoEvaluacion: TIPO_EVALUACION, comite: IComite): Observable<void> {
-    this.formularioTipo = resolveFormularioByTipoEvaluacionAndComite(tipoEvaluacion, comite);
-    return this.formularioService.findById(this.formularioTipo).pipe(
-      switchMap((formulario) => {
-        return this.formularioService.getBloques(formulario.id);
+  private loadFormulario(tipoEvaluacion: TIPO_EVALUACION, memoria: IMemoria): Observable<void> {
+    this.formulario = resolveFormularioByTipoEvaluacionAndComite(tipoEvaluacion, memoria);
+    return this.tipoDocumentoService.findByFormulario(this.formulario).pipe(
+      switchMap((tipos) => {
+        tipos.forEach(tipo => this.tipoDocumentosFormulario.set(tipo.codigo, tipo.id));
+        return this.formularioService.getBloques(this.formulario.id);
       }),
       map((response) => {
         return this.toBlocks(response.items);
@@ -663,16 +700,17 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
     formState: any,
     formlyFieldConfig: SgiFormlyFieldConfig[],
     questions: IQuestion[],
-    mapGroup?: Map<String, Group>
+    mapGroup?: Map<string, Group>
   ): void {
     questions.forEach(question => {
-      const firstFieldConfig = question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema ? question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema[0] : {};
+      const definicion = this.getApartadoDefinicion(question.apartado.definicion);
+      const firstFieldConfig = definicion?.esquema ? definicion?.esquema[0] : {};
       const key = firstFieldConfig.key as string;
       const fieldConfig = this.cleanFieldGroup(firstFieldConfig.fieldGroup);
       if (firstLevel && key) {
         model[key] = question.apartado.respuesta.valor;
         if (this.isEditable()) {
-          this.evalExpressionModelValue(question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema, model[key], formState);
+          this.evalExpressionModelValue(definicion?.esquema, model[key], formState);
         }
       }
       else {
@@ -713,14 +751,14 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
           });
         }
       }
-      const fieldsDocumentacion = this.getFieldsDocumentacion(question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema);
+      const fieldsDocumentacion = this.getFieldsDocumentacion(definicion?.esquema);
       if (fieldsDocumentacion.length) {
         if (fieldsDocumentacion.length > 1) {
           throw Error('Un apartado no puede contener más de un campo de tipo documento');
         }
         this.fieldsDocumentacion.set(question.apartado.id, fieldsDocumentacion[0]);
       }
-      formlyFieldConfig.push(...question.apartado.definicion.find(a => a.lang === this.languageService.getLanguage())?.esquema);
+      formlyFieldConfig.push(...definicion?.esquema);
       if (question.childs.length) {
         const isFirstLevel = !firstLevel ? question.childs.length > 0 : firstLevel;
         this.fillFormlyData(isFirstLevel, key ? model[key] : model, formState, fieldConfig ? fieldConfig : formlyFieldConfig, question.childs, mapGroup);
@@ -761,6 +799,9 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
   private getSafeI18nValue(type: string, value: any): any {
     if ((type === 'ckeditor' || type === 'textarea' || type === 'input') && isValidI18nFieldValue(value)) {
       return this.languageService.getFieldValue(value);
+    }
+    else if ((type === 'i18n-ckeditor' || type === 'i18n-textarea' || type === 'i18n-input') && isValidI18nFieldValue(value)) {
+      return value.map(v => { return { lang: v.lang.code, value: v.value }; });
     }
     return value;
   }
@@ -850,15 +891,6 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
             .replace('#MODULE_PATH#', this.moduloInv ? Module.INV.path : Module.ETI.path);
         });
     }
-  }
-
-  /**
-   * Comprueba si el formulario es de tipo M20
-   *
-   * @returns si el formulario es de tipo M20 o no
-   */
-  private isFormularioM20(): boolean {
-    return this.formularioTipo === FORMULARIO.M20;
   }
 
   /**

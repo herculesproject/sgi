@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/convocatoria-reunion.converter';
-import { MEMORIA_PETICION_EVALUACION_CONVERTER } from '@core/converters/eti/memoria-peticion-evaluacion.converter';
 import { IConvocatoriaReunionBackend } from '@core/models/eti/backend/convocatoria-reunion-backend';
-import { IMemoriaPeticionEvaluacionBackend } from '@core/models/eti/backend/memoria-peticion-evaluacion-backend';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IEstadoMemoria } from '@core/models/eti/estado-memoria';
@@ -17,6 +15,7 @@ import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { IEvaluacionResponse } from '@core/services/eti/evaluacion/evaluacion-response';
 import { IEvaluacionWithNumComentarioResponse } from '@core/services/eti/evaluacion/evaluacion-with-num-comentario-response';
 import { EVALUACION_WITH_NUM_COMENTARIO_RESPONSE_CONVERTER } from '@core/services/eti/evaluacion/evaluacion-with-num-comentario-response.converter';
+import { MEMORIA_PETICION_EVALUACION_RESPONSE_CONVERTER } from '@core/services/eti/memoria/memoria-peticion-evaluacion-response.converter';
 import { IMemoriaResponse } from '@core/services/eti/memoria/memoria-response';
 import { MEMORIA_RESPONSE_CONVERTER } from '@core/services/eti/memoria/memoria-response.converter';
 import { IRespuestaResponse } from '@core/services/eti/respuesta/respuesta-response';
@@ -32,18 +31,21 @@ import { IDocumentacionMemoriaResponse } from './memoria/documentacion-memoria-r
 import { DOCUMENTACION_MEMORIA_RESPONSE_CONVERTER } from './memoria/documentacion-memoria-response.converter';
 import { IInformeResponse } from './memoria/informe-response';
 import { INFORME_RESPONSE_CONVERTER } from './memoria/informe-response.converter';
+import { IMemoriaPeticionEvaluacionResponse } from './memoria/memoria-peticion-evaluacion-response';
+import { IMemoriaRequest } from './memoria/memoria-request';
+import { MEMORIA_REQUEST_CONVERTER } from './memoria/memoria-request.converter';
 
 const _MemoriaServiceMixinBase:
-  CreateCtor<IMemoria, IMemoria, IMemoriaResponse, IMemoriaResponse> &
+  CreateCtor<IMemoria, IMemoria, IMemoriaRequest, IMemoriaResponse> &
   UpdateCtor<number, IMemoria, IMemoria, IMemoriaResponse, IMemoriaResponse> &
   FindByIdCtor<number, IMemoria, IMemoriaResponse> &
-  FindAllCtor<IMemoriaPeticionEvaluacion, IMemoriaPeticionEvaluacionBackend> &
+  FindAllCtor<IMemoriaPeticionEvaluacion, IMemoriaPeticionEvaluacionResponse> &
   typeof SgiRestBaseService = mixinFindAll(
     mixinFindById(
       mixinUpdate(
         mixinCreate(
           SgiRestBaseService,
-          MEMORIA_RESPONSE_CONVERTER,
+          MEMORIA_REQUEST_CONVERTER,
           MEMORIA_RESPONSE_CONVERTER
         ),
         MEMORIA_RESPONSE_CONVERTER,
@@ -51,7 +53,7 @@ const _MemoriaServiceMixinBase:
       ),
       MEMORIA_RESPONSE_CONVERTER
     ),
-    MEMORIA_PETICION_EVALUACION_CONVERTER
+    MEMORIA_PETICION_EVALUACION_RESPONSE_CONVERTER
   );
 
 @Injectable({
@@ -157,10 +159,10 @@ export class MemoriaService extends _MemoriaServiceMixinBase {
    * @return las memorias
    */
   findAllMemoriasEvaluacionByPersonaRef(options?: SgiRestFindOptions): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
-    return this.find<IMemoriaPeticionEvaluacionBackend, IMemoriaPeticionEvaluacion>(
+    return this.find<IMemoriaPeticionEvaluacionResponse, IMemoriaPeticionEvaluacion>(
       `${this.endpointUrl}/persona`,
       options,
-      MEMORIA_PETICION_EVALUACION_CONVERTER
+      MEMORIA_PETICION_EVALUACION_RESPONSE_CONVERTER
     );
   }
 
@@ -381,9 +383,9 @@ export class MemoriaService extends _MemoriaServiceMixinBase {
    * @param id identificador de la memoria de la que se parte para crear la nueva memoria.
    */
   createMemoriaModificada(memoria: IMemoria, id: number): Observable<IMemoria> {
-    return this.post<IMemoriaResponse, IMemoriaResponse>(
+    return this.post<IMemoriaRequest, IMemoriaResponse>(
       `${this.endpointUrl}/${id}/crear-memoria-modificada`,
-      MEMORIA_RESPONSE_CONVERTER.fromTarget(memoria)
+      MEMORIA_REQUEST_CONVERTER.fromTarget(memoria)
     ).pipe(
       map(response => MEMORIA_RESPONSE_CONVERTER.toTarget(response))
     );

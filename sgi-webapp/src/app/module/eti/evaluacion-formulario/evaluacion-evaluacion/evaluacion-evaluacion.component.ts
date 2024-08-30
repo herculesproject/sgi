@@ -3,9 +3,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { DICTAMEN } from '@core/models/eti/dictamen';
-import { IMemoria } from '@core/models/eti/memoria';
+import { IMemoria, MemoriaTipo } from '@core/models/eti/memoria';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
-import { TIPO_MEMORIA } from '@core/models/eti/tipo-memoria';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -15,9 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-import {
-  EvaluacionListadoAnteriorMemoriaComponent
-} from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
+import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionEvaluacionFragment } from './evaluacion-evaluacion.fragment';
 
 const EVALUACION_DICTAMEN_KEY = marker('eti.dictamen');
@@ -126,10 +123,10 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
 
     if (this.formPart.evaluacion?.tipoEvaluacion?.id === TIPO_EVALUACION.MEMORIA) {
       const tipoMemoriaWithInforme = [
-        TIPO_MEMORIA.NUEVA,
-        TIPO_MEMORIA.RATIFICACION,
-        TIPO_MEMORIA.MODIFICACION,
-      ].includes(this.formPart.evaluacion?.memoria?.tipoMemoria?.id);
+        MemoriaTipo.NUEVA,
+        MemoriaTipo.RATIFICACION,
+        MemoriaTipo.MODIFICACION,
+      ].includes(this.formPart.evaluacion?.memoria?.tipo);
       const tipoDictamenConInforme = [
         DICTAMEN.DESFAVORABLE,
         DICTAMEN.FAVORABLE,

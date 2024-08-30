@@ -1,6 +1,7 @@
 import { IEvaluadorBackend } from '@core/models/eti/backend/evaluador-backend';
 import { IEvaluador } from '@core/models/eti/evaluador';
 import { IPersona } from '@core/models/sgp/persona';
+import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
@@ -11,7 +12,7 @@ class EvaluadorConverter extends SgiBaseConverter<IEvaluadorBackend, IEvaluador>
     }
     return {
       id: value.id,
-      comite: value.comite,
+      comite: COMITE_RESPONSE_CONVERTER.toTarget(value.comite),
       cargoComite: value.cargoComite,
       resumen: value.resumen,
       fechaAlta: LuxonUtils.fromBackend(value.fechaAlta),
@@ -27,7 +28,7 @@ class EvaluadorConverter extends SgiBaseConverter<IEvaluadorBackend, IEvaluador>
     }
     return {
       id: value.id,
-      comite: value.comite,
+      comite: COMITE_RESPONSE_CONVERTER.fromTarget(value.comite),
       cargoComite: value.cargoComite,
       resumen: value.resumen,
       fechaAlta: LuxonUtils.toBackend(value.fechaAlta),

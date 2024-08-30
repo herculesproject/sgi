@@ -7,11 +7,11 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-
-import { SeguimientoDatosMemoriaComponent } from './seguimiento-datos-memoria.component';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
-import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
+import { EtiSharedModule } from '../../shared/eti-shared.module';
 import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
+import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
+import { SeguimientoDatosMemoriaComponent } from './seguimiento-datos-memoria.component';
 
 describe('SeguimientoDatosMemoriaComponent', () => {
   let component: SeguimientoDatosMemoriaComponent;
@@ -34,7 +34,8 @@ describe('SeguimientoDatosMemoriaComponent', () => {
         RouterTestingModule,
         FormsModule,
         ReactiveFormsModule,
-        SgiAuthModule
+        SgiAuthModule,
+        EtiSharedModule
       ],
       providers: [
         { provide: SeguimientoFormularioActionService, useClass: SeguimientoEvaluarActionService },
