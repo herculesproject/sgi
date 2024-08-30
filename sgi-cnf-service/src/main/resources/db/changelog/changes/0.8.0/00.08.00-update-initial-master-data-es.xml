@@ -138,14 +138,6 @@
     </insert>
 
     <insert tableName="resources">
-      <column name="name" value="rep-eti-mxx-docx-es" />
-      <column name="description" value="Informe formularios M10, M20 y M30 en español" />
-      <column name="value" valueBlobFile="blob/rep/es/rep-eti-mxx.docx" />
-      <column name="default_value" valueBlobFile="blob/rep/es/rep-eti-mxx.docx" />
-      <column name="public_access" valueBoolean="false" />
-    </insert>
-
-    <insert tableName="resources">
       <column name="name" value="rep-prc-detalle-grupo-docx-es" />
       <column name="description"
         value="Informe del detalle de grupo en español" />
@@ -398,24 +390,6 @@
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-ficha-evaluador-docx" />
-      </whereParams>
-    </update>
-
-    <!-- Update value if mach default_value -->
-    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
-      <param name="resourceName" value="rep-eti-mxx-docx" />
-      <param name="valueBlobFile"
-        value="classpath:db/changelog/changes/0.8.0/blob/rep/es/rep-eti-mxx.docx" />
-    </customChange>
-    <update tableName="resources">
-      <column name="name" value="rep-eti-mxx-docx-es" />
-      <column name="description"
-        value="Informe formularios M10, M20 y M30 en español" />
-      <column name="default_value"
-        valueBlobFile="blob/rep/es/rep-eti-mxx.docx" />
-      <where>:name=:value</where>
-      <whereParams>
-        <param name="name" value="rep-eti-mxx-docx" />
       </whereParams>
     </update>
 

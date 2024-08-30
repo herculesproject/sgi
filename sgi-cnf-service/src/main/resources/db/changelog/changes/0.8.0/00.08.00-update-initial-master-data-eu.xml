@@ -138,14 +138,6 @@
     </insert>
 
     <insert tableName="resources">
-      <column name="name" value="rep-eti-mxx-docx-eu" />
-      <column name="description" value="Informe formularios M10, M20 y M30 en euskera" />
-      <column name="value" valueBlobFile="blob/rep/eu/rep-eti-mxx.docx" />
-      <column name="default_value" valueBlobFile="blob/rep/eu/rep-eti-mxx.docx" />
-      <column name="public_access" valueBoolean="false" />
-    </insert>
-
-    <insert tableName="resources">
       <column name="name" value="rep-prc-detalle-grupo-docx-eu" />
       <column name="description"
         value="Informe del detalle de grupo en euskera" />
@@ -337,18 +329,6 @@
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-eti-ficha-evaluador-docx" />
-      </whereParams>
-    </update>
-
-    <update tableName="resources">
-      <column name="name" value="rep-eti-mxx-docx-eu" />
-      <column name="description"
-        value="Informe formularios M10, M20 y M30 en euskera" />
-      <column name="default_value"
-        valueBlobFile="blob/rep/eu/rep-eti-mxx.docx" />
-      <where>:name=:value</where>
-      <whereParams>
-        <param name="name" value="rep-eti-mxx-docx" />
       </whereParams>
     </update>
 
