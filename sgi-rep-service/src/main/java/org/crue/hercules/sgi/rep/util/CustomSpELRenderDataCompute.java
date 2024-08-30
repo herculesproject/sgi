@@ -2,13 +2,15 @@ package org.crue.hercules.sgi.rep.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -28,25 +30,22 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
   private static final String F_LINKED_TREE_MAP_IN = "fLinkedTreeMapIn";
   private static final String F_OBJECT_EQUALS = "fObjectEquals";
 
+  private static final String I18N_FIELD_LANG = "lang";
+  private static final String I18N_FIELD_VALUE = "value";
+
   private final ExpressionParser parser;
   private final EvaluationContext context;
   private EvaluationContext envContext;
   private boolean isStrict;
+  private Language requestedLang;
 
   // --
   private final StandardEvaluationContext rootContext;
 
-  public CustomSpELRenderDataCompute(EnvModel model) throws NoSuchMethodException, SecurityException {
-    this(model, true);
-  }
-
-  public CustomSpELRenderDataCompute(EnvModel model, boolean isStrict) throws NoSuchMethodException, SecurityException {
-    this(model, model, isStrict, Collections.emptyMap());
-  }
-
   public CustomSpELRenderDataCompute(Object rootModel, EnvModel model, boolean isStrict,
-      Map<String, Method> spELFunction) throws NoSuchMethodException, SecurityException {
+      Map<String, Method> spELFunction, Language language) throws NoSuchMethodException, SecurityException {
     this.isStrict = isStrict;
+    this.requestedLang = language;
     this.parser = new SpelExpressionParser();
     if (null != model.getEnv() && !model.getEnv().isEmpty()) {
       this.envContext = new StandardEvaluationContext(model.getEnv());
@@ -75,7 +74,62 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
   }
 
   @Override
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public Object compute(String el) {
+    Object resolved = innerCompute(el);
+    if (resolved instanceof ArrayList) {
+      boolean isI18n = !((ArrayList) resolved).isEmpty();
+      for (LinkedTreeMap nested : (ArrayList<LinkedTreeMap>) resolved) {
+        isI18n = isI18n && isI18nField(nested);
+      }
+      if (isI18n) {
+        Map<Language, String> collectedValues = collectValues((ArrayList<LinkedTreeMap>) resolved);
+        if (collectedValues.containsKey(requestedLang)) {
+          return collectedValues.get(requestedLang);
+        } else {
+          if (collectedValues.isEmpty()) {
+            // Si no hay ningún valor, retornamos el objecto
+            return resolved;
+          } else {
+            // Por ahora retornamos el primer valor;
+            return collectedValues.values().toArray()[0];
+          }
+        }
+      }
+    }
+    return resolved;
+  }
+
+  private Map<Language, String> collectValues(ArrayList<LinkedTreeMap> i18nField) {
+    Map<Language, String> values = new HashMap<>(i18nField.size());
+    try {
+      for (LinkedTreeMap i18nValue : i18nField) {
+        Language lang = null;
+        String value = "";
+        if (i18nValue.get(I18N_FIELD_LANG) instanceof String) {
+          lang = Language.fromCode((String) i18nValue.get(I18N_FIELD_LANG));
+        }
+        if (i18nValue.get(I18N_FIELD_VALUE) instanceof String) {
+          value = (String) i18nValue.get(I18N_FIELD_VALUE);
+        }
+        if (lang != null) {
+          values.put(lang, value);
+        }
+      }
+    } catch (ClassCastException e) {
+      throw new RuntimeException("Error procesando expresion I18n", e);
+    }
+    return values;
+  }
+
+  private boolean isI18nField(LinkedTreeMap field) {
+    if (field.containsKey(I18N_FIELD_LANG) && field.containsKey(I18N_FIELD_VALUE)) {
+      return true;
+    }
+    return false;
+  }
+
+  private Object innerCompute(String el) {
     try {
       while (el.contains("#currentContext.get(")) {
         Object value = parser

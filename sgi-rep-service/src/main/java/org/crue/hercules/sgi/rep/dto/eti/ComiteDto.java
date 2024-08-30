@@ -15,10 +15,20 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ComiteDto extends BaseRestDto {
 
-  private String comite;
-  private String nombreInvestigacion;
+  private String codigo;
+  private String nombre;
   private Genero genero;
-  private FormularioDto formulario;
+  private Long formularioMemoriaId;
+  private Long formularioSeguimientoAnualId;
+  private Long formularioSeguimientoFinalId;
+  private Long formularioRetrospectivaId;
+  private Boolean requiereRetrospectiva;
+  private String prefijoReferencia;
+  private Boolean permitirRatificacion;
+  private Boolean tareaNombreLibre;
+  private Boolean tareaExperienciaLibre;
+  private Boolean tareaExperienciaDetalle;
+  private Boolean memoriaTituloLIibre;
   private Boolean activo;
 
   /** Género de nombre de investigación */

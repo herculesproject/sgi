@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.rep.service.eti;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.crue.hercules.sgi.framework.exception.NotFoundException;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDefinicionDto;
@@ -64,10 +66,12 @@ public class MXXReportService extends SgiReportDocxService {
   private final BloqueService bloqueService;
   private final PeticionEvaluacionService peticionEvaluacionService;
   private final PersonaService personaService;
+  private final FormularioService formularioService;
 
   public MXXReportService(SgiConfigProperties sgiConfigProperties, SgiApiConfService sgiApiConfService,
       MemoriaService memoriaService, BloqueService bloqueService, PeticionEvaluacionService peticionEvaluacionService,
-      PersonaService personaService) {
+      PersonaService personaService,
+      FormularioService formularioService) {
 
     super(sgiConfigProperties, sgiApiConfService);
     this.sgiConfigProperties = sgiConfigProperties;
@@ -75,6 +79,7 @@ public class MXXReportService extends SgiReportDocxService {
     this.bloqueService = bloqueService;
     this.peticionEvaluacionService = peticionEvaluacionService;
     this.personaService = personaService;
+    this.formularioService = formularioService;
   }
 
   /**
@@ -129,7 +134,10 @@ public class MXXReportService extends SgiReportDocxService {
       reportData.setTutor(tutor);
       reportData.setZoneId(sgiConfigProperties.getTimeZone());
 
-      XWPFDocument document = getDocument(reportData.getDataReport(), getReportDefinitionStream(reportMXX.getPath()));
+      FormularioDto formulario = getFormularioFromMemoria(memoria, formularioId);
+
+      XWPFDocument document = getDocument(reportData.getDataReport(),
+          getReportDefinitionStream(formulario, reportMXX.getLang()), reportMXX.getLang());
 
       ByteArrayOutputStream outputPdf = new ByteArrayOutputStream();
       PdfOptions pdfOptions = createCustomPdfOptions();
@@ -144,14 +152,59 @@ public class MXXReportService extends SgiReportDocxService {
     }
   }
 
-  protected XWPFDocument getDocument(Map<String, Object> modelReport, InputStream path) {
+  private FormularioDto getFormularioFromMemoria(MemoriaDto memoria, Long formularioId) {
+    if (memoria.getFormulario().getId().equals(formularioId)) {
+      return memoria.getFormulario();
+    }
+    if (memoria.getFormularioSeguimientoAnual().getId().equals(formularioId)) {
+      return memoria.getFormularioSeguimientoAnual();
+    }
+    if (memoria.getFormularioSeguimientoFinal().getId().equals(formularioId)) {
+      return memoria.getFormularioSeguimientoFinal();
+    }
+    if (memoria.getFormularioRetrospectiva().getId().equals(formularioId)) {
+      return memoria.getFormularioRetrospectiva();
+    }
+    return null;
+  }
+
+  private InputStream getReportDefinitionStream(FormularioDto formulario, Language language) {
+    List<Language> otherLanguages = new ArrayList<>();
+    for (Language lang : Language.values()) {
+      if (lang != language) {
+        otherLanguages.add(lang);
+      }
+    }
+    try {
+      if (formularioService.existsReport(formulario.getId(), language)) {
+        byte[] reportDefinition = formularioService.getReport(formulario.getId(), language);
+        return new ByteArrayInputStream(reportDefinition);
+      } else {
+        for (Language lang : otherLanguages) {
+          if (formularioService.existsReport(formulario.getId(), lang)) {
+            byte[] reportDefinition = formularioService.getReport(formulario.getId(), language);
+            return new ByteArrayInputStream(reportDefinition);
+          }
+        }
+      }
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new GetDataReportException(e);
+    }
+    throw new GetDataReportException(
+        new NotFoundException("No se ha encontrado ningún report para el formulario: " + formulario.getCodigo()));
+  }
+
+  protected XWPFDocument getDocument(Map<String, Object> modelReport, InputStream path, Language defaultLanguage) {
     Configure config = Configure.builder()
         .useSpringEL(false)
         .addPreRenderDataCastor(new GsonPreRenderDataCastor())
         .setRenderDataComputeFactory(
             model -> {
               try {
-                return new CustomSpELRenderDataCompute(modelReport, model, false, Collections.emptyMap());
+                return new CustomSpELRenderDataCompute(modelReport, model, false, Collections.emptyMap(),
+                    defaultLanguage);
               } catch (NoSuchMethodException | SecurityException e) {
                 log.error(e.getMessage(), e);
                 return null;
@@ -209,7 +262,11 @@ public class MXXReportService extends SgiReportDocxService {
     apartados.forEach(
         apartado -> bloqueModel.putAll(getReportModelApartado(apartado, respuestas, null, lang)));
 
-    reportModel.put("bloque_" + bloque.getId(), bloqueModel);
+    if (bloque.getFormulario().getId() <= 6) {
+      reportModel.put("bloque_" + bloque.getId(), bloqueModel);
+    } else {
+      reportModel.put("bloque_" + bloque.getOrden(), bloqueModel);
+    }
 
     return reportModel;
   }
@@ -227,7 +284,11 @@ public class MXXReportService extends SgiReportDocxService {
         apartado -> bloqueModel
             .putAll(getReportModelApartado(apartado, respuestas, respuestasMemoriaOriginal, null, lang)));
 
-    reportModel.put("bloque_" + bloque.getId(), bloqueModel);
+    if (bloque.getFormulario().getId() <= 6) {
+      reportModel.put("bloque_" + bloque.getId(), bloqueModel);
+    } else {
+      reportModel.put("bloque_" + bloque.getOrden(), bloqueModel);
+    }
 
     return reportModel;
   }

@@ -80,7 +80,6 @@ public class EtiReportController {
     }
 
     ReportMXX report = new ReportMXX(language);
-    report.setOutputType(OUTPUT_TYPE_PDF);
 
     byte[] reportContent = mxxReportService.getReport(report, idMemoria, idFormulario);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);

@@ -71,9 +71,9 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
 
     dataReport.put("idComite", evaluacion.getMemoria().getComite().getId());
 
-    dataReport.put("comite", evaluacion.getMemoria().getComite().getComite());
+    dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
 
-    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombreInvestigacion());
+    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombre());
 
     if (ObjectUtils.isNotEmpty(evaluacion.getMemoria().getEstadoActual())) {
       dataReport.put("retrospectiva", !evaluacion.getMemoria().getEstadoActual().getId().equals(

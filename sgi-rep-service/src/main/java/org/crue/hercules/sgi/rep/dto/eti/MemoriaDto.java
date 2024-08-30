@@ -17,12 +17,25 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class MemoriaDto extends BaseRestDto {
 
+  public enum Tipo {
+    /** Nueva */
+    NUEVA,
+    /** Modificacion */
+    MODIFICACION,
+    /** Ratificacion */
+    RATIFICACION;
+  }
+
   private String numReferencia;
   private PeticionEvaluacionDto peticionEvaluacion;
   private ComiteDto comite;
+  private FormularioDto formulario;
+  private FormularioDto formularioSeguimientoAnual;
+  private FormularioDto formularioSeguimientoFinal;
+  private FormularioDto formularioRetrospectiva;
   private String titulo;
   private String personaRef;
-  private TipoMemoriaDto tipoMemoria;
+  private Tipo tipo;
   private TipoEstadoMemoriaDto estadoActual;
   private Instant fechaEnvioSecretaria;
   private Boolean requiereRetrospectiva;

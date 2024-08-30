@@ -27,7 +27,6 @@ import org.crue.hercules.sgi.rep.dto.eti.TipoConvocatoriaReunionDto;
 import org.crue.hercules.sgi.rep.dto.eti.TipoEstadoMemoriaDto;
 import org.crue.hercules.sgi.rep.dto.eti.TipoEvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.TipoInvestigacionTuteladaDto;
-import org.crue.hercules.sgi.rep.dto.eti.TipoMemoriaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto.ComunidadAutonomaDto;
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto.PaisDto;
@@ -49,7 +48,7 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
   protected EvaluacionDto generarMockEvaluacion(Long idEvaluacion) {
     return EvaluacionDto.builder()
         .id(idEvaluacion)
-        .memoria(generarMockMemoria(1L, 1L))
+        .memoria(generarMockMemoria(1L))
         .convocatoriaReunion(generarMockConvocatoriaReunion(idEvaluacion))
         .tipoEvaluacion(TipoEvaluacionDto.builder().id(1L).nombre("nombre").activo(Boolean.TRUE).build())
         .dictamen(DictamenDto.builder().id(1L).nombre("nombre").activo(Boolean.TRUE).build())
@@ -92,10 +91,9 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
   protected ComiteDto generarMockComite(Long idComite, String comite) {
     return ComiteDto.builder()
         .id(idComite)
-        .comite(comite)
-        .nombreInvestigacion("nombreInvestigacion")
+        .codigo(comite)
+        .nombre("nombreInvestigacion")
         .genero(Genero.M)
-        .formulario(generarMockFormulario(1L))
         .activo(Boolean.TRUE)
         .build();
   }
@@ -110,14 +108,14 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
         .build();
   }
 
-  protected MemoriaDto generarMockMemoria(Long idMemoria, Long idFormulario) {
+  protected MemoriaDto generarMockMemoria(Long idMemoria) {
     return MemoriaDto.builder()
         .id(idMemoria)
         .numReferencia("numReferencia")
         .peticionEvaluacion(generarMockPeticionEvaluacion(1L))
         .comite(generarMockComite(1L, "CEI"))
         .titulo("titulo")
-        .tipoMemoria(TipoMemoriaDto.builder().id(1L).nombre("nombre").activo(Boolean.TRUE).build())
+        .tipo(MemoriaDto.Tipo.NUEVA)
         .fechaEnvioSecretaria(Instant.now())
         .version(1)
         .activo(Boolean.TRUE)
@@ -188,7 +186,7 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
   protected FormularioDto generarMockFormulario(Long idFormulario) {
     return FormularioDto.builder()
         .id(idFormulario)
-        .nombre("nombre")
+        .codigo("codigo")
         .build();
   }
 

@@ -10,10 +10,9 @@ import lombok.Getter;
 @Getter
 public class ComiteObject {
   private Long id;
-  private String comite;
-  private String nombreInvestigacion;
+  private String codigo;
+  private String nombre;
   private Genero genero;
-  private FormularioObject formulario;
   private Boolean activo;
 
   public ComiteObject(ComiteDto dto) {
@@ -23,13 +22,20 @@ public class ComiteObject {
   public ComiteObject(ComiteDto dto, Language lang) {
     if (dto != null) {
       this.id = dto.getId();
-      this.comite = dto.getComite();
-      this.nombreInvestigacion = dto.getNombreInvestigacion();
+      this.codigo = dto.getCodigo();
+      this.nombre = dto.getNombre();
       this.genero = dto.getGenero();
-      if (dto.getFormulario() != null) {
-        this.formulario = new FormularioObject(dto.getFormulario(), lang);
-      }
       this.activo = dto.getActivo();
     }
+  }
+
+  /** Se mantiene por compatibilidad con reports antiguos */
+  public String getComite() {
+    return codigo;
+  }
+
+  /** Se mantiene por compatibilidad con reports antiguos */
+  public String getNombreInvestigacion() {
+    return nombre;
   }
 }

@@ -55,7 +55,7 @@ public class InformeFavorableMemoriaReportService extends InformeEvaluacionEvalu
     String codigoActa = "(" + i18nActa + evaluacion.getConvocatoriaReunion().getNumeroActa() + "/"
         + formatInstantToString(evaluacion.getConvocatoriaReunion()
             .getFechaEvaluacion(), "YYYY")
-        + "/" + evaluacion.getConvocatoriaReunion().getComite().getComite() + ")";
+        + "/" + evaluacion.getConvocatoriaReunion().getComite().getCodigo() + ")";
     dataReport.put("numeroActa", codigoActa);
 
     addDataEvaluacion(evaluacion, dataReport, lang);

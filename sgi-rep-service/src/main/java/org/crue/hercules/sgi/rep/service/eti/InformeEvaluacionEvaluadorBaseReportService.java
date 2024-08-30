@@ -203,7 +203,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     dataReport.put("tituloProyecto",
         I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
     dataReport.put("referenciaProyecto", evaluacion.getMemoria().getPeticionEvaluacion().getCodigo());
-    dataReport.put("comite", evaluacion.getMemoria().getComite().getComite());
+    dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
     try {
       EvaluadorDto secretario = evaluacionService.findSecretarioEvaluacion(evaluacion.getId());
       if (ObjectUtils.isNotEmpty(secretario)) {
@@ -249,7 +249,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
           getErrorMessage(e));
     }
 
-    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombreInvestigacion());
+    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombre());
     if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
       String i18nDela = ApplicationContextSupport.getMessage("common.dela");
       dataReport.put("del", i18nDela);

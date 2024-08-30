@@ -40,9 +40,9 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
 
     dataReport.put("lugar", evaluacion.getConvocatoriaReunion().getNumeroActa());
 
-    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombreInvestigacion());
+    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombre());
 
-    dataReport.put("comite", evaluacion.getMemoria().getComite().getComite());
+    dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
 
     addDataEvaluacion(evaluacion, dataReport, lang);
 

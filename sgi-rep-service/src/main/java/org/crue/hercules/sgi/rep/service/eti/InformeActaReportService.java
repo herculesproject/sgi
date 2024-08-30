@@ -102,9 +102,9 @@ public class InformeActaReportService extends SgiReportDocxService {
 
     dataReport.put("numeroActa", acta.getNumero());
 
-    dataReport.put("comite", acta.getConvocatoriaReunion().getComite().getComite());
+    dataReport.put("comite", acta.getConvocatoriaReunion().getComite().getCodigo());
 
-    dataReport.put("nombreInvestigacion", acta.getConvocatoriaReunion().getComite().getNombreInvestigacion());
+    dataReport.put("nombreInvestigacion", acta.getConvocatoriaReunion().getComite().getNombre());
 
     String patternFechaConv = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     Instant fechaEvaluacion = acta.getConvocatoriaReunion().getFechaEvaluacion();
@@ -148,7 +148,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     dataReport.put("resumenActa", acta.getResumen());
 
     String codigoActa = acta.getNumero() + "/" + formatInstantToString(fechaEvaluacion, "YYYY") + "/" + acta
-        .getConvocatoriaReunion().getComite().getComite();
+        .getConvocatoriaReunion().getComite().getCodigo();
     dataReport.put("codigoActa", codigoActa);
 
     Long numeroEvaluacionesNuevas = actaService.countEvaluacionesNuevas(acta.getId());

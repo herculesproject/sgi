@@ -17,7 +17,7 @@ public class MemoriaObject {
   private ComiteObject comite;
   private String titulo;
   private String personaRef;
-  private TipoMemoriaObject tipoMemoria;
+  private MemoriaDto.Tipo tipo;
   private TipoEstadoMemoriaObject estadoActual;
   private Instant fechaEnvioSecretaria;
   private Boolean requiereRetrospectiva;
@@ -42,9 +42,7 @@ public class MemoriaObject {
       }
       this.titulo = dto.getTitulo();
       this.personaRef = dto.getPersonaRef();
-      if (dto.getTipoMemoria() != null) {
-        this.tipoMemoria = new TipoMemoriaObject(dto.getTipoMemoria(), lang);
-      }
+      this.tipo = dto.getTipo();
       if (dto.getEstadoActual() != null) {
         this.estadoActual = new TipoEstadoMemoriaObject(dto.getEstadoActual(), lang);
       }
@@ -55,6 +53,23 @@ public class MemoriaObject {
       if (dto.getMemoriaOriginal() != null) {
         this.memoriaOriginal = new MemoriaObject(dto.getMemoriaOriginal(), lang);
       }
+    }
+  }
+
+  /** Se mantiene para soportar formularios antiguos */
+  public TipoMemoriaObject getTipoMemoria() {
+    if (this.tipo == null) {
+      return null;
+    }
+    switch (this.tipo) {
+      case NUEVA:
+        return new TipoMemoriaObject(1L, "Nueva");
+      case MODIFICACION:
+        return new TipoMemoriaObject(2L, "Modificación");
+      case RATIFICACION:
+        return new TipoMemoriaObject(3L, "Ratificación");
+      default:
+        return null;
     }
   }
 }
