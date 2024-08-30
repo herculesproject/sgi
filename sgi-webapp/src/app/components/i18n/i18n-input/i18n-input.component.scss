@@ -1,41 +1,27 @@
-::ng-deep {
-  sgi-i18n-input+.mat-form-field-label-wrapper {
-    margin-left: 45px;
-    width: calc(100% - 45px);
-  }
-
-
-  .mat-form-field-should-float {
-    sgi-i18n-input+.mat-form-field-label-wrapper {
-      margin-left: 0px;
-    }
-  }
-
-}
-
-
-.input-multilang {
-  display: flex;
-  height: 18px;
-  gap: 5px;
-
-  mat-select {
-    width: 45px;
-  }
-
-  mat-select-trigger {
+:host {
+  .input-multilang {
     display: flex;
+    height: 18px;
     gap: 5px;
-    margin-bottom: -2px;
 
-    .text-language {
-      float: left;
+    mat-select {
+      width: 45px;
     }
 
-    .img-language {
-      float: left;
-      width: 25px;
-      height: 20px;
+    mat-select-trigger {
+      display: flex;
+      gap: 5px;
+      margin-bottom: -2px;
+
+      .text-language {
+        float: left;
+      }
+
+      .img-language {
+        float: left;
+        width: 25px;
+        height: 20px;
+      }
     }
   }
 }

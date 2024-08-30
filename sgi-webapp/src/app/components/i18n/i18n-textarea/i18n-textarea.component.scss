@@ -1,36 +1,24 @@
-::ng-deep {
-  sgi-i18n-textarea+.mat-form-field-label-wrapper {
-    margin-top: 35px;
-  }
+:host {
+  .input-multilang {
 
-
-  .mat-form-field-should-float {
-    sgi-i18n-textarea+.mat-form-field-label-wrapper {
-      margin-top: 0px;
-    }
-  }
-
-}
-
-.input-multilang {
-
-  mat-select {
-    width: 120px;
-  }
-
-  mat-select-trigger {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-
-    .text-language {
-      float: left;
+    mat-select {
+      width: 120px;
     }
 
-    .img-language {
-      float: left;
-      width: 25px;
-      height: 20px;
+    mat-select-trigger {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+
+      .text-language {
+        float: left;
+      }
+
+      .img-language {
+        float: left;
+        width: 25px;
+        height: 20px;
+      }
     }
   }
 }

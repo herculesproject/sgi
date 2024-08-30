@@ -406,3 +406,35 @@ mat-form-field {
 /**/
 /** FIN CKEDITOR */
 /**/
+
+/**/
+/** I18N Components */
+/**/
+.mat-form-field-type-sgi-i18n-textarea {
+  .mat-form-field-label-wrapper {
+    margin-top: 35px;
+  }
+
+  &.mat-form-field-should-float {
+    .mat-form-field-label-wrapper {
+      margin-top: 0px;
+    }
+  }
+}
+
+.mat-form-field-type-sgi-i18n-input {
+  .mat-form-field-label-wrapper {
+    margin-left: 45px;
+    width: calc(100% - 45px);
+  }
+
+  &.mat-form-field-should-float {
+    .mat-form-field-label-wrapper {
+      margin-left: 0px;
+    }
+  }
+}
+
+/**/
+/** Fin I18N Components */
+/**/
