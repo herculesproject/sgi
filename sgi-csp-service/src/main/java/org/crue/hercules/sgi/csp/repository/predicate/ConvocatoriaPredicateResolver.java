@@ -38,6 +38,7 @@ import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
+import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 import org.springframework.util.CollectionUtils;
 
@@ -48,6 +49,7 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
   private static final Pattern integerPattern = Pattern.compile("^\\d+$");
 
   private enum Property {
+    FECHA_ELIMINACION("fechaEliminacion"),
     PLAN_INVESTIGACION("planInvestigacion"),
     PLAZO_PRESENTACION_SOLICITUD("abiertoPlazoPresentacionSolicitud"),
     /* REQUISITOS IP */
@@ -349,6 +351,21 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
     return subquery;
   }
 
+  private Predicate buildByFechaEliminacion(ComparisonNode node, Root<Convocatoria> root, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.GREATER_THAN_OR_EQUAL,
+        RSQLOperators.LESS_THAN_OR_EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    String fechaEliminacionArgument = node.getArguments().get(0);
+    Instant fechaEliminacion = Instant.parse(fechaEliminacionArgument);
+
+    if (node.getOperator().equals(RSQLOperators.GREATER_THAN_OR_EQUAL)) {
+      return cb.greaterThanOrEqualTo(root.get(Auditable_.lastModifiedDate), fechaEliminacion);
+    } else {
+      return cb.lessThanOrEqualTo(root.get(Auditable_.lastModifiedDate), fechaEliminacion);
+    }
+  }
+
   @Override
   public boolean isManaged(ComparisonNode node) {
     Property property = Property.fromCode(node.getSelector());
@@ -363,6 +380,8 @@ public class ConvocatoriaPredicateResolver implements SgiRSQLPredicateResolver<C
       return null;
     }
     switch (property) {
+      case FECHA_ELIMINACION:
+        return buildByFechaEliminacion(node, root, criteriaBuilder);
       case PLAN_INVESTIGACION:
         return buildByPlanInvestigacion(node, root, criteriaBuilder);
       case PLAZO_PRESENTACION_SOLICITUD:

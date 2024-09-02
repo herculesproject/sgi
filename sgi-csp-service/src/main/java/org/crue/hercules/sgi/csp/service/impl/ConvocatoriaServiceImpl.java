@@ -898,4 +898,27 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     return cloned;
   }
 
+  /**
+   * Obtiene los ids de {@link Convocatoria} modificadas que no esten activas y
+   * que
+   * cumplan las condiciones indicadas en el filtro de búsqueda
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Convocatoria}.
+   */
+  @Override
+  public List<Long> findIdsConvocatoriasEliminadas(String query) {
+    log.debug("findIdsConvocatoriasEliminadas(String query) - start");
+
+    Specification<Convocatoria> specs = ConvocatoriaSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            ConvocatoriaPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
+
+    List<Long> returnValue = repository.findIds(specs);
+
+    log.debug("findIdsConvocatoriasEliminadas(String query) - end");
+
+    return returnValue;
+  }
+
 }

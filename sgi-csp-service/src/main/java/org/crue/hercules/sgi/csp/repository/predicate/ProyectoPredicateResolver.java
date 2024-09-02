@@ -34,7 +34,6 @@ import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
-import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
 import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
@@ -55,6 +54,8 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
     FINALIZADO("finalizado"),
     /* Prorrogado */
     PRORROGADO("prorrogado"),
+    /* Fecha eliminacion */
+    FECHA_ELIMINACION("fechaEliminacion"),
     /* Fecha modificación */
     FECHA_MODIFICACION("fechaModificacion"),
     /* Con participación actual */
@@ -77,20 +78,17 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
   }
 
   private final ProgramaRepository programaRepository;
-  private final ProyectoProrrogaRepository proyectoProrrogaRepository;
   private final SgiConfigProperties sgiConfigProperties;
 
   private ProyectoPredicateResolver(ProgramaRepository programaRepository,
-      ProyectoProrrogaRepository proyectoProrrogaRepository,
       SgiConfigProperties sgiConfigProperties) {
     this.programaRepository = programaRepository;
-    this.proyectoProrrogaRepository = proyectoProrrogaRepository;
     this.sgiConfigProperties = sgiConfigProperties;
   }
 
   public static ProyectoPredicateResolver getInstance(ProgramaRepository programaRepository,
-      ProyectoProrrogaRepository proyectoProrrogaRepository, SgiConfigProperties sgiConfigProperties) {
-    return new ProyectoPredicateResolver(programaRepository, proyectoProrrogaRepository, sgiConfigProperties);
+      SgiConfigProperties sgiConfigProperties) {
+    return new ProyectoPredicateResolver(programaRepository, sgiConfigProperties);
   }
 
   private Predicate buildByPlanInvestigacion(ComparisonNode node, Root<Proyecto> root, CriteriaBuilder cb) {
@@ -164,6 +162,21 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
       return cb.exists(subquery);
     } else {
       return cb.not(cb.exists(subquery));
+    }
+  }
+
+  private Predicate buildByFechaEliminacion(ComparisonNode node, Root<Proyecto> root, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.GREATER_THAN_OR_EQUAL,
+        RSQLOperators.LESS_THAN_OR_EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    String fechaEliminacionArgument = node.getArguments().get(0);
+    Instant fechaEliminacion = Instant.parse(fechaEliminacionArgument);
+
+    if (node.getOperator().equals(RSQLOperators.GREATER_THAN_OR_EQUAL)) {
+      return cb.greaterThanOrEqualTo(root.get(Auditable_.lastModifiedDate), fechaEliminacion);
+    } else {
+      return cb.lessThanOrEqualTo(root.get(Auditable_.lastModifiedDate), fechaEliminacion);
     }
   }
 
@@ -267,6 +280,8 @@ public class ProyectoPredicateResolver implements SgiRSQLPredicateResolver<Proye
         return buildByFinalizado(node, root, criteriaBuilder);
       case PRORROGADO:
         return buildByProrrogado(node, root, query, criteriaBuilder);
+      case FECHA_ELIMINACION:
+        return buildByFechaEliminacion(node, root, criteriaBuilder);
       case FECHA_MODIFICACION:
         return buildByFechaModificacion(node, root, criteriaBuilder);
       case PARTICIPACION_ACTUAL:

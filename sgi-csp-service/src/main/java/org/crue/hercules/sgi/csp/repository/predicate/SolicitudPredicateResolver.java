@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
+import org.crue.hercules.sgi.framework.data.jpa.domain.Auditable_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
 import org.springframework.util.CollectionUtils;
 
@@ -36,6 +37,7 @@ import io.github.perplexhub.rsql.RSQLOperators;
 
 public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Solicitud> {
   private enum Property {
+    FECHA_ELIMINACION("fechaEliminacion"),
     REFERENCIA_CONVOCATORIA("referenciaConvocatoria"),
     PLAN_INVESTIGACION("planInvestigacion"),
     ABIERTO_PLAZO_PRESENTACION_SOLICITUD("abiertoPlazoPresentacionSolicitud"),
@@ -151,6 +153,21 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
     return cb.equal(joinEstado.get(EstadoSolicitud_.estado), Estado.SOLICITADA);
   }
 
+  private Predicate buildByFechaEliminacion(ComparisonNode node, Root<Solicitud> root, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.GREATER_THAN_OR_EQUAL,
+        RSQLOperators.LESS_THAN_OR_EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    String fechaEliminacionArgument = node.getArguments().get(0);
+    Instant fechaEliminacion = Instant.parse(fechaEliminacionArgument);
+
+    if (node.getOperator().equals(RSQLOperators.GREATER_THAN_OR_EQUAL)) {
+      return cb.greaterThanOrEqualTo(root.get(Auditable_.lastModifiedDate), fechaEliminacion);
+    } else {
+      return cb.lessThanOrEqualTo(root.get(Auditable_.lastModifiedDate), fechaEliminacion);
+    }
+  }
+
   @Override
   public boolean isManaged(ComparisonNode node) {
     Property property = Property.fromCode(node.getSelector());
@@ -166,6 +183,8 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
     }
 
     switch (property) {
+      case FECHA_ELIMINACION:
+        return buildByFechaEliminacion(node, root, criteriaBuilder);
       case REFERENCIA_CONVOCATORIA:
         return buildByReferenciaConvocatoria(node, root, criteriaBuilder);
       case PLAN_INVESTIGACION:

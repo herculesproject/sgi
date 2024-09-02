@@ -465,6 +465,27 @@ public class GrupoService {
   }
 
   /**
+   * Obtiene los ids de {@link Grupo} modificados que no esten activos y que
+   * cumplan
+   * las condiciones indicadas en el filtro de búsqueda
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Grupo}.
+   */
+  public List<Long> findIdsGruposEliminados(String query) {
+    log.debug("findIdsGruposEliminados(String query) - start");
+
+    Specification<Grupo> specs = GrupoSpecifications.notActivos()
+        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+
+    List<Long> returnValue = repository.findIds(specs);
+
+    log.debug("findIdsGruposEliminados(String query) - end");
+
+    return returnValue;
+  }
+
+  /**
    * Devuelve la lista de investigadores principales y personas autorizadas de los
    * {@link Grupo} a los que pertenecen las personaRef
    *
