@@ -910,7 +910,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   public List<Long> findIdsConvocatoriasEliminadas(String query) {
     log.debug("findIdsConvocatoriasEliminadas(String query) - start");
 
-    Specification<Convocatoria> specs = ConvocatoriaSpecifications.activos()
+    Specification<Convocatoria> specs = ConvocatoriaSpecifications.notActivos()
         .and(SgiRSQLJPASupport.toSpecification(query,
             ConvocatoriaPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
 

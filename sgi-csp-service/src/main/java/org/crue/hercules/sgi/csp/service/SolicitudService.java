@@ -1136,7 +1136,7 @@ public class SolicitudService {
   public List<Long> findIdsSolicitudesEliminadas(String query) {
     log.debug("findIdsSolicitudesEliminadas(String query) - start");
 
-    Specification<Solicitud> specs = SolicitudSpecifications.activos()
+    Specification<Solicitud> specs = SolicitudSpecifications.notActivos()
         .and(SgiRSQLJPASupport.toSpecification(query,
             SolicitudPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
 
