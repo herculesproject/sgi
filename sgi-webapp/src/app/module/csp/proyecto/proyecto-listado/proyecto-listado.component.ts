@@ -9,7 +9,6 @@ import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ESTADO_MAP, Estado } from '@core/models/csp/estado-proyecto';
-import { IPrograma } from '@core/models/csp/programa';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
@@ -79,8 +78,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
   private subscriptions: Subscription[] = [];
 
   ambitoGeografico$: BehaviorSubject<ITipoAmbitoGeografico[]> = new BehaviorSubject<ITipoAmbitoGeografico[]>([]);
-
-  planInvestigacion$: BehaviorSubject<IPrograma[]> = new BehaviorSubject<IPrograma[]>([]);
 
   private convocatoriaId: number;
   private solicitudId: number;
@@ -186,7 +183,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
       rolUniversidad: new FormControl(null)
     });
     this.loadAmbitoGeografico();
-    this.loadPlanInvestigacion();
     this.loadColectivos();
     this.filter = this.createFilter();
   }
@@ -474,18 +470,6 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
    */
   toggleBusquedaAvanzada(): void {
     this.busquedaAvanzada = !this.busquedaAvanzada;
-  }
-
-  /**
-   * Cargar planes de investigación
-   */
-  private loadPlanInvestigacion() {
-    this.suscripciones.push(
-      this.programaService.findAllPlan().subscribe(
-        (res) => this.planInvestigacion$.next(res.items),
-        (error) => this.logger.error(error)
-      )
-    );
   }
 
   /**
