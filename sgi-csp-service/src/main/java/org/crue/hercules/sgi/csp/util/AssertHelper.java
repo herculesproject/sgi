@@ -14,7 +14,7 @@ public class AssertHelper {
   public static final String PROBLEM_MESSAGE_PARAMETER_FIELD = "field";
   public static final String PROBLEM_MESSAGE_PARAMETER_OTHER_FIELD = "otherField";
 
-  private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
+  public static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
   private static final String PROBLEM_MESSAGE_ISNULL = "isNull";
   private static final String PROBLEM_MESSAGE_EXISTS = "exists";
   private static final String PROBLEM_MESSAGE_NOT_EXISTS = "notExists";

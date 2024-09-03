@@ -81,4 +81,12 @@ public interface ModeloEjecucionService {
    */
   Boolean hasProyectosAsociados(Long id);
 
+  /**
+   * Comprueba si existen o no {@link ModeloEjecucion} que cumplan con el filtro.
+   *
+   * @param query la información del filtro.
+   * @return Si existen o no {@link ModeloEjecucion} que cumplan con el filtro.
+   */
+  boolean exists(String query);
+
 }

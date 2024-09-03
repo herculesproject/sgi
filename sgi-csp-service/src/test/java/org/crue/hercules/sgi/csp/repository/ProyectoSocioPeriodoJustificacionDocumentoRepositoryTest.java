@@ -28,7 +28,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
     // given: 1 ProyectoSocioPeriodoJustificacionDocumento para el
     // ProyectoSocioPeriodoJustificacionId buscado
     ModeloEjecucion modeloEjecucion = entityManager
-        .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false));
+        .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false));
 
     // @formatter:off
     RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()

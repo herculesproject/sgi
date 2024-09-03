@@ -21,7 +21,7 @@ class ModeloTipoHitoRepositoryTest extends BaseRepositoryTest {
 
     // given: data ModeloTipoHito to find by ModeloEjecucion and TipoHito
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-me-1", "descripcion-me-1", Boolean.TRUE,
-        Boolean.FALSE, Boolean.FALSE);
+        Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
     TipoHito tipoHito = new TipoHito(null, "nombre-tf-1", "descripcion-tf-1", Boolean.TRUE);
     entityManager.persistAndFlush(tipoHito);
@@ -48,7 +48,7 @@ class ModeloTipoHitoRepositoryTest extends BaseRepositoryTest {
   void findByModeloEjecucionIdAndTipoHitoId_ReturnsNull() throws Exception {
     // given: data ModeloTipoHito to find by ModeloEjecucion and TipoHito
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-me-1", "descripcion-me-1", Boolean.TRUE,
-        Boolean.FALSE, Boolean.FALSE);
+        Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
     TipoHito tipoHito = new TipoHito(null, "nombre-tf-1", "descripcion-tf-1", Boolean.TRUE);
     entityManager.persistAndFlush(tipoHito);

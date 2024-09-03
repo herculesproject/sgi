@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.Objects;
+
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
-import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoHitoSpecifications;
@@ -13,9 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

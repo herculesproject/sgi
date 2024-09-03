@@ -23,7 +23,7 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
   void findAllByProyectoSocioId_ReturnsProyectoSocioPeriodoJustificacion() throws Exception {
 
     // given: 1 ProyectoSocioPeriodoJustificacion para el ProyectoSocioId buscado
-    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false);
+    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false);
     entityManager.persistAndFlush(modeloEjecucion);
 
     // @formatter:off

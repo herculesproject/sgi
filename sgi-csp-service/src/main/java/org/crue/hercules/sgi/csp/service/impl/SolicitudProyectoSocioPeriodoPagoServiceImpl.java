@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocio
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -62,6 +63,8 @@ public class SolicitudProyectoSocioPeriodoPagoServiceImpl implements SolicitudPr
   /** Solicitud proyecto repository */
   private final SolicitudProyectoRepository solicitudProyectoRepository;
 
+  private final SolicitudAuthorityHelper solicitudAuthorityHelper;
+
   /**
    * {@link SolicitudProyectoSocioPeriodoPagoServiceImpl}
    * 
@@ -69,14 +72,17 @@ public class SolicitudProyectoSocioPeriodoPagoServiceImpl implements SolicitudPr
    * @param solicitudProyectoSocioRepository {@link SolicitudProyectoSocioRepository}
    * @param solicitudService                 {@link SolicitudService}
    * @param solicitudProyectoRepository      {@link SolicitudProyectoRepository}
+   * @param solicitudAuthorityHelper         {@link SolicitudAuthorityHelper}
    */
   public SolicitudProyectoSocioPeriodoPagoServiceImpl(SolicitudProyectoSocioPeriodoPagoRepository repository,
       SolicitudProyectoSocioRepository solicitudProyectoSocioRepository, SolicitudService solicitudService,
-      SolicitudProyectoRepository solicitudProyectoRepository) {
+      SolicitudProyectoRepository solicitudProyectoRepository,
+      SolicitudAuthorityHelper solicitudAuthorityHelper) {
     this.repository = repository;
     this.solicitudProyectoSocioRepository = solicitudProyectoSocioRepository;
     this.solicitudService = solicitudService;
     this.solicitudProyectoRepository = solicitudProyectoRepository;
+    this.solicitudAuthorityHelper = solicitudAuthorityHelper;
   }
 
   /**
@@ -100,12 +106,10 @@ public class SolicitudProyectoSocioPeriodoPagoServiceImpl implements SolicitudPr
     SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
         .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
 
-    // comprobar si la solicitud es modificable
-    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
-        .findById(solicitudProyectoSocio.getSolicitudProyectoId())
-        .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyectoSocio.getSolicitudProyectoId()));
+    solicitudAuthorityHelper
+        .checkUserHasAuthorityModifySolicitud(solicitudProyectoSocio.getSolicitudProyectoId());
 
-    Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()),
+    Assert.isTrue(solicitudService.modificable(solicitudProyectoSocio.getSolicitudProyectoId()),
         () -> ProblemMessage.builder()
             .key(MSG_ENTITY_MODIFICABLE)
             .parameter(MSG_KEY_ENTITY,
@@ -218,22 +222,27 @@ public class SolicitudProyectoSocioPeriodoPagoServiceImpl implements SolicitudPr
    * Obtiene las {@link SolicitudProyectoSocioPeriodoPago} para un
    * {@link SolicitudProyectoSocio}.
    *
-   * @param idSolicitudProyectoSocio el id del {@link SolicitudProyectoSocio}.
+   * @param solicitudProyectoSocioId el id del {@link SolicitudProyectoSocio}.
    * @param query                    la información del filtro.
    * @param paging                   la información de la paginación.
    * @return la lista de entidades {@link SolicitudProyectoSocioPeriodoPago} del
    *         {@link Solicitud} paginadas.
    */
   @Override
-  public Page<SolicitudProyectoSocioPeriodoPago> findAllBySolicitudProyectoSocio(Long idSolicitudProyectoSocio,
+  public Page<SolicitudProyectoSocioPeriodoPago> findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId,
       String query, Pageable paging) {
-    log.debug("findAllBySolicitudProyecto(Long solicitudProyectoId, String query, Pageable paging) - start");
+    log.debug("findAllBySolicitudProyecto(Long solicitudProyectoSocioId, String query, Pageable paging) - start");
+
+    SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
+        .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
+
+    solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(solicitudProyectoSocio.getSolicitudProyectoId());
 
     Specification<SolicitudProyectoSocioPeriodoPago> specs = SolicitudProyectoSocioPeriodoPagoSpecifications
-        .bySolicitudProyectoSocioId(idSolicitudProyectoSocio).and(SgiRSQLJPASupport.toSpecification(query));
+        .bySolicitudProyectoSocioId(solicitudProyectoSocioId).and(SgiRSQLJPASupport.toSpecification(query));
 
     Page<SolicitudProyectoSocioPeriodoPago> returnValue = repository.findAll(specs, paging);
-    log.debug("findAllBySolicitudProyecto(Long solicitudProyectoId, String query, Pageable paging) - end");
+    log.debug("findAllBySolicitudProyecto(Long solicitudProyectoSocioId, String query, Pageable paging) - end");
     return returnValue;
   }
 

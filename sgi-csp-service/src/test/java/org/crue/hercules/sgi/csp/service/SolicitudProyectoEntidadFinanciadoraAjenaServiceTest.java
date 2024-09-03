@@ -6,17 +6,25 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
+import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadFinanciadoraAjenaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -28,6 +36,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * SolicitudProyectoEntidadFinanciadoraAjenaServiceTest
@@ -52,15 +61,26 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   @Mock
   private SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository;
 
+  @Mock
+  private SolicitudRepository solicitudRepository;
+
+  @Mock
+  private SolicitudExternaRepository solicitudExternaRepository;
+
   private SolicitudProyectoEntidadFinanciadoraAjenaService service;
+
+  private SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   @BeforeEach
   void setUp() throws Exception {
+    solicitudAuthorityHelper = new SolicitudAuthorityHelper(solicitudRepository, solicitudExternaRepository);
     service = new SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl(repository, fuenteFinanciacionRepository,
-        tipoFinanciacionRepository, solicitudService, solicitudProyectoRepository, solicitudProyectoEntidadRepository);
+        tipoFinanciacionRepository, solicitudService, solicitudProyectoRepository, solicitudProyectoEntidadRepository,
+        solicitudAuthorityHelper);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void create_ReturnsSolicitudProyectoEntidadFinanciadoraAjena() {
     // given: Un nuevo SolicitudProyectoEntidadFinanciadoraAjena
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
@@ -70,6 +90,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena.getFuenteFinanciacion()));
     BDDMockito.given(tipoFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena.getTipoFinanciacion()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     BDDMockito.given(repository.save(solicitudProyectoEntidadFinanciadoraAjena)).will((InvocationOnMock invocation) -> {
       SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaCreado = invocation
@@ -101,6 +123,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo SolicitudProyectoEntidadFinanciadoraAjena que ya tiene id
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
@@ -115,6 +138,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void create_WithoutSolicitudProyectoId_ThrowsIllegalArgumentException() {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena without
     // SolicitudProyectoId
@@ -131,6 +155,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void create_WithFuenteFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena with FuenteFinanciacion
     // activo=false
@@ -140,6 +165,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
 
     BDDMockito.given(fuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena.getFuenteFinanciacion()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     Assertions.assertThatThrownBy(
         // when: create SolicitudProyectoEntidadFinanciadoraAjena
@@ -150,6 +177,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void create_WithTipoFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena with TipoFinanciacion
     // activo=false
@@ -161,6 +189,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena.getFuenteFinanciacion()));
     BDDMockito.given(tipoFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena.getTipoFinanciacion()));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     Assertions.assertThatThrownBy(
         // when: create SolicitudProyectoEntidadFinanciadoraAjena
@@ -170,6 +200,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_ReturnsSolicitudProyectoEntidadFinanciadoraAjena() {
     // given: Un nuevo SolicitudProyectoEntidadFinanciadoraAjena con el nombre
     // actualizado
@@ -192,6 +223,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoEntidadFinanciadoraAjena>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     // when: Actualizamos el SolicitudProyectoEntidadFinanciadoraAjena
     SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizado = service
@@ -218,6 +251,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithIdNotExist_ThrowsSolicitudProyectoEntidadFinanciadoraAjenaNotFoundException() {
     // given: Un SolicitudProyectoEntidadFinanciadoraAjena a actualizar con un id
     // que no existe
@@ -230,6 +264,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
         .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     // when: Actualizamos el SolicitudProyectoEntidadFinanciadoraAjena
     // then: Lanza una excepcion porque el SolicitudProyectoEntidadFinanciadoraAjena
@@ -239,6 +275,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithFuenteFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena with FuenteFinanciacion
     // activo=false
@@ -258,6 +295,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena));
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     Assertions.assertThatThrownBy(
         // when: update SolicitudProyectoEntidadFinanciadoraAjena
@@ -268,6 +307,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithTipoFinanciacionActivoFalse_ThrowsIllegalArgumentException() {
     // given: a SolicitudProyectoEntidadFinanciadoraAjena with TipoFinanciacion
     // activo=false
@@ -289,6 +329,8 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena));
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     Assertions.assertThatThrownBy(
         // when: update SolicitudProyectoEntidadFinanciadoraAjena
@@ -298,11 +340,17 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void delete_WithExistingId_ReturnsSolicitudProyectoEntidadFinanciadoraAjena() {
     // given: existing SolicitudProyectoEntidadFinanciadoraAjena
     Long id = 1L;
+    SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjena = generarMockSolicitudProyectoEntidadFinanciadoraAjena(
+        id);
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(true);
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyectoEntidadFinanciadoraAjena));
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
@@ -313,11 +361,12 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(false);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: delete
@@ -327,15 +376,18 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void findAllBySolicitud_ReturnsPage() {
     // given: Una lista con 37 SolicitudProyectoEntidadFinanciadoraAjena para la
     // Solicitud
     Long solicitudId = 1L;
+    Solicitud solicitud = generarMockSolicitud(solicitudId, 1L, null);
     List<SolicitudProyectoEntidadFinanciadoraAjena> solicitudProyectoEntidadesFinanciadoraAjenas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
       solicitudProyectoEntidadesFinanciadoraAjenas.add(generarMockSolicitudProyectoEntidadFinanciadoraAjena(i));
     }
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
     BDDMockito
         .given(repository.findAll(ArgumentMatchers.<Specification<SolicitudProyectoEntidadFinanciadoraAjena>>any(),
             ArgumentMatchers.<Pageable>any()))
@@ -440,6 +492,46 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
     // @formatter:on
 
     return solicitudProyectoEntidadFinanciadoraAjena;
+  }
+
+  /**
+   * Función que devuelve un objeto Solicitud
+   * 
+   * @param id                  id del Solicitud
+   * @param convocatoriaId      id de la Convocatoria
+   * @param convocatoriaExterna convocatoria externa
+   * @return el objeto Solicitud
+   */
+  private Solicitud generarMockSolicitud(Long id, Long convocatoriaId, String convocatoriaExterna) {
+    EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
+    estadoSolicitud.setId(1L);
+    estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
+
+    Programa programa = new Programa();
+    programa.setId(1L);
+
+    Solicitud solicitud = new Solicitud();
+    solicitud.setId(id);
+    solicitud.setTitulo("titulo");
+    solicitud.setCodigoExterno(null);
+    solicitud.setConvocatoriaId(convocatoriaId);
+    solicitud.setCreadorRef("usr-001");
+    solicitud.setSolicitanteRef("usr-002");
+    solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
+    solicitud.setConvocatoriaExterna(convocatoriaExterna);
+    solicitud.setUnidadGestionRef("1");
+    solicitud.setActivo(true);
+    solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
+    solicitud.setOrigenSolicitud(
+        convocatoriaId != null ? OrigenSolicitud.CONVOCATORIA_SGI : OrigenSolicitud.CONVOCATORIA_NO_SGI);
+
+    if (id != null) {
+      solicitud.setEstado(estadoSolicitud);
+      solicitud.setCodigoRegistroInterno("SGI_SLC1202011061027");
+      solicitud.setCreadorRef("usr-001");
+    }
+
+    return solicitud;
   }
 
 }

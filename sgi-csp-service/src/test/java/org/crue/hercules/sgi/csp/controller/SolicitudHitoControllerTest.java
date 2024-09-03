@@ -170,51 +170,6 @@ class SolicitudHitoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
-  @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
-  void findById_WithExistingId_ReturnsSolicitudHito() throws Exception {
-    // given: existing id
-    Long id = 1L;
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
-      return generarSolicitudHito(id);
-    });
-
-    // when: find by existing id
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: response is OK
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        // and the requested SolicitudHito is resturned as JSON object
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19T00:00:00Z"))
-        .andExpect(MockMvcResultMatchers.jsonPath("comentario").value("comentario"))
-        .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("aviso.tareaProgramadaRef").value("1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("aviso.comunicadoRef").value("1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("aviso.incluirIpsSolicitud").value(false));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "AUTH" })
-  void findById_WithNoExistingId_Returns404() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new SolicitudHitoNotFoundException(id);
-    });
-
-    // when: find by non existing id
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError()).
-        // then: HTTP code 404 NotFound pressent
-        andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
   /**
    * Función que devuelve un objeto SolicitudHito
    * 

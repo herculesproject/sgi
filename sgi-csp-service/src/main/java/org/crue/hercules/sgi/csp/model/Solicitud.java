@@ -46,6 +46,15 @@ public class Solicitud extends BaseEntity {
     MODIFICACION,
   }
 
+  public enum OrigenSolicitud {
+    /** Convocatoria registrada en el SGI */
+    CONVOCATORIA_SGI,
+    /** Convocatoria no registrada en el SGI */
+    CONVOCATORIA_NO_SGI,
+    /** Sin convocatoria */
+    SIN_CONVOCATORIA
+  }
+
   /**
    * Serial version
    */
@@ -126,6 +135,19 @@ public class Solicitud extends BaseEntity {
   @Column(name = "anio", nullable = true)
   private Integer anio;
 
+  /** Tipo formulario Grupo */
+  @Column(name = "origen_solicitud", length = 50, nullable = false)
+  @Enumerated(EnumType.STRING)
+  private OrigenSolicitud origenSolicitud;
+
+  /** Modelo Ejecucion */
+  @Column(name = "modelo_ejecucion_id", nullable = true)
+  private Long modeloEjecucionId;
+
+  /** Tipo finalidad */
+  @Column(name = "tipo_finalidad_id", nullable = true)
+  private Long tipoFinalidadId;
+
   // Relation mappings for JPA metamodel generation only
   @OneToOne(mappedBy = "solicitud")
   @Getter(AccessLevel.NONE)
@@ -182,5 +204,17 @@ public class Solicitud extends BaseEntity {
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
   private final SolicitudRrhh solicitudRrhh = null;
+
+  @ManyToOne
+  @JoinColumn(name = "modelo_ejecucion_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUD_MODELOEJECUCION"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final ModeloEjecucion modeloEjecucion = null;
+
+  @ManyToOne
+  @JoinColumn(name = "tipo_finalidad_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUD_TIPOFINALIDAD"))
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private final TipoFinalidad tipoFinalidad = null;
 
 }

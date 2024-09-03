@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoEquipoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.RequisitoEquipoRepository;
@@ -181,10 +180,6 @@ class RequisitoEquipoServiceTest extends BaseServiceTest {
     // then: lanza un ConvocatoriaNotFoundException
     Assertions.assertThatThrownBy(() -> service.findByConvocatoriaId(idBuscado))
         .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  private Convocatoria generarMockConvocatoria(Long convocatoriaId) {
-    return Convocatoria.builder().id(convocatoriaId).activo(Boolean.TRUE).codigo("codigo" + convocatoriaId).build();
   }
 
   /**

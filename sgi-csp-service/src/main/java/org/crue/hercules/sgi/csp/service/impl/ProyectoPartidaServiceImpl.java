@@ -15,7 +15,6 @@ import org.crue.hercules.sgi.csp.repository.ProyectoPartidaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPartidaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoPartidaService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;

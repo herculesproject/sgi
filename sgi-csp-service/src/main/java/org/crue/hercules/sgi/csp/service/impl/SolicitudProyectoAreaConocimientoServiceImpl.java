@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.csp.service.SolicitudProyectoAreaConocimientoServic
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
-import org.modelmapper.internal.util.Assert;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

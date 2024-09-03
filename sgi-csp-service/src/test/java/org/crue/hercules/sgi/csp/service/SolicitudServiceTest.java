@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
@@ -307,7 +308,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque no tiene convocatoria ni convocatoria
     // externa
     Assertions.assertThatThrownBy(() -> service.create(solicitud)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Convocatoria o Convocatoria Externa de Gasto de Requerimiento de Justificación no puede ser nulo");
+        .hasMessage("Convocatoria o Convocatoria Externa de Solicitud no puede ser nulo");
   }
 
   @Test
@@ -1217,6 +1218,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     solicitud.setUnidadGestionRef("1");
     solicitud.setActivo(true);
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
+    solicitud.setOrigenSolicitud(
+        convocatoriaId != null ? OrigenSolicitud.CONVOCATORIA_SGI : OrigenSolicitud.CONVOCATORIA_NO_SGI);
 
     if (id != null) {
       solicitud.setEstado(estadoSolicitud);

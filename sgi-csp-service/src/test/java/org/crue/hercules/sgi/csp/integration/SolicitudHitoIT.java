@@ -6,7 +6,6 @@ import java.util.Collections;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.dto.SolicitudHitoInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudHitoOutput;
-import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -93,22 +92,6 @@ class SolicitudHitoIT extends BaseIT {
     // then: SolicitudHito deleted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findById_ReturnsSolicitudHito() throws Exception {
-    Long idSolicitudHito = 1L;
-
-    final ResponseEntity<SolicitudHito> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), SolicitudHito.class, idSolicitudHito);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    SolicitudHito solicitudHito = response.getBody();
-    Assertions.assertThat(solicitudHito.getId()).as("getId()").isEqualTo(idSolicitudHito);
-    Assertions.assertThat(solicitudHito.getSolicitudId()).as("getSolicitudId()").isEqualTo(1);
-    Assertions.assertThat(solicitudHito.getComentario()).as("getComentario()").isEqualTo("comentario-001");
   }
 
   /**

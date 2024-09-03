@@ -21,7 +21,7 @@ class ModeloTipoFinalidadRepositoryTest extends BaseRepositoryTest {
 
     // given: data ModeloTipoFinalidad to find by ModeloEjecucion and TipoFinalidad
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-me-1", "descripcion-me-1", Boolean.TRUE,
-        Boolean.FALSE, Boolean.FALSE);
+        Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
     TipoFinalidad tipoFinalidad = new TipoFinalidad(null, "nombre-tf-1", "descripcion-tf-1", Boolean.TRUE);
     entityManager.persistAndFlush(tipoFinalidad);
@@ -45,7 +45,7 @@ class ModeloTipoFinalidadRepositoryTest extends BaseRepositoryTest {
   void findByModeloEjecucionIdAndTipoFinalidadId_ReturnsNull() throws Exception {
     // given: data ModeloTipoFinalidad to find by ModeloEjecucion and TipoFinalidad
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-me-1", "descripcion-me-1", Boolean.TRUE,
-        Boolean.FALSE, Boolean.FALSE);
+        Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
     TipoFinalidad tipoFinalidad = new TipoFinalidad(null, "nombre-tf-1", "descripcion-tf-1", Boolean.TRUE);
     entityManager.persistAndFlush(tipoFinalidad);

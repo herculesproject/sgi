@@ -102,6 +102,7 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
       modeloEjecucion.setDescripcion(modeloEjecucionActualizar.getDescripcion());
       modeloEjecucion.setExterno(modeloEjecucionActualizar.getExterno());
       modeloEjecucion.setContrato(modeloEjecucionActualizar.getContrato());
+      modeloEjecucion.setSolicitudSinConvocatoria(modeloEjecucionActualizar.getSolicitudSinConvocatoria());
 
       ModeloEjecucion returnValue = modeloEjecucionRepository.save(modeloEjecucion);
       log.debug("update(ModeloEjecucion modeloEjecucionActualizar) - end");
@@ -172,14 +173,32 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
    */
   @Override
   public List<ModeloEjecucion> findAll(String query) {
-    log.debug("findAll(String query, Pageable pageable) - start");
+    log.debug("findAll(String query) - start");
     Specification<ModeloEjecucion> specs = ModeloEjecucionSpecifications.distinct()
         .and(ModeloEjecucionSpecifications.activos())
         .and(SgiRSQLJPASupport.toSpecification(query));
 
     List<ModeloEjecucion> returnValue = modeloEjecucionRepository.findAll(specs,
         Sort.by(Sort.Direction.ASC, ModeloEjecucion_.NOMBRE));
-    log.debug("findAll(String query, Pageable pageable) - end");
+    log.debug("findAll(String query) - end");
+    return returnValue;
+  }
+
+  /**
+   * Comprueba si existen o no {@link ModeloEjecucion} que cumplan con el filtro.
+   *
+   * @param query la información del filtro.
+   * @return Si existen o no {@link ModeloEjecucion} que cumplan con el filtro.
+   */
+  @Override
+  public boolean exists(String query) {
+    log.debug("exists(String query) - start");
+    Specification<ModeloEjecucion> specs = ModeloEjecucionSpecifications.distinct()
+        .and(ModeloEjecucionSpecifications.activos())
+        .and(SgiRSQLJPASupport.toSpecification(query));
+
+    boolean returnValue = modeloEjecucionRepository.exists(specs);
+    log.debug("exists(String query) - end");
     return returnValue;
   }
 

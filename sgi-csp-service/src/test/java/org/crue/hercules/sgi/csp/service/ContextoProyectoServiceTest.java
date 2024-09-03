@@ -80,7 +80,6 @@ class ContextoProyectoServiceTest extends BaseServiceTest {
   @Test
   void create_WithDuplicatedProyecto_ThrowsIllegalArgumentException() {
     // given: Un nuevo ContextoProyecto con proyecto ya asignada
-    Long proyectoId = 1L;
     ContextoProyecto contextoProyecto = generarMockContextoProyecto(null);
 
     BDDMockito.given(repository.existsByProyectoId(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);

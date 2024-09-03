@@ -7,7 +7,6 @@ import org.crue.hercules.sgi.csp.repository.ConfiguracionRepository;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

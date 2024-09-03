@@ -21,13 +21,13 @@ class ModeloEjecucionRepositoryTest extends BaseRepositoryTest {
   void findByNombreAndActivoIsTrue_ReturnsModeloEjecucion() throws Exception {
 
     // given: 2 ModeloEjecucion de los que 1 coincide con el nombre buscado
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false);
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false);
     entityManager.persistAndFlush(modeloEjecucion1);
 
-    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false);
+    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false, false);
     entityManager.persistAndFlush(modeloEjecucion2);
 
-    ModeloEjecucion modeloEjecucion3 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", false, false, false);
+    ModeloEjecucion modeloEjecucion3 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", false, false, false, false);
     entityManager.persistAndFlush(modeloEjecucion3);
 
     String nombreBuscado = "nombre-1";
@@ -48,10 +48,10 @@ class ModeloEjecucionRepositoryTest extends BaseRepositoryTest {
   void findByNombreAndActivoIsTrueNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 ModeloEjecucion que no coinciden con el nombre buscado
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false);
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false);
     entityManager.persistAndFlush(modeloEjecucion1);
 
-    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false);
+    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false, false);
     entityManager.persistAndFlush(modeloEjecucion2);
 
     String nombreBuscado = "nombre-noexiste";

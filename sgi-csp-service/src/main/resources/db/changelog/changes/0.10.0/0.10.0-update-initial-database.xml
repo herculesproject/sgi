@@ -35,4 +35,43 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.10.0-5">
+    <addColumn tableName="modelo_ejecucion">
+      <column name="solicitud_sin_convocatoria" type="BOOLEAN" defaultValueBoolean="false" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="master" id="0.10.0-6">
+    <addColumn tableName="configuracion">
+      <column name="inv_solicitudes_sin_convocatoria" type="BOOLEAN" defaultValueBoolean="false" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="master" id="0.10.0-7">
+    <addColumn tableName="solicitud">
+      <column name="origen_solicitud" type="VARCHAR(50)" />
+    </addColumn>
+    <addColumn tableName="solicitud">
+      <column name="modelo_ejecucion_id" type="BIGINT" />
+    </addColumn>
+    <addColumn tableName="solicitud">
+      <column name="tipo_finalidad_id" type="BIGINT" />
+    </addColumn>
+
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="solicitud"
+      constraintName="FK_SOLICITUD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="solicitud"
+      constraintName="FK_SOLICITUD_TIPOFINALIDAD" deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="0.10.0-8">
+    <addColumn tableName="solicitud_documento">
+      <column name="tipo_fase_id" type="BIGINT" />
+    </addColumn>
+  </changeSet>
+
+
 </databaseChangeLog>

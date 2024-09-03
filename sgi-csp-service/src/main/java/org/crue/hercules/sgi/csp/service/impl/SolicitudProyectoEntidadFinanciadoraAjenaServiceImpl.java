@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.Objects;
+
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
@@ -18,6 +20,7 @@ import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoEntid
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoEntidadFinanciadoraAjenaService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -28,7 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -55,18 +57,21 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
   private final SolicitudService solicitudService;
   private final SolicitudProyectoRepository solicitudProyectoRepository;
   private final SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository;
+  private final SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   public SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl(
       SolicitudProyectoEntidadFinanciadoraAjenaRepository solicitudProyectoEntidadFinanciadoraAjenaRepository,
       FuenteFinanciacionRepository fuenteFinanciacionRepository, TipoFinanciacionRepository tipoFinanciacionRepository,
       SolicitudService solicitudService, SolicitudProyectoRepository solicitudProyectoRepository,
-      SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository) {
+      SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository,
+      SolicitudAuthorityHelper solicitudAuthorityHelper) {
     this.repository = solicitudProyectoEntidadFinanciadoraAjenaRepository;
     this.fuenteFinanciacionRepository = fuenteFinanciacionRepository;
     this.tipoFinanciacionRepository = tipoFinanciacionRepository;
     this.solicitudService = solicitudService;
     this.solicitudProyectoRepository = solicitudProyectoRepository;
     this.solicitudProyectoEntidadRepository = solicitudProyectoEntidadRepository;
+    this.solicitudAuthorityHelper = solicitudAuthorityHelper;
   }
 
   /**
@@ -88,6 +93,9 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
     AssertHelper.idIsNull(solicitudProyectoEntidadFinanciadoraAjena.getId(),
         SolicitudProyectoEntidadFinanciadoraAjena.class);
     AssertHelper.idNotNull(solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoId(), SolicitudProyecto.class);
+
+    solicitudAuthorityHelper.checkUserHasAuthorityModifySolicitud(
+        solicitudProyectoEntidadFinanciadoraAjena.getSolicitudProyectoId());
 
     validateData(solicitudProyectoEntidadFinanciadoraAjena, null);
 
@@ -117,6 +125,10 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
       SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizar) {
     log.debug(
         "update(SolicitudProyectoEntidadFinanciadoraAjena solicitudProyectoEntidadFinanciadoraAjenaActualizar) - start");
+
+    solicitudAuthorityHelper.checkUserHasAuthorityModifySolicitud(
+        solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoId());
+
     SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
         .findById(solicitudProyectoEntidadFinanciadoraAjenaActualizar.getSolicitudProyectoId())
         .orElseThrow(() -> new SolicitudProyectoNotFoundException(
@@ -169,9 +181,10 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
 
     AssertHelper.idNotNull(id, SolicitudProyectoEntidadFinanciadoraAjena.class);
 
-    if (!repository.existsById(id)) {
-      throw new SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException(id);
-    }
+    SolicitudProyectoEntidadFinanciadoraAjena entidadFinanciadoraAjena = repository.findById(id)
+        .orElseThrow(() -> new SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException(id));
+
+    solicitudAuthorityHelper.checkUserHasAuthorityModifySolicitud(entidadFinanciadoraAjena.getSolicitudProyectoId());
 
     solicitudProyectoEntidadRepository
         .findAll(SolicitudProyectoEntidadSpecifications.bySolicitudProyectoEntidadFinanciadoraAjenaId(id)).stream()
@@ -212,6 +225,9 @@ public class SolicitudProyectoEntidadFinanciadoraAjenaServiceImpl
   public Page<SolicitudProyectoEntidadFinanciadoraAjena> findAllBySolicitud(Long solicitudId, String query,
       Pageable pageable) {
     log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable pageable) - start");
+
+    solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(solicitudId);
+
     Specification<SolicitudProyectoEntidadFinanciadoraAjena> specs = SolicitudProyectoEntidadFinanciadoraAjenaSpecifications
         .bySolicitudId(solicitudId).and(SgiRSQLJPASupport.toSpecification(query));
 

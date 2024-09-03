@@ -6,20 +6,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
-import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocioEquipoSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -61,16 +59,15 @@ public class SolicitudProyectoSocioEquipoServiceImpl implements SolicitudProyect
   /** Solicitud proyecto socio repository */
   private final SolicitudProyectoSocioRepository solicitudProyectoSocioRepository;
 
-  /** Solicitud proyecto repository */
-  private final SolicitudProyectoRepository solicitudProyectoRepository;
+  private final SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   public SolicitudProyectoSocioEquipoServiceImpl(SolicitudProyectoSocioEquipoRepository repository,
       SolicitudService solicitudService, SolicitudProyectoSocioRepository solicitudProyectoSocioRepository,
-      SolicitudProyectoRepository solicitudProyectoRepository) {
+      SolicitudAuthorityHelper solicitudAuthorityHelper) {
     this.repository = repository;
     this.solicitudService = solicitudService;
     this.solicitudProyectoSocioRepository = solicitudProyectoSocioRepository;
-    this.solicitudProyectoRepository = solicitudProyectoRepository;
+    this.solicitudAuthorityHelper = solicitudAuthorityHelper;
   }
 
   /**
@@ -93,12 +90,10 @@ public class SolicitudProyectoSocioEquipoServiceImpl implements SolicitudProyect
     SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
         .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
 
-    // comprobar si la solicitud es modificable
-    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
-        .findById(solicitudProyectoSocio.getSolicitudProyectoId())
-        .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyectoSocio.getSolicitudProyectoId()));
+    solicitudAuthorityHelper
+        .checkUserHasAuthorityModifySolicitud(solicitudProyectoSocio.getSolicitudProyectoId());
 
-    Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()),
+    Assert.isTrue(solicitudService.modificable(solicitudProyectoSocio.getSolicitudProyectoId()),
         () -> ProblemMessage.builder()
             .key(MSG_ENTITY_MODIFICABLE)
             .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD_PROYECTO_SOCIO_EQUIPO))
@@ -222,6 +217,11 @@ public class SolicitudProyectoSocioEquipoServiceImpl implements SolicitudProyect
   public Page<SolicitudProyectoSocioEquipo> findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId, String query,
       Pageable paging) {
     log.debug("findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId, String query, Pageable paging) - start");
+
+    SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
+        .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
+
+    solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(solicitudProyectoSocio.getSolicitudProyectoId());
 
     Specification<SolicitudProyectoSocioEquipo> specs = SolicitudProyectoSocioEquipoSpecifications
         .bySolicitudProyectoSocio(solicitudProyectoSocioId).and(SgiRSQLJPASupport.toSpecification(query));

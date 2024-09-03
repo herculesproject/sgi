@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoSocio
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -59,16 +60,19 @@ public class SolicitudProyectoSocioPeriodoJustificacionServiceImpl
   private final SolicitudProyectoSocioRepository solicitudProyectoSocioRepository;
   private final SolicitudService solicitudService;
   private final SolicitudProyectoRepository solicitudProyectoRepository;
+  private final SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   public SolicitudProyectoSocioPeriodoJustificacionServiceImpl(Validator validator,
       SolicitudProyectoSocioPeriodoJustificacionRepository repository,
       SolicitudProyectoSocioRepository solicitudProyectoSocioRepository, SolicitudService solicitudService,
-      SolicitudProyectoRepository solicitudProyectoRepository) {
+      SolicitudProyectoRepository solicitudProyectoRepository,
+      SolicitudAuthorityHelper solicitudAuthorityHelper) {
     this.validator = validator;
     this.repository = repository;
     this.solicitudProyectoSocioRepository = solicitudProyectoSocioRepository;
     this.solicitudService = solicitudService;
     this.solicitudProyectoRepository = solicitudProyectoRepository;
+    this.solicitudAuthorityHelper = solicitudAuthorityHelper;
   }
 
   /**
@@ -95,12 +99,16 @@ public class SolicitudProyectoSocioPeriodoJustificacionServiceImpl
     }
 
     // Recuperamos la solicitud
-    SolicitudProyectoSocio solicitud = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
+    SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
         .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
 
+    solicitudAuthorityHelper
+        .checkUserHasAuthorityModifySolicitud(solicitudProyectoSocio.getSolicitudProyectoId());
+
     // Comprobar si la solicitud es modificable
-    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(solicitud.getSolicitudProyectoId())
-        .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitud.getSolicitudProyectoId()));
+    SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
+        .findById(solicitudProyectoSocio.getSolicitudProyectoId())
+        .orElseThrow(() -> new SolicitudProyectoNotFoundException(solicitudProyectoSocio.getSolicitudProyectoId()));
 
     Assert.isTrue(solicitudService.modificable(solicitudProyecto.getId()),
         () -> ProblemMessage.builder()
@@ -112,7 +120,7 @@ public class SolicitudProyectoSocioPeriodoJustificacionServiceImpl
 
     // Comprobamos la consistencia y preparamos para la actualización los
     // SolicitudProyectoSocioPeriodoJustificacion recibidos
-    checkAndSetupPeriodos(solicitud, solicitudProyecto, periodos);
+    checkAndSetupPeriodos(solicitudProyectoSocio, solicitudProyecto, periodos);
 
     // Recuperamos los SolicitudProyectoSocioPeriodoJustificacion asociados a la
     // solicitud existentes en base de datos
@@ -224,6 +232,11 @@ public class SolicitudProyectoSocioPeriodoJustificacionServiceImpl
   public Page<SolicitudProyectoSocioPeriodoJustificacion> findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId,
       String query, Pageable paging) {
     log.debug("findAllBySolicitudProyectoSocio(Long solicitudProyectoSocioId, String query, Pageable paging) - start");
+
+    SolicitudProyectoSocio solicitudProyectoSocio = solicitudProyectoSocioRepository.findById(solicitudProyectoSocioId)
+        .orElseThrow(() -> new SolicitudProyectoSocioNotFoundException(solicitudProyectoSocioId));
+
+    solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(solicitudProyectoSocio.getSolicitudProyectoId());
 
     Specification<SolicitudProyectoSocioPeriodoJustificacion> specs = SolicitudProyectoSocioPeriodoJustificacionSpecifications
         .bySolicitudId(solicitudProyectoSocioId).and(SgiRSQLJPASupport.toSpecification(query));

@@ -402,12 +402,6 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
         null, null);
   }
 
-  private RequerimientoJustificacion generarMockRequerimientoJustificacion(Long id, Long requerimientoPrevioId) {
-    String observacionSuffix = id != null ? String.format("%03d", id) : String.format("%03d", 1);
-    return generarMockRequerimientoJustificacion(id, "RequerimientoJustificacion-" + observacionSuffix,
-        requerimientoPrevioId, null);
-  }
-
   private RequerimientoJustificacion generarMockRequerimientoJustificacion(Long id,
       TipoRequerimiento tipoRequerimiento) {
     String observacionSuffix = id != null ? String.format("%03d", id) : String.format("%03d", 1);

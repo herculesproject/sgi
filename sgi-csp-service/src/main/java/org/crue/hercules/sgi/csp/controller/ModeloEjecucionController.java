@@ -142,6 +142,21 @@ public class ModeloEjecucionController {
   }
 
   /**
+   * Comprueba si existen o no {@link ModeloEjecucion} que cumplan con el filtro.
+   *
+   * @param query la información del filtro.
+   * @return Si existen o no {@link ModeloEjecucion} que cumplan con el filtro.
+   */
+  @RequestMapping(method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E', 'CSP-SOL-V', 'CSP-SOL-INV-C' ,'CSP-SOL-INV-ER')")
+  public ResponseEntity<Void> exists(@RequestParam(name = "q", required = false) String query) {
+    log.debug("exists(String query) - start");
+    boolean returnValue = modeloEjecucionService.exists(query);
+    log.debug("exist(String query) - end");
+    return new ResponseEntity<>(returnValue ? HttpStatus.OK : HttpStatus.NO_CONTENT);
+  }
+
+  /**
    * Devuelve el {@link ModeloEjecucion} con el id indicado.
    * 
    * @param id Identificador de {@link ModeloEjecucion}.

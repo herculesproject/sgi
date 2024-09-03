@@ -34,11 +34,11 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
-import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
@@ -94,9 +94,7 @@ public class SolicitudService {
   private static final String MSG_MODEL_CONVOCATORIA = "org.crue.hercules.sgi.csp.model.Convocatoria.message";
   private static final String MSG_KEY_CREADOR_REF = "solicitud.creadorRef";
   private static final String MSG_KEY_SOLICITANTE_REF = "solicitud.solicitanteRef";
-  private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_MSG = "msg";
-  private static final String MSG_KEY_FIELD = "field";
   private static final String MSG_ENTITY_MODIFICABLE = "org.springframework.util.Assert.entity.modificable.message";
   private static final String MSG_MODEL_SOLICITUD = "org.crue.hercules.sgi.csp.model.Solicitud.message";
   private static final String MESSAGE_KEY_CONVOCATORIA_O_CONVOCATORIA_EXTERNA = "convocatoriaOconvocatoriaExterna";
@@ -105,6 +103,7 @@ public class SolicitudService {
   private static final String MSG_SOLICITUD_SIN_CONVOCATORIA = "solicitud.sinConvocatoria";
   private static final String MSG_USUARIO_NO_CREADOR_SOLICITUD = "solicitud.usuario.noCreador";
   private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
+  private static final String MSG_KEY_SOLICITUD_ORIGEN_SOLICITUD = "solicitud.origenSolicitud";
 
   private final SgiConfigProperties sgiConfigProperties;
   private final SgiApiEtiService sgiApiEtiService;
@@ -180,15 +179,24 @@ public class SolicitudService {
   public Solicitud create(Solicitud solicitud) {
     log.debug("create(Solicitud solicitud) - start");
     AssertHelper.idIsNull(solicitud.getId(), Solicitud.class);
+    AssertHelper.fieldNotNull(solicitud.getOrigenSolicitud(), Solicitud.class, MSG_KEY_SOLICITUD_ORIGEN_SOLICITUD);
     Assert.notNull(solicitud.getCreadorRef(),
-        () -> ProblemMessage.builder().key(Assert.class, "notNull")
-            .parameter("field", ApplicationContextSupport.getMessage(MSG_KEY_CREADOR_REF))
-            .parameter("entity", ApplicationContextSupport.getMessage(Solicitud.class)).build());
+        () -> ProblemMessage.builder().key(Assert.class, AssertHelper.PROBLEM_MESSAGE_NOTNULL)
+            .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_FIELD,
+                ApplicationContextSupport.getMessage(MSG_KEY_CREADOR_REF))
+            .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                ApplicationContextSupport.getMessage(Solicitud.class))
+            .build());
 
-    AssertHelper.fieldNotNull((solicitud.getConvocatoriaId() != null || solicitud.getConvocatoriaExterna() != null),
-        GastoRequerimientoJustificacion.class, MESSAGE_KEY_CONVOCATORIA_O_CONVOCATORIA_EXTERNA);
+    AssertHelper.fieldNotNull((solicitud.getConvocatoriaId() != null
+        && solicitud.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_SGI))
+        || (solicitud.getConvocatoriaExterna() != null && !solicitud.getConvocatoriaExterna().isEmpty()
+            && solicitud.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_NO_SGI))
+        || solicitud.getOrigenSolicitud().equals(OrigenSolicitud.SIN_CONVOCATORIA),
+        Solicitud.class, MESSAGE_KEY_CONVOCATORIA_O_CONVOCATORIA_EXTERNA);
 
     String authority = "CSP-SOL-C";
+    String authorityInv = "CSP-SOL-INV-C";
     if (solicitud.getConvocatoriaId() != null) {
       ConfiguracionSolicitud configuracionSolicitud = configuracionSolicitudRepository
           .findByConvocatoriaId(solicitud.getConvocatoriaId())
@@ -198,23 +206,26 @@ public class SolicitudService {
           .orElseThrow(() -> new ConvocatoriaNotFoundException(configuracionSolicitud.getConvocatoriaId()));
 
       Assert.isTrue(
-          SgiSecurityContextHolder.hasAuthority("CSP-SOL-INV-C") || (SgiSecurityContextHolder.hasAuthority(authority)
+          SgiSecurityContextHolder.hasAuthority(authorityInv) || (SgiSecurityContextHolder.hasAuthority(authority)
               || SgiSecurityContextHolder.hasAuthorityForUO(authority, convocatoria.getUnidadGestionRef())),
           () -> ProblemMessage.builder()
               .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
-              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
-                  MSG_MODEL_CONVOCATORIA))
+              .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                  ApplicationContextSupport.getMessage(MSG_MODEL_CONVOCATORIA))
               .build());
 
       solicitud.setUnidadGestionRef(convocatoria.getUnidadGestionRef());
     } else {
       Assert.isTrue(
-          SgiSecurityContextHolder.hasAuthority(authority)
+          (SgiSecurityContextHolder.hasAuthority(authorityInv)
+              && solicitud.getOrigenSolicitud() == OrigenSolicitud.SIN_CONVOCATORIA
+              && solicitud.getUnidadGestionRef() != null)
+              || SgiSecurityContextHolder.hasAuthority(authority)
               || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
           () -> ProblemMessage.builder()
               .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
-              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
-                  MSG_MODEL_SOLICITUD))
+              .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                  ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
               .build());
     }
 
@@ -289,8 +300,11 @@ public class SolicitudService {
     }
 
     Assert.isTrue(
-        solicitud.getConvocatoriaId() != null
-            || (solicitud.getConvocatoriaExterna() != null && !solicitud.getConvocatoriaExterna().isEmpty()),
+        (solicitud.getConvocatoriaId() != null
+            && solicitud.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_SGI))
+            || (solicitud.getConvocatoriaExterna() != null && !solicitud.getConvocatoriaExterna().isEmpty()
+                && solicitud.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_NO_SGI))
+            || solicitud.getOrigenSolicitud().equals(OrigenSolicitud.SIN_CONVOCATORIA),
         ApplicationContextSupport.getMessage(MSG_SOLICITUD_SIN_CONVOCATORIA));
 
     // comprobar si la solicitud es modificable
@@ -298,7 +312,8 @@ public class SolicitudService {
         .getId()),
         () -> ProblemMessage.builder()
             .key(MSG_ENTITY_MODIFICABLE)
-            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
+            .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
             .parameter(MSG_KEY_MSG, null)
             .build());
 
@@ -307,16 +322,17 @@ public class SolicitudService {
       Assert.isTrue(solicitud.getActivo(),
           () -> ProblemMessage.builder()
               .key(MSG_ENTITY_INACTIVO)
-              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
-              .parameter(MSG_KEY_FIELD, solicitud.getTitulo())
+              .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                  ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
+              .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_FIELD, solicitud.getTitulo())
               .build());
 
       Assert.isTrue(
           solicitudAuthorityHelper.hasPermisosEdicion(solicitud),
           () -> ProblemMessage.builder()
               .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
-              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
-                  MSG_MODEL_SOLICITUD))
+              .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                  ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
               .build());
 
       data.setSolicitanteRef(solicitud.getSolicitanteRef());
@@ -332,11 +348,34 @@ public class SolicitudService {
         }
       }
 
+      if (data.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_NO_SGI)
+          || data.getOrigenSolicitud().equals(OrigenSolicitud.SIN_CONVOCATORIA)) {
+        if (hasDocumentosOrHitos(solicitud.getId())) {
+          data.setUnidadGestionRef(solicitud.getUnidadGestionRef());
+          data.setModeloEjecucionId(solicitud.getModeloEjecucionId());
+        }
+        data.setTipoFinalidadId(solicitud.getTipoFinalidadId());
+      }
+
       Solicitud returnValue = repository.save(data);
 
       log.debug("update(Solicitud solicitud) - end");
       return returnValue;
     }).orElseThrow(() -> new SolicitudNotFoundException(solicitud.getId()));
+  }
+
+  /**
+   * Comprueba si la solicitud tiene documentos o hitos asociados
+   * 
+   * @param solicitudId Identificador de la solicitud
+   * @return si la solicitud tiene o no documentos o hitos asociados
+   */
+  public boolean hasDocumentosOrHitos(Long solicitudId) {
+    log.debug("hasDocumentosOrHitos(Long solicitudId) - start");
+    Specification<Solicitud> specs = SolicitudSpecifications.hasDocumentosOrHitos(solicitudId);
+    boolean hasDocumentosOrHitos = repository.exists(specs);
+    log.debug("hasDocumentosOrHitos(Long solicitudId) - end");
+    return hasDocumentosOrHitos;
   }
 
   /**
@@ -383,8 +422,8 @@ public class SolicitudService {
           SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-R", solicitud.getUnidadGestionRef()),
           () -> ProblemMessage.builder()
               .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
-              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
-                  MSG_MODEL_SOLICITUD))
+              .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                  ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
               .build());
 
       if (Boolean.TRUE.equals(solicitud.getActivo())) {
@@ -427,8 +466,8 @@ public class SolicitudService {
                 || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
             () -> ProblemMessage.builder()
                 .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
-                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
-                    MSG_MODEL_SOLICITUD))
+                .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
+                    ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
                 .build());
       }
 
@@ -1234,13 +1273,22 @@ public class SolicitudService {
       return false;
     }
 
-    return Arrays.asList(
-        Estado.BORRADOR,
-        Estado.SUBSANACION,
-        Estado.EXCLUIDA_PROVISIONAL,
-        Estado.EXCLUIDA_DEFINITIVA,
-        Estado.DENEGADA_PROVISIONAL,
-        Estado.DENEGADA).contains(solicitud.getEstado().getEstado());
+    boolean modificableConvocatoriaSGI = solicitud.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_SGI)
+        && Arrays.asList(
+            Estado.BORRADOR,
+            Estado.SUBSANACION,
+            Estado.EXCLUIDA_PROVISIONAL,
+            Estado.EXCLUIDA_DEFINITIVA,
+            Estado.DENEGADA_PROVISIONAL,
+            Estado.DENEGADA).contains(solicitud.getEstado().getEstado());
+
+    boolean modificableSinConvocatoria = solicitud.getOrigenSolicitud().equals(OrigenSolicitud.SIN_CONVOCATORIA)
+        && Arrays.asList(
+            Estado.BORRADOR,
+            Estado.RECHAZADA,
+            Estado.SUBSANACION).contains(solicitud.getEstado().getEstado());
+
+    return modificableConvocatoriaSGI || modificableSinConvocatoria;
   }
 
   /**
@@ -1249,15 +1297,28 @@ public class SolicitudService {
    * No es modificable cuando el estado de la {@link Solicitud} es distinto de
    * {@link EstadoSolicitud.Estado#BORRADOR} o
    * {@link EstadoSolicitud.Estado#RECHAZADA} si es una {@link Solicitud} con
-   * {@link FormularioSolicitud#RRHH}
+   * {@link OrigenSolicitud#CONVOCATORIA_SGI} o
+   * {@link EstadoSolicitud.Estado#BORRADOR},
+   * {@link EstadoSolicitud.Estado#RECHAZADA} o
+   * {@link EstadoSolicitud.Estado#SUBSANACION} si
+   * {@link OrigenSolicitud#SIN_CONVOCATORIA}
    *
    * @param solicitud Id del {@link Solicitud}.
    * @return true si puede ser modificada / false si no puede ser modificada
    */
   private boolean modificableByInvestigador(Solicitud solicitud) {
-    return solicitud.getEstado().getEstado().equals(EstadoSolicitud.Estado.BORRADOR) ||
-        (solicitud.getFormularioSolicitud().equals(FormularioSolicitud.RRHH) && solicitud.getEstado()
-            .getEstado().equals(EstadoSolicitud.Estado.RECHAZADA));
+    boolean modificableConvocatoriaSGI = solicitud.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_SGI)
+        && Arrays.asList(
+            Estado.BORRADOR,
+            Estado.RECHAZADA).contains(solicitud.getEstado().getEstado());
+
+    boolean modificableSinConvocatoria = solicitud.getOrigenSolicitud().equals(OrigenSolicitud.SIN_CONVOCATORIA)
+        && Arrays.asList(
+            Estado.BORRADOR,
+            Estado.RECHAZADA,
+            Estado.SUBSANACION).contains(solicitud.getEstado().getEstado());
+
+    return modificableConvocatoriaSGI || modificableSinConvocatoria;
   }
 
   /**

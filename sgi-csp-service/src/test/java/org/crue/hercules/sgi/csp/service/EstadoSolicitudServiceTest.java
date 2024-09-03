@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
@@ -180,6 +181,8 @@ class EstadoSolicitudServiceTest extends BaseServiceTest {
     solicitud.setConvocatoriaExterna(convocatoriaExterna);
     solicitud.setUnidadGestionRef("1");
     solicitud.setActivo(true);
+    solicitud.setOrigenSolicitud(
+        convocatoriaId != null ? OrigenSolicitud.CONVOCATORIA_SGI : OrigenSolicitud.CONVOCATORIA_NO_SGI);
 
     if (id != null) {
       solicitud.setEstado(estadoSolicitud);

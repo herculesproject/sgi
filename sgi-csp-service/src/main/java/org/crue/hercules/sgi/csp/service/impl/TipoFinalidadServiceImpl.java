@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
-import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad_;
 import org.crue.hercules.sgi.csp.repository.TipoFinalidadRepository;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 

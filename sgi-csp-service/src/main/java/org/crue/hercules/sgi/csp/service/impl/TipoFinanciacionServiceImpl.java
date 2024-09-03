@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.Objects;
+
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
@@ -12,9 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -67,7 +67,7 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
 
     AssertHelper.idNotNull(tipoFinanciacionActualizar.getId(), TipoFinanciacion.class);
     tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacionActualizar.getNombre())
-        .ifPresent((tipoFinanciacionExistente) -> AssertHelper.entityExists(
+        .ifPresent(tipoFinanciacionExistente -> AssertHelper.entityExists(
             Objects.equals(tipoFinanciacionActualizar.getId(), tipoFinanciacionExistente.getId()),
             TipoFinanciacion.class, TipoFinanciacion.class));
 
@@ -158,7 +158,7 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
       }
 
       tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacion.getNombre())
-          .ifPresent((tipoFinanciacionExistente) -> AssertHelper.entityExists(
+          .ifPresent(tipoFinanciacionExistente -> AssertHelper.entityExists(
               Objects.equals(tipoFinanciacion.getId(), tipoFinanciacionExistente.getId()),
               TipoFinanciacion.class, TipoFinanciacion.class));
 

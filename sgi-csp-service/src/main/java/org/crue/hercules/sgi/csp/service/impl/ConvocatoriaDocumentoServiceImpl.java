@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -38,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 
 public class ConvocatoriaDocumentoServiceImpl implements ConvocatoriaDocumentoService {
-  private static final String MSG_KEY_ID = "id";
+
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_FIELD = "field";
   private static final String MSG_KEY_DOCUMENTO_REF = "convocatoriaDocumento.documentoRef";

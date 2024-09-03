@@ -177,7 +177,12 @@ public class Configuracion extends BaseEntity {
      * Determina si se esta habilitado el filtro de proyectos con algun socio del
      * pais seleccionado
      */
-    PROYECTO_SOCIO_PAIS_FILTER_ENABLED("proyectoSocioPaisFilterEnabled");
+    PROYECTO_SOCIO_PAIS_FILTER_ENABLED("proyectoSocioPaisFilterEnabled"),
+    /**
+     * Permitir creación de solicitudes sin convocatoria desde perfil de
+     * investigación
+     */
+    SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED("solicitudesSinConvocatoriaInvestigadorEnabled");
 
     private final String key;
 
@@ -350,6 +355,13 @@ public class Configuracion extends BaseEntity {
   @Column(name = "csp_pro_socio_pais_filter_enabled", columnDefinition = "boolean default true", nullable = false, unique = true)
   private Boolean proyectoSocioPaisFilterEnabled;
 
+  /**
+   * Permitir creación de solicitudes sin convocatoria desde perfil de
+   * investigación
+   */
+  @Column(name = "inv_solicitudes_sin_convocatoria", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean solicitudesSinConvocatoriaInvestigadorEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -400,6 +412,8 @@ public class Configuracion extends BaseEntity {
         return this.getPersonalContratadoColumnasFijasVisibles();
       case PROYECTO_SOCIO_PAIS_FILTER_ENABLED:
         return this.getProyectoSocioPaisFilterEnabled();
+      case SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED:
+        return this.getSolicitudesSinConvocatoriaInvestigadorEnabled();
       default:
         return null;
     }
@@ -432,31 +446,31 @@ public class Configuracion extends BaseEntity {
         this.setValidacionClasificacionGastos(ValidacionClasificacionGastos.valueOf(newValue));
         break;
       case EJECUCION_ECONOMICA_GRUPOS_ENABLED:
-        this.setEjecucionEconomicaGruposEnabled(new Boolean(newValue));
+        this.setEjecucionEconomicaGruposEnabled(Boolean.valueOf(newValue));
         break;
       case CARDINALIDAD_RELACION_SGI_SGE:
         this.setCardinalidadRelacionSgiSge(CardinalidadRelacionSgiSge.valueOf(newValue));
         break;
       case PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED:
-        this.setPartidasPresupuestariasSGE(new Boolean(newValue));
+        this.setPartidasPresupuestariasSGE(Boolean.valueOf(newValue));
         break;
       case AMORTIZACION_FONDOS_SGE_ENABLED:
-        this.setAmortizacionFondosSGE(new Boolean(newValue));
+        this.setAmortizacionFondosSGE(Boolean.valueOf(newValue));
         break;
       case ALTA_BUSCADOR_SGE_ENABLED:
-        this.setAltaBuscadorSGE(new Boolean(newValue));
+        this.setAltaBuscadorSGE(Boolean.valueOf(newValue));
         break;
       case GASTOS_JUSTIFICADOS_SGE_ENABLED:
-        this.setGastosJustificadosSGE(new Boolean(newValue));
+        this.setGastosJustificadosSGE(Boolean.valueOf(newValue));
         break;
       case MODIFICACION_PROYECTO_SGE_ENABLED:
-        this.setModificacionProyectoSge(new Boolean(newValue));
+        this.setModificacionProyectoSge(Boolean.valueOf(newValue));
         break;
       case SECTOR_IVA_SGE_ENABLED:
-        this.setSectorIvaSgeEnabled(new Boolean(newValue));
+        this.setSectorIvaSgeEnabled(Boolean.valueOf(newValue));
         break;
       case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
-        this.setDetalleOperacionesModificacionesEnabled(new Boolean(newValue));
+        this.setDetalleOperacionesModificacionesEnabled(Boolean.valueOf(newValue));
         break;
       case PROYECTO_SGE_ALTA_MODO_EJECUCION:
         this.setProyectoSgeAltaModoEjecucion(ModoEjecucion.valueOf(newValue));
@@ -465,7 +479,7 @@ public class Configuracion extends BaseEntity {
         this.setProyectoSgeModificacionModoEjecucion(ModoEjecucion.valueOf(newValue));
         break;
       case CALENDARIO_FACTURACION_SGE_ENABLED:
-        this.setCalendarioFacturacionSgeEnabled(new Boolean(newValue));
+        this.setCalendarioFacturacionSgeEnabled(Boolean.valueOf(newValue));
         break;
       case FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES:
         if (isValidEnumString(newValue, SgeFacturasJustificantesColumnasFijas.class, true)) {
@@ -483,7 +497,10 @@ public class Configuracion extends BaseEntity {
         }
         break;
       case PROYECTO_SOCIO_PAIS_FILTER_ENABLED:
-        this.setProyectoSocioPaisFilterEnabled(new Boolean(newValue));
+        this.setProyectoSocioPaisFilterEnabled(Boolean.valueOf(newValue));
+        break;
+      case SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED:
+        this.setSolicitudesSinConvocatoriaInvestigadorEnabled(Boolean.valueOf(newValue));
         break;
     }
   }

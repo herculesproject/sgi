@@ -592,8 +592,6 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     for (long i = 1; i <= 37; i++) {
       outputList.add(modelMapper.map(generarMockConvocatoriaFase(Long.valueOf(i)), ConvocatoriaFaseOutput.class));
     }
-    Page<ConvocatoriaFaseOutput> mockedPage = new PageImpl<>(outputList.subList(30, 37),
-        PageRequest.of(3, 10), convocatoriasEntidadesConvocantes.size());
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);

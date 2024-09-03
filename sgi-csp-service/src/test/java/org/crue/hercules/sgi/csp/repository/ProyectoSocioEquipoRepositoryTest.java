@@ -28,7 +28,7 @@ class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
     // buscado
 
     ModeloEjecucion modeloEjecucion1 = entityManager
-        .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false));
+        .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false));
 
     // @formatter:off
     Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder()

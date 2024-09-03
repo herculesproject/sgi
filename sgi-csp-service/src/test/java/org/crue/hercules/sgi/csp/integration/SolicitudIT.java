@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
@@ -1943,6 +1944,7 @@ class SolicitudIT extends BaseIT {
     solicitud.setUnidadGestionRef("2");
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
     solicitud.setActivo(true);
+    solicitud.setOrigenSolicitud(OrigenSolicitud.CONVOCATORIA_SGI);
 
     if (id != null) {
       solicitud.setEstado(estadoSolicitud);

@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoPresu
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoPresupuestoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -47,12 +48,16 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
   private final SolicitudProyectoPresupuestoRepository repository;
   private final SolicitudService solicitudService;
   private final SolicitudProyectoRepository solicitudProyectoRepository;
+  private final SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   public SolicitudProyectoPresupuestoServiceImpl(SolicitudProyectoPresupuestoRepository repository,
-      SolicitudService solicitudService, SolicitudProyectoRepository solicitudProyectoRepository) {
+      SolicitudService solicitudService,
+      SolicitudProyectoRepository solicitudProyectoRepository,
+      SolicitudAuthorityHelper solicitudAuthorityHelper) {
     this.repository = repository;
     this.solicitudService = solicitudService;
     this.solicitudProyectoRepository = solicitudProyectoRepository;
+    this.solicitudAuthorityHelper = solicitudAuthorityHelper;
   }
 
   /**
@@ -70,6 +75,9 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
     log.debug("create(SolicitudProyectoPresupuesto solicitudProyectoPresupuesto) - start");
 
     AssertHelper.idIsNull(solicitudProyectoPresupuesto.getId(), SolicitudProyectoPresupuesto.class);
+
+    solicitudAuthorityHelper
+        .checkUserHasAuthorityModifySolicitud(solicitudProyectoPresupuesto.getSolicitudProyectoId());
 
     SolicitudProyectoPresupuesto returnValue = repository.save(solicitudProyectoPresupuesto);
 
@@ -91,6 +99,9 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
     log.debug("update(SolicitudProyectoPresupuesto solicitudProyectoPresupuesto) - start");
 
     AssertHelper.idNotNull(solicitudProyectoPresupuesto.getId(), SolicitudProyectoPresupuesto.class);
+
+    solicitudAuthorityHelper
+        .checkUserHasAuthorityModifySolicitud(solicitudProyectoPresupuesto.getSolicitudProyectoId());
 
     // comprobar si la solicitud es modificable
     SolicitudProyecto solicitudProyecto = solicitudProyectoRepository
@@ -145,9 +156,12 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
     log.debug("delete(Long id) - start");
 
     AssertHelper.idNotNull(id, SolicitudProyectoPresupuesto.class);
-    if (!repository.existsById(id)) {
-      throw new SolicitudProyectoPresupuestoNotFoundException(id);
-    }
+
+    SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = repository.findById(id)
+        .orElseThrow(() -> new SolicitudProyectoPresupuestoNotFoundException(id));
+
+    solicitudAuthorityHelper
+        .checkUserHasAuthorityModifySolicitud(solicitudProyectoPresupuesto.getSolicitudProyectoId());
 
     repository.deleteById(id);
     log.debug("delete(Long id) - end");
@@ -166,6 +180,8 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
   @Override
   public Page<SolicitudProyectoPresupuesto> findAllBySolicitud(Long solicitudId, String query, Pageable paging) {
     log.debug("findAllBySolicitud(Long solicitudId, String query, Pageable paging) - start");
+
+    solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(solicitudId);
 
     Specification<SolicitudProyectoPresupuesto> specs = SolicitudProyectoPresupuestoSpecifications
         .bySolicitudId(solicitudId).and(SgiRSQLJPASupport.toSpecification(query));
@@ -201,6 +217,7 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
   @Override
   public SolicitudProyectoPresupuestoTotales getTotales(Long solicitudId) {
     log.debug("getTotales(Long solicitudId) - start");
+    solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(solicitudId);
     final SolicitudProyectoPresupuestoTotales returnValue = repository.getTotales(solicitudId);
     log.debug("getTotales(Long solicitudId) - end");
     return returnValue;
@@ -217,6 +234,7 @@ public class SolicitudProyectoPresupuestoServiceImpl implements SolicitudProyect
   public List<SolicitudProyectoPresupuestoTotalConceptoGasto> findAllSolicitudProyectoPresupuestoTotalConceptoGastos(
       Long solicitudId) {
     log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long solicitudId) - start");
+    solicitudAuthorityHelper.checkUserHasAuthorityViewSolicitud(solicitudId);
     final List<SolicitudProyectoPresupuestoTotalConceptoGasto> returnValue = repository
         .getSolicitudProyectoPresupuestoTotalConceptoGastos(solicitudId);
     log.debug("findAllSolicitudProyectoPresupuestoTotalConceptoGastos(Long solicitudId) - end");

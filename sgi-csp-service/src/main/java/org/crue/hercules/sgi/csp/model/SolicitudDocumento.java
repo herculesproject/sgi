@@ -70,6 +70,11 @@ public class SolicitudDocumento extends BaseEntity {
   @JoinColumn(name = "tipo_documento_id", nullable = true, foreignKey = @ForeignKey(name = "FK_SOLICITUDDOCUMENTO_TIPODOCUMENTO"))
   private TipoDocumento tipoDocumento;
 
+  /** Tipo fase */
+  @ManyToOne
+  @JoinColumn(name = "tipo_fase_id", nullable = true, foreignKey = @ForeignKey(name = "FK_SOLICITUDDOCUMENTO_TIPOFASE"))
+  private TipoFase tipoFase;
+
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
   @JoinColumn(name = "solicitud_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_SOLICITUDDOCUMENTO_SOLICITUD"))

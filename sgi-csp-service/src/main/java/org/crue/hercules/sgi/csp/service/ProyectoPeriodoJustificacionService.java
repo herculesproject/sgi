@@ -32,7 +32,6 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoPeriodoJustificacionSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.modelmapper.internal.util.Assert;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

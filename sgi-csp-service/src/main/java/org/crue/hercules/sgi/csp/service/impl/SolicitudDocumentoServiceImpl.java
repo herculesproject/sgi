@@ -8,7 +8,6 @@ import org.crue.hercules.sgi.csp.repository.specification.SolicitudDocumentoSpec
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;

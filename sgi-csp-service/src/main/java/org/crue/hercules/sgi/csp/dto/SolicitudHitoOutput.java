@@ -22,5 +22,6 @@ public class SolicitudHitoOutput implements Serializable {
   private TipoHito tipoHito;
   private Instant fecha;
   private String comentario;
+  private String createdBy;
   private SolicitudHitoAvisoOutput aviso;
 }

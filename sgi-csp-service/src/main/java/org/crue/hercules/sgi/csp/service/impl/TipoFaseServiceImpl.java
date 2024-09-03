@@ -1,7 +1,8 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.Objects;
+
 import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
-import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFaseSpecifications;
@@ -13,9 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

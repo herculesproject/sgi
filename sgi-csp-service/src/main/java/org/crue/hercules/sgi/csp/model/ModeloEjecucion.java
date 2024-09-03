@@ -68,6 +68,10 @@ public class ModeloEjecucion extends BaseEntity {
   @Column(name = "contrato", columnDefinition = "boolean default false", nullable = false)
   private Boolean contrato;
 
+  /** Permite crear solicitudes sin convocatoria */
+  @Column(name = "solicitud_sin_convocatoria", columnDefinition = "boolean default false", nullable = false)
+  private Boolean solicitudSinConvocatoria;
+
   @OneToMany(mappedBy = "modeloEjecucion")
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)

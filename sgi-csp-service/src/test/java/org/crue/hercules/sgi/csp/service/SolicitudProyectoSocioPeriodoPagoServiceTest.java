@@ -8,36 +8,42 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioPeriodoPagoNotFoundException;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
+import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoPagoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioPeriodoPagoServiceImpl;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * SolicitudProyectoSocioPeriodoPagoServiceTest
  */
-@ExtendWith(MockitoExtension.class)
-class SolicitudProyectoSocioPeriodoPagoServiceTest {
+class SolicitudProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
 
   @Mock
   private SolicitudProyectoSocioPeriodoPagoRepository repository;
@@ -53,13 +59,23 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
   @Mock
   private SolicitudService solicitudService;
 
+  @Mock
+  private SolicitudRepository solicitudRepository;
+
+  @Mock
+  private SolicitudExternaRepository solicitudExternaRepository;
+
+  private SolicitudAuthorityHelper solicitudAuthorityHelper;
+
   @BeforeEach
   void setUp() throws Exception {
+    solicitudAuthorityHelper = new SolicitudAuthorityHelper(solicitudRepository, solicitudExternaRepository);
     service = new SolicitudProyectoSocioPeriodoPagoServiceImpl(repository, solicitudProyectoSocioRepository,
-        solicitudService, solicitudProyectoRepository);
+        solicitudService, solicitudProyectoRepository, solicitudAuthorityHelper);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_ReturnsSolicitudProyectoSocioPeriodoPago() {
     // given: una lista con uno de los SolicitudProyectoSocioPeriodoPago
     // actualizado,
@@ -86,6 +102,8 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     solicitudProyectoSocioPeriodoPagoActualizar.add(newSolicitudProyectoSocioPeriodoPago);
     solicitudProyectoSocioPeriodoPagoActualizar.add(updatedSolicitudProyectoSocioPeriodoPago);
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
     BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
@@ -142,6 +160,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithSolicitudProyectoSocioNotExist_ThrowsSolicitudProyectoSocioNotFoundException() {
     // given: a SolicitudProyectoSocioPeriodoPago with non existing
     // SolicitudProyectoSocio
@@ -160,6 +179,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithIdNotExist_ThrowsSolicitudProyectoSocioPeriodoPagoNotFoundException() {
     // given: Un SolicitudProyectoSocioPeriodoPago actualizado con un id que no
     // existe
@@ -168,7 +188,6 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     Long solicitudProyectoSocioPeriodoPagoId = 1L;
     SolicitudProyectoSocioPeriodoPago solicitudProyectoSocioPeriodoPago = generarSolicitudProyectoSocioPeriodoPago(
         solicitudProyectoSocioPeriodoPagoId, solicitudProyectoSocioId);
-    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId);
     SolicitudProyectoSocio solicitudProyectoSocio = generarMockSolicitudProyectoSocio(solicitudProyectoSocioId,
         solicitudProyectoId);
 
@@ -176,8 +195,8 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     solicitudProyectoSocioPeriodoPagoExistentes
         .add(generarSolicitudProyectoSocioPeriodoPago(3L, solicitudProyectoSocioId));
 
-    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoSocio));
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
@@ -194,6 +213,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithSolicitudProyectoSocioChange_ThrowsIllegalArgumentException() {
     // given:Se actualiza SolicitudProyectoSocio
     Long solicitudProyectoId = 1L;
@@ -201,7 +221,6 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     Long solicitudProyectoSocioPeriodoPagoId = 1L;
     SolicitudProyectoSocioPeriodoPago solicitudProyectoSocioPeriodoPago = generarSolicitudProyectoSocioPeriodoPago(
         solicitudProyectoSocioPeriodoPagoId, solicitudProyectoSocioId);
-    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId);
     SolicitudProyectoSocio solicitudProyectoSocio = generarMockSolicitudProyectoSocio(solicitudProyectoSocioId,
         solicitudProyectoId);
 
@@ -210,8 +229,8 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     List<SolicitudProyectoSocioPeriodoPago> solicitudProyectoSocioPeriodoPagoExistentes = new ArrayList<>();
     solicitudProyectoSocioPeriodoPagoExistentes.add(generarSolicitudProyectoSocioPeriodoPago(1L, 1L));
 
-    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoSocio));
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
@@ -230,6 +249,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithMesSuperiorDuracion_ThrowsIllegalArgumentException() {
     // given: Se actualiza SolicitudProyectoSocioPeriodoPago cuyo mes es superior a
     // la
@@ -248,6 +268,8 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     List<SolicitudProyectoSocioPeriodoPago> solicitudProyectoSocioPeriodoPagoExistentes = new ArrayList<>();
     solicitudProyectoSocioPeriodoPagoExistentes.add(generarSolicitudProyectoSocioPeriodoPago(1L, 1L));
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
     BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
@@ -267,6 +289,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithMesSolapamiento_ThrowsIllegalArgumentException() {
     // given: Se actualiza SolicitudProyectoSocioPeriodoPago cuyo mes es superior a
     // la
@@ -285,6 +308,8 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     solicitudProyectoSocioPeriodoPagoExistentes.add(generarSolicitudProyectoSocioPeriodoPago(1L, 1L));
     solicitudProyectoSocioPeriodoPagoExistentes.add(generarSolicitudProyectoSocioPeriodoPago(2L, 1L));
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
     BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
@@ -305,13 +330,13 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithoutMes_ThrowsIllegalArgumentException() {
     // given: Un nuevo SolicitudProyectoSocioPeriodoPago que no tiene mes
     Long solicitudProyectoId = 1L;
     Long solicitudProyectoSocioId = 1L;
     SolicitudProyectoSocioPeriodoPago solicitudProyectoSocioPeriodoPago = generarSolicitudProyectoSocioPeriodoPago(1L,
         solicitudProyectoSocioId);
-    SolicitudProyecto solicitudProyecto = generarMockSolicitudProyecto(solicitudProyectoId);
     SolicitudProyectoSocio solicitudProyectoSocio = generarMockSolicitudProyectoSocio(solicitudProyectoSocioId,
         solicitudProyectoId);
 
@@ -320,8 +345,8 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
     List<SolicitudProyectoSocioPeriodoPago> solicitudProyectoSocioPeriodoPagoExistentes = new ArrayList<>();
     solicitudProyectoSocioPeriodoPagoExistentes.add(generarSolicitudProyectoSocioPeriodoPago(1L, 1L));
 
-    BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(solicitudProyecto));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
     BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyectoSocio));
     BDDMockito.given(repository.findAllBySolicitudProyectoSocioId(ArgumentMatchers.anyLong()))
@@ -365,6 +390,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void findAllBySolicitudProyectoSocio_ReturnsPage() {
     // given: Una lista con 37 SolicitudProyectoSocioPeriodoPago
     Long solicitudId = 1L;
@@ -373,6 +399,10 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
       solicitudProyectoSocioPeriodoPago.add(generarSolicitudProyectoSocioPeriodoPago(i, i));
     }
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
+    BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockSolicitudProyectoSocio(1L, solicitudId)));
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<SolicitudProyectoSocioPeriodoPago>>any(),
         ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<SolicitudProyectoSocioPeriodoPago>>() {
           @Override
@@ -433,6 +463,46 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest {
         .importe(new BigDecimal(358)).mes(3).build();
 
     return solicitudProyectoSocioPeriodoPago;
+  }
+
+  /**
+   * Función que devuelve un objeto Solicitud
+   * 
+   * @param id                  id del Solicitud
+   * @param convocatoriaId      id de la Convocatoria
+   * @param convocatoriaExterna convocatoria externa
+   * @return el objeto Solicitud
+   */
+  private Solicitud generarMockSolicitud(Long id, Long convocatoriaId, String convocatoriaExterna) {
+    EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
+    estadoSolicitud.setId(1L);
+    estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
+
+    Programa programa = new Programa();
+    programa.setId(1L);
+
+    Solicitud solicitud = new Solicitud();
+    solicitud.setId(id);
+    solicitud.setTitulo("titulo");
+    solicitud.setCodigoExterno(null);
+    solicitud.setConvocatoriaId(convocatoriaId);
+    solicitud.setCreadorRef("usr-001");
+    solicitud.setSolicitanteRef("usr-002");
+    solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
+    solicitud.setConvocatoriaExterna(convocatoriaExterna);
+    solicitud.setUnidadGestionRef("1");
+    solicitud.setActivo(true);
+    solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
+    solicitud.setOrigenSolicitud(
+        convocatoriaId != null ? OrigenSolicitud.CONVOCATORIA_SGI : OrigenSolicitud.CONVOCATORIA_NO_SGI);
+
+    if (id != null) {
+      solicitud.setEstado(estadoSolicitud);
+      solicitud.setCodigoRegistroInterno("SGI_SLC1202011061027");
+      solicitud.setCreadorRef("usr-001");
+    }
+
+    return solicitud;
   }
 
 }

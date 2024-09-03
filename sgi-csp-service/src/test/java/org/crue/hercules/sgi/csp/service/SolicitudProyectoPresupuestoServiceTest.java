@@ -6,32 +6,38 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoPresupuestoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
+import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoPresupuestoServiceImpl;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * SolicitudProyectoPresupuestoServiceTest
  */
-@ExtendWith(MockitoExtension.class)
-class SolicitudProyectoPresupuestoServiceTest {
+class SolicitudProyectoPresupuestoServiceTest extends BaseServiceTest {
 
   @Mock
   private SolicitudProyectoPresupuestoRepository repository;
@@ -42,17 +48,31 @@ class SolicitudProyectoPresupuestoServiceTest {
   @Mock
   private SolicitudProyectoRepository solicitudProyectoRepository;
 
+  @Mock
+  private SolicitudRepository solicitudRepository;
+
+  @Mock
+  private SolicitudExternaRepository solicitudExternaRepository;
+
   private SolicitudProyectoPresupuestoService service;
+
+  private SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   @BeforeEach
   void setUp() throws Exception {
-    service = new SolicitudProyectoPresupuestoServiceImpl(repository, solicitudService, solicitudProyectoRepository);
+    solicitudAuthorityHelper = new SolicitudAuthorityHelper(solicitudRepository, solicitudExternaRepository);
+    service = new SolicitudProyectoPresupuestoServiceImpl(repository, solicitudService, solicitudProyectoRepository,
+        solicitudAuthorityHelper);
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void create_ReturnsSolicitudProyectoPresupuesto() {
     // given: Un nuevo SolicitudProyectoPresupuesto
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = generarSolicitudProyectoPresupuesto(null, 1L, 1L);
+
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoPresupuesto>any()))
         .will((InvocationOnMock invocation) -> {
@@ -85,6 +105,7 @@ class SolicitudProyectoPresupuestoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo SolicitudProyectoPresupuesto que ya tiene id
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = generarSolicitudProyectoPresupuesto(1L, 1L, 1L);
@@ -97,6 +118,7 @@ class SolicitudProyectoPresupuestoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_ReturnsSolicitudProyectoPresupuesto() {
     // given: Un nuevo SolicitudProyectoPresupuesto con el titulo actualizado
     Long solicitudId = 1L;
@@ -115,6 +137,8 @@ class SolicitudProyectoPresupuestoServiceTest {
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudProyectoPresupuesto>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     // when: Actualizamos el SolicitudProyectoPresupuesto
     SolicitudProyectoPresupuesto solicitudProyectoPresupuestoActualizado = service
@@ -140,6 +164,7 @@ class SolicitudProyectoPresupuestoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithIdNotExist_ThrowsSolicitudProyectoPresupuestoNotFoundException() {
     // given: Un SolicitudProyectoPresupuesto actualizado con un id que no existe
     Long solicitudId = 1L;
@@ -151,6 +176,8 @@ class SolicitudProyectoPresupuestoServiceTest {
         .willReturn(Optional.of(solicitudProyecto));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
     BDDMockito.given(solicitudService.modificable(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
 
     // when: Actualizamos el SolicitudProyectoPresupuesto
     // then: Lanza una excepcion porque el SolicitudProyectoPresupuesto no existe
@@ -159,11 +186,16 @@ class SolicitudProyectoPresupuestoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void delete_WithExistingId_NoReturnsAnyException() {
     // given: existing SolicitudProyectoPresupuesto
     Long id = 1L;
+    SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = generarSolicitudProyectoPresupuesto(1L, 1L, 1L);
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(solicitudProyectoPresupuesto));
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
@@ -174,11 +206,12 @@ class SolicitudProyectoPresupuestoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
     // given: no existing id
     Long id = 1L;
 
-    BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: delete
@@ -215,6 +248,7 @@ class SolicitudProyectoPresupuestoServiceTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void findAllBySolicitud_ReturnsPage() {
     // given: Una lista con 37 SolicitudProyectoPresupuesto
     Long solicitudId = 1L;
@@ -223,6 +257,8 @@ class SolicitudProyectoPresupuestoServiceTest {
       solicitudProyectoPresupuesto.add(generarSolicitudProyectoPresupuesto(i, i, i));
     }
 
+    BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockSolicitud(1L, 1L, null)));
     BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<SolicitudProyectoPresupuesto>>any(),
         ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
@@ -282,6 +318,46 @@ class SolicitudProyectoPresupuestoServiceTest {
         .build();// @formatter:on
 
     return solicitudProyectoPresupuesto;
+  }
+
+  /**
+   * Función que devuelve un objeto Solicitud
+   * 
+   * @param id                  id del Solicitud
+   * @param convocatoriaId      id de la Convocatoria
+   * @param convocatoriaExterna convocatoria externa
+   * @return el objeto Solicitud
+   */
+  private Solicitud generarMockSolicitud(Long id, Long convocatoriaId, String convocatoriaExterna) {
+    EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
+    estadoSolicitud.setId(1L);
+    estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
+
+    Programa programa = new Programa();
+    programa.setId(1L);
+
+    Solicitud solicitud = new Solicitud();
+    solicitud.setId(id);
+    solicitud.setTitulo("titulo");
+    solicitud.setCodigoExterno(null);
+    solicitud.setConvocatoriaId(convocatoriaId);
+    solicitud.setCreadorRef("usr-001");
+    solicitud.setSolicitanteRef("usr-002");
+    solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
+    solicitud.setConvocatoriaExterna(convocatoriaExterna);
+    solicitud.setUnidadGestionRef("1");
+    solicitud.setActivo(true);
+    solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);
+    solicitud.setOrigenSolicitud(
+        convocatoriaId != null ? OrigenSolicitud.CONVOCATORIA_SGI : OrigenSolicitud.CONVOCATORIA_NO_SGI);
+
+    if (id != null) {
+      solicitud.setEstado(estadoSolicitud);
+      solicitud.setCodigoRegistroInterno("SGI_SLC1202011061027");
+      solicitud.setCreadorRef("usr-001");
+    }
+
+    return solicitud;
   }
 
 }

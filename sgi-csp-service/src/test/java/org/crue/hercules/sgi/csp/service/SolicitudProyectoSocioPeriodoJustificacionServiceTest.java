@@ -22,6 +22,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioPeriodoJustificacionServiceImpl;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -36,6 +37,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * SolicitudProyectoSocioPeriodoJustificacionServiceTest
@@ -52,11 +54,15 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   @MockBean
   private SolicitudProyectoRepository solicitudProyectoRepository;
 
+  @MockBean
+  private SolicitudAuthorityHelper solicitudAuthorityHelper;
+
   // This bean must be created by Spring so validations can be applied
   @Autowired
   private SolicitudProyectoSocioPeriodoJustificacionService service;
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_ReturnsSolicitudProyectoSocioPeriodoJustificacion() {
     // given: una lista con uno de los SolicitudProyectoSocioPeriodoJustificacion
     // actualizado,
@@ -158,6 +164,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithSolicitudProyectoSocioNotExist_ThrowsSolicitudProyectoSocioNotFoundException() {
     // given: a SolicitudProyectoSocioPeriodoJustificacion with non existing
     // SolicitudProyectoSocio
@@ -176,6 +183,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithIdNotExist_ThrowsSolicitudProyectoSocioPeriodoJustificacionNotFoundException() {
     // given: Un SolicitudProyectoSocioPeriodoJustificacion actualizado con un id
     // que no
@@ -211,6 +219,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithSolicitudProyectoSocioChange_ThrowsNoRelatedEntitiesException() {
     // given:Se actualiza SolicitudProyectoSocio
     Long solicitudId = 1L;
@@ -248,6 +257,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithMesSolapamiento_ThrowsPeriodoWrongOrderException() {
     // given: Se actualiza SolicitudProyectoSocioPeriodoJustificacion cuyo mes es
     // superior a la duración de solicitud de proyecto
@@ -285,6 +295,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithMesInicialPosteriorMesFinal_ThrowsConstraintViolationException() {
     // given: Se actualiza SolicitudProyectoSocioPeriodoJustificacion cuyo mes
     // inicial es
@@ -327,6 +338,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithFechaInicioPosteriorFechaFin_ThrowsConstraintViolationException() {
     // given: Se actualiza SolicitudProyectoSocioPeriodoJustificacion con fecha
     // inicio
@@ -363,6 +375,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithMesFinalSuperiorDuracion_ThrowsPeriodoLongerThanSolicitudProyectoException() {
     // given: Se actualiza SolicitudProyectoSocioPeriodoJustificacion con mes final
     // superior a la duración
@@ -399,6 +412,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void update_WithSolapamientoPeriodo_ThrowsPeriodoWrongOrderException() {
     // given: Se actualiza SolicitudProyectoSocioPeriodoJustificacion con fecha
     // inicio
@@ -436,6 +450,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void findById_ReturnsSolicitudProyectoSocioPeriodoJustificacion() {
     // given: Un SolicitudProyectoSocioPeriodoJustificacion con el id buscado
     Long idBuscado = 1L;
@@ -451,6 +466,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void findById_WithIdNotExist_ThrowsSolicitudProyectoSocioPeriodoJustificacionNotFoundException()
       throws Exception {
     // given: Ningun SolicitudProyectoSocioPeriodoJustificacion con el id buscado
@@ -464,6 +480,7 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
   void findAllBySolicitud_ReturnsPage() {
     // given: Una lista con 37 SolicitudProyectoSocioPeriodoJustificacion
     Long solicitudProyectoSocioId = 1L;
@@ -472,6 +489,8 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
       solicitudProyectoSocioPeriodoJustificacion.add(generarSolicitudProyectoSocioPeriodoJustificacion(i, i));
     }
 
+    BDDMockito.given(solicitudProyectoSocioRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockSolicitudProyectoSocio(solicitudProyectoSocioId, 1L)));
     BDDMockito
         .given(repository.findAll(ArgumentMatchers.<Specification<SolicitudProyectoSocioPeriodoJustificacion>>any(),
             ArgumentMatchers.<Pageable>any()))
