@@ -267,7 +267,8 @@ public class GrupoService {
     log.debug("findAll(String query, Pageable paging) - start");
 
     Specification<Grupo> specs = GrupoSpecifications.distinct()
-        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            GrupoPredicateResolver.getInstance(sgiConfigProperties, authorityHelper)));
     Page<Grupo> returnValue = repository.findAll(specs, paging);
 
     log.debug("findAll(String query, Pageable paging) - end");
@@ -287,11 +288,8 @@ public class GrupoService {
 
     Specification<Grupo> specs = GrupoSpecifications.distinct()
         .and(GrupoSpecifications.activos())
-        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
-
-    if (authorityHelper.isUserInvestigador()) {
-      specs = specs.and(authorityHelper.getSpecificationsUserInvestigadorGruposCanView());
-    }
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            GrupoPredicateResolver.getInstance(sgiConfigProperties, authorityHelper)));
 
     Page<Grupo> returnValue = repository.findAll(specs, paging);
 
@@ -437,7 +435,8 @@ public class GrupoService {
     Specification<Grupo> specs = GrupoSpecifications.activos().and(GrupoSpecifications.byProyectoSgeRefNotNull());
     if (query != null) {
       specs = specs
-          .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+          .and(SgiRSQLJPASupport.toSpecification(query,
+              GrupoPredicateResolver.getInstance(sgiConfigProperties, authorityHelper)));
     }
 
     Page<RelacionEjecucionEconomica> returnValue = repository.findRelacionesEjecucionEconomica(specs, pageable);
@@ -456,7 +455,8 @@ public class GrupoService {
     log.debug("findIdsGruposModificados(String query) - start");
 
     Specification<Grupo> specs = GrupoSpecifications.activos()
-        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            GrupoPredicateResolver.getInstance(sgiConfigProperties, authorityHelper)));
 
     List<Long> returnValue = repository.findIds(specs);
 
@@ -477,7 +477,8 @@ public class GrupoService {
     log.debug("findIdsGruposEliminados(String query) - start");
 
     Specification<Grupo> specs = GrupoSpecifications.notActivos()
-        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            GrupoPredicateResolver.getInstance(sgiConfigProperties, authorityHelper)));
 
     List<Long> returnValue = repository.findIds(specs);
 
@@ -500,7 +501,8 @@ public class GrupoService {
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
 
     Specification<Grupo> specs = GrupoSpecifications.activos().and(GrupoSpecifications.distinct())
-        .and(SgiRSQLJPASupport.toSpecification(query, GrupoPredicateResolver.getInstance(sgiConfigProperties)));
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            GrupoPredicateResolver.getInstance(sgiConfigProperties, authorityHelper)));
 
     List<String> returnValue = repository.findIds(specs).stream()
         .flatMap(
