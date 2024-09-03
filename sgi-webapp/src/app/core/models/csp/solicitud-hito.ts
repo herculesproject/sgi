@@ -14,6 +14,7 @@ export interface ISolicitudHito {
   comentario: string;
   /** Tipo Hito */
   tipoHito: ITipoHito;
+  createdBy: string;
   aviso: {
     email: IGenericEmailText;
     task: ISendEmailTask;

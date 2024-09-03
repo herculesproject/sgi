@@ -9,6 +9,7 @@ interface TipoConfiguracion {
 export interface IModeloEjecucion extends TipoConfiguracion {
   externo: boolean;
   contrato: boolean;
+  solicitudSinConvocatoria: boolean;
 }
 
 export interface ITipoDocumento extends TipoConfiguracion {

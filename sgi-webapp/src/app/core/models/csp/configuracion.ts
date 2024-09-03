@@ -94,4 +94,6 @@ export interface IConfiguracion {
   personalContratadoColumnasFijasVisibles: FacturasJustificantesColumnasFijasConfigurables[];
   /** Habilitar el filtro de busqueda por pais de socio en el listado de proyectos */
   proyectoSocioPaisFilterEnabled: boolean;
+  /** Permitir creación de solicitudes sin convocatoria desde perfil de investigación */
+  solicitudesSinConvocatoriaInvestigadorEnabled: boolean;
 }

@@ -23,7 +23,10 @@ class SolicitudResumenResponseConverter
       tipoSolicitudGrupo: undefined,
       unidadGestion: undefined,
       observaciones: undefined,
-      anio: undefined
+      anio: undefined,
+      modeloEjecucion: undefined,
+      origenSolicitud: undefined,
+      tipoFinalidad: undefined
     };
   }
 

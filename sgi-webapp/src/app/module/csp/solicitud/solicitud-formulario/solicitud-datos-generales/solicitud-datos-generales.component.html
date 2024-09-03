@@ -25,10 +25,20 @@
 
     <!-- Convocatoria -->
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
-      <mat-form-field fxFlex="0 1 calc((100% - (10px * 3)) / 2 + 10px)">
+      <mat-form-field *ngIf="!this.formPart.isInvestigador" fxFlex="0 1 calc((100% - (10px * 3)) / 2 + 10px)">
+        <mat-label>{{'csp.solicitud.origen-solicitud' | translate}}</mat-label>
+        <sgi-select-enum formControlName="origenSolicitud" #origenSolicitud required [enumMap]="ORIGEN_SOLICITUD_MAP">
+        </sgi-select-enum>
+        <mat-error *ngIf="formGroup.controls.origenSolicitud.errors?.required">
+          {{'error.required.entity' | translate:msgParamOrigenSolicitudEntity}}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="0 1 calc((100% - (10px * 3)) / 2 + 10px)"
+        *ngIf="this.formPart.isOrigenSolicitudConvocatoriaSGI$ | async">
         <mat-label>{{'csp.solicitud.convocatoria' | translate}}</mat-label>
         <sgi-select-convocatoria authorities="CSP-SOL-C" placeholder="{{'csp.solicitud.convocatoria' | translate}}"
-          formControlName="convocatoria" [required]="formPart.convocatoriaRequired">
+          formControlName="convocatoria" required>
           [value]="this.formPart.convocatoria$ | async">
         </sgi-select-convocatoria>
         <mat-error *ngIf="formGroup.controls.convocatoria.errors?.required">
@@ -36,13 +46,13 @@
         </mat-error>
       </mat-form-field>
 
-
       <!-- Referencia externa convocatoria // Identificación convocatoria -->
-      <mat-form-field *ngIf="!this.formPart.isInvestigador" fxFlex="0 1 calc((100% - (10px * 3)) / 2 + 10px)">
+      <mat-form-field
+        *ngIf="(this.formPart.isOrigenSolicitudConvocatoriaNoSGI$ | async) && !this.formPart.isInvestigador"
+        fxFlex="0 1 calc((100% - (10px * 3)) / 2 + 10px)">
         <mat-label>{{'csp.solicitud.convocatoria-externa' | translate}}</mat-label>
         <input matInput formControlName="convocatoriaExterna" type="text" id="convocatoriaExterna"
-          placeholder="{{'csp.solicitud.convocatoria-externa' | translate}}"
-          [required]="formPart.convocatoriaExternaRequired">
+          placeholder="{{'csp.solicitud.convocatoria-externa' | translate}}" required>
 
         <mat-error *ngIf="formGroup.controls.convocatoriaExterna.errors?.required">
           {{'error.required.entity' | translate:msgParamConvocatoriaExternaEntity}}
@@ -54,11 +64,71 @@
     </div>
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Unidad de gestión -->
+      <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+        <mat-label>{{'csp.proyecto.unidad-gestion' | translate}}</mat-label>
+
+        <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion"
+          [onlyAllowedInSolicitudesSinConvocatoria]="this.formPart.isOrigenSolicitudSinConvocatoria$ | async"
+          [resetOnChange]="getOrigenSolicitudSelectionChange()" required>
+        </sgi-select-unidad-gestion>
+        <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
+          {{'error.required.entity' | translate:msgParamUnidadGestionEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.invalid">
+          {{'error.invalid.entity' | translate:msgParamUnidadGestionEntity}}
+        </mat-error>
+        <sgi-field-info matSuffix [visible]="fragment.isEdit() && (formPart.isOrigenSolicitudConvocatoriaSGI$ | async)"
+          message="{{'msg.csp.solicitud.unidad-gestion.no-editable.origen-convocatoria' | translate}}">
+        </sgi-field-info>
+        <sgi-field-info matSuffix [visible]="fragment.isEdit() && formPart.hasDocumentosOrHitos"
+          message="{{'msg.csp.solicitud.unidad-gestion.no-editable.documentos-hitos' | translate}}">
+        </sgi-field-info>
+      </mat-form-field>
+
+      <!-- Modelo de ejecución -->
+      <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+        <mat-label>{{'csp.solicitud.modelo-ejecucion' | translate}}</mat-label>
+        <sgi-select-modelo-ejecucion #modeloEjecucion formControlName="modeloEjecucion"
+          [required]="!(this.formPart.isOrigenSolicitudConvocatoriaNoSGI$ | async)"
+          [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
+          [onlyAllowedInSolicitudesSinConvocatoria]="this.formPart.isOrigenSolicitudSinConvocatoria$ | async"
+          [resetOnChange]="unidadGestion.selectionChange">
+        </sgi-select-modelo-ejecucion>
+        <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamModeloEjecucionEntity }}
+        </mat-error>
+        <sgi-field-info matSuffix [visible]="fragment.isEdit() && (formPart.isOrigenSolicitudConvocatoriaSGI$ | async)"
+          message="{{'msg.csp.solicitud.modelo-ejecucion.no-editable.origen-convocatoria' | translate}}">
+        </sgi-field-info>
+        <sgi-field-info matSuffix [visible]="fragment.isEdit() && formPart.hasDocumentosOrHitos"
+          message="{{'msg.csp.solicitud.modelo-ejecucion.no-editable.documentos-hitos' | translate}}">
+        </sgi-field-info>
+      </mat-form-field>
+
+      <!-- Finalidad -->
+      <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
+        <mat-label>{{'csp.solicitud.finalidad' | translate}}</mat-label>
+        <sgi-select-tipo-finalidad formControlName="finalidad"
+          [required]="!(this.formPart.isOrigenSolicitudConvocatoriaNoSGI$ | async)"
+          [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
+          [modeloEjecucionId]="formGroup.controls.modeloEjecucion.value?.id"
+          [resetOnChange]="modeloEjecucion.selectionChange">
+        </sgi-select-tipo-finalidad>
+        <mat-error *ngIf="formGroup.controls.finalidad.errors?.required">
+          {{ 'error.required.entity' | translate:msgParamFinalidadEntity }}
+        </mat-error>
+        <sgi-field-info matSuffix [visible]="fragment.isEdit() && (formPart.isOrigenSolicitudConvocatoriaSGI$ | async)"
+          message="{{'msg.csp.solicitud.tipo-finalidad.no-editable.origen-convocatoria' | translate}}">
+        </sgi-field-info>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <!-- Tipo forumlario-->
-      <mat-form-field *ngIf="!this.formPart.isInvestigador" fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
+      <mat-form-field fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
         <mat-label>{{'csp.solicitud.tipo-formulario' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="formularioSolicitud"
-          [required]="formPart.convocatoriaExternaRequired">
+        <mat-select matNativeControl formControlName="formularioSolicitud" required>
           <mat-option *ngFor="let formularioSolicitud of FORMULARIO_SOLICITUD_MAP | keyvalue"
             [value]="formularioSolicitud.key">
             {{ formularioSolicitud.value | translate}}
@@ -71,7 +141,7 @@
 
       <!--Tipo solicitud grupo-->
       <mat-form-field *ngIf="this.formPart.tipoFormularioSolicitud === FormularioSolicitud.GRUPO"
-        fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
+        fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
         <mat-label>{{'csp.solicitud.tipo-solicitud-grupo' | translate}}</mat-label>
         <sgi-select-enum formControlName="tipoSolicitudGrupo" required [enumMap]="TIPO_SOLICITUD_GRUPO_MAP">
         </sgi-select-enum>
@@ -83,25 +153,12 @@
       <!-- Grupo-->
       <mat-form-field
         *ngIf="this.formPart.getFormGroup().controls.tipoSolicitudGrupo.value === TipoSolicitudGrupo.MODIFICACION"
-        fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
+        fxFlex="0 1 calc((100% - (10px * 2)) / 3)">
         <mat-label>{{'csp.solicitud.grupo' | translate}}</mat-label>
         <sgi-select-grupo #grupo [personaRef]="this.formPart.solicitanteRef" formControlName="grupo" required>
         </sgi-select-grupo>
         <mat-error *ngIf="formGroup.controls.grupo.errors?.required">
           {{'error.required.entity' | translate:msgParamGrupoEntity}}
-        </mat-error>
-      </mat-form-field>
-
-      <!-- Unidad de gestión -->
-      <mat-form-field *ngIf="!this.formPart.isInvestigador" fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
-        <mat-label>{{'csp.proyecto.unidad-gestion' | translate}}</mat-label>
-        <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion" required>
-        </sgi-select-unidad-gestion>
-        <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
-          {{'error.required.entity' | translate:msgParamUnidadGestionEntity}}
-        </mat-error>
-        <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.invalid">
-          {{'error.invalid.entity' | translate:msgParamUnidadGestionEntity}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -122,7 +179,7 @@
 
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <!-- Año -->
-      <mat-form-field fxFlex="8%">
+      <mat-form-field *ngIf="!this.formPart.isInvestigador" fxFlex="8%">
         <mat-label>{{'csp.solicitud.anio'| translate}}</mat-label>
         <input matInput formControlName="anio" type="number" placeholder="{{'csp.solicitud.anio' | translate}}">
         <mat-error *ngIf="formGroup.controls.anio.errors?.invalidAnio">
@@ -138,7 +195,8 @@
       </mat-form-field>
 
       <!-- Codigo de registro en entidad convocante -->
-      <mat-form-field [fxFlex]="fragment.isEdit() ? '20%' : '41%'">
+      <mat-form-field *ngIf="!this.formPart.isInvestigador || (formPart.isOrigenSolicitudConvocatoriaSGI$ | async)"
+        [fxFlex]="fragment.isEdit() ? '20%' : '41%'">
         <mat-label>{{'csp.solicitud.codigo-externo' | translate}}</mat-label>
         <input matInput formControlName="codigoExterno" type="text" id="codigoExterno"
           placeholder="{{'csp.solicitud.codigo-externo' | translate}}">

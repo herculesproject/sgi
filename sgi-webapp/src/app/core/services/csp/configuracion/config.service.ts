@@ -122,6 +122,12 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isSolicitudesSinConvocatoriaInvestigadorEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
   getFacturasGastosColumnasFijasVisibles(): Observable<FacturasJustificantesColumnasFijasConfigurables[]> {
     return this.findById(ConfigCsp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES).pipe(
       map(configValue => configValue?.value)

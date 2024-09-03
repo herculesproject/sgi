@@ -10,7 +10,6 @@ import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Group } from '@core/services/action-service';
-import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -20,7 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { NodeDocumentoSolicitud, SolicitudDocumentosFragment } from './solicitud-documentos.fragment';
 
@@ -71,7 +70,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
   uploading = false;
 
   disableUpload = true;
-  tiposDocumento: ITipoDocumento[] = [];
 
   msgParamEntity = {};
   msgParamNombreEntity = {};
@@ -94,7 +92,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     private readonly logger: NGXLogger,
     public readonly actionService: SolicitudActionService,
     private documentoService: DocumentoService,
-    private configuracionSolicitudService: ConfiguracionSolicitudService,
     private snackBar: SnackBarService,
     private dialogService: DialogService,
     private readonly translate: TranslateService
@@ -136,6 +133,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
         Validators.maxLength(50)
       ]),
       fichero: new FormControl(null, Validators.required),
+      fase: new FormControl(null),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
       comentarios: new FormControl('')
     }));
@@ -145,19 +143,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     }
 
     this.group.initialize();
-    const convocatoriaId = this.actionService.convocatoriaId;
-    if (convocatoriaId) {
-      this.subscriptions.push(
-        this.configuracionSolicitudService.findAllTipoDocumentosFasePresentacion(convocatoriaId)
-          .pipe(
-            map(tipoDocumentos => tipoDocumentos.items)
-          ).subscribe(
-            (tipos) => {
-              this.tiposDocumento = this.sortTipoDocumentos(tipos);
-            }
-          )
-      );
-    }
     this.switchToNone();
   }
 
@@ -190,18 +175,6 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
       })
     ).subscribe((value) => this.textoDelete = value);
 
-  }
-
-  private sortTipoDocumentos(tipoDocumentos: ITipoDocumento[]): ITipoDocumento[] {
-    return tipoDocumentos.sort((a, b) => {
-      if (a.nombre < b.nombre) {
-        return -1;
-      }
-      if (a.nombre > b.nombre) {
-        return 1;
-      }
-      return 0;
-    });
   }
 
   ngOnDestroy(): void {
@@ -239,6 +212,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     this.formGroup.reset();
     this.formGroup.get('nombre').patchValue(node?.documento?.value?.nombre);
     this.formGroup.get('fichero').patchValue(node?.fichero);
+    this.formGroup.get('fase').setValue(node?.documento?.value?.tipoFase);
     this.formGroup.get('tipoDocumento').patchValue(node?.documento?.value?.tipoDocumento);
     this.formGroup.get('comentarios').patchValue(node?.documento?.value?.comentario);
 
@@ -302,6 +276,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     const detail = this.viewingNode;
     detail.documento.value.nombre = this.formGroup.get('nombre').value;
     detail.title = detail.documento.value.nombre;
+    detail.documento.value.tipoFase = this.formGroup.get('fase').value;
     detail.documento.value.tipoDocumento = this.formGroup.get('tipoDocumento').value;
     detail.documento.value.comentario = this.formGroup.get('comentarios').value;
     detail.fichero = this.formGroup.get('fichero').value;
@@ -347,6 +322,7 @@ export class SolicitudDocumentosComponent extends FragmentComponent implements O
     this.viewMode = VIEW_MODE.EDIT;
     this.loadDetails(this.viewingNode);
     this.formGroup.get('tipoDocumento').disable();
+    this.formGroup.get('fase').disable();
   }
 
   deleteDetail(): void {

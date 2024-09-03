@@ -143,4 +143,9 @@
     <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
     </mat-paginator>
   </div>
+
+  <sgi-menu-content-footer *sgiHasAuthorityForAnyUO="'CSP-SOL-INV-C'">
+    <sgi-footer-crear *ngIf="isAddSolicitudEnabled" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
+    </sgi-footer-crear>
+  </sgi-menu-content-footer>
 </sgi-menu-content>

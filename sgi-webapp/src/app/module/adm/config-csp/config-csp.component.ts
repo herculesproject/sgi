@@ -80,6 +80,7 @@ export enum ConfigCsp {
   CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION = "proyectoSgeAltaModoEjecucion",
   CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION = "proyectoSgeModificacionModoEjecucion",
   CSP_SECTOR_IVA_SGE_ENABLED = "sectorIvaSgeEnabled",
+  CSP_SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED = "solicitudesSinConvocatoriaInvestigadorEnabled",
   CSP_VALIDACION_CLASIFICACION_GASTOS = 'validacionClasificacionGastos',
   CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES = 'viajesDietasColumnasFijasVisibles',
   CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED = 'proyectoSocioPaisFilterEnabled'
@@ -105,6 +106,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_DEDICACION_MINIMA_GRUPO, { type: ConfigType.TEXT, label: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO`), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_DEDICACION_MINIMA_GRUPO.description`) }],
     [ConfigCsp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_DOCX, { type: ConfigType.FILE, label: marker(`adm.config.csp.CSP_REP_PROYECTO_EXT_CERTIFICADO_AUTORIZACION_DOCX`), module: ConfigModule.CNF }],
     [ConfigCsp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED.description`) }],
+    [ConfigCsp.CSP_SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED.description`) }],
     [ConfigCsp.TITLE_INTEGRACION_SISTEMAS_CORPORATIVOS, { type: ConfigType.CONFIG_GROUP_TITLE, label: marker(`adm.config.group-title.integracion-sistemas-corporativos`), module: ConfigModule.NONE }],
     [ConfigCsp.CSP_CARDINALIDAD_RELACION_SGI_SGE, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE`), options: this.getCardinalidadRelacionSgiSgeValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_CARDINALIDAD_RELACION_SGI_SGE.description`) }],
     [ConfigCsp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION`), options: this.getModosEjecucionValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION.description`) }],

@@ -9,25 +9,25 @@
               <mat-icon class="mat-icon-rtl-mirror">
                 {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
-              {{node.title}}{{node.required ? '\*' : ''}}
+              {{node.title | translate}}{{node.required ? '\*' : ''}}
             </button>
           </ng-container>
 
           <ng-container *ngIf="!!node.documento">
             <button mat-button *ngIf="viewMode === VIEW_MODE.NEW">
-              {{node.title}}{{node.required ? '\*' : ''}}
+              {{node.title | translate}}{{node.required ? '\*' : ''}}
             </button>
 
             <button color="primary" mat-button *ngIf="(viewMode !== VIEW_MODE.NEW && node !== viewingNode)"
               (click)="showNodeDetails(node)">
-              {{node.title}}{{node.required ? '\*' : ''}}
+              {{node.title | translate}}{{node.required ? '\*' : ''}}
               <mat-icon class="mat-icon-rtl-mirror">
                 {{ 'visibility'}}
               </mat-icon>
             </button>
             <button color="primary" mat-button *ngIf="(viewMode !== VIEW_MODE.NEW && node === viewingNode)"
               (click)="hideNodeDetails()">
-              {{node.title}}{{node.required ? '\*' : ''}}
+              {{node.title | translate}}{{node.required ? '\*' : ''}}
               <mat-icon class="mat-icon-rtl-mirror">
                 {{ 'visibility_off'}}
               </mat-icon>
@@ -74,12 +74,17 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field class="input-form">
+          <mat-label>{{'csp.convocatoria-documento.fase' | translate}}</mat-label>
+          <sgi-select-tipo-fase #fase formControlName="fase" [modeloEjecucionId]="actionService.modeloEjecucionId"
+            relation="convocatoria">
+          </sgi-select-tipo-fase>
+        </mat-form-field>
+        <mat-form-field class="input-form">
           <mat-label>{{'csp.documento.tipo' | translate}}</mat-label>
-          <mat-select placeholder="{{'csp.documento.tipo' | translate}}" formControlName="tipoDocumento"
-            [compareWith]="compareTipoDocumento">
-            <mat-option [value]="null"></mat-option>
-            <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{tipo.nombre}}</mat-option>
-          </mat-select>
+          <sgi-select-tipo-documento formControlName="tipoDocumento"
+            [modeloEjecucionId]="actionService.modeloEjecucionId" [tipoFaseId]="formGroup.controls.fase.value?.id"
+            [resetOnChange]="fase.selectionChange">
+          </sgi-select-tipo-documento>
         </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.documento.comentarios' | translate}}</mat-label>

@@ -8,9 +8,9 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { FormularioSolicitud, FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
-import { ISolicitud, TipoSolicitudGrupo, TIPO_SOLICITUD_GRUPO_MAP } from '@core/models/csp/solicitud';
+import { ISolicitud, TipoSolicitudGrupo, TIPO_SOLICITUD_GRUPO_MAP, ORIGEN_SOLICITUD_MAP } from '@core/models/csp/solicitud';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { SolicitudModalidadEntidadConvocanteModalComponent, SolicitudModalidadEntidadConvocanteModalData } from '../../modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
 import { SolicitudActionService } from '../../solicitud.action.service';
@@ -27,6 +27,9 @@ const SOLICITUD_CONVOCATORIA_KEY = marker('csp.solicitud.convocatoria');
 const SOLICITUD_SOLICITANTE_KEY = marker('csp.solicitud.solicitante');
 const SOLICITUD_TIPO_SOLICITUD_GRUPO_KEY = marker('csp.solicitud.tipo-solicitud-grupo');
 const SOLICITUD_GRUPO_KEY = marker('csp.solicitud.grupo');
+const SOLICITUD_ORIGEN_SOLICITUD_KEY = marker('csp.solicitud.origen-solicitud');
+const SOLICITUD_MODELO_EJECUCION_KEY = marker('csp.solicitud.modelo-ejecucion');
+const SOLICITUD_FINALIDAD_KEY = marker('csp.solicitud.finalidad');
 
 @Component({
   selector: 'sgi-solicitud-datos-generales',
@@ -52,6 +55,9 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   msgParamConvocatoriaEntity = {};
   msgParamSolicitanteEntity = {};
   msgParamGrupoEntity = {};
+  msgParamOrigenSolicitudEntity = {};
+  msgParamModeloEjecucionEntity = {};
+  msgParamFinalidadEntity = {};
 
   dataSourceEntidadesConvocantes: MatTableDataSource<SolicitudModalidadEntidadConvocanteListado>;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -83,8 +89,20 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
     return ESTADO_MAP;
   }
 
+  get ORIGEN_SOLICITUD_MAP() {
+    return ORIGEN_SOLICITUD_MAP;
+  }
+
   get MSG_PARAMS() {
     return MSG_PARAMS;
+  }
+
+  getOrigenSolicitudSelectionChange(): Observable<any> {
+    if (this.formPart.isEdit()) {
+      return null;
+    }
+
+    return this.formGroup.controls.origenSolicitud ? this.formGroup.controls.origenSolicitud.valueChanges : this.formPart.origenSolicitud$;
   }
 
   constructor(
@@ -196,6 +214,21 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
       SOLICITUD_SOLICITANTE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamSolicitanteEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      SOLICITUD_ORIGEN_SOLICITUD_KEY
+    ).subscribe((value) => this.msgParamOrigenSolicitudEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      SOLICITUD_MODELO_EJECUCION_KEY
+    ).subscribe((value) => this.msgParamModeloEjecucionEntity =
+      { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      SOLICITUD_FINALIDAD_KEY
+    ).subscribe((value) => this.msgParamFinalidadEntity =
       { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 

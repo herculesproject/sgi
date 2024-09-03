@@ -18,6 +18,7 @@ class SolicitudHitoRequestConverter extends SgiBaseConverter<ISolicitudHitoReque
       } as ITipoHito,
       comentario: value.comentario,
       solicitudId: value.solicitudId,
+      createdBy: null,
       aviso: value.aviso ? {
         email: {
           id: undefined,

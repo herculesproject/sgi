@@ -13,6 +13,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { SolicitudHitosModalComponent, SolicitudHitosModalComponentData } from '../../modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
@@ -53,7 +54,8 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
     public readonly actionService: SolicitudActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private authService: SgiAuthService
   ) {
     super(actionService.FRAGMENT.HITOS, actionService, translate);
 
@@ -114,7 +116,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
       hitos: this.dataSource.data.filter(existing => existing !== wrapper).map(hito => hito.value),
       hito: wrapper ? wrapper.value : {} as ISolicitudHito,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
-      readonly: this.formPart.readonly,
+      readonly: wrapper ? !this.modificable(wrapper) : this.formPart.readonly,
       unidadGestionId: this.actionService.solicitud?.unidadGestion?.id,
       tituloSolicitud: this.actionService.solicitud?.titulo,
       tituloConvocatoria: this.actionService.convocatoriaTitulo
@@ -156,6 +158,11 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  modificable(solicitudHito: StatusWrapper<ISolicitudHito>): boolean {
+    return !this.formPart.readonly
+      && (!solicitudHito.value?.createdBy || solicitudHito.value.createdBy === this.authService.authStatus$?.getValue()?.userRefId);
   }
 
 }

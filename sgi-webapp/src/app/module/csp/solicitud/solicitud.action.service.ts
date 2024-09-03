@@ -6,7 +6,7 @@ import { VALIDACION_REQUISITOS_EQUIPO_IP_MAP } from '@core/enums/validaciones-re
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
-import { ISolicitud } from '@core/models/csp/solicitud';
+import { ISolicitud, OrigenSolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto, TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { IPersona } from '@core/models/sgp/persona';
@@ -178,7 +178,7 @@ export class SolicitudActionService extends ActionService {
   }
 
   get modeloEjecucionId(): number {
-    return this.convocatoria?.modeloEjecucion?.id;
+    return this.solicitud?.modeloEjecucion?.id;
   }
 
   get convocatoriaTitulo(): string {
@@ -312,8 +312,12 @@ export class SolicitudActionService extends ActionService {
       this.isInvestigador
     );
 
-    if (this.isInvestigador && idConvocatoria) {
-      this.loadConvocatoria(idConvocatoria);
+    if (this.isInvestigador && !this.isEdit()) {
+      if (idConvocatoria) {
+        this.loadConvocatoria(idConvocatoria);
+      } else {
+        this.datosGenerales.setOrigenSolicitud(OrigenSolicitud.SIN_CONVOCATORIA);
+      }
     }
 
     this.documentos = new SolicitudDocumentosFragment(
@@ -464,94 +468,72 @@ export class SolicitudActionService extends ActionService {
       this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
       this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
 
-      if (!this.isInvestigador) {
+      if (this.data.solicitud.modeloEjecucion) {
         this.addFragment(this.FRAGMENT.HITOS, this.hitos);
+        this.showHitos$.next(true);
+      }
 
+      if (this.isFormularioSolicitudProyecto()) {
+        this.addFragment(this.FRAGMENT.SOCIOS, this.socio);
 
-        if (this.isFormularioSolicitudProyecto()) {
-          this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
-          this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
-          this.addFragment(this.FRAGMENT.SOCIOS, this.socio);
-          this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
-          this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, this.desglosePresupuestoGlobal);
-          this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
-          this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
-          this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
-          this.addFragment(this.FRAGMENT.RESPONSABLE_ECONOMICO, this.responsableEconomico);
-          this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
+        this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
+        this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
+        this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
+        this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
+        this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
+        this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
+        this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_GLOBAL, this.desglosePresupuestoGlobal);
+        this.addFragment(this.FRAGMENT.DESGLOSE_PRESUPUESTO_ENTIDADES, this.desglosePresupuestoEntidades);
 
-          this.subscriptions.push(
-            solicitudService.hasConvocatoriaSGI(this.data.solicitud.id).subscribe((hasConvocatoriaSgi) => {
-              if (hasConvocatoriaSgi) {
-                this.showHitos$.next(true);
-              }
-            })
-          );
-
-          this.subscriptions.push(this.proyectoDatos.coordinado$.subscribe(
-            (value: boolean) => {
-              this.showSocios$.next(value);
-            }
-          ));
-
-          this.subscriptions.push(this.proyectoDatos.tipoDesglosePresupuesto$.subscribe(
-            (value) => {
-              this.showDesglosePresupuestoEntidad$.next(value !== TipoPresupuesto.GLOBAL);
-              this.showDesglosePresupuestoGlobal$.next(value === TipoPresupuesto.GLOBAL);
-              this.desglosePresupuestoEntidades.tipoPresupuesto$.next(value);
-            }
-          ));
-
-          this.subscriptions.push(this.desglosePresupuestoGlobal.partidasGastos$.subscribe((value) => {
-            const rowTableData = value.length > 0;
-            this.proyectoDatos.disableTipoDesglosePresupuesto(rowTableData);
-          }));
-
-          this.subscriptions.push(this.socio.proyectoSocios$.subscribe((value) => {
-            const rowTableData = value.length > 0;
-            this.proyectoDatos.disableProyectoCoordinadoIfAnySocioExists(rowTableData);
-          }));
-
-          this.subscriptions.push(this.socio.proyectoSocios$.subscribe(
-            (proyectoSocios) => {
-              this.onSolicitudProyectoSocioListChangeHandle(proyectoSocios);
-            }
-          ));
-
-          this.subscriptions.push(this.entidadesFinanciadoras.initialized$.subscribe(value => {
-            if (value) {
-              this.desglosePresupuestoEntidades.initialize();
-            }
-          }));
-          this.subscriptions.push(this.entidadesFinanciadoras.entidadesFinanciadoras$.subscribe(entidadesFinanciadoras => {
-            this.desglosePresupuestoEntidades.setEntidadesFinanciadorasEdited(entidadesFinanciadoras.map(entidad => entidad.value));
-          }));
-
-        } else if (this.isFormularioSolicitudRrhh()) {
-          this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
-          this.addFragment(this.FRAGMENT.TUTOR, this.tutorRrhh);
-          this.addFragment(this.FRAGMENT.REQUISITOS_CONVOCATORIA, this.requisitosConvocatoriaRrhh);
-          this.addFragment(this.FRAGMENT.MEMORIA, this.memoriaRrhh);
-        }
-      } else {
-        this.subscriptions.push(this.datosGenerales.convocatoria$.subscribe(
-          (value) => {
-            this.convocatoria = value;
+        this.subscriptions.push(this.proyectoDatos.coordinado$.subscribe(
+          (value: boolean) => {
+            this.showSocios$.next(value);
           }
         ));
 
-        if (this.isFormularioSolicitudProyecto()) {
-          this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
-          this.addFragment(this.FRAGMENT.PROYECTO_AREA_CONOCIMIENTO, this.areaConocimiento);
-          this.addFragment(this.FRAGMENT.EQUIPO_PROYECTO, this.equipoProyecto);
-          this.addFragment(this.FRAGMENT.CLASIFICACIONES, this.clasificaciones);
-          this.addFragment(this.FRAGMENT.AUTOEVALUACION, this.autoevaluacion);
-        } else if (this.isFormularioSolicitudRrhh()) {
-          this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
-          this.addFragment(this.FRAGMENT.TUTOR, this.tutorRrhh);
-          this.addFragment(this.FRAGMENT.REQUISITOS_CONVOCATORIA, this.requisitosConvocatoriaRrhh);
-          this.addFragment(this.FRAGMENT.MEMORIA, this.memoriaRrhh);
+        this.subscriptions.push(this.socio.proyectoSocios$.subscribe(
+          (proyectoSocios) => {
+            this.onSolicitudProyectoSocioListChangeHandle(proyectoSocios);
+          }
+        ));
+
+        this.subscriptions.push(this.proyectoDatos.tipoDesglosePresupuesto$.subscribe(
+          (value) => {
+            this.showDesglosePresupuestoEntidad$.next(value !== TipoPresupuesto.GLOBAL);
+            this.showDesglosePresupuestoGlobal$.next(value === TipoPresupuesto.GLOBAL);
+            this.desglosePresupuestoEntidades.tipoPresupuesto$.next(value);
+          }
+        ));
+
+        this.subscriptions.push(this.desglosePresupuestoGlobal.partidasGastos$.subscribe((value) => {
+          const rowTableData = value.length > 0;
+          this.proyectoDatos.disableTipoDesglosePresupuesto(rowTableData);
+        }));
+
+        this.subscriptions.push(this.socio.proyectoSocios$.subscribe((value) => {
+          const rowTableData = value.length > 0;
+          this.proyectoDatos.disableProyectoCoordinadoIfAnySocioExists(rowTableData);
+        }));
+
+        this.subscriptions.push(this.entidadesFinanciadoras.initialized$.subscribe(value => {
+          if (value) {
+            this.desglosePresupuestoEntidades.initialize();
+          }
+        }));
+
+        this.subscriptions.push(this.entidadesFinanciadoras.entidadesFinanciadoras$.subscribe(entidadesFinanciadoras => {
+          this.desglosePresupuestoEntidades.setEntidadesFinanciadorasEdited(entidadesFinanciadoras.map(entidad => entidad.value));
+        }));
+
+        if (!this.isInvestigador) {
+          this.addFragment(this.FRAGMENT.RESPONSABLE_ECONOMICO, this.responsableEconomico);
         }
+
+      } else if (this.isFormularioSolicitudRrhh()) {
+        this.addFragment(this.FRAGMENT.SOLICITANTE, this.solicitanteRrhh);
+        this.addFragment(this.FRAGMENT.TUTOR, this.tutorRrhh);
+        this.addFragment(this.FRAGMENT.REQUISITOS_CONVOCATORIA, this.requisitosConvocatoriaRrhh);
+        this.addFragment(this.FRAGMENT.MEMORIA, this.memoriaRrhh);
       }
 
       // Forzamos la inicialización de los datos principales
@@ -570,7 +552,6 @@ export class SolicitudActionService extends ActionService {
               }
               else if (status.changes && !status.errors) {
                 this.datosProyectoComplete$.next(true);
-                this.equipoProyecto.initialize();
               }
             }
           }
@@ -589,24 +570,29 @@ export class SolicitudActionService extends ActionService {
 
         this.subscriptions.push(this.datosGenerales.initialized$.subscribe(
           (value) => {
-            if (value && !!this.datosGenerales.getFormGroup().controls.solicitante) {
+            if (value) {
               this.equipoProyecto.initialize();
               this.documentos.initialize();
-              this.subscriptions.push(this.datosGenerales.getFormGroup().controls.solicitante.valueChanges.subscribe(
-                (solicitante) => {
-                  if (this.equipoProyecto.proyectoEquipos$.value.length === 0 ||
-                    this.equipoProyecto.proyectoEquipos$.value.filter(equipo =>
-                      equipo.value.solicitudProyectoEquipo.persona?.id === solicitante?.id
-                      && equipo.value.solicitudProyectoEquipo.rolProyecto?.rolPrincipal).length > 0) {
-                    this.equipoProyecto.setErrors(false);
-                  } else {
-                    this.equipoProyecto.setErrors(true);
-                  }
-                }
-              ));
             }
           }
         ));
+
+        if (!!this.datosGenerales.getFormGroup().controls.solicitante) {
+          this.subscriptions.push(
+            this.datosGenerales.getFormGroup().controls.solicitante.valueChanges.subscribe(
+              (solicitante) => {
+                if (this.equipoProyecto.proyectoEquipos$.value.length === 0 ||
+                  this.equipoProyecto.proyectoEquipos$.value.filter(equipo =>
+                    equipo.value.solicitudProyectoEquipo.persona?.id === solicitante?.id
+                    && equipo.value.solicitudProyectoEquipo.rolProyecto?.rolPrincipal).length > 0) {
+                  this.equipoProyecto.setErrors(false);
+                } else {
+                  this.equipoProyecto.setErrors(true);
+                }
+              }
+            )
+          );
+        }
 
         this.subscriptions.push(
           this.equipoProyecto.proyectoEquipos$.subscribe(

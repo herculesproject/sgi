@@ -14,7 +14,8 @@ class SolicitudDocumentoConverter extends SgiBaseConverter<ISolicitudDocumentoBa
       comentario: value.comentario,
       documentoRef: value.documentoRef,
       nombre: value.nombre,
-      tipoDocumento: value.tipoDocumento
+      tipoDocumento: value.tipoDocumento,
+      tipoFase: value.tipoFase
     };
   }
 
@@ -28,7 +29,8 @@ class SolicitudDocumentoConverter extends SgiBaseConverter<ISolicitudDocumentoBa
       comentario: value.comentario,
       documentoRef: value.documentoRef,
       nombre: value.nombre,
-      tipoDocumento: value.tipoDocumento
+      tipoDocumento: value.tipoDocumento,
+      tipoFase: value.tipoFase
     };
   }
 }

@@ -31,6 +31,7 @@ class ConfiguracionResponseConverter
       proyectoSgeModificacionModoEjecucion: value.proyectoSgeModificacionModoEjecucion ? ModoEjecucion[value.proyectoSgeModificacionModoEjecucion] : null,
       proyectoSocioPaisFilterEnabled: value.proyectoSocioPaisFilterEnabled,
       sectorIvaSgeEnabled: value.sectorIvaSgeEnabled,
+      solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos ? ValidacionClasificacionGastos[value.validacionClasificacionGastos] : null,
       viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s])
     };
@@ -63,6 +64,7 @@ class ConfiguracionResponseConverter
       proyectoSgeModificacionModoEjecucion: value.proyectoSgeModificacionModoEjecucion,
       proyectoSocioPaisFilterEnabled: value.proyectoSocioPaisFilterEnabled,
       sectorIvaSgeEnabled: value.sectorIvaSgeEnabled,
+      solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos,
       viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.join(',')
     };

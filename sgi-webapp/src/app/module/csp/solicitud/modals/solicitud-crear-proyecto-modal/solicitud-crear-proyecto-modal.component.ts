@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -12,14 +12,13 @@ import { ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { merge, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { delay, map, switchMap, tap } from 'rxjs/operators';
 
 const MSG_ACEPTAR = marker('btn.ok');
 const SOLICITUD_PROYECTO_FECHA_INICIO_KEY = marker('csp.solicitud-proyecto.fecha-inicio');
@@ -59,8 +58,6 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
     return ESTADO_MAP;
   }
 
-  private convocatoria: IConvocatoria;
-
   msgParamFechaFinEntity = {};
   msgParamFechaInicioEntity = {};
   msgParamModeloEjecucionEntity = {};
@@ -72,8 +69,7 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
     @Inject(MAT_DIALOG_DATA)
     public data: ISolicitudCrearProyectoModalData,
     private readonly proyectoService: ProyectoService,
-    private readonly translate: TranslateService,
-    private convocatoriaService: ConvocatoriaService
+    private readonly translate: TranslateService
   ) {
     super(matDialogRef, false);
 
@@ -84,16 +80,13 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
     super.ngOnInit();
     this.setupI18N();
 
-    if (this.data.solicitud.convocatoriaId) {
-      this.subscriptions.push(this.convocatoriaService.findById(this.data.solicitud.convocatoriaId).subscribe(
-        (convocatoria => {
-          this.formGroup.controls.modeloEjecucion.setValue(convocatoria.modeloEjecucion);
-          this.formGroup.controls.modeloEjecucion.disable();
-        })
-      ));
-    }
-
     this.proyectos$ = this.getProyectos();
+
+    this.subscriptions.push(
+      this.initialized$.pipe(delay(0)).subscribe(() => {
+        this.formGroup.updateValueAndValidity();
+      })
+    );
   }
 
   private setupI18N(): void {
@@ -145,7 +138,9 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
       if (!!this.data?.convocatoria?.titulo) {
         camposTitulo.push(this.data.convocatoria.titulo);
       }
-      if (!!this.data?.convocatoria?.fechaPublicacion) {
+      if (!!this.data?.convocatoria?.anio) {
+        camposTitulo.push(this.data.convocatoria.anio.toString());
+      } else if (!!this.data?.convocatoria?.fechaPublicacion) {
         camposTitulo.push(this.data.convocatoria.fechaPublicacion.year.toString());
       }
       if (!!this.data?.nombreSolicitante) {
@@ -159,8 +154,7 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
         titulo: new FormControl(titulo || null, [Validators.required, Validators.maxLength(250)]),
         fechaInicio: new FormControl(null),
         fechaFin: new FormControl(null),
-        modeloEjecucion: new FormControl(null, [Validators.required]
-        )
+        modeloEjecucion: new FormControl(this.data.solicitud.modeloEjecucion, [Validators.required])
       },
       {
         validators: [
@@ -176,7 +170,7 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
       })
     );
 
-    if (this.convocatoria?.modeloEjecucion) {
+    if (this.data.solicitud.modeloEjecucion) {
       formGroup.controls.modeloEjecucion.disable();
     }
 

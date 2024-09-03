@@ -59,5 +59,15 @@
         </mat-checkbox>
       </div>
     </div>
+
+    <!-- Solicitud sin convocatoria -->
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+        [fxFlexOrder]="fxFlexProperties.order">
+        <mat-checkbox formControlName="solicitudSinConvocatoria">
+          {{'csp.modelo-ejecucion.solicitud-sin-convocatoria' | translate}}
+        </mat-checkbox>
+      </div>
+    </div>
   </form>
 </sgi-fragment>

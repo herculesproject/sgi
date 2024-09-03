@@ -143,6 +143,10 @@ mat-form-field {
   box-shadow: 0 5px 6px -6px map-get($sgi-custom-colors, divider);
 }
 
+.field-info-tooltip {
+  white-space: pre-line;
+}
+
 /**/
 /** FIN MENSAJES */
 /**/

@@ -1,5 +1,5 @@
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
-import { TipoSolicitudGrupo } from '../solicitud';
+import { OrigenSolicitud, TipoSolicitudGrupo } from '../solicitud';
 import { IEstadoSolicitudBackend } from './estado-solicitud-backend';
 
 export interface ISolicitudBackend {
@@ -33,4 +33,7 @@ export interface ISolicitudBackend {
   observaciones: string;
   /** Año */
   anio: number;
+  modeloEjecucionId: number;
+  origenSolicitud: OrigenSolicitud;
+  tipoFinalidadId: number;
 }

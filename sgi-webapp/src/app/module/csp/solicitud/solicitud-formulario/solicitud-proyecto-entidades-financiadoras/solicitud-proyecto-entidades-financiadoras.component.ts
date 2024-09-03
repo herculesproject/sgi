@@ -8,6 +8,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
+import { OrigenSolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -79,6 +80,10 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
   @ViewChild('paginatorEntidadesFinanciadorasAjenas', { static: true }) paginatorEntidadesFinanciadorasAjena: MatPaginator;
   @ViewChild('sortEntidadesFinanciadorasAjenas', { static: true }) sortEntidadesFinanciadorasAjena: MatSort;
 
+  get showEntidadesFinanciadorasConvocatoria(): boolean {
+    return this.actionService.solicitud.origenSolicitud === OrigenSolicitud.CONVOCATORIA_SGI;
+  }
+
   constructor(
     private actionService: SolicitudActionService,
     private router: Router,
@@ -106,30 +111,6 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       }
     );
 
-    this.dataSourceEntidadesFinanciadorasConvocatoria.paginator = this.paginatorEntidadesFinanciadorasConvocatoria;
-    this.dataSourceEntidadesFinanciadorasConvocatoria.sortingDataAccessor =
-      (entidadFinanciadora: IConvocatoriaEntidadFinanciadora, property: string) => {
-        switch (property) {
-          case 'nombre':
-            return entidadFinanciadora.empresa?.nombre;
-          case 'cif':
-            return entidadFinanciadora.empresa?.numeroIdentificacion;
-          case 'fuenteFinanciacion':
-            return entidadFinanciadora.fuenteFinanciacion?.nombre;
-          case 'ambito':
-            return entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre;
-          case 'tipoFinanciacion':
-            return entidadFinanciadora.tipoFinanciacion?.nombre;
-          case 'porcentajeFinanciacion':
-            return entidadFinanciadora.porcentajeFinanciacion;
-          case 'importeFinanciacion':
-            return entidadFinanciadora.importeFinanciacion;
-          default:
-            return entidadFinanciadora[property];
-        }
-      };
-    this.dataSourceEntidadesFinanciadorasConvocatoria.sort = this.sortEntidadesFinanciadorasConvocatoria;
-
     this.dataSourceEntidadesFinanciadorasAjenas.paginator = this.paginatorEntidadesFinanciadorasAjena;
     this.dataSourceEntidadesFinanciadorasAjenas.sortingDataAccessor =
       (entidadFinanciadora: StatusWrapper<SolicitudProyectoEntidadFinanciadoraAjenaData>, property: string) => {
@@ -152,41 +133,15 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       };
     this.dataSourceEntidadesFinanciadorasAjenas.sort = this.sortEntidadesFinanciadorasAjena;
 
-    const subscriptionEntidadesFinanciadorasConvocatoria = this.solicitudService
-      .findEntidadesFinanciadorasConvocatoriaSolicitud(this.formPart.getKey() as number)
-      .pipe(
-        map(result => result.items),
-        switchMap((entidadesFinanciadoras) => {
-          return from(entidadesFinanciadoras)
-            .pipe(
-              map((entidadesFinanciadora) => {
-                return this.empresaService.findById(entidadesFinanciadora.empresa.id)
-                  .pipe(
-                    map(empresa => {
-                      entidadesFinanciadora.empresa = empresa;
-                      return entidadesFinanciadora;
-                    }),
-                  );
-
-              }),
-              mergeAll(),
-              map(() => {
-                return entidadesFinanciadoras;
-              })
-            );
-        }),
-        takeLast(1)
-      ).subscribe((result) => {
-        this.dataSourceEntidadesFinanciadorasConvocatoria.data = result;
-      });
-
-    this.subscriptions.push(subscriptionEntidadesFinanciadorasConvocatoria);
-
     const subscriptionEntidadesFinanciadorasAjenas = this.formPart.entidadesFinanciadoras$
       .subscribe((entidadesFinanciadoras) => {
         this.dataSourceEntidadesFinanciadorasAjenas.data = entidadesFinanciadoras;
       });
     this.subscriptions.push(subscriptionEntidadesFinanciadorasAjenas);
+
+    if (this.showEntidadesFinanciadorasConvocatoria) {
+      this.initializeEntidadesFinanciadorasConvocatoria();
+    }
   }
 
   protected setupI18N(): void {
@@ -274,4 +229,61 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       )
     );
   }
+
+  private initializeEntidadesFinanciadorasConvocatoria(): void {
+    this.dataSourceEntidadesFinanciadorasConvocatoria.paginator = this.paginatorEntidadesFinanciadorasConvocatoria;
+    this.dataSourceEntidadesFinanciadorasConvocatoria.sortingDataAccessor =
+      (entidadFinanciadora: IConvocatoriaEntidadFinanciadora, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return entidadFinanciadora.empresa?.nombre;
+          case 'cif':
+            return entidadFinanciadora.empresa?.numeroIdentificacion;
+          case 'fuenteFinanciacion':
+            return entidadFinanciadora.fuenteFinanciacion?.nombre;
+          case 'ambito':
+            return entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre;
+          case 'tipoFinanciacion':
+            return entidadFinanciadora.tipoFinanciacion?.nombre;
+          case 'porcentajeFinanciacion':
+            return entidadFinanciadora.porcentajeFinanciacion;
+          case 'importeFinanciacion':
+            return entidadFinanciadora.importeFinanciacion;
+          default:
+            return entidadFinanciadora[property];
+        }
+      };
+    this.dataSourceEntidadesFinanciadorasConvocatoria.sort = this.sortEntidadesFinanciadorasConvocatoria;
+
+    const subscriptionEntidadesFinanciadorasConvocatoria = this.solicitudService
+      .findEntidadesFinanciadorasConvocatoriaSolicitud(this.formPart.getKey() as number)
+      .pipe(
+        map(result => result.items),
+        switchMap((entidadesFinanciadoras) => {
+          return from(entidadesFinanciadoras)
+            .pipe(
+              map((entidadesFinanciadora) => {
+                return this.empresaService.findById(entidadesFinanciadora.empresa.id)
+                  .pipe(
+                    map(empresa => {
+                      entidadesFinanciadora.empresa = empresa;
+                      return entidadesFinanciadora;
+                    }),
+                  );
+
+              }),
+              mergeAll(),
+              map(() => {
+                return entidadesFinanciadoras;
+              })
+            );
+        }),
+        takeLast(1)
+      ).subscribe((result) => {
+        this.dataSourceEntidadesFinanciadorasConvocatoria.data = result;
+      });
+
+    this.subscriptions.push(subscriptionEntidadesFinanciadorasConvocatoria);
+  }
+
 }

@@ -56,7 +56,7 @@
       <mat-form-field class="input-form">
         <mat-label>{{'csp.solicitud-proyecto.modelo-ejecucion' | translate}}</mat-label>
         <sgi-select-modelo-ejecucion #modeloEjecucion formControlName="modeloEjecucion"
-          [unidadGestionRef]="data?.solicitud?.unidadGestion?.id">
+          [unidadGestionRef]="data?.solicitud?.unidadGestion?.id" required>
         </sgi-select-modelo-ejecucion>
         <mat-error *ngIf="formGroup.controls.modeloEjecucion.errors?.required">
           {{'error.required.entity' | translate:msgParamModeloEjecucionEntity}}

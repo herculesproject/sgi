@@ -18,6 +18,7 @@ class SolicitudHitoResponseConverter extends SgiBaseConverter<ISolicitudHitoResp
       tipoHito: value.tipoHito,
       comentario: value.comentario,
       solicitudId: value.solicitudId,
+      createdBy: value.createdBy,
       aviso: value.aviso ? {
         email: {
           id: Number(value.aviso.comunicadoRef)
@@ -42,6 +43,7 @@ class SolicitudHitoResponseConverter extends SgiBaseConverter<ISolicitudHitoResp
       } as ITipoHito,
       comentario: value.comentario,
       solicitudId: value.solicitudId,
+      createdBy: value.createdBy,
       aviso: value.aviso ? {
         comunicadoRef: value.aviso.email.id.toString(),
         tareaProgramadaRef: value.aviso.task.id.toString(),

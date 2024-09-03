@@ -25,7 +25,8 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
       nombre: new FormControl(''),
       descripcion: new FormControl(''),
       externo: new FormControl(false),
-      contrato: new FormControl(false)
+      contrato: new FormControl(false),
+      solicitudSinConvocatoria: new FormControl(false)
     });
     return fb;
   }
@@ -37,7 +38,8 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
       descripcion: modelo.descripcion,
       nombre: modelo.nombre,
       externo: modelo.externo,
-      contrato: modelo.contrato
+      contrato: modelo.contrato,
+      solicitudSinConvocatoria: modelo.solicitudSinConvocatoria
     } as IModeloEjecucion;
     this.modeloEjecucion = modelo;
     return result;
@@ -77,6 +79,7 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
     modeloEjecucion.descripcion = form.descripcion;
     modeloEjecucion.externo = typeof form.externo === 'boolean' ? form.externo : formRaw.externo;
     modeloEjecucion.contrato = typeof form.contrato === 'boolean' ? form.contrato : formRaw.contrato;
+    modeloEjecucion.solicitudSinConvocatoria = typeof form.solicitudSinConvocatoria === 'boolean' ? form.solicitudSinConvocatoria : formRaw.solicitudSinConvocatoria;
     return modeloEjecucion;
   }
 

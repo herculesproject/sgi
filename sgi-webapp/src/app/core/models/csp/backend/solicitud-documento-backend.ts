@@ -1,4 +1,4 @@
-import { ITipoDocumento } from '../tipos-configuracion';
+import { ITipoDocumento, ITipoFase } from '../tipos-configuracion';
 
 export interface ISolicitudDocumentoBackend {
   id: number;
@@ -7,4 +7,5 @@ export interface ISolicitudDocumentoBackend {
   documentoRef: string;
   nombre: string;
   tipoDocumento: ITipoDocumento;
+  tipoFase: ITipoFase;
 }

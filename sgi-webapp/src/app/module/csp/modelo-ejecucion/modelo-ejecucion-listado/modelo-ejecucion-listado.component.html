@@ -52,13 +52,6 @@
         <td mat-cell *matCellDef="let modeloEjecucion">{{modeloEjecucion.nombre}}</td>
       </ng-container>
 
-      <!-- Descripción -->
-      <ng-container matColumnDef="descripcion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.modelo-ejecucion.descripcion' | translate}}
-        </th>
-        <td mat-cell *matCellDef="let modeloEjecucion">{{modeloEjecucion.descripcion}}</td>
-      </ng-container>
-
       <!-- Externo -->
       <ng-container matColumnDef="externo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.modelo-ejecucion.externo' | translate}}
@@ -74,6 +67,16 @@
         </th>
         <td mat-cell *matCellDef="let modeloEjecucion">
           {{(modeloEjecucion.contrato ? 'label.si' : 'label.no') | translate}}
+        </td>
+      </ng-container>
+
+      <!-- Solicitud sin convocatoria -->
+      <ng-container matColumnDef="solicitudSinConvocatoria">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.modelo-ejecucion.solicitud-sin-convocatoria' |
+          translate}}
+        </th>
+        <td mat-cell *matCellDef="let modeloEjecucion">
+          {{(modeloEjecucion.solicitudSinConvocatoria ? 'label.si' : 'label.no') | translate}}
         </td>
       </ng-container>
 

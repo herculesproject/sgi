@@ -240,7 +240,7 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends FormFragment<ISo
    */
   public deletePartidaGasto(wrapper: StatusWrapper<ISolicitudProyectoPresupuesto>): void {
     const current = this.partidasGastos$.value;
-    const index = current.findIndex((value) => value === wrapper);
+    const index = current.findIndex(currentWrapper => wrapper.value.id ? currentWrapper.value?.id === wrapper.value.id : currentWrapper.value === wrapper.value);
     if (index >= 0) {
       if (!wrapper.created) {
         this.partidasGastosEliminadas.push(current[index]);

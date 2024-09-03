@@ -11,6 +11,7 @@ export interface ISolicitudHitoResponse {
   comentario: string;
   /** Id de Solicitud */
   solicitudId: number;
+  createdBy: string;
   aviso: {
     comunicadoRef: string;
     tareaProgramadaRef: string;

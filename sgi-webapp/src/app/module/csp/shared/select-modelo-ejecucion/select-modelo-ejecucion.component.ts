@@ -1,3 +1,4 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { PlatformLocation } from '@angular/common';
 import { Component, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -66,6 +67,24 @@ export class SelectModeloEjecucionComponent extends SelectServiceExtendedCompone
   private _unidadGestionRef: string;
   private _externo: boolean;
 
+
+  /** Restrict values to allowed in solicitudes sin convocatoria. Default: false */
+  @Input()
+  get onlyAllowedInSolicitudesSinConvocatoria(): boolean {
+    return this._onlyAllowedInSolicitudesSinConvocatoria;
+  }
+  set onlyAllowedInSolicitudesSinConvocatoria(value: boolean) {
+    const newValue = coerceBooleanProperty(value);
+    const changes = this._onlyAllowedInSolicitudesSinConvocatoria !== newValue;
+    this._onlyAllowedInSolicitudesSinConvocatoria = newValue;
+    if (this.ready && changes) {
+      this.loadData();
+    }
+    this.stateChanges.next();
+  }
+  // tslint:disable-next-line: variable-name
+  private _onlyAllowedInSolicitudesSinConvocatoria = false;
+
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
@@ -85,6 +104,15 @@ export class SelectModeloEjecucionComponent extends SelectServiceExtendedCompone
 
     if (this.requestByExterno) {
       findOptions.filter = (new RSQLSgiRestFilter('externo', SgiRestFilterOperator.EQUALS, this.externo.toString()));
+    }
+
+    if (this.onlyAllowedInSolicitudesSinConvocatoria) {
+      const filter = new RSQLSgiRestFilter('solicitudSinConvocatoria', SgiRestFilterOperator.EQUALS, 'true');
+      if (findOptions.filter) {
+        findOptions.filter.and(filter);
+      } else {
+        findOptions.filter = filter;
+      }
     }
 
     if (this.requestByUnidadGestion) {

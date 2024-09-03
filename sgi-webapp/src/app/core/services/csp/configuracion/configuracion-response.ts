@@ -23,4 +23,5 @@ export interface IConfiguracionResponse {
   viajesDietasColumnasFijasVisibles: string;
   personalContratadoColumnasFijasVisibles: string;
   proyectoSocioPaisFilterEnabled: boolean;
+  solicitudesSinConvocatoriaInvestigadorEnabled: boolean;
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MODELO_UNIDAD_CONVERTER } from '@core/converters/csp/modelo-unidad.converter';
 import { IModeloUnidadBackend } from '@core/models/csp/backend/modelo-unidad-backend';
@@ -10,7 +10,7 @@ import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { IModeloUnidad } from '@core/models/csp/modelo-unidad';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
-import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
+import { RSQLSgiRestFilter, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -35,6 +35,15 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
   hasProyectosAsociados(id: number): Observable<boolean> {
     const url = `${this.endpointUrl}/${id}/proyectos`;
     return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  exists(filter: RSQLSgiRestFilter): Observable<boolean> {
+    const url = `${this.endpointUrl}`;
+    let params = new HttpParams();
+    params = params.append('q', filter?.toString());
+    return this.http.head(url, { params, observe: 'response' }).pipe(
       map(response => response.status === 200)
     );
   }

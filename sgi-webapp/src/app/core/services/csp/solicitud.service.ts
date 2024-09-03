@@ -722,4 +722,16 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     );
   }
 
+  /**
+   * Comprueba si una solicitud tiene asociados documentos o hitos
+   *
+   * @param id Id de la solicitud.
+   */
+  hasDocumentosOrHitos(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/hasdocumentosorhitos`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200)
+    );
+  }
+
 }

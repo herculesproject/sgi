@@ -223,8 +223,10 @@ export abstract class SelectCommonComponent<T>
       this._resetOnChange = value;
       this.subscriptions.push(this._resetOnChange.subscribe(
         () => {
-          this.ngControl.control.markAsTouched({ onlySelf: true });
-          this.resetSelection();
+          if (this.ready) {
+            this.ngControl.control.markAsTouched({ onlySelf: true });
+            this.resetSelection();
+          }
         }
       ));
     }
