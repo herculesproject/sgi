@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DialogCommonComponent } from '@core/component/dialog-common.component';
@@ -9,11 +9,14 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IGrupo } from '@core/models/csp/grupo';
 import { TIPO_MAP } from '@core/models/csp/grupo-tipo';
 import { IPersona } from '@core/models/sgp/persona';
+import { Module } from '@core/module';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { RolProyectoColectivoService } from '@core/services/csp/rol-proyecto-colectivo/rol-proyecto-colectivo.service';
+import { LayoutService } from '@core/services/layout.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { toString } from '@core/utils/string-utils';
 import {
   RSQLSgiRestFilter,
   RSQLSgiRestSort,
@@ -22,7 +25,7 @@ import {
   SgiRestFindOptions, SgiRestSortDirection
 } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, from, merge, Observable, Subject, Subscription } from 'rxjs';
+import { EMPTY, Observable, Subject, from, merge } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 
 interface IGrupoListado extends IGrupo {
@@ -61,13 +64,18 @@ export class SearchGrupoModalComponent extends DialogCommonComponent implements 
     return TIPO_MAP;
   }
 
+  get isModuleINV(): boolean {
+    return this.layoutService.activeModule$.value === Module.INV;
+  }
+
   constructor(
     private readonly logger: NGXLogger,
     dialogRef: MatDialogRef<SearchGrupoModalComponent, IGrupo>,
     private readonly grupoService: GrupoService,
     private readonly personaService: PersonaService,
     private readonly rolProyectoColectivoService: RolProyectoColectivoService,
-    @Inject(MAT_DIALOG_DATA) public data: SearchModalData
+    @Inject(MAT_DIALOG_DATA) public data: SearchModalData,
+    private readonly layoutService: LayoutService
   ) {
     super(dialogRef);
   }
@@ -167,6 +175,8 @@ export class SearchGrupoModalComponent extends DialogCommonComponent implements 
       const fechaFilter = LuxonUtils.toBackend(controls.fechaInicioHasta.value?.plus({ hours: 23, minutes: 59, seconds: 59 }));
       restFilter.and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, fechaFilter);
     }
+
+    restFilter.and('isModuloInvestigador', SgiRestFilterOperator.EQUALS, toString(this.isModuleINV));
 
     return restFilter;
   }
