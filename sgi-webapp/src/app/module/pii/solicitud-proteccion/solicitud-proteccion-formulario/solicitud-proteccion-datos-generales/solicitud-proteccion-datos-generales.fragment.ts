@@ -22,7 +22,7 @@ import { catchError, defaultIfEmpty, last, map, mergeMap, switchMap, takeLast, t
 export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISolicitudProteccion> {
 
   private readonly TITULO_MAX_LENGTH = 250;
-  private readonly COMENTARIOS_MAX_LENGTH = 250;
+  private readonly COMENTARIOS_MAX_LENGTH = 2000;
   private readonly NUMERO_REGISTRO_MAX_LENGTH = 24;
   private readonly NUMERO_SOLICITUD_MAX_LENGTH = 24;
   private readonly NUMERO_PUBLICACION_MAX_LENGTH = 24;
