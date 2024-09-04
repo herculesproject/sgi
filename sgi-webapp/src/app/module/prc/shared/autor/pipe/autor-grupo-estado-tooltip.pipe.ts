@@ -13,8 +13,9 @@ export class AutorGrupoEstadoTooltipPipe implements PipeTransform {
     if (!grupos) {
       return '';
     }
-    return grupos.map(autorGrupo =>
+    const value = grupos.map(autorGrupo =>
       this.translateService.instant(autorGrupo.grupo.nombre) + ' (' + autorGrupo.grupo.codigo + ')'
-    ).join(', ');
+    );
+    return value.join(', ');
   }
 }

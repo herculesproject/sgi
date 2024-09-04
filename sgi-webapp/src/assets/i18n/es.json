@@ -1,7 +1,4 @@
 {
-  " | ": " | ",
-  ", ": ", ",
-  "; ": "; ",
   "adm": "Administración SGI",
   "adm.config.csp": "Configuración CSP",
   "adm.config.csp.CSP_ALTA_BUSCADOR_SGE_ENABLED": "Habilitar buscador identificador SGE",

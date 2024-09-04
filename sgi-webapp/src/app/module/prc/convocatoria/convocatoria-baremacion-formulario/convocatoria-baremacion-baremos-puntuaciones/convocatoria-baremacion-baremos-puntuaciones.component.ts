@@ -253,9 +253,10 @@ export class ConvocatoriaBaremacionBaremosPuntuacionesComponent extends Fragment
   }
 
   getErrorMsg(node: NodeConfiguracionBaremo): string {
-    return node.errorsMsg.map(errorMsg => {
+    const value = node.errorsMsg.map(errorMsg => {
       return this.translateService.instant(errorMsg);
-    }).join(' | ');
+    });
+    return value.join(' | ');
   }
 
   loadBaremoComponent(
