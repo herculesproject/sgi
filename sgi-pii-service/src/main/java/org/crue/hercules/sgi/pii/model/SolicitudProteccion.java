@@ -55,7 +55,7 @@ public class SolicitudProteccion extends BaseEntity {
   public static final int NUMERO_PUBLICACION_MAX_LENGTH = 24;
   public static final int NUMERO_CONCESION_MAX_LENGTH = 24;
   public static final int NUMERO_REGISTRO_MAX_LENGTH = 24;
-  public static final int COMENTARIOS_MAX_LENGTH = 500;
+  public static final int COMENTARIOS_MAX_LENGTH = 2000;
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
