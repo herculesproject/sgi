@@ -1,14 +1,21 @@
 package org.crue.hercules.sgi.eti.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -37,13 +44,11 @@ public class Comite extends BaseEntity {
   private String codigo;
 
   /** Nombre */
-  @Column(name = "nombre", length = 255, nullable = false)
-  private String nombre;
-
-  /** Género Nombre */
-  @Column(name = "genero", length = 1, nullable = false)
-  @Enumerated(EnumType.STRING)
-  private Genero genero;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "comite_nombre", joinColumns = @JoinColumn(name = "comite_id"))
+  @NotEmpty
+  @Valid
+  private Set<ComiteNombre> nombre = new HashSet<>();
 
   /** Formulario Memoria */
   @Column(name = "formulario_memoria_id", nullable = false)
@@ -101,13 +106,4 @@ public class Comite extends BaseEntity {
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   private Boolean activo;
-
-  /** Género de nombre de investigación */
-  public enum Genero {
-    /** Femenino */
-    F,
-    /** Masculino */
-    M;
-  }
-
 }

@@ -32,6 +32,7 @@ DELETE FROM test.apartado_definicion
 DELETE FROM test.apartado
 DELETE FROM test.bloque_nombre
 DELETE FROM test.bloque
+DELETE FROM test.comite_nombre
 DELETE FROM test.comite
 DELETE FROM test.tipo_estado_memoria
 DELETE FROM test.formacion_especifica

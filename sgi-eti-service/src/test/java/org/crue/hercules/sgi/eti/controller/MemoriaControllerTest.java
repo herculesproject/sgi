@@ -16,7 +16,6 @@ import org.crue.hercules.sgi.eti.dto.MemoriaInput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
@@ -1605,7 +1604,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     Comite comite = new Comite();
     comite.setId(id);
-    comite.setGenero(Genero.M);
     memoria.setComite(comite);
 
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();

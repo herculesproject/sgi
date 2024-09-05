@@ -1134,7 +1134,7 @@ public class MemoriaServiceImpl implements MemoriaService {
         try {
           this.comunicadosService.enviarComunicadoInformeRetrospectivaCeeaPendiente(
               memoria.getComite().getNombre(),
-              memoria.getComite().getGenero().toString(), memoria.getNumReferencia(), tipoActividad,
+              memoria.getNumReferencia(), tipoActividad,
               memoria.getPeticionEvaluacion().getTitulo(),
               memoria.getPeticionEvaluacion().getPersonaRef());
         } catch (Exception e) {

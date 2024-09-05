@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.com.Status;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -258,7 +259,7 @@ public class SgiApiComService extends SgiApiBaseService {
     request.setParams(Arrays.asList(
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_NOMBRE_INVESTIGACION,
-            convocatoriaReunion.getComite().getNombre()),
+            I18nHelper.getValueForCurrentLanguage(convocatoriaReunion.getComite().getNombre())),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_COMITE,
             convocatoriaReunion.getComite().getCodigo()),

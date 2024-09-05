@@ -109,7 +109,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         // then: La entidad se crea correctamente
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comite.id").value(response.getComite().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
@@ -167,7 +167,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         // then: Los datos se actualizan correctamente
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comite.id").value(response.getComite().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
@@ -280,7 +280,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         // then: Se recupera la entidad con el Id
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comite.id").value(response.getComite().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
@@ -346,7 +346,7 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         // then: Se recupera la entidad con el Id
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comite.id").value(response.getComite().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))

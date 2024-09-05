@@ -389,13 +389,40 @@
       oldColumnName="comite"
       tableName="comite" />
     <renameColumn
-      newColumnName="nombre"
-      oldColumnName="nombre_investigacion"
-      tableName="comite" />
-    <renameColumn
       newColumnName="formulario_memoria_id"
       oldColumnName="formulario_id"
       tableName="comite" />
+
+    <!-- Nombre -->
+    <createTable tableName="comite_nombre">
+      <column name="comite_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="genero" type="VARCHAR(1)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+    <addPrimaryKey tableName="comite_nombre" columnNames="comite_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="comite_id"
+      baseTableName="comite_nombre"
+      constraintName="FK_COMITENOMBRE_COMITE" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="comite" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}comite_nombre(comite_id, lang, value_, genero) SELECT id,
+      '${defaultLang}', nombre_investigacion, genero FROM ${schemaPrefix}comite WHERE
+      nombre_investigacion IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre_investigacion" tableName="comite" />
+    <dropColumn columnName="genero" tableName="comite" />
+
     <addColumn tableName="comite">
       <column name="formulario_seguimiento_anual_id"
         type="BIGINT" />

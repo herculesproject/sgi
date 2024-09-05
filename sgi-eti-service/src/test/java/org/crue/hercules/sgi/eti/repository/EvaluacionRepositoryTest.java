@@ -10,6 +10,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.ComiteNombre;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -399,10 +400,11 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
    * @return el objeto Comite
    */
   private Comite generarMockComite(Formulario formulario) {
+    Set<ComiteNombre> nombre = new HashSet<>();
+    nombre.add(new ComiteNombre(Language.ES, "NombreComite1", ComiteNombre.Genero.M));
     Comite comite = new Comite();
     comite.setCodigo("Comite1");
-    comite.setNombre("NombreComite1");
-    comite.setGenero(Comite.Genero.M);
+    comite.setNombre(nombre);
     comite.setFormularioMemoriaId(formulario.getId());
     comite.setFormularioSeguimientoAnualId(formulario.getId());
     comite.setFormularioSeguimientoFinalId(formulario.getId());

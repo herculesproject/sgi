@@ -855,7 +855,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       }
       this.comunicadosService.enviarComunicadoDictamenEvaluacionRevMinima(
           evaluacion.getMemoria().getComite().getNombre(),
-          evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
+          evaluacion.getMemoria().getNumReferencia(),
           tipoActividad,
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
           evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
@@ -878,7 +878,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       }
       this.comunicadosService.enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(
           evaluacion.getMemoria().getComite().getNombre(),
-          evaluacion.getMemoria().getComite().getGenero().toString(), evaluacion.getMemoria().getNumReferencia(),
+          evaluacion.getMemoria().getNumReferencia(),
           tipoActividad,
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
           evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());

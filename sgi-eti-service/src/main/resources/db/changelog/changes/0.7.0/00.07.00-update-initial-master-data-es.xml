@@ -1489,4 +1489,31 @@
       <column name="esquema" valueClobFile="clob/es/checklist.json" />
     </insert>
   </changeSet>
+
+  <!-- Comite nombre -->
+  <changeSet context="!test" author="master" id="00.07.00-comine-nombre-es">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <changeLogPropertyDefined property="defaultLang" value="es" />
+      </not>
+    </preConditions>
+    <insert tableName="comite_nombre">
+      <column name="comite_id" valueNumeric="1" />
+      <column name="lang" value="es" />
+      <column name="value_" value="Comisión de Ética de Investigación" />
+      <column name="genero" value="F" />
+    </insert>
+    <insert tableName="comite_nombre">
+      <column name="comite_id" valueNumeric="2" />
+      <column name="lang" value="es" />
+      <column name="value_" value="Comité de Ética de Experimentación Animal" />
+      <column name="genero" value="M" />
+    </insert>
+    <insert tableName="comite_nombre">
+      <column name="comite_id" valueNumeric="3" />
+      <column name="lang" value="es" />
+      <column name="value_" value="Comité de Ética de Bioseguridad en Experimentación" />
+      <column name="genero" value="M" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

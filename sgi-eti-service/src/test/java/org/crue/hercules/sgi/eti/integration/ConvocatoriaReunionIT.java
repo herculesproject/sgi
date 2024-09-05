@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.ComiteNombre;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -743,11 +744,12 @@ public class ConvocatoriaReunionIT extends BaseIT {
    */
   private ConvocatoriaReunion getMockData(Long id, Long comiteId, Long tipoId) {
 
+    Set<ComiteNombre> nombre = new HashSet<>();
+    nombre.add(new ComiteNombre(Language.ES, "nombreInvestigacion", ComiteNombre.Genero.M));
     Comite comite = new Comite();
     comite.setId(comiteId);
     comite.setCodigo("CEI");
-    comite.setNombre("nombreInvestigacion");
-    comite.setGenero(Comite.Genero.M);
+    comite.setNombre(nombre);
     comite.setFormularioMemoriaId(1L);
     comite.setFormularioSeguimientoAnualId(4L);
     comite.setFormularioSeguimientoFinalId(5L);
@@ -820,11 +822,12 @@ public class ConvocatoriaReunionIT extends BaseIT {
     cargoComite.setNombre("PRESIDENTE");
     cargoComite.setActivo(Boolean.TRUE);
 
+    Set<ComiteNombre> nombre = new HashSet<>();
+    nombre.add(new ComiteNombre(Language.ES, "nombreInvestigacion", ComiteNombre.Genero.M));
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setCodigo("CEI");
-    comite.setNombre("nombreInvestigacion");
-    comite.setGenero(Comite.Genero.M);
+    comite.setNombre(nombre);
     comite.setFormularioMemoriaId(1L);
     comite.setFormularioSeguimientoAnualId(4L);
     comite.setFormularioSeguimientoFinalId(5L);
@@ -900,11 +903,12 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
+    Set<ComiteNombre> nombre = new HashSet<>();
+    nombre.add(new ComiteNombre(Language.ES, "nombreInvestigacion", ComiteNombre.Genero.M));
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setCodigo("CEI");
-    comite.setNombre("nombreInvestigacion");
-    comite.setGenero(Comite.Genero.M);
+    comite.setNombre(nombre);
     comite.setFormularioMemoriaId(1L);
     comite.setFormularioSeguimientoAnualId(4L);
     comite.setFormularioSeguimientoFinalId(5L);
@@ -1021,11 +1025,12 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
+    Set<ComiteNombre> nombre = new HashSet<>();
+    nombre.add(new ComiteNombre(Language.ES, "nombreInvestigacion", ComiteNombre.Genero.M));
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setCodigo("CEI");
-    comite.setNombre("nombreInvestigacion");
-    comite.setGenero(Comite.Genero.M);
+    comite.setNombre(nombre);
     comite.setFormularioMemoriaId(1L);
     comite.setFormularioSeguimientoAnualId(4L);
     comite.setFormularioSeguimientoFinalId(5L);

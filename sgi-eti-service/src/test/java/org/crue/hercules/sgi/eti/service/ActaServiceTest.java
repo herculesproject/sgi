@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.dto.TipoConvocatoriaOutput;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Comite.Genero;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -366,7 +365,6 @@ public class ActaServiceTest extends BaseServiceTest {
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setCodigo("CEEA");
-    comite.setGenero(Genero.M);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
