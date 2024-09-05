@@ -1,9 +1,10 @@
 package org.crue.hercules.sgi.rep.report.data.objects;
 
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto;
-import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteNombreDto;
 
 import lombok.Getter;
 
@@ -11,8 +12,7 @@ import lombok.Getter;
 public class ComiteObject {
   private Long id;
   private String codigo;
-  private String nombre;
-  private Genero genero;
+  private ComiteNombreDto nombre;
   private Boolean activo;
 
   public ComiteObject(ComiteDto dto) {
@@ -23,8 +23,7 @@ public class ComiteObject {
     if (dto != null) {
       this.id = dto.getId();
       this.codigo = dto.getCodigo();
-      this.nombre = dto.getNombre();
-      this.genero = dto.getGenero();
+      this.nombre = I18nHelper.getFieldValueForLanguage(dto.getNombre(), lang).orElse(null);
       this.activo = dto.getActivo();
     }
   }
@@ -36,6 +35,11 @@ public class ComiteObject {
 
   /** Se mantiene por compatibilidad con reports antiguos */
   public String getNombreInvestigacion() {
-    return nombre;
+    return nombre != null ? nombre.getValue() : null;
+  }
+
+  /** Se mantiene por compatibilidad con reports antiguos */
+  public ComiteNombreDto.Genero getGenero() {
+    return nombre != null ? nombre.getGenero() : null;
   }
 }

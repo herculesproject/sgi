@@ -104,7 +104,8 @@ public class InformeActaReportService extends SgiReportDocxService {
 
     dataReport.put("comite", acta.getConvocatoriaReunion().getComite().getCodigo());
 
-    dataReport.put("nombreInvestigacion", acta.getConvocatoriaReunion().getComite().getNombre());
+    dataReport.put("nombreInvestigacion",
+        I18nHelper.getValueForLanguage(acta.getConvocatoriaReunion().getComite().getNombre(), lang));
 
     String patternFechaConv = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     Instant fechaEvaluacion = acta.getConvocatoriaReunion().getFechaEvaluacion();

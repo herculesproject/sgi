@@ -40,7 +40,8 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
 
     dataReport.put("lugar", evaluacion.getConvocatoriaReunion().getNumeroActa());
 
-    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombre());
+    dataReport.put("nombreInvestigacion",
+        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang));
 
     dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
 

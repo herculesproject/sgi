@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.rep.dto.eti;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.rep.dto.BaseRestDto;
 
 import lombok.AllArgsConstructor;
@@ -16,8 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class ComiteDto extends BaseRestDto {
 
   private String codigo;
-  private String nombre;
-  private Genero genero;
+  private List<ComiteNombreDto> nombre;
   private Long formularioMemoriaId;
   private Long formularioSeguimientoAnualId;
   private Long formularioSeguimientoFinalId;
@@ -31,11 +32,4 @@ public class ComiteDto extends BaseRestDto {
   private Boolean memoriaTituloLIibre;
   private Boolean activo;
 
-  /** Género de nombre de investigación */
-  public enum Genero {
-    /** Femenino */
-    F,
-    /** Masculino */
-    M;
-  }
 }

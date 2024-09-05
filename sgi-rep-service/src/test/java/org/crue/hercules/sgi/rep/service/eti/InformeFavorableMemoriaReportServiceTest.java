@@ -8,7 +8,7 @@ import java.util.List;
 import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.OutputType;
-import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteNombreDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableMemoria;
 import org.crue.hercules.sgi.rep.dto.eti.TareaDto;
@@ -80,7 +80,7 @@ class InformeFavorableMemoriaReportServiceTest extends BaseReportEtiServiceTest 
     BDDMockito.given(evaluacionService.findById(idEvaluacion))
         .willAnswer((InvocationOnMock invocation) -> {
           EvaluacionDto evaluacion = generarMockEvaluacion(idEvaluacion);
-          evaluacion.getMemoria().getComite().setGenero(Genero.F);
+          evaluacion.getMemoria().getComite().getNombre().get(0).setGenero(ComiteNombreDto.Genero.F);
           return evaluacion;
         });
     BDDMockito.given(peticionEvaluacionService.getTareasEquipoTrabajo(idEvaluacion))

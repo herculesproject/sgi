@@ -63,7 +63,8 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
         I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getResumen(), lang));
 
     dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
-    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombre());
+    dataReport.put("nombreInvestigacion",
+        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang));
 
     Long dictamenId = evaluacion.getDictamen() != null ? evaluacion.getDictamen().getId() : null;
 

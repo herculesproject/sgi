@@ -22,7 +22,7 @@ import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
-import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteNombreDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluadorDto;
 import org.crue.hercules.sgi.rep.dto.eti.FormularioDto;
@@ -249,8 +249,10 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
           getErrorMessage(e));
     }
 
-    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombre());
-    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.F)) {
+    dataReport.put("nombreInvestigacion",
+        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang));
+    if (I18nHelper.getFieldValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang)
+        .map(ComiteNombreDto::getGenero).orElse(null) == ComiteNombreDto.Genero.F) {
       String i18nDela = ApplicationContextSupport.getMessage("common.dela");
       dataReport.put("del", i18nDela);
       String i18nLa = ApplicationContextSupport.getMessage("common.la");

@@ -9,7 +9,7 @@ import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
-import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteNombreDto;
 import org.crue.hercules.sgi.rep.dto.eti.EvaluacionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.DictamenI18n;
@@ -73,7 +73,8 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
 
     dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
 
-    dataReport.put("nombreInvestigacion", evaluacion.getMemoria().getComite().getNombre());
+    dataReport.put("nombreInvestigacion",
+        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang));
 
     if (ObjectUtils.isNotEmpty(evaluacion.getMemoria().getEstadoActual())) {
       dataReport.put("retrospectiva", !evaluacion.getMemoria().getEstadoActual().getId().equals(
@@ -101,13 +102,17 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
       dataReport.put("seguimientoFinal", false);
     }
 
-    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.M)) {
+    if (I18nHelper.getFieldValueForLanguage(evaluacion.getMemoria()
+        .getComite().getNombre(), lang)
+        .map(ComiteNombreDto::getGenero).orElse(null) == ComiteNombreDto.Genero.M) {
       dataReport.put("preposicionComite", ApplicationContextSupport.getMessage("common.del"));
     } else {
       dataReport.put("preposicionComite", ApplicationContextSupport.getMessage("common.dela"));
     }
 
-    if (evaluacion.getMemoria().getComite().getGenero().equals(Genero.M)) {
+    if (I18nHelper.getFieldValueForLanguage(evaluacion.getMemoria()
+        .getComite().getNombre(), lang)
+        .map(ComiteNombreDto::getGenero).orElse(null) == ComiteNombreDto.Genero.M) {
       dataReport.put("comisionComite", ApplicationContextSupport.getMessage("comite.comision.masculino"));
     } else {
       dataReport.put("comisionComite", ApplicationContextSupport.getMessage("comite.comision.femenino"));

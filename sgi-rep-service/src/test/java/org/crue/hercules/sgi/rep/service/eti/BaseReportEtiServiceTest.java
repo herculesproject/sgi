@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.dto.eti.ActaDto;
 import org.crue.hercules.sgi.rep.dto.eti.ActaDto.TipoEstadoActaDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDefinicionDto;
@@ -12,7 +13,7 @@ import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueDto;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.ComiteDto;
-import org.crue.hercules.sgi.rep.dto.eti.ComiteDto.Genero;
+import org.crue.hercules.sgi.rep.dto.eti.ComiteNombreDto;
 import org.crue.hercules.sgi.rep.dto.eti.ConfiguracionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ConvocatoriaReunionDto;
 import org.crue.hercules.sgi.rep.dto.eti.DictamenDto;
@@ -89,11 +90,16 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
   }
 
   protected ComiteDto generarMockComite(Long idComite, String comite) {
+    List<ComiteNombreDto> nombre = new ArrayList<>();
+    ComiteNombreDto comiteNombre = new ComiteNombreDto();
+    comiteNombre.setLang(Language.ES);
+    comiteNombre.setValue("nombreInvestigacion");
+    comiteNombre.setGenero(ComiteNombreDto.Genero.M);
+    nombre.add(comiteNombre);
     return ComiteDto.builder()
         .id(idComite)
         .codigo(comite)
-        .nombre("nombreInvestigacion")
-        .genero(Genero.M)
+        .nombre(nombre)
         .activo(Boolean.TRUE)
         .build();
   }
