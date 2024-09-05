@@ -6,6 +6,7 @@ import { IComite } from '@core/models/eti/comite';
 import { IMemoria, MEMORIA_TIPO_MAP, MemoriaTipo } from '@core/models/eti/memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { ComiteService } from '@core/services/eti/comite.service';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { MemoriaActionService } from '../../memoria.action.service';
@@ -46,7 +47,8 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   constructor(
     private readonly comiteService: ComiteService,
     public actionService: MemoriaActionService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.datosGeneralesFragment = this.fragment as MemoriaDatosGeneralesFragment;
@@ -147,7 +149,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   }
 
   displayerComite(comite: IComite): string {
-    return comite?.nombre;
+    return this.languageService.getFieldValue(comite?.nombre);
   }
 
 }

@@ -45,6 +45,11 @@ export abstract class SelectServiceComponent<T extends EntityKey> extends Select
       }
       return '';
     }
+
+    // Refresh display values on language change
+    this.subscriptions.push(this.languageService.languageChange$.subscribe(
+      () => this.refreshDisplayValue()
+    ));
   }
 
   /**

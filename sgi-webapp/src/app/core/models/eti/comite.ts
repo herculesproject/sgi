@@ -1,12 +1,12 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+
 export interface IComite {
   /** Id. */
   id: number;
   /** Código */
   codigo: string;
   /** Nombre  */
-  nombre: string;
-  /** Genero del nombre */
-  genero: string;
+  nombre: IComiteNombre[];
   /** Formulario Memoria*/
   formularioMemoriaId: number;
   /** Formulario Seguimiento Anual */
@@ -31,4 +31,13 @@ export interface IComite {
   memoriaTituloLibre: boolean;
   /** Activo */
   activo: boolean;
+}
+
+export interface IComiteNombre extends I18nFieldValue {
+  genero: ComiteNombreGenero;
+}
+
+export enum ComiteNombreGenero {
+  F = 'F',
+  M = 'M'
 }

@@ -70,17 +70,25 @@ export class LanguageService {
   }
 
   public getFieldValue(field: I18nFieldValue[]): string {
+    const f = this.getField(field);
+    if (f) {
+      return f.value;
+    }
+    return '';
+  }
+
+  public getField<T extends I18nFieldValue>(field: T[]): T {
     let fieldValue = field.filter(f => f.lang === this.language);
     if (fieldValue.length) {
-      return fieldValue[0].value;
+      return fieldValue[0];
     }
     else {
       fieldValue = field.filter(f => f.value?.length);
       if (fieldValue.length) {
-        return fieldValue[0].value;
+        return fieldValue[0];
       }
       else {
-        return '';
+        return null;
       }
     }
   }

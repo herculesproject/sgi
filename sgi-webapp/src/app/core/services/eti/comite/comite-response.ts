@@ -1,12 +1,13 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
+import { ComiteNombreGenero } from "@core/models/eti/comite";
+
 export interface IComiteResponse {
   /** Id. */
   id: number;
   /** Código */
   codigo: string;
   /** Nombre  */
-  nombre: string;
-  /** Genero del nombre */
-  genero: string;
+  nombre: IComiteNombreResponse[];
   /** Formulario Memoria*/
   formularioMemoriaId: number;
   /** Formulario Seguimiento Anual */
@@ -31,4 +32,8 @@ export interface IComiteResponse {
   memoriaTituloLibre: boolean;
   /** Activo */
   activo: boolean;
+}
+
+export interface IComiteNombreResponse extends I18nFieldValueResponse {
+  genero: ComiteNombreGenero;
 }
