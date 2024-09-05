@@ -1,9 +1,11 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundException;
@@ -14,12 +16,15 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
+import org.crue.hercules.sgi.eti.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.FormularioRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.eti.service.impl.DocumentacionMemoriaServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -76,7 +81,9 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(documentacionMemoria.getId()).isEqualTo(1L);
     Assertions.assertThat(documentacionMemoria.getMemoria().getTitulo()).isEqualTo("Memoria1");
-    Assertions.assertThat(documentacionMemoria.getTipoDocumento().getNombre()).isEqualTo("TipoDocumento1");
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(documentacionMemoria.getTipoDocumento().getNombre(), Language.ES))
+        .isEqualTo("TipoDocumento1");
     Assertions.assertThat(documentacionMemoria.getDocumentoRef()).isEqualTo("doc-001");
 
   }
@@ -1111,9 +1118,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
    */
   private TipoDocumento generarMockTipoDocumento(Long id) {
 
+    Set<TipoDocumentoNombre> nombre = new HashSet<>();
+    nombre.add(new TipoDocumentoNombre(Language.ES, "TipoDocumento" + id));
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
-    tipoDocumento.setNombre("TipoDocumento" + id);
+    tipoDocumento.setNombre(nombre);
 
     return tipoDocumento;
   }

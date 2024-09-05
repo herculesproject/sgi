@@ -22,6 +22,7 @@ DELETE FROM test.peticion_evaluacion_dismetodologico
 DELETE FROM test.peticion_evaluacion
 DELETE FROM test.tipo_actividad
 DELETE FROM test.tipo_investigacion_tutelada
+DELETE FROM test.tipo_documento_nombre
 DELETE FROM test.tipo_documento
 DELETE FROM test.estado_acta
 DELETE FROM test.acta

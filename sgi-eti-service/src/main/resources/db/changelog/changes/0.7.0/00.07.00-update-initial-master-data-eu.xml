@@ -418,6 +418,56 @@
       <column name="esquema" valueClobFile="clob/eu/m10/m10_apartado_5_9.json" />
     </insert>
 
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'CONSENTIMIENTO')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Documento de consentimiento" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'CESION_DATOS')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Documento de cesión de datos" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'AUTORIZACION')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Documento de autorización" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'ACEPTACION_COLABORACION')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Documento de aceptación de colaboración" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'INFORME_GARANTIAS')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Informe de la Comisión de Garantías" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'ACUERDO_TRANSFERENCIA')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Acuerdo de transferencia de muestras" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'INFORME_EXTERNO')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Informe del comité o comisión del organismo externo" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM10Code}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Documentación adicional" />
+    </insert>
+
     <!-- Report -->
     <insert tableName="formulario_report">
       <column name="formulario_id"
@@ -852,6 +902,39 @@
       <column name="lang" value="eu" />
       <column name="nombre" value="EUSKERA Aclaraciones al comité" />
       <column name="esquema" valueClobFile="clob/eu/m20/m20_apartado_5_7.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'ACREDITACIONES')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Acreditaciones" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'INFORME_VETERINARIO')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Informe veterinario" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'SOLICITUD_RAZONADA')" />
+      <column name="lang" value="eu" />
+      <column name="value_"
+        value="EUSKERA Solicitud Razonada dirigida al Comité Habilitado y al Órgano Competente" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'RESUMEN_RNT')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Resumen Anónimo no técnico RNT" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM20Code}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Documentación adicional" />
     </insert>
 
     <!-- Report -->
@@ -1309,6 +1392,44 @@
       <column name="esquema" valueClobFile="clob/eu/m30/m30_apartado_5_6.json" />
     </insert>
 
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'ACREDITACIONES')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Acreditaciones" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'USO_AGENTES')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Notificación de uso de Agentes biológicos" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'SEGURO_RESPONSABILIDAD')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Seguro de responsabilidad" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'PROTOCOLO_ACTUACION')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Protocolo de actuación" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'AUTORIZACION_CONFINADA')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Autorización utilización confinada OMG" />
+    </insert>
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Documentación adicional" />
+    </insert>
+
     <!-- Report -->
     <insert tableName="formulario_report">
       <column name="formulario_id"
@@ -1365,6 +1486,14 @@
       <column name="esquema" valueClobFile="clob/eu/seguimiento_anual_apartado_5.json" />
     </insert>
 
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoAnualCode}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Seguimiento Anual" />
+    </insert>
+
     <!-- Report -->
     <insert tableName="formulario_report">
       <column name="formulario_id"
@@ -1391,6 +1520,14 @@
       <column name="lang" value="eu" />
       <column name="nombre" value="EUSKERA Descripción y resumen" />
       <column name="esquema" valueClobFile="clob/eu/seguimiento_final.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioSeguimientoFinalCode}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Seguimiento Final" />
     </insert>
 
     <!-- Report -->
@@ -1439,6 +1576,14 @@
       <column name="lang" value="eu" />
       <column name="nombre" value="EUSKERA Reducción, reemplazo y refinamiento" />
       <column name="esquema" valueClobFile="clob/eu/retrospectiva_apartado_4.json" />
+    </insert>
+
+    <!-- Tipos de documento -->
+    <insert tableName="tipo_documento_nombre">
+      <column name="tipo_documento_id"
+        valueComputed="(select id from ${schemaPrefix}tipo_documento where formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioRestrospectivaCode}') AND codigo = 'ADICIONAL')" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA Retrospectiva" />
     </insert>
 
     <!-- Report -->

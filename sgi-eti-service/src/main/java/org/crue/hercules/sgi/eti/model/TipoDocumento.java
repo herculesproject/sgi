@@ -1,9 +1,17 @@
 package org.crue.hercules.sgi.eti.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -33,8 +41,10 @@ public class TipoDocumento extends BaseEntity {
   private String codigo;
 
   /** Nombre. */
-  @Column(name = "nombre", length = 250, nullable = false)
-  private String nombre;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_documento_nombre", joinColumns = @JoinColumn(name = "tipo_documento_id"))
+  @Valid
+  private Set<TipoDocumentoNombre> nombre = new HashSet<>();
 
   /** Formulario Id */
   @Column(name = "formulario_id", nullable = false)

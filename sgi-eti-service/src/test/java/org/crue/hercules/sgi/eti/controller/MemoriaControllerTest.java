@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
+import org.crue.hercules.sgi.eti.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.custom.CustomConvocatoriaReunionRepository;
@@ -1585,9 +1586,11 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
   private TipoDocumento generarMockTipoDocumento(Long id) {
 
+    Set<TipoDocumentoNombre> nombre = new HashSet<>();
+    nombre.add(new TipoDocumentoNombre(Language.ES, "TipoDocumento" + id));
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
-    tipoDocumento.setNombre("TipoDocumento" + id);
+    tipoDocumento.setNombre(nombre);
 
     return tipoDocumento;
   }

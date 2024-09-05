@@ -1,14 +1,19 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
+import org.crue.hercules.sgi.eti.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.eti.service.impl.TipoDocumentoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -47,7 +52,8 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(tipoDocumento.getId()).isEqualTo(1L);
 
-    Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES))
+        .isEqualTo("TipoDocumento1");
 
   }
 
@@ -115,7 +121,8 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       TipoDocumento tipoDocumento = page.getContent().get(i);
-      Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES))
+          .isEqualTo("TipoDocumento" + String.format("%03d", j));
     }
   }
 
@@ -129,9 +136,11 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
 
   private TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
 
+    Set<TipoDocumentoNombre> nom = new HashSet<>();
+    nom.add(new TipoDocumentoNombre(Language.ES, nombre));
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
-    tipoDocumento.setNombre(nombre);
+    tipoDocumento.setNombre(nom);
     tipoDocumento.setFormularioId(1L);
     tipoDocumento.setActivo(Boolean.TRUE);
 

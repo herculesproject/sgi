@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
+import org.crue.hercules.sgi.eti.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -202,7 +203,16 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
    * @return TipoDocumento
    */
   private TipoDocumento generarMockTipoDocumento(Formulario formulario) {
-    return new TipoDocumento(1L, "SA", "Seguimiento Anual", formulario.getId(), false, Boolean.TRUE);
+    Set<TipoDocumentoNombre> nombre = new HashSet<>();
+    nombre.add(new TipoDocumentoNombre(Language.ES, "Seguimiento Anual"));
+    TipoDocumento tipoDocumento = new TipoDocumento();
+    tipoDocumento.setId(1L);
+    tipoDocumento.setCodigo("SA");
+    tipoDocumento.setFormularioId(formulario.getId());
+    tipoDocumento.setAdicional(false);
+    tipoDocumento.setActivo(Boolean.TRUE);
+
+    return tipoDocumento;
 
   }
 

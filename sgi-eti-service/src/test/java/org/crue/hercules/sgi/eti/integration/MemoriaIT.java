@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
+import org.crue.hercules.sgi.eti.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -875,9 +876,11 @@ class MemoriaIT extends BaseIT {
 
   private TipoDocumento generarMockTipoDocumento(Long id) {
 
+    Set<TipoDocumentoNombre> nombre = new HashSet<>();
+    nombre.add(new TipoDocumentoNombre(Language.ES, "TipoDocumento" + id));
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
-    tipoDocumento.setNombre("TipoDocumento" + id);
+    tipoDocumento.setNombre(nombre);
 
     return tipoDocumento;
   }
