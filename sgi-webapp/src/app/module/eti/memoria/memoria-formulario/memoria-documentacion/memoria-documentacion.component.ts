@@ -14,6 +14,7 @@ import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
@@ -75,7 +76,7 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
   private sortingDataAccesor = (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
     switch (property) {
       case 'tipoDocumento':
-        return wrapper.value.tipoDocumento?.nombre;
+        return this.languageService.getFieldValue(wrapper.value.tipoDocumento?.nombre);
       default:
         return wrapper.value[property];
     }
@@ -111,7 +112,9 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     private actionService: MemoriaActionService,
     private readonly documentoService: DocumentoService,
     private readonly translate: TranslateService,
-    private readonly authService: SgiAuthService) {
+    private readonly authService: SgiAuthService,
+    private readonly languageService: LanguageService
+  ) {
 
     super(actionService.FRAGMENT.DOCUMENTACION, actionService, translate);
 

@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ITipoDocumentoResponse } from './tipo-documento-response';
@@ -10,7 +11,7 @@ class TipoDocumentoResponseConverter extends SgiBaseConverter<ITipoDocumentoResp
     return {
       id: value.id,
       codigo: value.codigo,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       formularioId: value.formularioId,
       adicional: value.adicional,
       activo: value.activo
@@ -24,7 +25,7 @@ class TipoDocumentoResponseConverter extends SgiBaseConverter<ITipoDocumentoResp
     return {
       id: value.id,
       codigo: value.codigo,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       formularioId: value.formularioId,
       adicional: value.adicional,
       activo: value.activo

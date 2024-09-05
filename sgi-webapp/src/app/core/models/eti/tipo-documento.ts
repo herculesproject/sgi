@@ -1,3 +1,4 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 export interface ITipoDocumento {
   /** Id */
@@ -5,7 +6,7 @@ export interface ITipoDocumento {
   /** Codigo */
   codigo: string;
   /** Nombre */
-  nombre: string;
+  nombre: I18nFieldValue[];
   /** Formulario Id */
   formularioId: number;
   /** Documentación adicional */
