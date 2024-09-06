@@ -150,6 +150,7 @@ export class ProyectoRelacionFragment extends Fragment {
           map((grupo) => {
             wrapper.value.entidadRelacionada = this.fillGrupoWithTitulo(grupo);
             wrapper.value.entidadRelacionadaHref = this.createEntidadRelacionadaHref(grupo.id, tipoEntidad);
+            wrapper.value.codigosSge = grupo.proyectoSge?.id;
             return wrapper;
           }),
           catchError(() => of(wrapper))
@@ -195,6 +196,7 @@ export class ProyectoRelacionFragment extends Fragment {
       wrapped.value.entidadConvocanteRef = (relacion.entidadRelacionada as IProyecto).codigoExterno;
     }
     if (relacion.tipoEntidadRelacionada === TipoEntidad.GRUPO) {
+      wrapped.value.codigosSge = (relacion.entidadRelacionada as IGrupo)?.proyectoSge?.id;
       wrapped.value.entidadRelacionada = this.fillGrupoWithTitulo(wrapped.value.entidadRelacionada as IGrupo)
     }
     wrapped.setCreated();
@@ -340,6 +342,7 @@ export class ProyectoRelacionFragment extends Fragment {
   ): void {
     target.entidadRelacionada = source.entidadRelacionada;
     target.entidadRelacionadaHref = source.entidadRelacionadaHref;
+    target.codigosSge = source.codigosSge;
   }
 
   private fillGrupoWithTitulo(grupo: IGrupo): IGrupoWithTitulo {
