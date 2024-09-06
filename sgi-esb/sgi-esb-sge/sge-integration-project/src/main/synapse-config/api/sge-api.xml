@@ -1082,6 +1082,25 @@
     </faultSequence>
   </resource>
 
+  <resource methods="GET" url-mapping="/facturas-previstas-pendientes">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value="" />
+      </call-template>
+      <sequence key="sge-add-x-api-key-sequence" />
+      <sequence key="sge-remove-authorization-header-sequence" />
+      <send>
+        <endpoint key="sge-endpoint" />
+      </send>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
   <resource methods="GET" url-mapping="/facturas-previstas">
     <inSequence>
       <send>
