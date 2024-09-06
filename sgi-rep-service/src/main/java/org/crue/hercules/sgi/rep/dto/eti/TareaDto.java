@@ -63,7 +63,7 @@ public class TareaDto extends BaseRestDto {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String nombre;
+    private List<I18nFieldValueDto> nombre;
     private Boolean activo;
   }
 
