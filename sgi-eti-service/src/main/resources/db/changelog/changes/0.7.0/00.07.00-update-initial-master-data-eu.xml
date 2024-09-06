@@ -1661,4 +1661,54 @@
       <column name="genero" value="M" />
     </insert>
   </changeSet>
+
+  <!-- Formacion Especifica Nombre -->
+  <changeSet context="!test" author="master" id="00.07.00-formacion-especifica-nombre-eu">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <changeLogPropertyDefined property="defaultLang" value="eu" />
+      </not>
+    </preConditions>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="1" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA A: Cuidado de los animales" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="2" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA B: Eutanasia de los animales" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="3" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA C: Realización de los procedimientos" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="4" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA D: Diseño de los proyectos y procedimientos" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="5" />
+      <column name="lang" value="eu" />
+      <column name="value_"
+        value="EUSKERA E: Responsable de la supervisión &lt;&lt;in situ&gt;&gt; del bienestar y cuidado de los animales" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="6" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="F: Veterinario designado" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="7" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA G: Sin especificar" />
+    </insert>
+    <insert tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" valueNumeric="8" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="EUSKERA H: No requiere" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

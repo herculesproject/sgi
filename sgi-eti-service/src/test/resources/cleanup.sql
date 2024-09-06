@@ -37,6 +37,7 @@ DELETE FROM test.bloque
 DELETE FROM test.comite_nombre
 DELETE FROM test.comite
 DELETE FROM test.tipo_estado_memoria
+DELETE FROM test.formacion_especifica_nombre
 DELETE FROM test.formacion_especifica
 DELETE FROM test.cargo_comite
 DELETE FROM test.dictamen

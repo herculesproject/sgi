@@ -917,7 +917,37 @@
       constraintName="FK_FORMULARIOREPORT_FORMULARIO" deferrable="false"
       initiallyDeferred="false"
       referencedColumnNames="id" referencedTableName="formulario" validate="true" />
+  </changeSet>
 
+  <!-- Formacion Especifica -->
+  <changeSet author="user (generated)" id="00.07.00-13">
+    <!-- Nombre -->
+    <createTable tableName="formacion_especifica_nombre">
+      <column name="formacion_especifica_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="formacion_especifica_nombre"
+      columnNames="formacion_especifica_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="formacion_especifica_id"
+      baseTableName="formacion_especifica_nombre"
+      constraintName="FK_FORMACIONESPECIFICANOMBRE_FORMACIONESPECIFICA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="formacion_especifica" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}formacion_especifica_nombre(formacion_especifica_id, lang,
+      value_) SELECT id, '${defaultLang}', nombre FROM ${schemaPrefix}formacion_especifica WHERE
+      nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="formacion_especifica" />
   </changeSet>
 
 </databaseChangeLog>

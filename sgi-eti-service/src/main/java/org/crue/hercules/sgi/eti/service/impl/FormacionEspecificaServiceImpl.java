@@ -6,7 +6,6 @@ import org.crue.hercules.sgi.eti.repository.FormacionEspecificaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.FormacionEspecificaSpecifications;
 import org.crue.hercules.sgi.eti.service.FormacionEspecificaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,20 +25,6 @@ public class FormacionEspecificaServiceImpl implements FormacionEspecificaServic
 
   public FormacionEspecificaServiceImpl(FormacionEspecificaRepository formacionEspecificaRepository) {
     this.formacionEspecificaRepository = formacionEspecificaRepository;
-  }
-
-  /**
-   * Guarda la entidad {@link FormacionEspecifica}.
-   *
-   * @param formacionEspecifica la entidad {@link FormacionEspecifica} a guardar.
-   * @return la entidad {@link FormacionEspecifica} persistida.
-   */
-  @Transactional
-  public FormacionEspecifica create(FormacionEspecifica formacionEspecifica) {
-    log.debug("Petición a create FormacionEspecifica : {} - start", formacionEspecifica);
-    AssertHelper.idNotNull(formacionEspecifica.getId(), FormacionEspecifica.class);
-
-    return formacionEspecificaRepository.save(formacionEspecifica);
   }
 
   /**
@@ -76,63 +61,6 @@ public class FormacionEspecificaServiceImpl implements FormacionEspecificaServic
     log.debug("Petición a get FormacionEspecifica : {}  - end", id);
     return FormacionEspecifica;
 
-  }
-
-  /**
-   * Elimina una entidad {@link FormacionEspecifica} por id.
-   *
-   * @param id el id de la entidad {@link FormacionEspecifica}.
-   */
-  @Transactional
-  public void delete(Long id) throws FormacionEspecificaNotFoundException {
-    log.debug("Petición a delete FormacionEspecifica : {}  - start", id);
-    AssertHelper.idNotNull(id, FormacionEspecifica.class);
-    if (!formacionEspecificaRepository.existsById(id)) {
-      throw new FormacionEspecificaNotFoundException(id);
-    }
-    formacionEspecificaRepository.deleteById(id);
-    log.debug("Petición a delete FormacionEspecifica : {}  - end", id);
-  }
-
-  /**
-   * Elimina todos los registros {@link FormacionEspecifica}.
-   */
-  @Transactional
-  public void deleteAll() {
-    log.debug("Petición a deleteAll de FormacionEspecifica: {} - start");
-    formacionEspecificaRepository.deleteAll();
-    log.debug("Petición a deleteAll de FormacionEspecifica: {} - end");
-
-  }
-
-  /**
-   * Actualiza los datos del {@link FormacionEspecifica}.
-   * 
-   * @param formacionEspecificaActualizar {@link FormacionEspecifica} con los
-   *                                      datos actualizados.
-   * @return El {@link FormacionEspecifica} actualizado.
-   * @throws FormacionEspecificaNotFoundException Si no existe ninguna
-   *                                              {@link FormacionEspecifica} con
-   *                                              ese id.
-   * @throws IllegalArgumentException             Si la
-   *                                              {@link FormacionEspecifica} no
-   *                                              tiene id.
-   */
-
-  @Transactional
-  public FormacionEspecifica update(final FormacionEspecifica formacionEspecificaActualizar) {
-    log.debug("update(FormacionEspecifica FormacionEspecificaActualizar) - start");
-
-    AssertHelper.idNotNull(formacionEspecificaActualizar.getId(), FormacionEspecifica.class);
-
-    return formacionEspecificaRepository.findById(formacionEspecificaActualizar.getId()).map(formacionEspecifica -> {
-      formacionEspecifica.setNombre(formacionEspecificaActualizar.getNombre());
-      formacionEspecifica.setActivo(formacionEspecificaActualizar.getActivo());
-
-      FormacionEspecifica returnValue = formacionEspecificaRepository.save(formacionEspecifica);
-      log.debug("update(FormacionEspecifica formacionEspecificaActualizar) - end");
-      return returnValue;
-    }).orElseThrow(() -> new FormacionEspecificaNotFoundException(formacionEspecificaActualizar.getId()));
   }
 
 }
