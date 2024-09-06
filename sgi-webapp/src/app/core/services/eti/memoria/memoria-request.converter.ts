@@ -1,3 +1,4 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
@@ -15,7 +16,7 @@ class MemoriaRequestConverter extends SgiBaseConverter<IMemoriaRequest, IMemoria
       numReferencia: null,
       peticionEvaluacion: { id: value.peticionEvaluacionId } as IPeticionEvaluacion,
       comite: { id: value.comiteId } as IComite,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.titulo) : [],
       responsable: { id: value.responsableRef } as IPersona,
       tipo: value.tipo,
       fechaEnvioSecretaria: null,
@@ -40,7 +41,7 @@ class MemoriaRequestConverter extends SgiBaseConverter<IMemoriaRequest, IMemoria
     return {
       peticionEvaluacionId: value.peticionEvaluacion?.id,
       comiteId: value.comite?.id,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.titulo) : [],
       responsableRef: value.responsable?.id,
       tipo: value.tipo
     };

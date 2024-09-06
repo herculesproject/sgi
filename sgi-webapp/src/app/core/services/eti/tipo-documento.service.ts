@@ -12,7 +12,7 @@ import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from './tipo-documento/tipo-documen
 // tslint:disable-next-line: variable-name
 const _TipoDocumentoServiceMixinBase:
   FindByIdCtor<number, ITipoDocumento, ITipoDocumentoResponse> &
-  FindAllCtor<ITipoDocumento, ITipoDocumento> &
+  FindAllCtor<ITipoDocumento, ITipoDocumentoResponse> &
   typeof SgiRestBaseService = mixinFindAll(
     mixinFindById(
       SgiRestBaseService,

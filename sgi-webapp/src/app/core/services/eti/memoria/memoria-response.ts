@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { MemoriaTipo } from '@core/models/eti/memoria';
 import { TipoEstadoMemoria } from '../../../models/eti/tipo-estado-memoria';
 import { IComiteResponse } from '../comite/comite-response';
@@ -23,7 +24,7 @@ export interface IMemoriaResponse {
   /** Formulario de la Retrospectiva */
   formularioRetrospectiva: IFormularioResponse;
   /** Título */
-  titulo: string;
+  titulo: I18nFieldValueResponse[];
   //** Referencia persona responsable */
   personaRef: string;
   /** Tipo Memoria */

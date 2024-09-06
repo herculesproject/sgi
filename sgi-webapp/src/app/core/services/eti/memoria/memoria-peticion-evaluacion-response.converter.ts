@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
@@ -15,7 +16,7 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
       id: value.id,
       responsableRef: value.responsableRef,
       numReferencia: value.numReferencia,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       comite: COMITE_RESPONSE_CONVERTER.toTarget(value.comite),
       estadoActual: value.estadoActual,
       requiereRetrospectiva: value.requiereRetrospectiva,
@@ -37,7 +38,7 @@ class MemoriaPeticionEvaluacionConverter extends SgiBaseConverter<IMemoriaPetici
       id: value.id,
       responsableRef: value.responsableRef,
       numReferencia: value.numReferencia,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       comite: COMITE_RESPONSE_CONVERTER.fromTarget(value.comite),
       estadoActual: value.estadoActual,
       requiereRetrospectiva: value.requiereRetrospectiva,

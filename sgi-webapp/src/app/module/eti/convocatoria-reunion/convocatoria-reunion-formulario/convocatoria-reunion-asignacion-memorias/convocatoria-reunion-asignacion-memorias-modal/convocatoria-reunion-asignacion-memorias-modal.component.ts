@@ -73,7 +73,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent extends
     return MSG_PARAMS;
   }
 
-  readonly displayerMemoria = (memoria: IMemoria): string => (memoria.numReferencia ?? '') + (memoria.titulo ? ' - ' + memoria.titulo : '');
+  readonly displayerMemoria = (memoria: IMemoria): string => (memoria.numReferencia ?? '') + (memoria.titulo?.length ? ' - ' + this.languageService.getFieldValue(memoria.titulo) : '');
 
   constructor(
     matDialogRef: MatDialogRef<ConvocatoriaReunionAsignacionMemoriasModalComponent>,

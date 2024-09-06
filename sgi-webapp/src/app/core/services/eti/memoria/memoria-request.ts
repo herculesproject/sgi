@@ -1,3 +1,4 @@
+import { I18nFieldValueRequest } from '@core/i18n/i18n-field-request';
 import { MemoriaTipo } from '@core/models/eti/memoria';
 
 export interface IMemoriaRequest {
@@ -6,7 +7,7 @@ export interface IMemoriaRequest {
   /** Comité */
   comiteId: number;
   /** Título */
-  titulo: string;
+  titulo: I18nFieldValueRequest[];
   /** Referencia persona responsable */
   responsableRef: string;
   /** Tipo Memoria */

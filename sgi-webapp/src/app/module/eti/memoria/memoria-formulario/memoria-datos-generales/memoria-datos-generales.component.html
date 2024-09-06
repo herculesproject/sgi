@@ -69,8 +69,8 @@
         <div fxFlex="95.5">
           <mat-form-field>
             <mat-label>{{'eti.memoria.titulo-descriptivo' | translate}}</mat-label>
-            <textarea matInput [placeholder]="'eti.memoria.titulo-descriptivo' | translate"
-              formControlName="titulo"></textarea>
+            <sgi-i18n-textarea matInput [placeholder]="'eti.memoria.titulo-descriptivo' | translate"
+              formControlName="titulo"></sgi-i18n-textarea>
             <sgi-field-info matSuffix [visible]="true" message="{{textoInfoTituloDescriptivo}}">
             </sgi-field-info>
             <mat-error *ngIf="formGroup.controls.titulo.hasError('maxlength')">

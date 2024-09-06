@@ -1,4 +1,5 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DateTime } from 'luxon';
 import { IPersona } from '../sgp/persona';
 import { IComite } from './comite';
@@ -25,7 +26,7 @@ export interface IMemoria {
   /** Formulario de la Retrospectiva */
   formularioRetrospectiva: IFormulario;
   /** Título */
-  titulo: string;
+  titulo: I18nFieldValue[];
   /** Responsable */
   responsable: IPersona;
   /** Tipo Memoria */

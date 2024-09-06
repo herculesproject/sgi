@@ -9,6 +9,7 @@ import { FormFragment } from '@core/services/action-service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
@@ -78,7 +79,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> {
         Validators.required
       ],
       titulo: [
-        { value: this.isEdit() ? this.memoria.titulo : '', disabled: this.readonly }, Validators.maxLength(2000)
+        { value: this.isEdit() ? this.memoria.titulo : [], disabled: this.readonly }, I18nValidators.maxLength(2000)
       ],
       personaResponsable: [
         { value: null, disabled: this.readonly }

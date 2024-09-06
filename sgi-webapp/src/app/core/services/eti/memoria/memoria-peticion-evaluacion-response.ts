@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IComiteResponse } from '@core/services/eti/comite/comite-response';
 import { TipoEstadoMemoria } from '../../../models/eti/tipo-estado-memoria';
 import { IRetrospectivaResponse } from '../retrospectiva/retrospectiva-response';
@@ -10,7 +11,7 @@ export interface IMemoriaPeticionEvaluacionResponse {
   /** Numero Referencia  */
   numReferencia: string;
   /** Título */
-  titulo: string;
+  titulo: I18nFieldValueResponse[];
   /** Comité */
   comite: IComiteResponse;
   /** Estado Memoria Actual */

@@ -18,3 +18,4 @@ export class FormacionEspecificaService extends SgiRestService<number, Formacion
     );
   }
 }
+

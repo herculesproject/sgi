@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { IMemoriaResponse } from '@core/services/eti/memoria/memoria-response';
@@ -22,7 +23,7 @@ class MemoriaResponseConverter extends SgiBaseConverter<IMemoriaResponse, IMemor
       formularioSeguimientoAnual: FORMULARIO_RESPONSE_CONVERTER.toTarget(value.formularioSeguimientoAnual),
       formularioSeguimientoFinal: FORMULARIO_RESPONSE_CONVERTER.toTarget(value.formularioSeguimientoFinal),
       formularioRetrospectiva: FORMULARIO_RESPONSE_CONVERTER.toTarget(value.formularioRetrospectiva),
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       responsable: { id: value.personaRef } as IPersona,
       tipo: value.tipo,
       fechaEnvioSecretaria: LuxonUtils.fromBackend(value.fechaEnvioSecretaria),
@@ -49,7 +50,7 @@ class MemoriaResponseConverter extends SgiBaseConverter<IMemoriaResponse, IMemor
       formularioSeguimientoAnual: FORMULARIO_RESPONSE_CONVERTER.fromTarget(value.formularioSeguimientoAnual),
       formularioSeguimientoFinal: FORMULARIO_RESPONSE_CONVERTER.fromTarget(value.formularioSeguimientoFinal),
       formularioRetrospectiva: FORMULARIO_RESPONSE_CONVERTER.fromTarget(value.formularioRetrospectiva),
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       personaRef: value.responsable?.id,
       tipo: value.tipo,
       fechaEnvioSecretaria: LuxonUtils.toBackend(value.fechaEnvioSecretaria),
