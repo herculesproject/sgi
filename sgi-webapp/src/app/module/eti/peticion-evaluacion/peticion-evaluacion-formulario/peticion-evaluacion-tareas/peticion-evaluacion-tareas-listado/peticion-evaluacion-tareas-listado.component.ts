@@ -11,7 +11,6 @@ import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-ev
 import { ITarea } from '@core/models/eti/tarea';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
 import { ESTADO_MEMORIA } from '@core/models/eti/tipo-estado-memoria';
-import { TIPO_TAREA_MAP } from '@core/models/eti/tipo-tarea';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -57,10 +56,6 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     return MSG_PARAMS;
   }
 
-  get TIPO_TAREA_MAP() {
-    return TIPO_TAREA_MAP;
-  }
-
   constructor(
     protected readonly dialogService: DialogService,
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
@@ -97,7 +92,7 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
           case 'numReferencia':
             return wrapper.value.memoria?.numReferencia;
           case 'tarea':
-            return wrapper.value.tipoTarea ? wrapper.value.tipoTarea?.nombre : this.languageService.getFieldValue(wrapper.value.nombre);
+            return wrapper.value.tipoTarea ? this.languageService.getFieldValue(wrapper.value.tipoTarea.nombre) : this.languageService.getFieldValue(wrapper.value.nombre);
           case 'formacionEspecifica':
             return wrapper.value.formacionEspecifica ? this.languageService.getFieldValue(wrapper.value.formacionEspecifica.nombre) : this.languageService.getFieldValue(wrapper.value.formacion);
           case 'organismo':

@@ -68,7 +68,7 @@ export class PeticionEvaluacionAsignacionTareasListadoExportService extends
           experiencia: ''
         };
         if (tarea.memoria.comite.tareaNombreLibre) {
-          asignacion.tarea = tarea.tipoTarea.nombre ?? '';
+          asignacion.tarea = this.languageService.getFieldValue(tarea.tipoTarea?.nombre) ?? '';
         }
         else {
           asignacion.tarea = this.languageService.getFieldValue(tarea.nombre) ?? '';
@@ -77,7 +77,7 @@ export class PeticionEvaluacionAsignacionTareasListadoExportService extends
           asignacion.experiencia = this.languageService.getFieldValue(tarea.formacion) ?? '';
         }
         else {
-          asignacion.experiencia = this.languageService.getFieldValue(tarea.formacionEspecifica.nombre) ?? '';
+          asignacion.experiencia = this.languageService.getFieldValue(tarea.formacionEspecifica?.nombre) ?? '';
         }
 
         peticionData.asignacionTareas.push(asignacion);

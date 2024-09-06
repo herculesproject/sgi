@@ -5,6 +5,7 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { EQUIPO_TRABAJO_RESPONSE_CONVERTER } from '../equipo-trabajo/equipo-trabajo-response.converter';
 import { FORMACION_ESPECIFICA_RESPONSE_CONVERTER } from '../formacion-especifica/formacion-especifica-response.converter';
 import { MEMORIA_RESPONSE_CONVERTER } from '../memoria/memoria-response.converter';
+import { TIPO_TAREA_RESPONSE_CONVERTER } from '../tipo-tarea/tipo-tarea-response.converter';
 
 class TareaWithIsEliminableResponseConverter extends SgiBaseConverter<ITareaWithIsEliminableResponse, ITareaWithIsEliminable> {
   toTarget(value: ITareaWithIsEliminableResponse): ITareaWithIsEliminable {
@@ -20,7 +21,7 @@ class TareaWithIsEliminableResponseConverter extends SgiBaseConverter<ITareaWith
       formacion: value.formacion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.formacion) : [],
       organismo: value.organismo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.organismo) : [],
       anio: value.anio,
-      tipoTarea: value.tipoTarea,
+      tipoTarea: TIPO_TAREA_RESPONSE_CONVERTER.toTarget(value.tipoTarea),
       eliminable: value.eliminable
     };
   }
@@ -38,7 +39,7 @@ class TareaWithIsEliminableResponseConverter extends SgiBaseConverter<ITareaWith
       formacion: value.formacion ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.formacion) : [],
       organismo: value.organismo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.organismo) : [],
       anio: value.anio,
-      tipoTarea: value.tipoTarea,
+      tipoTarea: TIPO_TAREA_RESPONSE_CONVERTER.fromTarget(value.tipoTarea),
       eliminable: value.eliminable
     };
   }

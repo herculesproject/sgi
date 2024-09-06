@@ -1,8 +1,8 @@
 import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
-import { TipoTarea } from '../../../models/eti/tipo-tarea';
 import { IEquipoTrabajoResponse } from '../equipo-trabajo/equipo-trabajo-response';
 import { IFormacionEspecificaResponse } from '../formacion-especifica/formacion-especifica-response';
 import { IMemoriaResponse } from '../memoria/memoria-response';
+import { ITipoTareaResponse } from '../tipo-tarea/tipo-tarea-response';
 
 export interface ITareaResponse {
   /** Id */
@@ -22,5 +22,5 @@ export interface ITareaResponse {
   /** Año */
   anio: number;
   /** Tipo tarea */
-  tipoTarea: TipoTarea;
+  tipoTarea: ITipoTareaResponse;
 }

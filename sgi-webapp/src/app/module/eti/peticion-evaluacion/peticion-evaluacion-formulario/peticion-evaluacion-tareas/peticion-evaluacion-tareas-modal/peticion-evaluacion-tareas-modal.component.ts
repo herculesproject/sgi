@@ -5,11 +5,9 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
-import { IFormacionEspecifica } from '@core/models/eti/formacion-especifica';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
-import { TIPO_TAREA_MAP, TipoTarea } from '@core/models/eti/tipo-tarea';
 import { IPersona } from '@core/models/sgp/persona';
 import { FormacionEspecificaService } from '@core/services/eti/formacion-especifica.service';
 import { TareaService } from '@core/services/eti/tarea.service';
@@ -18,7 +16,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 const TAREA_KEY = marker('eti.peticion-evaluacion.tarea');
@@ -46,9 +44,9 @@ export interface PeticionEvaluacionTareasModalComponentData {
 export class PeticionEvaluacionTareasModalComponent
   extends DialogFormComponent<PeticionEvaluacionTareasModalComponentData> implements OnInit {
 
-  formaciones$: Subject<IFormacionEspecifica[]> = new BehaviorSubject<IFormacionEspecifica[]>([]);
+  formaciones$ = this.formacionService.findAll().pipe(map(response => response.items));
   personas$: Subject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
-  tipoTareas$: Subject<TipoTarea[]> = new BehaviorSubject<TipoTarea[]>([]);
+  tipoTareas$ = this.tipoTareaService.findAll().pipe(map(response => response.items));
 
   tareaLibre = false;
   formacionLibre = false;
@@ -69,15 +67,13 @@ export class PeticionEvaluacionTareasModalComponent
     return MSG_PARAMS;
   }
 
-  readonly displayerTipoTarea = (option) => option?.id ? (TIPO_TAREA_MAP.get(option.id) ? this.translate.instant(TIPO_TAREA_MAP.get(option.id)) : (option?.nombre ?? '')) : (option?.nombre ?? '');
-
   constructor(
     matDialogRef: MatDialogRef<PeticionEvaluacionTareasModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PeticionEvaluacionTareasModalComponentData,
     protected readonly tareaService: TareaService,
-    protected readonly formacionService: FormacionEspecificaService,
+    private readonly formacionService: FormacionEspecificaService,
     protected readonly personaService: PersonaService,
-    protected readonly tipoTareaService: TipoTareaService,
+    private readonly tipoTareaService: TipoTareaService,
     private readonly translate: TranslateService
   ) {
     super(matDialogRef, !!data.tarea?.memoria);
@@ -88,8 +84,6 @@ export class PeticionEvaluacionTareasModalComponent
     this.setupI18N();
 
     this.onChangeMemoria(this.data.tarea?.memoria);
-    this.loadFormaciones();
-    this.loadTipoTareas();
     this.loadDatosUsuario(this.data.equiposTrabajo);
   }
 
@@ -164,17 +158,6 @@ export class PeticionEvaluacionTareasModalComponent
   }
 
   /**
-   * Recupera un listado de las formaciones escíficas que hay en el sistema.
-   */
-  private loadFormaciones(): void {
-    this.subscriptions.push(this.formacionService.findAll().subscribe(
-      (response) => {
-        this.formaciones$.next(response.items);
-      }
-    ));
-  }
-
-  /**
    * Devuelve el titulo de una memoria
    * @param memoria memoria
    * returns título de la memoria
@@ -234,16 +217,6 @@ export class PeticionEvaluacionTareasModalComponent
     }
     const emailDataPrincipal = emails.find(emailData => emailData.principal);
     return emailDataPrincipal?.email ?? '';
-  }
-
-  /**
-   * Recupera un listado de los tipos de tareas que hay en el sistema.
-   */
-  private loadTipoTareas(): void {
-    this.subscriptions.push(this.tipoTareaService.findAll().subscribe(
-      (response) => {
-        this.tipoTareas$.next(response.items);
-      }));
   }
 
   /**

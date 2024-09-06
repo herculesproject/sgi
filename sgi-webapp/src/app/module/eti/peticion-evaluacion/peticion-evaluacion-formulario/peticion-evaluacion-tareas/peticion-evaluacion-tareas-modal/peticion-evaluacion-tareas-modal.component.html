@@ -48,7 +48,7 @@
         <mat-form-field>
           <mat-label>{{'eti.peticion-evaluacion.tarea'| translate:MSG_PARAMS.CARDINALIRY.SINGULAR}}</mat-label>
           <sgi-select-entity *ngIf="!tareaLibre" formControlName="tipoTarea" [options]="this.tipoTareas$ | async"
-            [displayWith]="displayerTipoTarea" required>
+            required>
           </sgi-select-entity>
           <sgi-i18n-input *ngIf="tareaLibre" formControlName="nombre"
             [placeholder]="'eti.peticion-evaluacion.tarea' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR"
