@@ -1,4 +1,8 @@
 :host {
+  .mat-select {
+    max-width: 140px;
+  }
+
   .option {
     .text-language {
       float: left;

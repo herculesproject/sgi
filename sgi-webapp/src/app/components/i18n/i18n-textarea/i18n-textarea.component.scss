@@ -1,14 +1,16 @@
 :host {
   .input-multilang {
+    display: flex;
+    gap: 5px;
 
     mat-select {
-      width: 120px;
+      width: 45px;
     }
 
     mat-select-trigger {
       display: flex;
       gap: 5px;
-      align-items: center;
+      margin-bottom: -2px;
 
       .text-language {
         float: left;
@@ -20,5 +22,6 @@
         height: 20px;
       }
     }
+
   }
 }
