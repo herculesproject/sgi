@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.rep.dto.eti;
 
 import java.time.Instant;
+import java.util.List;
 
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.rep.dto.BaseRestDto;
 
 import lombok.AllArgsConstructor;
@@ -33,7 +35,7 @@ public class MemoriaDto extends BaseRestDto {
   private FormularioDto formularioSeguimientoAnual;
   private FormularioDto formularioSeguimientoFinal;
   private FormularioDto formularioRetrospectiva;
-  private String titulo;
+  private List<I18nFieldValueDto> titulo;
   private String personaRef;
   private Tipo tipo;
   private TipoEstadoMemoriaDto estadoActual;

@@ -120,7 +120,6 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
         .numReferencia("numReferencia")
         .peticionEvaluacion(generarMockPeticionEvaluacion(1L))
         .comite(generarMockComite(1L, "CEI"))
-        .titulo("titulo")
         .tipo(MemoriaDto.Tipo.NUEVA)
         .fechaEnvioSecretaria(Instant.now())
         .version(1)

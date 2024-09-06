@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.rep.report.data.objects;
 
 import java.time.Instant;
 
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaPeticionEvaluacionDto;
@@ -30,7 +31,7 @@ public class MemoriaPeticionEvaluacionObject {
     if (dto != null) {
       this.id = dto.getId();
       this.numReferencia = dto.getNumReferencia();
-      this.titulo = dto.getTitulo();
+      this.titulo = I18nHelper.getValueForLanguage(dto.getTitulo(), lang);
       if (dto.getComite() != null) {
         this.comite = new ComiteObject(dto.getComite(), lang);
       }
