@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -44,6 +45,7 @@ import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.service.impl.EvaluacionServiceImpl;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -120,7 +122,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
 
     Assertions.assertThat(evaluacion.getId()).isEqualTo(1L);
 
-    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacion.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
     Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
@@ -163,7 +166,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
     // then: La Evaluacion se crea correctamente
     Assertions.assertThat(evaluacionCreado).isNotNull();
     Assertions.assertThat(evaluacionCreado.getId()).isEqualTo(1L);
-    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria New");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacion.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria New");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen New");
     Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
   }
@@ -198,7 +202,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
     // then: La Evaluacion se crea correctamente
     Assertions.assertThat(evaluacionCreado).isNotNull();
     Assertions.assertThat(evaluacionCreado.getId()).isEqualTo(1L);
-    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria New");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacion.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria New");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen New");
     Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
   }
@@ -234,7 +239,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
     // then: La Evaluacion se crea correctamente
     Assertions.assertThat(evaluacionCreado).isNotNull();
     Assertions.assertThat(evaluacionCreado.getId()).isEqualTo(1L);
-    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria New");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacion.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria New");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen New");
     Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
   }
@@ -288,7 +294,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: La evaluacion se actualiza correctamente.
     Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
-    Assertions.assertThat(evaluacionActualizado.getMemoria().getTitulo()).isEqualTo("Memoria actualizado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacionActualizado.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria actualizado");
     Assertions.assertThat(evaluacionActualizado.getDictamen().getNombre()).isEqualTo("Dictamen actualizado");
     Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getId()).isEqualTo(1L);
 
@@ -310,7 +317,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: La evaluacion se actualiza correctamente.
     Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
-    Assertions.assertThat(evaluacionActualizado.getMemoria().getTitulo()).isEqualTo("Memoria actualizado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacionActualizado.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria actualizado");
     Assertions.assertThat(evaluacionActualizado.getDictamen().getNombre()).isEqualTo("Dictamen actualizado");
     Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getId()).isEqualTo(1L);
 
@@ -333,7 +341,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: La evaluacion se actualiza correctamente.
     Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
-    Assertions.assertThat(evaluacionActualizado.getMemoria().getTitulo()).isEqualTo("Memoria actualizado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacionActualizado.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria actualizado");
     Assertions.assertThat(evaluacionActualizado.getDictamen().getNombre()).isEqualTo("Dictamen actualizado");
     Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getId()).isEqualTo(1L);
 
@@ -356,7 +365,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
 
     // then: La evaluacion se actualiza correctamente.
     Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
-    Assertions.assertThat(evaluacionActualizado.getMemoria().getTitulo()).isEqualTo("Memoria actualizado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacionActualizado.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria actualizado");
     Assertions.assertThat(evaluacionActualizado.getDictamen().getNombre()).isEqualTo("Dictamen actualizado");
     Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getId()).isEqualTo(1L);
 
@@ -477,7 +487,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Evaluacion evaluacion = page.getContent().get(i);
-      Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacion.getMemoria().getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     }
@@ -702,7 +713,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Evaluacion evaluacion = page.getContent().get(i);
-      Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacion.getMemoria().getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
     }
   }
@@ -849,10 +861,12 @@ class EvaluacionServiceTest extends BaseServiceTest {
   void findAllByMemoriaId_ReturnsFullEvaluacionList() {
 
     // given: Datos existentes con memoriaId = 1
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria"));
     Memoria memoria = new Memoria();
     memoria.setId(1L);
     memoria.setNumReferencia("numRef-001");
-    memoria.setTitulo("Memoria");
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-001");
     memoria.setFechaEnvioSecretaria(Instant.now());
     memoria.setRequiereRetrospectiva(Boolean.TRUE);
@@ -882,10 +896,12 @@ class EvaluacionServiceTest extends BaseServiceTest {
   @Test
   void findAllByMemoriaId_ReturnEmptyPage() {
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria"));
     Memoria memoria = new Memoria();
     memoria.setId(1L);
     memoria.setNumReferencia("numRef-001");
-    memoria.setTitulo("Memoria");
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-001");
     memoria.setFechaEnvioSecretaria(Instant.now());
     memoria.setRequiereRetrospectiva(Boolean.TRUE);
@@ -951,8 +967,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
-    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
-    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
+    Set<PeticionEvaluacionTitulo> peTitulo = new HashSet<>();
+    peTitulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
@@ -971,7 +987,7 @@ class EvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(peTitulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -992,12 +1008,14 @@ class EvaluacionServiceTest extends BaseServiceTest {
     retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
     retrospectiva.setFechaRetrospectiva(Instant.now());
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria" + sufijoStr));
     final Memoria memoria = new Memoria();
     memoria.setId(1L);
     memoria.setNumReferencia("numRef-001");
     memoria.setPeticionEvaluacion(peticionEvaluacion);
     memoria.setComite(comite);
-    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);
@@ -1067,8 +1085,8 @@ class EvaluacionServiceTest extends BaseServiceTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
-    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
-    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
+    Set<PeticionEvaluacionTitulo> peTitulo = new HashSet<>();
+    peTitulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
@@ -1087,7 +1105,7 @@ class EvaluacionServiceTest extends BaseServiceTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(peTitulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -1108,12 +1126,14 @@ class EvaluacionServiceTest extends BaseServiceTest {
     retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
     retrospectiva.setFechaRetrospectiva(Instant.now());
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria" + sufijoStr));
     Memoria memoria = new Memoria();
     memoria.setId(1L);
     memoria.setNumReferencia("numRef-001");
     memoria.setPeticionEvaluacion(peticionEvaluacion);
     memoria.setComite(comite);
-    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);
@@ -1181,12 +1201,14 @@ class EvaluacionServiceTest extends BaseServiceTest {
   private Memoria generarMockMemoria(Long id, String numReferencia, String titulo, Integer version,
       Long idTipoEstadoMemoria) {
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, titulo));
     Memoria memoria = new Memoria();
     memoria.setId(id);
     memoria.setNumReferencia(numReferencia);
     memoria.setPeticionEvaluacion(generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id));
     memoria.setComite(generarMockComite(id, "comite" + id, true));
-    memoria.setTitulo(titulo);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE));

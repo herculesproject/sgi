@@ -7,6 +7,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -228,13 +230,20 @@ public class ComiteIT extends BaseIT {
     final List<Memoria> memoria = response.getBody();
     Assertions.assertThat(memoria.size()).isEqualTo(7);
 
-    Assertions.assertThat(memoria.get(0).getTitulo()).isEqualTo("Memoria002");
-    Assertions.assertThat(memoria.get(1).getTitulo()).isEqualTo("Memoria004");
-    Assertions.assertThat(memoria.get(2).getTitulo()).isEqualTo("Memoria006");
-    Assertions.assertThat(memoria.get(3).getTitulo()).isEqualTo("Memoria007");
-    Assertions.assertThat(memoria.get(4).getTitulo()).isEqualTo("Memoria010");
-    Assertions.assertThat(memoria.get(5).getTitulo()).isEqualTo("Memoria014");
-    Assertions.assertThat(memoria.get(6).getTitulo()).isEqualTo("Memoria015");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoria.get(0).getTitulo(), Language.ES))
+        .isEqualTo("Memoria002");
+    Assertions.assertThat(
+        I18nHelper.getValueForLanguage(memoria.get(1).getTitulo(), Language.ES)).isEqualTo("Memoria004");
+    Assertions.assertThat(
+        I18nHelper.getValueForLanguage(memoria.get(2).getTitulo(), Language.ES)).isEqualTo("Memoria006");
+    Assertions.assertThat(
+        I18nHelper.getValueForLanguage(memoria.get(3).getTitulo(), Language.ES)).isEqualTo("Memoria007");
+    Assertions.assertThat(
+        I18nHelper.getValueForLanguage(memoria.get(4).getTitulo(), Language.ES)).isEqualTo("Memoria010");
+    Assertions.assertThat(
+        I18nHelper.getValueForLanguage(memoria.get(5).getTitulo(), Language.ES)).isEqualTo("Memoria014");
+    Assertions.assertThat(
+        I18nHelper.getValueForLanguage(memoria.get(6).getTitulo(), Language.ES)).isEqualTo("Memoria015");
   }
 
   @Test

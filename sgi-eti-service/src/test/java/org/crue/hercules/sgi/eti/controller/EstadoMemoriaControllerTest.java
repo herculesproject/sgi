@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -24,6 +25,7 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.service.EstadoMemoriaService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -69,7 +71,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("Memoria001"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEstadoMemoria.nombre").value("TipoEstadoMemoria001"));
     ;
   }
@@ -104,7 +106,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo estado memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("Memoria001"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEstadoMemoria.nombre").value("TipoEstadoMemoria001"));
   }
 
@@ -264,7 +266,8 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
     // containing titulo='EstadoMemoria031' to 'EstadoMemoria040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       EstadoMemoria estadoMemoria = actual.get(i);
-      Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(estadoMemoria.getMemoria().getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(estadoMemoria.getTipoEstadoMemoria().getNombre())
           .isEqualTo("TipoEstadoMemoria" + String.format("%03d", j));
     }
@@ -333,12 +336,14 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
    */
 
   private Memoria generarMockMemoria(Long id, String numReferencia, String titulo, Integer version) {
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, titulo));
     Memoria memoria = new Memoria();
     memoria.setId(id);
     memoria.setNumReferencia(numReferencia);
     memoria.setPeticionEvaluacion(generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id));
     memoria.setComite(generarMockComite(id, "comite" + id, true));
-    memoria.setTitulo(titulo);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));

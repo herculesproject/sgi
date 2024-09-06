@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -29,6 +30,7 @@ import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -136,7 +138,7 @@ class MemoriaIT extends BaseIT {
     final Memoria tipoMemoria = response.getBody();
 
     Assertions.assertThat(tipoMemoria.getId()).isEqualTo(2L);
-    Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria002");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoMemoria.getTitulo(), Language.ES)).isEqualTo("Memoria002");
     Assertions.assertThat(tipoMemoria.getNumReferencia()).isEqualTo("ref-002");
   }
 
@@ -230,7 +232,7 @@ class MemoriaIT extends BaseIT {
   void findAll_WithSearchQuery_ReturnsFilteredMemoriaList() throws Exception {
     // when: Búsqueda por titulo like e id equals
     Long id = 5L;
-    String query = "titulo=ke=Memoria;id==" + id;
+    String query = "titulo.value=ke=Memoria;id==" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
@@ -251,13 +253,14 @@ class MemoriaIT extends BaseIT {
     final List<MemoriaPeticionEvaluacion> tipoMemorias = response.getBody();
     Assertions.assertThat(tipoMemorias.size()).isEqualTo(1);
     Assertions.assertThat(tipoMemorias.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(tipoMemorias.get(0).getTitulo()).startsWith("Memoria");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoMemorias.get(0).getTitulo(), Language.ES))
+        .startsWith("Memoria");
   }
 
   @Test
   void findAll_WithSortQuery_ReturnsOrderedMemoriaList() throws Exception {
     // when: Ordenación por titulo desc
-    String query = "titulo,desc";
+    String query = "titulo.value,desc";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
@@ -279,7 +282,8 @@ class MemoriaIT extends BaseIT {
     for (int i = 1; i < 15; i++) {
       MemoriaPeticionEvaluacion tipoMemoria = tipoMemorias.get(i);
       Assertions.assertThat(tipoMemoria.getId()).isEqualTo(17 - i);
-      Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", 17 - i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tipoMemoria.getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", 17 - i));
     }
   }
 
@@ -292,9 +296,9 @@ class MemoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por titulo desc
-    String sort = "titulo,desc";
+    String sort = "titulo.value,desc";
     // when: Filtra por titulo like
-    String filter = "titulo=ke=00";
+    String filter = "titulo.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -316,9 +320,12 @@ class MemoriaIT extends BaseIT {
 
     // Contiene titulo='Memoria009' a 'Memoria007'
 
-    Assertions.assertThat(tipoMemorias.get(0).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 9));
-    Assertions.assertThat(tipoMemorias.get(1).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8));
-    Assertions.assertThat(tipoMemorias.get(2).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 7));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoMemorias.get(0).getTitulo(), Language.ES))
+        .isEqualTo("Memoria" + String.format("%03d", 9));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoMemorias.get(1).getTitulo(),
+        Language.ES)).isEqualTo("Memoria" + String.format("%03d", 8));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoMemorias.get(2).getTitulo(),
+        Language.ES)).isEqualTo("Memoria" + String.format("%03d", 7));
   }
 
   @Test
@@ -352,7 +359,7 @@ class MemoriaIT extends BaseIT {
     // la fecha límite, por lo que no es asignable.
     List<String> titulos = new ArrayList<>();
     for (int i = 0; i < 2; i++) {
-      titulos.add(memorias.get(i).getTitulo());
+      titulos.add(I18nHelper.getValueForLanguage(memorias.get(i).getTitulo(), Language.ES));
     }
     Assertions.assertThat(titulos).contains("Memoria011", "Memoria012");
   }
@@ -433,7 +440,7 @@ class MemoriaIT extends BaseIT {
     // given: search query with comité y fecha límite de una convocatoria de tipo
     // ordinario o extraordinario
     String query = "comite.id==1;fechaEnvioSecretaria=le=2020-08-01T00:00:00Z";
-    String sort = "titulo,asc";
+    String sort = "titulo.value,asc";
     // String query = "comite.id:1";
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_ORDEXT)
@@ -460,8 +467,10 @@ class MemoriaIT extends BaseIT {
     // fecha de envío es menor que la fecha límite por que son asignables.
     // Memoria 14 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
     // la fecha límite, por lo que no es asignable.
-    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria011");
-    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria012");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memorias.get(0).getTitulo(), Language.ES))
+        .isEqualTo("Memoria011");
+    Assertions.assertThat(
+        I18nHelper.getValueForLanguage(memorias.get(1).getTitulo(), Language.ES)).isEqualTo("Memoria012");
     // Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria012");
   }
 
@@ -496,7 +505,7 @@ class MemoriaIT extends BaseIT {
 
     List<String> titulos = new ArrayList<>();
     for (int i = 0; i < 3; i++) {
-      titulos.add(memorias.get(i).getTitulo());
+      titulos.add(I18nHelper.getValueForLanguage(memorias.get(i).getTitulo(), Language.ES));
     }
     Assertions.assertThat(titulos).contains("Memoria002", "Memoria004", "Memoria006");
 
@@ -908,6 +917,8 @@ class MemoriaIT extends BaseIT {
     formularioSeguimientoFinal.setId(5L);
     formularioSeguimientoFinal.setCodigo("SF/2020/001");
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, titulo));
     Memoria memoria = new Memoria();
     memoria.setId(id);
     memoria.setNumReferencia(numReferencia);
@@ -916,7 +927,7 @@ class MemoriaIT extends BaseIT {
     memoria.setFormulario(formularioMemoria);
     memoria.setFormularioSeguimientoAnual(formularioSeguimientoAnual);
     memoria.setFormularioSeguimientoFinal(formularioSeguimientoFinal);
-    memoria.setTitulo(titulo);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));

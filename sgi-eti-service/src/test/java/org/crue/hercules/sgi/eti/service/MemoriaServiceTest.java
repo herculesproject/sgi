@@ -30,6 +30,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -57,6 +58,8 @@ import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -163,7 +166,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     Memoria memoria = memoriaService.findById(1L);
 
     Assertions.assertThat(memoria.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoria.getTitulo(), Language.ES)).isEqualTo("Memoria1");
     Assertions.assertThat(memoria.getVersion()).isEqualTo(1);
     Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("numRef-5598");
 
@@ -257,7 +260,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     // then: La memoria se crea correctamente
     Assertions.assertThat(memoriaCreado).isNotNull();
     Assertions.assertThat(memoriaCreado.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaCreado.getTitulo()).isEqualTo("MemoriaNew");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaCreado.getTitulo(), Language.ES))
+        .isEqualTo("MemoriaNew");
     Assertions.assertThat(memoriaCreado.getNumReferencia()).isEqualTo("numRef-5598");
   }
 
@@ -282,7 +286,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     // then: La memoria se crea correctamente
     Assertions.assertThat(memoriaCreado).isNotNull();
     Assertions.assertThat(memoriaCreado.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaCreado.getTitulo()).isEqualTo("MemoriaNew");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaCreado.getTitulo(), Language.ES))
+        .isEqualTo("MemoriaNew");
     Assertions.assertThat(memoriaCreado.getNumReferencia()).isEqualTo("numRef-5598");
   }
 
@@ -376,7 +381,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     // then: La memoria se crea correctamente
     Assertions.assertThat(memoriaCreado).isNotNull();
     Assertions.assertThat(memoriaCreado.getId()).isEqualTo(3L);
-    Assertions.assertThat(memoriaCreado.getTitulo()).isEqualTo("MemoriaNew");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaCreado.getTitulo(), Language.ES))
+        .isEqualTo("MemoriaNew");
     Assertions.assertThat(memoriaCreado.getNumReferencia()).isEqualTo("M10/2020/001MR1");
   }
 
@@ -579,7 +585,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(result).hasSize(10);
     for (int i = 0, j = 1; i < 10; i++, j++) {
       Memoria memoria = result.get(i);
-      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(memoria.getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("numRef-5" + String.format("%03d", j));
     }
   }
@@ -771,7 +778,8 @@ class MemoriaServiceTest extends BaseServiceTest {
         .getMemoriaWithEstadoAnterior(generarMockMemoria(1L, "ref-001", "TituloMemoria", 1, 2L));
 
     Assertions.assertThat(returnMemoria.getId()).isEqualTo(1L);
-    Assertions.assertThat(returnMemoria.getTitulo()).isEqualTo("TituloMemoria");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(returnMemoria.getTitulo(), Language.ES))
+        .isEqualTo("TituloMemoria");
   }
 
   @Test
@@ -845,27 +853,7 @@ class MemoriaServiceTest extends BaseServiceTest {
         .isInstanceOf(MemoriaNotFoundException.class);
   }
 
-  public List<EstadoMemoria> generarEstadosMemoria(Long id) {
-    List<EstadoMemoria> estadosMemoria = new ArrayList<EstadoMemoria>();
-    EstadoMemoria estadoMemoria = new EstadoMemoria();
-    estadoMemoria.setFechaEstado(Instant.now());
-    estadoMemoria.setId(id);
-    estadoMemoria.setMemoria(generarMockMemoria(1L, "ref-001", "TituloMemoria", 1, id));
-    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
-    tipoEstadoMemoria.setActivo(true);
-    tipoEstadoMemoria.setId(id);
-    estadoMemoria.setTipoEstadoMemoria(tipoEstadoMemoria);
-    estadosMemoria.add(estadoMemoria);
-    return estadosMemoria;
-  }
-
-  public EstadoRetrospectiva generarEstadoRetrospectiva(Long id) {
-    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
-    estadoRetrospectiva.setActivo(true);
-    estadoRetrospectiva.setId(id);
-    return estadoRetrospectiva;
-  }
-
+  @Test
   public void enviarSecretaria_WithId() {
 
     Memoria memoria = generarMockMemoria(1L, "numRef-111", "Memoria1", 1, 6L);
@@ -874,7 +862,7 @@ class MemoriaServiceTest extends BaseServiceTest {
     Evaluacion evaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 6L, 1L, 1);
     BDDMockito
         .given(evaluacionRepository
-            .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), 1L))
+            .findFirstByMemoriaIdAndActivoTrueOrderByVersionDescCreationDateDesc(memoria.getId()))
         .willReturn(Optional.of(evaluacion));
 
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 4L);
@@ -883,7 +871,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     memoriaService.enviarSecretaria(memoria.getId(), "user-001");
 
     Assertions.assertThat(memoriaActualizada.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaActualizada.getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaActualizada.getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions.assertThat(memoriaActualizada.getVersion()).isEqualTo(2);
     Assertions.assertThat(memoriaActualizada.getNumReferencia()).isEqualTo("numRef-111");
     Assertions.assertThat(memoriaActualizada.getEstadoActual().getId()).isEqualTo(4L);
@@ -893,6 +882,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
+  @Test
   public void enviarSecretaria_WithId_EstadoEnAclaraciónSeguimientoFinal() {
     // given: Una nueva Memoria (21L=En Aclaración Seguimiento Final)
     Memoria memoria = generarMockMemoria(1L, "numRef-111", "Memoria1", 1, 21L);
@@ -901,7 +891,12 @@ class MemoriaServiceTest extends BaseServiceTest {
     Evaluacion evaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 21L, 1L, 1);
     BDDMockito
         .given(evaluacionRepository
-            .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), 1L))
+            .findFirstByMemoriaIdAndActivoTrueOrderByVersionDescCreationDateDesc(memoria.getId()))
+        .willReturn(Optional.of(evaluacion));
+
+    BDDMockito
+        .given(evaluacionRepository
+            .findFirstByMemoriaIdAndTipoEvaluacionIdAndActivoTrueOrderByVersionDesc(memoria.getId(), 4L))
         .willReturn(Optional.of(evaluacion));
 
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 18L);
@@ -912,7 +907,8 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     // then: La memoria se envía correctamente
     Assertions.assertThat(memoriaActualizada.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaActualizada.getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaActualizada.getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions.assertThat(memoriaActualizada.getVersion()).isEqualTo(2);
     Assertions.assertThat(memoriaActualizada.getNumReferencia()).isEqualTo("numRef-111");
     Assertions.assertThat(memoriaActualizada.getEstadoActual().getId()).isEqualTo(18L);
@@ -922,6 +918,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
+  @Test
   public void enviarSecretaria_WithId_EstadoCompletadaSeguimientoAnual() {
 
     // given: Una nueva Memoria (11L=Completada Seguimiento Anual)
@@ -935,7 +932,8 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     // then: La memoria se envía correctamente
     Assertions.assertThat(memoriaActualizada.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaActualizada.getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaActualizada.getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions.assertThat(memoriaActualizada.getVersion()).isEqualTo(2);
     Assertions.assertThat(memoriaActualizada.getNumReferencia()).isEqualTo("numRef-111");
     Assertions.assertThat(memoriaActualizada.getEstadoActual().getId()).isEqualTo(12L);
@@ -943,6 +941,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
+  @Test
   public void enviarSecretaria_WithId_EstadoCompletadaSeguimientoFinal() {
 
     // given: Una nueva Memoria (16L=Completada Seguimiento Final)
@@ -956,7 +955,8 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     // then: La memoria se envía correctamente
     Assertions.assertThat(memoriaActualizada.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaActualizada.getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaActualizada.getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions.assertThat(memoriaActualizada.getVersion()).isEqualTo(2);
     Assertions.assertThat(memoriaActualizada.getNumReferencia()).isEqualTo("numRef-111");
     Assertions.assertThat(memoriaActualizada.getEstadoActual().getId()).isEqualTo(17L);
@@ -964,6 +964,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
+  @Test
   public void enviarSecretaria_WithId_EstadoNoProcedeEvaluar() {
 
     // given: Una nueva Memoria (8L=No procede evaluar)
@@ -977,7 +978,8 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     // then: La memoria se envía correctamente
     Assertions.assertThat(memoriaActualizada.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaActualizada.getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaActualizada.getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions.assertThat(memoriaActualizada.getVersion()).isEqualTo(2);
     Assertions.assertThat(memoriaActualizada.getNumReferencia()).isEqualTo("numRef-111");
     Assertions.assertThat(memoriaActualizada.getEstadoActual().getId()).isEqualTo(3L);
@@ -985,6 +987,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
+  @Test
   public void enviarSecretaria_WithId_EstadoPendienteCorrecciones() {
 
     // given: Una nueva Memoria (7L=Pendiente de correcciones)
@@ -998,7 +1001,8 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     // then: La memoria se envía correctamente
     Assertions.assertThat(memoriaActualizada.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaActualizada.getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaActualizada.getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions.assertThat(memoriaActualizada.getVersion()).isEqualTo(2);
     Assertions.assertThat(memoriaActualizada.getNumReferencia()).isEqualTo("numRef-111");
     Assertions.assertThat(memoriaActualizada.getEstadoActual().getId()).isEqualTo(3L);
@@ -1006,6 +1010,7 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
+  @Test
   public void enviarSecretaria_WithId_EstadoCompletada() {
 
     // given: Una nueva Memoria (2L=Completada)
@@ -1019,7 +1024,8 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     // then: La memoria se envía correctamente
     Assertions.assertThat(memoriaActualizada.getId()).isEqualTo(1L);
-    Assertions.assertThat(memoriaActualizada.getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(memoriaActualizada.getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions.assertThat(memoriaActualizada.getVersion()).isEqualTo(2);
     Assertions.assertThat(memoriaActualizada.getNumReferencia()).isEqualTo("numRef-111");
     Assertions.assertThat(memoriaActualizada.getEstadoActual().getId()).isEqualTo(3L);
@@ -1057,6 +1063,20 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   }
 
+  private List<EstadoMemoria> generarEstadosMemoria(Long id) {
+    List<EstadoMemoria> estadosMemoria = new ArrayList<EstadoMemoria>();
+    EstadoMemoria estadoMemoria = new EstadoMemoria();
+    estadoMemoria.setFechaEstado(Instant.now());
+    estadoMemoria.setId(id);
+    estadoMemoria.setMemoria(generarMockMemoria(1L, "ref-001", "TituloMemoria", 1, id));
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setActivo(true);
+    tipoEstadoMemoria.setId(id);
+    estadoMemoria.setTipoEstadoMemoria(tipoEstadoMemoria);
+    estadosMemoria.add(estadoMemoria);
+    return estadosMemoria;
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 
@@ -1071,9 +1091,12 @@ class MemoriaServiceTest extends BaseServiceTest {
       Long idTipoEstadoMemoria) {
 
     Formulario formulario = new Formulario();
+    formulario.setId(1L);
     formulario.setTipo(Formulario.Tipo.MEMORIA);
     formulario.setCodigo("M10/2020/002");
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, titulo));
     Memoria memoria = new Memoria();
     memoria.setId(id);
     memoria.setNumReferencia(numReferencia);
@@ -1083,7 +1106,8 @@ class MemoriaServiceTest extends BaseServiceTest {
     memoria.setFormularioSeguimientoAnual(formulario);
     memoria.setFormularioSeguimientoFinal(formulario);
     memoria.setFormularioSeguimientoAnual(formulario);
-    memoria.setTitulo(titulo);
+    memoria.setFormularioRetrospectiva(formulario);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE));
@@ -1098,10 +1122,12 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   private MemoriaInput generarMockMemoriaInput(Long peticionEvaluacionId, Long comiteId, String titulo,
       Memoria.Tipo tipo) {
+    List<I18nFieldValueDto> mTitulo = new ArrayList<>();
+    mTitulo.add(new I18nFieldValueDto(Language.ES, titulo));
     MemoriaInput memoria = new MemoriaInput();
     memoria.setPeticionEvaluacionId(peticionEvaluacionId);
     memoria.setComiteId(comiteId);
-    memoria.setTitulo(titulo);
+    memoria.setTitulo(mTitulo);
     memoria.setTipo(tipo);
 
     return memoria;
@@ -1125,8 +1151,12 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
     tipoEstadoMemoria.setId(id);
+
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria" + String.format("%03d", id)));
+
     memoria.setEstadoActual(tipoEstadoMemoria);
-    memoria.setTitulo("Memoria" + String.format("%03d", id));
+    memoria.setTitulo(mTitulo);
     memoria.setNumReferencia("numRef-" + String.format("%03d", id));
     memoria.setFechaEvaluacion(Instant.parse("2020-05-15T00:00:00Z"));
     memoria.setFechaLimite(Instant.parse("2020-08-18T23:59:59Z"));

@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -42,6 +43,8 @@ import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RespuestaService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -113,7 +116,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("Memoria1"));
   }
 
   @Test
@@ -146,7 +149,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("Memoria1"));
   }
 
   @Test
@@ -154,7 +157,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void newMemoria_Error_Returns400() throws Exception {
     // given: Una memoria nueva que produce un error al crearse
     String nuevaMemoriaJson = "{\"peticionEvaluacionId\": 1,"
-        + " \"comiteId\": 1,\"titulo\": \"Memoria1\","
+        + " \"comiteId\": 1,\"titulo\": [{\"lang\": \"es\", \"value\": \"Memoria1\"}],"
         + "\"tipo\": \"NUEVA\"}";
 
     BDDMockito.given(memoriaService.create(ArgumentMatchers.<MemoriaInput>any()))
@@ -192,7 +195,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("Memoria1"));
   }
 
   @Test
@@ -200,7 +203,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   public void newMemoriaModificada_Error_Returns400() throws Exception {
     // given: Una memoria nueva que produce un error al crearse
     String nuevaMemoriaJson = "{\"peticionEvaluacionId\": 1,"
-        + " \"comiteId\": 1,\"titulo\": \"Memoria1\","
+        + " \"comiteId\": 1,\"titulo\": [{\"lang\": \"es\", \"value\": \"Memoria1\"}],"
         + "\"tipo\": \"MODIFICADA\"}";
 
     BDDMockito
@@ -236,7 +239,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica la memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("Memoria1"))
         .andExpect(MockMvcResultMatchers.jsonPath("numReferencia").value("numRef-5598"));
 
   }
@@ -389,7 +392,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // containing titulo='Memoria031' to 'Memoria040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Memoria memoria = actual.get(i);
-      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(memoria.getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
     }
   }
 
@@ -402,7 +406,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
       memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
           "Memoria" + String.format("%03d", i), i));
     }
-    String query = "titulo~Memoria%,id:5";
+    String query = "titulo.value~Memoria%,id:5";
 
     BDDMockito.given(memoriaService.findAll(ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Memoria>>() {
@@ -410,7 +414,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
           public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
             List<Memoria> content = new ArrayList<>();
             for (Memoria memoria : memorias) {
-              if (memoria.getTitulo().startsWith("Memoria") && memoria.getId().equals(5L)) {
+              if (I18nHelper.getValueForLanguage(memoria.getTitulo(), Language.ES).startsWith("Memoria")
+                  && memoria.getId().equals(5L)) {
                 content.add(memoria);
               }
             }
@@ -567,7 +572,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     for (int i = 0, j = 1; i < 10; i++, j++) {
       Memoria memoria = actual.get(i);
-      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(memoria.getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
     }
   }
 
@@ -937,7 +943,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("memoria1"));
   }
 
   @Test
@@ -965,7 +971,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("memoria1"));
   }
 
   @Test
@@ -1012,7 +1018,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("memoria1"));
   }
 
   @Test
@@ -1037,7 +1043,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("memoria1"));
   }
 
   @Test
@@ -1062,7 +1068,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("memoria1"));
   }
 
   @Test
@@ -1163,7 +1169,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
     // containing titulo='Memoria031' to 'Memoria040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Memoria memoria = actual.get(i);
-      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(memoria.getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
     }
   }
 
@@ -1281,6 +1288,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
     formularioSeguimientoFinal.setId(6L);
     formularioMemoria.setTipo(Formulario.Tipo.RETROSPECTIVA);
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, titulo));
     Memoria memoria = new Memoria();
     memoria.setId(id);
     memoria.setNumReferencia(numReferencia);
@@ -1290,7 +1299,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     memoria.setFormularioSeguimientoAnual(formularioSeguimientoAnual);
     memoria.setFormularioSeguimientoFinal(formularioSeguimientoFinal);
     memoria.setFormularioRetrospectiva(formularioRetrospectiva);
-    memoria.setTitulo(titulo);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));
@@ -1305,11 +1314,13 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
   private MemoriaInput generarMockMemoriaInput(Long comiteId, Long peticionEvaluacionId, String titulo) {
 
+    List<I18nFieldValueDto> mTitulo = new ArrayList<>();
+    mTitulo.add(new I18nFieldValueDto(Language.ES, titulo));
     MemoriaInput memoria = new MemoriaInput();
     memoria.setComiteId(comiteId);
     memoria.setPeticionEvaluacionId(peticionEvaluacionId);
     memoria.setTipo(Memoria.Tipo.NUEVA);
-    memoria.setTitulo(titulo);
+    memoria.setTitulo(mTitulo);
 
     return memoria;
   }
@@ -1327,10 +1338,10 @@ public class MemoriaControllerTest extends BaseControllerTest {
   private MemoriaPeticionEvaluacion generarMockMemoriaPeticionEvaluacion(Long id, String responsableRef,
       String numReferencia, String titulo) {
 
-    return new MemoriaPeticionEvaluacion(id, responsableRef, numReferencia, titulo,
-        generarMockComite(id, "comite" + id, true),
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), false, null,
-        Instant.parse("2020-05-15T00:00:00Z"), Instant.now(), false, true, "1111", null, 1);
+    Memoria memoria = generarMockMemoria(id, numReferencia, titulo, 1);
+
+    return new MemoriaPeticionEvaluacion(memoria,
+        Instant.parse("2020-05-15T00:00:00Z"), Instant.now(), true, null, "1111", null);
   }
 
   /**
@@ -1459,8 +1470,8 @@ public class MemoriaControllerTest extends BaseControllerTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
-    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
-    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
+    Set<PeticionEvaluacionTitulo> peTitulo = new HashSet<>();
+    peTitulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
@@ -1479,7 +1490,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(peTitulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -1504,12 +1515,14 @@ public class MemoriaControllerTest extends BaseControllerTest {
     retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
     retrospectiva.setFechaRetrospectiva(Instant.now());
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria" + sufijoStr));
     Memoria memoria = new Memoria();
     memoria.setId(1L);
     memoria.setNumReferencia("numRef-001");
     memoria.setPeticionEvaluacion(peticionEvaluacion);
     memoria.setComite(comite);
-    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);

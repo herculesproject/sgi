@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoDocumentoNombre;
@@ -80,7 +81,8 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     DocumentacionMemoria documentacionMemoria = documentacionMemoriaService.findById(1L);
 
     Assertions.assertThat(documentacionMemoria.getId()).isEqualTo(1L);
-    Assertions.assertThat(documentacionMemoria.getMemoria().getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(documentacionMemoria.getMemoria().getTitulo(), Language.ES))
+        .isEqualTo("Memoria1");
     Assertions
         .assertThat(I18nHelper.getValueForLanguage(documentacionMemoria.getTipoDocumento().getNombre(), Language.ES))
         .isEqualTo("TipoDocumento1");
@@ -1082,9 +1084,11 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
     formulario.setId(formularioId);
     formulario.setCodigo("M10/2020/001");
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, titulo));
     Memoria memoria = new Memoria();
     memoria.setId(id);
-    memoria.setTitulo(titulo);
+    memoria.setTitulo(mTitulo);
     memoria.setFormulario(formulario);
     memoria.setFormularioSeguimientoAnual(formulario);
     memoria.setFormularioSeguimientoFinal(formulario);

@@ -531,6 +531,31 @@
 
   <!-- Memoria -->
   <changeSet author="user (generated)" id="00.07.00-9">
+    <!-- Titulo -->
+    <createTable tableName="memoria_titulo">
+      <column name="memoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+    <addPrimaryKey tableName="memoria_titulo" columnNames="memoria_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="memoria_id"
+      baseTableName="memoria_titulo"
+      constraintName="FK_MEMORIATITULO_MEMORIA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}memoria_titulo(memoria_id, lang, value_) SELECT id,
+      '${defaultLang}', titulo FROM ${schemaPrefix}memoria WHERE titulo IS NOT NULL</sql>
+
+    <dropColumn columnName="titulo" tableName="memoria" />
+
     <addColumn tableName="memoria">
       <column name="tipo"
         type="VARCHAR(50)" />

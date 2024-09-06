@@ -37,6 +37,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.InformeDocumento;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -224,7 +225,10 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     Memoria memoria = new Memoria();
     memoria.setTipo(memoriaInput.getTipo());
-    memoria.setTitulo(memoriaInput.getTitulo());
+    if (memoriaInput.getTitulo() != null) {
+      memoria.setTitulo(memoriaInput.getTitulo().stream().map(t -> new MemoriaTitulo(t.getLang(), t.getValue()))
+          .collect(Collectors.toSet()));
+    }
     memoria.setPersonaRef(memoriaInput.getResponsableRef());
 
     // Validación de la petición de evaluación y carga de los datos asociados
@@ -282,7 +286,10 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     Memoria nuevaMemoria = new Memoria();
     nuevaMemoria.setTipo(memoriaInput.getTipo());
-    nuevaMemoria.setTitulo(memoriaInput.getTitulo());
+    if (memoriaInput.getTitulo() != null) {
+      nuevaMemoria.setTitulo(memoriaInput.getTitulo().stream().map(t -> new MemoriaTitulo(t.getLang(), t.getValue()))
+          .collect(Collectors.toSet()));
+    }
     nuevaMemoria.setPersonaRef(memoriaInput.getResponsableRef());
 
     // Valida de la memoriaOriginal y carga de los datos asociados

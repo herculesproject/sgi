@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -530,6 +531,8 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
    */
   private Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite,
       TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva, Formulario formulario) {
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria"));
     Memoria memoria = new Memoria();
     memoria.setId(null);
     memoria.setNumReferencia("numRef-001");
@@ -538,7 +541,7 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
     memoria.setFormulario(formulario);
     memoria.setFormularioSeguimientoAnual(formulario);
     memoria.setFormularioSeguimientoFinal(formulario);
-    memoria.setTitulo("Memoria");
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-001");
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);

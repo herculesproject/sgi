@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -245,8 +246,8 @@ public class InformeIT extends BaseIT {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
-    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
-    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
+    Set<PeticionEvaluacionTitulo> peTitulo = new HashSet<>();
+    peTitulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
@@ -265,7 +266,7 @@ public class InformeIT extends BaseIT {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(peTitulo);
     peticionEvaluacion.setPersonaRef("user-002");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -290,12 +291,14 @@ public class InformeIT extends BaseIT {
     retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
     retrospectiva.setFechaRetrospectiva(Instant.now());
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria" + id));
     Memoria memoria = new Memoria();
     memoria.setId(2L);
     memoria.setNumReferencia("numRef-002");
     memoria.setPeticionEvaluacion(peticionEvaluacion);
     memoria.setComite(comite);
-    memoria.setTitulo("Memoria" + id);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);

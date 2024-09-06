@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -650,7 +651,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     Evaluacion evaluacion13 = generarMockEvaluacionId(Long.valueOf(13));
     evaluacion13.getMemoria().setId(17L);
     evaluacion13.getMemoria().setNumReferencia("ref-017");
-    evaluacion13.getMemoria().setTitulo("Memoria017");
+    evaluacion13.getMemoria().getTitulo().stream().findFirst().get().setValue("Memoria017");
     evaluacion13.getMemoria().setPersonaRef("userref-017");
     evaluacion13.getMemoria().getComite().setId(2L);
     evaluacion13.getMemoria().getComite().setCodigo("CEEA");
@@ -879,8 +880,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     tipoActividad.setNombre("Proyecto de investigacion");
     tipoActividad.setActivo(Boolean.TRUE);
 
-    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
-    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
+    Set<PeticionEvaluacionTitulo> peTitulo = new HashSet<>();
+    peTitulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
@@ -898,7 +899,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(peTitulo);
     peticionEvaluacion.setPersonaRef("user");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -941,6 +942,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     formularioSeguimientoFinal.setTipo(Formulario.Tipo.SEGUIMIENTO_FINAL);
     formularioSeguimientoFinal.setCodigo("SF/2020/001");
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria002"));
     Memoria memoria = new Memoria();
     memoria.setId(2L);
     memoria.setNumReferencia("ref-002");
@@ -949,7 +952,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     memoria.setFormulario(formularioMemoria);
     memoria.setFormularioSeguimientoAnual(formularioSeguimientoAnual);
     memoria.setFormularioSeguimientoFinal(formularioSeguimientoFinal);
-    memoria.setTitulo("Memoria002");
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("userref-002");
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);
@@ -1001,8 +1004,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     tipoActividad.setNombre("Proyecto de investigacion");
     tipoActividad.setActivo(Boolean.TRUE);
 
-    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
-    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
+    Set<PeticionEvaluacionTitulo> peTitulo = new HashSet<>();
+    peTitulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion2"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
@@ -1020,7 +1023,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     peticionEvaluacion.setResumen(resumen);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(peTitulo);
     peticionEvaluacion.setPersonaRef("user");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -1063,6 +1066,8 @@ public class ConvocatoriaReunionIT extends BaseIT {
     formularioSeguimientoFinal.setTipo(Formulario.Tipo.SEGUIMIENTO_FINAL);
     formularioSeguimientoFinal.setCodigo("SF/2020/001");
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria002"));
     Memoria memoria = new Memoria();
     memoria.setId(2L);
     memoria.setNumReferencia("ref-002");
@@ -1071,7 +1076,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
     memoria.setFormulario(formularioMemoria);
     memoria.setFormularioSeguimientoAnual(formularioSeguimientoAnual);
     memoria.setFormularioSeguimientoFinal(formularioSeguimientoFinal);
-    memoria.setTitulo("Memoria002");
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("userref-002");
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);

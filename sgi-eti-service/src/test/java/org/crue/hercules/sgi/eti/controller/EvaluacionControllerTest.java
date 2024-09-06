@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion.TipoValorSocial;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionDisMetodologico;
@@ -36,6 +37,7 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -94,7 +96,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen1"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("Memoria1"));
     ;
   }
 
@@ -115,7 +117,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void newEvaluacion_ReturnsEvaluacion() throws Exception {
     // given: Una evaluacion nueva
     String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]},"
-        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
+        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": [{\"lang\": \"es\", \"value\": \"Memoria1 replace\"}], \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
         + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
         + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"},\"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
@@ -131,7 +133,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea la nueva evaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("Memoria1"))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen1"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.id").value("1"));
@@ -142,7 +144,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void newEvaluacion_Error_Returns400() throws Exception {
     // given: Una evaluacion nueva que produce un error al crearse
     String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]},"
-        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
+        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": [{\"lang\": \"es\", \"value\": \"Memoria1 replace\"}], \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\"}";
 
     BDDMockito.given(evaluacionService.create(ArgumentMatchers.<Evaluacion>any()))
@@ -164,7 +166,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void replaceEvaluacion_ReturnsEvaluacion() throws Exception {
     // given: Una evaluacion a modificar
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]},"
-        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
+        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": [{\"lang\": \"es\", \"value\": \"Memoria1 replace\"}], \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
         + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
         + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
@@ -180,7 +182,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica la evaluacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria Replace"))
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo[0].value").value("Memoria Replace"))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen Replace"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.id").value("1"));
@@ -192,7 +194,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
   public void replaceEvaluacion_NotFound() throws Exception {
     // given: Una evaluacion a modificar
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": [{\"lang\": \"es\", \"value\": \"PeticionEvaluacion1\"}]},"
-        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
+        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": [{\"lang\": \"es\", \"value\": \"Memoria1 replace\"}], \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
         + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
         + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
@@ -307,7 +309,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     // containing dictamen.nombre='Dictamen031' to 'Dictamen040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Evaluacion evaluacion = actual.get(i);
-      Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacion.getMemoria().getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     }
@@ -804,10 +807,9 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     // containing dictamen.nombre='Dictamen031' to 'Dictamen040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Evaluacion evaluacion = actual.get(i);
-      Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(evaluacion.getMemoria().getTitulo(), Language.ES))
+          .isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
-      // Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-"
-      // + String.format("%03d", j));
     }
   }
 
@@ -885,8 +887,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
-    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
-    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
+    Set<PeticionEvaluacionTitulo> peTitulo = new HashSet<>();
+    peTitulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
@@ -905,7 +907,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(peTitulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -930,12 +932,14 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
     retrospectiva.setFechaRetrospectiva(Instant.now());
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria" + sufijoStr));
     Memoria memoria = new Memoria();
     memoria.setId(1L);
     memoria.setNumReferencia("numRef-001");
     memoria.setPeticionEvaluacion(peticionEvaluacion);
     memoria.setComite(comite);
-    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);
@@ -1039,8 +1043,8 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     tipoActividad.setNombre("TipoActividad1");
     tipoActividad.setActivo(Boolean.TRUE);
 
-    Set<PeticionEvaluacionTitulo> titulo = new HashSet<>();
-    titulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
+    Set<PeticionEvaluacionTitulo> peTitulo = new HashSet<>();
+    peTitulo.add(new PeticionEvaluacionTitulo(Language.ES, "PeticionEvaluacion1"));
     Set<PeticionEvaluacionResumen> resumen = new HashSet<>();
     resumen.add(new PeticionEvaluacionResumen(Language.ES, "Resumen"));
     Set<PeticionEvaluacionObjetivos> objetivos = new HashSet<>();
@@ -1059,7 +1063,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
-    peticionEvaluacion.setTitulo(titulo);
+    peticionEvaluacion.setTitulo(peTitulo);
     peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(TipoValorSocial.ENSENIANZA_SUPERIOR);
     peticionEvaluacion.setActivo(Boolean.TRUE);
@@ -1084,12 +1088,14 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     retrospectiva.setEstadoRetrospectiva(estadoRetrospectiva);
     retrospectiva.setFechaRetrospectiva(Instant.now());
 
+    Set<MemoriaTitulo> mTitulo = new HashSet<>();
+    mTitulo.add(new MemoriaTitulo(Language.ES, "Memoria" + sufijoStr));
     Memoria memoria = new Memoria();
     memoria.setId(1L);
     memoria.setNumReferencia("numRef-001");
     memoria.setPeticionEvaluacion(peticionEvaluacion);
     memoria.setComite(comite);
-    memoria.setTitulo("Memoria" + sufijoStr);
+    memoria.setTitulo(mTitulo);
     memoria.setPersonaRef("user-00" + id);
     memoria.setTipo(Memoria.Tipo.NUEVA);
     memoria.setEstadoActual(tipoEstadoMemoria);

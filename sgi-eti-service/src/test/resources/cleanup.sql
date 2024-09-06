@@ -9,6 +9,7 @@ DELETE FROM test.informe
 DELETE FROM test.estado_memoria
 DELETE FROM test.comentario
 DELETE FROM test.evaluacion
+DELETE FROM test.memoria_titulo
 DELETE FROM test.memoria
 DELETE FROM test.asistentes
 DELETE FROM test.conflicto_interes

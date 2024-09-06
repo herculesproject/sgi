@@ -1,8 +1,11 @@
 package org.crue.hercules.sgi.eti.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +26,7 @@ public class MemoriaInput {
   @NotNull
   Memoria.Tipo tipo;
 
-  String titulo;
+  List<I18nFieldValueDto> titulo;
 
   String responsableRef;
 
