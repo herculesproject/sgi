@@ -2498,7 +2498,7 @@ public class ProyectoServiceImpl implements ProyectoService {
    */
   @Override
   public Page<ProyectoFacturacion> findAllProyectoFacturacionByProyectoId(Long proyectoId, String query, Pageable paging){
-    return this.proyectoFacturacionService.findByProyectoId(proyectoId, paging);
+    return this.proyectoFacturacionService.findByProyectoId(proyectoId, query, paging);
   }
 
   /**
