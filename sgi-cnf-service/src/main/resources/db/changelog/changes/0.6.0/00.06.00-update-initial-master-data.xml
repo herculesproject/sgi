@@ -8,6 +8,16 @@
                       http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
   <property name="schemaPrefix" value="" />
 
+  <changeSet context="!test" author="master" id="00.06.00-config">
+    <insert tableName="config">
+      <column name="name"
+        value="csp-exp-max-num-registros-excel-listado-facturas-previstas-pendientes" />
+      <column name="description"
+        value="Número máximo de registros a exportar en los informes de tipo listado (csv, xlsx) de facturas previstas pendientes de emitir" />
+      <column name="value" value="" />
+    </insert>
+  </changeSet>
+
   <changeSet context="!test" author="master" id="00.06.00-resources-update-oracle" dbms="oracle">
     <update tableName="resources">
       <column name="value" valueBlobFile="blob/rep/rep-eti-mxx.docx" />
