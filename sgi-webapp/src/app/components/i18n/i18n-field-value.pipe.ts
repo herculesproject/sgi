@@ -1,8 +1,24 @@
 import { ChangeDetectorRef, Injectable, OnDestroy, Pipe, PipeTransform } from "@angular/core";
 import { I18nFieldValue } from "@core/i18n/i18n-field";
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
 import { Language } from "@core/i18n/language";
 import { LanguageService } from "@core/services/language.service";
 import { Subscription } from "rxjs";
+
+
+function isI18nFieldValue(field: any[]): field is I18nFieldValue[] {
+  if (Array.isArray(field) && field.length) {
+    return field.every(f => isI18nValue(f));
+  }
+  return false;
+}
+
+function isI18nValue(field: I18nFieldValue | I18nFieldValueResponse): field is I18nFieldValue {
+  if (typeof field.lang === "string") {
+    return false;
+  }
+  return true;
+}
 
 @Injectable()
 @Pipe({
@@ -17,15 +33,15 @@ export class I18nFieldValuePipe implements PipeTransform, OnDestroy {
   constructor(private languageService: LanguageService, private _ref: ChangeDetectorRef) {
   }
 
-  updateValue(field: I18nFieldValue[], lang: Language): void {
+  private updateValue(field: I18nFieldValue[] | I18nFieldValueResponse[], lang: Language): void {
     if (field.length) {
-      let request = field.filter(f => f.lang === lang);
+      let request = isI18nFieldValue(field) ? field.filter(f => f.lang === lang) : field.filter(f => f.lang === lang.code);
       if (request.length) {
         this.value = request[0].value;
       }
       else {
         // Get other value
-        request = field.filter(f => f.value?.length);
+        request = isI18nFieldValue(field) ? field.filter(f => f.value?.length) : field.filter(f => f.value?.length);
         if (request.length) {
           this.value = request[0].value;
         }
@@ -41,7 +57,7 @@ export class I18nFieldValuePipe implements PipeTransform, OnDestroy {
     this._ref.markForCheck();
   }
 
-  transform(query: I18nFieldValue[], ...args: any[]): any {
+  transform(query: I18nFieldValue[] | I18nFieldValueResponse[], ...args: any[]): any {
     if (!Array.isArray(query) || !query.length) {
       return '';
     }
