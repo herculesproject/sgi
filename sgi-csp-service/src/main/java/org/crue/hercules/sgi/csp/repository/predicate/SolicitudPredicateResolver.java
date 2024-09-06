@@ -25,6 +25,8 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud_;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.model.SolicitudModalidad_;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
@@ -114,8 +116,10 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
     ListJoin<Convocatoria, ConvocatoriaEntidadConvocante> joinEntidadesConvocantes = joinConvocatoria
         .join(Convocatoria_.entidadesConvocantes, JoinType.LEFT);
 
+    ListJoin<Solicitud, SolicitudModalidad> joinSolicitudModalidades = root.join(Solicitud_.modalidades, JoinType.LEFT);
+
     return cb.or(joinEntidadesConvocantes.get(ConvocatoriaEntidadConvocante_.programa).in(programasQuery),
-        joinEntidadesConvocantes.get(ConvocatoriaEntidadConvocante_.programa).in(programasQuery));
+        joinSolicitudModalidades.get(SolicitudModalidad_.programa).in(programasQuery));
   }
 
   private Predicate buildByAbiertoPlazoPresentacionSolicitudes(ComparisonNode node, Root<Solicitud> root,
