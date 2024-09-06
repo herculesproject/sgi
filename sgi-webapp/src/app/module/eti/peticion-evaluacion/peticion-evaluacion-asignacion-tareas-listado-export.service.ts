@@ -60,14 +60,27 @@ export class PeticionEvaluacionAsignacionTareasListadoExportService extends
         if (peticionData.asignacionTareas === undefined || peticionData.asignacionTareas === null) {
           peticionData.asignacionTareas = [];
         }
-        peticionData.asignacionTareas.push({
+        let asignacion: IPeticionEvaluacionAsignacionTareaReportData = {
           nombre: persona.nombre,
           apellidos: persona.apellidos,
           memoria: tarea.memoria.numReferencia,
-          tarea: tarea.memoria.comite.id in [1, 3] ? this.languageService.getFieldValue(tarea.nombre) : tarea.memoria.comite.id === 2 ? tarea.tipoTarea.nombre : '',
-          experiencia: tarea.memoria.comite.id in [1, 3] ? this.languageService.getFieldValue(tarea.formacion) : tarea.memoria.comite.id === 2 ?
-            tarea.formacionEspecifica.nombre : ''
-        });
+          tarea: '',
+          experiencia: ''
+        };
+        if (tarea.memoria.comite.tareaNombreLibre) {
+          asignacion.tarea = tarea.tipoTarea.nombre ?? '';
+        }
+        else {
+          asignacion.tarea = this.languageService.getFieldValue(tarea.nombre) ?? '';
+        }
+        if (tarea.memoria.comite.tareaExperienciaLibre) {
+          asignacion.experiencia = this.languageService.getFieldValue(tarea.formacion) ?? '';
+        }
+        else {
+          asignacion.experiencia = this.languageService.getFieldValue(tarea.formacionEspecifica.nombre) ?? '';
+        }
+
+        peticionData.asignacionTareas.push(asignacion);
         return peticionData;
       })
     );

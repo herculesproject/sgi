@@ -5,7 +5,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
-import { FormacionEspecifica } from '@core/models/eti/formacion-especifica';
+import { IFormacionEspecifica } from '@core/models/eti/formacion-especifica';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoria-peticion-evaluacion';
 import { ITareaWithIsEliminable } from '@core/models/eti/tarea-with-is-eliminable';
@@ -46,7 +46,7 @@ export interface PeticionEvaluacionTareasModalComponentData {
 export class PeticionEvaluacionTareasModalComponent
   extends DialogFormComponent<PeticionEvaluacionTareasModalComponentData> implements OnInit {
 
-  formaciones$: Subject<FormacionEspecifica[]> = new BehaviorSubject<FormacionEspecifica[]>([]);
+  formaciones$: Subject<IFormacionEspecifica[]> = new BehaviorSubject<IFormacionEspecifica[]>([]);
   personas$: Subject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
   tipoTareas$: Subject<TipoTarea[]> = new BehaviorSubject<TipoTarea[]>([]);
 
