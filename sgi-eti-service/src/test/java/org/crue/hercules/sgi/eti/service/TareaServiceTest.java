@@ -276,7 +276,7 @@ public class TareaServiceTest extends BaseServiceTest {
    * @param descripcion descripcion de la tarea
    * @return el objeto Tarea
    */
-  public Tarea generarMockTarea(Long id, String descripcion) {
+  private Tarea generarMockTarea(Long id, String descripcion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(100L);
 
@@ -288,8 +288,6 @@ public class TareaServiceTest extends BaseServiceTest {
 
     TipoTarea tipoTarea = new TipoTarea();
     tipoTarea.setId(1L);
-    tipoTarea.setNombre("Eutanasia");
-    tipoTarea.setActivo(Boolean.TRUE);
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));
@@ -319,7 +317,7 @@ public class TareaServiceTest extends BaseServiceTest {
    * @param descripcion descripcion de la tarea
    * @return el objeto TareaWithIsEliminable
    */
-  public TareaWithIsEliminable generarMockTareaWithIsEliminable(Long id, String descripcion) {
+  private TareaWithIsEliminable generarMockTareaWithIsEliminable(Long id, String descripcion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(100L);
 
@@ -331,8 +329,6 @@ public class TareaServiceTest extends BaseServiceTest {
 
     TipoTarea tipoTarea = new TipoTarea();
     tipoTarea.setId(1L);
-    tipoTarea.setNombre("Eutanasia");
-    tipoTarea.setActivo(Boolean.TRUE);
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));

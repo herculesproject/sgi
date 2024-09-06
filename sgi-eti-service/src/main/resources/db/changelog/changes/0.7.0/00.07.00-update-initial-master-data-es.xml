@@ -1711,4 +1711,28 @@
       <column name="value_" value="H: No requiere" />
     </insert>
   </changeSet>
+
+  <!-- Tipo Tarea Nombre -->
+  <changeSet context="!test" author="master" id="00.07.00-tipo-tarea-nombre-es">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <changeLogPropertyDefined property="defaultLang" value="es" />
+      </not>
+    </preConditions>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="1" />
+      <column name="lang" value="es" />
+      <column name="value_" value="Diseño de proyecto y procedimientos" />
+    </insert>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="2" />
+      <column name="lang" value="es" />
+      <column name="value_" value="Eutanasia" />
+    </insert>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="3" />
+      <column name="lang" value="es" />
+      <column name="value_" value="Manipulación de animales o realización de procedimientos" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

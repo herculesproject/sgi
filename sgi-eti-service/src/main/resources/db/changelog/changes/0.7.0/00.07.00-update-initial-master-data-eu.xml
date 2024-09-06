@@ -1711,4 +1711,28 @@
       <column name="value_" value="EUSKERA H: No requiere" />
     </insert>
   </changeSet>
+
+  <!-- Tipo Tarea Nombre -->
+  <changeSet context="!test" author="master" id="00.07.00-tipo-tarea-nombre-eu">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <changeLogPropertyDefined property="defaultLang" value="eu" />
+      </not>
+    </preConditions>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="1" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="Proiektuaren diseinua eta prozedurak" />
+    </insert>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="2" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="Eutanasia" />
+    </insert>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="3" />
+      <column name="lang" value="eu" />
+      <column name="value_" value="Animalien manipulazioa edo prozedurak gauzatzea" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

@@ -6,7 +6,6 @@ import org.crue.hercules.sgi.eti.repository.TipoTareaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.TipoTareaSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoTareaService;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,21 +25,6 @@ public class TipoTareaServiceImpl implements TipoTareaService {
 
   public TipoTareaServiceImpl(TipoTareaRepository tipoTareaRepository) {
     this.tipoTareaRepository = tipoTareaRepository;
-  }
-
-  /**
-   * Guarda la entidad {@link TipoTarea}.
-   *
-   * @param tipoTarea la entidad {@link TipoTarea} a guardar.
-   * @return la entidad {@link TipoTarea} persistida.
-   */
-  @Transactional
-  public TipoTarea create(TipoTarea tipoTarea) {
-    log.debug("create(create(TipoTarea tipoTarea) - start");
-    AssertHelper.idNotNull(tipoTarea.getId(), TipoTarea.class);
-    TipoTarea returnValue = tipoTareaRepository.save(tipoTarea);
-    log.debug("create(create(TipoTarea tipoTarea) - end");
-    return returnValue;
   }
 
   /**
@@ -74,46 +58,4 @@ public class TipoTareaServiceImpl implements TipoTareaService {
     return TipoTarea;
 
   }
-
-  /**
-   * Elimina una entidad {@link TipoTarea} por id.
-   *
-   * @param id el id de la entidad {@link TipoTarea}.
-   */
-  @Transactional
-  public void delete(Long id) throws TipoTareaNotFoundException {
-    log.debug("Petición a delete TipoTarea : {}  - start", id);
-    AssertHelper.idNotNull(id, TipoTarea.class);
-    if (!tipoTareaRepository.existsById(id)) {
-      throw new TipoTareaNotFoundException(id);
-    }
-    tipoTareaRepository.deleteById(id);
-    log.debug("Petición a delete TipoTarea : {}  - end", id);
-  }
-
-  /**
-   * Actualiza los datos del {@link TipoTarea}.
-   * 
-   * @param tipoTareaActualizar {@link TipoTarea} con los datos actualizados.
-   * @return El {@link TipoTarea} actualizado.
-   * @throws TipoTareaNotFoundException Si no existe ningún {@link TipoTarea} con
-   *                                    ese id.
-   * @throws IllegalArgumentException   Si el {@link TipoTarea} no tiene id.
-   */
-  @Transactional
-  public TipoTarea update(final TipoTarea tipoTareaActualizar) {
-    log.debug("update(TipoTarea tipoTareaActualizar) - start");
-
-    AssertHelper.idNotNull(tipoTareaActualizar.getId(), TipoTarea.class);
-
-    return tipoTareaRepository.findById(tipoTareaActualizar.getId()).map(tipoTarea -> {
-      tipoTarea.setNombre(tipoTareaActualizar.getNombre());
-      tipoTarea.setActivo(tipoTareaActualizar.getActivo());
-
-      TipoTarea returnValue = tipoTareaRepository.save(tipoTarea);
-      log.debug("update(TipoTarea tipoTareaActualizar) - end");
-      return returnValue;
-    }).orElseThrow(() -> new TipoTareaNotFoundException(tipoTareaActualizar.getId()));
-  }
-
 }

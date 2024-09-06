@@ -950,4 +950,34 @@
     <dropColumn columnName="nombre" tableName="formacion_especifica" />
   </changeSet>
 
+  <!-- Tipo Tarea -->
+  <changeSet author="user (generated)" id="00.07.00-14">
+    <!-- Nombre -->
+    <createTable tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_tarea_nombre"
+      columnNames="tipo_tarea_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_tarea_id"
+      baseTableName="tipo_tarea_nombre"
+      constraintName="FK_TIPOTAREANOMBRE_TIPOTAREA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_tarea" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_tarea_nombre(tipo_tarea_id, lang, value_) SELECT id,
+      '${defaultLang}', nombre FROM ${schemaPrefix}tipo_tarea WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_tarea" />
+  </changeSet>
+
 </databaseChangeLog>

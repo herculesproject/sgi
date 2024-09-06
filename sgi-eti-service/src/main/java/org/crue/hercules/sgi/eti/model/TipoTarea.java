@@ -1,13 +1,19 @@
 package org.crue.hercules.sgi.eti.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,34 +27,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TipoTarea extends BaseEntity {
-  public enum Tipo {
-    /** Diseño de proyecto y procedimientos <code>1L</code> */
-    DISENIO_PROYECTO_PROCEDIMIENTOS(1L),
-    /** Eutanasia <code>2L</code> */
-    EUTANASIA(2L),
-    /** Manipulación de animales o realización de procedimientos <code>3L</code> */
-    MANIPULACION_ANIMALES(3L);
-
-    private final Long id;
-
-    private Tipo(Long id) {
-      this.id = id;
-    }
-
-    public Long getId() {
-      return this.id;
-    }
-
-    public static Tipo fromId(Long id) {
-      for (Tipo tipo : Tipo.values()) {
-        if (tipo.id.equals(id)) {
-          return tipo;
-        }
-      }
-      return null;
-    }
-  }
-
   /**
    * Serial version
    */
@@ -61,19 +39,14 @@ public class TipoTarea extends BaseEntity {
   private Long id;
 
   /** Nombre. */
-  @Column(name = "nombre", length = 250, nullable = false)
-  @NotNull
-  private String nombre;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_tarea_nombre", joinColumns = @JoinColumn(name = "tipo_tarea_id"))
+  @Valid
+  @NotEmpty
+  private Set<TipoTareaNombre> nombre = new HashSet<>();
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   @NotNull
   private Boolean activo;
-
-  @JsonIgnore
-  @Transient()
-  public Tipo getTipo() {
-    return Tipo.fromId(this.id);
-  }
-
 }

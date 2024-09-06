@@ -1712,4 +1712,28 @@
       <column name="value_" value="ENG H: No requiere" />
     </insert>
   </changeSet>
+
+  <!-- Tipo Tarea Nombre -->
+  <changeSet context="!test" author="master" id="00.07.00-tipo-tarea-nombre-en">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <changeLogPropertyDefined property="defaultLang" value="en" />
+      </not>
+    </preConditions>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="1" />
+      <column name="lang" value="en" />
+      <column name="value_" value="Project design and procedures" />
+    </insert>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="2" />
+      <column name="lang" value="en" />
+      <column name="value_" value="Euthanasia" />
+    </insert>
+    <insert tableName="tipo_tarea_nombre">
+      <column name="tipo_tarea_id" valueNumeric="3" />
+      <column name="lang" value="en" />
+      <column name="value_" value="Handling of animals or performance of procedures" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

@@ -256,8 +256,6 @@ public class TareaIT extends BaseIT {
 
     TipoTarea tipoTarea = new TipoTarea();
     tipoTarea.setId(1L);
-    tipoTarea.setNombre("Diseño de proyecto y procedimientos");
-    tipoTarea.setActivo(Boolean.TRUE);
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));

@@ -247,7 +247,7 @@ public class TareaControllerTest extends BaseControllerTest {
    * @param descripcion descripcion de la tarea
    * @return el objeto Tarea
    */
-  public Tarea generarMockTarea(Long id, String descripcion) {
+  private Tarea generarMockTarea(Long id, String descripcion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(100L);
 
@@ -259,8 +259,6 @@ public class TareaControllerTest extends BaseControllerTest {
 
     TipoTarea tipoTarea = new TipoTarea();
     tipoTarea.setId(1L);
-    tipoTarea.setNombre("Eutanasia");
-    tipoTarea.setActivo(Boolean.TRUE);
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));

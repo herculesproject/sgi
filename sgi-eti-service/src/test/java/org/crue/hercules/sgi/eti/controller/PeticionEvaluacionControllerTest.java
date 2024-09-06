@@ -942,7 +942,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
    * @param titulo el título de PeticionEvaluacion
    * @return el objeto PeticionEvaluacion
    */
-  public PeticionEvaluacion generarMockPeticionEvaluacion(Long id, String titulo) {
+  private PeticionEvaluacion generarMockPeticionEvaluacion(Long id, String titulo) {
     TipoActividad tipoActividad = new TipoActividad();
     tipoActividad.setId(1L);
     tipoActividad.setNombre("TipoActividad1");
@@ -1006,7 +1006,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
    * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
    * @return el objeto EquipoTrabajo
    */
-  public EquipoTrabajo generarMockEquipoTrabajo(Long id, PeticionEvaluacion peticionEvaluacion) {
+  private EquipoTrabajo generarMockEquipoTrabajo(Long id, PeticionEvaluacion peticionEvaluacion) {
 
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
@@ -1023,7 +1023,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
    * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
    * @return el objeto EquipoTrabajo
    */
-  public EquipoTrabajoWithIsEliminable generarMockEquipoTrabajoWithIsEliminable(Long id,
+  private EquipoTrabajoWithIsEliminable generarMockEquipoTrabajoWithIsEliminable(Long id,
       PeticionEvaluacion peticionEvaluacion) {
 
     EquipoTrabajoWithIsEliminable equipoTrabajo = new EquipoTrabajoWithIsEliminable();
@@ -1042,7 +1042,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
    * @param descripcion descripcion de la tarea
    * @return el objeto Tarea
    */
-  public Tarea generarMockTarea(Long id, String descripcion) {
+  private Tarea generarMockTarea(Long id, String descripcion) {
     PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
     peticionEvaluacion.setId(id);
 
@@ -1058,8 +1058,6 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     TipoTarea tipoTarea = new TipoTarea();
     tipoTarea.setId(1L);
-    tipoTarea.setNombre("Eutanasia");
-    tipoTarea.setActivo(Boolean.TRUE);
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));
@@ -1089,7 +1087,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
    * @param descripcion descripcion de la tarea
    * @return el objeto TareaWithIsEliminable
    */
-  public TareaWithIsEliminable generarMockTareaWithIsEliminable(Long id, String descripcion) {
+  private TareaWithIsEliminable generarMockTareaWithIsEliminable(Long id, String descripcion) {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
     equipoTrabajo.setPeticionEvaluacionId(id);
@@ -1102,8 +1100,6 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
 
     TipoTarea tipoTarea = new TipoTarea();
     tipoTarea.setId(1L);
-    tipoTarea.setNombre("Eutanasia");
-    tipoTarea.setActivo(Boolean.TRUE);
 
     Set<TareaNombre> nombre = new HashSet<>();
     nombre.add(new TareaNombre(Language.ES, descripcion));
@@ -1125,7 +1121,7 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     return tarea;
   }
 
-  public PeticionEvaluacionWithIsEliminable generarMockPeticionEvaluacionWithIsEliminable(Long id, String titulo) {
+  private PeticionEvaluacionWithIsEliminable generarMockPeticionEvaluacionWithIsEliminable(Long id, String titulo) {
     return new PeticionEvaluacionWithIsEliminable(generarMockPeticionEvaluacion(id, titulo), true);
   }
 

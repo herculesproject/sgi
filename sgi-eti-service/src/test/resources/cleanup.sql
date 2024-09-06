@@ -47,6 +47,7 @@ DELETE FROM test.configuracion
 DELETE FROM test.tipo_evaluacion
 DELETE FROM test.retrospectiva
 DELETE FROM test.estado_retrospectiva
+DELETE FROM test.tipo_tarea_nombre
 DELETE FROM test.tipo_tarea
 DELETE FROM test.checklist
 DELETE FROM test.formly_definicion
