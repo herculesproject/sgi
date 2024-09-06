@@ -20,9 +20,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
-import org.crue.hercules.sgi.pii.model.SolicitudProteccion.OnActualizar;
-import org.crue.hercules.sgi.pii.model.SolicitudProteccion.OnCrear;
-import org.crue.hercules.sgi.pii.validation.UniqueSolicitudViaProteccion;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -40,7 +37,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@UniqueSolicitudViaProteccion(groups = { OnActualizar.class, OnCrear.class })
 public class SolicitudProteccion extends BaseEntity {
   /*
    * 
