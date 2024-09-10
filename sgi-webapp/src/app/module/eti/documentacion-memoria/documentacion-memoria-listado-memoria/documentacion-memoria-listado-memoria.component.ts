@@ -166,9 +166,9 @@ export class DocumentacionMemoriaListadoMemoriaComponent
     }
     switch (this.tipoEvaluacion) {
       case TIPO_EVALUACION.MEMORIA:
-        return `${this.languageService.getFieldValue(documento.tipoDocumento.nombre)}: ${documento.nombre}`;
+        return `${this.languageService.getFieldValue(documento.tipoDocumento.nombre)}: ${this.languageService.getFieldValue(documento.nombre)}`;
       default:
-        return documento.nombre;
+        return this.languageService.getFieldValue(documento.nombre);
     }
   }
 }

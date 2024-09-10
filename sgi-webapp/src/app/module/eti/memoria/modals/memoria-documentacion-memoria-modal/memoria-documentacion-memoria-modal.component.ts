@@ -13,6 +13,7 @@ import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { Observable, of } from 'rxjs';
@@ -126,7 +127,7 @@ export class MemoriaDocumentacionMemoriaModalComponent extends DialogFormCompone
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       tipoDocumento: new FormControl(null, Validators.required),
-      nombre: new FormControl(null, Validators.required),
+      nombre: new FormControl([], I18nValidators.required),
       fichero: new FormControl(null, Validators.required),
     });
     return formGroup;

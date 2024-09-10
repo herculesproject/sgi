@@ -77,6 +77,8 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     switch (property) {
       case 'tipoDocumento':
         return this.languageService.getFieldValue(wrapper.value.tipoDocumento?.nombre);
+      case 'nombre':
+        return this.languageService.getFieldValue(wrapper.value.nombre);
       default:
         return wrapper.value[property];
     }

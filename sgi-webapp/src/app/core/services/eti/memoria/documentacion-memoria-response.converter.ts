@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -14,7 +15,7 @@ class DocumentacionMemoriaResponseConverter extends SgiBaseConverter<IDocumentac
       id: value.id,
       memoria: MEMORIA_RESPONSE_CONVERTER.toTarget(value.memoria),
       tipoDocumento: TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento),
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       documento: { documentoRef: value.documentoRef } as IDocumento,
     };
   }
@@ -27,7 +28,7 @@ class DocumentacionMemoriaResponseConverter extends SgiBaseConverter<IDocumentac
       id: value.id,
       memoria: MEMORIA_RESPONSE_CONVERTER.fromTarget(value.memoria),
       tipoDocumento: TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento),
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       documentoRef: value.documento.documentoRef,
     };
   }

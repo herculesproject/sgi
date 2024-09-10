@@ -6,8 +6,7 @@ import { IConfigValue } from '@core/models/cnf/config-value';
 import { environment } from '@env';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 
