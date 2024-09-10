@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoriaNombre;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -1059,12 +1060,14 @@ public class DocumentacionMemoriaServiceTest extends BaseServiceTest {
 
   private DocumentacionMemoria generarMockDocumentacionMemoria(Long id, Memoria memoria, TipoDocumento tipoDocumento) {
 
+    Set<DocumentacionMemoriaNombre> nombre = new HashSet<>();
+    nombre.add(new DocumentacionMemoriaNombre(Language.ES, "doc-00" + id));
     DocumentacionMemoria documentacionMemoria = new DocumentacionMemoria();
     documentacionMemoria.setId(id);
     documentacionMemoria.setMemoria(memoria);
     documentacionMemoria.setTipoDocumento(tipoDocumento);
     documentacionMemoria.setDocumentoRef("doc-00" + id);
-    documentacionMemoria.setNombre("doc-00" + id);
+    documentacionMemoria.setNombre(nombre);
 
     return documentacionMemoria;
   }

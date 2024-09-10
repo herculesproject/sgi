@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteNombre;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoriaNombre;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -230,7 +231,15 @@ public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
    * @return Memoria
    */
   private DocumentacionMemoria generarMockDocumentacionMemoria(Memoria memoria, TipoDocumento tipoDocumento) {
-    return new DocumentacionMemoria(null, memoria, tipoDocumento, "docRef001", "doc");
+    Set<DocumentacionMemoriaNombre> nombre = new HashSet<>();
+    nombre.add(new DocumentacionMemoriaNombre(Language.ES, "doc"));
+    DocumentacionMemoria documentacionMemoria = new DocumentacionMemoria();
+    documentacionMemoria.setMemoria(memoria);
+    documentacionMemoria.setTipoDocumento(tipoDocumento);
+    documentacionMemoria.setDocumentoRef("docRef001");
+    documentacionMemoria.setNombre(nombre);
+
+    return documentacionMemoria;
   }
 
 }

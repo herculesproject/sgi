@@ -980,4 +980,35 @@
     <dropColumn columnName="nombre" tableName="tipo_tarea" />
   </changeSet>
 
+  <!-- Documentacion Memoria -->
+  <changeSet author="user (generated)" id="00.07.00-15">
+    <!-- Nombre -->
+    <createTable tableName="documentacion_memoria_nombre">
+      <column name="documentacion_memoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="documentacion_memoria_nombre"
+      columnNames="documentacion_memoria_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="documentacion_memoria_id"
+      baseTableName="documentacion_memoria_nombre"
+      constraintName="FK_DOCUMENTACIONMEMORIANOMBRE_DOCUMENTACIONMEMORIA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="documentacion_memoria" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}documentacion_memoria_nombre(documentacion_memoria_id, lang,
+      value_) SELECT id, '${defaultLang}', nombre FROM ${schemaPrefix}documentacion_memoria WHERE
+      nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="documentacion_memoria" />
+  </changeSet>
+
 </databaseChangeLog>

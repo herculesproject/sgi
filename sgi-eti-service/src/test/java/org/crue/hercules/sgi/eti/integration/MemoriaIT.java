@@ -14,6 +14,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoriaNombre;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Formulario;
@@ -866,12 +867,14 @@ class MemoriaIT extends BaseIT {
 
   private DocumentacionMemoria generarMockDocumentacionMemoria(Long id, Memoria memoria, TipoDocumento tipoDocumento) {
 
+    Set<DocumentacionMemoriaNombre> nombre = new HashSet<>();
+    nombre.add(new DocumentacionMemoriaNombre(Language.ES, "doc-00" + id));
     DocumentacionMemoria documentacionMemoria = new DocumentacionMemoria();
     documentacionMemoria.setId(id);
     documentacionMemoria.setMemoria(memoria);
     documentacionMemoria.setTipoDocumento(tipoDocumento);
     documentacionMemoria.setDocumentoRef("doc-00" + id);
-    documentacionMemoria.setNombre("doc-00" + id);
+    documentacionMemoria.setNombre(nombre);
 
     return documentacionMemoria;
   }
