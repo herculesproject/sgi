@@ -299,7 +299,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
   /**
    * Devuelve los evaluadores activos del comité indicado
    * 
-   * @param comite nombre del {@link Comite}
+   * @param comiteId id del {@link Comite}
    * @return lista de evaluadores
    */
   @Override
@@ -322,8 +322,8 @@ public class EvaluadorServiceImpl implements EvaluadorService {
   /**
    * Busca un secretario {@link Evaluador} activo dentro de la fecha indicada
    *
-   * @param fecha  la fecha de actividad del secretario.
-   * @param comite el nombre del {@link Comite} al que pertenece
+   * @param fecha    la fecha de actividad del secretario.
+   * @param comiteId id del {@link Comite} al que pertenece
    * @return el secretario {@link Evaluador}
    */
   @Override

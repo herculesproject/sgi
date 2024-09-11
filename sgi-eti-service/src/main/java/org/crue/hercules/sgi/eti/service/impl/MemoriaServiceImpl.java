@@ -211,7 +211,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   /**
    * Guarda la entidad {@link Memoria}.
    *
-   * @param memoria la entidad {@link Memoria} a guardar.
+   * @param memoriaInput la entidad {@link MemoriaInput} a guardar.
    * @return la entidad {@link Memoria} persistida.
    */
   @Transactional
