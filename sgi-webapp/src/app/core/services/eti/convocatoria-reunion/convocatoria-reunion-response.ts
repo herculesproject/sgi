@@ -1,7 +1,8 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IComiteResponse } from '@core/services/eti/comite/comite-response';
-import { TipoConvocatoriaReunion } from '../tipo-convocatoria-reunion';
+import { TipoConvocatoriaReunion } from '../../../models/eti/tipo-convocatoria-reunion';
 
-export interface IConvocatoriaReunionBackend {
+export interface IConvocatoriaReunionResponse {
   /** ID */
   id: number;
   /** Comite */
@@ -23,7 +24,7 @@ export interface IConvocatoriaReunionBackend {
   /** Videoconferencia */
   videoconferencia: boolean;
   /** Lugar */
-  lugar: string;
+  lugar: I18nFieldValueResponse[];
   /** Orden día */
   ordenDia: string;
   /** Año */

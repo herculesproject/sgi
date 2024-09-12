@@ -1,11 +1,11 @@
 import { TipoEstadoActa } from '../../../models/eti/tipo-estado-acta';
-import { IConvocatoriaReunionBackend } from '../../../models/eti/backend/convocatoria-reunion-backend';
+import { IConvocatoriaReunionResponse } from '../convocatoria-reunion/convocatoria-reunion-response';
 
 export interface IActaResponse {
   /** Id */
   id: number;
   /** Convocatoria de la reunión */
-  convocatoriaReunion: IConvocatoriaReunionBackend;
+  convocatoriaReunion: IConvocatoriaReunionResponse;
   /** Hora inicio */
   horaInicio: number;
   /** Minuto inicio */

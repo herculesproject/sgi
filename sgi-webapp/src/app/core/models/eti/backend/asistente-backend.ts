@@ -1,4 +1,4 @@
-import { IConvocatoriaReunionBackend } from './convocatoria-reunion-backend';
+import { IConvocatoriaReunionResponse } from '../../../services/eti/convocatoria-reunion/convocatoria-reunion-response';
 import { IEvaluadorBackend } from './evaluador-backend';
 
 export interface IAsistenteBackend {
@@ -7,7 +7,7 @@ export interface IAsistenteBackend {
   /** Evaluador. */
   evaluador: IEvaluadorBackend;
   /** Convocatoria de la reunión */
-  convocatoriaReunion: IConvocatoriaReunionBackend;
+  convocatoriaReunion: IConvocatoriaReunionResponse;
   /** Asistencia */
   asistencia: boolean;
   /** Motivo */

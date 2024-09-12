@@ -1,3 +1,4 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DateTime } from 'luxon';
 import { IComite } from './comite';
 import { TipoConvocatoriaReunion } from './tipo-convocatoria-reunion';
@@ -24,7 +25,7 @@ export interface IConvocatoriaReunion {
   /** Videoconferencia */
   videoconferencia: boolean;
   /** Lugar */
-  lugar: string;
+  lugar: I18nFieldValue[];
   /** Orden día */
   ordenDia: string;
   /** Año */

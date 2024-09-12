@@ -1,11 +1,12 @@
-import { IConvocatoriaReunionBackend } from '@core/models/eti/backend/convocatoria-reunion-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
+import { IConvocatoriaReunionResponse } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
-class ConvocatoriaReunionConverter extends SgiBaseConverter<IConvocatoriaReunionBackend, IConvocatoriaReunion> {
-  toTarget(value: IConvocatoriaReunionBackend): IConvocatoriaReunion {
+class ConvocatoriaReunionResponseConverter extends SgiBaseConverter<IConvocatoriaReunionResponse, IConvocatoriaReunion> {
+  toTarget(value: IConvocatoriaReunionResponse): IConvocatoriaReunion {
     if (!value) {
       return value as unknown as IConvocatoriaReunion;
     }
@@ -20,7 +21,7 @@ class ConvocatoriaReunionConverter extends SgiBaseConverter<IConvocatoriaReunion
       minutoInicioSegunda: value.minutoInicioSegunda,
       fechaLimite: LuxonUtils.fromBackend(value.fechaLimite),
       videoconferencia: value.videoconferencia,
-      lugar: value.lugar,
+      lugar: value.lugar ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.lugar) : [],
       ordenDia: value.ordenDia,
       anio: value.anio,
       numeroActa: value.numeroActa,
@@ -30,9 +31,9 @@ class ConvocatoriaReunionConverter extends SgiBaseConverter<IConvocatoriaReunion
     };
   }
 
-  fromTarget(value: IConvocatoriaReunion): IConvocatoriaReunionBackend {
+  fromTarget(value: IConvocatoriaReunion): IConvocatoriaReunionResponse {
     if (!value) {
-      return value as unknown as IConvocatoriaReunionBackend;
+      return value as unknown as IConvocatoriaReunionResponse;
     }
     return {
       id: value.id,
@@ -45,7 +46,7 @@ class ConvocatoriaReunionConverter extends SgiBaseConverter<IConvocatoriaReunion
       minutoInicioSegunda: value.minutoInicioSegunda,
       fechaLimite: LuxonUtils.toBackend(value.fechaLimite),
       videoconferencia: value.videoconferencia,
-      lugar: value.lugar,
+      lugar: value.lugar ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.lugar) : [],
       ordenDia: value.ordenDia,
       anio: value.anio,
       numeroActa: value.numeroActa,
@@ -55,4 +56,4 @@ class ConvocatoriaReunionConverter extends SgiBaseConverter<IConvocatoriaReunion
   }
 }
 
-export const CONVOCATORIA_REUNION_CONVERTER = new ConvocatoriaReunionConverter();
+export const CONVOCATORIA_REUNION_RESPONSE_CONVERTER = new ConvocatoriaReunionResponseConverter();

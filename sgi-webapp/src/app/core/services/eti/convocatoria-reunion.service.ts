@@ -1,21 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ASISTENTE_CONVERTER } from '@core/converters/eti/asistente.converter';
-import { CONVOCATORIA_REUNION_DATOS_GENERALES_CONVERTER } from '@core/converters/eti/convocatoria-reunion-datos-generales.converter';
-import { CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/convocatoria-reunion.converter';
 import { DOCUMENTACION_CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/documentacion-convocatoria-reunion.converter';
 import { IActa } from '@core/models/eti/acta';
 import { IAsistente } from '@core/models/eti/asistente';
 import { IAsistenteBackend } from '@core/models/eti/backend/asistente-backend';
-import { IConvocatoriaReunionBackend } from '@core/models/eti/backend/convocatoria-reunion-backend';
-import { IConvocatoriaReunionDatosGeneralesBackend } from '@core/models/eti/backend/convocatoria-reunion-datos-generales-backend';
 import { IDocumentacionConvocatoriaReunionBackend } from '@core/models/eti/backend/documentacion-convocatoria-reunion-backend';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IConvocatoriaReunionDatosGenerales } from '@core/models/eti/convocatoria-reunion-datos-generales';
 import { IDocumentacionConvocatoriaReunion } from '@core/models/eti/documentacion-convocatoria-reunion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IConvocatoriaReunionDatosGeneralesResponse } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-datos-generales-response';
+import { CONVOCATORIA_REUNION_DATOS_GENERALES_RESPONSE_CONVERTER } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-datos-generales-response.converter';
+import { IConvocatoriaReunionResponse } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-response';
+import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-response.converter';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IActaResponse } from './acta/acta-response';
@@ -23,19 +23,43 @@ import { ACTA_RESPONSE_CONVERTER } from './acta/acta-response.converter';
 import { IEvaluacionResponse } from './evaluacion/evaluacion-response';
 import { EVALUACION_RESPONSE_CONVERTER } from './evaluacion/evaluacion-response.converter';
 
+// tslint:disable-next-line: variable-name
+const _ConvocatoriaReunionServiceMixinBase:
+  CreateCtor<IConvocatoriaReunion, IConvocatoriaReunion, IConvocatoriaReunionResponse, IConvocatoriaReunionResponse> &
+  UpdateCtor<number, IConvocatoriaReunion, IConvocatoriaReunion, IConvocatoriaReunionResponse, IConvocatoriaReunionResponse> &
+  FindByIdCtor<number, IConvocatoriaReunion, IConvocatoriaReunionResponse> &
+  FindAllCtor<IConvocatoriaReunion, IConvocatoriaReunionResponse> &
+  typeof SgiRestBaseService =
+  mixinFindAll(
+    mixinFindById(
+      mixinUpdate(
+        mixinCreate(
+          SgiRestBaseService,
+          CONVOCATORIA_REUNION_RESPONSE_CONVERTER,
+          CONVOCATORIA_REUNION_RESPONSE_CONVERTER
+        ),
+        CONVOCATORIA_REUNION_RESPONSE_CONVERTER,
+        CONVOCATORIA_REUNION_RESPONSE_CONVERTER
+      ),
+      CONVOCATORIA_REUNION_RESPONSE_CONVERTER
+    ), CONVOCATORIA_REUNION_RESPONSE_CONVERTER
+  );
+
 @Injectable({
   providedIn: 'root',
 })
-export class ConvocatoriaReunionService extends SgiMutableRestService<number, IConvocatoriaReunionBackend, IConvocatoriaReunion> {
+export class ConvocatoriaReunionService extends _ConvocatoriaReunionServiceMixinBase {
   private static readonly MAPPING = '/convocatoriareuniones';
 
   constructor(protected http: HttpClient) {
     super(
-      ConvocatoriaReunionService.name,
       `${environment.serviceServers.eti}${ConvocatoriaReunionService.MAPPING}`,
-      http,
-      CONVOCATORIA_REUNION_CONVERTER
+      http
     );
+  }
+
+  deleteById(idConvocatoria: number): Observable<void> {
+    return this.http.delete<void>(`${this.endpointUrl}/${idConvocatoria}`);
   }
 
   /**
@@ -67,11 +91,11 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
    * @param idConvocatoria id convocatoria.
    */
   public findByIdWithDatosGenerales(idConvocatoria: number): Observable<IConvocatoriaReunionDatosGenerales> {
-    return this.http.get<IConvocatoriaReunionDatosGeneralesBackend>(
+    return this.http.get<IConvocatoriaReunionDatosGeneralesResponse>(
       `${this.endpointUrl}/${idConvocatoria}/datos-generales`
     ).pipe(
       map((convocatoriaReunion) => {
-        return CONVOCATORIA_REUNION_DATOS_GENERALES_CONVERTER.toTarget(convocatoriaReunion);
+        return CONVOCATORIA_REUNION_DATOS_GENERALES_RESPONSE_CONVERTER.toTarget(convocatoriaReunion);
       })
     );
   }
@@ -88,10 +112,10 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
    * Devuelve todos las convocatorias que no estén asociadas a un acta.
    */
   findConvocatoriasSinActa(): Observable<SgiRestListResult<IConvocatoriaReunion>> {
-    return this.find<IConvocatoriaReunionBackend, IConvocatoriaReunion>(
+    return this.find<IConvocatoriaReunionResponse, IConvocatoriaReunion>(
       `${this.endpointUrl}/acta-no-asignada`,
       null,
-      CONVOCATORIA_REUNION_CONVERTER
+      CONVOCATORIA_REUNION_RESPONSE_CONVERTER
     );
   }
 

@@ -1,7 +1,7 @@
 import { IActa } from '@core/models/eti/acta';
 import { IActaResponse } from '@core/services/eti/acta/acta-response';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { CONVOCATORIA_REUNION_CONVERTER } from '../../../converters/eti/convocatoria-reunion.converter';
+import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from '../convocatoria-reunion/convocatoria-reunion-response.converter';
 
 class ActaResponseConverter extends SgiBaseConverter<IActaResponse, IActa> {
   toTarget(value: IActaResponse): IActa {
@@ -10,7 +10,7 @@ class ActaResponseConverter extends SgiBaseConverter<IActaResponse, IActa> {
     }
     return {
       id: value.id,
-      convocatoriaReunion: CONVOCATORIA_REUNION_CONVERTER.toTarget(value.convocatoriaReunion),
+      convocatoriaReunion: CONVOCATORIA_REUNION_RESPONSE_CONVERTER.toTarget(value.convocatoriaReunion),
       horaInicio: value.horaInicio,
       minutoInicio: value.minutoInicio,
       horaFin: value.horaFin,
@@ -29,7 +29,7 @@ class ActaResponseConverter extends SgiBaseConverter<IActaResponse, IActa> {
     }
     return {
       id: value.id,
-      convocatoriaReunion: CONVOCATORIA_REUNION_CONVERTER.fromTarget(value.convocatoriaReunion),
+      convocatoriaReunion: CONVOCATORIA_REUNION_RESPONSE_CONVERTER.fromTarget(value.convocatoriaReunion),
       horaInicio: value.horaInicio,
       minutoInicio: value.minutoInicio,
       horaFin: value.horaFin,

@@ -1,8 +1,8 @@
-import { IConvocatoriaReunionBackend } from '../../../models/eti/backend/convocatoria-reunion-backend';
 import { IEvaluadorBackend } from '../../../models/eti/backend/evaluador-backend';
 import { IDictamen } from '../../../models/eti/dictamen';
 import { TipoEvaluacion } from '../../../models/eti/tipo-evaluacion';
 import { IComiteResponse } from '../comite/comite-response';
+import { IConvocatoriaReunionResponse } from '../convocatoria-reunion/convocatoria-reunion-response';
 import { IMemoriaResponse } from '../memoria/memoria-response';
 
 export interface IEvaluacionResponse {
@@ -13,7 +13,7 @@ export interface IEvaluacionResponse {
   /** Comite */
   comite: IComiteResponse;
   /** Convocatoria reunión */
-  convocatoriaReunion: IConvocatoriaReunionBackend;
+  convocatoriaReunion: IConvocatoriaReunionResponse;
   /** Tipo evaluación */
   tipoEvaluacion: TipoEvaluacion;
   /** Version */

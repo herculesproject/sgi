@@ -1,9 +1,9 @@
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { CONVOCATORIA_REUNION_CONVERTER } from '../../../converters/eti/convocatoria-reunion.converter';
 import { EVALUADOR_CONVERTER } from '../../../converters/eti/evaluador.converter';
 import { COMITE_RESPONSE_CONVERTER } from '../comite/comite-response.converter';
+import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from '../convocatoria-reunion/convocatoria-reunion-response.converter';
 import { MEMORIA_RESPONSE_CONVERTER } from '../memoria/memoria-response.converter';
 import { IEvaluacionResponse } from './evaluacion-response';
 
@@ -16,7 +16,7 @@ class EvaluacionResponseConverter extends SgiBaseConverter<IEvaluacionResponse, 
       id: value.id,
       memoria: MEMORIA_RESPONSE_CONVERTER.toTarget(value.memoria),
       comite: COMITE_RESPONSE_CONVERTER.toTarget(value.comite),
-      convocatoriaReunion: CONVOCATORIA_REUNION_CONVERTER.toTarget(value.convocatoriaReunion),
+      convocatoriaReunion: CONVOCATORIA_REUNION_RESPONSE_CONVERTER.toTarget(value.convocatoriaReunion),
       tipoEvaluacion: value.tipoEvaluacion,
       version: value.version,
       dictamen: value.dictamen,
@@ -37,7 +37,7 @@ class EvaluacionResponseConverter extends SgiBaseConverter<IEvaluacionResponse, 
       id: value.id,
       memoria: MEMORIA_RESPONSE_CONVERTER.fromTarget(value.memoria),
       comite: COMITE_RESPONSE_CONVERTER.fromTarget(value.comite),
-      convocatoriaReunion: CONVOCATORIA_REUNION_CONVERTER.fromTarget(value.convocatoriaReunion),
+      convocatoriaReunion: CONVOCATORIA_REUNION_RESPONSE_CONVERTER.fromTarget(value.convocatoriaReunion),
       tipoEvaluacion: value.tipoEvaluacion,
       version: value.version,
       dictamen: value.dictamen,

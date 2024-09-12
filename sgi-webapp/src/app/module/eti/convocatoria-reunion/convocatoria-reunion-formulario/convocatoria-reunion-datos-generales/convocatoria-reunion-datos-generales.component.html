@@ -101,8 +101,8 @@
       <ng-container *ngIf="formGroup.controls.videoconferencia?.value === false">
         <mat-form-field fxFlex="33%">
           <mat-label>{{'eti.convocatoria-reunion.lugar' | translate}}</mat-label>
-          <input matInput formControlName="lugar" id="lugar"
-            placeholder="{{'eti.convocatoria-reunion.lugar' | translate}}" required />
+          <sgi-i18n-input matInput formControlName="lugar" id="lugar"
+            placeholder="{{'eti.convocatoria-reunion.lugar' | translate}}" required></sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.lugar.errors?.required">
             {{'error.required.entity' | translate:msgParamLugarEntity}}
           </mat-error>

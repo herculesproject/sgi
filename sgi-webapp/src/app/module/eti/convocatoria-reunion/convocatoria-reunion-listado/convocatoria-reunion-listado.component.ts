@@ -94,6 +94,13 @@ export class ConvocatoriaReunionListadoComponent
     this.fxLayoutProperties.xs = 'column';
 
     this.totalElementos = 0;
+
+    this.resolveSortProperty = (column: string) => {
+      if (column == 'lugar') {
+        return 'lugar.value';
+      }
+      return column;
+    }
   }
 
 

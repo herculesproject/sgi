@@ -1,12 +1,13 @@
-import { IConvocatoriaReunionDatosGeneralesBackend } from '@core/models/eti/backend/convocatoria-reunion-datos-generales-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoriaReunionDatosGenerales } from '@core/models/eti/convocatoria-reunion-datos-generales';
 import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
+import { IConvocatoriaReunionDatosGeneralesResponse } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-datos-generales-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
-class ConvocatoriaReunionDatosGeneralesConverter
-  extends SgiBaseConverter<IConvocatoriaReunionDatosGeneralesBackend, IConvocatoriaReunionDatosGenerales> {
-  toTarget(value: IConvocatoriaReunionDatosGeneralesBackend): IConvocatoriaReunionDatosGenerales {
+class ConvocatoriaReunionDatosGeneralesResponseConverter
+  extends SgiBaseConverter<IConvocatoriaReunionDatosGeneralesResponse, IConvocatoriaReunionDatosGenerales> {
+  toTarget(value: IConvocatoriaReunionDatosGeneralesResponse): IConvocatoriaReunionDatosGenerales {
     if (!value) {
       return value as unknown as IConvocatoriaReunionDatosGenerales;
     }
@@ -21,7 +22,7 @@ class ConvocatoriaReunionDatosGeneralesConverter
       minutoInicioSegunda: value.minutoInicioSegunda,
       fechaLimite: LuxonUtils.fromBackend(value.fechaLimite),
       videoconferencia: value.videoconferencia,
-      lugar: value.lugar,
+      lugar: value.lugar ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.lugar) : [],
       ordenDia: value.ordenDia,
       anio: value.anio,
       numeroActa: value.numeroActa,
@@ -33,9 +34,9 @@ class ConvocatoriaReunionDatosGeneralesConverter
     };
   }
 
-  fromTarget(value: IConvocatoriaReunionDatosGenerales): IConvocatoriaReunionDatosGeneralesBackend {
+  fromTarget(value: IConvocatoriaReunionDatosGenerales): IConvocatoriaReunionDatosGeneralesResponse {
     if (!value) {
-      return value as unknown as IConvocatoriaReunionDatosGeneralesBackend;
+      return value as unknown as IConvocatoriaReunionDatosGeneralesResponse;
     }
     return {
       id: value.id,
@@ -48,7 +49,7 @@ class ConvocatoriaReunionDatosGeneralesConverter
       minutoInicioSegunda: value.minutoInicioSegunda,
       fechaLimite: LuxonUtils.toBackend(value.fechaLimite),
       videoconferencia: value.videoconferencia,
-      lugar: value.lugar,
+      lugar: value.lugar ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.lugar) : [],
       ordenDia: value.ordenDia,
       anio: value.anio,
       numeroActa: value.numeroActa,
@@ -60,4 +61,4 @@ class ConvocatoriaReunionDatosGeneralesConverter
   }
 }
 
-export const CONVOCATORIA_REUNION_DATOS_GENERALES_CONVERTER = new ConvocatoriaReunionDatosGeneralesConverter();
+export const CONVOCATORIA_REUNION_DATOS_GENERALES_RESPONSE_CONVERTER = new ConvocatoriaReunionDatosGeneralesResponseConverter();

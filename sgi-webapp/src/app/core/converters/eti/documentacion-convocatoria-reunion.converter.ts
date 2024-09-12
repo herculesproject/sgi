@@ -1,9 +1,8 @@
 import { IDocumentacionConvocatoriaReunionBackend } from '@core/models/eti/backend/documentacion-convocatoria-reunion-backend';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IDocumentacionConvocatoriaReunion } from '@core/models/eti/documentacion-convocatoria-reunion';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { CONVOCATORIA_REUNION_CONVERTER } from './convocatoria-reunion.converter';
-import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 
 class DocumentacionConvocatoriaReunionConverter extends SgiBaseConverter<IDocumentacionConvocatoriaReunionBackend, IDocumentacionConvocatoriaReunion> {
   toTarget(value: IDocumentacionConvocatoriaReunionBackend): IDocumentacionConvocatoriaReunion {

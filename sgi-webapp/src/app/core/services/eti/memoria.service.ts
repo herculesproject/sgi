@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/convocatoria-reunion.converter';
-import { IConvocatoriaReunionBackend } from '@core/models/eti/backend/convocatoria-reunion-backend';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IEstadoMemoria } from '@core/models/eti/estado-memoria';
@@ -24,6 +22,8 @@ import { environment } from '@env';
 import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IConvocatoriaReunionResponse } from './convocatoria-reunion/convocatoria-reunion-response';
+import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from './convocatoria-reunion/convocatoria-reunion-response.converter';
 import { IEstadoMemoriaResponse } from './estado-memoria/estado-memoria-response';
 import { ESTADO_MEMORIA_RESPONSE_CONVERTER } from './estado-memoria/estado-memoria-response.converter';
 import { EVALUACION_RESPONSE_CONVERTER } from './evaluacion/evaluacion-response.converter';
@@ -396,10 +396,10 @@ export class MemoriaService extends _MemoriaServiceMixinBase {
    * @param idComite identificador del comite
    */
   findConvocatoriaReunionProxima(idComite: number): Observable<IConvocatoriaReunion> {
-    return this.get<IConvocatoriaReunionBackend>(
+    return this.get<IConvocatoriaReunionResponse>(
       `${this.endpointUrl}/${idComite}/convocatoria-reunion/proxima`
     ).pipe(
-      map(response => CONVOCATORIA_REUNION_CONVERTER.toTarget(response))
+      map(response => CONVOCATORIA_REUNION_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 
