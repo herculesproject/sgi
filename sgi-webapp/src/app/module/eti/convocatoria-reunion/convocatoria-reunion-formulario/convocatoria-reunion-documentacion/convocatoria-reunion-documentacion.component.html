@@ -8,7 +8,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoria-reunion.documento.nombre' |
           translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.nombre}} </td>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.nombre | i18nFieldValue}} </td>
       </ng-container>
 
       <!-- Fichero Column -->

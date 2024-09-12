@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ASISTENTE_CONVERTER } from '@core/converters/eti/asistente.converter';
-import { DOCUMENTACION_CONVOCATORIA_REUNION_CONVERTER } from '@core/converters/eti/documentacion-convocatoria-reunion.converter';
 import { IActa } from '@core/models/eti/acta';
 import { IAsistente } from '@core/models/eti/asistente';
 import { IAsistenteBackend } from '@core/models/eti/backend/asistente-backend';
-import { IDocumentacionConvocatoriaReunionBackend } from '@core/models/eti/backend/documentacion-convocatoria-reunion-backend';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IConvocatoriaReunionDatosGenerales } from '@core/models/eti/convocatoria-reunion-datos-generales';
 import { IDocumentacionConvocatoriaReunion } from '@core/models/eti/documentacion-convocatoria-reunion';
@@ -20,6 +18,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IActaResponse } from './acta/acta-response';
 import { ACTA_RESPONSE_CONVERTER } from './acta/acta-response.converter';
+import { IDocumentacionConvocatoriaReunionResponse } from './documentacion-convocatoria-reunion/documentacion-convocatoria-reunion-response';
+import { DOCUMENTACION_CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from './documentacion-convocatoria-reunion/documentacion-convocatoria-reunion-response.converter';
 import { IEvaluacionResponse } from './evaluacion/evaluacion-response';
 import { EVALUACION_RESPONSE_CONVERTER } from './evaluacion/evaluacion-response.converter';
 
@@ -187,10 +187,10 @@ export class ConvocatoriaReunionService extends _ConvocatoriaReunionServiceMixin
  */
   getDocumentaciones(id: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IDocumentacionConvocatoriaReunion>> {
-    return this.find<IDocumentacionConvocatoriaReunionBackend, IDocumentacionConvocatoriaReunion>(
+    return this.find<IDocumentacionConvocatoriaReunionResponse, IDocumentacionConvocatoriaReunion>(
       `${this.endpointUrl}/${id}/documentaciones`,
       options,
-      DOCUMENTACION_CONVOCATORIA_REUNION_CONVERTER
+      DOCUMENTACION_CONVOCATORIA_REUNION_RESPONSE_CONVERTER
     );
   }
 
@@ -203,11 +203,11 @@ export class ConvocatoriaReunionService extends _ConvocatoriaReunionServiceMixin
   * @returns observable para eliminar documentación.
   */
   createDocumentacion(id: number, documentacionConvocatoriaReunion: IDocumentacionConvocatoriaReunion): Observable<IDocumentacionConvocatoriaReunion> {
-    return this.http.post<IDocumentacionConvocatoriaReunionBackend>(
+    return this.http.post<IDocumentacionConvocatoriaReunionResponse>(
       `${this.endpointUrl}/${id}/documentacion`,
-      DOCUMENTACION_CONVOCATORIA_REUNION_CONVERTER.fromTarget(documentacionConvocatoriaReunion)
+      DOCUMENTACION_CONVOCATORIA_REUNION_RESPONSE_CONVERTER.fromTarget(documentacionConvocatoriaReunion)
     ).pipe(
-      map(response => DOCUMENTACION_CONVOCATORIA_REUNION_CONVERTER.toTarget(response))
+      map(response => DOCUMENTACION_CONVOCATORIA_REUNION_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 
@@ -220,11 +220,11 @@ export class ConvocatoriaReunionService extends _ConvocatoriaReunionServiceMixin
   * @returns observable para eliminar documentación.
   */
   updateDocumentacion(id: number, documentacionConvocatoriaReunion: IDocumentacionConvocatoriaReunion): Observable<IDocumentacionConvocatoriaReunion> {
-    return this.http.put<IDocumentacionConvocatoriaReunionBackend>(
+    return this.http.put<IDocumentacionConvocatoriaReunionResponse>(
       `${this.endpointUrl}/${id}/documentacion/${documentacionConvocatoriaReunion.id}`,
-      DOCUMENTACION_CONVOCATORIA_REUNION_CONVERTER.fromTarget(documentacionConvocatoriaReunion)
+      DOCUMENTACION_CONVOCATORIA_REUNION_RESPONSE_CONVERTER.fromTarget(documentacionConvocatoriaReunion)
     ).pipe(
-      map(response => DOCUMENTACION_CONVOCATORIA_REUNION_CONVERTER.toTarget(response))
+      map(response => DOCUMENTACION_CONVOCATORIA_REUNION_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 
