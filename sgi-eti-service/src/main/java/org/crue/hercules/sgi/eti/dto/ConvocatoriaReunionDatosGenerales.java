@@ -2,9 +2,11 @@ package org.crue.hercules.sgi.eti.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Collection;
 
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 
 import lombok.AllArgsConstructor;
@@ -34,7 +36,7 @@ public class ConvocatoriaReunionDatosGenerales implements Serializable {
   private Instant fechaLimite;
 
   /** Lugar. */
-  private String lugar;
+  private Collection<ConvocatoriaReunionLugar> lugar;
 
   /** Orden del día. */
   private String ordenDia;

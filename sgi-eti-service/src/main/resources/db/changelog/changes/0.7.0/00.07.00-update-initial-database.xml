@@ -1011,4 +1011,35 @@
     <dropColumn columnName="nombre" tableName="documentacion_memoria" />
   </changeSet>
 
+  <!-- Convocatoria Reunion -->
+  <changeSet author="user (generated)" id="00.07.00-16">
+    <!-- Lugar -->
+    <createTable tableName="convocatoria_reunion_lugar">
+      <column name="convocatoria_reunion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_reunion_lugar"
+      columnNames="convocatoria_reunion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id"
+      baseTableName="convocatoria_reunion_lugar"
+      constraintName="FK_CONVOCATORIAREUNIONLUGAR_CONVOCATORIAREUNION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}convocatoria_reunion_lugar(convocatoria_reunion_id, lang,
+      value_) SELECT id, '${defaultLang}', lugar FROM ${schemaPrefix}convocatoria_reunion WHERE
+      lugar IS NOT NULL</sql>
+
+    <dropColumn columnName="lugar" tableName="convocatoria_reunion" />
+  </changeSet>
+
 </databaseChangeLog>

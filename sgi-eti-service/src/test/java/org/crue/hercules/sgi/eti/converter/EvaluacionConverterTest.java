@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -228,13 +229,15 @@ public class EvaluacionConverterTest extends BaseServiceTest {
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
+    Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
+    lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar"));
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L);
     convocatoriaReunion.setComite(comite);
     convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-05-10T00:00:00Z"));
     convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setVideoconferencia(false);
-    convocatoriaReunion.setLugar("Lugar");
+    convocatoriaReunion.setLugar(lugar);
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
     convocatoriaReunion.setNumeroActa(100L);

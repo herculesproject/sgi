@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -40,6 +41,7 @@ import org.crue.hercules.sgi.eti.service.AsistentesService;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
 import org.crue.hercules.sgi.eti.service.DocumentacionConvocatoriaReunionService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -113,7 +115,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("comite.id").value(response.getComite().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
+        .andExpect(MockMvcResultMatchers.jsonPath("lugar[0].value")
+            .value(I18nHelper.getValueForLanguage(response.getLugar(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
         .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
         .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
@@ -171,7 +174,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("comite.id").value(response.getComite().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
+        .andExpect(MockMvcResultMatchers.jsonPath("lugar[0].value")
+            .value(I18nHelper.getValueForLanguage(response.getLugar(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
         .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
         .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
@@ -284,7 +288,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("comite.id").value(response.getComite().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
+        .andExpect(MockMvcResultMatchers.jsonPath("lugar[0].value")
+            .value(I18nHelper.getValueForLanguage(response.getLugar(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
         .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
         .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
@@ -350,7 +355,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("comite.id").value(response.getComite().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
+        .andExpect(MockMvcResultMatchers.jsonPath("lugar[0].value")
+            .value(I18nHelper.getValueForLanguage(response.getLugar(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
         .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
         .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
@@ -1026,12 +1032,14 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
+    Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
+    lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar " + txt));
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
     data.setFechaEvaluacion(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
     data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
-    data.setLugar("Lugar " + txt);
+    data.setLugar(lugar);
     data.setOrdenDia("Orden del día convocatoria reunión " + txt);
     data.setAnio(2020);
     data.setNumeroActa(id);

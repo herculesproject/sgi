@@ -3,9 +3,11 @@ package org.crue.hercules.sgi.eti.service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.AsistentesNotFoundException;
@@ -13,10 +15,12 @@ import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.AsistentesRepository;
 import org.crue.hercules.sgi.eti.service.impl.AsistentesServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -396,12 +400,14 @@ public class AsistentesServiceTest extends BaseServiceTest {
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
+    Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
+    lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar " + String.format("%03d", id)));
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
     data.setFechaEvaluacion(Instant.parse("2020-07-20T00:00:00Z"));
     data.setFechaLimite(Instant.parse("2020-08-20T23:59:59Z"));
-    data.setLugar("Lugar " + String.format("%03d", id));
+    data.setLugar(lugar);
     data.setOrdenDia("Orden del día convocatoria reunión " + String.format("%03d", id));
     data.setAnio(2020);
     data.setNumeroActa(100L);

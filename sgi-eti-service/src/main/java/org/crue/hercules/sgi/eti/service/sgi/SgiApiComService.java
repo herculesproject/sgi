@@ -32,7 +32,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -283,7 +282,8 @@ public class SgiApiComService extends SgiApiBaseService {
             convocatoriaReunion.getOrdenDia()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_LUGAR,
-            ObjectUtils.isEmpty(convocatoriaReunion.getLugar()) ? EMPTY_LUGAR : convocatoriaReunion.getLugar()),
+            convocatoriaReunion.getLugar().isEmpty() ? EMPTY_LUGAR
+                : I18nHelper.getValueForCurrentLanguage(convocatoriaReunion.getLugar())),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_VIDEOCONFERENCIA,
             convocatoriaReunion.getVideoconferencia().toString())));

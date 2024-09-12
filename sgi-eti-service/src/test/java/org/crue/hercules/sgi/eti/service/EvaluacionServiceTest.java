@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -1027,13 +1028,15 @@ class EvaluacionServiceTest extends BaseServiceTest {
 
     final TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
+    Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
+    lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar"));
     final ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L); // Ordinaria
     convocatoriaReunion.setComite(comite);
     convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-05-10T00:00:00Z"));
     convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setVideoconferencia(false);
-    convocatoriaReunion.setLugar("Lugar");
+    convocatoriaReunion.setLugar(lugar);
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
     convocatoriaReunion.setNumeroActa(100L);
@@ -1145,13 +1148,15 @@ class EvaluacionServiceTest extends BaseServiceTest {
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(3L, "Seguimiento", Boolean.TRUE);
 
+    Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
+    lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar"));
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L);
     convocatoriaReunion.setComite(comite);
     convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-05-10T00:00:00Z"));
     convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setVideoconferencia(false);
-    convocatoriaReunion.setLugar("Lugar");
+    convocatoriaReunion.setLugar(lugar);
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
     convocatoriaReunion.setNumeroActa(100L);

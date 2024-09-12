@@ -3,9 +3,11 @@ package org.crue.hercules.sgi.eti.service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
@@ -13,11 +15,13 @@ import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.impl.ConvocatoriaReunionServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -335,12 +339,14 @@ public class ConvocatoriaReunionServiceTest extends BaseServiceTest {
 
     String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
+    Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
+    lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar " + txt));
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
     data.setFechaEvaluacion(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
     data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
-    data.setLugar("Lugar " + txt);
+    data.setLugar(lugar);
     data.setOrdenDia("Orden del día convocatoria reunión " + txt);
     data.setAnio(2020);
     data.setNumeroActa(100L);

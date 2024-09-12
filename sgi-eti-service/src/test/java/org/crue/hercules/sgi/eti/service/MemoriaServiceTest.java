@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -1333,13 +1334,15 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
+    Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
+    lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar"));
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L);
     convocatoriaReunion.setComite(comite);
     convocatoriaReunion.setFechaEvaluacion(Instant.now().plus(5, ChronoUnit.DAYS));
     convocatoriaReunion.setFechaLimite(Instant.now().plus(4, ChronoUnit.DAYS));
     convocatoriaReunion.setVideoconferencia(false);
-    convocatoriaReunion.setLugar("Lugar");
+    convocatoriaReunion.setLugar(lugar);
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
     convocatoriaReunion.setAnio(2020);
     convocatoriaReunion.setNumeroActa(100L);
