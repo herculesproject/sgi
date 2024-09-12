@@ -117,7 +117,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   }
 
   protected initColumns(): void {
-    this.columnas = ['memoria.comite.comite', 'tipoEvaluacion.nombre', 'memoria.tipo',
+    this.columnas = ['memoria.comite.codigo', 'tipoEvaluacion.nombre', 'memoria.tipo',
       'memoria.numReferencia', 'version', 'solicitante', 'convocatoriaReunion.fechaEvaluacion', 'enviada', 'acciones'];
   }
 
