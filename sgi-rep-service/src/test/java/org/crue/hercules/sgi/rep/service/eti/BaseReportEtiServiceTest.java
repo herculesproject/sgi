@@ -63,7 +63,6 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
     ConvocatoriaReunionDto convocatoriaReunion = ConvocatoriaReunionDto.builder()
         .id(idConvocatoriaReunion)
         .comite(generarMockComite(1L, "CEI"))
-        .ordenDia("ordenDia")
         .anio(2021)
         .horaInicio(10)
         .minutoInicio(0)

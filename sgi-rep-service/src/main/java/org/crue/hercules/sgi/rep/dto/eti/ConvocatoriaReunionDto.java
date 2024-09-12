@@ -24,7 +24,7 @@ public class ConvocatoriaReunionDto extends BaseRestDto {
   private Instant fechaLimite;
   private Boolean videoconferencia;
   private List<I18nFieldValueDto> lugar;
-  private String ordenDia;
+  private List<I18nFieldValueDto> ordenDia;
   private Integer anio;
   private Long numeroActa;
   private TipoConvocatoriaReunionDto tipoConvocatoriaReunion;

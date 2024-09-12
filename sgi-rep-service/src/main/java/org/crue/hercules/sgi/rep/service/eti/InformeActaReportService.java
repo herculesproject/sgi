@@ -159,7 +159,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     dataReport.put("numeroEvaluacionesRevisiones",
         null != numeroEvaluacionesRevisiones ? numeroEvaluacionesRevisiones : 0);
 
-    dataReport.put("ordenDelDia", acta.getConvocatoriaReunion().getOrdenDia());
+    dataReport.put("ordenDelDia", I18nHelper.getValueForLanguage(acta.getConvocatoriaReunion().getOrdenDia(), lang));
 
     List<MemoriaEvaluadaDto> memorias = actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(acta.getId());
 
