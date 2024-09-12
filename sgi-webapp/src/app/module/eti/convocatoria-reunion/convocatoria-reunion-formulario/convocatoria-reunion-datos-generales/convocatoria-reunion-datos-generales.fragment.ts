@@ -47,7 +47,7 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
       horaInicioSegunda: [null],
       videoconferencia: [null, Validators.required],
       lugar: [[], [I18nValidators.maxLength(250)]],
-      ordenDia: ['', [Validators.maxLength(2000), Validators.required]],
+      ordenDia: [[], [I18nValidators.maxLength(2000), I18nValidators.required]],
       convocantes: ['', Validators.required],
     },
       {

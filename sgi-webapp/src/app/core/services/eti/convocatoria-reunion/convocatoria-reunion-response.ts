@@ -26,7 +26,7 @@ export interface IConvocatoriaReunionResponse {
   /** Lugar */
   lugar: I18nFieldValueResponse[];
   /** Orden día */
-  ordenDia: string;
+  ordenDia: I18nFieldValueResponse[];
   /** Año */
   anio: number;
   /** Numero acta */

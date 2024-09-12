@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TIPO_CONVOCATORIA_REUNION_MAP } from '@core/models/eti/tipo-convocatoria-reunion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -22,7 +23,8 @@ export class ConvocatoriaReunionGeneralListadoExportService extends
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly translate: TranslateService
+    protected readonly translate: TranslateService,
+    private readonly languagueService: LanguageService
   ) {
     super(translate);
   }
@@ -74,7 +76,7 @@ export class ConvocatoriaReunionGeneralListadoExportService extends
       LuxonUtils.toBackend(convocatoriaData.fechaEvaluacion) ?? '',
       convocatoriaData.codigo ?? '',
       convocatoriaData.tipoConvocatoriaReunion?.id ? TIPO_CONVOCATORIA_REUNION_MAP.get(convocatoriaData.tipoConvocatoriaReunion?.id) : '',
-      convocatoriaData.ordenDia ?? '',
+      this.languagueService.getFieldValue(convocatoriaData.ordenDia) ?? '',
     ];
   }
 }
