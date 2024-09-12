@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionOrdenDia;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -117,7 +118,9 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar[0].value")
             .value(I18nHelper.getValueForLanguage(response.getLugar(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
+        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia[0].value").value(
+            I18nHelper.getValueForLanguage(response.getOrdenDia(),
+                Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
         .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
         .andExpect(
@@ -176,7 +179,8 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar[0].value")
             .value(I18nHelper.getValueForLanguage(response.getLugar(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
+        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia[0].value")
+            .value(I18nHelper.getValueForLanguage(response.getOrdenDia(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
         .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
         .andExpect(
@@ -290,7 +294,9 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar[0].value")
             .value(I18nHelper.getValueForLanguage(response.getLugar(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
+        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia[0].value").value(
+            I18nHelper.getValueForLanguage(response.getOrdenDia(),
+                Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
         .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
         .andExpect(
@@ -357,7 +363,9 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar[0].value")
             .value(I18nHelper.getValueForLanguage(response.getLugar(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
+        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia[0].value").value(
+            I18nHelper.getValueForLanguage(response.getOrdenDia(),
+                Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
         .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
         .andExpect(
@@ -1034,13 +1042,16 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
     Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
     lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar " + txt));
+    Set<ConvocatoriaReunionOrdenDia> ordenDia = new HashSet<>();
+    ordenDia.add(new ConvocatoriaReunionOrdenDia(Language.ES,
+        "Orden del día convocatoria reunión " + txt));
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
     data.setFechaEvaluacion(LocalDate.of(2020, 7, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
     data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()).atStartOfDay(ZoneOffset.UTC).toInstant());
     data.setLugar(lugar);
-    data.setOrdenDia("Orden del día convocatoria reunión " + txt);
+    data.setOrdenDia(ordenDia);
     data.setAnio(2020);
     data.setNumeroActa(id);
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);

@@ -75,8 +75,10 @@ public class ConvocatoriaReunion extends BaseEntity {
   private Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
 
   /** Orden del día. */
-  @Column(name = "orden_dia", length = 2000, nullable = false)
-  private String ordenDia;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "convocatoria_reunion_orden_dia", joinColumns = @JoinColumn(name = "convocatoria_reunion_id"))
+  @Valid
+  private Set<ConvocatoriaReunionOrdenDia> ordenDia = new HashSet<>();
 
   /** Anio */
   @Column(name = "anio", nullable = false)

@@ -1040,6 +1040,34 @@
       lugar IS NOT NULL</sql>
 
     <dropColumn columnName="lugar" tableName="convocatoria_reunion" />
+
+    <!-- Orden día -->
+    <createTable tableName="convocatoria_reunion_orden_dia">
+      <column name="convocatoria_reunion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_reunion_orden_dia"
+      columnNames="convocatoria_reunion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id"
+      baseTableName="convocatoria_reunion_orden_dia"
+      constraintName="FK_CONVOCATORIAREUNIONORDENDIA_CONVOCATORIAREUNION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}convocatoria_reunion_orden_dia(convocatoria_reunion_id, lang,
+      value_) SELECT id, '${defaultLang}', orden_dia FROM ${schemaPrefix}convocatoria_reunion WHERE
+      orden_dia IS NOT NULL</sql>
+
+    <dropColumn columnName="orden_dia" tableName="convocatoria_reunion" />
   </changeSet>
 
 </databaseChangeLog>

@@ -30,6 +30,7 @@ DELETE FROM test.estado_acta
 DELETE FROM test.acta
 DELETE FROM test.tipo_estado_acta
 DELETE FROM test.convocatoria_reunion_lugar
+DELETE FROM test.convocatoria_reunion_orden_dia
 DELETE FROM test.convocatoria_reunion
 DELETE FROM test.tipo_convocatoria_reunion
 DELETE FROM test.apartado_definicion

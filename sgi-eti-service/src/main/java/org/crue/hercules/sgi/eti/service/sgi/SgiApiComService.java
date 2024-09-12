@@ -279,7 +279,7 @@ public class SgiApiComService extends SgiApiBaseService {
             minutoSegunda),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_ORDEN_DEL_DIA,
-            convocatoriaReunion.getOrdenDia()),
+            I18nHelper.getValueForCurrentLanguage(convocatoriaReunion.getOrdenDia())),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_LUGAR,
             convocatoriaReunion.getLugar().isEmpty() ? EMPTY_LUGAR

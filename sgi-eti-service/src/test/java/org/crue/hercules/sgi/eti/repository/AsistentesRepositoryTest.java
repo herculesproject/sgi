@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteNombre;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionOrdenDia;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -166,6 +167,9 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
 
     Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
     lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar"));
+    Set<ConvocatoriaReunionOrdenDia> ordenDia = new HashSet<>();
+    ordenDia.add(new ConvocatoriaReunionOrdenDia(Language.ES,
+        "Orden del día convocatoria reunión"));
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setComite(comite);
     convocatoriaReunion.setFechaEvaluacion(Instant.parse("2020-08-01T00:00:00Z"));
@@ -173,7 +177,7 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
     convocatoriaReunion.setVideoconferencia(false);
     convocatoriaReunion.setVideoconferencia(false);
     convocatoriaReunion.setLugar(lugar);
-    convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
+    convocatoriaReunion.setOrdenDia(ordenDia);
     convocatoriaReunion.setAnio(2020);
     convocatoriaReunion.setNumeroActa(100L);
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);

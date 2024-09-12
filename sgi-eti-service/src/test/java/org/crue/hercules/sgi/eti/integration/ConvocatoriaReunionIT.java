@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteNombre;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionOrdenDia;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -772,6 +773,9 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
     Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
     lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar " + txt));
+    Set<ConvocatoriaReunionOrdenDia> ordenDia = new HashSet<>();
+    ordenDia.add(new ConvocatoriaReunionOrdenDia(Language.ES,
+        "Orden del día convocatoria reunión " + txt));
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
@@ -780,7 +784,7 @@ public class ConvocatoriaReunionIT extends BaseIT {
         LocalDate.of(2020, 8, id.intValue()).atStartOfDay(ZoneOffset.UTC).with(LocalTime.of(23, 59, 59)).toInstant());
     data.setVideoconferencia(false);
     data.setLugar(lugar);
-    data.setOrdenDia("Orden del día convocatoria reunión " + txt);
+    data.setOrdenDia(ordenDia);
     data.setAnio(2020);
     data.setNumeroActa(id);
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);

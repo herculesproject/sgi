@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionOrdenDia;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -880,6 +881,9 @@ public class EvaluacionIT extends BaseIT {
 
     Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
     lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar"));
+    Set<ConvocatoriaReunionOrdenDia> ordenDia = new HashSet<>();
+    ordenDia.add(new ConvocatoriaReunionOrdenDia(Language.ES,
+        "Orden del día convocatoria reunión"));
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(2L);
     convocatoriaReunion.setComite(comite);
@@ -887,7 +891,7 @@ public class EvaluacionIT extends BaseIT {
     convocatoriaReunion.setFechaLimite(Instant.now());
     convocatoriaReunion.setVideoconferencia(false);
     convocatoriaReunion.setLugar(lugar);
-    convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
+    convocatoriaReunion.setOrdenDia(ordenDia);
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);

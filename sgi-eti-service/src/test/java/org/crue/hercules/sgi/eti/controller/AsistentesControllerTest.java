@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionOrdenDia;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
@@ -365,13 +366,16 @@ public class AsistentesControllerTest extends BaseControllerTest {
 
     Set<ConvocatoriaReunionLugar> lugar = new HashSet<>();
     lugar.add(new ConvocatoriaReunionLugar(Language.ES, "Lugar " + String.format("%03d", id)));
+    Set<ConvocatoriaReunionOrdenDia> ordenDia = new HashSet<>();
+    ordenDia.add(new ConvocatoriaReunionOrdenDia(Language.ES,
+        "Orden del día convocatoria reunión " + String.format("%03d", id)));
     final ConvocatoriaReunion data = new ConvocatoriaReunion();
     data.setId(id);
     data.setComite(comite);
     data.setFechaEvaluacion(Instant.parse("2020-07-20T00:00:00Z"));
     data.setFechaLimite(Instant.parse("2020-08-20T23:59:59Z"));
     data.setLugar(lugar);
-    data.setOrdenDia("Orden del día convocatoria reunión " + String.format("%03d", id));
+    data.setOrdenDia(ordenDia);
     data.setAnio(2020);
     data.setNumeroActa(100L);
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
