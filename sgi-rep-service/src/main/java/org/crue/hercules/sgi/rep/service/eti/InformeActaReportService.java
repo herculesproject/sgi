@@ -111,7 +111,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     Instant fechaEvaluacion = acta.getConvocatoriaReunion().getFechaEvaluacion();
     dataReport.put("fechaConvocatoria", formatInstantToString(fechaEvaluacion, patternFechaConv));
 
-    dataReport.put("lugar", acta.getConvocatoriaReunion().getLugar());
+    dataReport.put("lugar", I18nHelper.getValueForLanguage(acta.getConvocatoriaReunion().getLugar(), lang));
 
     dataReport.put("isVideoconferencia", acta.getConvocatoriaReunion().getVideoconferencia());
 

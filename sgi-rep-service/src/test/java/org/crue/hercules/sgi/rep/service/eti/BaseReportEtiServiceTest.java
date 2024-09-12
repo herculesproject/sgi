@@ -62,7 +62,6 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
   protected ConvocatoriaReunionDto generarMockConvocatoriaReunion(Long idConvocatoriaReunion) {
     ConvocatoriaReunionDto convocatoriaReunion = ConvocatoriaReunionDto.builder()
         .id(idConvocatoriaReunion)
-        .lugar("lugar")
         .comite(generarMockComite(1L, "CEI"))
         .ordenDia("ordenDia")
         .anio(2021)

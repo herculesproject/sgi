@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.rep.dto.eti;
 
 import java.time.Instant;
+import java.util.List;
 
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.rep.dto.BaseRestDto;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +23,7 @@ public class ConvocatoriaReunionDto extends BaseRestDto {
   private Instant fechaEvaluacion;
   private Instant fechaLimite;
   private Boolean videoconferencia;
-  private String lugar;
+  private List<I18nFieldValueDto> lugar;
   private String ordenDia;
   private Integer anio;
   private Long numeroActa;
