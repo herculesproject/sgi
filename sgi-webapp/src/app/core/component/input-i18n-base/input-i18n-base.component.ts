@@ -139,6 +139,8 @@ export abstract class InputI18nBaseComponent
     } else if (currentI18nValue) {
       newValue.splice(idxCurrrentI18nValue, 1);
       this.value = newValue;
+    } else {
+      this.stateChanges.next();
     }
   }
   get editingValue(): string {
@@ -201,9 +203,11 @@ export abstract class InputI18nBaseComponent
       // Note: we provide the value accessor through here, instead of
       // the `providers` to avoid running into a circular import.
       this.ngControl.valueAccessor = this;
-      this._availableLanguages = this.languageService.getAvailableLanguages();
-      this._selectedLanguage = this.languageService.getLanguage();
     }
+    this._availableLanguages = this.languageService.getAvailableLanguages();
+    this._selectedLanguage = this.languageService.getLanguage();
+    this.languageService.languageChange$.pipe(takeUntil(this._destroy)).subscribe((lang) => this.selectedLanguage = lang);
+
     this.errorStateMatcher = this._errorStateMatcher || this.defaultErrorStateMatcher;
   }
 
@@ -213,11 +217,13 @@ export abstract class InputI18nBaseComponent
         takeUntil(this._destroy)
       ).subscribe(
         (value) => {
-          this._focused = !!value;
-          if (!value) {
-            this._onTouched();
+          if (!this.disabled) {
+            this._focused = !!value;
+            if (!value) {
+              this._onTouched();
+            }
+            this.stateChanges.next();
           }
-          this.stateChanges.next();
         }
       );
   }
