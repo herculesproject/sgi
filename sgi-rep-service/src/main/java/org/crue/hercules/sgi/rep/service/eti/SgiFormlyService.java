@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
@@ -78,7 +80,7 @@ public class SgiFormlyService {
     this.sgiConfigProperties = sgiConfigProperties;
   }
 
-  public void parseApartadoAndRespuestaAndComentarios(ApartadoOutput apartadoOutput) {
+  public void parseApartadoAndRespuestaAndComentarios(ApartadoOutput apartadoOutput, Language lang) {
     try {
       String apartadoJson = apartadoOutput.getEsquema();
       String respuestaJson = null != apartadoOutput.getRespuesta() ? apartadoOutput.getRespuesta().getValor() : "";
@@ -97,7 +99,7 @@ public class SgiFormlyService {
 
         apartadoOutput.setElementos(new ArrayList<>());
 
-        parseComentarios(apartadoOutput);
+        parseComentarios(apartadoOutput, lang);
 
         if (null != apartadoOutput.getMostrarContenidoApartado() && apartadoOutput.getMostrarContenidoApartado()) {
           evaluateFieldGroup(apartadoOutput.getElementos(), respuestaJson, fieldGroup);
@@ -114,10 +116,11 @@ public class SgiFormlyService {
     }
   }
 
-  private void parseComentarios(ApartadoOutput apartadoOutput) {
+  private void parseComentarios(ApartadoOutput apartadoOutput, Language lang) {
     if (null != apartadoOutput.getComentarios() && !apartadoOutput.getComentarios().isEmpty()) {
       apartadoOutput.getComentarios().stream().forEach(c -> apartadoOutput.getElementos()
-          .add(ElementOutput.builder().content(c.getTexto()).tipo(COMMENT_TYPE).nombre("").build()));
+          .add(ElementOutput.builder().content(I18nHelper.getValueForLanguage(c.getTexto(), lang)).tipo(COMMENT_TYPE)
+              .nombre("").build()));
     }
   }
 

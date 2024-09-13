@@ -194,7 +194,7 @@ public class BaseApartadosRespuestasReportService {
       .build();
     // @formatter:on
 
-    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput);
+    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput, lang);
 
     return apartadoOutput;
   }

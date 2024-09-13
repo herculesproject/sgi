@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.rep.service.eti;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
 import org.crue.hercules.sgi.rep.dto.eti.RespuestaDto;
@@ -33,7 +34,7 @@ class SgiFormlyServiceTest extends BaseReportEtiServiceTest {
     ApartadoOutput apartadoOutput = ApartadoOutput.builder().build();
 
     Assertions.assertThatThrownBy(() -> sgiFormlyService.parseApartadoAndRespuestaAndComentarios(
-        apartadoOutput))
+        apartadoOutput, Language.ES))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -60,7 +61,7 @@ class SgiFormlyServiceTest extends BaseReportEtiServiceTest {
         .comentarios(generarMockComentarios())
         .build();
 
-    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput);
+    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput, Language.ES);
 
     // given: apartadoOutput parsed
     assertNotNull(apartadoOutput);
