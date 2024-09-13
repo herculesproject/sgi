@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IComentario } from '@core/models/eti/comentario';
 import { IPersona } from '@core/models/sgp/persona';
 import { IComentarioResponse } from '@core/services/eti/comentario/comentario-response';
@@ -18,7 +19,7 @@ class ComentarioResponseConverter extends SgiBaseConverter<IComentarioResponse, 
       apartado: APARTADO_RESPONSE_CONVERTER.toTarget(value.apartado),
       evaluacion: EVALUACION_RESPONSE_CONVERTER.toTarget(value.evaluacion),
       tipoComentario: value.tipoComentario,
-      texto: value.texto,
+      texto: value.texto ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.texto) : [],
       evaluador: { id: value.lastModifiedBy ?? value.createdBy } as IPersona,
       estado: value.estado,
       fechaEstado: LuxonUtils.fromBackend(value.fechaEstado)
@@ -35,7 +36,7 @@ class ComentarioResponseConverter extends SgiBaseConverter<IComentarioResponse, 
       apartado: APARTADO_RESPONSE_CONVERTER.fromTarget(value.apartado),
       evaluacion: EVALUACION_RESPONSE_CONVERTER.fromTarget(value.evaluacion),
       tipoComentario: value.tipoComentario,
-      texto: value.texto,
+      texto: value.texto ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.texto) : [],
       createdBy: null,
       lastModifiedBy: null,
       estado: value.estado,

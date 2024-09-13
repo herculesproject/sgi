@@ -97,6 +97,8 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
             return this.getApartadoNombre(wrapper.value);
           case 'apartado':
             return this.getSubApartadoNombre(wrapper.value);
+          case 'texto':
+            return this.languageService.getFieldValue(wrapper.value.texto);
           default:
             return wrapper.value[property];
         }

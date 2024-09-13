@@ -18,6 +18,7 @@ import { BloqueService } from '@core/services/eti/bloque.service';
 import { FormularioService } from '@core/services/eti/formulario.service';
 import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -314,8 +315,8 @@ export class ComentarioModalComponent extends DialogFormComponent<ComentarioModa
     const formGroup = new FormGroup({
       bloque: new FormControl(this.data?.comentario?.apartado?.bloque, [Validators.required]),
       apartado: new FormControl(this.data.comentario?.apartado, [Validators.required]),
-      comentario: new FormControl(this.data?.comentario?.texto, [
-        Validators.required, Validators.maxLength(2000)]),
+      comentario: new FormControl(this.data?.comentario?.texto ?? [], [
+        I18nValidators.required, I18nValidators.maxLength(2000)]),
       evaluacion: new FormControl(this.data?.evaluaciones?.length === 1 ? this.data?.evaluaciones[0] : this.data?.comentario ? this.data?.evaluaciones.filter(ev => ev.memoria.id === this.data.comentario?.memoria?.id)[0] : null, [Validators.required, IsEntityValidator.isValid()])
     });
 
