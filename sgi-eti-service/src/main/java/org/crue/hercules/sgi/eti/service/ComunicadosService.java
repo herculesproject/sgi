@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ComiteNombre;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.EstadoMemoriaComentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
@@ -350,7 +351,8 @@ public class ComunicadosService {
     log.debug("enviarComunicadoMemoriaArchivadaAutomaticamentePorInactividad() - end");
   }
 
-  public void enviarComunicadoIndicarSubsanacion(Collection<ComiteNombre> comiteNombre, String comentarioEstado,
+  public void enviarComunicadoIndicarSubsanacion(Collection<ComiteNombre> comiteNombre,
+      Collection<EstadoMemoriaComentario> comentarioEstado,
       String referenciaMemoria, String tipoActividad,
       Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
       String solicitanteRef)
@@ -363,7 +365,7 @@ public class ComunicadosService {
       EmailOutput emailOutput = emailService.createComunicadoMemoriaIndicarSubsanacion(
           EtiComMemoriaIndicarSubsanacionData.builder()
               .enlaceAplicacion(enlaceAplicacion)
-              .comentarioEstado(comentarioEstado)
+              .comentarioEstado(I18nHelper.getValueForCurrentLanguage(comentarioEstado))
               .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
                   comiteNombre))
               .referenciaMemoria(referenciaMemoria)

@@ -9,8 +9,10 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
+import org.crue.hercules.sgi.eti.model.EstadoMemoriaComentario;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Informe;
@@ -69,6 +72,7 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -589,7 +593,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   public void updateEstadoMemoria(Long memoriaId, Long tipoEstadoMemoriaId) {
     log.debug("updateEstadoMemoria(Long memoriaId, Long tipoEstadoMemoriaId) - start");
     Memoria memoria = memoriaRepository.findById(memoriaId).orElseThrow(() -> new MemoriaNotFoundException(memoriaId));
-    updateEstadoMemoria(memoria, tipoEstadoMemoriaId, null);
+    updateEstadoMemoria(memoria, tipoEstadoMemoriaId, Collections.emptySet());
     log.debug("updateEstadoMemoria(Long memoriaId, Long tipoEstadoMemoriaId) - end");
   }
 
@@ -604,7 +608,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Override
   public void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria) {
     log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - start");
-    updateEstadoMemoria(memoria, idTipoEstadoMemoria, null);
+    updateEstadoMemoria(memoria, idTipoEstadoMemoria, Collections.emptySet());
     log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - end");
   }
 
@@ -616,7 +620,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    * @param idTipoEstadoMemoria identificador del estado nuevo de la memoria.
    * @param comentario          un comentario
    */
-  private void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria, String comentario) {
+  private void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria, Set<EstadoMemoriaComentario> comentario) {
     log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria, String comentario) - start");
 
     // se crea el nuevo estado para la memoria
@@ -1502,7 +1506,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    */
   @Transactional
   @Override
-  public void indicarSubsanacion(Long id, String comentario) {
+  public void indicarSubsanacion(Long id, List<I18nFieldValue> comentario) {
     log.debug("indicarSubsanacion(Long id, String comentario) - start");
 
     AssertHelper.idNotNull(id, Memoria.class);
@@ -1513,7 +1517,10 @@ public class MemoriaServiceImpl implements MemoriaService {
       throw new EstadoMemoriaIndicarSubsanacionNotValidException();
     }
 
-    updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.SUBSANACION.getId(), comentario);
+    Set<EstadoMemoriaComentario> comentarioEstado = comentario.stream()
+        .map((c) -> new EstadoMemoriaComentario(c.getLang(), c.getValue())).collect(Collectors.toSet());
+
+    updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.SUBSANACION.getId(), comentarioEstado);
 
     try {
       String tipoActividad;
@@ -1526,7 +1533,7 @@ public class MemoriaServiceImpl implements MemoriaService {
 
       this.comunicadosService.enviarComunicadoIndicarSubsanacion(
           memoria.getComite().getNombre(),
-          comentario,
+          comentarioEstado,
           memoria.getNumReferencia(),
           tipoActividad,
           memoria.getPeticionEvaluacion().getTitulo(),

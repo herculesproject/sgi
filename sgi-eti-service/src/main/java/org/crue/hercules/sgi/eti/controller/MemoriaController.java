@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.eti.converter.RespuestaConverter;
@@ -34,6 +33,7 @@ import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.RespuestaService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -860,7 +860,7 @@ public class MemoriaController {
   @PatchMapping(PATH_INDICAR_SUBSANACION)
   @PreAuthorize("hasAuthority('ETI-MEM-CEST')")
   public ResponseEntity<Void> indicarSubsanacion(@PathVariable Long id,
-      @NotEmpty @Size(max = EstadoMemoria.COMENTARIO_MAX_LENGTH) @RequestBody String comentario) {
+      @NotEmpty @RequestBody List<I18nFieldValue> comentario) {
     log.debug("indicarSubsanacion({}, {}) - start", id, comentario);
     service.indicarSubsanacion(id, comentario);
     log.debug("indicarSubsanacion({}, {}) - end", id, comentario);

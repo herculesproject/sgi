@@ -1168,4 +1168,37 @@
     <dropColumn columnName="texto" tableName="comentario" />
   </changeSet>
 
+  <!-- Estado Memoria -->
+  <changeSet author="user (generated)" id="00.07.00-20">
+    <!-- Comentario -->
+    <createTable tableName="estado_memoria_comentario">
+      <column name="estado_memoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="estado_memoria_comentario"
+      columnNames="estado_memoria_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="estado_memoria_id"
+      baseTableName="estado_memoria_comentario"
+      constraintName="FK_ESTADOMEMORIACOMENTARIO_ESTADOMEMORIA"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="estado_memoria"
+      validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}estado_memoria_comentario(estado_memoria_id, lang, value_)
+      SELECT id, '${defaultLang}', comentario FROM ${schemaPrefix}estado_memoria WHERE comentario IS
+      NOT NULL</sql>
+
+    <dropColumn columnName="comentario" tableName="estado_memoria" />
+  </changeSet>
+
 </databaseChangeLog>

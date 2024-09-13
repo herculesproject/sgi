@@ -7,6 +7,7 @@ DELETE FROM test.tarea_formacion
 DELETE FROM test.tarea_organismo
 DELETE FROM test.tarea
 DELETE FROM test.informe
+DELETE FROM test.estado_memoria_comentario
 DELETE FROM test.estado_memoria
 DELETE FROM test.comentario_texto
 DELETE FROM test.comentario

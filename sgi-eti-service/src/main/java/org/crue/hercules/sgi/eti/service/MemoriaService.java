@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria.Tipo;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -306,7 +307,7 @@ public interface MemoriaService {
    * @param id         Id de la {@link Memoria}.
    * @param comentario comentario subsanacion
    */
-  void indicarSubsanacion(Long id, String comentario);
+  void indicarSubsanacion(Long id, List<I18nFieldValue> comentario);
 
   /**
    * Devuelve el estado actual de la memoria
