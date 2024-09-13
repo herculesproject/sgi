@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Comentario;
+import org.crue.hercules.sgi.eti.model.ComentarioTexto;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
@@ -548,7 +549,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     Comentario comentario = generarMockComentario(300L, "Comentario1", 1L);
 
     // given: Un listado de comentarios
-    String nuevoComentarioJson = "{\"apartado\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
+    String nuevoComentarioJson = "{\"apartado\": {\"id\": 100},  \"texto\": [{\"lang\": \"es\", \"value\": \"Comentario1\"}]}";
 
     BDDMockito
         .given(comentarioService.createComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
@@ -600,7 +601,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     Comentario comentario = generarMockComentario(300L, "Comentario1", 1L);
 
     // given: Un listado de comentarios
-    String nuevoComentarioJson = "{\"apartado\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
+    String nuevoComentarioJson = "{\"apartado\": {\"id\": 100},  \"texto\": [{\"lang\": \"es\", \"value\": \"Comentario1\"}]}";
 
     BDDMockito.given(comentarioService.createComentarioEvaluador(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<Comentario>any(), ArgumentMatchers.anyString())).willReturn(comentario);
@@ -650,7 +651,7 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     Comentario comentario = generarMockComentario(1L, "Comentario Replace", 1L);
 
     // given: Comentarios para actualizar
-    String replaceComentarioJson = "{\"id\": 1, \"apartado\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": \"Comentario\"}";
+    String replaceComentarioJson = "{\"id\": 1, \"apartado\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": [{\"lang\": \"es\", \"value\": \"Comentario\"}]}";
 
     BDDMockito
         .given(comentarioService.updateComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
@@ -662,14 +663,14 @@ public class EvaluacionControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el comentario y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("texto").value("Comentario Replace"));
+        .andExpect(MockMvcResultMatchers.jsonPath("texto[0].value").value("Comentario Replace"));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
   public void updateComentarioGestor_NotFound() throws Exception {
     // given: Un comentario a modificar
-    String replaceComentarioJson = "{\"id\": 1, \"apartado\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": \"Comentario\"}";
+    String replaceComentarioJson = "{\"id\": 1, \"apartado\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": [{\"lang\": \"es\", \"value\": \"Comentario\"}]}";
 
     BDDMockito
         .given(comentarioService.updateComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
@@ -1018,12 +1019,14 @@ public class EvaluacionControllerTest extends BaseControllerTest {
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(tipoComentarioId);
 
+    Set<ComentarioTexto> txt = new HashSet<>();
+    txt.add(new ComentarioTexto(Language.ES, texto));
     Comentario comentario = new Comentario();
     comentario.setId(id);
     comentario.setApartado(apartado);
     comentario.setEvaluacion(evaluacion);
     comentario.setTipoComentario(tipoComentario);
-    comentario.setTexto(texto);
+    comentario.setTexto(txt);
 
     return comentario;
   }

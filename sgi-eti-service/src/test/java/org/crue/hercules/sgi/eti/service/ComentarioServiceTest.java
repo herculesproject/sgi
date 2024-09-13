@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.eti.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
@@ -13,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comentario.TipoEstadoComentario;
+import org.crue.hercules.sgi.eti.model.ComentarioTexto;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -28,17 +31,13 @@ import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.service.impl.ComentarioServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 
 /**
@@ -80,7 +79,8 @@ public class ComentarioServiceTest extends BaseServiceTest {
     Assertions.assertThat(comentario.getEvaluacion().getId()).as("evaluacion.id").isEqualTo(200L);
     Assertions.assertThat(comentario.getTipoComentario()).as("tipoComentario").isNotNull();
     Assertions.assertThat(comentario.getTipoComentario().getId()).as("tipoComentario.id").isEqualTo(1L);
-    Assertions.assertThat(comentario.getTexto()).as("texto").isEqualTo("Comentario1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(comentario.getTexto(), Language.ES)).as("texto")
+        .isEqualTo("Comentario1");
   }
 
   @Test
@@ -114,7 +114,8 @@ public class ComentarioServiceTest extends BaseServiceTest {
 
     for (int i = 0; i < numeroComentario; i++) {
       final Comentario comentario = resultList.get(i);
-      Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(comentario.getTexto(), Language.ES))
+          .isEqualTo("Comentario" + String.format("%03d", i));
     }
   }
 
@@ -141,7 +142,8 @@ public class ComentarioServiceTest extends BaseServiceTest {
     Assertions.assertThat(listResult.size()).isEqualTo(numeroComentario);
     for (int i = 0; i < 9; i++) {
       final Comentario comentario = listResult.get(i);
-      Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario00" + (i + 1));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(comentario.getTexto(), Language.ES))
+          .isEqualTo("Comentario00" + (i + 1));
     }
   }
 
@@ -190,56 +192,8 @@ public class ComentarioServiceTest extends BaseServiceTest {
     Assertions.assertThat(listResult.size()).isEqualTo(numeroComentario * 2);
     for (int i = 0; i < numeroComentario; i++) {
       final Comentario comentario = listResult.get(i);
-      Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", i));
-    }
-  }
-
-  public void findByEvaluacionEvaluadorWithPagingValidId() {
-    // given: EL id de la evaluación sea valido
-    final Long evaluacionId = 1L;
-    final int numeroComentario = 100;
-    final String personaRef = "user-002";
-
-    BDDMockito.given(evaluacionRepository.findById(1L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
-
-    final List<Comentario> comentarios = new ArrayList<>();
-    for (int i = 1; i <= numeroComentario; i++) {
-      comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 1L));
-    }
-
-    final int numPagina = 7;
-    final int numElementos = 10;
-    final Pageable paging = PageRequest.of(numPagina, numElementos);
-    BDDMockito
-        .given(comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedBy(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any()))
-        .willReturn(comentarios);
-
-    BDDMockito
-        .given(comentarioRepository.findByEvaluacionIdAndTipoComentarioIdAndCreatedByNotAndEstado(
-            ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>any(), ArgumentMatchers.<TipoEstadoComentario>any()))
-        .willAnswer(new Answer<Page<Comentario>>() {
-          @Override
-          public Page<Comentario> answer(final InvocationOnMock invocation) throws Throwable {
-            final Pageable pageable = invocation.getArgument(2, Pageable.class);
-            final int size = pageable.getPageSize();
-            final int index = pageable.getPageNumber();
-            final int fromIndex = size * index;
-            final int toIndex = fromIndex + size;
-            final List<Comentario> content = comentarios.subList(fromIndex, toIndex);
-            final Page<Comentario> page = new PageImpl<>(content, pageable, comentarios.size());
-            return page;
-          }
-        });
-    // when: se listen sus comentarios
-    final List<Comentario> resultList = comentarioService.findByEvaluacionIdEvaluador(evaluacionId, personaRef);
-
-    // then: se debe devolver una lista de comentarios
-    Assertions.assertThat(resultList.size()).isEqualTo(numElementos);
-    for (int i = 0, j = (numPagina * 10) + 1; i < 10; i++, j++) {
-      final Comentario comentario = resultList.get(i);
-      Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(comentario.getTexto(), Language.ES))
+          .isEqualTo("Comentario" + String.format("%03d", i));
     }
   }
 
@@ -281,7 +235,8 @@ public class ComentarioServiceTest extends BaseServiceTest {
     Assertions.assertThat(resultList.size()).isEqualTo(numeroComentario);
     for (int i = 0; i < numeroComentario; i++) {
       final Comentario comentario = resultList.get(i);
-      Assertions.assertThat(comentario.getTexto()).isEqualTo("Comentario" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(comentario.getTexto(), Language.ES))
+          .isEqualTo("Comentario" + String.format("%03d", i));
     }
   }
 
@@ -1898,12 +1853,14 @@ public class ComentarioServiceTest extends BaseServiceTest {
     final TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(tipoComentarioId);
 
+    Set<ComentarioTexto> txt = new HashSet<>();
+    txt.add(new ComentarioTexto(Language.ES, texto));
     final Comentario comentario = new Comentario();
     comentario.setId(id);
     comentario.setApartado(apartado);
     comentario.setEvaluacion(evaluacion);
     comentario.setTipoComentario(tipoComentario);
-    comentario.setTexto(texto);
+    comentario.setTexto(txt);
 
     return comentario;
   }

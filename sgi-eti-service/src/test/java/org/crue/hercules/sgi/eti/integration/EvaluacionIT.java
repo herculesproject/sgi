@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comentario;
+import org.crue.hercules.sgi.eti.model.ComentarioTexto;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
@@ -555,10 +556,12 @@ public class EvaluacionIT extends BaseIT {
     Memoria memoria = new Memoria();
     memoria.setId(2L);
 
+    Set<ComentarioTexto> texto = new HashSet<>();
+    texto.add(new ComentarioTexto(Language.ES, "comentario1"));
     Comentario comentario = new Comentario();
     comentario.setApartado(apartado);
     comentario.setMemoria(memoria);
-    comentario.setTexto("comentario1");
+    comentario.setTexto(texto);
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -586,10 +589,12 @@ public class EvaluacionIT extends BaseIT {
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(bloque);
 
+    Set<ComentarioTexto> texto = new HashSet<>();
+    texto.add(new ComentarioTexto(Language.ES, "comentario1"));
     Comentario comentario = new Comentario();
     comentario.setApartado(apartado);
     comentario.setEvaluacion(evaluacion);
-    comentario.setTexto("comentario1");
+    comentario.setTexto(texto);
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -620,10 +625,12 @@ public class EvaluacionIT extends BaseIT {
     Memoria memoria = new Memoria();
     memoria.setId(2L);
 
+    Set<ComentarioTexto> texto = new HashSet<>();
+    texto.add(new ComentarioTexto(Language.ES, "comentario1"));
     Comentario comentario = new Comentario();
     comentario.setApartado(apartado);
     comentario.setMemoria(memoria);
-    comentario.setTexto("comentario1");
+    comentario.setTexto(texto);
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -652,10 +659,12 @@ public class EvaluacionIT extends BaseIT {
     Bloque bloque = new Bloque(1L, formulario, 1, null);
     apartado.setBloque(bloque);
 
+    Set<ComentarioTexto> texto = new HashSet<>();
+    texto.add(new ComentarioTexto(Language.ES, "comentario1"));
     Comentario comentario = new Comentario();
     comentario.setApartado(apartado);
     comentario.setEvaluacion(evaluacion);
-    comentario.setTexto("comentario1");
+    comentario.setTexto(texto);
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -686,12 +695,14 @@ public class EvaluacionIT extends BaseIT {
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(1L);
 
+    Set<ComentarioTexto> texto = new HashSet<>();
+    texto.add(new ComentarioTexto(Language.ES, "Actualizado"));
     Comentario comentarioReplace = new Comentario();
     comentarioReplace.setId(7L);
     comentarioReplace.setApartado(apartado);
     comentarioReplace.setEvaluacion(evaluacion);
     comentarioReplace.setTipoComentario(tipoComentario);
-    comentarioReplace.setTexto("Actualizado");
+    comentarioReplace.setTexto(texto);
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -707,7 +718,7 @@ public class EvaluacionIT extends BaseIT {
 
     Assertions.assertThat(comentario.getId()).isNotNull();
     Assertions.assertThat(comentario.getEvaluacion().getId()).isEqualTo(8L);
-    Assertions.assertThat(comentario.getTexto()).isEqualTo("Actualizado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(comentario.getTexto(), Language.ES)).isEqualTo("Actualizado");
   }
 
   @Test
@@ -727,12 +738,14 @@ public class EvaluacionIT extends BaseIT {
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(2L);
 
+    Set<ComentarioTexto> texto = new HashSet<>();
+    texto.add(new ComentarioTexto(Language.ES, "Actualizado"));
     Comentario comentarioReplace = new Comentario();
     comentarioReplace.setId(1L);
     comentarioReplace.setApartado(apartado);
     comentarioReplace.setEvaluacion(evaluacion);
     comentarioReplace.setTipoComentario(tipoComentario);
-    comentarioReplace.setTexto("Actualizado");
+    comentarioReplace.setTexto(texto);
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
@@ -749,7 +762,7 @@ public class EvaluacionIT extends BaseIT {
 
     Assertions.assertThat(comentario.getId()).isNotNull();
     Assertions.assertThat(comentario.getEvaluacion().getId()).isEqualTo(3L);
-    Assertions.assertThat(comentario.getTexto()).isEqualTo("Actualizado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(comentario.getTexto(), Language.ES)).isEqualTo("Actualizado");
   }
 
   @Test
