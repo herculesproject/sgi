@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IEvaluadorBackend } from '../../../models/eti/backend/evaluador-backend';
 import { IDictamen } from '../../../models/eti/dictamen';
 import { TipoEvaluacion } from '../../../models/eti/tipo-evaluacion';
@@ -29,7 +30,7 @@ export interface IEvaluacionResponse {
   /** Es revisión mínima */
   esRevMinima: boolean;
   /** Comentario */
-  comentario: string;
+  comentario: I18nFieldValueResponse[];
   /** Activo */
   activo: boolean;
 }

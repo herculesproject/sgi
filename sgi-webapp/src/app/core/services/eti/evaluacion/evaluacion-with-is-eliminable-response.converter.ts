@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is-eliminable';
 import { IEvaluacionWithIsEliminableResponse } from '@core/services/eti/evaluacion/evaluacion-with-is-eliminable-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -25,7 +26,7 @@ class EvaluacionWithIsEliminableResponseConverter extends SgiBaseConverter<IEval
       fechaDictamen: LuxonUtils.fromBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
       activo: value.activo,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : [],
       eliminable: value.eliminable
     };
   }
@@ -47,7 +48,7 @@ class EvaluacionWithIsEliminableResponseConverter extends SgiBaseConverter<IEval
       fechaDictamen: LuxonUtils.toBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
       activo: value.activo,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : [],
       eliminable: value.eliminable
     };
   }

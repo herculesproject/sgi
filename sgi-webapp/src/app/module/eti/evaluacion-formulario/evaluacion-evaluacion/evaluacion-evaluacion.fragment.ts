@@ -9,6 +9,7 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
@@ -39,7 +40,7 @@ export class EvaluacionEvaluacionFragment extends FormFragment<IMemoria> {
       solicitante: [{ value: '', disabled: true }],
       version: [{ value: '', disabled: true }],
       dictamen: [null, [Validators.required]],
-      comentario: ['', [Validators.maxLength(2000)]]
+      comentario: [[], [I18nValidators.maxLength(2000)]]
     });
 
     this.subscriptions.push(form.controls.dictamen.valueChanges.subscribe(

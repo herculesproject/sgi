@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -24,7 +25,7 @@ class EvaluacionResponseConverter extends SgiBaseConverter<IEvaluacionResponse, 
       evaluador2: EVALUADOR_CONVERTER.toTarget(value.evaluador2),
       fechaDictamen: LuxonUtils.fromBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : [],
       activo: value.activo
     };
   }
@@ -45,7 +46,7 @@ class EvaluacionResponseConverter extends SgiBaseConverter<IEvaluacionResponse, 
       evaluador2: EVALUADOR_CONVERTER.fromTarget(value.evaluador2),
       fechaDictamen: LuxonUtils.toBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : [],
       activo: value.activo
     };
   }
