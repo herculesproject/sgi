@@ -1104,4 +1104,36 @@
     <dropColumn columnName="nombre" tableName="documentacion_convocatoria_reunion" />
   </changeSet>
 
+  <!-- Evaluacion -->
+  <changeSet author="user (generated)" id="00.07.00-18">
+    <!-- Comentario -->
+    <createTable tableName="evaluacion_comentario">
+      <column name="evaluacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="evaluacion_comentario"
+      columnNames="evaluacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="evaluacion_id"
+      baseTableName="evaluacion_comentario"
+      constraintName="FK_EVALUACIONCOMENTARIO_EVALUACION"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="evaluacion"
+      validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}evaluacion_comentario(evaluacion_id, lang, value_) SELECT id,
+      '${defaultLang}', comentario FROM ${schemaPrefix}evaluacion WHERE comentario IS NOT NULL</sql>
+
+    <dropColumn columnName="comentario" tableName="evaluacion" />
+  </changeSet>
+
 </databaseChangeLog>
