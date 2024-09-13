@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IEstadoMemoria } from '@core/models/eti/estado-memoria';
@@ -373,8 +375,8 @@ export class MemoriaService extends _MemoriaServiceMixinBase {
    * @param memoriaId id memoria.
    * @param comentario un comentario
    */
-  indicarSubsanacion(memoriaId: number, comentario: string): Observable<void> {
-    return this.http.patch<void>(`${this.endpointUrl}/${memoriaId}/indicar-subsanacion`, comentario);
+  indicarSubsanacion(memoriaId: number, comentario: I18nFieldValue[]): Observable<void> {
+    return this.http.patch<void>(`${this.endpointUrl}/${memoriaId}/indicar-subsanacion`, comentario ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(comentario) : []);
   }
 
   /**

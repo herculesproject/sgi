@@ -89,7 +89,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> {
         Validators.required
       ],
       comentarioSubsanacion: [
-        { value: '', disabled: true }
+        { value: [], disabled: true }
       ]
     });
   }
@@ -106,7 +106,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> {
       titulo: value.titulo,
       personaResponsable: value.responsable?.id ? value.responsable : null,
       memoriaOriginal: value.memoriaOriginal,
-      comentarioSubsanacion: this.estadoMemoria?.comentario ?? ''
+      comentarioSubsanacion: this.estadoMemoria?.comentario ?? []
     };
   }
 
