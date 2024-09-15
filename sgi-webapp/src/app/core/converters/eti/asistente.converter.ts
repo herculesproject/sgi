@@ -2,7 +2,7 @@ import { IAsistente } from '@core/models/eti/asistente';
 import { IAsistenteBackend } from '@core/models/eti/backend/asistente-backend';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from '../../services/eti/convocatoria-reunion/convocatoria-reunion-response.converter';
-import { EVALUADOR_CONVERTER } from './evaluador.converter';
+import { EVALUADOR_RESPONSE_CONVERTER } from '../../services/eti/evaluador/evaluador-response.converter';
 
 class AsistenteConverter extends SgiBaseConverter<IAsistenteBackend, IAsistente> {
   toTarget(value: IAsistenteBackend): IAsistente {
@@ -11,7 +11,7 @@ class AsistenteConverter extends SgiBaseConverter<IAsistenteBackend, IAsistente>
     }
     return {
       id: value.id,
-      evaluador: EVALUADOR_CONVERTER.toTarget(value.evaluador),
+      evaluador: EVALUADOR_RESPONSE_CONVERTER.toTarget(value.evaluador),
       convocatoriaReunion: CONVOCATORIA_REUNION_RESPONSE_CONVERTER.toTarget(value.convocatoriaReunion),
       asistencia: value.asistencia,
       motivo: value.motivo
@@ -24,7 +24,7 @@ class AsistenteConverter extends SgiBaseConverter<IAsistenteBackend, IAsistente>
     }
     return {
       id: value.id,
-      evaluador: EVALUADOR_CONVERTER.fromTarget(value.evaluador),
+      evaluador: EVALUADOR_RESPONSE_CONVERTER.fromTarget(value.evaluador),
       convocatoriaReunion: CONVOCATORIA_REUNION_RESPONSE_CONVERTER.fromTarget(value.convocatoriaReunion),
       asistencia: value.asistencia,
       motivo: value.motivo

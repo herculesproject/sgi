@@ -1,7 +1,8 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IComiteResponse } from '@core/services/eti/comite/comite-response';
-import { CargoComite } from '../cargo-comite';
+import { CargoComite } from '../../../models/eti/cargo-comite';
 
-export interface IEvaluadorBackend {
+export interface IEvaluadorResponse {
   /** Id */
   id: number;
   /** Comité */
@@ -9,7 +10,7 @@ export interface IEvaluadorBackend {
   /** Cargo comité */
   cargoComite: CargoComite;
   /** Resumen */
-  resumen: string;
+  resumen: I18nFieldValueResponse[];
   /** Fecha Alta. */
   fechaAlta: string;
   /** Fecha Baja. */

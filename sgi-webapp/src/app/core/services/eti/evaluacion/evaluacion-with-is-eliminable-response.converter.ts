@@ -3,9 +3,9 @@ import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is
 import { IEvaluacionWithIsEliminableResponse } from '@core/services/eti/evaluacion/evaluacion-with-is-eliminable-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { EVALUADOR_CONVERTER } from '../../../converters/eti/evaluador.converter';
 import { COMITE_RESPONSE_CONVERTER } from '../comite/comite-response.converter';
 import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from '../convocatoria-reunion/convocatoria-reunion-response.converter';
+import { EVALUADOR_RESPONSE_CONVERTER } from '../evaluador/evaluador-response.converter';
 import { MEMORIA_RESPONSE_CONVERTER } from '../memoria/memoria-response.converter';
 
 class EvaluacionWithIsEliminableResponseConverter extends SgiBaseConverter<IEvaluacionWithIsEliminableResponse, IEvaluacionWithIsEliminable> {
@@ -21,8 +21,8 @@ class EvaluacionWithIsEliminableResponseConverter extends SgiBaseConverter<IEval
       tipoEvaluacion: value.tipoEvaluacion,
       version: value.version,
       dictamen: value.dictamen,
-      evaluador1: EVALUADOR_CONVERTER.toTarget(value.evaluador1),
-      evaluador2: EVALUADOR_CONVERTER.toTarget(value.evaluador2),
+      evaluador1: EVALUADOR_RESPONSE_CONVERTER.toTarget(value.evaluador1),
+      evaluador2: EVALUADOR_RESPONSE_CONVERTER.toTarget(value.evaluador2),
       fechaDictamen: LuxonUtils.fromBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
       activo: value.activo,
@@ -43,8 +43,8 @@ class EvaluacionWithIsEliminableResponseConverter extends SgiBaseConverter<IEval
       tipoEvaluacion: value.tipoEvaluacion,
       version: value.version,
       dictamen: value.dictamen,
-      evaluador1: EVALUADOR_CONVERTER.fromTarget(value.evaluador1),
-      evaluador2: EVALUADOR_CONVERTER.fromTarget(value.evaluador2),
+      evaluador1: EVALUADOR_RESPONSE_CONVERTER.fromTarget(value.evaluador1),
+      evaluador2: EVALUADOR_RESPONSE_CONVERTER.fromTarget(value.evaluador2),
       fechaDictamen: LuxonUtils.toBackend(value.fechaDictamen),
       esRevMinima: value.esRevMinima,
       activo: value.activo,

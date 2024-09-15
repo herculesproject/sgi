@@ -84,9 +84,9 @@
       [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
       <mat-form-field>
         <mat-label>{{'eti.evaluador.resumen' | translate}}</mat-label>
-        <textarea #resumen matInput formControlName="resumen" id="resumen"
-          placeholder="{{'eti.evaluador.resumen' | translate}}" maxlength="4000"></textarea>
-        <mat-hint>{{resumen.value.length}} / 4000</mat-hint>
+        <sgi-i18n-textarea #resumen formControlName="resumen" id="resumen"
+          placeholder="{{'eti.evaluador.resumen' | translate}}" maxlength="4000"></sgi-i18n-textarea>
+        <mat-hint>{{resumen.editingValue.length}} / 4000</mat-hint>
         <mat-error *ngIf="formGroup.controls.resumen.errors?.required">
           {{'error.required.entity' | translate:msgParamResumenEntity}}
         </mat-error>
