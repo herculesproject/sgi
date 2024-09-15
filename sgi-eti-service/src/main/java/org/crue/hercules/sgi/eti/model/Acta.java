@@ -1,20 +1,25 @@
 package org.crue.hercules.sgi.eti.model;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -75,9 +80,11 @@ public class Acta extends BaseEntity {
   private Integer minutoFin;
 
   /** Resumen */
-  @Column(name = "resumen", length = 4000, nullable = false, columnDefinition = "clob")
-  @NotNull
-  private String resumen;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "acta_resumen", joinColumns = @JoinColumn(name = "acta_id"))
+  @NotEmpty
+  @Valid
+  private Set<ActaResumen> resumen = new HashSet<>();
 
   /** Numero */
   @Column(name = "numero", nullable = false)

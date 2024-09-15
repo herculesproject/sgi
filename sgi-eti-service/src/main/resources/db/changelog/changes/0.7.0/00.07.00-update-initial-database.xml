@@ -1231,4 +1231,34 @@
     <dropColumn columnName="resumen" tableName="evaluador" />
   </changeSet>
 
+  <!-- Acta -->
+  <changeSet author="user (generated)" id="00.07.00-22">
+    <!-- Resumen -->
+    <createTable tableName="acta_resumen">
+      <column name="acta_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="CLOB">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="acta_resumen"
+      columnNames="acta_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="acta_id"
+      baseTableName="acta_resumen"
+      constraintName="FK_ACTARESUMEN_ACTA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="acta" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}acta_resumen(acta_id, lang, value_) SELECT id, '${defaultLang}',
+      resumen FROM ${schemaPrefix}acta WHERE resumen IS NOT NULL</sql>
+
+    <dropColumn columnName="resumen" tableName="acta" />
+  </changeSet>
+
 </databaseChangeLog>

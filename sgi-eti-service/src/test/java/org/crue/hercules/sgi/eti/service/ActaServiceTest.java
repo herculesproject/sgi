@@ -3,8 +3,10 @@ package org.crue.hercules.sgi.eti.service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
@@ -12,6 +14,7 @@ import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.TipoConvocatoriaOutput;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.ActaResumen;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
@@ -30,6 +33,7 @@ import org.crue.hercules.sgi.eti.service.impl.ActaServiceImpl;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiBlockchainService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -110,7 +114,8 @@ public class ActaServiceTest extends BaseServiceTest {
     Assertions.assertThat(acta.getMinutoInicio()).as("minutoInicio").isEqualTo(15);
     Assertions.assertThat(acta.getHoraFin()).as("horaFin").isEqualTo(12);
     Assertions.assertThat(acta.getMinutoFin()).as("minutoFin").isEqualTo(0);
-    Assertions.assertThat(acta.getResumen()).as("resumen").isEqualTo("Resumen123");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(acta.getResumen(), Language.ES)).as("resumen")
+        .isEqualTo("Resumen123");
     Assertions.assertThat(acta.getNumero()).as("numero").isEqualTo(123);
     Assertions.assertThat(acta.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1);
     Assertions.assertThat(acta.getInactiva()).as("inactiva").isEqualTo(true);
@@ -147,7 +152,8 @@ public class ActaServiceTest extends BaseServiceTest {
     Assertions.assertThat(actaCreado.getMinutoInicio()).as("minutoInicio").isEqualTo(15);
     Assertions.assertThat(actaCreado.getHoraFin()).as("horaFin").isEqualTo(12);
     Assertions.assertThat(actaCreado.getMinutoFin()).as("minutoFin").isEqualTo(0);
-    Assertions.assertThat(actaCreado.getResumen()).as("resumen").isEqualTo("Resumen123");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(actaCreado.getResumen(), Language.ES)).as("resumen")
+        .isEqualTo("Resumen123");
     Assertions.assertThat(actaCreado.getNumero()).as("numero").isEqualTo(123);
     Assertions.assertThat(actaCreado.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1);
     Assertions.assertThat(actaCreado.getInactiva()).as("inactiva").isEqualTo(true);
@@ -168,7 +174,8 @@ public class ActaServiceTest extends BaseServiceTest {
 
     // given: Un nuevo acta con el resumen actualizado
     Acta actaResumenActualizado = generarMockActa(1L, 123);
-    actaResumenActualizado.setResumen("Resumen actualizado");
+    I18nHelper.getFieldValueForLanguage(actaResumenActualizado.getResumen(), Language.ES)
+        .ifPresent(resumen -> resumen.setValue("Resumen actualizado"));
 
     Acta acta = generarMockActa(1L, 123);
 
@@ -180,7 +187,8 @@ public class ActaServiceTest extends BaseServiceTest {
 
     // then: El acta se actualiza correctamente.
     Assertions.assertThat(actaActualizado.getId()).isEqualTo(1L);
-    Assertions.assertThat(actaActualizado.getResumen()).isEqualTo("Resumen actualizado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(actaActualizado.getResumen(), Language.ES))
+        .isEqualTo("Resumen actualizado");
 
   }
 
@@ -378,6 +386,8 @@ public class ActaServiceTest extends BaseServiceTest {
     tipoEstadoActa.setNombre("En elaboración");
     tipoEstadoActa.setActivo(Boolean.TRUE);
 
+    Set<ActaResumen> resumen = new HashSet<>();
+    resumen.add(new ActaResumen(Language.ES, "Resumen" + numero));
     Acta acta = new Acta();
     acta.setId(id);
     acta.setConvocatoriaReunion(convocatoriaReunion);
@@ -385,7 +395,7 @@ public class ActaServiceTest extends BaseServiceTest {
     acta.setMinutoInicio(15);
     acta.setHoraFin(12);
     acta.setMinutoFin(0);
-    acta.setResumen("Resumen" + numero);
+    acta.setResumen(resumen);
     acta.setNumero(numero);
     acta.setEstadoActual(tipoEstadoActa);
     acta.setInactiva(true);

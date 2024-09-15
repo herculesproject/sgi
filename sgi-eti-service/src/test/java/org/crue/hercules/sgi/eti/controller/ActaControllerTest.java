@@ -2,19 +2,23 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.dto.TipoConvocatoriaOutput;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.ActaResumen;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -65,7 +69,7 @@ public class ActaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(15))
         .andExpect(MockMvcResultMatchers.jsonPath("horaFin").value(12))
         .andExpect(MockMvcResultMatchers.jsonPath("minutoFin").value(0))
-        .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Resumen123"))
+        .andExpect(MockMvcResultMatchers.jsonPath("resumen[0].value").value("Resumen123"))
         .andExpect(MockMvcResultMatchers.jsonPath("numero").value(123))
         .andExpect(MockMvcResultMatchers.jsonPath("estadoActual.id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("inactiva").value(true))
@@ -110,7 +114,7 @@ public class ActaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ACT-C" })
   public void newActa_ReturnsActa() throws Exception {
     // given: Un acta nuevo
-    String nuevoActaJson = "{\"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
+    String nuevoActaJson = "{\"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": [{\"lang\": \"es\", \"value\": \"Resumen123\"}], \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
 
     Acta acta = generarMockActa(1L, 123);
 
@@ -129,7 +133,7 @@ public class ActaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(15))
         .andExpect(MockMvcResultMatchers.jsonPath("horaFin").value(12))
         .andExpect(MockMvcResultMatchers.jsonPath("minutoFin").value(0))
-        .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Resumen123"))
+        .andExpect(MockMvcResultMatchers.jsonPath("resumen[0].value").value("Resumen123"))
         .andExpect(MockMvcResultMatchers.jsonPath("numero").value(123))
         .andExpect(MockMvcResultMatchers.jsonPath("estadoActual.id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("inactiva").value(true))
@@ -140,7 +144,7 @@ public class ActaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ACT-C" })
   public void newActa_Error_Returns400() throws Exception {
     // given: Un acta nuevo que produce un error al crearse
-    String nuevoActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
+    String nuevoActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": [{\"lang\": \"es\", \"value\": \"Resumen123\"}], \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
 
     BDDMockito.given(actaService.create(ArgumentMatchers.<Acta>any())).willThrow(new IllegalArgumentException());
 
@@ -158,7 +162,7 @@ public class ActaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ACT-E" })
   public void replaceActa_ReturnsActa() throws Exception {
     // given: Un acta a modificar
-    String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
+    String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": [{\"lang\": \"es\", \"value\": \"Resumen123\"}], \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
 
     Acta actaActualizado = generarMockActa(1L, 456);
 
@@ -175,7 +179,7 @@ public class ActaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(15))
         .andExpect(MockMvcResultMatchers.jsonPath("horaFin").value(12))
         .andExpect(MockMvcResultMatchers.jsonPath("minutoFin").value(0))
-        .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Resumen456"))
+        .andExpect(MockMvcResultMatchers.jsonPath("resumen[0].value").value("Resumen456"))
         .andExpect(MockMvcResultMatchers.jsonPath("numero").value(456))
         .andExpect(MockMvcResultMatchers.jsonPath("estadoActual.id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("inactiva").value(true))
@@ -186,7 +190,7 @@ public class ActaControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ACT-E" })
   public void replaceActa_NotFound() throws Exception {
     // given: Un acta a modificar
-    String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
+    String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": [{\"lang\": \"es\", \"value\": \"Resumen123\"}], \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
 
     BDDMockito.given(actaService.update(ArgumentMatchers.<Acta>any())).will((InvocationOnMock invocation) -> {
       throw new ActaNotFoundException(((Acta) invocation.getArgument(0)).getId());
@@ -336,7 +340,7 @@ public class ActaControllerTest extends BaseControllerTest {
    * @param numero numero del acta
    * @return el objeto Acta
    */
-  public Acta generarMockActa(Long id, Integer numero) {
+  private Acta generarMockActa(Long id, Integer numero) {
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setCodigo("CEEA");
@@ -352,6 +356,8 @@ public class ActaControllerTest extends BaseControllerTest {
     tipoEstadoActa.setNombre("En elaboración");
     tipoEstadoActa.setActivo(Boolean.TRUE);
 
+    Set<ActaResumen> resumen = new HashSet<>();
+    resumen.add(new ActaResumen(Language.ES, "Resumen" + numero));
     Acta acta = new Acta();
     acta.setId(id);
     acta.setConvocatoriaReunion(convocatoriaReunion);
@@ -359,7 +365,7 @@ public class ActaControllerTest extends BaseControllerTest {
     acta.setMinutoInicio(15);
     acta.setHoraFin(12);
     acta.setMinutoFin(0);
-    acta.setResumen("Resumen" + numero);
+    acta.setResumen(resumen);
     acta.setNumero(numero);
     acta.setEstadoActual(tipoEstadoActa);
     acta.setInactiva(true);
@@ -375,7 +381,7 @@ public class ActaControllerTest extends BaseControllerTest {
    * @param numero numero del acta
    * @return el objeto Acta
    */
-  public ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
+  private ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
     Acta acta = generarMockActa(id, numero);
 
     TipoConvocatoriaOutput tipoConvocatoria = generarMockTipoConvocatoriaOutput(

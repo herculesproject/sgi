@@ -30,6 +30,7 @@ DELETE FROM test.tipo_investigacion_tutelada
 DELETE FROM test.tipo_documento_nombre
 DELETE FROM test.tipo_documento
 DELETE FROM test.estado_acta
+DELETE FROM test.acta_resumen
 DELETE FROM test.acta
 DELETE FROM test.tipo_estado_acta
 DELETE FROM test.convocatoria_reunion_lugar
