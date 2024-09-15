@@ -16,6 +16,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.model.Asistentes;
+import org.crue.hercules.sgi.eti.model.AsistentesMotivo;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteNombre;
@@ -808,11 +809,13 @@ public class ConvocatoriaReunionIT extends BaseIT {
 
   private Asistentes generarMockAsistentes(Long id, Long evaluadorId, Long convocatoriaReunionId) {
 
+    Set<AsistentesMotivo> motivo = new HashSet<>();
+    motivo.add(new AsistentesMotivo(Language.ES, "Motivo" + id));
     Asistentes asistentes = new Asistentes();
     asistentes.setId(id);
     asistentes.setEvaluador(generarMockEvaluador(evaluadorId));
     asistentes.setConvocatoriaReunion(getMockData(convocatoriaReunionId, 1L, 2L));
-    asistentes.setMotivo("Motivo" + id);
+    asistentes.setMotivo(motivo);
     asistentes.setAsistencia(Boolean.TRUE);
 
     return asistentes;

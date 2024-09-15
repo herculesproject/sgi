@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Asistentes;
+import org.crue.hercules.sgi.eti.model.AsistentesMotivo;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteNombre;
@@ -229,7 +230,15 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
    * @return el objeto Asistentes
    */
   private Asistentes generarMockAsistentes(Evaluador evaluador, ConvocatoriaReunion convocatoriaReunion) {
-    return new Asistentes(null, evaluador, convocatoriaReunion, Boolean.TRUE, "Motivo1");
+    Set<AsistentesMotivo> motivo = new HashSet<>();
+    motivo.add(new AsistentesMotivo(Language.ES, "Motivo1"));
+    Asistentes asistentes = new Asistentes();
+    asistentes.setEvaluador(evaluador);
+    asistentes.setConvocatoriaReunion(convocatoriaReunion);
+    asistentes.setMotivo(motivo);
+    asistentes.setAsistencia(Boolean.TRUE);
+
+    return asistentes;
   }
 
 }

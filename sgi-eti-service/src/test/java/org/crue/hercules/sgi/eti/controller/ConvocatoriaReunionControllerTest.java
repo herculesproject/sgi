@@ -15,6 +15,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Asistentes;
+import org.crue.hercules.sgi.eti.model.AsistentesMotivo;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -1075,11 +1076,13 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
 
   private Asistentes generarMockAsistentes(Long id, String motivo, Boolean asistencia) {
 
+    Set<AsistentesMotivo> mot = new HashSet<>();
+    mot.add(new AsistentesMotivo(Language.ES, motivo));
     Asistentes asistentes = new Asistentes();
     asistentes.setId(id);
     asistentes.setEvaluador(generarMockEvaluador(id, "Resumen " + motivo));
     asistentes.setConvocatoriaReunion(getMockData(id, id, 1L));
-    asistentes.setMotivo(motivo);
+    asistentes.setMotivo(mot);
     asistentes.setAsistencia(asistencia);
 
     return asistentes;

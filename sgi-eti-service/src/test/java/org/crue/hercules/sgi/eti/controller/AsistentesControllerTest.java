@@ -9,6 +9,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.AsistentesNotFoundException;
 import org.crue.hercules.sgi.eti.model.Asistentes;
+import org.crue.hercules.sgi.eti.model.AsistentesMotivo;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -18,6 +19,7 @@ import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -61,7 +63,7 @@ public class AsistentesControllerTest extends BaseControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("motivo").value("Motivo 1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("motivo[0].value").value("Motivo 1"))
         .andExpect(MockMvcResultMatchers.jsonPath("asistencia").value(Boolean.TRUE))
         .andExpect(MockMvcResultMatchers.jsonPath("evaluador.id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.id").value(1));
@@ -84,7 +86,7 @@ public class AsistentesControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-CNV-C" })
   public void newAsistentes_ReturnsAsistentes() throws Exception {
     // given: Una entidad Asistentes nueva
-    String nuevoAsistentesJson = "{ \"motivo\": \"Motivo 1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
+    String nuevoAsistentesJson = "{ \"motivo\": [{\"lang\": \"es\", \"value\": \"Motivo 1\"}], \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
 
     Asistentes asistente = generarMockAsistentes(1L, "Motivo 1", Boolean.TRUE);
 
@@ -98,7 +100,7 @@ public class AsistentesControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea los nuevos Asistentes y los devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("motivo").value("Motivo 1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("motivo[0].value").value("Motivo 1"));
   }
 
   @Test
@@ -125,7 +127,7 @@ public class AsistentesControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
   public void replaceAsistentes_ReturnsAsistentes() throws Exception {
     // given: Asistentes a modificar
-    String replaceAsistentesJson = "{\"id\": 1, \"motivo\": \"Motivo1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
+    String replaceAsistentesJson = "{\"id\": 1, \"motivo\": [{\"lang\": \"es\", \"value\": \"Motivo 1\"}], \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
 
     Asistentes asistente = generarMockAsistentes(1L, "Replace Motivo 1", Boolean.TRUE);
 
@@ -138,7 +140,7 @@ public class AsistentesControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica Asistentes y los devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("motivo").value("Replace Motivo 1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("motivo[0].value").value("Replace Motivo 1"));
 
   }
 
@@ -146,7 +148,7 @@ public class AsistentesControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
   public void replaceAsistentes_NotFound() throws Exception {
     // given: Asistentes a modificar
-    String replaceAsistentesJson = "{\"id\": 1, \"motivo\": \"Motivo1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
+    String replaceAsistentesJson = "{\"id\": 1, \"motivo\": [{\"lang\": \"es\", \"value\": \"Motivo 1\"}], \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
 
     BDDMockito.given(asistenteService.update(ArgumentMatchers.<Asistentes>any()))
         .will((InvocationOnMock invocation) -> {
@@ -256,7 +258,8 @@ public class AsistentesControllerTest extends BaseControllerTest {
     // containing motivo='Motivo031' to 'Motivo040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Asistentes asistente = actual.get(i);
-      Assertions.assertThat(asistente.getMotivo()).isEqualTo("Motivo" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(asistente.getMotivo(), Language.ES))
+          .isEqualTo("Motivo" + String.format("%03d", j));
     }
   }
 
@@ -277,7 +280,8 @@ public class AsistentesControllerTest extends BaseControllerTest {
           public Page<Asistentes> answer(InvocationOnMock invocation) throws Throwable {
             List<Asistentes> content = new ArrayList<>();
             for (Asistentes asistente : asistentes) {
-              if (asistente.getMotivo().startsWith("Motivo") && asistente.getId() == 5L) {
+              if (I18nHelper.getValueForLanguage(asistente.getMotivo(), Language.ES).startsWith("Motivo")
+                  && asistente.getId() == 5L) {
                 content.add(asistente);
               }
             }
@@ -307,11 +311,13 @@ public class AsistentesControllerTest extends BaseControllerTest {
 
   private Asistentes generarMockAsistentes(Long id, String motivo, Boolean asistencia) {
 
+    Set<AsistentesMotivo> mot = new HashSet<>();
+    mot.add(new AsistentesMotivo(Language.ES, motivo));
     Asistentes asistentes = new Asistentes();
     asistentes.setId(id);
     asistentes.setEvaluador(generarMockEvaluador(id, "Resumen " + motivo));
     asistentes.setConvocatoriaReunion(getMockConvocatoriaReunion(id, id));
-    asistentes.setMotivo(motivo);
+    asistentes.setMotivo(mot);
     asistentes.setAsistencia(asistencia);
 
     return asistentes;
