@@ -86,7 +86,6 @@ class InformeActaReportServiceTest extends BaseReportEtiServiceTest {
     List<AsistentesDto> memorias = new ArrayList<>();
     memorias.add(AsistentesDto.builder()
         .evaluador(EvaluadorDto.builder().personaRef(null).build())
-        .motivo("motivo")
         .build());
     return memorias;
   }

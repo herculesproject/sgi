@@ -26,7 +26,6 @@ import org.crue.hercules.sgi.rep.dto.SgiReportDto;
 import org.crue.hercules.sgi.rep.dto.eti.ActaComentariosMemoriaReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ActaComentariosReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ActaDto;
-import org.crue.hercules.sgi.rep.dto.eti.AsistenteReportDataDto;
 import org.crue.hercules.sgi.rep.dto.eti.AsistentesDto;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
 import org.crue.hercules.sgi.rep.dto.eti.BloquesReportInput;
@@ -41,6 +40,7 @@ import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.DictamenI18n;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoConvocatoriaReunionI18n;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoEvaluacionI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.report.data.objects.AsistenteObject;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
@@ -172,7 +172,7 @@ public class InformeActaReportService extends SgiReportDocxService {
 
     dataReport.put("existsComentarios", memoriasEvaluadasNoFavorables.isPresent());
 
-    addDataAsistentes(acta, dataReport);
+    addDataAsistentes(acta, dataReport, lang);
 
     getTableMemoriasEvaluadas(acta, dataReport, locale);
 
@@ -182,21 +182,21 @@ public class InformeActaReportService extends SgiReportDocxService {
     return compileReportData(path, dataReport);
   }
 
-  private void addDataAsistentes(ActaDto acta, HashMap<String, Object> dataReport) {
+  private void addDataAsistentes(ActaDto acta, HashMap<String, Object> dataReport, Language lang) {
 
     List<AsistentesDto> asistentes = convocatoriaReunionService
         .findAsistentesByConvocatoriaReunionId(acta.getConvocatoriaReunion().getId());
 
-    List<AsistenteReportDataDto> asistentesReportData = new ArrayList<>();
+    List<AsistenteObject> asistentesReportData = new ArrayList<>();
     asistentes.forEach(asistente -> {
-      AsistenteReportDataDto asistenteReportData = new AsistenteReportDataDto();
+      AsistenteObject asistenteReportData = new AsistenteObject();
       try {
         PersonaDto persona = personaService.findById(asistente.getEvaluador().getPersonaRef());
         asistenteReportData.setPersona(persona);
       } catch (Exception e) {
         log.error(e.getMessage());
       }
-      asistenteReportData.setMotivo(asistente.getMotivo());
+      asistenteReportData.setMotivo(I18nHelper.getValueForLanguage(asistente.getMotivo(), lang));
       asistentesReportData.add(asistenteReportData);
     });
 
