@@ -2,6 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IActa } from '@core/models/eti/acta';
 import { FormFragment } from '@core/services/action-service';
 import { ActaService } from '@core/services/eti/acta.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TimeValidator } from '@core/validators/time-validator';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -29,7 +30,7 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
       fechaFin: [null],
       horaInicio: [null],
       horaFin: [null],
-      resumen: ['', [Validators.required, Validators.maxLength(4000)]]
+      resumen: [[], [I18nValidators.required, I18nValidators.maxLength(4000)]]
     });
 
     const horaInicio = fb.controls.horaInicio;

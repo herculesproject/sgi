@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IActa } from '@core/models/eti/acta';
 import { IActaResponse } from '@core/services/eti/acta/acta-response';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -15,7 +16,7 @@ class ActaResponseConverter extends SgiBaseConverter<IActaResponse, IActa> {
       minutoInicio: value.minutoInicio,
       horaFin: value.horaFin,
       minutoFin: value.minutoFin,
-      resumen: value.resumen,
+      resumen: value.resumen ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.resumen) : [],
       numero: value.numero,
       inactiva: value.inactiva,
       activo: value.activo,
@@ -34,7 +35,7 @@ class ActaResponseConverter extends SgiBaseConverter<IActaResponse, IActa> {
       minutoInicio: value.minutoInicio,
       horaFin: value.horaFin,
       minutoFin: value.minutoFin,
-      resumen: value.resumen,
+      resumen: value.resumen ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.resumen) : [],
       numero: value.numero,
       inactiva: value.inactiva,
       activo: value.activo,

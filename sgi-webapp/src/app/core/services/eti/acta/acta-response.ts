@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { TipoEstadoActa } from '../../../models/eti/tipo-estado-acta';
 import { IConvocatoriaReunionResponse } from '../convocatoria-reunion/convocatoria-reunion-response';
 
@@ -15,7 +16,7 @@ export interface IActaResponse {
   /** Minuto fin */
   minutoFin: number;
   /** Resumen */
-  resumen: string;
+  resumen: I18nFieldValueResponse[];
   /** Numero */
   numero: number;
   /** Inactiva */
