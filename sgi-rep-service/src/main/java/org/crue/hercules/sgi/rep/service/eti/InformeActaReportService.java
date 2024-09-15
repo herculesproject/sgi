@@ -146,7 +146,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     dataReport.put("tipoConvocatoria", TipoConvocatoriaReunionI18n
         .getI18nMessageFromEnumAndLocale(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getId(), locale));
 
-    dataReport.put("resumenActa", acta.getResumen());
+    dataReport.put("resumenActa", I18nHelper.getValueForLanguage(acta.getResumen(), lang));
 
     String codigoActa = acta.getNumero() + "/" + formatInstantToString(fechaEvaluacion, "YYYY") + "/" + acta
         .getConvocatoriaReunion().getComite().getCodigo();

@@ -177,7 +177,6 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
         .horaFin(15)
         .minutoInicio(10)
         .minutoFin(10)
-        .resumen("resumen" + numero)
         .numero(numero)
         .inactiva(Boolean.TRUE)
         .activo(Boolean.TRUE)
