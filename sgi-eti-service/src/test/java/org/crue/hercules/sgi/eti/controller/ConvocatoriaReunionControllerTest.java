@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -1103,13 +1104,15 @@ public class ConvocatoriaReunionControllerTest extends BaseControllerTest {
     comite.setCodigo("Comite1");
     comite.setActivo(Boolean.TRUE);
 
+    Set<EvaluadorResumen> res = new HashSet<>();
+    res.add(new EvaluadorResumen(Language.ES, resumen));
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
     evaluador.setFechaAlta(Instant.now());
     evaluador.setFechaBaja(Instant.now());
-    evaluador.setResumen(resumen);
+    evaluador.setResumen(res);
     evaluador.setPersonaRef("user-" + String.format("%03d", id));
     evaluador.setActivo(Boolean.TRUE);
 

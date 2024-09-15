@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionOrdenDia;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -207,8 +208,17 @@ public class AsistentesRepositoryTest extends BaseRepositoryTest {
    * @return el objeto Evaluador
    */
   private Evaluador generarMockEvaluador(CargoComite cargoComite, Comite comite) {
-    return new Evaluador(null, cargoComite, comite, Instant.parse("2020-08-01T00:00:00Z"), null, "Resumen", "user-001",
-        Boolean.TRUE);
+    Set<EvaluadorResumen> res = new HashSet<>();
+    res.add(new EvaluadorResumen(Language.ES, "Resumen"));
+    Evaluador evaluador = new Evaluador();
+    evaluador.setCargoComite(cargoComite);
+    evaluador.setComite(comite);
+    evaluador.setFechaAlta(Instant.parse("2020-08-01T00:00:00Z"));
+    evaluador.setResumen(res);
+    evaluador.setPersonaRef("user-001");
+    evaluador.setActivo(Boolean.TRUE);
+
+    return evaluador;
   }
 
   /**

@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
@@ -579,8 +580,18 @@ public class EvaluacionRepositoryTest extends BaseRepositoryTest {
    * @return un evaluador
    */
   private Evaluador generarMockEvaluador(CargoComite cargoComite, Comite comite) {
-    return new Evaluador(null, cargoComite, comite, Instant.now(), Instant.now(), "resumen", "persona_ref",
-        Boolean.TRUE);
+    Set<EvaluadorResumen> res = new HashSet<>();
+    res.add(new EvaluadorResumen(Language.ES, "resumen"));
+    Evaluador evaluador = new Evaluador();
+    evaluador.setCargoComite(cargoComite);
+    evaluador.setComite(comite);
+    evaluador.setFechaAlta(Instant.now());
+    evaluador.setFechaBaja(Instant.now());
+    evaluador.setResumen(res);
+    evaluador.setPersonaRef("persona_ref");
+    evaluador.setActivo(Boolean.TRUE);
+
+    return evaluador;
   }
 
   /**

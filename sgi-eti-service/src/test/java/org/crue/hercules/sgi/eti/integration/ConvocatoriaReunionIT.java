@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
@@ -849,13 +850,15 @@ public class ConvocatoriaReunionIT extends BaseIT {
     comite.setMemoriaTituloLibre(Boolean.FALSE);
     comite.setActivo(Boolean.TRUE);
 
+    Set<EvaluadorResumen> resumen = new HashSet<>();
+    resumen.add(new EvaluadorResumen(Language.ES, "Evaluador" + id));
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
     evaluador.setFechaAlta(Instant.parse("2020-07-01T00:00:00Z"));
     evaluador.setFechaBaja(Instant.parse("2021-07-01T23:59:59Z"));
-    evaluador.setResumen("Evaluador" + id);
+    evaluador.setResumen(resumen);
     evaluador.setPersonaRef("user-00" + id);
     evaluador.setActivo(Boolean.TRUE);
 

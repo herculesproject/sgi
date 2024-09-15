@@ -2,12 +2,16 @@ package org.crue.hercules.sgi.eti.integration;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -157,13 +161,15 @@ public class ConflictoInteresIT extends BaseIT {
     comite.setCodigo("Comite1");
     comite.setActivo(Boolean.TRUE);
 
+    Set<EvaluadorResumen> res = new HashSet<>();
+    res.add(new EvaluadorResumen(Language.ES, resumen));
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
     evaluador.setFechaAlta(Instant.now());
     evaluador.setFechaBaja(Instant.now());
-    evaluador.setResumen(resumen);
+    evaluador.setResumen(res);
     evaluador.setPersonaRef("user-00" + (id != null ? id : "1"));
     evaluador.setActivo(Boolean.TRUE);
 

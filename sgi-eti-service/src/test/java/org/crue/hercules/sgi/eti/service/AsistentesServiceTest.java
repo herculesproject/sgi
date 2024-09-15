@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionLugar;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunionOrdenDia;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.AsistentesRepository;
 import org.crue.hercules.sgi.eti.service.impl.AsistentesServiceImpl;
@@ -372,13 +373,15 @@ public class AsistentesServiceTest extends BaseServiceTest {
     comite.setCodigo("Comite1");
     comite.setActivo(Boolean.TRUE);
 
+    Set<EvaluadorResumen> res = new HashSet<>();
+    res.add(new EvaluadorResumen(Language.ES, resumen));
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
     evaluador.setFechaAlta(Instant.now());
     evaluador.setFechaBaja(Instant.now());
-    evaluador.setResumen(resumen);
+    evaluador.setResumen(res);
     evaluador.setPersonaRef("user-" + String.format("%03d", id));
     evaluador.setActivo(Boolean.TRUE);
 

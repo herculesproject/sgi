@@ -1,13 +1,17 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.crue.hercules.sgi.eti.exceptions.ConflictoInteresNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.service.ConflictoInteresService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -151,13 +155,15 @@ public class ConflictoInteresControllerTest extends BaseControllerTest {
     comite.setCodigo("Comite1");
     comite.setActivo(Boolean.TRUE);
 
+    Set<EvaluadorResumen> res = new HashSet<>();
+    res.add(new EvaluadorResumen(Language.ES, resumen));
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
     evaluador.setFechaAlta(Instant.now());
     evaluador.setFechaBaja(Instant.now());
-    evaluador.setResumen(resumen);
+    evaluador.setResumen(res);
     evaluador.setPersonaRef("user-00" + (id != null ? id : "1"));
     evaluador.setActivo(Boolean.TRUE);
 

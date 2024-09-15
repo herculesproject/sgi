@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
@@ -916,9 +917,11 @@ public class EvaluacionIT extends BaseIT {
     cargoComite.setNombre("CargoComite1");
     cargoComite.setActivo(Boolean.TRUE);
 
+    Set<EvaluadorResumen> resumenEvaluador1 = new HashSet<>();
+    resumenEvaluador1.add(new EvaluadorResumen(Language.ES, "Evaluador2"));
     Evaluador evaluador1 = new Evaluador();
     evaluador1.setId(2L);
-    evaluador1.setResumen("Evaluador2");
+    evaluador1.setResumen(resumenEvaluador1);
     evaluador1.setComite(comite);
     evaluador1.setCargoComite(cargoComite);
     evaluador1.setFechaAlta(Instant.parse("2020-07-01T00:00:00Z"));
@@ -926,9 +929,11 @@ public class EvaluacionIT extends BaseIT {
     evaluador1.setPersonaRef("user-001");
     evaluador1.setActivo(Boolean.TRUE);
 
+    Set<EvaluadorResumen> resumenEvaluador2 = new HashSet<>();
+    resumenEvaluador2.add(new EvaluadorResumen(Language.ES, "Evaluador3"));
     Evaluador evaluador2 = new Evaluador();
     evaluador2.setId(3L);
-    evaluador2.setResumen("Evaluador3");
+    evaluador2.setResumen(resumenEvaluador2);
     evaluador2.setComite(comite);
     evaluador2.setCargoComite(cargoComite);
     evaluador2.setFechaAlta(Instant.parse("2020-07-01T00:00:00Z"));

@@ -1201,4 +1201,34 @@
     <dropColumn columnName="comentario" tableName="estado_memoria" />
   </changeSet>
 
+  <!-- Evaluador -->
+  <changeSet author="user (generated)" id="00.07.00-21">
+    <!-- Resumen -->
+    <createTable tableName="evaluador_resumen">
+      <column name="evaluador_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="CLOB">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="evaluador_resumen"
+      columnNames="evaluador_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="evaluador_id"
+      baseTableName="evaluador_resumen"
+      constraintName="FK_EVALUADORRESUMEN_EVALUADOR" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="evaluador" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}evaluador_resumen(evaluador_id, lang, value_) SELECT id,
+      '${defaultLang}', resumen FROM ${schemaPrefix}evaluador WHERE resumen IS NOT NULL</sql>
+
+    <dropColumn columnName="resumen" tableName="evaluador" />
+  </changeSet>
+
 </databaseChangeLog>

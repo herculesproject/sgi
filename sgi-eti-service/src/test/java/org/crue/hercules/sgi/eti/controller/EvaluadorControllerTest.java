@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.EvaluadorResumen;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -35,6 +36,7 @@ import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.eti.service.ConflictoInteresService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.EvaluadorService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -92,8 +94,7 @@ public class EvaluadorControllerTest extends BaseControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Evaluador1"));
-    ;
+        .andExpect(MockMvcResultMatchers.jsonPath("resumen[0].value").value("Evaluador1"));
   }
 
   @Test
@@ -127,7 +128,7 @@ public class EvaluadorControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo evaluador y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Evaluador1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("resumen[0].value").value("Evaluador1"));
   }
 
   @Test
@@ -166,7 +167,7 @@ public class EvaluadorControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el evaluador y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Replace Evaluador1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("resumen[0].value").value("Replace Evaluador1"));
 
   }
 
@@ -269,7 +270,8 @@ public class EvaluadorControllerTest extends BaseControllerTest {
     // containing resumen='Evaluador031' to 'Evaluador040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Evaluador evaluador = actual.get(i);
-      Assertions.assertThat(evaluador.getResumen()).isEqualTo("Evaluador" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(evaluador.getResumen(), Language.ES))
+          .isEqualTo("Evaluador" + String.format("%03d", j));
     }
   }
 
@@ -289,7 +291,8 @@ public class EvaluadorControllerTest extends BaseControllerTest {
           public Page<Evaluador> answer(InvocationOnMock invocation) throws Throwable {
             List<Evaluador> content = new ArrayList<>();
             for (Evaluador evaluador : evaluadores) {
-              if (evaluador.getResumen().startsWith("Evaluador") && evaluador.getId().equals(5L)) {
+              if (I18nHelper.getValueForLanguage(evaluador.getResumen(), Language.ES).startsWith("Evaluador")
+                  && evaluador.getId().equals(5L)) {
                 content.add(evaluador);
               }
             }
@@ -466,7 +469,8 @@ public class EvaluadorControllerTest extends BaseControllerTest {
 
     for (int i = 0, j = 1; i < 10; i++, j++) {
       Evaluador evaluador = actual.get(i);
-      Assertions.assertThat(evaluador.getResumen()).isEqualTo("Evaluador" + String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(evaluador.getResumen(), Language.ES))
+          .isEqualTo("Evaluador" + String.format("%03d", j));
     }
   }
 
@@ -553,13 +557,15 @@ public class EvaluadorControllerTest extends BaseControllerTest {
     comite.setCodigo("Comite1");
     comite.setActivo(Boolean.TRUE);
 
+    Set<EvaluadorResumen> res = new HashSet<>();
+    res.add(new EvaluadorResumen(Language.ES, resumen));
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
     evaluador.setCargoComite(cargoComite);
     evaluador.setComite(comite);
     evaluador.setFechaAlta(Instant.now());
     evaluador.setFechaBaja(Instant.now());
-    evaluador.setResumen(resumen);
+    evaluador.setResumen(res);
     evaluador.setPersonaRef("user-00" + id);
     evaluador.setActivo(Boolean.TRUE);
 

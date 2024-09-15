@@ -16,6 +16,7 @@ DELETE FROM test.memoria_titulo
 DELETE FROM test.memoria
 DELETE FROM test.asistentes
 DELETE FROM test.conflicto_interes
+DELETE FROM test.evaluador_resumen
 DELETE FROM test.evaluador
 DELETE FROM test.equipo_trabajo
 DELETE FROM test.peticion_evaluacion_titulo
