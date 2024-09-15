@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IAsistente } from '@core/models/eti/asistente';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap } from 'rxjs/operators';
 
@@ -80,7 +81,7 @@ export class ActaAsistentesEditarModalComponent extends DialogFormComponent<IAsi
         [Validators.required]
       ),
       asistencia: new FormControl(!!this.asistente.asistencia, [Validators.required]),
-      motivo: new FormControl(this.asistente.motivo, !!!this.asistente.asistencia ? Validators.required : undefined),
+      motivo: new FormControl(this.asistente.motivo ?? [], !!!this.asistente.asistencia ? I18nValidators.required : undefined),
     });
     formGroup.controls.asistente.disable();
 
@@ -94,7 +95,7 @@ export class ActaAsistentesEditarModalComponent extends DialogFormComponent<IAsi
         }
         else {
           this.ocultarMotivo = false;
-          formGroup.controls.motivo.setValidators(Validators.required);
+          formGroup.controls.motivo.setValidators(I18nValidators.required);
         }
         formGroup.controls.motivo.updateValueAndValidity({ onlySelf: true, emitEvent: false });
       }
@@ -109,8 +110,8 @@ export class ActaAsistentesEditarModalComponent extends DialogFormComponent<IAsi
   protected getValue(): IAsistente {
     const asistente = this.asistente;
     if (this.ocultarMotivo) {
-      this.formGroup.controls.motivo.setValue('');
-      asistente.motivo = '';
+      this.formGroup.controls.motivo.setValue([]);
+      asistente.motivo = [];
     } else {
       asistente.motivo = this.formGroup.controls.motivo.value;
     }

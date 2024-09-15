@@ -1,8 +1,8 @@
-import { IActionService, IFormFragment, IFragment, FormFragment } from '@core/services/action-service';
+import { Directive, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { OnInit, Directive, OnDestroy } from '@angular/core';
+import { FormFragment, IActionService, IFormFragment, IFragment } from '@core/services/action-service';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 export interface SgiOnRouteChange {
   onRouteChange(): void;
@@ -16,6 +16,7 @@ export abstract class FragmentComponent implements SgiOnRouteChange, OnInit, OnD
   public readonly GROUP_NAME: string;
   public readonly fragment: IFragment;
   private _subscriptions: Subscription[] = [];
+  protected readonly _destroy$ = new Subject();
 
   constructor(name: string, actionService: IActionService, translateService?: TranslateService) {
     this.GROUP_NAME = name;
@@ -41,6 +42,7 @@ export abstract class FragmentComponent implements SgiOnRouteChange, OnInit, OnD
 
   ngOnDestroy(): void {
     this._subscriptions.forEach(subscription => subscription.unsubscribe());
+    this._destroy$.next();
   }
 
   protected abstract setupI18N(): void;

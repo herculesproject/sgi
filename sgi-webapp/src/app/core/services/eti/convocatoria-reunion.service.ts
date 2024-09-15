@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ASISTENTE_CONVERTER } from '@core/converters/eti/asistente.converter';
 import { IActa } from '@core/models/eti/acta';
 import { IAsistente } from '@core/models/eti/asistente';
-import { IAsistenteBackend } from '@core/models/eti/backend/asistente-backend';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IConvocatoriaReunionDatosGenerales } from '@core/models/eti/convocatoria-reunion-datos-generales';
 import { IDocumentacionConvocatoriaReunion } from '@core/models/eti/documentacion-convocatoria-reunion';
@@ -18,6 +16,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IActaResponse } from './acta/acta-response';
 import { ACTA_RESPONSE_CONVERTER } from './acta/acta-response.converter';
+import { IAsistenteResponse } from './asistente/asistente-response';
+import { ASISTENTE_RESPONSE_CONVERTER } from './asistente/asistente-response.converter';
 import { IDocumentacionConvocatoriaReunionResponse } from './documentacion-convocatoria-reunion/documentacion-convocatoria-reunion-response';
 import { DOCUMENTACION_CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from './documentacion-convocatoria-reunion/documentacion-convocatoria-reunion-response.converter';
 import { IEvaluacionResponse } from './evaluacion/evaluacion-response';
@@ -67,10 +67,10 @@ export class ConvocatoriaReunionService extends _ConvocatoriaReunionServiceMixin
    * @param idConvocatoria id convocatoria.
    */
   findAsistentes(idConvocatoria: number): Observable<SgiRestListResult<IAsistente>> {
-    return this.find<IAsistenteBackend, IAsistente>(
+    return this.find<IAsistenteResponse, IAsistente>(
       `${this.endpointUrl}/${idConvocatoria}/asistentes`,
       null,
-      ASISTENTE_CONVERTER
+      ASISTENTE_RESPONSE_CONVERTER
     );
   }
 

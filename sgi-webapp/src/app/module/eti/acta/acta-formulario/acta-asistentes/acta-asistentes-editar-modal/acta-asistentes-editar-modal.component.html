@@ -21,8 +21,8 @@
     <div fxLayout="row" *ngIf="!ocultarMotivo">
       <mat-form-field>
         <mat-label>{{'eti.acta.asistente.motivo' | translate}}</mat-label>
-        <textarea matInput formControlName="motivo" type="text"
-          placeholder="{{'eti.acta.asistente.motivo' | translate}}" [required]="!ocultarMotivo"></textarea>
+        <sgi-i18n-textarea formControlName="motivo" placeholder="{{'eti.acta.asistente.motivo' | translate}}"
+          [required]="!ocultarMotivo"></sgi-i18n-textarea>
         <mat-error *ngIf="formGroup.get('motivo').errors?.required">
           {{'error.required.entity' | translate:msgParamMotivoEntity}}
         </mat-error>
