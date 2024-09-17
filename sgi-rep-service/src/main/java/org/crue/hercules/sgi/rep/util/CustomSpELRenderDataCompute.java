@@ -78,21 +78,21 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
   public Object compute(String el) {
     Object resolved = innerCompute(el);
     if (resolved instanceof ArrayList) {
-      boolean isI18n = !((ArrayList) resolved).isEmpty();
-      for (LinkedTreeMap nested : (ArrayList<LinkedTreeMap>) resolved) {
-        isI18n = isI18n && isI18nField(nested);
-      }
-      if (isI18n) {
-        Map<Language, String> collectedValues = collectValues((ArrayList<LinkedTreeMap>) resolved);
-        if (collectedValues.containsKey(requestedLang)) {
-          return collectedValues.get(requestedLang);
-        } else {
-          if (collectedValues.isEmpty()) {
-            // Si no hay ningún valor, retornamos el objecto
-            return resolved;
+      boolean isLinkedTreeMap = ((ArrayList) resolved).stream().allMatch(LinkedTreeMap.class::isInstance);
+      if (isLinkedTreeMap) {
+        boolean isI18n = ((ArrayList) resolved).stream().allMatch(nested -> isI18nField((LinkedTreeMap) nested));
+        if (isI18n) {
+          Map<Language, String> collectedValues = collectValues((ArrayList<LinkedTreeMap>) resolved);
+          if (collectedValues.containsKey(requestedLang)) {
+            return collectedValues.get(requestedLang);
           } else {
-            // Por ahora retornamos el primer valor;
-            return collectedValues.values().toArray()[0];
+            if (collectedValues.isEmpty()) {
+              // Si no hay ningún valor, retornamos null
+              return null;
+            } else {
+              // Por ahora retornamos el primer valor;
+              return collectedValues.values().toArray()[0];
+            }
           }
         }
       }
