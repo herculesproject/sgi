@@ -2,13 +2,13 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -155,7 +155,8 @@ class ProyectoSocioEquipoIT extends BaseIT {
    * @return el ProyectoSocioEquipo
    */
   private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
-
+    Set<RolProyectoNombre> nombre = new HashSet<>();
+    nombre.add(new RolProyectoNombre(Language.ES, "rolProyecto1"));
     // @formatter:off
     ProyectoSocioEquipo proyectoSocioEquipo = ProyectoSocioEquipo.builder()
       .id(id)
@@ -164,7 +165,7 @@ class ProyectoSocioEquipoIT extends BaseIT {
         RolProyecto.builder()
           .id(1L)
           .abreviatura("001")
-          .nombre("rolProyecto1")
+          .nombre(nombre)
           .equipo(RolProyecto.Equipo.INVESTIGACION)
           .activo(Boolean.TRUE)
           .build()

@@ -2,15 +2,15 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioEquipoNotFoundException;
-import org.crue.hercules.sgi.csp.model.ProyectoSocio;
-import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
-import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.*;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -165,10 +165,13 @@ class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
         .activo(Boolean.TRUE)
         .build();
 
+    Set<RolProyectoNombre> nombre = new HashSet<>();
+    nombre.add(new RolProyectoNombre(Language.ES, "nombre-001"));
+
     RolProyecto rolProyecto = RolProyecto.builder()
         .id(id)
         .abreviatura("001")
-        .nombre("nombre-001")
+        .nombre(nombre)
         .descripcion("descripcion-001")
         .rolPrincipal(Boolean.FALSE)
         .equipo(RolProyecto.Equipo.INVESTIGACION)

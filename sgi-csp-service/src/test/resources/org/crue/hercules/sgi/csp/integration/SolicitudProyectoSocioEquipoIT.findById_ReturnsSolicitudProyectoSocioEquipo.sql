@@ -64,8 +64,9 @@ INSERT INTO test.solicitud_proyecto_socio (id, solicitud_proyecto_id, rol_socio_
 VALUES (1, 1, 1, 2, 6, 8, 4, 'ref-001');
 
 -- ROL PROYECTO
-INSERT INTO test.rol_proyecto (id, abreviatura, nombre, descripcion, rol_principal, orden, equipo, activo) VALUES(1, '001', 'nombre-001', 'descripcion-001', false, null, 'INVESTIGACION', true);
+INSERT INTO test.rol_proyecto (id, abreviatura, descripcion, rol_principal, orden, equipo, activo) VALUES(1, '001', 'descripcion-001', false, null, 'INVESTIGACION', true);
 
+INSERT INTO test.rol_proyecto_nombre(rol_proyecto_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- SOLICITUD PROYECTO EQUIPO SOCIO
 INSERT INTO test.solicitud_proyecto_socio_equipo (id, persona_ref, rol_proyecto_id, solicitud_proyecto_socio_id, mes_inicio, mes_fin) 

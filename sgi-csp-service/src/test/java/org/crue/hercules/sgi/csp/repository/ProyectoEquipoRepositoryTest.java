@@ -1,13 +1,13 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
-import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.*;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -48,9 +48,12 @@ class ProyectoEquipoRepositoryTest extends BaseRepositoryTest {
         .activo(Boolean.TRUE)
         .build());
 
+    Set<RolProyectoNombre> nombre = new HashSet<>();
+    nombre.add(new RolProyectoNombre(Language.ES, "nombre-001"));
+
     RolProyecto rolProyecto = entityManager.persistAndFlush(RolProyecto.builder()
         .abreviatura("001")
-        .nombre("nombre-001")
+        .nombre(nombre)
         .descripcion("descripcion-001")
         .rolPrincipal(Boolean.FALSE)
         .equipo(RolProyecto.Equipo.INVESTIGACION)

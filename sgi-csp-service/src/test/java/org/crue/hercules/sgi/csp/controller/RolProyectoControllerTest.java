@@ -1,17 +1,17 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.service.RolProyectoColectivoService;
 import org.crue.hercules.sgi.csp.service.RolProyectoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -166,11 +166,14 @@ class RolProyectoControllerTest extends BaseControllerTest {
 
     String suffix = String.format("%03d", rolProyectoId);
 
+    Set<RolProyectoNombre> nombre = new HashSet<>();
+    nombre.add(new RolProyectoNombre(Language.ES, "nombre-" + suffix));
+
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder()
         .id(rolProyectoId)
         .abreviatura(suffix)
-        .nombre("nombre-" + suffix)
+        .nombre(nombre)
         .descripcion("descripcion-" + suffix)
         .rolPrincipal(Boolean.FALSE)
         .orden(null)

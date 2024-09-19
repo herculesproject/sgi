@@ -1,16 +1,16 @@
 package org.crue.hercules.sgi.csp.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.validation.Validator;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.RolProyectoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -170,11 +170,13 @@ class RolProyectoServiceTest extends BaseServiceTest {
 
     String suffix = String.format("%03d", rolProyectoId);
 
+    Set<RolProyectoNombre> nombre = new HashSet<>();
+    nombre.add(new RolProyectoNombre(Language.ES, "nombre-" + suffix));
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder()
         .id(rolProyectoId)
         .abreviatura(suffix)
-        .nombre("nombre-" + suffix)
+        .nombre(nombre)
         .descripcion("descripcion-" + suffix)
         .rolPrincipal(Boolean.FALSE)
         .orden(null)

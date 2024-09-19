@@ -1,17 +1,15 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
-import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.csp.model.RolSocio;
-import org.crue.hercules.sgi.csp.model.Solicitud;
-import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.*;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -51,9 +49,12 @@ class SolicitudProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(rolSocio);
 
+    Set<RolProyectoNombre> nombre = new HashSet<>();
+    nombre.add(new RolProyectoNombre(Language.ES, "Rol1"));
+
     RolProyecto rolProyecto = RolProyecto.builder()
         .abreviatura("001")
-        .nombre("Rol1")
+        .nombre(nombre)
         .descripcion("Rol1")
         .rolPrincipal(Boolean.FALSE)
         .orden(null)
