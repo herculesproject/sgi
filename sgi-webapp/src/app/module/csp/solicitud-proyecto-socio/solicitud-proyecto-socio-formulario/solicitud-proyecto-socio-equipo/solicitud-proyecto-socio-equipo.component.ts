@@ -16,6 +16,7 @@ import { getPersonaEmailListConcatenated } from 'src/app/esb/sgp/shared/pipes/pe
 import { MiembroEquipoSolicitudModalComponent, MiembroEquipoSolicitudModalData } from '../../../shared/miembro-equipo-solicitud-modal/miembro-equipo-solicitud-modal.component';
 import { SolicitudProyectoSocioActionService } from '../../solicitud-proyecto-socio.action.service';
 import { SolicitudProyectoSocioEquipoFragment } from './solicitud-proyecto-socio-equipo.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MODAL_TITLE_KEY = marker('csp.solicitud-proyecto-socio-equipo.miembro-equipo');
@@ -47,7 +48,8 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
     private actionService: SolicitudProyectoSocioActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.EQUIPO, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoSocioEquipoFragment;
@@ -72,11 +74,12 @@ export class SolicitudProyectoSocioEquipoComponent extends FragmentComponent imp
         case 'apellidos':
           return wrapper.value.persona.apellidos;
         case 'rolProyecto':
-          return wrapper.value.rolProyecto.nombre;
+          return this.languageService.getFieldValue(wrapper.value.rolProyecto.nombre);
         default:
           return wrapper.value[property];
       }
     };
+
   }
 
   protected setupI18N(): void {

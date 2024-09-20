@@ -33,7 +33,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto-socio.equipo.rol-proyecto'
           | translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.rolProyecto.nombre | translate}}
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.rolProyecto.nombre | i18nFieldValue}}
         </td>
       </ng-container>
 

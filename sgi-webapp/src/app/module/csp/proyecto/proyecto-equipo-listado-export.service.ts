@@ -6,6 +6,7 @@ import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { IPersona } from '@core/models/sgp/persona';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -38,7 +39,7 @@ const INVESTIGADOR_FECHA_INICIO_FIELD = 'fechaInicioInvestigador';
 const INVESTIGADOR_FECHA_FIN_FIELD = 'fechaFinInvestigador';
 
 @Injectable()
-export class ProyectoEquipoListadoExportService extends AbstractTableExportFillService<IProyectoReportData, IProyectoReportOptions>{
+export class ProyectoEquipoListadoExportService extends AbstractTableExportFillService<IProyectoReportData, IProyectoReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -46,6 +47,7 @@ export class ProyectoEquipoListadoExportService extends AbstractTableExportFillS
     private luxonDatePipe: LuxonDatePipe,
     private readonly proyectoService: ProyectoService,
     private personaService: PersonaService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -191,7 +193,7 @@ export class ProyectoEquipoListadoExportService extends AbstractTableExportFillS
       miembroEquipoTable += '\n';
       miembroEquipoTable += this.getEmailPrincipal(miembroEquipo?.persona) ?? '';
       miembroEquipoTable += '\n';
-      miembroEquipoTable += this.sanitizeText(miembroEquipo?.rolProyecto?.nombre ?? '');
+      miembroEquipoTable += this.sanitizeText(this.languageService.getFieldValue(miembroEquipo?.rolProyecto?.nombre) ?? '');
       miembroEquipoTable += '\n';
       miembroEquipoTable += this.luxonDatePipe.transform(LuxonUtils.toBackend(miembroEquipo?.fechaInicio, true), 'shortDate') ?? '';
       miembroEquipoTable += '\n';

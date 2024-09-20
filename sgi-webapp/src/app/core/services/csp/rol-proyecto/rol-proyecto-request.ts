@@ -1,7 +1,8 @@
+import { I18nFieldValueRequest } from "@core/i18n/i18n-field-request";
 import { Equipo, Orden } from "@core/models/csp/rol-proyecto";
 
 export interface IRolProyectoRequest {
-  nombre: string;
+  nombre: I18nFieldValueRequest[];
   abreviatura: string;
   descripcion: string;
   rolPrincipal: boolean;

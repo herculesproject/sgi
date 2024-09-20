@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { SgiError } from '@core/errors/sgi-error';
 import { MSG_PARAMS } from '@core/i18n';
+import { Language } from '@core/i18n/language';
 import { EQUIPO_MAP, IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
@@ -40,6 +46,10 @@ export class RolEquipoListadoComponent extends AbstractTablePaginationComponent<
   fxLayoutProperties: FxLayoutProperties;
   rolEquipo$: Observable<IRolProyecto[]>;
 
+  dataSource = new MatTableDataSource<IRolProyecto>();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
   msgParamEntity = {};
 
   textoCrearSuccess: string;
@@ -64,7 +74,8 @@ export class RolEquipoListadoComponent extends AbstractTablePaginationComponent<
     private readonly rolProyectoService: RolProyectoService,
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService,
-    private readonly authService: SgiAuthService
+    private readonly authService: SgiAuthService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -77,10 +88,29 @@ export class RolEquipoListadoComponent extends AbstractTablePaginationComponent<
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.resolveSortProperty = (column: string) => {
+      if (column == 'nombre') {
+        return 'nombre.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor =
+      (rolProyecto: IRolProyecto, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return this.languageService.getFieldValue(rolProyecto.nombre);
+          default:
+            return rolProyecto[property];
+        }
+      };
+
 
     this.formGroup = new FormGroup({
       nombre: new FormControl(''),
@@ -222,12 +252,15 @@ export class RolEquipoListadoComponent extends AbstractTablePaginationComponent<
 
   protected loadTable(reset?: boolean): void {
     this.rolEquipo$ = this.getObservableLoadTable(reset);
+    this.suscripciones.push(this.rolEquipo$.subscribe((rolProyecto) => {
+      this.dataSource.data = rolProyecto;
+    }));
     this.rolProyectoService.existsPrincipal().subscribe(res => this.showWarning = !res);
   }
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
+    const filter = new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
     filter.and('equipo', SgiRestFilterOperator.EQUALS, controls.equipo.value);
     if (controls.activo.value !== 'todos') {
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);

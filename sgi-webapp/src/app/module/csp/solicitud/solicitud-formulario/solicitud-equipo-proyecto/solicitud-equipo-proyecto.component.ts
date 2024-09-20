@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,6 +12,7 @@ import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-eq
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -59,7 +60,8 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
     private route: ActivatedRoute,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.EQUIPO_PROYECTO, actionService, translate);
     this.formPart = this.fragment as SolicitudEquipoProyectoFragment;
@@ -81,7 +83,7 @@ export class SolicitudEquipoProyectoComponent extends FragmentComponent implemen
           case 'apellidos':
             return wrapper.value.solicitudProyectoEquipo.persona.apellidos;
           case 'rolProyecto':
-            return wrapper.value.solicitudProyectoEquipo.rolProyecto.nombre;
+            return this.languageService.getFieldValue(wrapper.value.solicitudProyectoEquipo.rolProyecto.nombre);
           default:
             return wrapper[property];
         }

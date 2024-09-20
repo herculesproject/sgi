@@ -2,6 +2,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { FormFragment } from '@core/services/action-service';
 import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -23,7 +24,7 @@ export class RolEquipoDatosGeneralesFragment extends FormFragment<IRolProyecto> 
 
   protected buildFormGroup(): FormGroup {
     const fb = new FormGroup({
-      nombre: new FormControl(null, [Validators.maxLength(50), Validators.required]),
+      nombre: new FormControl(null, [I18nValidators.maxLength(50), I18nValidators.required]),
       abreviatura: new FormControl(null, [Validators.maxLength(5), Validators.required]),
       equipo: new FormControl(null, [Validators.required]),
       rolPrincipal: new FormControl(null, [Validators.required]),

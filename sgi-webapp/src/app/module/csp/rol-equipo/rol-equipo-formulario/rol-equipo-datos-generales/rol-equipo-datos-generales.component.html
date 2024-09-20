@@ -5,8 +5,8 @@
     <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
       <mat-form-field fxFlex="70%">
         <mat-label>{{'csp.rol-equipo.nombre' | translate}}</mat-label>
-        <input matInput formControlName="nombre" type="text" id="nombre"
-          placeholder="{{'csp.rol-equipo.nombre' | translate}}" required>
+        <sgi-i18n-input formControlName="nombre" id="nombre" placeholder="{{'csp.rol-equipo.nombre' | translate}}"
+          required></sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
           {{'error.required.entity' | translate:msgParamNombreEntity}}
         </mat-error>

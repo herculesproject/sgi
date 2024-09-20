@@ -15,6 +15,7 @@ import { switchMap } from 'rxjs/operators';
 import { MiembroEquipoProyectoModalComponent, MiembroEquipoProyectoModalData } from '../../../shared/miembro-equipo-proyecto-modal/miembro-equipo-proyecto-modal.component';
 import { ProyectoSocioActionService } from '../../proyecto-socio.action.service';
 import { ProyectoSocioEquipoFragment } from './proyecto-socio-equipo.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_EQUIPO_SOCIO_MIEMBRO_KEY = marker('csp.proyecto-socio-equipo.miembro');
@@ -48,7 +49,8 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
     private actionService: ProyectoSocioActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.EQUIPO, actionService, translate);
     this.formPart = this.fragment as ProyectoSocioEquipoFragment;
@@ -68,7 +70,7 @@ export class ProyectoSocioEquipoComponent extends FragmentComponent implements O
           case 'apellidos':
             return wrapper.value.persona.apellidos;
           case 'rolProyecto':
-            return wrapper.value.rolProyecto.nombre;
+            return this.languageService.getFieldValue(wrapper.value.rolProyecto.nombre);
           case 'fechaInicio':
             return wrapper.value.fechaInicio;
           case 'fechaFin':
