@@ -176,8 +176,7 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     };
 
     if (wrapper) {
-      const filtered = Object.assign([], data.selectedEntidades);
-      filtered.splice(row, 1);
+      const filtered = data.selectedEntidades.filter(element => element !== entidad);
       data.selectedEntidades = filtered;
     }
 
