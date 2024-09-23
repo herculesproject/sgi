@@ -7,6 +7,7 @@ import javax.validation.Validator;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.RolProyectoServiceImpl;
@@ -172,12 +173,16 @@ class RolProyectoServiceTest extends BaseServiceTest {
 
     Set<RolProyectoNombre> nombre = new HashSet<>();
     nombre.add(new RolProyectoNombre(Language.ES, "nombre-" + suffix));
+
+    Set<RolProyectoDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new RolProyectoDescripcion(Language.ES, "descripcion-" + suffix));
+    
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder()
         .id(rolProyectoId)
         .abreviatura(suffix)
         .nombre(nombre)
-        .descripcion("descripcion-" + suffix)
+        .descripcion(descripcion)
         .rolPrincipal(Boolean.FALSE)
         .orden(null)
         .equipo(RolProyecto.Equipo.INVESTIGACION)

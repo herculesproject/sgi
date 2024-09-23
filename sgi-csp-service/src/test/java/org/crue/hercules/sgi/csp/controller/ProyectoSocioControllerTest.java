@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
@@ -645,11 +646,14 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
     Set<RolProyectoNombre> nombre = new HashSet<>();
     nombre.add(new RolProyectoNombre(Language.ES, "nombre-001"));
 
+    Set<RolProyectoDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new RolProyectoDescripcion(Language.ES, "descripcion-001"));
+
     RolProyecto rolProyecto = RolProyecto.builder()
         .id(id)
         .abreviatura("001")
         .nombre(nombre)
-        .descripcion("descripcion-001")
+        .descripcion(descripcion)
         .activo(Boolean.TRUE)
         .build();
 

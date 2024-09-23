@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -74,8 +75,6 @@ class RolProyectoRepositoryTest extends BaseRepositoryTest {
     Assertions.assertThat(responseData.getAbreviatura()).as("getAbreviatura()")
         .isEqualTo(rolProyecto1.getAbreviatura());
     Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo(nombreToFind);
-    Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()")
-        .isEqualTo(rolProyecto1.getDescripcion());
     Assertions.assertThat(responseData.getRolPrincipal()).as("getRolPrincipal()")
         .isEqualTo(rolProyecto1.getRolPrincipal());
     Assertions.assertThat(responseData.getOrden()).as("getOrden()").isEqualTo(rolProyecto1.getOrden());
@@ -104,11 +103,13 @@ class RolProyectoRepositoryTest extends BaseRepositoryTest {
   private RolProyecto generarMockRolProyecto(String suffix, Boolean activo) {
     Set<RolProyectoNombre> nombre = new HashSet<>();
     nombre.add(new RolProyectoNombre(Language.ES, "nombre-" + suffix));
+    Set<RolProyectoDescripcion> descricion = new HashSet<>();
+    descricion.add(new RolProyectoDescripcion(Language.ES, "descripcion-" + suffix));
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder()
         .abreviatura(suffix)
         .nombre(nombre)
-        .descripcion("descripcion-" + suffix)
+        .descripcion(descricion)
         .rolPrincipal(Boolean.FALSE)
         .orden(null)
         .equipo(RolProyecto.Equipo.INVESTIGACION)

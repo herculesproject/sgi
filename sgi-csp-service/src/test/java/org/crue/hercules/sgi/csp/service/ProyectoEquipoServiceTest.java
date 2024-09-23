@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
@@ -342,11 +343,13 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
   private ProyectoEquipo generarMockProyectoEquipo(Long id, Instant fechaInicio, Instant fechaFin, Long proyectoId) {
     Set<RolProyectoNombre> nombre = new HashSet<>();
     nombre.add(new RolProyectoNombre(Language.ES, "nombre-001"));
+    Set<RolProyectoDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new RolProyectoDescripcion(Language.ES, "descripcion-001"));
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder().id(id)
         .abreviatura("001")
         .nombre(nombre)
-        .descripcion("descripcion-001")
+        .descripcion(descripcion)
         .rolPrincipal(Boolean.FALSE)
         .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)
         .build();

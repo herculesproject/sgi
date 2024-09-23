@@ -54,10 +54,13 @@ class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryTest {
     Set<RolProyectoNombre> nombre = new HashSet<>();
     nombre.add(new RolProyectoNombre(Language.ES, "Rol1"));
 
+    Set<RolProyectoDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new RolProyectoDescripcion(Language.ES, "Rol1"));
+
     RolProyecto rolProyecto = RolProyecto.builder()
         .abreviatura("001")
         .nombre(nombre)
-        .descripcion("Rol1")
+        .descripcion(descripcion)
         .rolPrincipal(Boolean.FALSE)
         .orden(null)
         .equipo(RolProyecto.Equipo.INVESTIGACION)

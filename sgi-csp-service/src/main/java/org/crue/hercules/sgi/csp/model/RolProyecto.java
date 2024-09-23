@@ -106,9 +106,10 @@ public class RolProyecto extends BaseActivableEntity {
   private Set<RolProyectoNombre> nombre = new HashSet<>();
 
   /** Descripción */
-  @Column(name = "descripcion", length = 250, nullable = true)
-  @Size(max = 250)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name="rol_proyecto_descripcion", joinColumns= @JoinColumn(name="rol_proyecto_id"))
+  @Valid
+  private Set<RolProyectoDescripcion> descripcion = new HashSet<>();
 
   /** Rol principal */
   @Column(name = "rol_principal", columnDefinition = "boolean default false", nullable = true)

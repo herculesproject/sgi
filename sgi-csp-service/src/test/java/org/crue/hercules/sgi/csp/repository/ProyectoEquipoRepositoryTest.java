@@ -51,10 +51,13 @@ class ProyectoEquipoRepositoryTest extends BaseRepositoryTest {
     Set<RolProyectoNombre> nombre = new HashSet<>();
     nombre.add(new RolProyectoNombre(Language.ES, "nombre-001"));
 
+    Set<RolProyectoDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new RolProyectoDescripcion(Language.ES, "descripcion-001"));
+
     RolProyecto rolProyecto = entityManager.persistAndFlush(RolProyecto.builder()
         .abreviatura("001")
         .nombre(nombre)
-        .descripcion("descripcion-001")
+        .descripcion(descripcion)
         .rolPrincipal(Boolean.FALSE)
         .equipo(RolProyecto.Equipo.INVESTIGACION)
         .activo(Boolean.TRUE)
