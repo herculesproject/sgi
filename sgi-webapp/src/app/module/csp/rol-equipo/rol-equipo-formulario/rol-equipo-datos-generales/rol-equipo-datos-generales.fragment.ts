@@ -30,7 +30,7 @@ export class RolEquipoDatosGeneralesFragment extends FormFragment<IRolProyecto> 
       rolPrincipal: new FormControl(null, [Validators.required]),
       orden: new FormControl(null),
       baremablePRC: new FormControl(null, [Validators.required]),
-      descripcion: new FormControl('', [Validators.maxLength(250)]),
+      descripcion: new FormControl('', [I18nValidators.maxLength(250)]),
     });
     return fb;
   }

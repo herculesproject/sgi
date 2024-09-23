@@ -5,7 +5,7 @@ export interface IRolProyectoResponse {
   id: number;
   nombre: I18nFieldValueResponse[];
   abreviatura: string;
-  descripcion: string;
+  descripcion: I18nFieldValueResponse[];
   rolPrincipal: boolean;
   baremablePRC: boolean;
   orden: Orden;
