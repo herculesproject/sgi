@@ -13,7 +13,7 @@ class RolProyectoRequestConverter extends SgiBaseConverter<IRolProyectoRequest, 
     return {
       id: undefined,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombre) : [],
-      abreviatura: value.abreviatura,
+      abreviatura: value.abreviatura ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.abreviatura) : [],
       baremablePRC: value.baremablePRC,
       descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.descripcion) : [],
       equipo: value.equipo,
@@ -28,7 +28,7 @@ class RolProyectoRequestConverter extends SgiBaseConverter<IRolProyectoRequest, 
     }
     return {
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
-      abreviatura: value.abreviatura,
+      abreviatura: value.abreviatura ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.abreviatura) : [],
       baremablePRC: value.baremablePRC,
       descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.descripcion) : [],
       equipo: value.equipo,

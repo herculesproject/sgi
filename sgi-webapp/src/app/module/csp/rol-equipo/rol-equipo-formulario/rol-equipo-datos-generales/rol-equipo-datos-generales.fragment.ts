@@ -25,7 +25,7 @@ export class RolEquipoDatosGeneralesFragment extends FormFragment<IRolProyecto> 
   protected buildFormGroup(): FormGroup {
     const fb = new FormGroup({
       nombre: new FormControl(null, [I18nValidators.maxLength(50), I18nValidators.required]),
-      abreviatura: new FormControl(null, [Validators.maxLength(5), Validators.required]),
+      abreviatura: new FormControl(null, [I18nValidators.maxLength(5), I18nValidators.required]),
       equipo: new FormControl(null, [Validators.required]),
       rolPrincipal: new FormControl(null, [Validators.required]),
       orden: new FormControl(null),

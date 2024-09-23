@@ -14,8 +14,8 @@
       <!-- Abreviatura -->
       <mat-form-field fxFlex="30%">
         <mat-label>{{'csp.rol-equipo.abreviatura' | translate}}</mat-label>
-        <input matInput formControlName="abreviatura" type="text" id="abreviatura"
-          placeholder="{{'csp.rol-equipo.abreviatura' | translate}}" maxLength="5" required>
+        <sgi-i18n-input matInput formControlName="abreviatura" type="text" id="abreviatura"
+          placeholder="{{'csp.rol-equipo.abreviatura' | translate}}" maxLength="5" required></sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.abreviatura.errors?.required">
           {{'error.required.entity' | translate:msgParamAbreviaturaEntity}}
         </mat-error>

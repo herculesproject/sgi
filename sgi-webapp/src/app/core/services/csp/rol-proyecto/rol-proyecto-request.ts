@@ -3,7 +3,7 @@ import { Equipo, Orden } from "@core/models/csp/rol-proyecto";
 
 export interface IRolProyectoRequest {
   nombre: I18nFieldValueRequest[];
-  abreviatura: string;
+  abreviatura: I18nFieldValueRequest[];
   descripcion: I18nFieldValueRequest[];
   rolPrincipal: boolean;
   baremablePRC: boolean;
