@@ -10,11 +10,13 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
@@ -46,6 +48,9 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.model.TareaFormacion;
+import org.crue.hercules.sgi.eti.model.TareaNombre;
+import org.crue.hercules.sgi.eti.model.TareaOrganismo;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria.Tipo;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
@@ -389,8 +394,15 @@ public class MemoriaServiceImpl implements MemoriaService {
         .findAllByMemoriaId(memoriaCreada.getMemoriaOriginal().getId());
     if (!tareasMemoriaOriginal.isEmpty()) {
       List<Tarea> tareasMemoriaCopy = tareasMemoriaOriginal.stream()
-          .map(tarea -> new Tarea(null, tarea.getEquipoTrabajo(), nuevaMemoria, tarea.getNombre(), tarea.getFormacion(),
-              tarea.getFormacionEspecifica(), tarea.getOrganismo(), tarea.getAnio(), tarea.getTipoTarea()))
+          .map(tarea -> new Tarea(null, tarea.getEquipoTrabajo(), nuevaMemoria,
+              tarea.getNombre().stream().map(ori -> new TareaNombre(
+                  ori.getLang(), ori.getValue())).collect(Collectors.toSet()),
+              tarea.getFormacion().stream().map(ori -> new TareaFormacion(
+                  ori.getLang(), ori.getValue())).collect(Collectors.toSet()),
+              tarea.getFormacionEspecifica(),
+              tarea.getOrganismo().stream().map(ori -> new TareaOrganismo(
+                  ori.getLang(), ori.getValue())).collect(Collectors.toSet()),
+              tarea.getAnio(), tarea.getTipoTarea()))
           .collect(Collectors.toList());
       tareaRepository.saveAll(tareasMemoriaCopy);
     }
