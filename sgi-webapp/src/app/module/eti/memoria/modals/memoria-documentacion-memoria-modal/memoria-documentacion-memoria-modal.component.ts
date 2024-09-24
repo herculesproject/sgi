@@ -82,7 +82,7 @@ export class MemoriaDocumentacionMemoriaModalComponent extends DialogFormCompone
     super.ngOnInit();
     if (this.data.tipoEvaluacion !== TIPO_EVALUACION.MEMORIA) {
       this.subscriptions.push(this.tipoDocumentoService.findByFormulario(
-        resolveFormularioByTipoEvaluacionAndComite(this.data.tipoEvaluacion, null)
+        resolveFormularioByTipoEvaluacionAndComite(this.data.tipoEvaluacion, this.data.memoria)
       ).subscribe(
         (tiposDocumento) => {
           this.formGroup.controls.tipoDocumento.setValue(tiposDocumento[0]);
