@@ -73,7 +73,7 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
-import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
@@ -1508,7 +1508,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    */
   @Transactional
   @Override
-  public void indicarSubsanacion(Long id, List<I18nFieldValue> comentario) {
+  public void indicarSubsanacion(Long id, List<I18nFieldValueDto> comentario) {
     log.debug("indicarSubsanacion(Long id, String comentario) - start");
 
     AssertHelper.idNotNull(id, Memoria.class);
