@@ -37,6 +37,7 @@ import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoMemoriaComentario;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.EvaluacionComentario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.InformeDocumento;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -982,6 +983,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     evaluacionNueva.setEsRevMinima(true);
     evaluacionNueva.setDictamen(null);
     evaluacionNueva.setTipoEvaluacion(TipoEvaluacion.builder().id(tipoEvaluacion.getId()).build());
+    evaluacionNueva.setComentario(Collections.emptySet());
     evaluacionNueva.setActivo(true);
     Evaluacion evaluacionCreated = evaluacionRepository.save(evaluacionNueva);
 
