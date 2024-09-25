@@ -33,7 +33,7 @@ export abstract class AbstractMenuContentComponent implements OnInit, OnDestroy 
     this.problems$ = new BehaviorSubject<SgiProblem[]>([]);
 
     if (translateService) {
-      this.suscripciones.push(translateService.onDefaultLangChange.subscribe(() => {
+      this.suscripciones.push(translateService.onLangChange.subscribe(() => {
         this.setupI18N();
       }));
     }

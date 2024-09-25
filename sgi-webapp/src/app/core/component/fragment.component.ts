@@ -23,7 +23,7 @@ export abstract class FragmentComponent implements SgiOnRouteChange, OnInit, OnD
     this.fragment = actionService.getFragment(name);
 
     if (translateService) {
-      this._subscriptions.push(translateService.onDefaultLangChange.subscribe(() => {
+      this._subscriptions.push(translateService.onLangChange.subscribe(() => {
         this.setupI18N();
       }));
     }
@@ -59,7 +59,7 @@ export abstract class FormFragmentComponent<T> implements SgiOnRouteChange, OnIn
     this.fragment = actionService.getFragment(name) as FormFragment<T>;
 
     if (translateService) {
-      this._subscriptions.push(translateService.onDefaultLangChange.subscribe(() => {
+      this._subscriptions.push(translateService.onLangChange.subscribe(() => {
         this.setupI18N();
       }));
     }

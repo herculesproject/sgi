@@ -33,7 +33,7 @@ export abstract class ActionComponent implements SgiAllowNavigation, OnInit, OnD
     this._service = actionService;
 
     if (translateService) {
-      this.subscriptions.push(translateService.onDefaultLangChange.subscribe(() => {
+      this.subscriptions.push(translateService.onLangChange.subscribe(() => {
         this.setupI18N();
       }));
     }
