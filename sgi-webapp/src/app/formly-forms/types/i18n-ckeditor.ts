@@ -3,6 +3,9 @@ import { FieldType } from '@ngx-formly/material/form-field';
 
 @Component({
   template: `
+    <span class="ckeditor-label">{{to.name}}<span *ngIf="to.required"
+      [class]="(formControl.touched && formControl.errors?.required) ? 'warn' : ''">
+      *</span></span>
     <sgi-i18n-ckeditor
       [id]="id"
       [required]="to.required"
