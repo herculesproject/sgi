@@ -5,6 +5,6 @@ export interface IRolSocioResponse {
   nombre: I18nFieldValueResponse[];
   abreviatura: string;
   coordinador: boolean;
-  descripcion: string;
+  descripcion: I18nFieldValueResponse[];
   activo: boolean;
 }

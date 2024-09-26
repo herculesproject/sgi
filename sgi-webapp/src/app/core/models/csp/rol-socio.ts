@@ -4,7 +4,7 @@ export interface IRolSocio {
   id: number;
   abreviatura: string;
   nombre: I18nFieldValue[];
-  descripcion: string;
+  descripcion: I18nFieldValue[];
   coordinador: boolean;
   activo: boolean;
 }

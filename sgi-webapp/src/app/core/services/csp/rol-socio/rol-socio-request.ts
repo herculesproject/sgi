@@ -4,6 +4,6 @@ export interface IRolSocioRequest {
   nombre: I18nFieldValueRequest[];
   abreviatura: string;
   coordinador: boolean;
-  descripcion: string;
+  descripcion: I18nFieldValueRequest[];
 }
 

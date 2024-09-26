@@ -13,7 +13,7 @@ class RolSocioResponseConverter extends SgiBaseConverter<IRolSocioResponse, IRol
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       abreviatura: value.abreviatura,
       coordinador: value.coordinador,
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.descripcion) : [],
       activo: value.activo
     };
   }
@@ -26,7 +26,7 @@ class RolSocioResponseConverter extends SgiBaseConverter<IRolSocioResponse, IRol
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       abreviatura: value.abreviatura,
       coordinador: value.coordinador,
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.descripcion) : [],
       activo: value.activo
     };
   }

@@ -110,7 +110,7 @@ export class RolSocioModalComponent
       nombre: [this.rolSocio?.nombre ?? [], I18nValidators.required],
       abreviatura: [this.rolSocio?.abreviatura ?? '', Validators.required],
       coordinador: [this.rolSocio?.coordinador ?? null, Validators.required],
-      descripcion: [this.rolSocio?.descripcion ?? '']
+      descripcion: [this.rolSocio?.descripcion ?? []]
     });
     return formGroup;
   }
