@@ -24,7 +24,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.solicitud-socio-colaborador.rol-socio' |
           translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.rolSocio.nombre | translate}} </td>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.rolSocio.nombre | i18nFieldValue}} </td>
       </ng-container>
 
       <!-- Número de investigadores Column -->

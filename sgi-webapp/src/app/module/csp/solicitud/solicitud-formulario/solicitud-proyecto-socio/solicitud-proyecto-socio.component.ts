@@ -20,6 +20,7 @@ import { map, switchMap, take } from 'rxjs/operators';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudProyectoSocioFragment } from './solicitud-proyecto-socio.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_CASCADE = marker('msg.csp.solicitud-socio-colaborador.relations.delete');
@@ -57,7 +58,8 @@ export class SolicitudProyectoSocioComponent extends FragmentComponent implement
     private dialogService: DialogService,
     private solicitudProyectoSocioService: SolicitudProyectoSocioService,
     private snackBarService: SnackBarService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.SOCIOS, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoSocioFragment;
@@ -87,7 +89,7 @@ export class SolicitudProyectoSocioComponent extends FragmentComponent implement
         case 'empresa':
           return wrapper.value.empresa.nombre;
         case 'rolSocio':
-          return wrapper.value.rolSocio.nombre;
+          return this.languageService.getFieldValue(wrapper.value.rolSocio.nombre);
         default:
           return wrapper.value[property];
       }

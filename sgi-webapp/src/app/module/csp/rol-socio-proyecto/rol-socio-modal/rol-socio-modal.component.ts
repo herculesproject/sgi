@@ -6,6 +6,7 @@ import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -106,7 +107,7 @@ export class RolSocioModalComponent
 
   protected buildFormGroup(): FormGroup {
     const formGroup = this.formBuilder.group({
-      nombre: [this.rolSocio?.nombre ?? '', Validators.required],
+      nombre: [this.rolSocio?.nombre ?? [], I18nValidators.required],
       abreviatura: [this.rolSocio?.abreviatura ?? '', Validators.required],
       coordinador: [this.rolSocio?.coordinador ?? null, Validators.required],
       descripcion: [this.rolSocio?.descripcion ?? '']

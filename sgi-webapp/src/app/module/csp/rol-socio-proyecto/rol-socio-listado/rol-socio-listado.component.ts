@@ -71,6 +71,14 @@ export class RolSocioListadoComponent extends AbstractTablePaginationComponent<I
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'nombre') {
+        return 'nombre.value';
+      }
+      return column;
+    }
+
   }
 
   ngOnInit(): void {
@@ -209,7 +217,7 @@ export class RolSocioListadoComponent extends AbstractTablePaginationComponent<I
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const filter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
+    const filter = new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value);
     if (controls.activo.value !== 'todos') {
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
