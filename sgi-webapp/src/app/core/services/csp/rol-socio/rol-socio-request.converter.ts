@@ -11,7 +11,7 @@ class RolSocioRequestConverter extends SgiBaseConverter<IRolSocioRequest, IRolSo
     return {
       id: undefined,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombre) : [],
-      abreviatura: value.abreviatura,
+      abreviatura: value.abreviatura ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.abreviatura) : [],
       coordinador: value.coordinador,
       descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.descripcion) : [],
       activo: true
@@ -23,7 +23,7 @@ class RolSocioRequestConverter extends SgiBaseConverter<IRolSocioRequest, IRolSo
     }
     return {
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
-      abreviatura: value.abreviatura,
+      abreviatura: value.abreviatura ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.abreviatura) : [],
       coordinador: value.coordinador,
       descripcion: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
     };

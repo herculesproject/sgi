@@ -76,6 +76,9 @@ export class RolSocioListadoComponent extends AbstractTablePaginationComponent<I
       if (column === 'nombre') {
         return 'nombre.value';
       }
+      if (column === 'abreviatura') {
+        return 'abreviatura.value';
+      }
       return column;
     }
 
