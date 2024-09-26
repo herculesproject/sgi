@@ -188,10 +188,6 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     cq.where(cb.and(predicates.toArray(new Predicate[] {})));
 
     // Execute query
-    List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.ASC, Memoria_.TITULO + "." + MemoriaTitulo_.VALUE),
-        root, cb);
-    cq.orderBy(orders);
-
     TypedQuery<Memoria> typedQuery = entityManager.createQuery(cq);
 
     List<Memoria> result = typedQuery.getResultList();
@@ -255,10 +251,6 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     cq.where(cb.and(predicates.toArray(new Predicate[] {})));
 
     // Execute query
-    List<Order> orders = QueryUtils.toOrders(Sort.by(Sort.Direction.ASC,
-        Memoria_.TITULO + "." + MemoriaTitulo_.VALUE), root, cb);
-    cq.orderBy(orders);
-
     TypedQuery<Memoria> typedQuery = entityManager.createQuery(cq);
 
     List<Memoria> result = typedQuery.getResultList();
