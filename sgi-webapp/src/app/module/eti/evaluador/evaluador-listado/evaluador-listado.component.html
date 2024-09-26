@@ -5,25 +5,20 @@
   <form class="formulario mat-elevation-z8" [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
     [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-    <div fxFlex="85%" fxFlex.sm="50%" fxFlex.md="73%" [fxLayout.xs]="fxLayoutProperties.xs"
-      [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <!--Persona-->
-      <div class="col">
-        <mat-form-field fxFill>
-          <mat-label>{{'title.eti.search.evaluador' | translate}}</mat-label>
-          <sgi-select-persona placeholder="{{'title.eti.search.evaluador' | translate}}" formControlName="solicitante"
-            [tipoColectivo]="tipoColectivoEvaluador">
-          </sgi-select-persona>
-        </mat-form-field>
-      </div>
+      <mat-form-field fxFlex="35%">
+        <mat-label>{{'title.eti.search.evaluador' | translate}}</mat-label>
+        <sgi-select-persona placeholder="{{'title.eti.search.evaluador' | translate}}" formControlName="solicitante"
+          [tipoColectivo]="tipoColectivoEvaluador">
+        </sgi-select-persona>
+      </mat-form-field>
 
       <!-- Comité -->
-      <div class="col">
-        <mat-form-field fxFill>
-          <mat-label>{{'label.eti.comite' | translate}}</mat-label>
-          <sgi-select-comite #selectComite formControlName="comite"></sgi-select-comite>
-        </mat-form-field>
-      </div>
+      <mat-form-field fxFlex="10%">
+        <mat-label>{{'label.eti.comite' | translate}}</mat-label>
+        <sgi-select-comite #selectComite formControlName="comite"></sgi-select-comite>
+      </mat-form-field>
 
       <!-- Estado -->
       <div class="col checkbox">
