@@ -1893,6 +1893,7 @@
   "error.csp.proyecto-ficha-general.fecha-inicio.range": "La fecha de inicio del proyecto debe ser anterior o igual a la fecha de inicio del periodo de seguimiento",
   "error.csp.proyecto-ficha-general.iva.proyectos-sge": "El proyecto se encuentra vinculado a un proyecto SGE. Porcentaje IVA no puede cambiar a valor 0 con posterioridad a la creación del proyecto SGE.",
   "error.csp.proyecto-hito.duplicate": "Ya existe ese hito para la fecha indicada",
+  "error.csp.proyecto-paquete-trabajo.fecha.invalid": "La fecha no está dentro del rango válido de participación en el proyecto",
   "error.csp.proyecto-paquete-trabajo.nombre.duplicate": "Ya existe un paquete de trabajo con este nombre",
   "error.csp.proyecto-partida-presupuestaria.codigo.duplicated": "Ya existe otra partida con el mismo código y tipo",
   "error.csp.proyecto-partida-presupuestaria.codigo.invalid-format": "Formato de código no válido",
