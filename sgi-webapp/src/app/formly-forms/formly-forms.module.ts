@@ -14,6 +14,7 @@ import { SelectProcedimientosTypeComponent } from './types/select-procedimientos
 import { TipoValorSocialComponent } from './types/tipo-valor-social.component';
 import { IDateBetweenValidatorOptions, IDateValidatorOptions, dateIsAfter, dateIsBetween } from './validators/date.validator';
 import { emailValidator } from './validators/email.validator';
+import { fieldArrayMax } from './validators/field-array-max.validator';
 import { IMulticheckboxValidatorOptions, multicheckboxRestricted } from './validators/multicheckbox.validator';
 import { requiredChecked } from './validators/utils.validator';
 import { InfoDivWrapperComponent } from './wrappers/info-div/info-div.wrapper';
@@ -107,6 +108,11 @@ import { WarnDivWrapperComponent } from './wrappers/warn-div/warn-div.wrapper';
         {
           name: 'email',
           validation: emailValidator,
+          options: {}
+        },
+        {
+          name: 'field-array-max',
+          validation: fieldArrayMax,
           options: {}
         }
       ]
