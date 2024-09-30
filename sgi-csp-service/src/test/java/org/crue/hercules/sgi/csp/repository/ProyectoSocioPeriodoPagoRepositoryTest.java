@@ -3,6 +3,9 @@ package org.crue.hercules.sgi.csp.repository;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -10,6 +13,8 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -41,8 +46,11 @@ class ProyectoSocioPeriodoPagoRepositoryTest extends BaseRepositoryTest {
         .modeloEjecucion(modeloEjecucion1)
         .activo(Boolean.TRUE)
         .build());
+        
+    Set<RolSocioNombre> nombre = new HashSet<>();
+    nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
 
-    RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder().abreviatura("001").nombre("nombre-001")
+    RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder().abreviatura("001").nombre(nombre)
         .descripcion("descripcion-001").coordinador(Boolean.FALSE).activo(Boolean.TRUE).build());
 
     ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(

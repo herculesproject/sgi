@@ -155,11 +155,14 @@ class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
    * @return el ProyectoSocioEquipo
    */
   private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
+    Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
+    rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
+    
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(id)
         .abreviatura("001")
-        .nombre("nombre-001")
+        .nombre(rolSocioNombre)
         .descripcion("descripcion-001")
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)

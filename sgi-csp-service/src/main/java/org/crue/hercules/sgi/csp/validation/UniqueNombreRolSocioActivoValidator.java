@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.repository.RolSocioRepository;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -35,19 +36,25 @@ public class UniqueNombreRolSocioActivoValidator
     if (value == null || value.getNombre() == null) {
       return false;
     }
-    Optional<RolSocio> rolSocio = repository.findByNombreAndActivoIsTrue(value.getNombre());
-    boolean returnValue = (!rolSocio.isPresent() || rolSocio.get().getId().equals(value.getId()));
-    if (!returnValue) {
-      addEntityMessageParameter(context);
+    
+    for(RolSocioNombre nombreI18n: value.getNombre()) {
+      Optional<RolSocio> rolSocio = repository.findByNombreLangAndNombreValueAndActivoIsTrue(nombreI18n.getLang(), nombreI18n.getValue());
+      boolean returnValue = (!rolSocio.isPresent() || rolSocio.get().getId().equals(value.getId()));
+      if (!returnValue) {
+        addEntityMessageParameter(context, nombreI18n);
+        return false;
+      }
     }
-    return returnValue;
+
+    return true;
   }
 
-  private void addEntityMessageParameter(ConstraintValidatorContext context) {
+  private void addEntityMessageParameter(ConstraintValidatorContext context, RolSocioNombre nombreI18n) {
     // Add "entity" message parameter this the message-revolved entity name so it
     // can be used in the error message
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
     hibernateContext.addMessageParameter("entity", ApplicationContextSupport.getMessage(RolSocio.class));
+    hibernateContext.addMessageParameter("nombre", nombreI18n.getValue());
 
     // Disable default message to allow binding the message to a property
     hibernateContext.disableDefaultConstraintViolation();

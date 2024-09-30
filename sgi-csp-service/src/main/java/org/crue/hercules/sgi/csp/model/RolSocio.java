@@ -1,12 +1,22 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.util.Set;
+import java.util.HashSet;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -56,10 +66,11 @@ public class RolSocio extends BaseActivableEntity {
   private String abreviatura;
 
   /** Nombre */
-  @Column(name = "nombre", length = NOMBRE_LENGTH, nullable = false)
-  @NotBlank
-  @Size(max = 50)
-  private String nombre;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name="rol_socio_nombre", joinColumns= @JoinColumn(name="rol_socio_id"))
+  @NotEmpty
+  @Valid
+  private Set<RolSocioNombre> nombre = new HashSet<>();
 
   /** Descripción */
   @Column(name = "descripcion", length = DESCRIPCION_LENGTH, nullable = true)

@@ -2,6 +2,9 @@ package org.crue.hercules.sgi.csp.repository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -9,6 +12,8 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,10 +31,13 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false);
     entityManager.persistAndFlush(modeloEjecucion);
 
+    Set<RolSocioNombre> nombre = new HashSet<>();
+    nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
+    
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .abreviatura("001")
-        .nombre("nombre-001")
+        .nombre(nombre)
         .descripcion("descripcion-001")
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)

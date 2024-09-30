@@ -2,11 +2,15 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.csp.repository.RolSocioRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -162,11 +166,14 @@ class RolSocioServiceTest extends BaseServiceTest {
 
     String suffix = String.format("%03d", rolSocioId);
 
+    Set<RolSocioNombre> nombre = new HashSet<>();
+    nombre.add(new RolSocioNombre(Language.ES, "nombre-" + suffix));
+    
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(rolSocioId)
         .abreviatura(suffix)
-        .nombre("nombre-" + suffix)
+        .nombre(nombre)
         .descripcion("descripcion-" + suffix)
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)

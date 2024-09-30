@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
@@ -604,11 +605,14 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoSocioPeriodoPago
    */
   private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
+    Set<RolSocioNombre> nombre = new HashSet<>();
+    nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
+    
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(id)
         .abreviatura("001")
-        .nombre("nombre-001")
+        .nombre(nombre)
         .descripcion("descripcion-001")
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)
@@ -635,10 +639,13 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
    * @return el ProyectoSocioEquipo
    */
   private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
+    Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
+    rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
+    
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(id).abreviatura("001")
-        .nombre("nombre-001")
+        .nombre(rolSocioNombre)
         .descripcion("descripcion-001")
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)

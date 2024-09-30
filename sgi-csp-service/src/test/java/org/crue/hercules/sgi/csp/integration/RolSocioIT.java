@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -51,7 +53,7 @@ class RolSocioIT extends BaseIT {
     RolSocio responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(responseData.getAbreviatura()).as("getAbreviatura()").isEqualTo("001");
-    Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(responseData.getCoordinador()).as("getCoordinador()").isEqualTo(Boolean.FALSE);
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);

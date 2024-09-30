@@ -57,7 +57,9 @@ INSERT INTO test.solicitud_proyecto (id, colaborativo, tipo_presupuesto)
 VALUES (1, true, 'GLOBAL');
 
 -- ROL SOCIO
-INSERT INTO test.rol_socio (id, abreviatura, nombre, descripcion, coordinador, activo) VALUES(1, '001', 'nombre-001', 'descripcion-001' , false, false);
+INSERT INTO test.rol_socio (id, abreviatura, descripcion, coordinador, activo) VALUES(1, '001', 'descripcion-001' , false, false);
+
+INSERT INTO test.rol_socio_nombre(rol_socio_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- SOLICITUD PROYECTO SOCIO
 INSERT INTO test.solicitud_proyecto_socio (id, solicitud_proyecto_id, rol_socio_id, mes_inicio, mes_fin, num_investigadores, importe_solicitado, empresa_ref) 

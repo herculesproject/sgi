@@ -250,10 +250,13 @@ class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
   }
 
   private ProyectoSocio generarMockProyectoSocio(Long id) {
+    Set<RolSocioNombre> nombre = new HashSet<>();
+    nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
+    
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(id).abreviatura("001")
-        .nombre("nombre-001")
+        .nombre(nombre)
         .descripcion("descripcion-001")
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)

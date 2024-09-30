@@ -1,9 +1,15 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -55,8 +61,8 @@ class RolSocioRepositoryTest extends BaseRepositoryTest {
     generarMockRolSocio("001", Boolean.FALSE);
 
     // when: find given Nombre
-    String nombreToFind = rolSocio1.getNombre();
-    RolSocio responseData = repository.findByNombreAndActivoIsTrue(nombreToFind).get();
+    Set<RolSocioNombre> nombreToFind = rolSocio1.getNombre();
+    RolSocio responseData = repository.findByNombreValueAndActivoIsTrue(I18nHelper.getValueForLanguage(nombreToFind, Language.ES)).get();
 
     // then: RolSocio with given Nombre is found
     Assertions.assertThat(responseData).isNotNull();
@@ -74,7 +80,7 @@ class RolSocioRepositoryTest extends BaseRepositoryTest {
     String nombreToFind = "001";
 
     // when: find given Nombre
-    Optional<RolSocio> responseData = repository.findByNombreAndActivoIsTrue(nombreToFind);
+    Optional<RolSocio> responseData = repository.findByNombreValueAndActivoIsTrue(nombreToFind);
 
     // then: RolSocio with given Nombre is not found
     Assertions.assertThat(responseData).isEqualTo(Optional.empty());
@@ -88,10 +94,13 @@ class RolSocioRepositoryTest extends BaseRepositoryTest {
    */
   private RolSocio generarMockRolSocio(String suffix, Boolean activo) {
 
+    Set<RolSocioNombre> nombre = new HashSet<>();
+    nombre.add(new RolSocioNombre(Language.ES, "nombre-" + suffix));
+    
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .abreviatura(suffix)
-        .nombre("nombre-" + suffix)
+        .nombre(nombre)
         .descripcion("descripcion-" + suffix)
         .coordinador(Boolean.FALSE)
         .activo(activo)

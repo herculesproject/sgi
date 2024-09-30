@@ -4,13 +4,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.service.RolSocioService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -164,12 +169,15 @@ class RolSocioControllerTest extends BaseControllerTest {
   private RolSocio generarMockRolSocio(Long rolSocioId) {
 
     String suffix = String.format("%03d", rolSocioId);
+    
+    Set<RolSocioNombre> nombre = new HashSet<>();
+    nombre.add(new RolSocioNombre(Language.ES, "nombre-" + suffix));
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(rolSocioId)
         .abreviatura(suffix)
-        .nombre("nombre-" + suffix)
+        .nombre(nombre)
         .descripcion("descripcion-" + suffix)
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)
