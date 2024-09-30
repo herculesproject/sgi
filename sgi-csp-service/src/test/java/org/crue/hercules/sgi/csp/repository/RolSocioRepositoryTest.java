@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -97,11 +98,14 @@ class RolSocioRepositoryTest extends BaseRepositoryTest {
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-" + suffix));
     
+    Set<RolSocioDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-" + suffix));
+    
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .abreviatura(suffix)
         .nombre(nombre)
-        .descripcion("descripcion-" + suffix)
+        .descripcion(descripcion)
         .coordinador(Boolean.FALSE)
         .activo(activo)
         .build();

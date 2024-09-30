@@ -15,9 +15,11 @@ INSERT INTO test.proyecto (id, titulo, codigo_externo, fecha_inicio, fecha_fin, 
  VALUES (1, 'PRO1', 'cod-externo-001', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', '2', 1, 1, 1, false, 'observaciones 1', 1, true);
 
 -- ROL SOCIO
-INSERT INTO test.rol_socio (id, abreviatura, descripcion, coordinador, activo) VALUES (1, '001', 'descripcion-001', false, true);
+INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES (1, '001', false, true);
 
 INSERT INTO test.rol_socio_nombre (rol_socio_id, lang, value_) VALUES(1, 'es', 'nombre-001');
+
+INSERT INTO test.rol_socio_descripcion (rol_socio_id, lang, value_) VALUES(1, 'es', 'descripcion-001');
 
 -- PROYECTO SOCIO
 INSERT INTO test.proyecto_socio (id, proyecto_id, empresa_ref, rol_socio_id, fecha_inicio, fecha_fin, num_investigadores, importe_concedido)

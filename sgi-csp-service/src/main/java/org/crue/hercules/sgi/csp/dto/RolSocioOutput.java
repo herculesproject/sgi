@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class RolSocioOutput implements Serializable {
   private Long id;
   private Collection<RolSocioNombre> nombre;
   private String abreviatura;
-  private String descripcion;
+  private Collection<RolSocioDescripcion> descripcion;
   private Boolean coordinador;
   private Boolean activo;
 }

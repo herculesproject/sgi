@@ -54,7 +54,7 @@ class RolSocioIT extends BaseIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(responseData.getAbreviatura()).as("getAbreviatura()").isEqualTo("001");
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()").isEqualTo("nombre-001");
-    Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getDescripcion(), Language.ES)).as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(responseData.getCoordinador()).as("getCoordinador()").isEqualTo(Boolean.FALSE);
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
@@ -71,7 +71,7 @@ class RolSocioIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     // when: find RolSocio
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
@@ -90,11 +90,11 @@ class RolSocioIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(responseData.get(0).getDescripcion()).as("get(0).getDescripcion())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getDescripcion(), Language.ES)).as("get(0).getDescripcion())")
         .isEqualTo("descripcion-" + String.format("%03d", 3));
-    Assertions.assertThat(responseData.get(1).getDescripcion()).as("get(1).getDescripcion())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getDescripcion(), Language.ES)).as("get(1).getDescripcion())")
         .isEqualTo("descripcion-" + String.format("%03d", 2));
-    Assertions.assertThat(responseData.get(2).getDescripcion()).as("get(2).getDescripcion())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getDescripcion(), Language.ES)).as("get(2).getDescripcion())")
         .isEqualTo("descripcion-" + String.format("%03d", 1));
   }
 }

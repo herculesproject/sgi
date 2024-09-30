@@ -42,10 +42,13 @@ class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
     
+    Set<RolSocioDescripcion> rolSocioDescripcion = new HashSet<>();
+    rolSocioDescripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
+    
     RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()
         .abreviatura("001")
         .nombre(rolSocioNombre)
-        .descripcion("descripcion-001")
+        .descripcion(rolSocioDescripcion)
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)
         .build());

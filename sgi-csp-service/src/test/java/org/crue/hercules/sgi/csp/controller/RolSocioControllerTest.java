@@ -14,6 +14,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
 import org.crue.hercules.sgi.csp.service.RolSocioService;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
@@ -172,13 +173,17 @@ class RolSocioControllerTest extends BaseControllerTest {
     
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-" + suffix));
+    
+    Set<RolSocioDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-" + suffix));
+
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(rolSocioId)
         .abreviatura(suffix)
         .nombre(nombre)
-        .descripcion("descripcion-" + suffix)
+        .descripcion(descripcion)
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)
         .build();

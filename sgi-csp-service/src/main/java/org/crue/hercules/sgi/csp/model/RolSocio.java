@@ -73,9 +73,10 @@ public class RolSocio extends BaseActivableEntity {
   private Set<RolSocioNombre> nombre = new HashSet<>();
 
   /** Descripción */
-  @Column(name = "descripcion", length = DESCRIPCION_LENGTH, nullable = true)
-  @Size(max = 250)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name="rol_socio_descripcion", joinColumns= @JoinColumn(name="rol_socio_id"))
+  @Valid
+  private Set<RolSocioDescripcion> descripcion = new HashSet<>();
 
   /** Coordinador */
   @Column(name = "coordinador", columnDefinition = "boolean default false", nullable = true)

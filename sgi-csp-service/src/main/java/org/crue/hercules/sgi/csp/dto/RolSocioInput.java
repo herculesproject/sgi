@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import org.crue.hercules.sgi.csp.model.RolSocio;
-import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,5 +36,5 @@ public class RolSocioInput implements Serializable {
   private Boolean coordinador;
 
   @Size(max = RolSocio.DESCRIPCION_LENGTH)
-  private String descripcion;
+  private List<I18nFieldValueDto> descripcion;
 }

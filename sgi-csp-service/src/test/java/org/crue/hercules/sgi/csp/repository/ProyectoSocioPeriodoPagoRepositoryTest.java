@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +50,12 @@ class ProyectoSocioPeriodoPagoRepositoryTest extends BaseRepositoryTest {
         
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
+    
+    Set<RolSocioDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
 
     RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder().abreviatura("001").nombre(nombre)
-        .descripcion("descripcion-001").coordinador(Boolean.FALSE).activo(Boolean.TRUE).build());
+        .descripcion(descripcion).coordinador(Boolean.FALSE).activo(Boolean.TRUE).build());
 
     ProyectoSocio proyectoSocio1 = entityManager.persistAndFlush(
         ProyectoSocio.builder().proyectoId(proyecto1.getId()).empresaRef("empresa-0041").rolSocio(rolSocio).build());

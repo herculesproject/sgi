@@ -164,7 +164,6 @@
 
   </changeSet>
 
-
   <changeSet author="master" id="0.10.0-12">
 
     <createTable tableName="rol_socio_nombre">
@@ -191,6 +190,35 @@
       '${defaultLang}' FROM ${schemaPrefix}rol_socio WHERE nombre IS NOT NULL</sql>
 
     <dropColumn columnName="nombre" tableName="rol_socio" />
+
+  </changeSet>
+
+  <changeSet author="master" id="0.10.0-13">
+
+    <createTable tableName="rol_socio_descripcion">
+      <column name="rol_socio_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="rol_socio_descripcion" columnNames="rol_socio_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="rol_socio_id"
+      baseTableName="rol_socio_descripcion"
+      constraintName="FK_ROLSOCIODESCRIPCION_ROLSOCIO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="rol_socio" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}rol_socio_descripcion(rol_socio_id, value_, lang) SELECT id,
+      descripcion, '${defaultLang}' FROM ${schemaPrefix}rol_socio WHERE descripcion IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="rol_socio" />
 
   </changeSet>
 </databaseChangeLog>

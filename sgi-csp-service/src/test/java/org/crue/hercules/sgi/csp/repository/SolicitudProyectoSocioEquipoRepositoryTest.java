@@ -41,12 +41,15 @@ class SolicitudProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
 
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "Lider"));
+    
+    Set<RolSocioDescripcion> rolSocioDescripcion = new HashSet<>();
+    rolSocioDescripcion.add(new RolSocioDescripcion(Language.ES, "Lider"));
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .abreviatura("001")
         .nombre(rolSocioNombre)
-        .descripcion("Lider")
+        .descripcion(rolSocioDescripcion)
         .coordinador(Boolean.FALSE)
         .activo(Boolean.TRUE)
         .build();
