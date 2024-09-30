@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -29,8 +30,8 @@ class RolProyectoRepositoryTest extends BaseRepositoryTest {
     generarMockRolProyecto("001", Boolean.FALSE);
 
     // when: find given Abreviatura
-    String abreviaturaToFind = rolProyecto1.getAbreviatura();
-    RolProyecto responseData = repository.findByAbreviaturaAndActivoIsTrue(abreviaturaToFind).get();
+    Set<RolProyectoAbreviatura> abreviaturaToFind = rolProyecto1.getAbreviatura();
+    RolProyecto responseData = repository.findByAbreviaturaValueAndActivoIsTrue(I18nHelper.getValueForLanguage(abreviaturaToFind, Language.ES)).get();
 
     // then: RolProyecto with given Abreviatura is found
     Assertions.assertThat(responseData).isNotNull();
@@ -52,7 +53,7 @@ class RolProyectoRepositoryTest extends BaseRepositoryTest {
     String abreviaturaToFind = "001";
 
     // when: find given Abreviatura
-    Optional<RolProyecto> responseData = repository.findByAbreviaturaAndActivoIsTrue(abreviaturaToFind);
+    Optional<RolProyecto> responseData = repository.findByAbreviaturaValueAndActivoIsTrue(abreviaturaToFind);
 
     // then: RolProyecto with given Abreviatura is not found
     Assertions.assertThat(responseData).isEqualTo(Optional.empty());
@@ -105,9 +106,12 @@ class RolProyectoRepositoryTest extends BaseRepositoryTest {
     nombre.add(new RolProyectoNombre(Language.ES, "nombre-" + suffix));
     Set<RolProyectoDescripcion> descricion = new HashSet<>();
     descricion.add(new RolProyectoDescripcion(Language.ES, "descripcion-" + suffix));
+    Set<RolProyectoAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolProyectoAbreviatura(Language.ES, suffix));
+    
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder()
-        .abreviatura(suffix)
+        .abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descricion)
         .rolPrincipal(Boolean.FALSE)

@@ -7,10 +7,12 @@ import javax.validation.Validator;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.RolProyectoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,7 +116,7 @@ class RolProyectoServiceTest extends BaseServiceTest {
 
     for (int i = 0, j = 62; i < 10; i++, j += 2) {
       RolProyecto item = page.getContent().get(i);
-      Assertions.assertThat(item.getAbreviatura()).isEqualTo(String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getAbreviatura(), Language.ES)).isEqualTo(String.format("%03d", j));
       Assertions.assertThat(item.getActivo()).isEqualTo(Boolean.TRUE);
     }
   }
@@ -156,7 +158,7 @@ class RolProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       RolProyecto item = page.getContent().get(i);
-      Assertions.assertThat(item.getAbreviatura()).isEqualTo(String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getAbreviatura(), Language.ES)).isEqualTo(String.format("%03d", j));
       Assertions.assertThat(item.getActivo()).isEqualTo((j % 2 == 0 ? Boolean.TRUE : Boolean.FALSE));
     }
   }
@@ -177,10 +179,14 @@ class RolProyectoServiceTest extends BaseServiceTest {
     Set<RolProyectoDescripcion> descripcion = new HashSet<>();
     descripcion.add(new RolProyectoDescripcion(Language.ES, "descripcion-" + suffix));
     
+    Set<RolProyectoAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolProyectoAbreviatura(Language.ES, suffix));
+    
+    
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder()
         .id(rolProyectoId)
-        .abreviatura(suffix)
+        .abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .rolPrincipal(Boolean.FALSE)

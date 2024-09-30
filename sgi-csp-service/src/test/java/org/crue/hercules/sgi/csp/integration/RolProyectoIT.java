@@ -56,7 +56,7 @@ class RolProyectoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     RolProyecto responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
-    Assertions.assertThat(responseData.getAbreviatura()).as("getAbreviatura()").isEqualTo("001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getAbreviatura(), Language.ES)).as("getAbreviatura()").isEqualTo("001");
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getDescripcion(), Language.ES)).as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(responseData.getRolPrincipal()).as("getRolPrincipal()").isEqualTo(Boolean.FALSE);

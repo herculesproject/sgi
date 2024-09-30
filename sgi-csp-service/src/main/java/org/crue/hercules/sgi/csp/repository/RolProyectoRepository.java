@@ -13,10 +13,19 @@ public interface RolProyectoRepository extends JpaRepository<RolProyecto, Long>,
   /**
    * Obtiene la entidad {@link RolProyecto} activo con la abreviatura indicada
    *
+   * @param lang el language sobre el que buscar
    * @param abreviatura la abreviatura de {@link RolProyecto}.
    * @return el {@link RolProyecto} activo con la abreviatura indicada
    */
-  Optional<RolProyecto> findByAbreviaturaAndActivoIsTrue(String abreviatura);
+  Optional<RolProyecto> findByAbreviaturaLangAndAbreviaturaValueAndActivoIsTrue(Language lang, String abreviatura);
+
+  /**
+   * Obtiene la entidad {@link RolProyecto} activo con la abreviatura indicada
+   *
+   * @param abreviatura la abreviatura de {@link RolProyecto}.
+   * @return el {@link RolProyecto} activo con la abreviatura indicada
+   */
+  Optional<RolProyecto> findByAbreviaturaValueAndActivoIsTrue(String abreviatura);
 
   /**
    * Obtiene la entidad {@link RolProyecto} activo con el nombre indicado

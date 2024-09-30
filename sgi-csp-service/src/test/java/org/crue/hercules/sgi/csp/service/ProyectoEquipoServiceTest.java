@@ -8,11 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
-import org.crue.hercules.sgi.csp.model.Proyecto;
-import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
-import org.crue.hercules.sgi.csp.model.RolProyecto;
-import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
-import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
+import org.crue.hercules.sgi.csp.model.*;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
@@ -345,9 +341,12 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
     nombre.add(new RolProyectoNombre(Language.ES, "nombre-001"));
     Set<RolProyectoDescripcion> descripcion = new HashSet<>();
     descripcion.add(new RolProyectoDescripcion(Language.ES, "descripcion-001"));
+    Set<RolProyectoAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolProyectoAbreviatura(Language.ES, "001"));
+
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder().id(id)
-        .abreviatura("001")
+        .abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .rolPrincipal(Boolean.FALSE)

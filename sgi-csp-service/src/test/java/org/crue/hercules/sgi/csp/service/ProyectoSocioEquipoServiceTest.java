@@ -281,9 +281,12 @@ class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
 
     Set<RolProyectoDescripcion> descripcion = new HashSet<>();
     descripcion.add(new RolProyectoDescripcion(Language.ES, "descripcion-001"));
+
+    Set<RolProyectoAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolProyectoAbreviatura(Language.ES, "001"));
     // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder()
-        .id(id).abreviatura("001")
+        .id(id).abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .rolPrincipal(Boolean.FALSE)

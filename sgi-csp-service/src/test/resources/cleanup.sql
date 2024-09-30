@@ -89,6 +89,7 @@ DELETE FROM test.proyecto;
 DELETE FROM test.rol_proyecto_colectivo;
 DELETE FROM test.rol_proyecto_nombre;
 DELETE FROM test.rol_proyecto_descripcion;
+DELETE FROM test.rol_proyecto_abreviatura;
 DELETE FROM test.rol_proyecto;
 DELETE FROM test.rol_socio;
 DELETE FROM test.convocatoria_documento;

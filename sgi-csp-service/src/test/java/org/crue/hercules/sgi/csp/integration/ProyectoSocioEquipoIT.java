@@ -7,6 +7,7 @@ import java.util.*;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -157,6 +158,9 @@ class ProyectoSocioEquipoIT extends BaseIT {
   private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
     Set<RolProyectoNombre> nombre = new HashSet<>();
     nombre.add(new RolProyectoNombre(Language.ES, "rolProyecto1"));
+
+    Set<RolProyectoAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolProyectoAbreviatura(Language.ES, "001"));
     // @formatter:off
     ProyectoSocioEquipo proyectoSocioEquipo = ProyectoSocioEquipo.builder()
       .id(id)
@@ -164,7 +168,7 @@ class ProyectoSocioEquipoIT extends BaseIT {
       .rolProyecto(
         RolProyecto.builder()
           .id(1L)
-          .abreviatura("001")
+          .abreviatura(abreviatura)
           .nombre(nombre)
           .equipo(RolProyecto.Equipo.INVESTIGACION)
           .activo(Boolean.TRUE)

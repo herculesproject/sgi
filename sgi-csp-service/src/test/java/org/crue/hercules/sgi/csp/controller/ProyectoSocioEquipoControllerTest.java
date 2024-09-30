@@ -171,9 +171,12 @@ class ProyectoSocioEquipoControllerTest extends BaseControllerTest {
     Set<RolProyectoDescripcion> descripcion = new HashSet<>();
     descripcion.add(new RolProyectoDescripcion(Language.ES, "descripcion-001"));
 
+    Set<RolProyectoAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolProyectoAbreviatura(Language.ES, "001"));
+    
     RolProyecto rolProyecto = RolProyecto.builder()
         .id(id)
-        .abreviatura("001")
+        .abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .rolPrincipal(Boolean.FALSE)

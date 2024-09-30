@@ -64,11 +64,13 @@ INSERT INTO test.solicitud_proyecto_socio (id, solicitud_proyecto_id, rol_socio_
 VALUES (1, 1, 1, 2, 6, 8, 4, 'ref-001');
 
 -- ROL PROYECTO
-INSERT INTO test.rol_proyecto (id, abreviatura, rol_principal, orden, equipo, activo) VALUES(1, '001', false, null, 'INVESTIGACION', true);
+INSERT INTO test.rol_proyecto (id, rol_principal, orden, equipo, activo) VALUES(1, false, null, 'INVESTIGACION', true);
 
 INSERT INTO test.rol_proyecto_nombre(rol_proyecto_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 INSERT INTO test.rol_proyecto_descripcion(rol_proyecto_id, lang, value_) VALUES(1, 'es', 'descripcion-001');
+
+INSERT INTO test.rol_proyecto_abreviatura(rol_proyecto_id, lang, value_) VALUES(1, 'es', '001');
 
 -- SOLICITUD PROYECTO EQUIPO SOCIO
 INSERT INTO test.solicitud_proyecto_socio_equipo (id, persona_ref, rol_proyecto_id, solicitud_proyecto_socio_id, mes_inicio, mes_fin) 

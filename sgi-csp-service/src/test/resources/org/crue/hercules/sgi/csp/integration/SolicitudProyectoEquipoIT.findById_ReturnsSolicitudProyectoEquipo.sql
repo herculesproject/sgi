@@ -57,12 +57,14 @@ INSERT INTO test.solicitud_proyecto (id, colaborativo, tipo_presupuesto)
 VALUES (1, true, 'GLOBAL');
 
 -- ROL PROYECTO
-INSERT INTO test.rol_proyecto (id, abreviatura, rol_principal, orden, equipo, activo) 
-VALUES(1, '001', false, null, 'INVESTIGACION', true);
+INSERT INTO test.rol_proyecto (id, rol_principal, orden, equipo, activo) 
+VALUES(1, false, null, 'INVESTIGACION', true);
 
 INSERT INTO test.rol_proyecto_nombre(rol_proyecto_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 INSERT INTO test.rol_proyecto_descripcion(rol_proyecto_id, lang, value_) VALUES(1, 'es', 'descripcion-001');
+
+INSERT INTO test.rol_proyecto_abreviatura(rol_proyecto_id, lang, value_) VALUES(1, 'es', '001');
 
 -- SOLICITUD PROYECTO EQUIPO
 INSERT INTO test.solicitud_proyecto_equipo (id, solicitud_proyecto_id, persona_ref, rol_proyecto_id, mes_inicio, mes_fin ) 
