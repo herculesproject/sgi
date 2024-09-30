@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
 import org.crue.hercules.sgi.csp.repository.RolSocioRepository;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -35,19 +36,23 @@ public class UniqueAbreviaturaRolSocioActivoValidator
     if (value == null || value.getAbreviatura() == null) {
       return false;
     }
-    Optional<RolSocio> rolSocio = repository.findByAbreviaturaAndActivoIsTrue(value.getAbreviatura());
-    boolean returnValue = (!rolSocio.isPresent() || rolSocio.get().getId().equals(value.getId()));
-    if (!returnValue) {
-      addEntityMessageParameter(context);
+    for (RolSocioAbreviatura rolSocioAbreviatura : value.getAbreviatura()) {
+      Optional<RolSocio> rolSocio = repository.findByAbreviaturaLangAndAbreviaturaValueAndActivoIsTrue(rolSocioAbreviatura.getLang(), rolSocioAbreviatura.getValue());
+      boolean returnValue = (!rolSocio.isPresent() || rolSocio.get().getId().equals(value.getId()));
+      if (!returnValue) {
+        addEntityMessageParameter(context, rolSocioAbreviatura);
+        return false;
+      }
     }
-    return returnValue;
+    return true;
   }
 
-  private void addEntityMessageParameter(ConstraintValidatorContext context) {
+  private void addEntityMessageParameter(ConstraintValidatorContext context, RolSocioAbreviatura rolSocioAbreviatura) {
     // Add "entity" message parameter this the message-revolved entity name so it
     // can be used in the error message
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
     hibernateContext.addMessageParameter("entity", ApplicationContextSupport.getMessage(RolSocio.class));
+    hibernateContext.addMessageParameter("abreviatura", rolSocioAbreviatura.getValue());
 
     // Disable default message to allow binding the message to a property
     hibernateContext.disableDefaultConstraintViolation();

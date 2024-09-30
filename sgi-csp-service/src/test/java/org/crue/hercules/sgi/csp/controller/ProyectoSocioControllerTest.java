@@ -19,8 +19,9 @@ import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
 import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.model.RolSocio;
-import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
@@ -606,6 +607,9 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoSocioPeriodoPago
    */
   private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
+    Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
+    
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
     
@@ -615,7 +619,7 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(id)
-        .abreviatura("001")
+        .abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .coordinador(Boolean.FALSE)
@@ -643,6 +647,9 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
    * @return el ProyectoSocioEquipo
    */
   private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
+    Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
+    rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
+    
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
     
@@ -651,7 +658,7 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
     
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
-        .id(id).abreviatura("001")
+        .id(id).abreviatura(rolSocioAbreviatura)
         .nombre(rolSocioNombre)
         .descripcion(rolSocioDescripcion)
         .coordinador(Boolean.FALSE)

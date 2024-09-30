@@ -30,7 +30,7 @@ public class RolSocioInput implements Serializable {
 
   @NotEmpty
   @Size(max = RolSocio.ABREVIATURA_LENGTH)
-  private String abreviatura;
+  private List<I18nFieldValueDto> abreviatura;
 
   @NotNull
   private Boolean coordinador;

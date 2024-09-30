@@ -1,13 +1,13 @@
 -- ROL SOCIO
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(1, '001', false, true);
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(2, '002', false, true);
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(3, '003', false, true);
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(4, '004', false, true);
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(5, '005', false, true);
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(6, '006', false, true);
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(7, '007', false, false);
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(8, '008', false, false);
-INSERT INTO test.rol_socio (id, abreviatura, coordinador, activo) VALUES(9, '009',  true, false);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(1, false, true);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(2, false, true);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(3, false, true);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(4, false, true);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(5, false, true);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(6, false, true);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(7, false, false);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(8, false, false);
+INSERT INTO test.rol_socio (id, coordinador, activo) VALUES(9, true, false);
 
 -- ROL SOCIO NOMBRE
 INSERT INTO test.rol_socio_nombre (rol_socio_id, lang, value_) VALUES(1, 'es', 'nombre-001');

@@ -41,6 +41,9 @@ class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryTest {
         SolicitudProyecto.builder().id(solicitud1.getId()).colaborativo(Boolean.TRUE)
             .coordinado(Boolean.TRUE).colaborativo(Boolean.TRUE).tipoPresupuesto(TipoPresupuesto.GLOBAL).build());
 
+    Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
+    rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
+    
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "Lider"));
     
@@ -49,7 +52,7 @@ class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryTest {
     
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
-        .abreviatura("001")
+        .abreviatura(rolSocioAbreviatura)
         .nombre(rolSocioNombre)
         .descripcion(rolSocioDescripcion)
         .coordinador(Boolean.FALSE)

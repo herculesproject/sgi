@@ -12,8 +12,9 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.RolSocio;
-import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false);
     entityManager.persistAndFlush(modeloEjecucion);
 
+    Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
+    
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
     
@@ -40,7 +44,7 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
     
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
-        .abreviatura("001")
+        .abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .coordinador(Boolean.FALSE)

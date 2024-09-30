@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
@@ -35,6 +36,9 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
     ModeloEjecucion modeloEjecucion = entityManager
         .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false));
 
+    Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
+    rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
+    
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
     
@@ -43,7 +47,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
     
     // @formatter:off
     RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()
-        .abreviatura("001")
+        .abreviatura(rolSocioAbreviatura)
         .nombre(rolSocioNombre)
         .descripcion(rolSocioDescripcion)
         .coordinador(Boolean.FALSE)

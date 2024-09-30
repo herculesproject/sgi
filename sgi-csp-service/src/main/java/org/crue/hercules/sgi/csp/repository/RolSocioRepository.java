@@ -10,13 +10,22 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface RolSocioRepository extends JpaRepository<RolSocio, Long>, JpaSpecificationExecutor<RolSocio> {
 
   /**
+   * Obtiene la entidad {@link RolSocio} activa con la abreviatura indicada y el lang
+   *
+   * @param abreviatura la abreviatura de {@link RolSocio}.
+   * @param lang la language de {@link RolSocio}.
+   * @return el {@link RolSocio} activo con la abreviatura indicada
+   */
+  Optional<RolSocio> findByAbreviaturaLangAndAbreviaturaValueAndActivoIsTrue(Language lang, String abreviatura);
+
+  /**
    * Obtiene la entidad {@link RolSocio} activa con la abreviatura indicada
    *
    * @param abreviatura la abreviatura de {@link RolSocio}.
    * @return el {@link RolSocio} activo con la abreviatura indicada
    */
-  Optional<RolSocio> findByAbreviaturaAndActivoIsTrue(String abreviatura);
-
+  Optional<RolSocio> findByAbreviaturaValueAndActivoIsTrue(String abreviatura);
+  
   /**
    * Obtiene la entidad {@link RolSocio} activa con el nombre indicado y el lang
    *

@@ -60,10 +60,11 @@ public class RolSocio extends BaseActivableEntity {
   private Long id;
 
   /** Abreviatura */
-  @Column(name = "abreviatura", length = ABREVIATURA_LENGTH, nullable = false)
-  @NotBlank
-  @Size(max = 5)
-  private String abreviatura;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name="rol_socio_abreviatura", joinColumns= @JoinColumn(name="rol_socio_id"))
+  @NotEmpty
+  @Valid
+  private Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
 
   /** Nombre */
   @ElementCollection(fetch = FetchType.EAGER)

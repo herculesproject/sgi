@@ -250,6 +250,9 @@ class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
   }
 
   private ProyectoSocio generarMockProyectoSocio(Long id) {
+    Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
+    
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
     
@@ -258,7 +261,7 @@ class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
     
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
-        .id(id).abreviatura("001")
+        .id(id).abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .coordinador(Boolean.FALSE)

@@ -39,6 +39,9 @@ class SolicitudProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
         new SolicitudProyecto(solicitud1.getId(), null, null, null, Boolean.TRUE, null, Boolean.FALSE, null,
             null, null, null, null, null, TipoPresupuesto.GLOBAL, null, null, null, null, null, null, null, null));
 
+    Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
+    rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
+    
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "Lider"));
     
@@ -47,7 +50,7 @@ class SolicitudProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
 
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
-        .abreviatura("001")
+        .abreviatura(rolSocioAbreviatura)
         .nombre(rolSocioNombre)
         .descripcion(rolSocioDescripcion)
         .coordinador(Boolean.FALSE)

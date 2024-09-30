@@ -15,7 +15,9 @@ import org.crue.hercules.sgi.csp.exceptions.RolSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
+import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
 import org.crue.hercules.sgi.csp.service.RolSocioService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -133,7 +135,7 @@ class RolSocioControllerTest extends BaseControllerTest {
     // containing Codigo='codigo-62' to 'codigo-80'
     for (int i = 0, j = 62; i < 10; i++, j += 2) {
       RolSocio item = actual.get(i);
-      Assertions.assertThat(item.getAbreviatura()).isEqualTo(String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getAbreviatura(), Language.ES)).isEqualTo(String.format("%03d", j));
       Assertions.assertThat(item.getActivo()).isEqualTo(Boolean.TRUE);
     }
   }
@@ -171,6 +173,9 @@ class RolSocioControllerTest extends BaseControllerTest {
 
     String suffix = String.format("%03d", rolSocioId);
     
+    Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolSocioAbreviatura(Language.ES, suffix));
+    
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-" + suffix));
     
@@ -181,7 +186,7 @@ class RolSocioControllerTest extends BaseControllerTest {
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(rolSocioId)
-        .abreviatura(suffix)
+        .abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .coordinador(Boolean.FALSE)

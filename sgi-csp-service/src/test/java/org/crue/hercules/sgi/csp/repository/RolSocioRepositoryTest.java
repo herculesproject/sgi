@@ -7,8 +7,9 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.RolSocio;
-import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -29,13 +30,13 @@ class RolSocioRepositoryTest extends BaseRepositoryTest {
     generarMockRolSocio("001", Boolean.FALSE);
 
     // when: find given Abreviatura
-    String abreviaturaToFind = rolSocio1.getAbreviatura();
-    RolSocio responseData = repository.findByAbreviaturaAndActivoIsTrue(abreviaturaToFind).get();
+    String abreviaturaToFind = I18nHelper.getValueForLanguage(rolSocio1.getAbreviatura(), Language.ES);
+    RolSocio responseData = repository.findByAbreviaturaValueAndActivoIsTrue(abreviaturaToFind).get();
 
     // then: RolSocio with given Abreviatura is found
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(rolSocio1.getId());
-    Assertions.assertThat(responseData.getAbreviatura()).as("getAbreviatura()").isEqualTo(abreviaturaToFind);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getAbreviatura(), Language.ES)).as("getAbreviatura()").isEqualTo(abreviaturaToFind);
     Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo(rolSocio1.getNombre());
     Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo(rolSocio1.getDescripcion());
     Assertions.assertThat(responseData.getCoordinador()).as("getCoordinador()").isEqualTo(rolSocio1.getCoordinador());
@@ -48,7 +49,7 @@ class RolSocioRepositoryTest extends BaseRepositoryTest {
     String abreviaturaToFind = "001";
 
     // when: find given Abreviatura
-    Optional<RolSocio> responseData = repository.findByAbreviaturaAndActivoIsTrue(abreviaturaToFind);
+    Optional<RolSocio> responseData = repository.findByAbreviaturaValueAndActivoIsTrue(abreviaturaToFind);
 
     // then: RolSocio with given Abreviatura is not found
     Assertions.assertThat(responseData).isEqualTo(Optional.empty());
@@ -95,6 +96,9 @@ class RolSocioRepositoryTest extends BaseRepositoryTest {
    */
   private RolSocio generarMockRolSocio(String suffix, Boolean activo) {
 
+    Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
+    abreviatura.add(new RolSocioAbreviatura(Language.ES, suffix));
+    
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-" + suffix));
     
@@ -103,7 +107,7 @@ class RolSocioRepositoryTest extends BaseRepositoryTest {
     
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
-        .abreviatura(suffix)
+        .abreviatura(abreviatura)
         .nombre(nombre)
         .descripcion(descripcion)
         .coordinador(Boolean.FALSE)
