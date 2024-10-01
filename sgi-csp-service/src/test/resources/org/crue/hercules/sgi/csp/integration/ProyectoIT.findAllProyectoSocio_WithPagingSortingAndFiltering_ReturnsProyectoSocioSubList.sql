@@ -5,7 +5,9 @@ INSERT INTO test.modelo_ejecucion (id, nombre, descripcion, activo) VALUES (1, '
 INSERT INTO test.tipo_finalidad (id,nombre,descripcion,activo) VALUES (1,'nombre-1','descripcion-1',true);
 
 -- TIPO AMBITO GEOGRAFICO
-INSERT INTO test.tipo_ambito_geografico (id, nombre, activo) VALUES (1, 'nombre-001', true);
+INSERT INTO test.tipo_ambito_geografico (id, activo) VALUES (1, true);
+
+INSERT INTO test.tipo_ambito_geografico_nombre (tipo_ambito_geografico_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- PROYECTO
 INSERT INTO test.proyecto (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, activo)

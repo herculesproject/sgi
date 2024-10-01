@@ -250,4 +250,35 @@
     <dropColumn columnName="abreviatura" tableName="rol_socio" />
 
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-15">
+
+    <createTable tableName="tipo_ambito_geografico_nombre">
+      <column name="tipo_ambito_geografico_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_ambito_geografico_nombre"
+      columnNames="tipo_ambito_geografico_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id"
+      baseTableName="tipo_ambito_geografico_nombre"
+      constraintName="FK_TIPOAMBITOGEOGRAFICONOMBRE_TIPOAMBITOGEOGRAFICO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_ambito_geografico_nombre(tipo_ambito_geografico_id, value_,
+      lang) SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}tipo_ambito_geografico WHERE
+      nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_ambito_geografico" />
+
+  </changeSet>
 </databaseChangeLog>

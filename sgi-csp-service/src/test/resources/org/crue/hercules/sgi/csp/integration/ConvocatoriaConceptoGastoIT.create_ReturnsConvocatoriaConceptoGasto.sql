@@ -14,7 +14,9 @@ INSERT INTO test.modelo_tipo_finalidad (id, modelo_ejecucion_id, tipo_finalidad_
 INSERT INTO test.tipo_regimen_concurrencia (id,nombre,activo) VALUES (1,'nombre-1',true);
 
 -- TIPO AMBITO GEOGRAFICO
-INSERT INTO test.tipo_ambito_geografico (id, nombre, activo) VALUES (1, 'nombre-001', true);
+INSERT INTO test.tipo_ambito_geografico (id, activo) VALUES (1, true);
+
+INSERT INTO test.tipo_ambito_geografico_nombre (tipo_ambito_geografico_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- CONVOCATORIA
 INSERT INTO test.convocatoria

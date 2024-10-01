@@ -1,11 +1,15 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,7 +26,10 @@ class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
   @Test
   void findByNombreAndActivoIsTrue_ReturnsFuenteFinanciacion() throws Exception {
     // given: 2 FuenteFinanciacion de los que 1 coincide con el nombre buscado
-    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder().nombre("nombre-1").activo(true).build();
+    Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
+    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombre-1"));
+    
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder().nombre(nombre).activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
     TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = TipoOrigenFuenteFinanciacion.builder()
@@ -64,7 +71,10 @@ class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
   @Test
   void findByNombreAndActivoIsTrue_WithNombreNoExiste_ReturnsNull() throws Exception {
     // given: 2 FuenteFinanciacion que no coinciden con el nombre buscado
-    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder().nombre("nombre-1").activo(true).build();
+    Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
+    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombre-1"));
+    
+    TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder().nombre(nombre).activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
     TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = TipoOrigenFuenteFinanciacion.builder()
