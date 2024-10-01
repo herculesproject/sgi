@@ -167,7 +167,7 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     const data: GrupoEquipoModalData = {
       titleEntity: this.modalTitleEntity,
       entidad,
-      selectedEntidades: this.dataSource.data.map(element => element.value),
+      selectedEntidades: this.dataSource.filteredData.map(element => element.value),
       fechaInicioMin: this.actionService.grupo.fechaInicio,
       fechaFinMax: this.actionService.grupo.fechaFin,
       dedicacionMinimaGrupo: this.getDedicacionMinima(),
@@ -176,7 +176,8 @@ export class GrupoEquipoInvestigacionComponent extends FragmentComponent impleme
     };
 
     if (wrapper) {
-      const filtered = data.selectedEntidades.filter(element => element !== entidad);
+      const filtered = Object.assign([], data.selectedEntidades);
+      filtered.splice(row, 1);
       data.selectedEntidades = filtered;
     }
 
