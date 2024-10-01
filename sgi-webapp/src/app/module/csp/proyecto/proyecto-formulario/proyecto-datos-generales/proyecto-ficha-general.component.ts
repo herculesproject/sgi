@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const PROYECTO_ACRONIMO_KEY = marker('csp.proyecto.acronimo');
 const PROYECTO_AMBITO_GEOGRAFICO_KEY = marker('csp.proyecto.ambito-geografico');
@@ -101,7 +102,8 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
   constructor(
     protected actionService: ProyectoActionService,
     private configService: ConfigService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.FICHA_GENERAL, actionService, translate);
     this.formPart = this.fragment as ProyectoFichaGeneralFragment;
@@ -311,7 +313,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   setTextoInfoAmbitoGeograficoConvocatoria() {
     this.translate.get(
-      this.formPart.ambitoGeograficoConvocatoria.nombre,
+      this.languageService.getFieldValue(this.formPart.ambitoGeograficoConvocatoria.nombre),
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {

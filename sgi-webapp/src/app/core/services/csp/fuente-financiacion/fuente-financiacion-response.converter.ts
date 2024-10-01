@@ -2,8 +2,10 @@ import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { ITipoAmbitoGeografico, ITipoOrigenFuenteFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IFuenteFinanciacionResponse } from './fuente-financiacion-response';
+import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '../tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 
-class FuenteFinanciacionResponseConverter extends SgiBaseConverter<IFuenteFinanciacionResponse, IFuenteFinanciacion>{
+class FuenteFinanciacionResponseConverter extends SgiBaseConverter<IFuenteFinanciacionResponse, IFuenteFinanciacion> {
   toTarget(value: IFuenteFinanciacionResponse): IFuenteFinanciacion {
     if (!value) {
       return value as unknown as IFuenteFinanciacion;
@@ -15,7 +17,7 @@ class FuenteFinanciacionResponseConverter extends SgiBaseConverter<IFuenteFinanc
       fondoEstructural: value.fondoEstructural,
       tipoAmbitoGeografico: {
         id: value.tipoAmbitoGeografico.id,
-        nombre: value.tipoAmbitoGeografico.nombre
+        nombre: value.tipoAmbitoGeografico.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.tipoAmbitoGeografico.nombre) : [],
       } as ITipoAmbitoGeografico,
       tipoOrigenFuenteFinanciacion: {
         id: value.tipoOrigenFuenteFinanciacion.id,
@@ -35,7 +37,7 @@ class FuenteFinanciacionResponseConverter extends SgiBaseConverter<IFuenteFinanc
       fondoEstructural: value.fondoEstructural,
       tipoAmbitoGeografico: {
         id: value.tipoAmbitoGeografico.id,
-        nombre: value.tipoAmbitoGeografico.nombre
+        nombre: value.tipoAmbitoGeografico.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.tipoAmbitoGeografico.nombre) : [],
       },
       tipoOrigenFuenteFinanciacion: {
         id: value.tipoOrigenFuenteFinanciacion.id,

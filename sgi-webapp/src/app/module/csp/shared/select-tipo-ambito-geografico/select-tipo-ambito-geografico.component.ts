@@ -4,12 +4,13 @@ import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoAmbitoGeograficoModalComponent } from '../../tipo-ambito-geografico/tipo-ambito-geografico-modal/tipo-ambito-geografico-modal.component';
@@ -39,11 +40,14 @@ export class SelectTipoAmbitoGeograficoComponent extends SelectServiceExtendedCo
     super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = TipoAmbitoGeograficoModalComponent;
+
+    this.sortWith = (o1: SelectValue<ITipoAmbitoGeografico>, o2: SelectValue<ITipoAmbitoGeografico>) => {
+      return o1.displayText.localeCompare(o2.displayText);
+    };
   }
 
   protected loadServiceOptions(): Observable<ITipoAmbitoGeografico[]> {
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
     };
     return this.service.findAll(findOptions).pipe(map(response => response.items));
   }
