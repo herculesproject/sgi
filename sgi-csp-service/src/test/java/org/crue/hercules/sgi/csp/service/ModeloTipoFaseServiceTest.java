@@ -91,7 +91,7 @@ class ModeloTipoFaseServiceTest extends BaseServiceTest {
 
     // then: Se lanza una excepción
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoFase)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Debe seleccionarse si la fase está disponible para proyectos o convocatorias");
+        .hasMessage("Debe seleccionarse si la fase está disponible para convocatorias, solicitudes o proyectos");
 
   }
 
@@ -182,7 +182,7 @@ class ModeloTipoFaseServiceTest extends BaseServiceTest {
         () -> service.update(modeloTipoFase))
         // then: Lanza una excepción
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Debe seleccionarse si la fase está disponible para proyectos o convocatorias");
+        .hasMessage("Debe seleccionarse si la fase está disponible para convocatorias, solicitudes o proyectos");
     ;
   }
 

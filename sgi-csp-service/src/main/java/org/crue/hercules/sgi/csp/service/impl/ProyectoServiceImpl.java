@@ -999,10 +999,14 @@ public class ProyectoServiceImpl implements ProyectoService {
     proyecto.setConvocatoriaId(solicitud.getConvocatoriaId());
     proyecto.setUnidadGestionRef(solicitud.getUnidadGestionRef());
     proyecto.setAnio(solicitud.getAnio());
+
+    if (solicitud.getTipoFinalidadId() != null) {
+      proyecto.setFinalidad(TipoFinalidad.builder().id(solicitud.getTipoFinalidadId()).build());
+    }
+
     if (solicitud.getConvocatoriaId() != null) {
       Convocatoria convocatoria = convocatoriaRepository.findById(solicitud.getConvocatoriaId())
           .orElseThrow(() -> new ConvocatoriaNotFoundException(solicitud.getConvocatoriaId()));
-      proyecto.setFinalidad(convocatoria.getFinalidad());
       proyecto.setAmbitoGeografico(convocatoria.getAmbitoGeografico());
       proyecto.setClasificacionCVN(convocatoria.getClasificacionCVN());
       proyecto.setExcelencia(convocatoria.getExcelencia());

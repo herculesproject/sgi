@@ -40,6 +40,7 @@ import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
@@ -350,10 +351,17 @@ public class SolicitudService {
 
       if (data.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_NO_SGI)
           || data.getOrigenSolicitud().equals(OrigenSolicitud.SIN_CONVOCATORIA)) {
-        if (hasDocumentosOrHitos(solicitud.getId())) {
+
+        boolean hasDocumentosOrHitos = hasDocumentosOrHitos(solicitud.getId());
+
+        if (modificableUnidadGestion(solicitud, hasDocumentosOrHitos)) {
           data.setUnidadGestionRef(solicitud.getUnidadGestionRef());
+        }
+
+        if (!hasDocumentosOrHitos) {
           data.setModeloEjecucionId(solicitud.getModeloEjecucionId());
         }
+
         data.setTipoFinalidadId(solicitud.getTipoFinalidadId());
       }
 
@@ -440,7 +448,7 @@ public class SolicitudService {
   }
 
   /**
-   * Desactiva el {@link Solicitud}.
+   * Desactiva la {@link Solicitud}.
    *
    * @param id Id del {@link Solicitud}.
    * @return la entidad {@link Solicitud} persistida.
@@ -453,17 +461,17 @@ public class SolicitudService {
 
     return repository.findById(id).map(solicitud -> {
       String authorityInv = "CSP-SOL-INV-BR";
-      boolean hasAuthorityInv = SgiSecurityContextHolder.hasAuthority(authorityInv);
+      String authority = "CSP-SOL-B";
+      boolean hasAuthorityInvestigador = SgiSecurityContextHolder.hasAuthority(authorityInv);
+      boolean hasAuthorityUnidadGestion = SgiSecurityContextHolder.hasAuthority(authority)
+          || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef());
 
-      if (hasAuthorityInv) {
+      if (hasAuthorityInvestigador && !hasAuthorityUnidadGestion) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Assert.isTrue(solicitud.getCreadorRef().equals(authentication.getName()),
             ApplicationContextSupport.getMessage(MSG_USUARIO_NO_CREADOR_SOLICITUD));
       } else {
-        String authority = "CSP-SOL-B";
-        Assert.isTrue(
-            SgiSecurityContextHolder.hasAuthority(authority)
-                || SgiSecurityContextHolder.hasAuthorityForUO(authority, solicitud.getUnidadGestionRef()),
+        Assert.isTrue(hasAuthorityUnidadGestion,
             () -> ProblemMessage.builder()
                 .key(MSG_PROBLEM_UNIDAD_GESTION_NO_GESTIONABLE)
                 .parameter(AssertHelper.PROBLEM_MESSAGE_PARAMETER_ENTITY,
@@ -1115,11 +1123,39 @@ public class SolicitudService {
       return false;
     }
 
-    if (solicitudAuthorityHelper.isUserInvestigador()) {
-      return modificableEstadoAndDocumentosByInvestigador(solicitud);
-    } else {
-      return modificableByUnidadGestion(solicitud);
+    return (solicitudAuthorityHelper.hasPermisosEdicionUnidadGestion(solicitud)
+        && modificableByUnidadGestion(solicitud))
+        || (solicitudAuthorityHelper.isUserInvestigador() && modificableEstadoAndDocumentosByInvestigador(solicitud));
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si la
+   * {@link UnidadGestion} de la {@link Solicitud}
+   * puede ser modificada.
+   *
+   * @param solicitud            una {@link Solicitud}.
+   * @param hasDocumentosOrHitos Si la solicitud tiene o no
+   *                             {@link SolicitudDocumento} o
+   *                             {@link SolicitudHito} asociados
+   * @return true si puede ser modificada / false si no puede ser modificada
+   */
+  private boolean modificableUnidadGestion(Solicitud solicitud, boolean hasDocumentosOrHitos) {
+
+    if (!solicitudAuthorityHelper.hasPermisosEdicion(solicitud)) {
+      return false;
     }
+
+    boolean modificableUnidadGestionByUnidadGestion = solicitudAuthorityHelper
+        .hasPermisosEdicionUnidadGestion(solicitud)
+        && Arrays.asList(Estado.BORRADOR, Estado.SOLICITADA).contains(solicitud.getEstado().getEstado());
+
+    boolean modificableUnidadGestionByInvestigador = solicitudAuthorityHelper.isUserInvestigador()
+        && modificableByInvestigador(solicitud)
+        && Arrays.asList(Estado.BORRADOR).contains(solicitud.getEstado().getEstado());
+
+    return !solicitud.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_SGI)
+        && !hasDocumentosOrHitos
+        && (modificableUnidadGestionByUnidadGestion || modificableUnidadGestionByInvestigador);
   }
 
   /**

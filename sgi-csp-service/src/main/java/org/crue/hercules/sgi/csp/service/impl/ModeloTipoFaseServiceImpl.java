@@ -34,7 +34,7 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_FIELD = "field";
   private static final String MSG_KEY_MODELO = "modelo";
-  private static final String MSG_MODELO_TIPO_FASE_SELECCIONAR_CONVOCATORIA_O_PROYECTO = "modeloTipoFase.seleccionar.convocatoriaOproyecto";
+  private static final String MSG_MODELO_TIPO_FASE_SELECCIONAR_CONVOCATORIA_SOLICITUD_PROYECTO = "modeloTipoFase.seleccionar.convocatoriaSolicitudProyecto";
   private static final String MSG_MODEL_TIPO_FASE = "org.crue.hercules.sgi.csp.model.TipoFase.message";
   private static final String MSG_MODEL_MODELO_TIPO_FASE = "org.crue.hercules.sgi.csp.model.ModeloTipoFase.message";
   private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
@@ -88,8 +88,9 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
                   .build());
           modeloTipoFase.setId(modeloTipoFaseExistente.getId());
         });
-    Assert.isTrue(modeloTipoFase.getConvocatoria() || modeloTipoFase.getProyecto(),
-        "Debe seleccionarse si la fase está disponible para proyectos o convocatorias");
+
+    Assert.isTrue(modeloTipoFase.getConvocatoria() || modeloTipoFase.getSolicitud() || modeloTipoFase.getProyecto(),
+        ApplicationContextSupport.getMessage(MSG_MODELO_TIPO_FASE_SELECCIONAR_CONVOCATORIA_SOLICITUD_PROYECTO));
 
     modeloTipoFase.setActivo(true);
     log.debug("create(ModeloTipoFase modeloTipoFase) - end");
@@ -115,11 +116,12 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
               .parameter(MSG_KEY_FIELD, modeloTipoFase.getTipoFase().getNombre())
               .build());
 
-      Assert.isTrue(modeloTipoFase.getConvocatoria() || modeloTipoFase.getProyecto(),
-          ApplicationContextSupport.getMessage(MSG_MODELO_TIPO_FASE_SELECCIONAR_CONVOCATORIA_O_PROYECTO));
+      Assert.isTrue(modeloTipoFase.getConvocatoria() || modeloTipoFase.getSolicitud() || modeloTipoFase.getProyecto(),
+          ApplicationContextSupport.getMessage(MSG_MODELO_TIPO_FASE_SELECCIONAR_CONVOCATORIA_SOLICITUD_PROYECTO));
 
       modeloTipoFase.setConvocatoria(modeloTipoFaseActualizar.getConvocatoria());
       modeloTipoFase.setProyecto(modeloTipoFaseActualizar.getProyecto());
+      modeloTipoFase.setSolicitud(modeloTipoFaseActualizar.getSolicitud());
       ModeloTipoFase returnValue = modeloTipoFaseRepository.save(modeloTipoFase);
       log.debug("update(ModeloTipoFase modeloTipoFaseActualizar) - end");
       return returnValue;
