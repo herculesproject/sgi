@@ -19,7 +19,7 @@ import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 import { MODELO_EJECUCION_ROUTE_NAMES } from '../../modelo-ejecucion/modelo-ejecucion-route-names';
 import { TipoFaseModalComponent } from '../../tipo-fase/tipo-fase-modal/tipo-fase-modal.component';
 
-export type Relation = 'convocatoria' | 'proyecto' | null | undefined;
+export type Relation = 'convocatoria' | 'solicitud' | 'proyecto' | null | undefined;
 
 @Component({
   selector: 'sgi-select-tipo-fase',
@@ -79,6 +79,16 @@ export class SelectTipoFaseComponent extends SelectServiceExtendedComponent<ITip
   // tslint:disable-next-line: variable-name
   private _relation: Relation;
 
+  @Input()
+  get relations(): Relation[] {
+    return this._relations;
+  }
+  set relations(value: Relation[]) {
+    this._relations = value;
+  }
+  // tslint:disable-next-line: variable-name
+  private _relations: Relation[];
+
   constructor(
     defaultErrorStateMatcher: ErrorStateMatcher,
     @Self() @Optional() ngControl: NgControl,
@@ -111,6 +121,16 @@ export class SelectTipoFaseComponent extends SelectServiceExtendedComponent<ITip
         filter: new RSQLSgiRestFilter('tipoFase.activo', SgiRestFilterOperator.EQUALS, 'true'),
         sort: new RSQLSgiRestSort('tipoFase.nombre', SgiRestSortDirection.ASC)
       };
+
+      if (this.relations) {
+        let filterRelations = new RSQLSgiRestFilter(this.relations.shift(), SgiRestFilterOperator.EQUALS, 'true');
+        this.relations.forEach(relation => {
+          filterRelations.or(relation, SgiRestFilterOperator.EQUALS, 'true')
+        })
+
+        findOptions.filter.and(filterRelations);
+      }
+
       if (this.relation === 'convocatoria' || this.relation === 'proyecto' || this.relation === 'solicitud') {
         findOptions.filter.and(this.relation, SgiRestFilterOperator.EQUALS, 'true');
       }

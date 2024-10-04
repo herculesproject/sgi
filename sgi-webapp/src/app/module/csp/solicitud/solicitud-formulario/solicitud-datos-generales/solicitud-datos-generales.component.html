@@ -23,8 +23,8 @@
       </mat-form-field>
     </div>
 
-    <!-- Convocatoria -->
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Origen solicitud -->
       <mat-form-field *ngIf="!this.formPart.isInvestigador" fxFlex="0 1 calc((100% - (10px * 3)) / 2 + 10px)">
         <mat-label>{{'csp.solicitud.origen-solicitud' | translate}}</mat-label>
         <sgi-select-enum formControlName="origenSolicitud" #origenSolicitud required [enumMap]="ORIGEN_SOLICITUD_MAP">
@@ -33,7 +33,10 @@
           {{'error.required.entity' | translate:msgParamOrigenSolicitudEntity}}
         </mat-error>
       </mat-form-field>
+    </div>
 
+    <div fxFlex fxLayout="row" fxLayoutGap="10px">
+      <!-- Convocatoria -->
       <mat-form-field fxFlex="0 1 calc((100% - (10px * 3)) / 2 + 10px)"
         *ngIf="this.formPart.isOrigenSolicitudConvocatoriaSGI$ | async">
         <mat-label>{{'csp.solicitud.convocatoria' | translate}}</mat-label>
@@ -48,7 +51,7 @@
 
       <!-- Referencia externa convocatoria // Identificación convocatoria -->
       <mat-form-field
-        *ngIf="(this.formPart.isOrigenSolicitudConvocatoriaNoSGI$ | async) && !this.formPart.isInvestigador"
+        *ngIf="((this.formPart.isOrigenSolicitudConvocatoriaSGI$ | async) || (this.formPart.isOrigenSolicitudConvocatoriaNoSGI$ | async)) && !this.formPart.isInvestigador"
         fxFlex="0 1 calc((100% - (10px * 3)) / 2 + 10px)">
         <mat-label>{{'csp.solicitud.convocatoria-externa' | translate}}</mat-label>
         <input matInput formControlName="convocatoriaExterna" type="text" id="convocatoriaExterna"
@@ -70,7 +73,8 @@
 
         <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion"
           [onlyAllowedInSolicitudesSinConvocatoria]="this.formPart.isOrigenSolicitudSinConvocatoria$ | async"
-          [resetOnChange]="getOrigenSolicitudSelectionChange()" required>
+          [resetOnChange]="getOrigenSolicitudSelectionChange()"
+          (selectValuesChange)="showWarningIfListUnidadesGestionEmpty($event)" required>
         </sgi-select-unidad-gestion>
         <mat-error *ngIf="formGroup.controls.unidadGestion.errors?.required">
           {{'error.required.entity' | translate:msgParamUnidadGestionEntity}}
@@ -81,8 +85,17 @@
         <sgi-field-info matSuffix [visible]="fragment.isEdit() && (formPart.isOrigenSolicitudConvocatoriaSGI$ | async)"
           message="{{'msg.csp.solicitud.unidad-gestion.no-editable.origen-convocatoria' | translate}}">
         </sgi-field-info>
-        <sgi-field-info matSuffix [visible]="fragment.isEdit() && formPart.hasDocumentosOrHitos"
+        <sgi-field-info matSuffix
+          [visible]="fragment.isEdit() && !(formPart.isOrigenSolicitudConvocatoriaSGI$ | async) && formPart.hasDocumentosOrHitos"
           message="{{'msg.csp.solicitud.unidad-gestion.no-editable.documentos-hitos' | translate}}">
+        </sgi-field-info>
+        <sgi-field-info matSuffix icon="error" color="warn"
+          [visible]="(this.formPart.isOrigenSolicitudSinConvocatoria$ | async) && isListUnidadesGestionEmpty"
+          message="{{'msg.csp.solicitud.unidad-gestion.sin-modelos-ejecucion-sin-convocatoria' | translate}}">
+        </sgi-field-info>
+        <sgi-field-info matSuffix
+          [visible]="fragment.isEdit() && !(formPart.isOrigenSolicitudConvocatoriaSGI$ | async) && formPart.showInfoUnidadGestionDisabledByEstadoUO && !formPart.hasDocumentosOrHitos"
+          message="{{'msg.csp.solicitud.unidad-gestion.no-editable.estado-uo' | translate}}">
         </sgi-field-info>
       </mat-form-field>
 
@@ -101,8 +114,13 @@
         <sgi-field-info matSuffix [visible]="fragment.isEdit() && (formPart.isOrigenSolicitudConvocatoriaSGI$ | async)"
           message="{{'msg.csp.solicitud.modelo-ejecucion.no-editable.origen-convocatoria' | translate}}">
         </sgi-field-info>
-        <sgi-field-info matSuffix [visible]="fragment.isEdit() && formPart.hasDocumentosOrHitos"
+        <sgi-field-info matSuffix
+          [visible]="fragment.isEdit() && !(formPart.isOrigenSolicitudConvocatoriaSGI$ | async) && formPart.hasDocumentosOrHitos"
           message="{{'msg.csp.solicitud.modelo-ejecucion.no-editable.documentos-hitos' | translate}}">
+        </sgi-field-info>
+        <sgi-field-info matSuffix icon="error" color="warn"
+          [visible]="(this.formPart.isOrigenSolicitudSinConvocatoria$ | async) && isListUnidadesGestionEmpty"
+          message="{{'msg.csp.solicitud.unidad-gestion.sin-modelos-ejecucion-sin-convocatoria' | translate}}">
         </sgi-field-info>
       </mat-form-field>
 
@@ -195,7 +213,7 @@
       </mat-form-field>
 
       <!-- Codigo de registro en entidad convocante -->
-      <mat-form-field *ngIf="!this.formPart.isInvestigador || (formPart.isOrigenSolicitudConvocatoriaSGI$ | async)"
+      <mat-form-field *ngIf="!(formPart.isOrigenSolicitudSinConvocatoria$ | async)"
         [fxFlex]="fragment.isEdit() ? '20%' : '41%'">
         <mat-label>{{'csp.solicitud.codigo-externo' | translate}}</mat-label>
         <input matInput formControlName="codigoExterno" type="text" id="codigoExterno"

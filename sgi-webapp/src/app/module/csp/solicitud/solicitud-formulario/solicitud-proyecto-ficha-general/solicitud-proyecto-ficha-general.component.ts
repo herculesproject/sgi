@@ -9,7 +9,8 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
-import { ISolicitudProyecto, TIPO_PRESUPUESTO_MAP } from '@core/models/csp/solicitud-proyecto';
+import { OrigenSolicitud } from '@core/models/csp/solicitud';
+import { ISolicitudProyecto, TIPO_PRESUPUESTO_MAP, TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TranslateService } from '@ngx-translate/core';
@@ -96,6 +97,24 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     }
     this.loadAreaTematicas();
 
+  }
+
+  get isOrigenSolicitudConvocatoriaSGI(): boolean {
+    return this.actionService.solicitud.origenSolicitud === OrigenSolicitud.CONVOCATORIA_SGI;
+  }
+
+  get tiposPresupuesto(): Map<TipoPresupuesto, string> {
+    let tiposPresupuesto: Map<TipoPresupuesto, string>;
+
+    if (this.isOrigenSolicitudConvocatoriaSGI) {
+      tiposPresupuesto = TIPO_PRESUPUESTO_MAP;
+    } else {
+      tiposPresupuesto = new Map();
+      tiposPresupuesto.set(TipoPresupuesto.GLOBAL, TIPO_PRESUPUESTO_MAP.get(TipoPresupuesto.GLOBAL))
+        .set(TipoPresupuesto.POR_ENTIDAD, TIPO_PRESUPUESTO_MAP.get(TipoPresupuesto.POR_ENTIDAD));
+    }
+
+    return tiposPresupuesto;
   }
 
   get TIPO_PRESUPUESTO_MAP() {

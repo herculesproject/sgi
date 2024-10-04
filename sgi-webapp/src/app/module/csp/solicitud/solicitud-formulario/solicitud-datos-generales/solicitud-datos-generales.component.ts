@@ -5,10 +5,12 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { FormularioSolicitud, FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
+import { SelectValue } from '@core/component/select-common/select-common.component';
+import { FORMULARIO_SOLICITUD_MAP, FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
-import { ISolicitud, TipoSolicitudGrupo, TIPO_SOLICITUD_GRUPO_MAP, ORIGEN_SOLICITUD_MAP } from '@core/models/csp/solicitud';
+import { ISolicitud, ORIGEN_SOLICITUD_MAP, TIPO_SOLICITUD_GRUPO_MAP, TipoSolicitudGrupo } from '@core/models/csp/solicitud';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
@@ -104,6 +106,11 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
 
     return this.formGroup.controls.origenSolicitud ? this.formGroup.controls.origenSolicitud.valueChanges : this.formPart.origenSolicitud$;
   }
+
+  get isListUnidadesGestionEmpty(): boolean {
+    return this._isListUnidadesGestionEmpty;
+  }
+  private _isListUnidadesGestionEmpty = true;
 
   constructor(
     public readonly actionService: SolicitudActionService,
@@ -271,5 +278,9 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
         }
       }
     );
+  }
+
+  showWarningIfListUnidadesGestionEmpty(options: SelectValue<IUnidadGestion>[]): void {
+    this._isListUnidadesGestionEmpty = !options?.length;
   }
 }

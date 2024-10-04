@@ -714,6 +714,14 @@ export class SolicitudActionService extends ActionService {
   private saveOrUpdateSolicitud() {
     if (this.isEdit()) {
       let cascade = of(void 0);
+      let ckeckHasDocumentosOrHitos$ = of(void 0);
+
+      if (this.documentos.hasChanges() || this.hitos.hasChanges) {
+        ckeckHasDocumentosOrHitos$ = this.solicitudService.hasDocumentosOrHitos(this.solicitud.id).pipe(
+          tap(hasDocumentosOrHitos => this.datosGenerales.hasDocumentosOrHitos$.next(hasDocumentosOrHitos))
+        );
+      }
+
       if (this.datosGenerales.hasChanges()) {
         cascade = cascade.pipe(
           switchMap(() => this.datosGenerales.saveOrUpdate().pipe(tap(() => this.datosGenerales.refreshInitialState(true))))
@@ -809,8 +817,10 @@ export class SolicitudActionService extends ActionService {
           switchMap(() => this.equipoProyecto.saveOrUpdate().pipe(tap(() => this.equipoProyecto.refreshInitialState(true))))
         );
       }
+
       return cascade.pipe(
-        switchMap(() => super.saveOrUpdate())
+        switchMap(() => super.saveOrUpdate()),
+        switchMap(() => ckeckHasDocumentosOrHitos$)
       );
     } else {
       let cascade = of(void 0);
@@ -826,16 +836,19 @@ export class SolicitudActionService extends ActionService {
           ))
         );
       }
+
       if (this.proyectoDatos.hasChanges()) {
         cascade = cascade.pipe(
           switchMap(() => this.proyectoDatos.saveOrUpdate().pipe(tap(() => this.proyectoDatos.refreshInitialState(true))))
         );
       }
+
       if (this.equipoProyecto.hasChanges()) {
         cascade = cascade.pipe(
           switchMap(() => this.equipoProyecto.saveOrUpdate().pipe(tap(() => this.equipoProyecto.refreshInitialState(true))))
         );
       }
+
       return cascade.pipe(
         switchMap(() => super.saveOrUpdate())
       );

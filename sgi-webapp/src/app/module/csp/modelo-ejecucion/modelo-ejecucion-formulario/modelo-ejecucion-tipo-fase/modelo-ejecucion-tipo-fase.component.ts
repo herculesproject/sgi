@@ -31,7 +31,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
   private formPart: ModeloEjecucionTipoFaseFragment;
   private subscriptions = [] as Subscription[];
 
-  columns = ['nombre', 'descripcion', 'convocatorias', 'proyectos', 'acciones'];
+  columns = ['nombre', 'descripcion', 'convocatorias', 'solicitudes', 'proyectos', 'acciones'];
   numPage = [5, 10, 25, 100];
 
   modelosTipoFases = new MatTableDataSource<StatusWrapper<IModeloTipoFase>>();
@@ -82,6 +82,8 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
             return wrapper.value.convocatoria;
           case 'proyectos':
             return wrapper.value.proyecto;
+          case 'solicitudes':
+            return wrapper.value.solicitud;
           default:
             return wrapper[property];
         }

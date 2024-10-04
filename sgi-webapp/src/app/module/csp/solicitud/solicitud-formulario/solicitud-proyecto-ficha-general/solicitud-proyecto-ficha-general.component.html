@@ -108,13 +108,16 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field class="input-form">
           <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.tipo-desglose-presupuesto' | translate}}</mat-label>
-          <sgi-select-enum formControlName="tipoDesglosePresupuesto" [enumMap]="TIPO_PRESUPUESTO_MAP">
+          <sgi-select-enum formControlName="tipoDesglosePresupuesto" [enumMap]="tiposPresupuesto">
           </sgi-select-enum>
           <mat-error *ngIf="formGroup.controls.tipoDesglosePresupuesto.errors?.required">
             {{'error.required.entity' | translate:msgParamTipoDesglosePresupuestoEntity}}
           </mat-error>
-          <sgi-field-info matSuffix visible="true"
-            message="{{'info.csp.solicitud-proyecto.tipo-desglose-presupuesto' | translate}}">
+          <sgi-field-info matSuffix visible="true" [visible]="this.isOrigenSolicitudConvocatoriaSGI"
+            message="{{'info.csp.solicitud-proyecto.tipo-desglose-presupuesto.convocatoria-sgi' | translate}}">
+          </sgi-field-info>
+          <sgi-field-info matSuffix visible="true" [visible]="!this.isOrigenSolicitudConvocatoriaSGI"
+            message="{{'info.csp.solicitud-proyecto.tipo-desglose-presupuesto.convocatoria-no-sgi' | translate}}">
           </sgi-field-info>
         </mat-form-field>
       </div>

@@ -25,6 +25,14 @@
           {{wrapper.value.convocatoria ? ('label.si'|translate) : ('label.no'|translate)}}</td>
       </ng-container>
 
+      <!-- Solicitudes -->
+      <ng-container matColumnDef="solicitudes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.tipo-fase.solicitudes' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper">
+          {{wrapper.value.solicitud ? ('label.si'| translate) : ('label.no'| translate)}}</td>
+      </ng-container>
+
       <!-- Proyectos -->
       <ng-container matColumnDef="proyectos">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.tipo-fase.proyectos' | translate}}
