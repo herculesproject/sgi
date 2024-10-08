@@ -5,7 +5,6 @@ import { Language } from "@core/i18n/language";
 import { LanguageService } from "@core/services/language.service";
 import { Subscription } from "rxjs";
 
-
 function isI18nFieldValue(field: any[]): field is I18nFieldValue[] {
   if (Array.isArray(field) && field.length) {
     return field.every(f => isI18nValue(f));
@@ -33,26 +32,30 @@ export class I18nFieldValuePipe implements PipeTransform, OnDestroy {
   constructor(private languageService: LanguageService, private _ref: ChangeDetectorRef) {
   }
 
-  private updateValue(field: I18nFieldValue[] | I18nFieldValueResponse[], lang: Language): void {
+  private getFieldValue(field: I18nFieldValue[] | I18nFieldValueResponse[], lang: Language): string {
+    let value = '';
     if (field.length) {
       let request = isI18nFieldValue(field) ? field.filter(f => f.lang === lang) : field.filter(f => f.lang === lang.code);
       if (request.length) {
-        this.value = request[0].value;
+        value = request[0].value;
       }
       else {
         // Get other value
         request = isI18nFieldValue(field) ? field.filter(f => f.value?.length) : field.filter(f => f.value?.length);
         if (request.length) {
-          this.value = request[0].value;
+          value = request[0].value;
         }
         else {
-          this.value = '';
+          value = '';
         }
       }
     }
-    else {
-      this.value = '';
-    }
+
+    return value;
+  }
+
+  private updateValue(field: I18nFieldValue[] | I18nFieldValueResponse[], lang: Language): void {
+    this.value = this.getFieldValue(field, lang);
     this.lastLang = lang;
     this._ref.markForCheck();
   }
@@ -65,7 +68,7 @@ export class I18nFieldValuePipe implements PipeTransform, OnDestroy {
     const requestLang = this.languageService.getLanguage();
 
     // if we ask another time for the same key, return the last value
-    if (this.lastLang === requestLang) {
+    if (this.lastLang === requestLang && this.value === this.getFieldValue(query, requestLang)) {
       return this.value;
     }
 
