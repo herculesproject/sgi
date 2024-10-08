@@ -448,7 +448,7 @@
                 }
               },
               {
-                "key": "fechaFincategoriaPas",
+                "key": "fechaFinCategoriaPas",
                 "type": "dateTimePicker",
                 "className": "flex-1",
                 "templateOptions": {
