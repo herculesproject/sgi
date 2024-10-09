@@ -10,7 +10,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ESTADO_MAP, Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
@@ -28,8 +27,8 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, Observable, Subscription, merge, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, from, merge, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { CONVOCATORIA_ACTION_LINK_KEY } from '../../convocatoria/convocatoria.action.service';
 import { SOLICITUD_ACTION_LINK_KEY } from '../../solicitud/solicitud.action.service';
 import { ProyectoListadoExportModalComponent } from '../modals/proyecto-listado-export-modal/proyecto-listado-export-modal.component';
@@ -489,39 +488,46 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
    * y activa ambos campos en el buscador.
    */
   private loadColectivos() {
-    const queryOptions: SgiRestFindOptions = {};
-    queryOptions.filter = new RSQLSgiRestFilter('rolPrincipal', SgiRestFilterOperator.EQUALS, 'false');
-    this.subscriptions.push(this.rolProyectoService.findAll(queryOptions).subscribe(
-      (response) => {
-        response.items.forEach((rolProyecto: IRolProyecto) => {
-          this.rolProyectoService.findAllColectivos(rolProyecto.id).subscribe(
-            (res) => {
-              this.colectivosMiembroEquipo = res.items;
-              this.formGroup.controls.miembroEquipo.enable();
-            }
-          );
-        });
-      },
-      (error) => this.logger.error(error)
-    ));
+    this.subscriptions.push(
+      this.getColectivosRolesProyecto(false).subscribe(
+        (colectivos) => {
+          this.colectivosMiembroEquipo = colectivos;
+          this.formGroup.controls.miembroEquipo.enable();
+        },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(MSG_ERROR);
+        }
+      )
+    );
 
-    const queryOptionsResponsable: SgiRestFindOptions = {};
-    queryOptionsResponsable.filter = new RSQLSgiRestFilter('rolPrincipal', SgiRestFilterOperator.EQUALS, 'true');
-    this.rolProyectoService.findAll(queryOptionsResponsable).subscribe(
-      (response) => {
-        response.items.forEach((rolProyecto: IRolProyecto) => {
-          this.rolProyectoService.findAllColectivos(rolProyecto.id).subscribe(
-            (res) => {
-              this.colectivosResponsableProyecto = res.items;
-              this.formGroup.controls.responsableProyecto.enable();
-            }
-          );
-        });
-      },
-      (error) => {
-        this.logger.error(error);
-        this.snackBarService.showError(MSG_ERROR);
-      }
+    this.subscriptions.push(
+      this.getColectivosRolesProyecto(true).subscribe(
+        (colectivos) => {
+          this.colectivosResponsableProyecto = colectivos;
+          this.formGroup.controls.responsableProyecto.enable();
+        },
+        (error) => {
+          this.logger.error(error);
+          this.snackBarService.showError(MSG_ERROR);
+        }
+      )
+    );
+  }
+
+  /**
+   * Observable con todso los colectivos asociados a roles de proyecto con el flag rolPrincipal igual al indicado, sin repetidos.
+   */
+  private getColectivosRolesProyecto(rolPrincipal: boolean): Observable<string[]> {
+    const queryOptions: SgiRestFindOptions = {};
+    queryOptions.filter = new RSQLSgiRestFilter('rolPrincipal', SgiRestFilterOperator.EQUALS, rolPrincipal.toString());
+
+    return this.rolProyectoService.findAll(queryOptions).pipe(
+      switchMap(response => from(response.items).pipe(
+        mergeMap(rolProyecto => this.rolProyectoService.findAllColectivos(rolProyecto.id).pipe(map(response => response.items))),
+      )),
+      toArray(),
+      map(colectivos => [...new Set<string>([].concat(...colectivos))])
     );
   }
 
