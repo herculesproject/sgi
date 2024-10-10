@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FieldType } from '@ngx-formly/material/form-field';
 
 @Component({
@@ -21,6 +22,8 @@ import { FieldType } from '@ngx-formly/material/form-field';
 })
 export class I18nCkeditorTypeComponent extends FieldType implements OnInit {
 
-  defaultOptions = {};
+  defaultOptions: FormlyFieldConfig = {
+    defaultValue: []
+  };
 
 }
