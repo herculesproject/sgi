@@ -67,9 +67,11 @@ public class DocumentacionConvocatoriaReunion extends BaseEntity {
   @Valid
   private Set<DocumentacionConvocatoriaReunionNombre> nombre = new HashSet<>();
 
-  @ManyToOne
+  // Relation mappings for JPA metamodel generation only
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "convocatoria_reunion_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_DOCUMENTACIONCONVOCATORIAREUNION_CONVOCATORIAREUNION"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @EqualsAndHashCode.Exclude
   private final ConvocatoriaReunion convocatoriaReunion = null;
 }

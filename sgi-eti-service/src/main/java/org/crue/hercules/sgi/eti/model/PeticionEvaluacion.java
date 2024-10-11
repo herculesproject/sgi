@@ -190,9 +190,10 @@ public class PeticionEvaluacion extends BaseEntity {
   private Boolean activo;
 
   // Relations mapping, only for JPA metamodel generation
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "checklistId", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_PETICIONEVALUACION_CHECKLIST"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @EqualsAndHashCode.Exclude
   private final Checklist checklist = null;
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -58,9 +59,10 @@ public class ActaDocumento implements Serializable {
   private String transaccionRef;
 
   // Relation mappings for JPA metamodel generation only
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "acta_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_ACTADOCUMENTO_ACTA"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @EqualsAndHashCode.Exclude
   private final Acta acta = null;
 }

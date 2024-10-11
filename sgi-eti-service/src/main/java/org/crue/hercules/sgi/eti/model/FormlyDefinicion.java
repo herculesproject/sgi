@@ -6,6 +6,7 @@ import java.io.StringWriter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -95,10 +96,11 @@ public class FormlyDefinicion implements Serializable {
   }
 
   // Relation mappings for JPA metamodel generation only
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "formly_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_FORMLYDEFINICION_FORMLY"))
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @EqualsAndHashCode.Exclude
   private final Formly formly = null;
 
 }

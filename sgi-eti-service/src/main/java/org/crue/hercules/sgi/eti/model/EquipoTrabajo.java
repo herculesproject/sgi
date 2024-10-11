@@ -2,22 +2,16 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * EquipoTrabajo
@@ -50,10 +44,4 @@ public class EquipoTrabajo extends BaseEntity {
   @Column(name = "peticion_evaluacion_id", nullable = false)
   Long peticionEvaluacionId;
 
-  // Relation mappings for JPA metamodel generation only
-  @ManyToOne
-  @JoinColumn(name = "peticion_evaluacion_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_EQUIPOTRABAJO_PETICIONEVALUACION"))
-  @Getter(AccessLevel.NONE)
-  @Setter(AccessLevel.NONE)
-  private final PeticionEvaluacion peticionEvaluacion = null;
 }
