@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.crue.hercules.sgi.csp.model.TipoFacturacion;
+import org.crue.hercules.sgi.csp.model.TipoFacturacionNombre;
 import org.crue.hercules.sgi.csp.repository.TipoFacturacionRepository;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -34,14 +35,18 @@ public class UniqueNombreTipoFacturacionActivoValidator
     if (value == null || value.getNombre() == null) {
       return false;
     }
-    Optional<TipoFacturacion> tipoFacturacion = repository
-        .findByNombreAndActivoIsTrue(value.getNombre());
-    boolean returnValue = (!tipoFacturacion.isPresent()
-        || tipoFacturacion.get().getId().equals(value.getId()));
-    if (!returnValue) {
-      addEntityMessageParameter(context);
+    for (TipoFacturacionNombre nombre : value.getNombre()) {
+      Optional<TipoFacturacion> tipoFacturacion = repository
+          .findByNombreLangAndNombreValueAndActivoIsTrue(nombre.getLang(), nombre.getValue());
+      boolean returnValue = (!tipoFacturacion.isPresent()
+          || tipoFacturacion.get().getId().equals(value.getId()));
+      if (!returnValue) {
+        addEntityMessageParameter(context);
+        return false;
+      }
     }
-    return returnValue;
+
+    return true;
   }
 
   private void addEntityMessageParameter(ConstraintValidatorContext context) {

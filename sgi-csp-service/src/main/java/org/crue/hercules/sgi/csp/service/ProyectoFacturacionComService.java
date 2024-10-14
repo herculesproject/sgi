@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.dto.com.CspComCalendarioFacturacionNotificarData;
@@ -32,8 +30,12 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProyectoFacturacionComService {
   private static final String CONFIG_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_DESTINATARIOS = "csp-com-cal-fact-validarip-destinatarios-";
+  private static final String MSG_SIN_ESPEFICAR = "sinEspeficar";
 
   private final ProyectoRepository proyectoRepository;
   private final ProyectoProyectoSgeRepository proyectoProyectoSgeRepository;
@@ -223,8 +226,8 @@ public class ProyectoFacturacionComService {
         .tituloProyecto(proyecto.getTitulo())
         .numPrevision(proyectoFacturacion.getNumeroPrevision())
         .tipoFacturacion(proyectoFacturacion.getTipoFacturacion() == null
-            || StringUtils.isEmpty(proyectoFacturacion.getTipoFacturacion().getNombre()) ? "Sin especificar"
-                : proyectoFacturacion.getTipoFacturacion().getNombre())
+            ? ApplicationContextSupport.getMessage(MSG_SIN_ESPEFICAR)
+            : I18nHelper.getValueForCurrentLanguage(proyectoFacturacion.getTipoFacturacion().getNombre()))
         .entidadesFinanciadoras(getNombresEntidadesFinanciadorasByProyectoId(
             proyectoFacturacion.getProyectoId()))
         .apellidosDestinatario(persona.getApellidos())

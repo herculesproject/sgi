@@ -145,6 +145,7 @@ DELETE FROM test.tipo_origen_fuente_financiacion;
 DELETE FROM test.tipo_regimen_concurrencia;
 DELETE FROM test.concepto_gasto;
 DELETE FROM test.linea_investigacion;
+DELETE FROM test.tipo_facturacion_nombre;
 DELETE FROM test.tipo_facturacion;
 DELETE FROM test.configuracion;
 DELETE FROM test.convocatoria_concepto_gasto_codigo_ec;

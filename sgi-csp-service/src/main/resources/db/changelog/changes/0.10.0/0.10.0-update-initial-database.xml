@@ -281,4 +281,35 @@
     <dropColumn columnName="nombre" tableName="tipo_ambito_geografico" />
 
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-16">
+
+    <createTable tableName="tipo_facturacion_nombre">
+      <column name="tipo_facturacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_facturacion_nombre"
+      columnNames="tipo_facturacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_facturacion_id"
+      baseTableName="tipo_facturacion_nombre"
+      constraintName="FK_TIPOFACTURACIONNOMBRE_TIPOFACTURACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_facturacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_facturacion_nombre(tipo_facturacion_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}tipo_facturacion WHERE nombre IS NOT
+      NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_facturacion" />
+
+  </changeSet>
 </databaseChangeLog>
