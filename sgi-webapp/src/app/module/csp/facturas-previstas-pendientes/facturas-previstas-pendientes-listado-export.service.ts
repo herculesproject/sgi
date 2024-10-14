@@ -9,6 +9,7 @@ import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { IFacturaPrevistaPendiente } from '@core/models/sge/factura-prevista-pendiente';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
 import { FacturaPrevistaPendienteService } from '@core/services/sge/factura-prevista-pendiente/factura-prevista-pendiente.service';
@@ -56,7 +57,8 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
     private readonly proyectoService: ProyectoService,
     protected reportService: ReportService,
     private readonly facturaPrevistaPendienteService: FacturaPrevistaPendienteService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly languageService: LanguageService
   ) {
     super(reportService);
   }
@@ -128,7 +130,7 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
                           facturaPrevistaPendiente.importeBase = proyectoFacturacion.importeBase;
                           facturaPrevistaPendiente.porcentajeIVA = proyectoFacturacion.porcentajeIVA;
                           facturaPrevistaPendiente.importeTotal = (facturaPrevistaPendiente.importeBase * (100 + facturaPrevistaPendiente.porcentajeIVA)) / 100;
-                          facturaPrevistaPendiente.tipoFacturacion = proyectoFacturacion.tipoFacturacion?.nombre;
+                          facturaPrevistaPendiente.tipoFacturacion = this.languageService.getFieldValue(proyectoFacturacion.tipoFacturacion?.nombre);
                           facturaPrevistaPendiente.fechaConformidad = proyectoFacturacion.fechaConformidad;
                           facturaPrevistaPendiente.estadoValidacionIP = proyectoFacturacion.estadoValidacionIP?.estado;
                           facturaPrevistaPendiente.comentario = proyectoFacturacion.comentario;

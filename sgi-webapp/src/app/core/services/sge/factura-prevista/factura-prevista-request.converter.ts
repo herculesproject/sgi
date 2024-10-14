@@ -1,7 +1,8 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IFacturaPrevista } from '@core/models/sge/factura-prevista';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IFacturaPrevistaRequest } from './factura-prevista-request';
-import { LuxonUtils } from '@core/utils/luxon-utils';
 
 class FacturaPrevistaRequestConverter extends SgiBaseConverter<IFacturaPrevistaRequest, IFacturaPrevista> {
 
@@ -15,7 +16,7 @@ class FacturaPrevistaRequestConverter extends SgiBaseConverter<IFacturaPrevistaR
       importeBase: value.importeBase,
       porcentajeIVA: value.porcentajeIVA,
       comentario: value.comentario,
-      tipoFacturacion: value.tipoFacturacion
+      tipoFacturacion: value.tipoFacturacion ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.tipoFacturacion) : [],
     } : value as unknown as IFacturaPrevista;
   }
 
@@ -28,7 +29,7 @@ class FacturaPrevistaRequestConverter extends SgiBaseConverter<IFacturaPrevistaR
       importeBase: value.importeBase,
       porcentajeIVA: value.porcentajeIVA,
       comentario: value.comentario,
-      tipoFacturacion: value.tipoFacturacion
+      tipoFacturacion: value.tipoFacturacion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.tipoFacturacion) : [],
     } : value as unknown as IFacturaPrevistaRequest;
   }
 

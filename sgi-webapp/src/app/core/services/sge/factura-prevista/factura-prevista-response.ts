@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
 
 export interface IFacturaPrevistaResponse {
   id: string;
@@ -8,5 +9,5 @@ export interface IFacturaPrevistaResponse {
   importeBase: number;
   porcentajeIVA: number;
   comentario: string;
-  tipoFacturacion: string;
+  tipoFacturacion: I18nFieldValueResponse[];
 }

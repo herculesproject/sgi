@@ -6,6 +6,7 @@ import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { FacturaPrevistaEmitidaService } from '@core/services/sge/factura-prevista-emitida/factura-prevista-emitida.service';
@@ -46,7 +47,7 @@ const CALENDARIO_FACTURACION_PRORROGA_FIELD = 'prorroga';
 
 @Injectable()
 export class ProyectoCalendarioFacturacionListadoExportService
-  extends AbstractTableExportFillService<IProyectoReportData, IProyectoReportOptions>{
+  extends AbstractTableExportFillService<IProyectoReportData, IProyectoReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -56,7 +57,8 @@ export class ProyectoCalendarioFacturacionListadoExportService
     private readonly percentPipe: PercentPipe,
     private readonly proyectoService: ProyectoService,
     private readonly proyectoProrrogaService: ProyectoProrrogaService,
-    private readonly facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService
+    private readonly facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -293,7 +295,7 @@ export class ProyectoCalendarioFacturacionListadoExportService
         this.getImporteTotal(proyectoCalendarioFacturacion.importeBase, proyectoCalendarioFacturacion.porcentajeIVA), '.2-2'
       ) ?? '';
       calendarioFacturacionContent += '\n';
-      calendarioFacturacionContent += proyectoCalendarioFacturacion.tipoFacturacion?.nombre ?? '';
+      calendarioFacturacionContent += this.languageService.getFieldValue(proyectoCalendarioFacturacion.tipoFacturacion?.nombre) ?? '';
       calendarioFacturacionContent += '\n';
       calendarioFacturacionContent += proyectoCalendarioFacturacion.proyectoProrroga?.numProrroga ? `${proyectoCalendarioFacturacion.proyectoProrroga?.numProrroga} - ${this.luxonDatePipe.transform(LuxonUtils.toBackend(proyectoCalendarioFacturacion?.fechaEmision, true), 'shortDate')}` : '';
       calendarioFacturacionContent += '\n';

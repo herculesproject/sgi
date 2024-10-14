@@ -9,6 +9,7 @@ import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoFacturacionService } from '@core/services/csp/proyecto-facturacion/proyecto-facturacion.service';
 import { ProyectoProrrogaService } from '@core/services/csp/proyecto-prorroga.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { FacturaPrevistaEmitidaService } from '@core/services/sge/factura-prevista-emitida/factura-prevista-emitida.service';
 import { FacturaPrevistaService } from '@core/services/sge/factura-prevista/factura-prevista.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -44,7 +45,8 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
     private facturaPrevistaEmitidaService: FacturaPrevistaEmitidaService,
     private proyectoProrrogaService: ProyectoProrrogaService,
     private configService: ConfigService,
-    private readonly isInvestigador: boolean
+    private readonly isInvestigador: boolean,
+    private readonly languageService: LanguageService
   ) {
     super(key);
     this.setComplete(true);

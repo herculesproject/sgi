@@ -48,6 +48,7 @@ import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geog
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
@@ -315,7 +316,8 @@ export class ProyectoActionService extends ActionService {
     private readonly translate: TranslateService,
     private readonly unidadGestionService: UnidadGestionService,
     private readonly viculacionService: VinculacionService,
-    private readonly grupoService: GrupoService
+    private readonly grupoService: GrupoService,
+    private readonly languageService: LanguageService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -359,7 +361,8 @@ export class ProyectoActionService extends ActionService {
         facturaPrevistaEmitidaService,
         proyectoProrrogaService,
         configService,
-        this.isInvestigador
+        this.isInvestigador,
+        this.languageService
       );
 
       this.proyectosSge = new ProyectoProyectosSgeFragment(
@@ -500,7 +503,8 @@ export class ProyectoActionService extends ActionService {
           facturaPrevistaEmitidaService,
           proyectoProrrogaService,
           configService,
-          this.isInvestigador
+          this.isInvestigador,
+          this.languageService
         );
 
         this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);
