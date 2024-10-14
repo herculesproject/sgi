@@ -10,13 +10,11 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
@@ -35,11 +33,11 @@ import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoriaNombre;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoMemoriaComentario;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
-import org.crue.hercules.sgi.eti.model.EvaluacionComentario;
 import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.InformeDocumento;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -358,7 +356,9 @@ public class MemoriaServiceImpl implements MemoriaService {
     List<DocumentacionMemoria> documentacionesMemoriaList = documentacionesMemoriaPage.getContent().stream()
         .map(documentacionMemoria -> new DocumentacionMemoria(null, memoriaCreada,
             documentacionMemoria.getTipoDocumento(),
-            documentacionMemoria.getDocumentoRef(), documentacionMemoria.getNombre()))
+            documentacionMemoria.getDocumentoRef(),
+            documentacionMemoria.getNombre().stream()
+                .map(dm -> new DocumentacionMemoriaNombre(dm.getLang(), dm.getValue())).collect(Collectors.toSet())))
         .collect(Collectors.toList());
 
     documentacionMemoriaRepository.saveAll(documentacionesMemoriaList);
