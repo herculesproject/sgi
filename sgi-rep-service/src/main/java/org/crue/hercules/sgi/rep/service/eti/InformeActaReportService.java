@@ -40,6 +40,7 @@ import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.DictamenI18n;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoConvocatoriaReunionI18n;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoEvaluacionI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.report.data.ActaComentariosReportData;
 import org.crue.hercules.sgi.rep.report.data.objects.AsistenteObject;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
@@ -177,7 +178,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     getTableMemoriasEvaluadas(acta, dataReport, locale);
 
     dataReport.put("bloqueApartados",
-        generarBloqueApartados(getActaComentariosSubReport(acta.getId(), lang)));
+        generarBloqueApartados(getActaComentariosSubReport(acta.getId(), lang), lang));
 
     return compileReportData(path, dataReport);
   }
@@ -364,22 +365,20 @@ public class InformeActaReportService extends SgiReportDocxService {
     return actaComentariosSubReportOutput;
   }
 
-  private RenderData generarBloqueApartados(ActaComentariosReportOutput actaComentariosReportOutput) {
-    Map<String, Object> subDataBloqueApartado = new HashMap<>();
+  private RenderData generarBloqueApartados(ActaComentariosReportOutput actaComentariosReportOutput, Language lang) {
+    ActaComentariosReportData reportData = new ActaComentariosReportData(lang);
     if (ObjectUtils.isNotEmpty(actaComentariosReportOutput)
         && ObjectUtils.isNotEmpty(actaComentariosReportOutput.getComentariosMemoria())
         && ObjectUtils
             .isNotEmpty(actaComentariosReportOutput.getComentariosMemoria().stream().findAny().get().getBloques())
         && actaComentariosReportOutput.getComentariosMemoria().stream().findAny().get().getBloques().size() > 0) {
-      subDataBloqueApartado.put("comentariosMemoria",
-          actaComentariosReportOutput.getComentariosMemoria());
+      reportData.setComentarios(actaComentariosReportOutput.getComentariosMemoria());
     } else {
-      subDataBloqueApartado.put("comentariosMemoria", null);
       return null;
     }
     return Includes.ofStream(getReportDefinitionStream(
         actaComentariosReportOutput.getReportName()))
-        .setRenderModel(subDataBloqueApartado).create();
+        .setRenderModel(reportData.getDataReport()).create();
   }
 
 }

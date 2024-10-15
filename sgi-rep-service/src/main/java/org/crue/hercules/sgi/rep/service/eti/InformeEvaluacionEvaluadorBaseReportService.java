@@ -32,6 +32,7 @@ import org.crue.hercules.sgi.rep.dto.sgp.PersonaDto;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoActividadI18n;
 import org.crue.hercules.sgi.rep.enums.TiposEnumI18n.TipoInvestigacionTuteladaI18n;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.report.data.BloqueApartadoReportData;
 import org.crue.hercules.sgi.rep.service.SgiReportDocxService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
@@ -314,28 +315,26 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
   }
 
   protected RenderData generarBloqueApartados(Long idDictamen,
-      InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput) {
-    Map<String, Object> subDataBloqueApartado = new HashMap<>();
-    subDataBloqueApartado.put("idDictamen", idDictamen);
-    subDataBloqueApartado.put("idDictamenNoProcedeEvaluar", DICTAMEN_NO_PROCEDE_EVALUAR);
+      InformeEvaluacionEvaluadorReportOutput informeEvaluacionEvaluadorReportOutput, Language lang) {
+    BloqueApartadoReportData reportData = new BloqueApartadoReportData(lang);
+    reportData.setIdDictamen(idDictamen);
+    reportData.setIdDictamenNoProcedeEvaluar(DICTAMEN_NO_PROCEDE_EVALUAR);
     if (ObjectUtils.isNotEmpty(informeEvaluacionEvaluadorReportOutput)
         && ObjectUtils.isNotEmpty(informeEvaluacionEvaluadorReportOutput.getBloques())
         && !informeEvaluacionEvaluadorReportOutput.getBloques().isEmpty()) {
       if (informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().isPresent()
           && informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().get().getApartados().stream()
               .findAny().isPresent()) {
-        subDataBloqueApartado.put("numComentarios",
+        reportData.setNumComentarios(
             informeEvaluacionEvaluadorReportOutput.getBloques().stream().findAny().get().getApartados().stream()
                 .findAny().get().getNumeroComentariosTotalesInforme());
       }
-      subDataBloqueApartado.put("bloques", informeEvaluacionEvaluadorReportOutput.getBloques());
+      reportData.setBloques(informeEvaluacionEvaluadorReportOutput.getBloques());
     } else {
-      subDataBloqueApartado.put("numComentarios", null);
-      subDataBloqueApartado.put("bloques", null);
       return null;
     }
     return Includes.ofStream(getReportDefinitionStream(informeEvaluacionEvaluadorReportOutput.getReportName()))
-        .setRenderModel(subDataBloqueApartado).create();
+        .setRenderModel(reportData.getDataReport()).create();
   }
 
   /**
