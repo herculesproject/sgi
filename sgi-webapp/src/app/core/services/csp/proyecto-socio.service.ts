@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROYECTO_SOCIO_EQUIPO_CONVERTER } from '@core/converters/csp/proyecto-socio-equipo.converter';
 import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/proyecto-socio-periodo-justificacion.converter';
 import { PROYECTO_SOCIO_PERIODO_PAGO_CONVERTER } from '@core/converters/csp/proyecto-socio-periodo-pago.converter';
-import { IProyectoSocioEquipoBackend } from '@core/models/csp/backend/proyecto-socio-equipo-backend';
 import { IProyectoSocioPeriodoJustificacionBackend } from '@core/models/csp/backend/proyecto-socio-periodo-justificacion-backend';
 import { IProyectoSocioPeriodoPagoBackend } from '@core/models/csp/backend/proyecto-socio-periodo-pago-backend';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
@@ -14,6 +12,8 @@ import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IProyectoSocioEquipoResponse } from './proyecto-socio-equipo/proyecto-socio-equipo-response';
+import { PROYECTO_SOCIO_EQUIPO_RESPONSE_CONVERTER } from './proyecto-socio-equipo/proyecto-socio-equipo.converter';
 import { IProyectoSocioResponse } from './proyecto-socio/proyecto-socio-response';
 import { PROYECTO_SOCIO_RESPONSE_CONVERTER } from './proyecto-socio/proyecto-socio.converter';
 
@@ -21,6 +21,7 @@ import { PROYECTO_SOCIO_RESPONSE_CONVERTER } from './proyecto-socio/proyecto-soc
   providedIn: 'root'
 })
 export class ProyectoSocioService extends SgiMutableRestService<number, IProyectoSocioResponse, IProyectoSocio> {
+
   private static readonly MAPPING = '/proyectosocios';
 
   constructor(protected http: HttpClient) {
@@ -51,10 +52,10 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
    */
   findAllProyectoEquipoSocio(id: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IProyectoSocioEquipo>> {
-    return this.find<IProyectoSocioEquipoBackend, IProyectoSocioEquipo>(
+    return this.find<IProyectoSocioEquipoResponse, IProyectoSocioEquipo>(
       `${this.endpointUrl}/${id}/proyectosocioequipos`,
       options,
-      PROYECTO_SOCIO_EQUIPO_CONVERTER
+      PROYECTO_SOCIO_EQUIPO_RESPONSE_CONVERTER
     );
   }
 

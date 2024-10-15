@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SOLICITUD_PROYECTO_SOCIO_EQUIPO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-equipo.converter';
 import { SOLICITUD_PROYECTO_SOCIO_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-periodo-justificacion.converter';
 import { SOLICITUD_PROYECTO_SOCIO_PERIODO_PAGO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-periodo-pago.converter';
-import { ISolicitudProyectoSocioEquipoBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-equipo-backend';
 import { ISolicitudProyectoSocioPeriodoJustificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-periodo-justificacion-backend';
 import { ISolicitudProyectoSocioPeriodoPagoBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-periodo-pago-backend';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
@@ -16,13 +14,17 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { EmpresaService } from '../sgemp/empresa.service';
+import { ISolicitudProyectoSocioEquipoResponse } from './solicitud-proyecto-socio-equipo/solicitud-proyecto-socio-equipo-response';
+import { SOLICITUD_PROYECTO_SOCIO_EQUIPO_RESPONSE_CONVERTER } from './solicitud-proyecto-socio-equipo/solicitud-proyecto-socio-equipo.converter';
 import { ISolicitudProyectoSocioResponse } from './solicitud-proyecto-socio/solicitud-proyecto-socio-response';
 import { SOLICITUD_PROYECTO_SOCIO_RESPONSE_CONVERTER } from './solicitud-proyecto-socio/solicitud-proyecto-socio.converter';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SolicitudProyectoSocioService extends SgiMutableRestService<number, ISolicitudProyectoSocioResponse, ISolicitudProyectoSocio> {
+
   private static readonly MAPPING = '/solicitudproyectosocio';
 
   constructor(
@@ -90,10 +92,10 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
    */
   findAllSolicitudProyectoSocioEquipo(id: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<ISolicitudProyectoSocioEquipo>> {
-    return this.find<ISolicitudProyectoSocioEquipoBackend, ISolicitudProyectoSocioEquipo>(
+    return this.find<ISolicitudProyectoSocioEquipoResponse, ISolicitudProyectoSocioEquipo>(
       `${this.endpointUrl}/${id}/solicitudproyectosocioequipo`,
       options,
-      SOLICITUD_PROYECTO_SOCIO_EQUIPO_CONVERTER
+      SOLICITUD_PROYECTO_SOCIO_EQUIPO_RESPONSE_CONVERTER
     );
   }
 

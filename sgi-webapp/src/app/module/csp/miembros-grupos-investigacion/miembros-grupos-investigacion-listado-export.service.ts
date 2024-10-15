@@ -10,6 +10,7 @@ import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { GrupoLineaInvestigacionService } from '@core/services/csp/grupo-linea-investigacion/grupo-linea-investigacion.service';
 import { GrupoLineaInvestigadorService } from '@core/services/csp/grupo-linea-investigador/grupo-linea-investigador.service';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -66,7 +67,8 @@ export class MiembrosGruposInvestigacionListadoExportService extends AbstractTab
     private readonly grupoLineaInvestigadorService: GrupoLineaInvestigadorService,
     private readonly grupoLineaInvestigacionService: GrupoLineaInvestigacionService,
     private readonly lineaInvestigacionService: LineaInvestigacionService,
-    protected reportService: ReportService
+    protected reportService: ReportService,
+    private languageService: LanguageService
   ) {
     super(reportService);
   }
@@ -136,7 +138,7 @@ export class MiembrosGruposInvestigacionListadoExportService extends AbstractTab
           miembroGrupoInvestigacion.persona.nombre,
           miembroGrupoInvestigacion.persona.apellidos,
           miembroGrupoInvestigacion.persona.emails?.map(e => e.email).join(', '),
-          miembroGrupoInvestigacion.rol.nombre,
+          this.languageService.getFieldValue(miembroGrupoInvestigacion.rol.nombre),
           this.getI18nBooleanYesNo(miembroGrupoInvestigacion.activo),
           LuxonUtils.toBackend(miembroGrupoInvestigacion.fechaInicioParticipacion),
           LuxonUtils.toBackend(miembroGrupoInvestigacion.fechaFinParticipacion),

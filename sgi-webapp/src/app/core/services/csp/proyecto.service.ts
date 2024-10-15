@@ -9,7 +9,6 @@ import { PROYECTO_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-docu
 import { PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/proyecto-entidad-convocante.converter';
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
-import { PROYECTO_EQUIPO_CONVERTER } from '@core/converters/csp/proyecto-equipo.converter';
 import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
 import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyecto-paquete-trabajo.converter';
 import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento.converter';
@@ -28,7 +27,6 @@ import { IProyectoDocumentoBackend } from '@core/models/csp/backend/proyecto-doc
 import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proyecto-entidad-convocante-backend';
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
-import { IProyectoEquipoBackend } from '@core/models/csp/backend/proyecto-equipo-backend';
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
 import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyecto-paquete-trabajo-backend';
 import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
@@ -93,6 +91,8 @@ import { IProyectoAnualidadResponse } from './proyecto-anualidad/proyecto-anuali
 import { PROYECTO_ANUALIDAD_RESPONSE_CONVERTER } from './proyecto-anualidad/proyecto-anualidad-response.converter';
 import { IProyectoAnualidadResumenResponse } from './proyecto-anualidad/proyecto-anualidad-resumen-response';
 import { PROYECTO_ANUALIDAD_RESUMEN_RESPONSE_CONVERTER } from './proyecto-anualidad/proyecto-anualidad-resumen-response.converter';
+import { IProyectoEquipoResponse } from './proyecto-equipo/proyecto-equipo-response';
+import { PROYECTO_EQUIPO_RESPONSE_CONVERTER } from './proyecto-equipo/proyecto-equipo-response.converter';
 import { IProyectoFacturacionResponse } from './proyecto-facturacion/proyecto-facturacion-response';
 import { PROYECTO_FACTURACION_RESPONSE_CONVERTER } from './proyecto-facturacion/proyecto-facturacion-response.converter';
 import { IProyectoFaseResponse } from './proyecto-fase/proyecto-fase-response';
@@ -296,10 +296,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param id Id del IProyecto
    */
   findAllProyectoEquipo(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEquipo>> {
-    return this.find<IProyectoEquipoBackend, IProyectoEquipo>(
+    return this.find<IProyectoEquipoResponse, IProyectoEquipo>(
       `${this.endpointUrl}/${id}/proyectoequipos`,
       options,
-      PROYECTO_EQUIPO_CONVERTER
+      PROYECTO_EQUIPO_RESPONSE_CONVERTER
     );
   }
 
@@ -859,8 +859,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @return la lista de investigadores principales del proyecto en el momento actual.
    */
   findInvestigadoresPrincipalesActuales(id: number): Observable<IProyectoEquipo[]> {
-    return this.http.get<IProyectoEquipoBackend[]>(`${this.endpointUrl}/${id}/investigadoresprincipalesactuales`).pipe(
-      map((response => PROYECTO_EQUIPO_CONVERTER.toTargetArray(response ?? [])))
+    return this.http.get<IProyectoEquipoResponse[]>(`${this.endpointUrl}/${id}/investigadoresprincipalesactuales`).pipe(
+      map((response => PROYECTO_EQUIPO_RESPONSE_CONVERTER.toTargetArray(response ?? [])))
     );
   }
 
@@ -874,8 +874,8 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @return la lista de investigadores principales del proyecto en cualquier momento.
    */
   findInvestigadoresPrincipales(id: number): Observable<IProyectoEquipo[]> {
-    return this.http.get<IProyectoEquipoBackend[]>(`${this.endpointUrl}/${id}/investigadoresprincipales`).pipe(
-      map((response => PROYECTO_EQUIPO_CONVERTER.toTargetArray(response ?? [])))
+    return this.http.get<IProyectoEquipoResponse[]>(`${this.endpointUrl}/${id}/investigadoresprincipales`).pipe(
+      map((response => PROYECTO_EQUIPO_RESPONSE_CONVERTER.toTargetArray(response ?? [])))
     );
   }
 

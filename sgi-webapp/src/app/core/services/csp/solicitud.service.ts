@@ -9,7 +9,6 @@ import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-mo
 import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-area-conocimiento.converter';
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
-import { SOLICITUD_PROYECTO_EQUIPO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-equipo.converter';
 import { SOLICITUD_PROYECTO_PRESUPUESTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-presupuesto.converter';
 import { SOLICITUD_PROYECTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto.converter';
 import { SOLICITUD_CONVERTER } from '@core/converters/csp/solicitud.converter';
@@ -24,7 +23,6 @@ import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/back
 import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
 import { ISolicitudProyectoClasificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-clasificacion-backend';
 import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/csp/backend/solicitud-proyecto-entidad-financiadora-ajena-backend';
-import { ISolicitudProyectoEquipoBackend } from '@core/models/csp/backend/solicitud-proyecto-equipo-backend';
 import { ISolicitudProyectoPresupuestoBackend } from '@core/models/csp/backend/solicitud-proyecto-presupuesto-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
@@ -80,6 +78,8 @@ import { ISolicitudPalabraClaveResponse } from './solicitud-palabra-clave/solici
 import { SOLICITUD_PALABRACLAVE_RESPONSE_CONVERTER } from './solicitud-palabra-clave/solicitud-palabra-clave-response.converter';
 import { ISolicitudProyectoEntidadResponse } from './solicitud-proyecto-entidad/solicitud-proyecto-entidad-response';
 import { SOLICITUD_PROYECTO_ENTIDAD_RESPONSE_CONVERTER } from './solicitud-proyecto-entidad/solicitud-proyecto-entidad-response.converter';
+import { ISolicitudProyectoEquipoResponse } from './solicitud-proyecto-equipo/solicitud-proyecto-equipo-response';
+import { SOLICITUD_PROYECTO_EQUIPO_RESPONSE_CONVERTER } from './solicitud-proyecto-equipo/solicitud-proyecto-equipo.converter';
 import { ISolicitudProyectoResponsableEconomicoResponse } from './solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico-response';
 import { SOLICITUD_PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico-response.converter';
 import { ISolicitudProyectoSocioResponse } from './solicitud-proyecto-socio/solicitud-proyecto-socio-response';
@@ -252,10 +252,10 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param solicitudId Id de la solicitud
    */
   findAllSolicitudProyectoEquipo(solicitudId: number): Observable<SgiRestListResult<ISolicitudProyectoEquipo>> {
-    return this.find<ISolicitudProyectoEquipoBackend, ISolicitudProyectoEquipo>(
+    return this.find<ISolicitudProyectoEquipoResponse, ISolicitudProyectoEquipo>(
       `${this.endpointUrl}/${solicitudId}/solicitudproyectoequipo`,
       undefined,
-      SOLICITUD_PROYECTO_EQUIPO_CONVERTER
+      SOLICITUD_PROYECTO_EQUIPO_RESPONSE_CONVERTER
     ).pipe(
       switchMap(resultList =>
         from(resultList.items).pipe(
