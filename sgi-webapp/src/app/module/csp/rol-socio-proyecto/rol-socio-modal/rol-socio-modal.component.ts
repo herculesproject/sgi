@@ -108,7 +108,7 @@ export class RolSocioModalComponent
   protected buildFormGroup(): FormGroup {
     const formGroup = this.formBuilder.group({
       nombre: [this.rolSocio?.nombre ?? [], I18nValidators.required],
-      abreviatura: [this.rolSocio?.abreviatura ?? [], I18nValidators.required],
+      abreviatura: [this.rolSocio?.abreviatura ?? [], I18nValidators.required, I18nValidators.maxLength(5)],
       coordinador: [this.rolSocio?.coordinador ?? null, Validators.required],
       descripcion: [this.rolSocio?.descripcion ?? []]
     });

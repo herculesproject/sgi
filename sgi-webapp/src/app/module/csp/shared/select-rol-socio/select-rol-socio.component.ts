@@ -4,12 +4,13 @@ import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RolSocioModalComponent } from '../../rol-socio-proyecto/rol-socio-modal/rol-socio-modal.component';
@@ -39,11 +40,14 @@ export class SelectRolSocioComponent extends SelectServiceExtendedComponent<IRol
     super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = RolSocioModalComponent;
+    this.sortWith = (o1: SelectValue<IRolSocio>, o2: SelectValue<IRolSocio>) => {
+      return o1.displayText.localeCompare(o2.displayText);
+    };
   }
 
   protected loadServiceOptions(): Observable<IRolSocio[]> {
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+
     };
     return this.service.findAll(findOptions).pipe(map(response => response.items));
   }

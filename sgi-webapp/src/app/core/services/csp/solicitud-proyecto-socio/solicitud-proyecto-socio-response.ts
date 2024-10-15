@@ -1,10 +1,10 @@
-import { IRolSocio } from '../rol-socio';
+import { IRolSocioResponse } from '@core/services/csp/rol-socio/rol-socio-response';
 
-export interface ISolicitudProyectoSocioBackend {
+export interface ISolicitudProyectoSocioResponse {
   id: number;
   solicitudProyectoId: number;
   empresaRef: string;
-  rolSocio: IRolSocio;
+  rolSocio: IRolSocioResponse;
   mesInicio: number;
   mesFin: number;
   numInvestigadores: number;

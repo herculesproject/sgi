@@ -1,12 +1,13 @@
-import { IProyectoSocioBackend } from '@core/models/csp/backend/proyecto-socio-backend';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { ROL_SOCIO_RESPONSE_CONVERTER } from '../rol-socio/rol-socio-response.converter';
+import { IProyectoSocioResponse } from './proyecto-socio-response';
 
-class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IProyectoSocio> {
+class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioResponse, IProyectoSocio> {
 
-  toTarget(value: IProyectoSocioBackend): IProyectoSocio {
+  toTarget(value: IProyectoSocioResponse): IProyectoSocio {
     if (!value) {
       return value as unknown as IProyectoSocio;
     }
@@ -14,7 +15,7 @@ class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IPr
       id: value.id,
       proyectoId: value.proyectoId,
       empresa: { id: value.empresaRef } as IEmpresa,
-      rolSocio: value.rolSocio,
+      rolSocio: ROL_SOCIO_RESPONSE_CONVERTER.toTarget(value.rolSocio),
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       numInvestigadores: value.numInvestigadores,
@@ -23,15 +24,15 @@ class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IPr
     };
   }
 
-  fromTarget(value: IProyectoSocio): IProyectoSocioBackend {
+  fromTarget(value: IProyectoSocio): IProyectoSocioResponse {
     if (!value) {
-      return value as unknown as IProyectoSocioBackend;
+      return value as unknown as IProyectoSocioResponse;
     }
     return {
       id: value.id,
       proyectoId: value.proyectoId,
       empresaRef: value.empresa.id,
-      rolSocio: value.rolSocio,
+      rolSocio: ROL_SOCIO_RESPONSE_CONVERTER.fromTarget(value.rolSocio),
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       numInvestigadores: value.numInvestigadores,
@@ -41,4 +42,4 @@ class ProyectoSocioConverter extends SgiBaseConverter<IProyectoSocioBackend, IPr
   }
 }
 
-export const PROYECTO_SOCIO_CONVERTER = new ProyectoSocioConverter();
+export const PROYECTO_SOCIO_RESPONSE_CONVERTER = new ProyectoSocioConverter();

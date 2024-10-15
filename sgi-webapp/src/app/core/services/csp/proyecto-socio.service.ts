@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 import { PROYECTO_SOCIO_EQUIPO_CONVERTER } from '@core/converters/csp/proyecto-socio-equipo.converter';
 import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/proyecto-socio-periodo-justificacion.converter';
 import { PROYECTO_SOCIO_PERIODO_PAGO_CONVERTER } from '@core/converters/csp/proyecto-socio-periodo-pago.converter';
-import { PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/proyecto-socio.converter';
-import { IProyectoSocioBackend } from '@core/models/csp/backend/proyecto-socio-backend';
 import { IProyectoSocioEquipoBackend } from '@core/models/csp/backend/proyecto-socio-equipo-backend';
 import { IProyectoSocioPeriodoJustificacionBackend } from '@core/models/csp/backend/proyecto-socio-periodo-justificacion-backend';
 import { IProyectoSocioPeriodoPagoBackend } from '@core/models/csp/backend/proyecto-socio-periodo-pago-backend';
@@ -16,11 +14,13 @@ import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IProyectoSocioResponse } from './proyecto-socio/proyecto-socio-response';
+import { PROYECTO_SOCIO_RESPONSE_CONVERTER } from './proyecto-socio/proyecto-socio.converter';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProyectoSocioService extends SgiMutableRestService<number, IProyectoSocioBackend, IProyectoSocio>  {
+export class ProyectoSocioService extends SgiMutableRestService<number, IProyectoSocioResponse, IProyectoSocio> {
   private static readonly MAPPING = '/proyectosocios';
 
   constructor(protected http: HttpClient) {
@@ -28,7 +28,7 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
       ProyectoSocioService.name,
       `${environment.serviceServers.csp}${ProyectoSocioService.MAPPING}`,
       http,
-      PROYECTO_SOCIO_CONVERTER
+      PROYECTO_SOCIO_RESPONSE_CONVERTER
     );
   }
 

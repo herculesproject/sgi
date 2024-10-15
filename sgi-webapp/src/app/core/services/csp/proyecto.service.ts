@@ -15,7 +15,6 @@ import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyect
 import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento.converter';
 import { PROYECTO_PRORROGA_CONVERTER } from '@core/converters/csp/proyecto-prorroga.converter';
 import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-proyecto-sge.converter';
-import { PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/proyecto-socio.converter';
 import { PROYECTO_CONVERTER } from '@core/converters/csp/proyecto.converter';
 import { TipoPartida } from '@core/enums/tipo-partida';
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
@@ -35,7 +34,6 @@ import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyect
 import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
 import { IProyectoProrrogaBackend } from '@core/models/csp/backend/proyecto-prorroga-backend';
 import { IProyectoProyectoSgeBackend } from '@core/models/csp/backend/proyecto-proyecto-sge-backend';
-import { IProyectoSocioBackend } from '@core/models/csp/backend/proyecto-socio-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -110,6 +108,8 @@ import { IProyectoPeriodoJustificacionResponse } from './proyecto-periodo-justif
 import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
 import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico/proyecto-responsable-economico-response';
 import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
+import { IProyectoSocioResponse } from './proyecto-socio/proyecto-socio-response';
+import { PROYECTO_SOCIO_RESPONSE_CONVERTER } from './proyecto-socio/proyecto-socio.converter';
 import { IProyectosCompetitivosPersonasResponse } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response';
 import { PROYECTOS_COMPETITIVOS_PERSONAS_RESPONSE_CONVERTER } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response.converter';
 import { IRequerimientoJustificacionResponse } from './requerimiento-justificacion/requerimiento-justificacion-response';
@@ -283,10 +283,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns observable con la lista de IProyectoSocio del proyecto
    */
   findAllProyectoSocioProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoSocio>> {
-    return this.find<IProyectoSocioBackend, IProyectoSocio>(
+    return this.find<IProyectoSocioResponse, IProyectoSocio>(
       `${this.endpointUrl}/${id}/proyectosocios`,
       options,
-      PROYECTO_SOCIO_CONVERTER
+      PROYECTO_SOCIO_RESPONSE_CONVERTER
     );
   }
 

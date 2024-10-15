@@ -1,10 +1,10 @@
-import { IRolSocio } from '../rol-socio';
+import { IRolSocioResponse } from '../rol-socio/rol-socio-response';
 
-export interface IProyectoSocioBackend {
+export interface IProyectoSocioResponse {
   id: number;
   proyectoId: number;
   empresaRef: string;
-  rolSocio: IRolSocio;
+  rolSocio: IRolSocioResponse;
   fechaInicio: string;
   fechaFin: string;
   numInvestigadores: number;

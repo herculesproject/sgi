@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 import { SOLICITUD_PROYECTO_SOCIO_EQUIPO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-equipo.converter';
 import { SOLICITUD_PROYECTO_SOCIO_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-periodo-justificacion.converter';
 import { SOLICITUD_PROYECTO_SOCIO_PERIODO_PAGO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio-periodo-pago.converter';
-import { SOLICITUD_PROYECTO_SOCIO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-socio.converter';
-import { ISolicitudProyectoSocioBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-backend';
 import { ISolicitudProyectoSocioEquipoBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-equipo-backend';
 import { ISolicitudProyectoSocioPeriodoJustificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-periodo-justificacion-backend';
 import { ISolicitudProyectoSocioPeriodoPagoBackend } from '@core/models/csp/backend/solicitud-proyecto-socio-periodo-pago-backend';
@@ -18,11 +16,13 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { EmpresaService } from '../sgemp/empresa.service';
+import { ISolicitudProyectoSocioResponse } from './solicitud-proyecto-socio/solicitud-proyecto-socio-response';
+import { SOLICITUD_PROYECTO_SOCIO_RESPONSE_CONVERTER } from './solicitud-proyecto-socio/solicitud-proyecto-socio.converter';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SolicitudProyectoSocioService extends SgiMutableRestService<number, ISolicitudProyectoSocioBackend, ISolicitudProyectoSocio>  {
+export class SolicitudProyectoSocioService extends SgiMutableRestService<number, ISolicitudProyectoSocioResponse, ISolicitudProyectoSocio> {
   private static readonly MAPPING = '/solicitudproyectosocio';
 
   constructor(
@@ -34,7 +34,7 @@ export class SolicitudProyectoSocioService extends SgiMutableRestService<number,
       SolicitudProyectoSocioService.name,
       `${environment.serviceServers.csp}${SolicitudProyectoSocioService.MAPPING}`,
       http,
-      SOLICITUD_PROYECTO_SOCIO_CONVERTER
+      SOLICITUD_PROYECTO_SOCIO_RESPONSE_CONVERTER
     );
   }
 
