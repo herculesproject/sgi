@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { DICTAMEN_MAP } from '@core/models/eti/dictamen';
 import { MEMORIA_TIPO_MAP } from '@core/models/eti/memoria';
 import { TIPO_EVALUACION_MAP } from '@core/models/eti/tipo-evaluacion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
@@ -114,7 +115,7 @@ export class EvaluacionGeneralListadoExportService extends
       convocatoriaData.memoria?.numReferencia ?? '',
       convocatoriaData.solicitante?.nombre ?? '',
       convocatoriaData.solicitante?.apellidos ?? '',
-      convocatoriaData.dictamen?.nombre ?? '',
+      convocatoriaData.dictamen ? this.translate.instant(DICTAMEN_MAP.get(convocatoriaData.dictamen.id)) ?? '' : '',
       convocatoriaData.version ?? ''
     ];
   }
