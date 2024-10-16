@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacionNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,15 @@ class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
     // given: 2 FuenteFinanciacion de los que 1 coincide con el nombre buscado
     Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
     nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombre-1"));
-    
+
     TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder().nombre(nombre).activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
+    Set<TipoOrigenFuenteFinanciacionNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
+    tipoAmbitoGeograficoNombre.add(new TipoOrigenFuenteFinanciacionNombre(Language.ES, "nombre-1"));
+
     TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = TipoOrigenFuenteFinanciacion.builder()
-        .nombre("nombre-1").activo(true).build();
+        .nombre(tipoAmbitoGeograficoNombre).activo(true).build();
     entityManager.persistAndFlush(tipoOrigenFuenteFinanciacion);
 
     FuenteFinanciacion fuenteFinanciacion1 = FuenteFinanciacion.builder().nombre("nombre-1")
@@ -73,12 +77,15 @@ class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
     // given: 2 FuenteFinanciacion que no coinciden con el nombre buscado
     Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
     nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombre-1"));
-    
+
     TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder().nombre(nombre).activo(true).build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
+    Set<TipoOrigenFuenteFinanciacionNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
+    tipoAmbitoGeograficoNombre.add(new TipoOrigenFuenteFinanciacionNombre(Language.ES, "nombre-1"));
+
     TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = TipoOrigenFuenteFinanciacion.builder()
-        .nombre("nombre-1").activo(true).build();
+        .nombre(tipoAmbitoGeograficoNombre).activo(true).build();
     entityManager.persistAndFlush(tipoOrigenFuenteFinanciacion);
 
     FuenteFinanciacion fuenteFinanciacion1 = FuenteFinanciacion.builder().nombre("nombre-1")

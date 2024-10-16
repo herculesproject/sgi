@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacionNombre;
 import org.crue.hercules.sgi.csp.repository.TipoOrigenFuenteFinanciacionRepository;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -34,14 +35,17 @@ public class UniqueNombreTipoOrigenFuenteFinanciacionActivaValidator
     if (value == null || value.getNombre() == null) {
       return false;
     }
-    Optional<TipoOrigenFuenteFinanciacion> tipoOrigenFuenteFinanciacion = repository
-        .findByNombreAndActivoIsTrue(value.getNombre());
-    boolean returnValue = (!tipoOrigenFuenteFinanciacion.isPresent()
-        || tipoOrigenFuenteFinanciacion.get().getId().equals(value.getId()));
-    if (!returnValue) {
-      addEntityMessageParameter(context);
+    for (TipoOrigenFuenteFinanciacionNombre nombreValue : value.getNombre()) {
+      Optional<TipoOrigenFuenteFinanciacion> tipoOrigenFuenteFinanciacion = repository
+          .findByNombreLangAndNombreValueAndActivoIsTrue(nombreValue.getLang(), nombreValue.getValue());
+      boolean returnValue = (!tipoOrigenFuenteFinanciacion.isPresent()
+          || tipoOrigenFuenteFinanciacion.get().getId().equals(value.getId()));
+      if (!returnValue) {
+        addEntityMessageParameter(context);
+        return false;
+      }
     }
-    return returnValue;
+    return true;
   }
 
   private void addEntityMessageParameter(ConstraintValidatorContext context) {

@@ -141,6 +141,7 @@ DELETE FROM test.tipo_fase;
 DELETE FROM test.tipo_finalidad;
 DELETE FROM test.tipo_financiacion;
 DELETE FROM test.tipo_hito;
+DELETE FROM test.tipo_origen_fuente_financiacion_nombre;
 DELETE FROM test.tipo_origen_fuente_financiacion;
 DELETE FROM test.tipo_regimen_concurrencia;
 DELETE FROM test.concepto_gasto;

@@ -73,7 +73,10 @@ INSERT INTO test.rol_proyecto_descripcion(rol_proyecto_id, lang, value_) VALUES(
 INSERT INTO test.rol_proyecto_abreviatura(rol_proyecto_id, lang, value_) VALUES(1, 'es', '001');
 
 -- TIPO ORIGEN FUENTE FINANCIACION
-INSERT INTO test.tipo_origen_fuente_financiacion (id, nombre, activo) VALUES (1, 'nombre-001', true);
+INSERT INTO test.tipo_origen_fuente_financiacion (id, activo) VALUES (1, true);
+
+-- TIPO ORIGEN FUENTE FINANCIACION NOMBRE
+INSERT INTO test.tipo_origen_fuente_financiacion_nombre (tipo_origen_fuente_financiacion_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- FUENTE FINANCIACION
 INSERT INTO test.fuente_financiacion (id, nombre, descripcion, fondo_estructural, tipo_ambito_geografico_id, tipo_origen_fuente_financiacion_id, activo) 

@@ -312,4 +312,38 @@
     <dropColumn columnName="nombre" tableName="tipo_facturacion" />
 
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-17">
+
+    <createTable tableName="tipo_origen_fuente_financiacion_nombre">
+      <column name="tipo_origen_fuente_financiacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_origen_fuente_financiacion_nombre"
+      columnNames="tipo_origen_fuente_financiacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_origen_fuente_financiacion_id"
+      baseTableName="tipo_origen_fuente_financiacion_nombre"
+      constraintName="FK_TIPOORIGENFUENTEFINANCIACIONNOMBRE_TIPOORIGENFUENTEFINANCIACION"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_origen_fuente_financiacion"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}tipo_origen_fuente_financiacion_nombre(tipo_origen_fuente_financiacion_id,
+      value_, lang) SELECT id, nombre, '${defaultLang}' FROM
+      ${schemaPrefix}tipo_origen_fuente_financiacion WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_origen_fuente_financiacion" />
+
+  </changeSet>
 </databaseChangeLog>

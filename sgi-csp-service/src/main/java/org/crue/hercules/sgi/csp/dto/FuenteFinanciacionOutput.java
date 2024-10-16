@@ -1,6 +1,10 @@
 package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
+import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacionNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +33,7 @@ public class FuenteFinanciacionOutput implements Serializable {
   @Builder
   public static class TipoAmbitoGeografico implements Serializable {
     private Long id;
-    private String nombre;
+    private Collection<TipoAmbitoGeograficoNombre> nombre;
   }
 
   @Data
@@ -39,6 +43,6 @@ public class FuenteFinanciacionOutput implements Serializable {
   @Builder
   public static class TipoOrigenFuenteFinanciacion implements Serializable {
     private Long id;
-    private String nombre;
+    private Collection<TipoOrigenFuenteFinanciacionNombre> nombre;
   }
 }
