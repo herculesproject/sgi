@@ -83,14 +83,15 @@
           {{'csp.fuente-financiacion.ambito' | translate}}
         </th>
         <td mat-cell *matCellDef="let fuenteFinanciacion">
-          {{fuenteFinanciacion.tipoAmbitoGeografico.nombre}}</td>
+          {{fuenteFinanciacion.tipoAmbitoGeografico.nombre | i18nFieldValue}}</td>
       </ng-container>
 
       <!--Origen-->
       <ng-container matColumnDef="tipoOrigenFuenteFinanciacion.nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.fuente-financiacion.origen' | translate}}
         </th>
-        <td mat-cell *matCellDef="let fuenteFinanciacion">{{fuenteFinanciacion.tipoOrigenFuenteFinanciacion.nombre}}
+        <td mat-cell *matCellDef="let fuenteFinanciacion">{{fuenteFinanciacion.tipoOrigenFuenteFinanciacion.nombre |
+          i18nFieldValue}}
         </td>
       </ng-container>
 

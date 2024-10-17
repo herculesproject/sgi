@@ -49,5 +49,5 @@ export interface ITipoAmbitoGeografico extends TipoConfiguracionI18n {
 export interface ITipoRegimenConcurrencia extends TipoConfiguracion {
 }
 
-export interface ITipoOrigenFuenteFinanciacion extends TipoConfiguracion {
+export interface ITipoOrigenFuenteFinanciacion extends TipoConfiguracionI18n {
 }

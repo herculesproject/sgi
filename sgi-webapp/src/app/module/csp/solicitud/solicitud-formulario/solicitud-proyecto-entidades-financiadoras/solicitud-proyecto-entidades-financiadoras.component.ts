@@ -14,6 +14,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
@@ -92,7 +93,8 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
     private dialogService: DialogService,
     private solicitudService: SolicitudService,
     private empresaService: EmpresaService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoEntidadesFinanciadorasFragment;
@@ -122,7 +124,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
           case 'fuenteFinanciacion':
             return entidadFinanciadora.value.fuenteFinanciacion?.nombre;
           case 'ambito':
-            return entidadFinanciadora.value.fuenteFinanciacion?.tipoAmbitoGeografico.nombre;
+            return this.languageService.getFieldValue(entidadFinanciadora.value.fuenteFinanciacion?.tipoAmbitoGeografico.nombre);
           case 'tipoFinanciacion':
             return entidadFinanciadora.value.tipoFinanciacion?.nombre;
           case 'porcentajeFinanciacion':

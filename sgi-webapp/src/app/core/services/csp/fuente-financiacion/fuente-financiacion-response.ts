@@ -11,7 +11,7 @@ export interface IFuenteFinanciacionResponse {
   };
   tipoOrigenFuenteFinanciacion: {
     id: number;
-    nombre: string;
+    nombre: I18nFieldValueResponse[];
   };
   activo: boolean;
 }

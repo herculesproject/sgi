@@ -243,8 +243,8 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
       filter.and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value);
     }
     filter
-      .and('tipoAmbitoGeografico.nombre', SgiRestFilterOperator.LIKE_ICASE, controls.ambitoGeografico.value?.nombre)
-      .and('tipoOrigenFuenteFinanciacion.nombre', SgiRestFilterOperator.LIKE_ICASE, controls.origen.value?.nombre);
+      .and('tipoAmbitoGeografico.id', SgiRestFilterOperator.EQUALS, controls.ambitoGeografico.value?.id)
+      .and('tipoOrigenFuenteFinanciacion.id', SgiRestFilterOperator.EQUALS, controls.origen.value?.id);
 
     return filter;
   }
