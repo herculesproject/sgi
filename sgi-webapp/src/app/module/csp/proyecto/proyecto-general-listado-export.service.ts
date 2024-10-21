@@ -10,6 +10,7 @@ import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.se
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -52,6 +53,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
+    private readonly languageService: LanguageService,
     private readonly proyectoService: ProyectoService,
     private readonly contextoProyectoService: ContextoProyectoService,
     private readonly unidadGestionService: UnidadGestionService,
@@ -273,7 +275,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(proyecto.ambitoGeografico?.nombre);
     elementsRow.push(proyecto.unidadGestion?.nombre);
     elementsRow.push(proyecto.modeloEjecucion?.nombre);
-    elementsRow.push(proyecto.finalidad?.nombre);
+    elementsRow.push(this.languageService.getFieldValue(proyecto.finalidad?.nombre) ?? []);
     elementsRow.push(toString(proyecto.anio))
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaInicio));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFin));

@@ -1,9 +1,8 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
+import { ITipoFinalidadResponse } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response';
 import { Estado } from '../convocatoria';
-import { ITipoAmbitoGeografico } from '../tipos-configuracion';
-import { ITipoRegimenConcurrencia } from '../tipos-configuracion';
-import { IModeloEjecucion, ITipoFinalidad } from '../tipos-configuracion';
+import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoRegimenConcurrencia } from '../tipos-configuracion';
 
 export interface IConvocatoriaBackend {
   id: number;
@@ -16,7 +15,7 @@ export interface IConvocatoriaBackend {
   titulo: string;
   objeto: string;
   observaciones: string;
-  finalidad: ITipoFinalidad;
+  finalidad: ITipoFinalidadResponse;
   regimenConcurrencia: ITipoRegimenConcurrencia;
   formularioSolicitud: FormularioSolicitud;
   estado: Estado;

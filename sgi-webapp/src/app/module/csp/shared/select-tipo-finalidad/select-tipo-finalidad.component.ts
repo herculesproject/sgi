@@ -5,6 +5,7 @@ import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { Module } from '@core/module';
@@ -121,6 +122,9 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
     };
 
     this.addTarget = TipoFinalidadModalComponent;
+    this.sortWith = (o1: SelectValue<ITipoFinalidad>, o2: SelectValue<ITipoFinalidad>) => {
+      return o1?.displayText.localeCompare(o2?.displayText)
+    };
   }
 
   protected loadServiceOptions(): Observable<ITipoFinalidad[]> {

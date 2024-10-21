@@ -11,6 +11,7 @@ import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -49,6 +50,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
     private readonly dialogService: DialogService,
     private matDialog: MatDialog,
     actionService: ModeloEjecucionActionService,
+    private readonly languageService: LanguageService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.TIPO_FINALIDADES, actionService, translate);
@@ -79,7 +81,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
       (wrapper: StatusWrapper<IModeloTipoFinalidad>, property: string) => {
         switch (property) {
           case 'nombre':
-            return wrapper.value.tipoFinalidad.nombre;
+            return this.languageService.getFieldValue(wrapper.value.tipoFinalidad.nombre);
           case 'descripcion':
             return wrapper.value.tipoFinalidad.descripcion;
           case 'activo':

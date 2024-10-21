@@ -6,6 +6,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '../../services/csp/estado-proyecto/estado-proyecto-response.converter';
 import { PROYECTO_IVA_CONVERTER } from './proyecto-iva.converter';
+import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
 
 class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
 
@@ -26,7 +27,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       fechaFinDefinitiva: LuxonUtils.fromBackend(value.fechaFinDefinitiva),
       modeloEjecucion: value.modeloEjecucion,
-      finalidad: value.finalidad,
+      finalidad: TIPO_FINALIDAD_RESPONSE_CONVERTER.toTarget(value.finalidad),
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
       solicitudId: value.solicitudId,
@@ -75,7 +76,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       unidadGestionRef: String(value.unidadGestion?.id),
       modeloEjecucion: value.modeloEjecucion,
-      finalidad: value.finalidad,
+      finalidad: TIPO_FINALIDAD_RESPONSE_CONVERTER.fromTarget(value.finalidad),
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
       solicitudId: value.solicitudId,

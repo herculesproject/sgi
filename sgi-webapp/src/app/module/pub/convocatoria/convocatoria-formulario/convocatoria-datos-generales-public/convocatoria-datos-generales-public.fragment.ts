@@ -8,6 +8,7 @@ import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { FormFragment } from '@core/services/action-service';
 import { ConvocatoriaPublicService } from '@core/services/csp/convocatoria-public.service';
 import { UnidadGestionPublicService } from '@core/services/csp/unidad-gestion-public.service';
+import { LanguageService } from '@core/services/language.service';
 import { EmpresaPublicService } from '@core/services/sgemp/empresa-public.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
@@ -29,6 +30,7 @@ export class ConvocatoriaDatosGeneralesPublicFragment extends FormFragment<IConv
 
   constructor(
     private readonly logger: NGXLogger,
+    private readonly languageService: LanguageService,
     key: number,
     private convocatoriaService: ConvocatoriaPublicService,
     private empresaService: EmpresaPublicService,
@@ -83,7 +85,7 @@ export class ConvocatoriaDatosGeneralesPublicFragment extends FormFragment<IConv
       titulo: convocatoria.titulo,
       objeto: convocatoria.objeto,
       observaciones: convocatoria.observaciones,
-      finalidad: convocatoria.finalidad?.nombre ?? '',
+      finalidad: this.languageService.getFieldValue(convocatoria.finalidad?.nombre) ?? '',
       regimenConcurrencia: convocatoria.regimenConcurrencia?.nombre ?? '',
       formularioSolicitud: convocatoria.formularioSolicitud,
       duracion: convocatoria.duracion,

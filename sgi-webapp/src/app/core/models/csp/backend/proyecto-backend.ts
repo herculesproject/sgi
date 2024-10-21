@@ -1,8 +1,9 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
+import { ITipoFinalidadResponse } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response';
 import { IEstadoProyectoResponse } from '../../../services/csp/estado-proyecto/estado-proyecto-response';
 import { CausaExencion } from '../proyecto';
-import { IModeloEjecucion, ITipoAmbitoGeografico, ITipoFinalidad } from '../tipos-configuracion';
+import { IModeloEjecucion, ITipoAmbitoGeografico } from '../tipos-configuracion';
 import { IProyectoIVABackend } from './proyecto-iva-backend';
 
 export interface IProyectoBackend {
@@ -29,7 +30,7 @@ export interface IProyectoBackend {
   /** modelo ejecucion */
   modeloEjecucion: IModeloEjecucion;
   /** finalidad */
-  finalidad: ITipoFinalidad;
+  finalidad: ITipoFinalidadResponse;
   /** Id de Convocatoria */
   convocatoriaId: number;
   /** Id de Solicitud */

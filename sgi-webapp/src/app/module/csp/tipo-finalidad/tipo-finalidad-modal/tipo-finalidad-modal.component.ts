@@ -1,11 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -79,7 +80,7 @@ export class TipoFinalidadModalComponent extends DialogActionComponent<ITipoFina
 
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
-      nombre: new FormControl(this.tipoFinalidad?.nombre ?? '', Validators.required),
+      nombre: new FormControl(this.tipoFinalidad?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(100)]),
       descripcion: new FormControl(this.tipoFinalidad?.descripcion ?? '')
     });
   }

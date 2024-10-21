@@ -10,13 +10,13 @@ import { ESTADO_MAP, Estado } from '@core/models/csp/estado-proyecto';
 import { CAUSA_EXENCION_MAP, IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoFichaGeneralFragment } from './proyecto-ficha-general.fragment';
-import { LanguageService } from '@core/services/language.service';
 
 const PROYECTO_ACRONIMO_KEY = marker('csp.proyecto.acronimo');
 const PROYECTO_AMBITO_GEOGRAFICO_KEY = marker('csp.proyecto.ambito-geografico');
@@ -299,7 +299,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   setTextoInfoFinalidadConvocatoria() {
     this.translate.get(
-      this.formPart.finalidadConvocatoria.nombre,
+      this.languageService.getFieldValue(this.formPart.finalidadConvocatoria.nombre),
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {

@@ -28,7 +28,7 @@ export interface ITipoDocumento extends TipoConfiguracion {
 export interface ITipoHito extends TipoConfiguracion {
 }
 
-export interface ITipoFinalidad extends TipoConfiguracion {
+export interface ITipoFinalidad extends TipoConfiguracionI18n {
 }
 
 export interface ITipoFase extends TipoConfiguracion {

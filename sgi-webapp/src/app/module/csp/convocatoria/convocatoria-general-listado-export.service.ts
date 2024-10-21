@@ -5,16 +5,17 @@ import { ESTADO_MAP } from '@core/models/csp/convocatoria';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { toString } from '@core/utils/string-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IConvocatoriaReportData, IConvocatoriaReportOptions } from './convocatoria-listado-export.service';
-import { toString } from '@core/utils/string-utils';
 
 
 const TITLE_KEY = marker('csp.convocatoria.titulo');
@@ -36,11 +37,12 @@ const ANIO_KEY = marker('csp.convocatoria.anio');
 
 @Injectable()
 export class ConvocatoriaGeneralListadoExportService
-  extends AbstractTableExportFillService<IConvocatoriaReportData, IConvocatoriaReportOptions>{
+  extends AbstractTableExportFillService<IConvocatoriaReportData, IConvocatoriaReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
+    private readonly languageService: LanguageService,
     private readonly convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
     private unidadGestionService: UnidadGestionService
@@ -184,7 +186,7 @@ export class ConvocatoriaGeneralListadoExportService
       this.translate.instant(FORMULARIO_SOLICITUD_MAP.get(convocatoria.convocatoria?.formularioSolicitud)) : '');
     elementsRow.push(convocatoria.convocatoria?.unidadGestion?.nombre ?? '');
     elementsRow.push(convocatoria.convocatoria?.modeloEjecucion?.nombre ?? '');
-    elementsRow.push(convocatoria.convocatoria?.finalidad?.nombre ?? '');
+    elementsRow.push(convocatoria.convocatoria?.finalidad?.nombre ? this.languageService.getFieldValue(convocatoria.convocatoria.finalidad.nombre) ?? '' : '');
     elementsRow.push(convocatoria.convocatoria?.codigoInterno ?? '');
     elementsRow.push(convocatoria.convocatoria?.codigo ?? '');
     elementsRow.push(toString(convocatoria.convocatoria?.anio));
