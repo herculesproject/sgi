@@ -17,6 +17,18 @@
     }
   }
 
+  table {
+
+    .mat-cell.mat-column-entidadesFinanciadoras,
+    .mat-cell.mat-column-comentario {
+      max-width: 10vw;
+      overflow: hidden;
+      padding-right: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
   .paginator-export {
     display: flex;
     align-items: center;

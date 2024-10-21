@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
 import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
+import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
 import { ITipoFacturacion } from '@core/models/csp/tipo-facturacion';
 import { IFacturaPrevistaPendiente } from '@core/models/sge/factura-prevista-pendiente';
@@ -14,6 +15,7 @@ import { ConfigService as ConfigCnfService } from '@core/services/cnf/config.ser
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { FacturaPrevistaPendienteService } from '@core/services/sge/factura-prevista-pendiente/factura-prevista-pendiente.service';
+import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
@@ -24,7 +26,6 @@ import { catchError, filter, map, mergeMap, switchMap, toArray } from 'rxjs/oper
 import { FacturasPrevistasPendientesListadoExportModalComponent } from '../modals/facturas-previstas-pendientes-listado-export-modal/facturas-previstas-pendientes-listado-export-modal.component';
 
 export interface IFacturaPrevistaPendienteListadoData extends IFacturaPrevistaPendiente {
-  tituloProyecto: string;
   fechaEmision: DateTime;
   importeBase: number;
   porcentajeIVA: number;
@@ -32,6 +33,8 @@ export interface IFacturaPrevistaPendienteListadoData extends IFacturaPrevistaPe
   tipoFacturacion: ITipoFacturacion;
   fechaConformidad: DateTime;
   estadoValidacionIP: IEstadoValidacionIP;
+  comentario: string;
+  entidadesFinanciadoras: IProyectoEntidadFinanciadora[];
 }
 
 @Component({
@@ -60,6 +63,7 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
     private readonly matDialog: MatDialog,
     private readonly configService: ConfigService,
     private readonly configCnfService: ConfigCnfService,
+    private readonly empresaService: EmpresaService,
     private readonly facturaPrevistaPendienteService: FacturaPrevistaPendienteService,
     private readonly proyectoService: ProyectoService,
     private readonly translate: TranslateService
@@ -116,11 +120,11 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
                           isCalendarioFacturacionSgeEnabled ? facturaPrevistaPendiente.proyectoIdSGE : null,
                           facturaPrevistaPendiente.numeroPrevision
                         ),
-                        proyecto: this.proyectoService.findById(+facturaPrevistaPendiente.proyectoIdSGI)
+                        entidadesFinanciadoras: this.getEntidadesFinanciadoras(+facturaPrevistaPendiente.proyectoIdSGI)
                       }).pipe(
-                        map(({ proyecto, proyectoFacturacion }) => {
-                          if (proyecto) {
-                            facturaPrevistaPendiente.tituloProyecto = proyecto.titulo;
+                        map(({ entidadesFinanciadoras, proyectoFacturacion }) => {
+                          if (entidadesFinanciadoras) {
+                            facturaPrevistaPendiente.entidadesFinanciadoras = entidadesFinanciadoras;
                           }
 
                           if (proyectoFacturacion) {
@@ -131,19 +135,19 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
                             facturaPrevistaPendiente.tipoFacturacion = proyectoFacturacion.tipoFacturacion;
                             facturaPrevistaPendiente.fechaConformidad = proyectoFacturacion.fechaConformidad;
                             facturaPrevistaPendiente.estadoValidacionIP = proyectoFacturacion.estadoValidacionIP;
+                            facturaPrevistaPendiente.comentario = proyectoFacturacion.comentario;
                           }
 
                           return facturaPrevistaPendiente;
-                        }),
-                        catchError((error) => {
-                          this.logger.error(error);
-                          this.processError(error);
-                          return EMPTY;
                         })
                       )
                     )
                   )
-                )
+                ),
+                catchError((error) => {
+                  this.logger.error(error);
+                  return of(facturaPrevistaPendiente);
+                })
               )
             }, 10),
             toArray()
@@ -181,14 +185,15 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
 
   private initColumns(): void {
     this.columnas = [
-      'tituloProyecto',
       'proyectoIdSGI',
       'proyectoIdSGE',
+      'entidadesFinanciadoras',
       'numeroPrevision',
       'fechaEmision',
       'importeBase',
       'porcentajeIVA',
       'importeTotal',
+      'comentario',
       'tipoFacturacion.nombre',
       'fechaConformidad',
       'estadoValidacionIP.estado'
@@ -238,6 +243,23 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
     const filter = new RSQLSgiRestFilter('numeroPrevision', SgiRestFilterOperator.EQUALS, numeroPrevision)
       .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, proyectoSgeRef);
     return this.proyectoService.findProyectosFacturacionByProyectoId(proyectoId, { filter }).pipe(map(response => response.items.length === 1 ? response.items[0] : null));
+  }
+
+  private getEntidadesFinanciadoras(proyectoId: number): Observable<IProyectoEntidadFinanciadora[]> {
+    return this.proyectoService.findEntidadesFinanciadoras(proyectoId).pipe(
+      map(response => response.items),
+      switchMap(entidades => from(entidades).pipe(
+        mergeMap(entidad => {
+          return this.empresaService.findById(entidad.empresa.id).pipe(
+            map((empresa) => {
+              entidad.empresa = empresa;
+              return entidad;
+            })
+          );
+        }),
+        toArray()
+      ))
+    )
   }
 
 }
