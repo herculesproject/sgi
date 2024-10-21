@@ -2,9 +2,9 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,6 +40,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -1821,10 +1822,13 @@ class ConvocatoriaIT extends BaseIT {
             .activo(Boolean.TRUE)
             .build();
 
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
+
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : TipoFinalidad.builder()
             .id(modeloTipoFinalidadId)
-            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))
+            .nombre(nombreTipoFinalidad)
             .activo(Boolean.TRUE)
             .build();
 

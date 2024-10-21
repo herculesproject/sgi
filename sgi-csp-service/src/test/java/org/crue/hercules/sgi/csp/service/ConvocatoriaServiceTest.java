@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
@@ -2633,9 +2634,16 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         : ModeloEjecucion.builder().id(modeloEjecucionId)
             .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)).activo(Boolean.TRUE).build();
 
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(
+        new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
+
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
-        : TipoFinalidad.builder().id(modeloTipoFinalidadId)
-            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)).activo(Boolean.TRUE).build();
+        : TipoFinalidad.builder()
+            .id(modeloTipoFinalidadId)
+            .nombre(nombreTipoFinalidad)
+            .activo(Boolean.TRUE)
+            .build();
 
     ModeloTipoFinalidad modeloTipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : ModeloTipoFinalidad.builder().id(modeloTipoFinalidadId).modeloEjecucion(modeloEjecucion)

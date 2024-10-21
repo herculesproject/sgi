@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -1159,10 +1160,13 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     // @formatter:off
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(modeloEjecucionId);
 
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
+
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : TipoFinalidad.builder()
             .id(modeloTipoFinalidadId)
-            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))
+            .nombre(nombreTipoFinalidad)
             .activo(Boolean.TRUE)
             .build();
 

@@ -1,17 +1,27 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import org.crue.hercules.sgi.csp.model.BaseActivableEntity.OnActivar;
+import org.crue.hercules.sgi.csp.validation.UniqueNombreTipoFinalidadActivo;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -29,6 +39,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@UniqueNombreTipoFinalidadActivo(groups = { BaseEntity.Create.class, BaseEntity.Update.class, OnActivar.class })
 public class TipoFinalidad extends BaseEntity {
 
   /**
@@ -44,10 +55,12 @@ public class TipoFinalidad extends BaseEntity {
   private Long id;
 
   /** Nombre */
-  @Column(name = "nombre", length = 100, nullable = false)
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_finalidad_nombre", joinColumns = @JoinColumn(name = "tipo_finalidad_id"))
   @NotEmpty
-  @Size(max = 100)
-  private String nombre;
+  @Valid
+  @Builder.Default
+  private Set<TipoFinalidadNombre> nombre = new HashSet<>();
 
   /** Descripción */
   @Column(name = "descripcion", length = 250)

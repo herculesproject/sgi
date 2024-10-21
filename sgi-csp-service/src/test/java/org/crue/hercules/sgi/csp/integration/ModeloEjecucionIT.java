@@ -12,6 +12,8 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -500,7 +502,7 @@ class ModeloEjecucionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoFinalidad.nombre,desc";
+    String sort = "tipoFinalidad.nombre.value,desc";
     String filter = "tipoFinalidad.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
@@ -521,11 +523,14 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(tiposFinalidad.get(0).getTipoFinalidad().getNombre())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(tiposFinalidad.get(0).getTipoFinalidad().getNombre(), Language.ES))
         .as("get(0).getTipoFinalidad().getNombre())").isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(tiposFinalidad.get(1).getTipoFinalidad().getNombre())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(tiposFinalidad.get(1).getTipoFinalidad().getNombre(), Language.ES))
         .as("get(1).getTipoFinalidad().getNombre())").isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(tiposFinalidad.get(2).getTipoFinalidad().getNombre())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(tiposFinalidad.get(2).getTipoFinalidad().getNombre(), Language.ES))
         .as("get(2).getTipoFinalidad().getNombre())").isEqualTo("nombre-" + String.format("%03d", 1));
   }
 

@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
-  private ConvocatoriaConceptoGastoCodigoEcRepository repository; 
+  private ConvocatoriaConceptoGastoCodigoEcRepository repository;
 
   @Test
   void findAllByConvocatoriaConceptoGastoId_ReturnsListConvocatoriaConceptoGastoCodigoEc() throws Exception {
@@ -82,8 +83,11 @@ class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad" + suffix));
+    
     TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
-        .nombre("nombreTipoFinalidad" + suffix)
+        .nombre(nombreTipoFinalidad)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);

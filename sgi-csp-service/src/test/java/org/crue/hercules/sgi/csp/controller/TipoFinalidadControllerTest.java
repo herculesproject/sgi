@@ -2,12 +2,17 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.service.TipoFinalidadService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -70,7 +75,8 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
         // then: new TipoFinalidad is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(data.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(data.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(data.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(data.getActivo()));
   }
@@ -123,7 +129,8 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
         // then: TipoFinalidad is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(data.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(data.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(data.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(data.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(data.getActivo()));
   }
@@ -171,7 +178,8 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
         // then: return enabled TipoFinalidad
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(tipoFinalidad.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoFinalidad.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(tipoFinalidad.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoFinalidad.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
@@ -217,7 +225,8 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
         // then: return disabled TipoFinalidad
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoFinalidad.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(tipoFinalidad.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoFinalidad.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
   }
@@ -309,7 +318,7 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
     // containing Nombre='Nombre-31' to 'Nombre-40'
     for (int i = 1; i < 10; i++) {
       TipoFinalidad item = actual.get(i - 1);
-      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getNombre(), Language.ES)).isEqualTo("nombre-" + i);
     }
   }
 
@@ -376,7 +385,7 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
     // containing Nombre='Nombre-31' to 'Nombre-40'
     for (int i = 0, j = 31; i < 10; i++, j++) {
       TipoFinalidad item = actual.get(i);
-      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + j);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getNombre(), Language.ES)).isEqualTo("nombre-" + j);
     }
   }
 
@@ -407,12 +416,19 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
   /**
    * Función que devuelve un objeto TipoFinalidad
    * 
-   * @param id
-   * @param activo
+   * @param id     Identificador del TipoFinalidad
+   * @param activo flag activo
    * @return TipoFinalidad
    */
   private TipoFinalidad generarMockTipoFinalidad(Long id, Boolean activo) {
-    return TipoFinalidad.builder().id(id).nombre("nombre-" + id).descripcion("descripcion-" + id).activo(activo)
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-" + id));
+
+    return TipoFinalidad.builder()
+        .id(id)
+        .nombre(nombreTipoFinalidad)
+        .descripcion("descripcion-" + id)
+        .activo(activo)
         .build();
   }
 

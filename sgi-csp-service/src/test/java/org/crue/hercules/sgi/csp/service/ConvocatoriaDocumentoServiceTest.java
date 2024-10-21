@@ -1080,10 +1080,13 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
             .activo(Boolean.TRUE)
             .build();
 
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
+
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : TipoFinalidad.builder()
             .id(modeloTipoFinalidadId)
-            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))
+            .nombre(nombreTipoFinalidad)
             .activo(Boolean.TRUE)
             .build();
 

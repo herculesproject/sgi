@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
@@ -16,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoDocumentoService;
@@ -24,6 +27,8 @@ import org.crue.hercules.sgi.csp.service.ModeloTipoFaseService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFinalidadService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoHitoService;
 import org.crue.hercules.sgi.csp.service.ModeloUnidadService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -1010,7 +1015,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ModeloTipoFinalidad modeloTipoFinalidad = modeloTipoFinalidadesResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloTipoFinalidad.getTipoFinalidad().getNombre())
+      Assertions
+          .assertThat(I18nHelper.getValueForLanguage(modeloTipoFinalidad.getTipoFinalidad().getNombre(), Language.ES))
           .isEqualTo("TipoFinalidad" + String.format("%03d", i));
     }
   }
@@ -1641,9 +1647,12 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
 
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, nombre));
+
     TipoFinalidad tipoFinalidad = new TipoFinalidad();
     tipoFinalidad.setId(id);
-    tipoFinalidad.setNombre(nombre);
+    tipoFinalidad.setNombre(nombreTipoFinalidad);
     tipoFinalidad.setDescripcion("descripcion-" + id);
     tipoFinalidad.setActivo(Boolean.TRUE);
 

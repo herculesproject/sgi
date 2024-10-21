@@ -5,7 +5,10 @@ INSERT INTO test.modelo_ejecucion (id, nombre, descripcion, activo) VALUES (1, '
 INSERT INTO test.modelo_unidad (id, unidad_gestion_ref, modelo_ejecucion_id, activo) VALUES (1, 'unidad-001', 1, true);
 
 -- TIPO_FINALIDAD
-INSERT INTO test.tipo_finalidad (id,nombre,descripcion,activo) VALUES (1,'nombre-1','descripcion-1',true);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) VALUES (1, 'descripcion-1', true);
+
+-- TIPO_FINALIDAD_NOMBRE
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES(1, 'es', 'nombre-1');
 
 -- MODELO TIPO FINALIDAD
 INSERT INTO test.modelo_tipo_finalidad (id, modelo_ejecucion_id, tipo_finalidad_id, activo) VALUES (1, 1, 1, true);

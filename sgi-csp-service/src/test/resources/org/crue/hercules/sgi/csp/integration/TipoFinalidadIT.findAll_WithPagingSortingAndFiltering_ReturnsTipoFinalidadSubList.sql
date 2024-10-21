@@ -1,8 +1,17 @@
 -- TIPO_FINALIDAD
-insert into test.tipo_finalidad (id,nombre,descripcion,activo) values (1,'nombre-001','descripcion-001',true);
-insert into test.tipo_finalidad (id,nombre,descripcion,activo) values (2,'nombre-002','descripcion-002',true);
-insert into test.tipo_finalidad (id,nombre,descripcion,activo) values (3,'nombre-003','descripcion-003',true);
-insert into test.tipo_finalidad (id,nombre,descripcion,activo) values (4,'nombre-004','descripcion-004',false);
-insert into test.tipo_finalidad (id,nombre,descripcion,activo) values (5,'nombre-011','descripcion-011',true);
-insert into test.tipo_finalidad (id,nombre,descripcion,activo) values (6,'nombre-012','descripcion-012',true);
-insert into test.tipo_finalidad (id,nombre,descripcion,activo) values (7,'nombre-013','descripcion-013',false);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) values (1, 'descripcion-001', true);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) values (2, 'descripcion-002', true);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) values (3, 'descripcion-003', false);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) values (4, 'descripcion-004', false);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) values (5, 'descripcion-011', true);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) values (6, 'descripcion-012', true);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) values (7, 'descripcion-013', false);
+
+-- TIPO_FINALIDAD_NOMBRE
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES (1, 'es', 'nombre-001');
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES (2, 'es', 'nombre-002');
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES (3, 'es', 'nombre-003');
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES (4, 'es', 'nombre-004');
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES (5, 'es', 'nombre-011');
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES (6, 'es', 'nombre-012');
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES (7, 'es', 'nombre-013');

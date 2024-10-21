@@ -29,6 +29,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto.CausaExencion;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
@@ -969,9 +970,12 @@ class ProyectoServiceTest extends BaseServiceTest {
     modeloEjecucion.setId(1L);
     modeloEjecucion.setNombre("nombreModeloEjecucion");
 
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad"));
+    
     TipoFinalidad tipoFinalidad = new TipoFinalidad();
     tipoFinalidad.setId(1L);
-    tipoFinalidad.setNombre("nombreTipoFinalidad");
+    tipoFinalidad.setNombre(nombreTipoFinalidad);
 
     Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
     nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico"));

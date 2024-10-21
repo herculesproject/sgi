@@ -7,8 +7,12 @@ INSERT INTO test.modelo_unidad (id, unidad_gestion_ref, modelo_ejecucion_id, act
 INSERT INTO test.modelo_unidad (id, unidad_gestion_ref, modelo_ejecucion_id, activo) VALUES (2, 'unidad-002', 2, true);
 
 -- TIPO_FINALIDAD
-INSERT INTO test.tipo_finalidad (id,nombre,descripcion,activo) VALUES (1,'nombre-1','descripcion-1',true);
-INSERT INTO test.tipo_finalidad (id,nombre,descripcion,activo) VALUES (2,'nombre-2','descripcion-2',true);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) VALUES (1, 'descripcion-1', true);
+INSERT INTO test.tipo_finalidad (id, descripcion, activo) VALUES (2, 'descripcion-2', true);
+
+-- TIPO_FINALIDAD_NOMBRE
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES(1, 'es', 'nombre-1');
+INSERT INTO test.tipo_finalidad_nombre (tipo_finalidad_id, lang, value_) VALUES(2, 'es', 'nombre-2');
 
 -- MODELO TIPO FINALIDAD
 INSERT INTO test.modelo_tipo_finalidad (id, modelo_ejecucion_id, tipo_finalidad_id, activo) VALUES (1, 1, 1, true);

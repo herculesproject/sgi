@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,8 +100,11 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad" + suffix));
+
     TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
-        .nombre("nombreTipoFinalidad" + suffix)
+        .nombre(nombreTipoFinalidad)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);

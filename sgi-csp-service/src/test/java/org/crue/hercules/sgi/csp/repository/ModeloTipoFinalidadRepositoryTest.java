@@ -1,11 +1,15 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,7 +27,11 @@ class ModeloTipoFinalidadRepositoryTest extends BaseRepositoryTest {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-me-1", "descripcion-me-1", Boolean.TRUE,
         Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
-    TipoFinalidad tipoFinalidad = new TipoFinalidad(null, "nombre-tf-1", "descripcion-tf-1", Boolean.TRUE);
+
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-tf-1"));
+
+    TipoFinalidad tipoFinalidad = new TipoFinalidad(null, nombreTipoFinalidad, "descripcion-tf-1", Boolean.TRUE);
     entityManager.persistAndFlush(tipoFinalidad);
     ModeloTipoFinalidad modeloTipoFinalidad = new ModeloTipoFinalidad(null, tipoFinalidad, modeloEjecucion,
         Boolean.TRUE);
@@ -47,7 +55,11 @@ class ModeloTipoFinalidadRepositoryTest extends BaseRepositoryTest {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-me-1", "descripcion-me-1", Boolean.TRUE,
         Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
-    TipoFinalidad tipoFinalidad = new TipoFinalidad(null, "nombre-tf-1", "descripcion-tf-1", Boolean.TRUE);
+
+    Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
+    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-tf-1"));
+
+    TipoFinalidad tipoFinalidad = new TipoFinalidad(null, nombreTipoFinalidad, "descripcion-tf-1", Boolean.TRUE);
     entityManager.persistAndFlush(tipoFinalidad);
 
     // when: find by ModeloEjecucion and TipoFinalidad

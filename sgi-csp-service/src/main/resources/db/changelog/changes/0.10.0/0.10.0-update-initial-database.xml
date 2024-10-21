@@ -346,4 +346,31 @@
     <dropColumn columnName="nombre" tableName="tipo_origen_fuente_financiacion" />
 
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-18">
+    <createTable tableName="tipo_finalidad_nombre">
+      <column name="tipo_finalidad_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(100)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_finalidad_nombre" columnNames="tipo_finalidad_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id"
+      baseTableName="tipo_finalidad_nombre"
+      constraintName="FK_TIPOFINALIDADNOMBRE_TIPOFINALIDAD" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_finalidad_nombre(tipo_finalidad_id, value_, lang) SELECT
+      id, nombre, '${defaultLang}' FROM ${schemaPrefix}tipo_finalidad WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_finalidad" />
+  </changeSet>
 </databaseChangeLog>
