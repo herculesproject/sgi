@@ -56,7 +56,7 @@
       <ng-container matColumnDef="descripcion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.tipo-finalidad.descripcion' | translate}}
         </th>
-        <td mat-cell *matCellDef="let tipoFinalidad">{{tipoFinalidad.descripcion}}</td>
+        <td mat-cell *matCellDef="let tipoFinalidad">{{tipoFinalidad.descripcion | i18nFieldValue}}</td>
       </ng-container>
 
       <!-- Activo -->

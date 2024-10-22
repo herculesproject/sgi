@@ -83,7 +83,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
           case 'nombre':
             return this.languageService.getFieldValue(wrapper.value.tipoFinalidad.nombre);
           case 'descripcion':
-            return wrapper.value.tipoFinalidad.descripcion;
+            return wrapper.value.tipoFinalidad.descripcion ? this.languageService.getFieldValue(wrapper.value.tipoFinalidad.descripcion) : '';
           case 'activo':
             return wrapper.value.tipoFinalidad.activo;
           default:

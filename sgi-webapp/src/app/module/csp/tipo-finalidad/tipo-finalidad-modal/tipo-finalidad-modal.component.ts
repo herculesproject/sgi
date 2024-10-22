@@ -13,6 +13,7 @@ import { switchMap } from 'rxjs/operators';
 
 const TIPO_FINALIDAD_KEY = marker('csp.tipo-finalidad');
 const TIPO_FINALIDAD_NOMBRE_KEY = marker('csp.tipo-finalidad.nombre');
+const TIPO_FINALIDAD_DESCRIPCION_KEY = marker('csp.tipo-finalidad.descripcion');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -24,6 +25,7 @@ export class TipoFinalidadModalComponent extends DialogActionComponent<ITipoFina
   private readonly tipoFinalidad: ITipoFinalidad;
   title: string;
   msgParamNombreEntity = {};
+  msgParamDescripcionEntity = {};
 
   constructor(
     matDialogRef: MatDialogRef<TipoFinalidadModalComponent>,
@@ -50,6 +52,11 @@ export class TipoFinalidadModalComponent extends DialogActionComponent<ITipoFina
       TIPO_FINALIDAD_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      TIPO_FINALIDAD_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.isEdit()) {
       this.translate.get(
@@ -81,7 +88,7 @@ export class TipoFinalidadModalComponent extends DialogActionComponent<ITipoFina
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
       nombre: new FormControl(this.tipoFinalidad?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(100)]),
-      descripcion: new FormControl(this.tipoFinalidad?.descripcion ?? '')
+      descripcion: new FormControl(this.tipoFinalidad?.descripcion ?? [], I18nValidators.maxLength(250))
     });
   }
 

@@ -10,7 +10,7 @@ interface TipoConfiguracion {
 interface TipoConfiguracionI18n {
   id: number;
   nombre: I18nFieldValue[];
-  descripcion?: string;
+  descripcion?: I18nFieldValue[];
   activo: boolean;
 }
 
