@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
@@ -1650,10 +1651,13 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, nombre));
 
+    Set<TipoFinalidadDescripcion> descripcionTipoFinalidad = new HashSet<>();
+    descripcionTipoFinalidad.add(new TipoFinalidadDescripcion(Language.ES, "descripcion-" + id));
+
     TipoFinalidad tipoFinalidad = new TipoFinalidad();
     tipoFinalidad.setId(id);
     tipoFinalidad.setNombre(nombreTipoFinalidad);
-    tipoFinalidad.setDescripcion("descripcion-" + id);
+    tipoFinalidad.setDescripcion(descripcionTipoFinalidad);
     tipoFinalidad.setActivo(Boolean.TRUE);
 
     ModeloTipoFinalidad modeloTipoFinalidad = new ModeloTipoFinalidad();

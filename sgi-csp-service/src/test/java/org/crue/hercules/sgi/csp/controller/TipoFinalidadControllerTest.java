@@ -9,6 +9,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.service.TipoFinalidadService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -77,7 +78,8 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(data.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(data.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(data.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(data.getActivo()));
   }
 
@@ -131,7 +133,8 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(data.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(data.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(data.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(data.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(data.getActivo()));
   }
 
@@ -180,7 +183,8 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(tipoFinalidad.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(tipoFinalidad.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoFinalidad.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(tipoFinalidad.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
 
@@ -227,7 +231,8 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(tipoFinalidad.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoFinalidad.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(tipoFinalidad.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
   }
 
@@ -424,10 +429,13 @@ class TipoFinalidadControllerTest extends BaseControllerTest {
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-" + id));
 
+    Set<TipoFinalidadDescripcion> descripcionTipoFinalidad = new HashSet<>();
+    descripcionTipoFinalidad.add(new TipoFinalidadDescripcion(Language.ES, "descripcion-" + id));
+
     return TipoFinalidad.builder()
         .id(id)
         .nombre(nombreTipoFinalidad)
-        .descripcion("descripcion-" + id)
+        .descripcion(descripcionTipoFinalidad)
         .activo(activo)
         .build();
   }

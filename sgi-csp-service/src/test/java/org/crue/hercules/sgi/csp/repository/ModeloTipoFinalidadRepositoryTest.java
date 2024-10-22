@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,10 @@ class ModeloTipoFinalidadRepositoryTest extends BaseRepositoryTest {
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-tf-1"));
 
-    TipoFinalidad tipoFinalidad = new TipoFinalidad(null, nombreTipoFinalidad, "descripcion-tf-1", Boolean.TRUE);
+    Set<TipoFinalidadDescripcion> descripcionTipoFinalidad = new HashSet<>();
+    descripcionTipoFinalidad.add(new TipoFinalidadDescripcion(Language.ES, "descripcion-tf-1"));
+
+    TipoFinalidad tipoFinalidad = new TipoFinalidad(null, nombreTipoFinalidad, descripcionTipoFinalidad, Boolean.TRUE);
     entityManager.persistAndFlush(tipoFinalidad);
     ModeloTipoFinalidad modeloTipoFinalidad = new ModeloTipoFinalidad(null, tipoFinalidad, modeloEjecucion,
         Boolean.TRUE);
@@ -59,7 +63,10 @@ class ModeloTipoFinalidadRepositoryTest extends BaseRepositoryTest {
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-tf-1"));
 
-    TipoFinalidad tipoFinalidad = new TipoFinalidad(null, nombreTipoFinalidad, "descripcion-tf-1", Boolean.TRUE);
+    Set<TipoFinalidadDescripcion> descripcionTipoFinalidad = new HashSet<>();
+    descripcionTipoFinalidad.add(new TipoFinalidadDescripcion(Language.ES, "descripcion-tf-1"));
+
+    TipoFinalidad tipoFinalidad = new TipoFinalidad(null, nombreTipoFinalidad, descripcionTipoFinalidad, Boolean.TRUE);
     entityManager.persistAndFlush(tipoFinalidad);
 
     // when: find by ModeloEjecucion and TipoFinalidad

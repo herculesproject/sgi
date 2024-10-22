@@ -18,7 +18,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity.OnActivar;
 import org.crue.hercules.sgi.csp.validation.UniqueNombreTipoFinalidadActivo;
@@ -63,9 +62,11 @@ public class TipoFinalidad extends BaseEntity {
   private Set<TipoFinalidadNombre> nombre = new HashSet<>();
 
   /** Descripción */
-  @Column(name = "descripcion", length = 250)
-  @Size(max = 250)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_finalidad_descripcion", joinColumns = @JoinColumn(name = "tipo_finalidad_id"))
+  @Valid
+  @Builder.Default
+  private Set<TipoFinalidadDescripcion> descripcion = new HashSet<>();
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

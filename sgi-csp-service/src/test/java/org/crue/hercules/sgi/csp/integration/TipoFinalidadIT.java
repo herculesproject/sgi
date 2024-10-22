@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -52,9 +53,12 @@ class TipoFinalidadIT extends BaseIT {
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-1"));
 
+    Set<TipoFinalidadDescripcion> descripcionTipoFinalidad = new HashSet<>();
+    descripcionTipoFinalidad.add(new TipoFinalidadDescripcion(Language.ES, "descripcion-1"));
+
     TipoFinalidad data = TipoFinalidad.builder()
         .nombre(nombreTipoFinalidad)
-        .descripcion("descripcion-1")
+        .descripcion(descripcionTipoFinalidad)
         .activo(Boolean.TRUE)
         .build();
 
@@ -79,10 +83,13 @@ class TipoFinalidadIT extends BaseIT {
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-updated"));
 
+    Set<TipoFinalidadDescripcion> descripcionTipoFinalidad = new HashSet<>();
+    descripcionTipoFinalidad.add(new TipoFinalidadDescripcion(Language.ES, "descripcion-updated"));
+
     TipoFinalidad data = TipoFinalidad.builder()
         .id(1L)
         .nombre(nombreTipoFinalidad)
-        .descripcion("descripcion-updated")
+        .descripcion(descripcionTipoFinalidad)
         .activo(Boolean.TRUE)
         .build();
 
@@ -114,7 +121,8 @@ class TipoFinalidadIT extends BaseIT {
     Assertions.assertThat(tipoFinalidadDisabled.getId()).as("getId()").isEqualTo(idTipoFinalidad);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFinalidadDisabled.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-1");
-    Assertions.assertThat(tipoFinalidadDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFinalidadDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoFinalidadDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -133,7 +141,8 @@ class TipoFinalidadIT extends BaseIT {
     Assertions.assertThat(tipoFinalidadDisabled.getId()).as("getId()").isEqualTo(idTipoFinalidad);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFinalidadDisabled.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-1");
-    Assertions.assertThat(tipoFinalidadDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFinalidadDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoFinalidadDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
@@ -151,7 +160,8 @@ class TipoFinalidadIT extends BaseIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-1");
-    Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -161,7 +171,7 @@ class TipoFinalidadIT extends BaseIT {
   void findAll_WithPagingSortingAndFiltering_ReturnsTipoFinalidadSubList() throws Exception {
 
     // given: data for TipoFinalidad
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00,descripcion.lang==es";
 
     // when: find TipoFinalidad
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("q", filter)
@@ -188,7 +198,7 @@ class TipoFinalidadIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00,descripcion.lang==es";
 
     // when: find TipoFinalidad
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)

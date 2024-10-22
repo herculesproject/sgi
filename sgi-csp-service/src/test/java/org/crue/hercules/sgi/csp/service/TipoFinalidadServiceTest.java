@@ -11,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.repository.TipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.service.impl.TipoFinalidadServiceImpl;
@@ -386,9 +387,12 @@ class TipoFinalidadServiceTest extends BaseServiceTest {
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombre-" + id));
 
+    Set<TipoFinalidadDescripcion> descripcionTipoFinalidad = new HashSet<>();
+    descripcionTipoFinalidad.add(new TipoFinalidadDescripcion(Language.ES, "descripcion-" + id));
+
     return TipoFinalidad.builder().id(id)
         .nombre(nombreTipoFinalidad)
-        .descripcion("descripcion-" + id)
+        .descripcion(descripcionTipoFinalidad)
         .activo(activo)
         .build();
   }
