@@ -244,7 +244,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
           case 'fuenteFinanciacion':
             return entidadFinanciadora.fuenteFinanciacion?.nombre;
           case 'ambito':
-            return entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre;
+            return entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre) : '';
           case 'tipoFinanciacion':
             return entidadFinanciadora.tipoFinanciacion?.nombre;
           case 'porcentajeFinanciacion':

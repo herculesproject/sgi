@@ -6,6 +6,7 @@ import { FieldOrientation } from '@core/models/rep/field-orientation.enum';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
@@ -37,14 +38,15 @@ const ENTIDAD_FINANCIADORA_AJENA_FIELD = 'ajenaEntidadFinanciadora';
 
 @Injectable()
 export class ProyectoEntidadFinanciadoraListadoExportService
-  extends AbstractTableExportFillService<IProyectoReportData, IProyectoReportOptions>{
+  extends AbstractTableExportFillService<IProyectoReportData, IProyectoReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
     private readonly proyectoService: ProyectoService,
     private empresaService: EmpresaService,
-    private readonly decimalPipe: DecimalPipe
+    private readonly decimalPipe: DecimalPipe,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -232,7 +234,7 @@ export class ProyectoEntidadFinanciadoraListadoExportService
       entidadTable += '\n';
       entidadTable += entidadFinanciadora.fuenteFinanciacion?.nombre ?? '';
       entidadTable += '\n';
-      entidadTable += entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ?? '';
+      entidadTable += entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre) : ''
       entidadTable += '\n';
       entidadTable += entidadFinanciadora.tipoFinanciacion?.nombre ?? '';
       entidadTable += '\n';

@@ -34,7 +34,7 @@
           <th mat-header-cell *matHeaderCellDef>
             {{'csp.proyecto-amortizacion-fondos.entidad-financiadora.ambito' | translate}}</th>
           <td mat-cell *matCellDef="let wrapper">
-            {{wrapper.value.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre}}
+            {{wrapper.value.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre | i18nFieldValue}}
           </td>
         </ng-container>
 

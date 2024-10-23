@@ -2,6 +2,7 @@ import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '../../services/csp/estado-proyecto/estado-proyecto-response.converter';
@@ -31,7 +32,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
       solicitudId: value.solicitudId,
-      ambitoGeografico: value.ambitoGeografico,
+      ambitoGeografico: TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER.toTarget(value.ambitoGeografico),
       confidencial: value.confidencial,
       clasificacionCVN: value.clasificacionCVN,
       colaborativo: value.colaborativo,
@@ -80,7 +81,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
       solicitudId: value.solicitudId,
-      ambitoGeografico: value.ambitoGeografico,
+      ambitoGeografico: TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER.fromTarget(value.ambitoGeografico),
       confidencial: value.confidencial,
       clasificacionCVN: value.clasificacionCVN,
       coordinado: value.coordinado,

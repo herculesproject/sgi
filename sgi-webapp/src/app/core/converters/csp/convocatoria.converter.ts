@@ -1,6 +1,7 @@
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
 import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -28,7 +29,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       estado: value.estado,
       duracion: value.duracion,
       abiertoPlazoPresentacionSolicitud: value.abiertoPlazoPresentacionSolicitud,
-      ambitoGeografico: value.ambitoGeografico,
+      ambitoGeografico: TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER.toTarget(value.ambitoGeografico),
       clasificacionCVN: value.clasificacionCVN,
       activo: value.activo,
       excelencia: value.excelencia,
@@ -58,7 +59,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       estado: value.estado,
       duracion: value.duracion,
       abiertoPlazoPresentacionSolicitud: value.abiertoPlazoPresentacionSolicitud,
-      ambitoGeografico: value.ambitoGeografico,
+      ambitoGeografico: TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER.fromTarget(value.ambitoGeografico),
       clasificacionCVN: value.clasificacionCVN,
       activo: value.activo,
       excelencia: value.excelencia,

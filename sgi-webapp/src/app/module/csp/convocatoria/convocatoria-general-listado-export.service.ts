@@ -194,7 +194,7 @@ export class ConvocatoriaGeneralListadoExportService
     elementsRow.push(convocatoria.convocatoria?.fechaProvisional ? LuxonUtils.toBackend(convocatoria.convocatoria?.fechaProvisional) : '');
     elementsRow.push(convocatoria.convocatoria?.fechaConcesion ? LuxonUtils.toBackend(convocatoria.convocatoria?.fechaConcesion) : '');
     elementsRow.push(toString(convocatoria.convocatoria?.duracion));
-    elementsRow.push(convocatoria.convocatoria?.ambitoGeografico?.nombre ?? '');
+    elementsRow.push(convocatoria.convocatoria?.ambitoGeografico?.nombre ? this.languageService.getFieldValue(convocatoria.convocatoria?.ambitoGeografico?.nombre) : '');
     elementsRow.push(convocatoria.convocatoria?.regimenConcurrencia?.nombre ?? '');
     elementsRow.push(convocatoria.entidadGestora?.empresa ? (convocatoria.entidadGestora?.empresa.nombre + ' - ' + convocatoria.entidadGestora?.empresa.numeroIdentificacion) : '');
 

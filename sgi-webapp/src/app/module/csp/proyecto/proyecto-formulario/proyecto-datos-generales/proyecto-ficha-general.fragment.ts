@@ -25,7 +25,9 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { anioValidator } from '@core/validators/anio-validator';
 import { DateValidator } from '@core/validators/date-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
@@ -34,7 +36,6 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, merge, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../proyecto-relaciones/proyecto-relaciones.fragment';
-import { anioValidator } from '@core/validators/anio-validator';
 
 interface IProyectoDatosGenerales extends IProyecto {
   convocatoria: IConvocatoria;
@@ -774,7 +775,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       formgroup.get('finalidad').setValidators([
         Validators.required, IsEntityValidator.isValid()]);
       formgroup.get('ambitoGeografico').setValidators([
-        Validators.required, IsEntityValidator.isValid()]);
+        I18nValidators.required]);
       formgroup.get('confidencial').setValidators([
         Validators.required]);
       formgroup.get('coordinado').setValidators([
