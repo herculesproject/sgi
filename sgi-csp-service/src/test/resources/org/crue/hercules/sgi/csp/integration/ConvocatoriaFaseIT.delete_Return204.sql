@@ -42,7 +42,10 @@ INSERT INTO test.convocatoria
 VALUES(2, 'unidad-002', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-002', 'objeto-002', 'observaciones-002', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', true);
 
 --TIPO FASE
-INSERT INTO test.tipo_fase (id,nombre,descripcion,activo) VALUES (1,'nombre-1','descripcion-1',true);
+INSERT INTO test.tipo_fase (id, descripcion, activo) VALUES (1, 'descripcion-1', true);
+
+-- TIPO_FASE_NOMBRE
+INSERT INTO test.tipo_fase_nombre (tipo_fase_id, lang, value_) VALUES (1, 'es', 'nombre-1');
 
 -- MODELO TIPO FASE
 INSERT INTO test.modelo_tipo_fase (id, tipo_fase_id, modelo_ejecucion_id, solicitud, convocatoria, proyecto, activo) VALUES (1, 1, 1, true, true, true, true);

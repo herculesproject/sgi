@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
@@ -730,10 +731,12 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
    * @return el objeto TipoFase
    */
   private TipoFase generarMockTipoFase(Long id, Boolean activo) {
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-" + id));
 
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id);
-    tipoFase.setNombre("nombre-" + id);
+    tipoFase.setNombre(nombreTipoFase);
     tipoFase.setDescripcion("descripcion-" + id);
     tipoFase.setActivo(activo);
 

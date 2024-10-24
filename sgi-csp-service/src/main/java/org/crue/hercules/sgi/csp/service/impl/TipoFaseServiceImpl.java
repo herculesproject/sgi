@@ -1,8 +1,15 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.Objects;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
+import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
+import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFaseSpecifications;
@@ -14,19 +21,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Validated
 public class TipoFaseServiceImpl implements TipoFaseService {
 
+  private final Validator validator;
   private final TipoFaseRepository tipoFaseRepository;
-
-  public TipoFaseServiceImpl(TipoFaseRepository tipoFaseRepository) {
-    this.tipoFaseRepository = tipoFaseRepository;
-  }
 
   /**
    * Guardar {@link TipoFase}.
@@ -36,17 +44,16 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    */
   @Override
   @Transactional
-  public TipoFase create(TipoFase tipoFase) {
-    log.debug("create (TipoFase tipoFase) - start");
+  @Validated({ BaseEntity.Create.class })
+  public TipoFase create(@Valid TipoFase tipoFase) {
+    log.debug("create(TipoFase tipoFase) - start");
 
     AssertHelper.idIsNull(tipoFase.getId(), TipoFase.class);
-    AssertHelper.entityExists(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
-        TipoFase.class, TipoFase.class);
 
     tipoFase.setActivo(Boolean.TRUE);
     TipoFase returnValue = tipoFaseRepository.save(tipoFase);
 
-    log.debug("create (TipoFase tipoFase) - start");
+    log.debug("create(TipoFase tipoFase) - end");
     return returnValue;
   }
 
@@ -58,14 +65,11 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    */
   @Override
   @Transactional
-  public TipoFase update(TipoFase tipoFaseActualizar) {
+  @Validated({ BaseEntity.Update.class })
+  public TipoFase update(@Valid TipoFase tipoFaseActualizar) {
     log.debug("update(TipoFase tipoFaseActualizar) - start");
 
     AssertHelper.idNotNull(tipoFaseActualizar.getId(), TipoFase.class);
-    tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFaseActualizar.getNombre()).ifPresent(
-        tipoFaseExistente -> AssertHelper.entityExists(
-            Objects.equals(tipoFaseActualizar.getId(), tipoFaseExistente.getId()),
-            TipoFase.class, TipoFase.class));
 
     return tipoFaseRepository.findById(tipoFaseActualizar.getId()).map(tipoFase -> {
       tipoFase.setNombre(tipoFaseActualizar.getNombre());
@@ -116,20 +120,6 @@ public class TipoFaseServiceImpl implements TipoFaseService {
   }
 
   /**
-   * Obtiene {@link TipoFase} por id.
-   *
-   * @param id el id de la entidad {@link TipoFase}.
-   * @return la entidad {@link TipoFase}.
-   */
-  @Override
-  public TipoFase findById(Long id) throws TipoFaseNotFoundException {
-    log.debug("findById(Long id) - start");
-    TipoFase tipoFase = tipoFaseRepository.findById(id).orElseThrow(() -> new TipoFaseNotFoundException(id));
-    log.debug("findById(Long id) - end");
-    return tipoFase;
-  }
-
-  /**
    * Reactiva el {@link TipoFase}.
    *
    * @param id Id del {@link TipoFase}.
@@ -147,8 +137,13 @@ public class TipoFaseServiceImpl implements TipoFaseService {
         return tipoFase;
       }
 
-      AssertHelper.entityExists(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
-          TipoFase.class, TipoFase.class);
+      // Invocar validaciones asociadas a OnActivar
+      Set<ConstraintViolation<TipoFase>> result = validator.validate(
+          tipoFase,
+          BaseActivableEntity.OnActivar.class);
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
+      }
 
       tipoFase.setActivo(true);
       TipoFase returnValue = tipoFaseRepository.save(tipoFase);

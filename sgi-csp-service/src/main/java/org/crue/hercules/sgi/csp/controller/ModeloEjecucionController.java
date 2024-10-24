@@ -299,58 +299,6 @@ public class ModeloEjecucionController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada de {@link ModeloTipoFase} del
-   * {@link ModeloEjecucion}.
-   * 
-   * @param id     Identificador de {@link ModeloEjecucion}.
-   * @param query  filtro de búsqueda.
-   * @param paging pageable.
-   * @return el listado de entidades {@link ModeloTipoFase}
-   *         paginadas y filtradas del {@link ModeloEjecucion}.
-   */
-  @GetMapping("/{id}/modelotipofases/convocatoria")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-CON-C', 'CSP-CON-E', 'CSP-CON-V', 'CSP-CON-INV-V', 'CSP-ME-E')")
-  public ResponseEntity<Page<ModeloTipoFase>> findAllModeloTipoFasesConvocatoria(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllModeloTipoFasesConvocatoria(Long id, String query, Pageable paging) - start");
-    Page<ModeloTipoFase> page = modeloTipoFaseService.findAllByModeloEjecucionActivosConvocatoria(id, query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllModeloTipoFasesConvocatoria(Long id, String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    log.debug("findAllModeloTipoFasesConvocatoria(Long id, String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
-   * Devuelve una lista paginada y filtrada de {@link TipoFase} del
-   * {@link ModeloEjecucion}.
-   * 
-   * @param id     Identificador de {@link ModeloEjecucion}.
-   * @param query  filtro de búsqueda.
-   * @param paging pageable.
-   * @return el listado de entidades {@link TipoFase}
-   *         paginadas y filtradas del {@link ModeloEjecucion}.
-   */
-  @GetMapping("/{id}/modelotipofases/proyecto")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-E')")
-  public ResponseEntity<Page<ModeloTipoFase>> findAllModeloTipoFasesProyecto(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) String query, @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllModeloTipoFasesProyecto(Long id, String query, Pageable paging) - start");
-    Page<ModeloTipoFase> page = modeloTipoFaseService.findAllByModeloEjecucionActivosProyecto(id, query, paging);
-
-    if (page.isEmpty()) {
-      log.debug("findAllModeloTipoFasesProyecto(Long id, String query, Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    log.debug("findAllModeloTipoFasesProyecto(Long id, String query, Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
    * 
    * MODELO TIPO FASE DOCUMENTO
    * 

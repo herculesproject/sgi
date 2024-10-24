@@ -63,7 +63,10 @@ insert into test.convocatoria_periodo_seguimiento_cientifico
 values(8, 1, 8, 15, 16, '2021-03-01T00:00:00Z', '2021-04-01T23:59:59Z', 'observaciones-08','FINAL');
 
 -- TIPO FASE
-INSERT INTO test.tipo_fase (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
+INSERT INTO test.tipo_fase (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
+
+-- TIPO_FASE_NOMBRE
+INSERT INTO test.tipo_fase_nombre (tipo_fase_id, lang, value_) VALUES (1, 'es', 'nombre-001');
 
 --CONVOCATORIA FASE
 INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');

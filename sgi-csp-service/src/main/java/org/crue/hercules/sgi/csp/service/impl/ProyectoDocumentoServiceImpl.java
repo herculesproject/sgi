@@ -150,21 +150,6 @@ public class ProyectoDocumentoServiceImpl implements ProyectoDocumentoService {
   }
 
   /**
-   * Obtiene {@link ProyectoDocumento} por su id.
-   *
-   * @param id el id de la entidad {@link ProyectoDocumento}.
-   * @return la entidad {@link ProyectoDocumento}.
-   */
-  @Override
-  public ProyectoDocumento findById(Long id) {
-    log.debug("findById(Long id)  - start");
-    final ProyectoDocumento returnValue = repository.findById(id)
-        .orElseThrow(() -> new ProyectoDocumentoNotFoundException(id));
-    log.debug("findById(Long id)  - end");
-    return returnValue;
-  }
-
-  /**
    * Obtiene las {@link ProyectoDocumento} para una {@link Proyecto}.
    *
    * @param proyectoId el id de la {@link Proyecto}.

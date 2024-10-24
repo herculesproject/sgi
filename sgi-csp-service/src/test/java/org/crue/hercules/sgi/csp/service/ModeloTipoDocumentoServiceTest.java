@@ -1,8 +1,10 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
@@ -14,11 +16,13 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.repository.ModeloEjecucionRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ModeloTipoDocumentoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -518,41 +522,6 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_ReturnsModeloTipoDocumento() {
-    // given: Un ModeloTipoDocumento con el id buscado
-    Long idBuscado = 1L;
-    BDDMockito.given(modeloTipoDocumentoRepository.findById(idBuscado))
-        .willReturn(Optional.of(generarMockModeloTipoDocumento(idBuscado)));
-
-    // when: Buscamos el ModeloTipoDocumento por su id
-    ModeloTipoDocumento modeloTipoDocumento = service.findById(idBuscado);
-
-    // then: el ModeloTipoDocumento
-    Assertions.assertThat(modeloTipoDocumento).as("isNotNull()").isNotNull();
-    Assertions.assertThat(modeloTipoDocumento.getId()).as("getId()").isEqualTo(idBuscado);
-    Assertions.assertThat(modeloTipoDocumento.getModeloEjecucion()).as("getModeloEjecucion()").isNotNull();
-    Assertions.assertThat(modeloTipoDocumento.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()")
-        .isEqualTo(1L);
-    Assertions.assertThat(modeloTipoDocumento.getTipoDocumento()).as("getTipoDocumento()").isNotNull();
-    Assertions.assertThat(modeloTipoDocumento.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
-        .isEqualTo(1L);
-    Assertions.assertThat(modeloTipoDocumento.getActivo()).as("getActivo()").isTrue();
-
-  }
-
-  @Test
-  void findById_WithIdNotExist_ThrowsModeloTipoDocumentoNotFoundException() throws Exception {
-    // given: Ningun ModeloTipoDocumento con el id buscado
-    Long idBuscado = 1L;
-    BDDMockito.given(modeloTipoDocumentoRepository.findById(idBuscado)).willReturn(Optional.empty());
-
-    // when: Buscamos el ModeloTipoDocumento por su id
-    // then: lanza un ModeloTipoDocumentoNotFoundException
-    Assertions.assertThatThrownBy(() -> service.findById(idBuscado))
-        .isInstanceOf(ModeloTipoDocumentoNotFoundException.class);
-  }
-
-  @Test
   void findAllByModeloEjecucion_ReturnsPage() {
     // given: Una lista con 37 ModeloTipoDocumento para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
@@ -660,9 +629,12 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     modeloEjecucion.setId(1L);
     modeloEjecucion.setNombre("nombreModeloEjecion-1");
 
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-" + idTipoFase));
+
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(idTipoFase);
-    tipoFase.setNombre("nombre-" + idTipoFase);
+    tipoFase.setNombre(nombreTipoFase);
     tipoFase.setDescripcion("descripcion-" + idTipoFase);
     tipoFase.setActivo(Boolean.TRUE);
 

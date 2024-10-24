@@ -2,10 +2,15 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -41,23 +46,6 @@ class TipoFaseIT extends BaseIT {
 
   }
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findById_WithId_ReturnsTipoFase() throws Exception {
-    final ResponseEntity<TipoFase> response = restTemplate.exchange(TIPO_FASE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), TipoFase.class, 1L);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    TipoFase tipoFase = response.getBody();
-
-    Assertions.assertThat(tipoFase.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(tipoFase.getNombre()).as("getNombre()").isEqualTo("TipoFase1");
-    Assertions.assertThat(tipoFase.getDescripcion()).as("getDescripcion()").isEqualTo("Descripcion1");
-    Assertions.assertThat(tipoFase.getActivo()).as("getActivo()").isTrue();
-  }
-
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void create_ReturnsTipoFase() throws Exception {
@@ -90,7 +78,8 @@ class TipoFaseIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     TipoFase tipoFaseDisabled = response.getBody();
     Assertions.assertThat(tipoFaseDisabled.getId()).as("getId()").isEqualTo(idTipoFase);
-    Assertions.assertThat(tipoFaseDisabled.getNombre()).as("getNombre()").isEqualTo("TipoFase1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFaseDisabled.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("TipoFase1");
     Assertions.assertThat(tipoFaseDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("Descripción1");
     Assertions.assertThat(tipoFaseDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
@@ -108,7 +97,8 @@ class TipoFaseIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     TipoFase tipoFaseDisabled = response.getBody();
     Assertions.assertThat(tipoFaseDisabled.getId()).as("getId()").isEqualTo(idTipoFase);
-    Assertions.assertThat(tipoFaseDisabled.getNombre()).as("getNombre()").isEqualTo("TipoFase1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFaseDisabled.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("TipoFase1");
     Assertions.assertThat(tipoFaseDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("Descripción1");
     Assertions.assertThat(tipoFaseDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
@@ -141,7 +131,7 @@ class TipoFaseIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "nombre,desc";
+    String sort = "id,desc";
     String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_FASE_CONTROLLER_BASE_PATH).queryParam("s", sort)
@@ -159,11 +149,14 @@ class TipoFaseIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(tiposFase.get(0).getNombre()).as("get(0).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tiposFase.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(tiposFase.get(1).getNombre()).as("get(1).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tiposFase.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(tiposFase.get(2).getNombre()).as("get(2).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tiposFase.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
@@ -175,7 +168,7 @@ class TipoFaseIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "nombre,desc";
+    String sort = "id,desc";
     String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_FASE_CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
@@ -193,11 +186,14 @@ class TipoFaseIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(tiposFase.get(0).getNombre()).as("get(0).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tiposFase.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(tiposFase.get(1).getNombre()).as("get(1).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tiposFase.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(tiposFase.get(2).getNombre()).as("get(2).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tiposFase.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
@@ -218,9 +214,12 @@ class TipoFaseIT extends BaseIT {
    * @return el objeto TipoFase
    */
   public TipoFase generarMockTipoFase(Long id, String nombre) {
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, nombre));
+
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id);
-    tipoFase.setNombre(nombre);
+    tipoFase.setNombre(nombreTipoFase);
     tipoFase.setDescripcion("descripcion-" + id);
     tipoFase.setActivo(Boolean.TRUE);
     return tipoFase;

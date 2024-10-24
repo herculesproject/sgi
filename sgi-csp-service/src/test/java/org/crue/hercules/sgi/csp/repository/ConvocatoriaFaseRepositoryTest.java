@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
@@ -268,8 +269,11 @@ class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(convocatoria);
 
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombreTipoEnlace" + suffix));
+
     TipoFase tipoFase = TipoFase.builder()
-        .nombre("nombreTipoEnlace" + suffix)
+        .nombre(nombreTipoFase)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFase);

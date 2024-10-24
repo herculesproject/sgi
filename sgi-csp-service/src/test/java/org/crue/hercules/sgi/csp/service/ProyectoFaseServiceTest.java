@@ -7,9 +7,11 @@ import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.dto.ProyectoFaseAvisoInput;
@@ -24,12 +26,14 @@ import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoFaseAviso;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoFaseServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -893,10 +897,12 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
    * @return el objeto TipoFase
    */
   private TipoFase generarMockTipoFase(Long id, Boolean activo) {
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-fase-" + String.format("%03d", id)));
 
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id);
-    tipoFase.setNombre("nombre-fase-" + String.format("%03d", id));
+    tipoFase.setNombre(nombreTipoFase);
     tipoFase.setDescripcion("descripcion-fase-" + String.format("%03d", id));
     tipoFase.setActivo(activo);
 
@@ -981,7 +987,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         .asunto("asunto")
         .contenido("contenido mail")
         .destinatarios(destinatarios)
-        .incluirIpsProyecto(new Boolean(Boolean.TRUE))
+        .incluirIpsProyecto(true)
         .fechaEnvio(Instant.now().plus(15, ChronoUnit.MINUTES))
         .build();
   }

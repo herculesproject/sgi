@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
@@ -1086,14 +1087,15 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    */
   private TipoFase generarMockTipoFase(Long id) {
 
-    // @formatter:off
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombreTipoFase-" + id));
+
     return TipoFase.builder()
         .id(id)
-        .nombre("nombreTipoFase-" + id)
+        .nombre(nombreTipoFase)
         .descripcion("descripcionTipoFase-" + id)
         .activo(Boolean.TRUE)
         .build();
-    // @formatter:on
   }
 
   /**

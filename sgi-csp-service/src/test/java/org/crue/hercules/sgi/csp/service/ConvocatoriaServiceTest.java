@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
@@ -2719,10 +2720,12 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
   private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId,
       Convocatoria convocatoria, Long convocatoriaFaseId) {
 
-    // @formatter:off
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-1"));
+
     TipoFase tipoFase = TipoFase.builder()
         .id(convocatoriaFaseId)
-        .nombre("nombre-1")
+        .nombre(nombreTipoFase)
         .activo(Boolean.TRUE)
         .build();
 
@@ -2742,7 +2745,6 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))
         .build();
-    // @formatter:on
 
     return configuracionSolicitud;
   }

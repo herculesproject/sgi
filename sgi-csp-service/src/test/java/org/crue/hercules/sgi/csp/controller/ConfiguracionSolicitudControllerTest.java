@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -18,9 +20,11 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.service.ConfiguracionSolicitudService;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
 import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -339,10 +343,13 @@ class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
   private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
       Long convocatoriaFaseId) {
 
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-1"));
+
     // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(convocatoriaFaseId)
-        .nombre("nombre-1")
+        .nombre(nombreTipoFase)
         .activo(Boolean.TRUE)
         .build();
 
@@ -374,10 +381,14 @@ class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
    * @return
    */
   private DocumentoRequeridoSolicitud generarDocumentoRequeridoSolicitud(Long documentoRequeridoSolicitudId) {
+
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-1"));
+
     // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(1L)
-        .nombre("nombre-1")
+        .nombre(nombreTipoFase)
         .activo(Boolean.TRUE)
         .build();
 

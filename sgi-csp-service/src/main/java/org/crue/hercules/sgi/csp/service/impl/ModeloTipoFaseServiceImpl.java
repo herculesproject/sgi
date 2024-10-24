@@ -130,22 +130,6 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
   }
 
   /**
-   * Obtiene {@link ModeloTipoFase} por id.
-   *
-   * @param id el id de la entidad {@link ModeloTipoFase}.
-   * @return la entidad {@link ModeloTipoFase}.
-   */
-  @Override
-  public ModeloTipoFase findById(Long id) {
-    log.debug("findById(Long id) - start");
-    ModeloTipoFase modeloTipoFase = modeloTipoFaseRepository.findById(id)
-        .orElseThrow(() -> new ModeloTipoFaseNotFoundException(id));
-    log.debug("findById(Long id) - end");
-    return modeloTipoFase;
-
-  }
-
-  /**
    * Desactiva el {@link ModeloTipoFase} por id.
    *
    * @param id el id de la entidad {@link ModeloTipoFase}.
@@ -182,55 +166,6 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
 
     Page<ModeloTipoFase> returnValue = modeloTipoFaseRepository.findAll(specs, pageable);
     log.debug("findAllByModeloEjecucion(Long idModeloEjecucion,  String query, Pageable pageable) - end");
-    return returnValue;
-  }
-
-  /**
-   * Obtiene los {@link ModeloTipoFase} activos para convocatorias para un
-   * {@link ModeloEjecucion}.
-   *
-   * @param idModeloEjecucion el id de la entidad {@link ModeloEjecucion}.
-   * @param query             la información del filtro.
-   * @param pageable          la información de la paginación.
-   * @return la lista de entidades {@link ModeloTipoFase} del
-   *         {@link ModeloEjecucion} paginadas.
-   */
-  @Override
-  public Page<ModeloTipoFase> findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, String query,
-      Pageable pageable) {
-    log.debug(
-        "findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, String query, Pageable pageable) - start");
-    Specification<ModeloTipoFase> specs = ModeloTipoFaseSpecifications.activos()
-        .and(ModeloTipoFaseSpecifications.byModeloEjecucionId(idModeloEjecucion))
-        .and(ModeloTipoFaseSpecifications.activosConvocatoria()).and(SgiRSQLJPASupport.toSpecification(query));
-
-    Page<ModeloTipoFase> returnValue = modeloTipoFaseRepository.findAll(specs, pageable);
-    log.debug(
-        "findAllByModeloEjecucionActivosConvocatoria(Long idModeloEjecucion, String query, Pageable pageable) - end");
-    return returnValue;
-  }
-
-  /**
-   * Obtiene los {@link TipoFase} activos para proyectos para un
-   * {@link ModeloEjecucion}.
-   *
-   * @param idModeloEjecucion el id de la entidad {@link ModeloEjecucion}.
-   * @param query             la información del filtro.
-   * @param pageable          la información de la paginación.
-   * @return la lista de entidades {@link TipoFase} del {@link ModeloEjecucion}
-   *         paginadas.
-   */
-  @Override
-  public Page<ModeloTipoFase> findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query,
-      Pageable pageable) {
-    log.debug(
-        "findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query, Pageable pageable) - start");
-    Specification<ModeloTipoFase> specs = ModeloTipoFaseSpecifications.activos()
-        .and(ModeloTipoFaseSpecifications.byModeloEjecucionId(idModeloEjecucion))
-        .and(ModeloTipoFaseSpecifications.activosProyecto()).and(SgiRSQLJPASupport.toSpecification(query));
-
-    Page<ModeloTipoFase> returnValue = modeloTipoFaseRepository.findAll(specs, pageable);
-    log.debug("findAllByModeloEjecucionActivosProyecto(Long idModeloEjecucion, String query, Pageable pageable) - end");
     return returnValue;
   }
 

@@ -43,6 +43,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
@@ -888,6 +889,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaFase
    */
   private ConvocatoriaFase generarMockConvocatoriaFase(Long id) {
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "tipoFase" + id));
 
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
@@ -895,7 +898,11 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaFase.setFechaInicio(Instant.now());
     convocatoriaFase.setFechaFin(Instant.now().plus(Period.ofDays(1)));
     convocatoriaFase.setTipoFase(
-        TipoFase.builder().nombre("tipoFase" + id).descripcion("descripcionFase" + id).activo(Boolean.TRUE).build());
+        TipoFase.builder()
+            .nombre(nombreTipoFase)
+            .descripcion("descripcionFase" + id)
+            .activo(Boolean.TRUE)
+            .build());
     convocatoriaFase.setObservaciones("observaciones" + id);
 
     return convocatoriaFase;

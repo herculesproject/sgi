@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
@@ -634,7 +635,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ModeloTipoFase modeloTipoFase = modeloTipoFasesResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloTipoFase.getTipoFase().getNombre()).isEqualTo("TipoFase" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(modeloTipoFase.getTipoFase().getNombre(), Language.ES))
+          .isEqualTo("TipoFase" + String.format("%03d", i));
     }
   }
 
@@ -664,192 +666,6 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders
             .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases", idModeloEjecucion)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Devuelve un 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
-  void findAllModeloTipoFasesConvocatoria_ReturnsPage() throws Exception {
-    // given: Una lista con 37 ModeloTipoFase para el ModeloEjecucion
-    Long idModeloEjecucion = 1L;
-
-    List<ModeloTipoFase> modeloTipoFases = new ArrayList<>();
-    for (long i = 1; i <= 37; i++) {
-      modeloTipoFases.add(generarMockModeloTipoFase(i, "TipoFase" + String.format("%03d", i)));
-    }
-
-    Integer page = 3;
-    Integer pageSize = 10;
-
-    BDDMockito
-        .given(modeloTipoFaseService.findAllByModeloEjecucionActivosConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ModeloTipoFase>>() {
-          @Override
-          public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(2, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            toIndex = toIndex > modeloTipoFases.size() ? modeloTipoFases.size() : toIndex;
-            List<ModeloTipoFase> content = modeloTipoFases.subList(fromIndex, toIndex);
-            Page<ModeloTipoFase> page = new PageImpl<>(content, pageable, modeloTipoFases.size());
-            return page;
-          }
-        });
-
-    // when: Get page=3 with pagesize=10
-    MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/convocatoria",
-                idModeloEjecucion)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Devuelve la pagina 3 con los ModeloTipoFase del 31 al 37
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
-
-    List<ModeloTipoFase> modeloTipoFasesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<ModeloTipoFase>>() {
-        });
-
-    for (int i = 31; i <= 37; i++) {
-      ModeloTipoFase modeloTipoFase = modeloTipoFasesResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloTipoFase.getTipoFase().getNombre()).isEqualTo("TipoFase" + String.format("%03d", i));
-    }
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CON-V" })
-  void findAllModeloTipoFasesConvocatoria_EmptyList_Returns204() throws Exception {
-    // given: Una lista vacia de ModeloTipoFase del ModeloEjecucion
-    Long idModeloEjecucion = 1L;
-    List<ModeloTipoFase> modeloTipoFases = new ArrayList<>();
-
-    Integer page = 0;
-    Integer pageSize = 10;
-
-    BDDMockito
-        .given(modeloTipoFaseService.findAllByModeloEjecucionActivosConvocatoria(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ModeloTipoFase>>() {
-          @Override
-          public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ModeloTipoFase> page = new PageImpl<>(modeloTipoFases, pageable, 0);
-            return page;
-          }
-        });
-
-    // when: Get page=0 with pagesize=10
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/convocatoria",
-                idModeloEjecucion)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Devuelve un 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  void findAllModeloTipoFasesProyecto_ReturnsPage() throws Exception {
-    // given: Una lista con 37 ModeloTipoFase para el ModeloEjecucion
-    Long idModeloEjecucion = 1L;
-
-    List<ModeloTipoFase> modeloTipoFases = new ArrayList<>();
-    for (long i = 1; i <= 37; i++) {
-      modeloTipoFases.add(generarMockModeloTipoFase(i, "TipoFase" + String.format("%03d", i)));
-    }
-
-    Integer page = 3;
-    Integer pageSize = 10;
-
-    BDDMockito
-        .given(modeloTipoFaseService.findAllByModeloEjecucionActivosProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ModeloTipoFase>>() {
-          @Override
-          public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(2, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            toIndex = toIndex > modeloTipoFases.size() ? modeloTipoFases.size() : toIndex;
-            List<ModeloTipoFase> content = modeloTipoFases.subList(fromIndex, toIndex);
-            Page<ModeloTipoFase> page = new PageImpl<>(content, pageable, modeloTipoFases.size());
-            return page;
-          }
-        });
-
-    // when: Get page=3 with pagesize=10
-    MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/proyecto",
-                idModeloEjecucion)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: Devuelve la pagina 3 con los ModeloTipoFase del 31 al 37
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
-
-    List<ModeloTipoFase> modeloTipoFasesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<ModeloTipoFase>>() {
-        });
-
-    for (int i = 31; i <= 37; i++) {
-      ModeloTipoFase modeloTipoFase = modeloTipoFasesResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloTipoFase.getTipoFase().getNombre()).isEqualTo("TipoFase" + String.format("%03d", i));
-    }
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-E" })
-  void findAllModeloTipoFasesProyecto_EmptyList_Returns204() throws Exception {
-    // given: Una lista vacia de ModeloTipoFase del ModeloEjecucion
-    Long idModeloEjecucion = 1L;
-    List<ModeloTipoFase> modeloTipoFases = new ArrayList<>();
-
-    Integer page = 0;
-    Integer pageSize = 10;
-
-    BDDMockito
-        .given(modeloTipoFaseService.findAllByModeloEjecucionActivosProyecto(ArgumentMatchers.<Long>any(),
-            ArgumentMatchers.<String>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ModeloTipoFase>>() {
-          @Override
-          public Page<ModeloTipoFase> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ModeloTipoFase> page = new PageImpl<>(modeloTipoFases, pageable, 0);
-            return page;
-          }
-        });
-
-    // when: Get page=0 with pagesize=10
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/proyecto",
-                idModeloEjecucion)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(SgiMockMvcResultHandlers.printOnError())
@@ -1567,9 +1383,12 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
 
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, nombre));
+
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id);
-    tipoFase.setNombre(nombre);
+    tipoFase.setNombre(nombreTipoFase);
     tipoFase.setDescripcion("descripcion-" + id);
     tipoFase.setActivo(Boolean.TRUE);
 

@@ -1209,15 +1209,16 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
    * @return el objeto TipoFase
    */
   private TipoFase generarMockTipoFase(Long id) {
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombreTipoFase-" + id));
 
-    // @formatter:off
     return TipoFase.builder()
         .id(id)
-        .nombre("nombreTipoFase-" + id)
+        .nombre(nombreTipoFase)
         .descripcion("descripcionTipoFase-" + id)
         .activo(Boolean.TRUE)
         .build();
-    // @formatter:on
+
   }
 
   private Convocatoria generarMockConvocatoria(Long convocatoriaId) {

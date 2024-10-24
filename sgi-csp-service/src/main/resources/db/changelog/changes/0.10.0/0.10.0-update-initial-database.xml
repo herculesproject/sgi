@@ -401,4 +401,31 @@
 
     <dropColumn columnName="descripcion" tableName="tipo_finalidad" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-20">
+    <createTable tableName="tipo_fase_nombre">
+      <column name="tipo_fase_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_fase_nombre" columnNames="tipo_fase_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_fase_id"
+      baseTableName="tipo_fase_nombre"
+      constraintName="FK_TIPOFASENOMBRE_TIPOFASE" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_fase" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_fase_nombre(tipo_fase_id, value_, lang) SELECT id, nombre,
+      '${defaultLang}' FROM ${schemaPrefix}tipo_fase WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_fase" />
+  </changeSet>
 </databaseChangeLog>

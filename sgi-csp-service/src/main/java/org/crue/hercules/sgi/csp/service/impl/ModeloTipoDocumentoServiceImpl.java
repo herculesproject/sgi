@@ -178,21 +178,6 @@ public class ModeloTipoDocumentoServiceImpl implements ModeloTipoDocumentoServic
   }
 
   /**
-   * Obtiene una entidad {@link ModeloTipoDocumento} por id.
-   * 
-   * @param id Identificador de la entidad {@link ModeloTipoDocumento}.
-   * @return la entidad {@link ModeloTipoDocumento}.
-   */
-  @Override
-  public ModeloTipoDocumento findById(final Long id) {
-    log.debug("findById(Long id) - start");
-    final ModeloTipoDocumento returnValue = modeloTipoDocumentoRepository.findById(id)
-        .orElseThrow(() -> new ModeloTipoDocumentoNotFoundException(id));
-    log.debug("findById(Long id) - end");
-    return returnValue;
-  }
-
-  /**
    * Obtiene los {@link ModeloTipoDocumento} activos para un
    * {@link ModeloEjecucion}.
    *

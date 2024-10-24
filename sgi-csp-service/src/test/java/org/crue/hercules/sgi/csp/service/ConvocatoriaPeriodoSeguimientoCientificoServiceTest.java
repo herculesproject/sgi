@@ -5,9 +5,11 @@ import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
@@ -23,11 +25,13 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaPeriodoSeguimientoCientificoServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -465,10 +469,12 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
    */
   private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
       Long convocatoriaFaseId) {
-    // @formatter:off
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-1"));
+
     TipoFase tipoFase = TipoFase.builder()
         .id(convocatoriaFaseId)
-        .nombre("nombre-1")
+        .nombre(nombreTipoFase)
         .activo(Boolean.TRUE)
         .build();
 
@@ -488,7 +494,6 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
         .fasePresentacionSolicitudes(convocatoriaFase)
         .importeMaximoSolicitud(BigDecimal.valueOf(12345))
         .build();
-    // @formatter:on
 
     return configuracionSolicitud;
   }

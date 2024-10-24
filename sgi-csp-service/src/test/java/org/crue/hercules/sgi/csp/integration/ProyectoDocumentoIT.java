@@ -151,41 +151,6 @@ class ProyectoDocumentoIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-  // @formatter:off  
-    "classpath:scripts/tipo_fase.sql",
-    "classpath:scripts/tipo_documento.sql",
-    "classpath:scripts/modelo_ejecucion.sql",
-    "classpath:scripts/modelo_tipo_fase.sql",
-    "classpath:scripts/modelo_tipo_documento.sql",
-    "classpath:scripts/modelo_unidad.sql",
-    "classpath:scripts/tipo_finalidad.sql",
-    "classpath:scripts/tipo_ambito_geografico.sql",
-    "classpath:scripts/tipo_regimen_concurrencia.sql",
-    "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/proyecto.sql",
-    "classpath:scripts/estado_proyecto.sql",
-    "classpath:scripts/contexto_proyecto.sql",
-    "classpath:scripts/proyecto_documento.sql",
-    // @formatter:on
-  })
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findById_ReturnsProyectoDocumento() throws Exception {
-    String roles = "AUTH";
-    Long idProyecto = 1L;
-
-    final ResponseEntity<ProyectoDocumento> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null, roles), ProyectoDocumento.class, idProyecto);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    ProyectoDocumento proyectoDocumento = response.getBody();
-    Assertions.assertThat(proyectoDocumento.getId()).as("getId()").isEqualTo(idProyecto);
-    Assertions.assertThat(proyectoDocumento.getNombre()).as("getNombre()").isEqualTo("nombre-001");
-    Assertions.assertThat(proyectoDocumento.getComentario()).as("getComentarios()").isEqualTo("comentario-001");
-    Assertions.assertThat(proyectoDocumento.getProyectoId()).as("getProyectoId()").isEqualTo(1);
-  }
-
   /**
    * Función que devuelve un objeto ProyectoDocumento
    * 

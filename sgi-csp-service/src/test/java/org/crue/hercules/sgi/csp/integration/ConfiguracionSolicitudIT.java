@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -12,6 +14,8 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -243,10 +247,14 @@ class ConfiguracionSolicitudIT extends BaseIT {
    */
   private ConfiguracionSolicitud generarMockConfiguracionSolicitud(Long configuracionSolicitudId, Long convocatoriaId,
       Long convocatoriaFaseId) {
+
+    Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
+    nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-1"));
+
     // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(convocatoriaFaseId)
-        .nombre("nombre-1")
+        .nombre(nombreTipoFase)
         .activo(Boolean.TRUE)
         .build();
 

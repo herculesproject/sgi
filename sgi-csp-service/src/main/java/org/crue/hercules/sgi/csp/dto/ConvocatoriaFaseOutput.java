@@ -2,6 +2,9 @@ package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +34,7 @@ public class ConvocatoriaFaseOutput implements Serializable {
   @Builder
   public static class TipoFase implements Serializable {
     private Long id;
-    private String nombre;
+    private Collection<TipoFaseNombre> nombre;
     private String descripcion;
     private Boolean activo;
   }

@@ -277,7 +277,7 @@ class ModeloEjecucionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre,desc";
+    String sort = "tipoFase.id,desc";
     String filter = "tipoFase.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
@@ -298,11 +298,14 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(modeloTipoFases.get(0).getTipoFase().getNombre()).as("get(0).getTipoFase().getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloTipoFases.get(0).getTipoFase().getNombre(), Language.ES))
+        .as("get(0).getTipoFase().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoFases.get(1).getTipoFase().getNombre()).as("get(1).getTipoFase().getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloTipoFases.get(1).getTipoFase().getNombre(), Language.ES))
+        .as("get(1).getTipoFase().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoFases.get(2).getTipoFase().getNombre()).as("get(2).getTipoFase().getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloTipoFases.get(2).getTipoFase().getNombre(), Language.ES))
+        .as("get(2).getTipoFase().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
@@ -311,131 +314,13 @@ class ModeloEjecucionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre,desc";
+    String sort = "tipoFase.id,desc";
     String filter = "tipoFase.descripcion=ke=00";
 
     Long idModeloEjecucion = 5L;
 
     URI uri = UriComponentsBuilder
         .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases")
-        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
-
-    final ResponseEntity<List<ModeloTipoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoFase>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findAllModeloTipoFasesConvocatoria_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList()
-      throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre,desc";
-    String filter = "tipoFase.descripcion=ke=00";
-
-    Long idModeloEjecucion = 1L;
-
-    URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/convocatoria")
-        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
-
-    final ResponseEntity<List<ModeloTipoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoFase>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ModeloTipoFase> modeloTipoFases = response.getBody();
-    Assertions.assertThat(modeloTipoFases).hasSize(3);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
-    Assertions.assertThat(modeloTipoFases.get(0).getTipoFase().getNombre()).as("get(0).getTipoFase().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoFases.get(1).getTipoFase().getNombre()).as("get(1).getTipoFase().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoFases.get(2).getTipoFase().getNombre()).as("get(2).getTipoFase().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 1));
-  }
-
-  @Test
-  void findAllModeloTipoFasesConvocatoria_WithPagingSortingAndFiltering_ReturnsStatusCode204()
-      throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre,desc";
-    String filter = "tipoFase.descripcion=ke=00";
-
-    Long idModeloEjecucion = 5L;
-
-    URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/convocatoria")
-        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
-
-    final ResponseEntity<List<ModeloTipoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoFase>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findAllModeloTipoFasesProyecto_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseSubList()
-      throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre,desc";
-    String filter = "tipoFase.descripcion=ke=00";
-
-    Long idModeloEjecucion = 1L;
-
-    URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/proyecto")
-        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
-
-    final ResponseEntity<List<ModeloTipoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoFase>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ModeloTipoFase> modeloTipoFases = response.getBody();
-    Assertions.assertThat(modeloTipoFases).hasSize(3);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
-    Assertions.assertThat(modeloTipoFases.get(0).getTipoFase().getNombre()).as("get(0).getTipoFase().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoFases.get(1).getTipoFase().getNombre()).as("get(1).getTipoFase().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoFases.get(2).getTipoFase().getNombre()).as("get(2).getTipoFase().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 1));
-  }
-
-  @Test
-  void findAllModeloTipoFasesProyecto_WithPagingSortingAndFiltering_ReturnsStatusCode204()
-      throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "10");
-    String sort = "tipoFase.nombre,desc";
-    String filter = "tipoFase.descripcion=ke=00";
-
-    Long idModeloEjecucion = 1L;
-
-    URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofases/proyecto")
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
 
     final ResponseEntity<List<ModeloTipoFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
