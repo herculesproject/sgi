@@ -11,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.TipoFaseServiceImpl;
@@ -346,10 +347,13 @@ class TipoFaseServiceTest extends BaseServiceTest {
     Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
     nombreTipoFase.add(new TipoFaseNombre(Language.ES, nombre));
 
+    Set<TipoFaseDescripcion> descripcionTipoFase = new HashSet<>();
+    descripcionTipoFase.add(new TipoFaseDescripcion(Language.ES, "descripcion-" + id));
+
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id);
     tipoFase.setNombre(nombreTipoFase);
-    tipoFase.setDescripcion("descripcion-" + id);
+    tipoFase.setDescripcion(descripcionTipoFase);
     tipoFase.setActivo(Boolean.TRUE);
     return tipoFase;
   }

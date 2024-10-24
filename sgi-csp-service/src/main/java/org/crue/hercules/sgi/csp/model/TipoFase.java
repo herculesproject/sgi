@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity.OnActivar;
 import org.crue.hercules.sgi.csp.validation.UniqueNombreTipoFaseActivo;
@@ -57,10 +56,12 @@ public class TipoFase extends BaseEntity {
   @Builder.Default
   private Set<TipoFaseNombre> nombre = new HashSet<>();
 
-  /** Descripcion. */
-  @Column(name = "descripcion", length = 250, nullable = true)
-  @Size(max = 250)
-  private String descripcion;
+  /** Descripcion */
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_fase_descripcion", joinColumns = @JoinColumn(name = "tipo_fase_id"))
+  @Valid
+  @Builder.Default
+  private Set<TipoFaseDescripcion> descripcion = new HashSet<>();
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

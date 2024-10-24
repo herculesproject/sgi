@@ -138,6 +138,7 @@ DELETE FROM test.tipo_ambito_geografico;
 DELETE FROM test.tipo_documento;
 DELETE FROM test.tipo_enlace;
 DELETE FROM test.tipo_fase_nombre;
+DELETE FROM test.tipo_fase_descripcion;
 DELETE FROM test.tipo_fase;
 DELETE FROM test.tipo_finalidad_nombre;
 DELETE FROM test.tipo_finalidad_descripcion;

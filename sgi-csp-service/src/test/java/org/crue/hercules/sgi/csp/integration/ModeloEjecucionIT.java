@@ -278,7 +278,7 @@ class ModeloEjecucionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoFase.id,desc";
-    String filter = "tipoFase.descripcion=ke=00";
+    String filter = "tipoFase.descripcion.value=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -315,7 +315,7 @@ class ModeloEjecucionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoFase.id,desc";
-    String filter = "tipoFase.descripcion=ke=00";
+    String filter = "tipoFase.descripcion.value=ke=00";
 
     Long idModeloEjecucion = 5L;
 

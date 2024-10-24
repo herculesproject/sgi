@@ -1212,10 +1212,13 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
     nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombreTipoFase-" + id));
 
+    Set<TipoFaseDescripcion> descripcionTipoFase = new HashSet<>();
+    descripcionTipoFase.add(new TipoFaseDescripcion(Language.ES, "descripcionTipoFase-" + id));
+
     return TipoFase.builder()
         .id(id)
         .nombre(nombreTipoFase)
-        .descripcion("descripcionTipoFase-" + id)
+        .descripcion(descripcionTipoFase)
         .activo(Boolean.TRUE)
         .build();
 

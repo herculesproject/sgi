@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.service.ModeloTipoDocumentoService;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -216,10 +217,13 @@ class ModeloTipoDocumentoControllerTest extends BaseControllerTest {
     Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
     nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-" + idTipoFase));
 
+    Set<TipoFaseDescripcion> descripcionTipoFase = new HashSet<>();
+    descripcionTipoFase.add(new TipoFaseDescripcion(Language.ES, "descripcion-" + idTipoFase));
+
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(idTipoFase);
     tipoFase.setNombre(nombreTipoFase);
-    tipoFase.setDescripcion("descripcion-" + idTipoFase);
+    tipoFase.setDescripcion(descripcionTipoFase);
     tipoFase.setActivo(Boolean.TRUE);
 
     ModeloTipoFase modeloTipoFase = new ModeloTipoFase();

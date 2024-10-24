@@ -33,10 +33,13 @@ INSERT INTO test.convocatoria
 VALUES(2, 'unidad-001', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-002', 'objeto-002', 'observaciones-002', 1, 1, 'REGISTRADA', 12, 1, 'AYUDAS', true, 'PROYECTO');
 
 -- TIPO FASE
-INSERT INTO test.tipo_fase (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
+INSERT INTO test.tipo_fase (id, activo) VALUES (1, true);
 
 -- TIPO_FASE_NOMBRE
 INSERT INTO test.tipo_fase_nombre (tipo_fase_id, lang, value_) VALUES (1, 'es', 'nombre-001');
+
+-- TIPO_FASE_DESCRIPCION
+INSERT INTO test.tipo_fase_descripcion (tipo_fase_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
 
 --CONVOCATORIA FASE
 INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z', 'observaciones-1');

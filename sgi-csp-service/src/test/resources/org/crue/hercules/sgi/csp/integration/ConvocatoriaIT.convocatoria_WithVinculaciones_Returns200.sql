@@ -40,11 +40,14 @@ INSERT INTO test.modelo_tipo_enlace (id, tipo_enlace_id, modelo_ejecucion_id, ac
 --CONVOCATORIA ENLACE
 INSERT INTO test.convocatoria_enlace (id, convocatoria_id, url, descripcion, tipo_enlace_id) VALUES(1, 1, 'www.url1.com','descripcion' ,1);
 
---TIPO FASE
-INSERT INTO test.tipo_fase (id, descripcion, activo) VALUES (1, 'descripcion-1', true);
+-- TIPO FASE
+INSERT INTO test.tipo_fase (id, activo) VALUES (1, true);
 
 -- TIPO_FASE_NOMBRE
-INSERT INTO test.tipo_fase_nombre (tipo_fase_id, lang, value_) VALUES (2, 'es', 'nombre-1');
+INSERT INTO test.tipo_fase_nombre (tipo_fase_id, lang, value_) VALUES (1, 'es', 'nombre-001');
+
+-- TIPO_FASE_DESCRIPCION
+INSERT INTO test.tipo_fase_descripcion (tipo_fase_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
 
 -- MODELO TIPO FASE
 INSERT INTO test.modelo_tipo_fase (id, tipo_fase_id, modelo_ejecucion_id, solicitud, convocatoria, proyecto, activo) VALUES (1, 1, 1, true, true, true, true);

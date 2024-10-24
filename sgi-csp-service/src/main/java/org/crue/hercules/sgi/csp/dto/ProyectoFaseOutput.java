@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class ProyectoFaseOutput implements Serializable {
   public static class TipoFase implements Serializable {
     private Long id;
     private Collection<TipoFaseNombre> nombre;
-    private String descripcion;
+    private Collection<TipoFaseDescripcion> descripcion;
     private Boolean activo;
   }
 }

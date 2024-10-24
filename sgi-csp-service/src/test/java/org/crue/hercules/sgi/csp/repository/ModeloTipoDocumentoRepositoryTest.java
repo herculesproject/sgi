@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -123,13 +124,19 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
     Set<TipoFaseNombre> nombreTipoFase1 = new HashSet<>();
     nombreTipoFase1.add(new TipoFaseNombre(Language.ES, "nombre-1"));
 
-    TipoFase tipoFase1 = new TipoFase(null, nombreTipoFase1, "descripcion-1", true);
+    Set<TipoFaseDescripcion> descripcionTipoFase1 = new HashSet<>();
+    descripcionTipoFase1.add(new TipoFaseDescripcion(Language.ES, "descripcion-1"));
+
+    TipoFase tipoFase1 = new TipoFase(null, nombreTipoFase1, descripcionTipoFase1, true);
     entityManager.persistAndFlush(tipoFase1);
 
     Set<TipoFaseNombre> nombreTipoFase2 = new HashSet<>();
     nombreTipoFase2.add(new TipoFaseNombre(Language.ES, "nombre-2"));
 
-    TipoFase tipoFase2 = new TipoFase(null, nombreTipoFase2, "descripcion-2", true);
+    Set<TipoFaseDescripcion> descripcionTipoFase2 = new HashSet<>();
+    descripcionTipoFase2.add(new TipoFaseDescripcion(Language.ES, "descripcion-2"));
+
+    TipoFase tipoFase2 = new TipoFase(null, nombreTipoFase2, descripcionTipoFase2, true);
     entityManager.persistAndFlush(tipoFase2);
 
     ModeloTipoFase modeloTipoFase1 = new ModeloTipoFase(null, tipoFase1, modeloEjecucion1, true, true, true, true);
@@ -190,13 +197,19 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
     Set<TipoFaseNombre> nombreTipoFase1 = new HashSet<>();
     nombreTipoFase1.add(new TipoFaseNombre(Language.ES, "nombre-1"));
 
-    TipoFase tipoFase1 = new TipoFase(null, nombreTipoFase1, "descripcion-1", true);
+    Set<TipoFaseDescripcion> descripcionTipoFase1 = new HashSet<>();
+    descripcionTipoFase1.add(new TipoFaseDescripcion(Language.ES, "descripcion-1"));
+
+    TipoFase tipoFase1 = new TipoFase(null, nombreTipoFase1, descripcionTipoFase1, true);
     entityManager.persistAndFlush(tipoFase1);
 
     Set<TipoFaseNombre> nombreTipoFase2 = new HashSet<>();
     nombreTipoFase2.add(new TipoFaseNombre(Language.ES, "nombre-2"));
 
-    TipoFase tipoFase2 = new TipoFase(null, nombreTipoFase2, "descripcion-2", true);
+    Set<TipoFaseDescripcion> descripcionTipoFase2 = new HashSet<>();
+    descripcionTipoFase2.add(new TipoFaseDescripcion(Language.ES, "descripcion-2"));
+
+    TipoFase tipoFase2 = new TipoFase(null, nombreTipoFase2, descripcionTipoFase2, true);
     entityManager.persistAndFlush(tipoFase2);
 
     ModeloTipoFase modeloTipoFase1 = new ModeloTipoFase(null, tipoFase1, modeloEjecucion1, true, true, true, true);

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -80,7 +81,8 @@ class TipoFaseIT extends BaseIT {
     Assertions.assertThat(tipoFaseDisabled.getId()).as("getId()").isEqualTo(idTipoFase);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFaseDisabled.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("TipoFase1");
-    Assertions.assertThat(tipoFaseDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("Descripción1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFaseDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("Descripción1");
     Assertions.assertThat(tipoFaseDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -99,7 +101,8 @@ class TipoFaseIT extends BaseIT {
     Assertions.assertThat(tipoFaseDisabled.getId()).as("getId()").isEqualTo(idTipoFase);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFaseDisabled.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("TipoFase1");
-    Assertions.assertThat(tipoFaseDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("Descripción1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFaseDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("Descripción1");
     Assertions.assertThat(tipoFaseDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
@@ -132,7 +135,7 @@ class TipoFaseIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_FASE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -169,7 +172,7 @@ class TipoFaseIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_FASE_CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -217,10 +220,13 @@ class TipoFaseIT extends BaseIT {
     Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
     nombreTipoFase.add(new TipoFaseNombre(Language.ES, nombre));
 
+    Set<TipoFaseDescripcion> descripcionTipoFase = new HashSet<>();
+    descripcionTipoFase.add(new TipoFaseDescripcion(Language.ES, "descripcion-" + id));
+
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(id);
     tipoFase.setNombre(nombreTipoFase);
-    tipoFase.setDescripcion("descripcion-" + id);
+    tipoFase.setDescripcion(descripcionTipoFase);
     tipoFase.setActivo(Boolean.TRUE);
     return tipoFase;
   }

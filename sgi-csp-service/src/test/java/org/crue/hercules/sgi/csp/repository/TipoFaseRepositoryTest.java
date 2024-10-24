@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -28,19 +29,28 @@ class TipoFaseRepositoryTest extends BaseRepositoryTest {
     Set<TipoFaseNombre> nombreTipoFase1 = new HashSet<>();
     nombreTipoFase1.add(new TipoFaseNombre(Language.ES, "nombre-tipoFase1"));
 
-    TipoFase tipoFase1 = new TipoFase(null, nombreTipoFase1, "descripcion-tipoFase1", true);
+    Set<TipoFaseDescripcion> descripcionTipoFase1 = new HashSet<>();
+    descripcionTipoFase1.add(new TipoFaseDescripcion(Language.ES, "descripcion-tipoFase1"));
+
+    TipoFase tipoFase1 = new TipoFase(null, nombreTipoFase1, descripcionTipoFase1, true);
     entityManager.persistAndFlush(tipoFase1);
 
     Set<TipoFaseNombre> nombreTipoFase2 = new HashSet<>();
     nombreTipoFase2.add(new TipoFaseNombre(Language.ES, "nombre-tipoFase2"));
 
-    TipoFase tipoFase2 = new TipoFase(null, nombreTipoFase2, "descripcion-tipoFase2", true);
+    Set<TipoFaseDescripcion> descripcionTipoFase2 = new HashSet<>();
+    descripcionTipoFase2.add(new TipoFaseDescripcion(Language.ES, "descripcion-tipoFase2"));
+
+    TipoFase tipoFase2 = new TipoFase(null, nombreTipoFase2, descripcionTipoFase2, true);
     entityManager.persistAndFlush(tipoFase2);
 
     Set<TipoFaseNombre> nombreTipoFase3 = new HashSet<>();
     nombreTipoFase3.add(new TipoFaseNombre(Language.ES, "nombre-tipoFase3"));
 
-    TipoFase tipoFase3 = new TipoFase(null, nombreTipoFase3, "descripcion-tipoFase3", false);
+    Set<TipoFaseDescripcion> descripcionTipoFase3 = new HashSet<>();
+    descripcionTipoFase3.add(new TipoFaseDescripcion(Language.ES, "descripcion-tipoFase3"));
+
+    TipoFase tipoFase3 = new TipoFase(null, nombreTipoFase3, descripcionTipoFase3, false);
     entityManager.persistAndFlush(tipoFase3);
 
     String nombreBuscado = "nombre-tipoFase1";
@@ -64,13 +74,19 @@ class TipoFaseRepositoryTest extends BaseRepositoryTest {
     Set<TipoFaseNombre> nombreTipoFase1 = new HashSet<>();
     nombreTipoFase1.add(new TipoFaseNombre(Language.ES, "nombre-tipoFase1"));
 
-    TipoFase tipoFase1 = new TipoFase(null, nombreTipoFase1, "descripcion-tipoFase1", true);
+    Set<TipoFaseDescripcion> descripcionTipoFase1 = new HashSet<>();
+    descripcionTipoFase1.add(new TipoFaseDescripcion(Language.ES, "descripcion-tipoFase1"));
+
+    TipoFase tipoFase1 = new TipoFase(null, nombreTipoFase1, descripcionTipoFase1, true);
     entityManager.persistAndFlush(tipoFase1);
 
     Set<TipoFaseNombre> nombreTipoFase2 = new HashSet<>();
     nombreTipoFase2.add(new TipoFaseNombre(Language.ES, "nombre-tipoFase2"));
 
-    TipoFase tipoFase2 = new TipoFase(null, nombreTipoFase2, "descripcion-tipoFase2", true);
+    Set<TipoFaseDescripcion> descripcionTipoFase2 = new HashSet<>();
+    descripcionTipoFase2.add(new TipoFaseDescripcion(Language.ES, "descripcion-tipoFase2"));
+
+    TipoFase tipoFase2 = new TipoFase(null, nombreTipoFase2, descripcionTipoFase2, true);
     entityManager.persistAndFlush(tipoFase2);
 
     String nombreBuscado = "nombre-tipoFase-noexiste";

@@ -43,6 +43,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
@@ -892,6 +893,9 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
     nombreTipoFase.add(new TipoFaseNombre(Language.ES, "tipoFase" + id));
 
+    Set<TipoFaseDescripcion> descripcionTipoFase = new HashSet<>();
+    descripcionTipoFase.add(new TipoFaseDescripcion(Language.ES, "descripcionFase" + id));
+
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
     convocatoriaFase.setConvocatoriaId(id);
@@ -900,7 +904,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaFase.setTipoFase(
         TipoFase.builder()
             .nombre(nombreTipoFase)
-            .descripcion("descripcionFase" + id)
+            .descripcion(descripcionTipoFase)
             .activo(Boolean.TRUE)
             .build());
     convocatoriaFase.setObservaciones("observaciones" + id);
