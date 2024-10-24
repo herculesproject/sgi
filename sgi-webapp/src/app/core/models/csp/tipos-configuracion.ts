@@ -31,11 +31,7 @@ export interface ITipoHito extends TipoConfiguracion {
 export interface ITipoFinalidad extends TipoConfiguracionI18n {
 }
 
-export interface ITipoFase {
-  id: number;
-  nombre: I18nFieldValue[];
-  descripcion: string;
-  activo: boolean;
+export interface ITipoFase extends TipoConfiguracionI18n {
 }
 
 export interface ITipoEnlace extends TipoConfiguracion {

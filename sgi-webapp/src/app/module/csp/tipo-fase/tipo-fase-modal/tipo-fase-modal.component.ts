@@ -13,6 +13,7 @@ import { switchMap } from 'rxjs/operators';
 
 const TIPO_FASE_KEY = marker('csp.tipo-fase');
 const TIPO_FASE_NOMBRE_KEY = marker('csp.tipo-fase.nombre');
+const TIPO_FASE_DESCRIPCION_KEY = marker('csp.tipo-finalidad.descripcion');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -25,6 +26,7 @@ export class TipoFaseModalComponent extends DialogActionComponent<ITipoFase> imp
   private readonly tipoFase: ITipoFase;
   title: string;
   msgParamNombreEntity = {};
+  msgParamDescripcionEntity = {};
 
   constructor(
     matDialogRef: MatDialogRef<TipoFaseModalComponent>,
@@ -52,6 +54,11 @@ export class TipoFaseModalComponent extends DialogActionComponent<ITipoFase> imp
       TIPO_FASE_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      TIPO_FASE_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.isEdit()) {
       this.translate.get(
@@ -82,7 +89,7 @@ export class TipoFaseModalComponent extends DialogActionComponent<ITipoFase> imp
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       nombre: new FormControl(this.tipoFase?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
-      descripcion: new FormControl(this.tipoFase?.descripcion ?? '')
+      descripcion: new FormControl(this.tipoFase?.descripcion ?? [], I18nValidators.maxLength(250))
     });
 
     return formGroup;

@@ -76,6 +76,9 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
       if (column === 'nombre') {
         return 'nombre.value';
       }
+      if (column === 'descripcion') {
+        return 'descripcion.value';
+      }
       return column;
     }
   }

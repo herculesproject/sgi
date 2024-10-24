@@ -79,7 +79,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
           case 'nombre':
             return this.languageService.getFieldValue(wrapper.value.tipoFase.nombre);
           case 'descripcion':
-            return wrapper.value.tipoFase.descripcion;
+            return wrapper.value.tipoFase.descripcion ? this.languageService.getFieldValue(wrapper.value.tipoFase.descripcion) : '';
           case 'convocatorias':
             return wrapper.value.convocatoria;
           case 'proyectos':
