@@ -11,6 +11,7 @@ import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -48,6 +49,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
     private dialogService: DialogService,
     private matDialog: MatDialog,
     actionService: ModeloEjecucionActionService,
+    private readonly languageService: LanguageService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.TIPO_FASES, actionService, translate);
@@ -75,7 +77,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
       (wrapper: StatusWrapper<IModeloTipoFase>, property: string) => {
         switch (property) {
           case 'nombre':
-            return wrapper.value.tipoFase.nombre;
+            return this.languageService.getFieldValue(wrapper.value.tipoFase.nombre);
           case 'descripcion':
             return wrapper.value.tipoFase.descripcion;
           case 'convocatorias':

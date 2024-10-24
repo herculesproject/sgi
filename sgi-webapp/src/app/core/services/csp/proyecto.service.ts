@@ -5,7 +5,7 @@ import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-
 import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto-codigo-ec.converter';
 import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
 import { PROYECTO_CONTEXTO_CONVERTER } from '@core/converters/csp/proyecto-contexto.converter';
-import { PROYECTO_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-documento.converter';
+import { PROYECTO_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-documento/proyecto-documento-response.converter';
 import { PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/proyecto-entidad-convocante.converter';
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
@@ -23,7 +23,7 @@ import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto
 import { IProyectoConceptoGastoBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-backend';
 import { IProyectoConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-codigo-ec-backend';
 import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
-import { IProyectoDocumentoBackend } from '@core/models/csp/backend/proyecto-documento-backend';
+import { IProyectoDocumentoResponse } from '@core/services/csp/proyecto-documento/proyecto-documento-response';
 import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proyecto-entidad-convocante-backend';
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
@@ -391,10 +391,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options opciones de búsqueda
    */
   findAllProyectoDocumentos(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoDocumento>> {
-    return this.find<IProyectoDocumentoBackend, IProyectoDocumento>(
+    return this.find<IProyectoDocumentoResponse, IProyectoDocumento>(
       `${this.endpointUrl}/${idProyecto}/documentos`,
       options,
-      PROYECTO_DOCUMENTO_CONVERTER
+      PROYECTO_DOCUMENTO_RESPONSE_CONVERTER
     );
   }
 

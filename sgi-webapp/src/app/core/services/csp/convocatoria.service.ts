@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
 import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto-codigo-ec.converter';
 import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto.converter';
-import { CONVOCATORIA_DOCUMENTO_CONVERTER } from '@core/converters/csp/convocatoria-documento.converter';
+import { CONVOCATORIA_DOCUMENTO_CONVERTER } from '@core/services/csp/convocatoria-documento/convocatoria-documento.converter';
 import { CONVOCATORIA_ENLACE_CONVERTER } from '@core/converters/csp/convocatoria-enlace.converter';
 import { CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/convocatoria-entidad-convocante.converter';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
@@ -16,7 +16,7 @@ import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convo
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaConceptoGastoBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-backend';
 import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-codigo-ec-backend';
-import { IConvocatoriaDocumentoBackend } from '@core/models/csp/backend/convocatoria-documento-backend';
+import { IConvocatoriaDocumentoResponse } from '@core/services/csp/convocatoria-documento/convocatoria-documento-response';
 import { IConvocatoriaEnlaceBackend } from '@core/models/csp/backend/convocatoria-enlace-backend';
 import { IConvocatoriaEntidadConvocanteBackend } from '@core/models/csp/backend/convocatoria-entidad-convocante-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
@@ -263,7 +263,7 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
   }
 
   findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaDocumento>> {
-    return this.find<IConvocatoriaDocumentoBackend, IConvocatoriaDocumento>(
+    return this.find<IConvocatoriaDocumentoResponse, IConvocatoriaDocumento>(
       `${this.endpointUrl}/${id}/convocatoriadocumentos`,
       options,
       CONVOCATORIA_DOCUMENTO_CONVERTER

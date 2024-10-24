@@ -13,6 +13,8 @@ import { environment } from '@env';
 import { RSQLSgiRestFilter, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IModeloTipoFaseResponse } from './modelo-tipo-fase/modelo-tipo-fase-response';
+import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from './modelo-tipo-fase/modelo-tipo-fase-response.converter';
 
 @Injectable({
   providedIn: 'root'
@@ -53,30 +55,16 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
   }
 
   /**
-   * Muestra todos los modelos tipo de fase de modelo ejecución convocatoria
-   * @param id modelo de ejecucion
-   * @param options opciones de búsqueda.
-   */
-  findModeloTipoFaseModeloEjecucionConvocatoria(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
-    return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases/convocatoria`, options);
-  }
-
-  /**
-   * Muestra todos los modelos tipo de fase de modelo ejecución proyecto
-   * @param id modelo de ejecucion
-   * @param options opciones de búsqueda.
-   */
-  findModeloTipoFaseModeloEjecucionProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
-    return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases/proyecto`, options);
-  }
-
-  /**
    * Muestra todos los modelos tipo de fase del modelo de ejecución
    * @param id modelo de ejecucion
    * @param options opciones de búsqueda.
    */
   findModeloTipoFaseModeloEjecucion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
-    return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases`, options);
+    return this.find<IModeloTipoFaseResponse, IModeloTipoFase>(
+      `${this.endpointUrl}/${id}/modelotipofases`,
+      options,
+      MODELO_TIPO_FASE_RESPONSE_CONVERTER
+    );
   }
 
   /**

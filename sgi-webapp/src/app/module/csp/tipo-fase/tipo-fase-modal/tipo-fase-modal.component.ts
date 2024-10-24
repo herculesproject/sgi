@@ -6,6 +6,7 @@ import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -80,7 +81,7 @@ export class TipoFaseModalComponent extends DialogActionComponent<ITipoFase> imp
 
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      nombre: new FormControl(this.tipoFase?.nombre ?? '', Validators.required),
+      nombre: new FormControl(this.tipoFase?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
       descripcion: new FormControl(this.tipoFase?.descripcion ?? '')
     });
 

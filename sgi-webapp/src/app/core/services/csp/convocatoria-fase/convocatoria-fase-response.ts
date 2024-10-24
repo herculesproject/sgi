@@ -1,10 +1,10 @@
-import { ITipoFase } from '@core/models/csp/tipos-configuracion';
+import { ITipoFaseResponse } from '../tipo-fase/tipo-fase-response';
 import { IConvocatoriaFaseAvisoResponse } from './convocatoria-fase-aviso-response';
 
 export interface IConvocatoriaFaseResponse {
   id: number;
   convocatoriaId: number;
-  tipoFase: ITipoFase;
+  tipoFase: ITipoFaseResponse;
   fechaInicio: string;
   fechaFin: string;
   observaciones: string;

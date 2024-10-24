@@ -1,12 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
-import { SOLICITUD_DOCUMENTO_CONVERTER } from '@core/converters/csp/solicitud-documento.converter';
+import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
 import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
 import { SOLICITUD_CONVERTER } from '@core/converters/csp/solicitud.converter';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
-import { ISolicitudDocumentoBackend } from '@core/models/csp/backend/solicitud-documento-backend';
+import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
 import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
@@ -67,10 +67,10 @@ export class SolicitudPublicService extends _SolicitudMixinBase {
   }
 
   findDocumentos(solicitudId: string, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudDocumento>> {
-    return this.find<ISolicitudDocumentoBackend, ISolicitudDocumento>(
+    return this.find<ISolicitudDocumentoResponse, ISolicitudDocumento>(
       `${this.endpointUrl}/${solicitudId}/solicituddocumentos`,
       options,
-      SOLICITUD_DOCUMENTO_CONVERTER
+      SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER
     );
   }
 

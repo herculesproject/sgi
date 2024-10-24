@@ -1,5 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { ITipoDocumento, ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { IDocumento } from '@core/models/sgdoc/documento';
@@ -58,7 +59,7 @@ interface IDocumentoData {
 export class NodeDocumento {
   parent: NodeDocumento;
   key: string;
-  title: string;
+  title: string | I18nFieldValue[];
   documento?: StatusWrapper<IDocumentoData>;
   fichero?: IDocumento;
   // tslint:disable-next-line: variable-name
@@ -76,7 +77,7 @@ export class NodeDocumento {
   }
 
   constructor(
-    key: string, title: string, level: number,
+    key: string, title: string | I18nFieldValue[], level: number,
     documento?: StatusWrapper<IDocumentoData>, readonly?: boolean) {
     this.key = key;
     this.title = title;

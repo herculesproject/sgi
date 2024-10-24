@@ -1,9 +1,9 @@
 import { IGenericEmailText } from "@core/models/com/generic-email-text";
 import { IProyectoFase } from "@core/models/csp/proyecto-fase";
-import { ITipoFase } from "@core/models/csp/tipos-configuracion";
 import { ISendEmailTask } from "@core/models/tp/send-email-task";
 import { LuxonUtils } from "@core/utils/luxon-utils";
 import { SgiBaseConverter } from "@sgi/framework/core";
+import { TIPO_FASE_RESPONSE_CONVERTER } from "../tipo-fase/tipo-fase-response.converter";
 import { IProyectoFaseAviso } from "./proyecto-fase-aviso";
 import { IProyectoFaseAvisoResponse } from "./proyecto-fase-aviso-response";
 import { IProyectoFaseResponse } from "./proyecto-fase-response";
@@ -16,7 +16,7 @@ class ProyectoFaseResponseConverter extends SgiBaseConverter<IProyectoFaseRespon
         id: value.id,
         fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
         fechaFin: LuxonUtils.fromBackend(value.fechaFin),
-        tipoFase: value.tipoFase,
+        tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.toTarget(value.tipoFase) : null,
         observaciones: value.observaciones,
         proyectoId: value.proyectoId,
         aviso1: this.getConvocatoriaFaseAviso(value.aviso1),
@@ -29,9 +29,7 @@ class ProyectoFaseResponseConverter extends SgiBaseConverter<IProyectoFaseRespon
         id: value.id,
         fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
         fechaFin: LuxonUtils.toBackend(value.fechaFin),
-        tipoFase: {
-          id: value.tipoFase.id
-        } as ITipoFase,
+        tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.fromTarget(value.tipoFase) : null,
         observaciones: value.observaciones,
         proyectoId: value.proyectoId,
         aviso1: this.getConvocatoriaFaseAvisoResponse(value.aviso1),

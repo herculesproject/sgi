@@ -1,10 +1,11 @@
-import { IConvocatoriaDocumentoBackend } from '@core/models/csp/backend/convocatoria-documento-backend';
+import { IConvocatoriaDocumentoResponse } from '@core/services/csp/convocatoria-documento/convocatoria-documento-response';
 import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { TIPO_FASE_RESPONSE_CONVERTER } from '../tipo-fase/tipo-fase-response.converter';
 
-class ConvocatoriaDocumentoConverter extends SgiBaseConverter<IConvocatoriaDocumentoBackend, IConvocatoriaDocumento> {
+class ConvocatoriaDocumentoConverter extends SgiBaseConverter<IConvocatoriaDocumentoResponse, IConvocatoriaDocumento> {
 
-  toTarget(value: IConvocatoriaDocumentoBackend): IConvocatoriaDocumento {
+  toTarget(value: IConvocatoriaDocumentoResponse): IConvocatoriaDocumento {
     if (!value) {
       return value as unknown as IConvocatoriaDocumento;
     }
@@ -13,23 +14,23 @@ class ConvocatoriaDocumentoConverter extends SgiBaseConverter<IConvocatoriaDocum
       convocatoriaId: value.convocatoriaId,
       nombre: value.nombre,
       documentoRef: value.documentoRef,
-      tipoFase: value.tipoFase,
+      tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.toTarget(value.tipoFase) : null,
       tipoDocumento: value.tipoDocumento,
       publico: value.publico,
       observaciones: value.observaciones
     };
   }
 
-  fromTarget(value: IConvocatoriaDocumento): IConvocatoriaDocumentoBackend {
+  fromTarget(value: IConvocatoriaDocumento): IConvocatoriaDocumentoResponse {
     if (!value) {
-      return value as unknown as IConvocatoriaDocumentoBackend;
+      return value as unknown as IConvocatoriaDocumentoResponse;
     }
     return {
       id: value.id,
       convocatoriaId: value.convocatoriaId,
       nombre: value.nombre,
       documentoRef: value.documentoRef,
-      tipoFase: value.tipoFase,
+      tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.fromTarget(value.tipoFase) : null,
       tipoDocumento: value.tipoDocumento,
       publico: value.publico,
       observaciones: value.observaciones

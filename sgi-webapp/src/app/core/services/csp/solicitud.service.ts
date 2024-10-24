@@ -4,7 +4,7 @@ import { CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
 import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.converter';
 import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
-import { SOLICITUD_DOCUMENTO_CONVERTER } from '@core/converters/csp/solicitud-documento.converter';
+import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
 import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
 import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-area-conocimiento.converter';
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
@@ -17,7 +17,7 @@ import { IConvocatoriaEntidadConvocanteBackend } from '@core/models/csp/backend/
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
-import { ISolicitudDocumentoBackend } from '@core/models/csp/backend/solicitud-documento-backend';
+import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
 import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
 import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/backend/solicitud-proyecto-area-conocimiento-backend';
 import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
@@ -170,10 +170,10 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de documentos de la solicitud
    */
   findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudDocumento>> {
-    return this.find<ISolicitudDocumentoBackend, ISolicitudDocumento>(
+    return this.find<ISolicitudDocumentoResponse, ISolicitudDocumento>(
       `${this.endpointUrl}/${id}/solicituddocumentos`,
       options,
-      SOLICITUD_DOCUMENTO_CONVERTER
+      SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER
     );
   }
 

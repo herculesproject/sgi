@@ -14,6 +14,7 @@ import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -62,6 +63,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
 
   constructor(
     protected actionService: ConvocatoriaActionService,
+    private readonly languageService: LanguageService,
     public translate: TranslateService,
     private matDialog: MatDialog,
     private dialogService: DialogService
@@ -148,7 +150,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
   }
 
   displayerConvocatoriaFase(convocatoriaFase: IConvocatoriaFase): string {
-    return convocatoriaFase?.tipoFase?.nombre ?? '';
+    return this.languageService.getFieldValue(convocatoriaFase?.tipoFase?.nombre) ?? '';
   }
 
   /**

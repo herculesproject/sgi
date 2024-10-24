@@ -21,7 +21,7 @@
       <ng-container matColumnDef="nombreFase">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.tipo-documento.nombre.fase' | translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper">{{wrapper.value.modeloTipoFase?.tipoFase?.nombre}}</td>
+        <td mat-cell *matCellDef="let wrapper">{{wrapper.value.modeloTipoFase?.tipoFase?.nombre | i18nFieldValue}}</td>
       </ng-container>
 
       <!-- Acciones -->

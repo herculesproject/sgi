@@ -60,7 +60,11 @@ export class I18nFieldValuePipe implements PipeTransform, OnDestroy {
     this._ref.markForCheck();
   }
 
-  transform(query: I18nFieldValue[] | I18nFieldValueResponse[], ...args: any[]): any {
+  transform(query: I18nFieldValue[] | I18nFieldValueResponse[] | string, ...args: any[]): any {
+    if (typeof query === 'string') {
+      return query;
+    }
+
     if (!Array.isArray(query) || !query.length) {
       return '';
     }
