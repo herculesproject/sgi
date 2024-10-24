@@ -77,6 +77,9 @@ export class LanguageService {
   }
 
   public getField<T extends I18nFieldValue>(field: T[]): T {
+    if (!Array.isArray(field)) {
+      return null;
+    }
     let fieldValue = field.filter(f => f.lang === this.language);
     if (fieldValue.length) {
       return fieldValue[0];
