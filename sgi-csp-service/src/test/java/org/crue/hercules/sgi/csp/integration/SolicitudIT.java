@@ -35,8 +35,8 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
