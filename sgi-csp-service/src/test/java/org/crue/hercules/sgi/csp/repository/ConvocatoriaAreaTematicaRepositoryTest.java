@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrenciaNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,8 +104,12 @@ class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloTipoFinalidad);
 
+        Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombre = new HashSet<>();
+    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia" + suffix));
+
+
     TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder()
-        .nombre("nombreTipoRegimenConcurrencia" + suffix)
+        .nombre(tipoRegimenConcurrenciaNombre)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoRegimenConcurrencia);

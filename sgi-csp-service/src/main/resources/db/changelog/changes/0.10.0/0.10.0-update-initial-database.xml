@@ -572,4 +572,34 @@
 
     <dropColumn columnName="descripcion" tableName="tipo_documento" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-26">
+    <createTable tableName="tipo_regimen_concurrencia_nombre">
+      <column name="tipo_regimen_concurrencia_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_regimen_concurrencia_nombre"
+      columnNames="tipo_regimen_concurrencia_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_regimen_concurrencia_id"
+      baseTableName="tipo_regimen_concurrencia_nombre"
+      constraintName="FK_TIPOREGIMENCONCURRENCIANOMBRE_TIPOREGIMENCONCURRENCIA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_regimen_concurrencia"
+      validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_regimen_concurrencia_nombre(tipo_regimen_concurrencia_id,
+      value_, lang) SELECT id, nombre, '${defaultLang}' FROM
+      ${schemaPrefix}tipo_regimen_concurrencia WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_regimen_concurrencia" />
+  </changeSet>
 </databaseChangeLog>

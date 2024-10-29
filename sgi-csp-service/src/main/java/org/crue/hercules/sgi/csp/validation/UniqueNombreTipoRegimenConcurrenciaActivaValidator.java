@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrenciaNombre;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -35,14 +36,18 @@ public class UniqueNombreTipoRegimenConcurrenciaActivaValidator
     if (value == null || value.getNombre() == null) {
       return false;
     }
-    Optional<TipoRegimenConcurrencia> tipoRegimenConcurrencia = repository
-        .findByNombreAndActivoIsTrue(value.getNombre());
-    boolean returnValue = (!tipoRegimenConcurrencia.isPresent()
-        || tipoRegimenConcurrencia.get().getId().equals(value.getId()));
-    if (!returnValue) {
-      addEntityMessageParameter(context);
+    for (TipoRegimenConcurrenciaNombre nombreI18n : value.getNombre()) {
+      Optional<TipoRegimenConcurrencia> tipoRegimenConcurrencia = repository
+          .findByNombreLangAndNombreValueAndActivoIsTrue(nombreI18n.getLang(), nombreI18n.getValue());
+      boolean returnValue = (!tipoRegimenConcurrencia.isPresent()
+          || tipoRegimenConcurrencia.get().getId().equals(value.getId()));
+      if (!returnValue) {
+        addEntityMessageParameter(context);
+        return false;
+      }
     }
-    return returnValue;
+
+    return true;
   }
 
   private void addEntityMessageParameter(ConstraintValidatorContext context) {

@@ -24,8 +24,12 @@ INSERT INTO test.modelo_tipo_finalidad (id, modelo_ejecucion_id, tipo_finalidad_
 INSERT INTO test.modelo_tipo_finalidad (id, modelo_ejecucion_id, tipo_finalidad_id, activo) VALUES (2, 2, 2, true);
 
 -- TIPO_REGIMEN_CONCURRENCIA
-INSERT INTO test.tipo_regimen_concurrencia (id,nombre,activo) VALUES (1,'nombre-1',true);
-INSERT INTO test.tipo_regimen_concurrencia (id,nombre,activo) VALUES (2,'nombre-2',true);
+INSERT INTO test.tipo_regimen_concurrencia (id,activo) VALUES (1,true);
+INSERT INTO test.tipo_regimen_concurrencia (id,activo) VALUES (2,true);
+
+-- TIPO_REGIMEN_CONCURRENCIA_NOMBRE
+INSERT INTO test.tipo_regimen_concurrencia_nombre (tipo_regimen_concurrencia_id, lang, value_) VALUES(1, 'es', 'nombre-1');
+INSERT INTO test.tipo_regimen_concurrencia_nombre (tipo_regimen_concurrencia_id, lang, value_) VALUES(2, 'es', 'nombre-2');
 
 -- TIPO AMBITO GEOGRAFICO
 INSERT INTO test.tipo_ambito_geografico (id, activo) VALUES (1, true);

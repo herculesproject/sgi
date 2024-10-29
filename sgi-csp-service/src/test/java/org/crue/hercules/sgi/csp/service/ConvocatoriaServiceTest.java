@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrenciaNombre;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
@@ -2650,9 +2651,14 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
         : ModeloTipoFinalidad.builder().id(modeloTipoFinalidadId).modeloEjecucion(modeloEjecucion)
             .tipoFinalidad(tipoFinalidad).activo(Boolean.TRUE).build();
 
+    Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombres = new HashSet<>();
+    tipoRegimenConcurrenciaNombres.add(new TipoRegimenConcurrenciaNombre(Language.ES,
+        "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
+
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
         : TipoRegimenConcurrencia.builder().id(tipoRegimenConcurrenciaId)
-            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))
+            .nombre(
+                tipoRegimenConcurrenciaNombres)
             .activo(Boolean.TRUE).build();
 
     Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();

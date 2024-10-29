@@ -12,7 +12,24 @@ import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
-import org.crue.hercules.sgi.csp.model.*;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
+import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
+import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
+import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
+import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
+import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrenciaNombre;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -1098,10 +1115,13 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
             .activo(Boolean.TRUE)
             .build();
 
+    Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombre = new HashSet<>();
+    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
+
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
         : TipoRegimenConcurrencia.builder()
             .id(tipoRegimenConcurrenciaId)
-            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))
+            .nombre(tipoRegimenConcurrenciaNombre)
             .activo(Boolean.TRUE)
             .build();
 
