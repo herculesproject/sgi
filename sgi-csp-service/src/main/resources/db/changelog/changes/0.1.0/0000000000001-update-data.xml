@@ -149,6 +149,7 @@
     <validCheckSum>8:24676541849f3ccb51f34d61496923ee</validCheckSum>
     <validCheckSum>8:56134c1b6306895fcc3a8b262b571653</validCheckSum>
     <validCheckSum>8:94593869370d90fdc937d19784d193a9</validCheckSum>
+    <validCheckSum>8:40e1605d4f9626bcea9e026202148a1c</validCheckSum>
     <!-- Actualizar solicitud_proyecto_entidad_id en solicitud_proyecto_presupuesto -->
     <sql dbms="!h2">
       UPDATE ${schemaPrefix}solicitud_proyecto_presupuesto SET solicitud_proyecto_entidad_id=(
