@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacionDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -104,25 +105,9 @@ class TipoFinanciacionIT extends BaseIT {
     Assertions.assertThat(tipoFinanciacion.getId()).as("getId()").isNotNull();
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFinanciacion.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-001");
-    Assertions.assertThat(tipoFinanciacion.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoFinanciacion.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(tipoFinanciacion.getActivo()).as("getActivo()").isTrue();
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findById_ReturnsTipoFinanciacion() throws Exception {
-    Long id = 1L;
-
-    final ResponseEntity<TipoFinanciacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), TipoFinanciacion.class, id);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    TipoFinanciacion tipoFinanciacion = response.getBody();
-
-    Assertions.assertThat(tipoFinanciacion).as("isNotNull()").isNotNull();
-    Assertions.assertThat(tipoFinanciacion.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(tipoFinanciacion.getNombre()).as("getNombre()").isNotNull();
   }
 
   @Sql
@@ -156,7 +141,7 @@ class TipoFinanciacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
@@ -193,7 +178,7 @@ class TipoFinanciacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -243,11 +228,14 @@ class TipoFinanciacionIT extends BaseIT {
     Set<TipoFinanciacionNombre> tipoFinanciacionNombre = new HashSet<>();
     tipoFinanciacionNombre.add(new TipoFinanciacionNombre(Language.ES, nombre));
 
+    Set<TipoFinanciacionDescripcion> tipoFinanciacionDescripcion = new HashSet<>();
+    tipoFinanciacionDescripcion.add(new TipoFinanciacionDescripcion(Language.ES, "descripcion-" + 1));
+
     TipoFinanciacion tipoFinanciacion = new TipoFinanciacion();
     tipoFinanciacion.setId(id);
     tipoFinanciacion.setActivo(true);
     tipoFinanciacion.setNombre(tipoFinanciacionNombre);
-    tipoFinanciacion.setDescripcion("descripcion-" + 1);
+    tipoFinanciacion.setDescripcion(tipoFinanciacionDescripcion);
 
     return tipoFinanciacion;
   }

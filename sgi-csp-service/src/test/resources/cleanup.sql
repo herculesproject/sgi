@@ -143,6 +143,7 @@ DELETE FROM test.tipo_fase;
 DELETE FROM test.tipo_finalidad_nombre;
 DELETE FROM test.tipo_finalidad_descripcion;
 DELETE FROM test.tipo_finalidad;
+DELETE FROM test.tipo_financiacion_descripcion;
 DELETE FROM test.tipo_financiacion_nombre;
 DELETE FROM test.tipo_financiacion;
 DELETE FROM test.tipo_hito;

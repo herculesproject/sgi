@@ -6,22 +6,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.validation.ConstraintViolationException;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacionDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.TipoFinanciacionServiceImpl;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,17 +35,14 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * TipoFinanciacionServiceTest
  */
+@Import({ TipoFinanciacionServiceImpl.class })
 class TipoFinanciacionServiceTest extends BaseServiceTest {
 
-  @Mock
+  @MockBean
   private TipoFinanciacionRepository repository;
 
+  @Autowired
   private TipoFinanciacionService service;
-
-  @BeforeEach
-  void setUp() throws Exception {
-    service = new TipoFinanciacionServiceImpl(repository);
-  }
 
   @Test
   void findById_WithId_ReturnsTipoFinanciacion() {
@@ -164,8 +165,10 @@ class TipoFinanciacionServiceTest extends BaseServiceTest {
 
     // when: Activamos el TipoFinanciacion
     // then: Lanza una excepcion porque hay otro TipoFinanciacion con ese nombre
-    Assertions.assertThatThrownBy(() -> service.update(tipoFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Financiación de Tipo Financiación ya existe", tipoFinanciacion.getNombre());
+    Assertions.assertThatThrownBy(() -> service.update(tipoFinanciacion))
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessage("update.tipoFinanciacion.Nombre: Ya existe un tipo de financiacion con el nombre 'nombreRepetido'",
+            tipoFinanciacion.getNombre());
   }
 
   @Test
@@ -313,7 +316,7 @@ class TipoFinanciacionServiceTest extends BaseServiceTest {
         // when: create TipoFinanciacion
         () -> service.create(newTFinanciacion))
         // then: throw exception as Nombre already exists
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   @Test
@@ -330,7 +333,7 @@ class TipoFinanciacionServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque ya existe otro TipoFinanciacion con ese
     // nombre
     Assertions.assertThatThrownBy(() -> service.update(tipoFinanciacionUpdated))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(ConstraintViolationException.class);
   }
 
   /**
@@ -355,11 +358,14 @@ class TipoFinanciacionServiceTest extends BaseServiceTest {
     Set<TipoFinanciacionNombre> tipoFinanciacionNombre = new HashSet<>();
     tipoFinanciacionNombre.add(new TipoFinanciacionNombre(Language.ES, nombre));
 
+    Set<TipoFinanciacionDescripcion> tipoFinanciacionDescripcion = new HashSet<>();
+    tipoFinanciacionDescripcion.add(new TipoFinanciacionDescripcion(Language.ES, "descripcion-" + 1));
+
     TipoFinanciacion tipoFinanciacion = new TipoFinanciacion();
     tipoFinanciacion.setId(id);
     tipoFinanciacion.setActivo(true);
     tipoFinanciacion.setNombre(tipoFinanciacionNombre);
-    tipoFinanciacion.setDescripcion("descripcion-" + 1);
+    tipoFinanciacion.setDescripcion(tipoFinanciacionDescripcion);
 
     return tipoFinanciacion;
   }

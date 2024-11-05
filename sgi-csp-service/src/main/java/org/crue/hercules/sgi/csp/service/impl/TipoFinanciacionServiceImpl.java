@@ -1,10 +1,16 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.Objects;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
+import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
+import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
-import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFinanciacionSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFinanciacionService;
@@ -15,20 +21,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Validated
 public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
 
   private final TipoFinanciacionRepository tipoFinanciacionRepository;
 
-  public TipoFinanciacionServiceImpl(TipoFinanciacionRepository tipoFinanciacionRepository) {
-
-    this.tipoFinanciacionRepository = tipoFinanciacionRepository;
-  }
+  private final Validator validator;
 
   /**
    * Guardar {@link TipoFinanciacion}.
@@ -38,16 +45,11 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
    */
   @Override
   @Transactional
-  public TipoFinanciacion create(TipoFinanciacion tipoFinanciacion) {
+  @Validated({ BaseEntity.Create.class })
+  public TipoFinanciacion create(@Valid TipoFinanciacion tipoFinanciacion) {
     log.debug("create(TipoFinanciacion tipoFinanciacion) - start");
 
     AssertHelper.idIsNull(tipoFinanciacion.getId(), TipoFinanciacion.class);
-    for (TipoFinanciacionNombre tipoFacturacionNombre : tipoFinanciacion.getNombre()) {
-      AssertHelper.entityExists(
-          !(tipoFinanciacionRepository.findByNombreLangAndNombreValueAndActivoIsTrue(tipoFacturacionNombre.getLang(),
-              tipoFacturacionNombre.getValue()).isPresent()),
-          TipoFinanciacion.class, TipoFinanciacion.class);
-    }
 
     tipoFinanciacion.setActivo(Boolean.TRUE);
     TipoFinanciacion returnValue = tipoFinanciacionRepository.save(tipoFinanciacion);
@@ -66,17 +68,9 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
    */
   @Override
   @Transactional
-  public TipoFinanciacion update(TipoFinanciacion tipoFinanciacionActualizar) {
+  @Validated({ BaseEntity.Update.class })
+  public TipoFinanciacion update(@Valid TipoFinanciacion tipoFinanciacionActualizar) {
     log.debug("update(TipoFinanciacion tipoFinanciacionActualizar) - start");
-
-    for (TipoFinanciacionNombre tipoFacturacionNombre : tipoFinanciacionActualizar.getNombre()) {
-      AssertHelper.idNotNull(tipoFinanciacionActualizar.getId(), TipoFinanciacion.class);
-      tipoFinanciacionRepository.findByNombreLangAndNombreValueAndActivoIsTrue(
-          tipoFacturacionNombre.getLang(), tipoFacturacionNombre.getValue())
-          .ifPresent(tipoFinanciacionExistente -> AssertHelper.entityExists(
-              Objects.equals(tipoFinanciacionActualizar.getId(), tipoFinanciacionExistente.getId()),
-              TipoFinanciacion.class, TipoFinanciacion.class));
-    }
 
     return tipoFinanciacionRepository.findById(tipoFinanciacionActualizar.getId()).map(tipoFinanciacion -> {
       tipoFinanciacion.setNombre(tipoFinanciacionActualizar.getNombre());
@@ -164,15 +158,13 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
         return tipoFinanciacion;
       }
 
-      for (TipoFinanciacionNombre tipoFacturacionNombre : tipoFinanciacion.getNombre()) {
-        tipoFinanciacionRepository
-            .findByNombreLangAndNombreValueAndActivoIsTrue(tipoFacturacionNombre.getLang(),
-                tipoFacturacionNombre.getValue())
-            .ifPresent(tipoFinanciacionExistente -> AssertHelper.entityExists(
-                Objects.equals(tipoFinanciacion.getId(), tipoFinanciacionExistente.getId()),
-                TipoFinanciacion.class, TipoFinanciacion.class));
+      // Invocar validaciones asociadas a OnActivar
+      Set<ConstraintViolation<TipoFinanciacion>> result = validator.validate(
+          tipoFinanciacion,
+          BaseActivableEntity.OnActivar.class);
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
       }
-
       tipoFinanciacion.setActivo(true);
 
       TipoFinanciacion returnValue = tipoFinanciacionRepository.save(tipoFinanciacion);

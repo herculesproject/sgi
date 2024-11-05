@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacionDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -27,16 +28,21 @@ class TipoFinanciacionRepositoryTest extends BaseRepositoryTest {
     // given: 2 TipoFinanciacion de los que 1 coincide con el nombre buscado
     Set<TipoFinanciacionNombre> nombre1 = new HashSet<>();
     nombre1.add(new TipoFinanciacionNombre(Language.ES, "nombre-tipoFinanciacion1"));
+
+    Set<TipoFinanciacionDescripcion> descripcion1 = new HashSet<>();
+    descripcion1.add(new TipoFinanciacionDescripcion(Language.ES, "nombre-tipoFinanciacion1"));
+
     TipoFinanciacion tipoFinanciacion1 = new TipoFinanciacion(null,
-        nombre1,
-        "descripcion-tipoFinanciacion1", true);
+        nombre1, descripcion1, true);
     entityManager.persistAndFlush(tipoFinanciacion1);
 
     Set<TipoFinanciacionNombre> nombre2 = new HashSet<>();
     nombre2.add(new TipoFinanciacionNombre(Language.ES, "nombre-tipoFinanciacion2"));
 
-    TipoFinanciacion tipoFinanciacion2 = new TipoFinanciacion(null, nombre2,
-        "descripcion-tipoFinanciacion2", true);
+    Set<TipoFinanciacionDescripcion> descripcion2 = new HashSet<>();
+    descripcion2.add(new TipoFinanciacionDescripcion(Language.ES, "descripcion-tipoFinanciacion2"));
+
+    TipoFinanciacion tipoFinanciacion2 = new TipoFinanciacion(null, nombre2, descripcion2, true);
     entityManager.persistAndFlush(tipoFinanciacion2);
 
     String nombreBuscado = "nombre-tipoFinanciacion1";
@@ -62,17 +68,21 @@ class TipoFinanciacionRepositoryTest extends BaseRepositoryTest {
     Set<TipoFinanciacionNombre> nombre1 = new HashSet<>();
     nombre1.add(new TipoFinanciacionNombre(Language.ES, "nombre-tipoFinanciacion1"));
 
+    Set<TipoFinanciacionDescripcion> descripcion1 = new HashSet<>();
+    descripcion1.add(new TipoFinanciacionDescripcion(Language.ES, "descripcion-tipoFinanciacion1"));
+
     TipoFinanciacion tipoFinanciacion1 = new TipoFinanciacion(null,
-        nombre1,
-        "descripcion-tipoFinanciacion1", true);
+        nombre1, descripcion1, true);
     entityManager.persistAndFlush(tipoFinanciacion1);
 
     Set<TipoFinanciacionNombre> nombre2 = new HashSet<>();
     nombre2.add(new TipoFinanciacionNombre(Language.ES, "nombre-tipoFinanciacion"));
 
+    Set<TipoFinanciacionDescripcion> descripcion2 = new HashSet<>();
+    descripcion2.add(new TipoFinanciacionDescripcion(Language.ES, "descripcion-tipoFinanciacion"));
+
     TipoFinanciacion tipoFinanciacion2 = new TipoFinanciacion(null,
-        nombre2,
-        "descripcion-tipoFinanciacion2", true);
+        nombre2, descripcion2, true);
     entityManager.persistAndFlush(tipoFinanciacion2);
 
     String nombreBuscado = "nombre-tipoFinanciacion-noexiste";
