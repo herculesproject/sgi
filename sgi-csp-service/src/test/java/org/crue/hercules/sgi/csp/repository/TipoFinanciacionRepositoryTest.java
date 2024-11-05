@@ -1,9 +1,13 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,18 +25,25 @@ class TipoFinanciacionRepositoryTest extends BaseRepositoryTest {
   void findByNombreAndActivoIsTrue_ReturnsTipoFinanciacion() throws Exception {
 
     // given: 2 TipoFinanciacion de los que 1 coincide con el nombre buscado
-    TipoFinanciacion tipoFinanciacion1 = new TipoFinanciacion(null, "nombre-tipoFinanciacion1",
+    Set<TipoFinanciacionNombre> nombre1 = new HashSet<>();
+    nombre1.add(new TipoFinanciacionNombre(Language.ES, "nombre-tipoFinanciacion1"));
+    TipoFinanciacion tipoFinanciacion1 = new TipoFinanciacion(null,
+        nombre1,
         "descripcion-tipoFinanciacion1", true);
     entityManager.persistAndFlush(tipoFinanciacion1);
 
-    TipoFinanciacion tipoFinanciacion2 = new TipoFinanciacion(null, "nombre-tipoFinanciacion2",
+    Set<TipoFinanciacionNombre> nombre2 = new HashSet<>();
+    nombre2.add(new TipoFinanciacionNombre(Language.ES, "nombre-tipoFinanciacion2"));
+
+    TipoFinanciacion tipoFinanciacion2 = new TipoFinanciacion(null, nombre2,
         "descripcion-tipoFinanciacion2", true);
     entityManager.persistAndFlush(tipoFinanciacion2);
 
     String nombreBuscado = "nombre-tipoFinanciacion1";
 
     // when: se busca el TipoFinanciacionpor nombre
-    TipoFinanciacion tipoFinanciacionEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado).get();
+    TipoFinanciacion tipoFinanciacionEncontrado = repository
+        .findByNombreLangAndNombreValueAndActivoIsTrue(Language.ES, nombreBuscado).get();
 
     // then: Se recupera el TipoFinanciacion con el nombre buscado
     Assertions.assertThat(tipoFinanciacionEncontrado.getId()).as("getId").isNotNull();
@@ -48,18 +59,27 @@ class TipoFinanciacionRepositoryTest extends BaseRepositoryTest {
   void findByNombreAndActivoIsTrue_WithNombreNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 TipoFinanciacion que no coinciden con el nombre buscado
-    TipoFinanciacion tipoFinanciacion1 = new TipoFinanciacion(null, "nombre-tipoFinanciacion1",
+    Set<TipoFinanciacionNombre> nombre1 = new HashSet<>();
+    nombre1.add(new TipoFinanciacionNombre(Language.ES, "nombre-tipoFinanciacion1"));
+
+    TipoFinanciacion tipoFinanciacion1 = new TipoFinanciacion(null,
+        nombre1,
         "descripcion-tipoFinanciacion1", true);
     entityManager.persistAndFlush(tipoFinanciacion1);
 
-    TipoFinanciacion tipoFinanciacion2 = new TipoFinanciacion(null, "nombre-tipoFinanciacion",
+    Set<TipoFinanciacionNombre> nombre2 = new HashSet<>();
+    nombre2.add(new TipoFinanciacionNombre(Language.ES, "nombre-tipoFinanciacion"));
+
+    TipoFinanciacion tipoFinanciacion2 = new TipoFinanciacion(null,
+        nombre2,
         "descripcion-tipoFinanciacion2", true);
     entityManager.persistAndFlush(tipoFinanciacion2);
 
     String nombreBuscado = "nombre-tipoFinanciacion-noexiste";
 
     // when: se busca elTipoFinanciacion por nombre
-    Optional<TipoFinanciacion> tipoFinanciacionEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado);
+    Optional<TipoFinanciacion> tipoFinanciacionEncontrado = repository
+        .findByNombreLangAndNombreValueAndActivoIsTrue(Language.ES, nombreBuscado);
 
     // then: Se recupera el TipoFinanciacion con el nombre buscado
     Assertions.assertThat(tipoFinanciacionEncontrado).isEqualTo(Optional.empty());

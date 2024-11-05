@@ -455,4 +455,35 @@
 
     <dropColumn columnName="descripcion" tableName="tipo_fase" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-22">
+
+    <createTable tableName="tipo_financiacion_nombre">
+      <column name="tipo_financiacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_financiacion_nombre"
+      columnNames="tipo_financiacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id"
+      baseTableName="tipo_financiacion_nombre"
+      constraintName="FK_TIPOFINANCIACIONNOMBRE_TIPOFINANCIACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_financiacion_nombre(tipo_financiacion_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}tipo_financiacion WHERE nombre IS NOT
+      NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_financiacion" />
+
+  </changeSet>
 </databaseChangeLog>

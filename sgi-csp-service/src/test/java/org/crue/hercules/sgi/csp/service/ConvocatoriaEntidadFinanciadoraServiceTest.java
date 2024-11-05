@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
@@ -16,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -23,6 +26,7 @@ import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaEntidadFinanciadoraServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -622,9 +626,12 @@ class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest {
     fuenteFinanciacion.setNombre("nombreFuenteFinanciacion");
     fuenteFinanciacion.setActivo(true);
 
+    Set<TipoFinanciacionNombre> nombre = new HashSet<>();
+    nombre.add(new TipoFinanciacionNombre(Language.ES, "nombreTipoFinanciacion"));
+
     TipoFinanciacion tipoFinanciacion = new TipoFinanciacion();
     tipoFinanciacion.setId(id == null ? 1 : id);
-    tipoFinanciacion.setNombre("nombreTipoFinanciacion");
+    tipoFinanciacion.setNombre(nombre);
     tipoFinanciacion.setActivo(true);
 
     Programa programa = new Programa();

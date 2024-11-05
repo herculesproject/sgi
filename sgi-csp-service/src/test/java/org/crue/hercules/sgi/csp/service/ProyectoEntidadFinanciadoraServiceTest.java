@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
@@ -15,11 +17,13 @@ import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoEntidadFinanciadoraServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -526,10 +530,13 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
       .build();
     // @formatter:on
 
+    Set<TipoFinanciacionNombre> nombre = new HashSet<>();
+    nombre.add(new TipoFinanciacionNombre(Language.ES, "nombreTipoFinanciacion"));
+
     TipoFinanciacion tipoFinanciacion = TipoFinanciacion.builder()
     // @formatter:off
       .id(id == null ? 1 : id)
-      .nombre("nombreTipoFinanciacion")
+      .nombre(nombre)
       .activo(true)
       .build();
     // @formatter:on

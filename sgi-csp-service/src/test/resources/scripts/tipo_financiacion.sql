@@ -1,4 +1,5 @@
-
 INSERT INTO test.tipo_financiacion 
-(id, nombre, descripcion, activo) 
-VALUES (1, 'nombre-001', 'descripcion-001', true);
+(id, descripcion, activo) 
+VALUES (1, 'descripcion-001', true);
+
+INSERT INTO test.tipo_financiacion_nombre (tipo_financiacion_id, lang, value_) VALUES(1, 'es', 'nombre-001');

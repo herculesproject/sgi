@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoFinanciacionSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFinanciacionService;
@@ -41,9 +42,12 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
     log.debug("create(TipoFinanciacion tipoFinanciacion) - start");
 
     AssertHelper.idIsNull(tipoFinanciacion.getId(), TipoFinanciacion.class);
-    AssertHelper.entityExists(
-        !(tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacion.getNombre()).isPresent()),
-        TipoFinanciacion.class, TipoFinanciacion.class);
+    for (TipoFinanciacionNombre tipoFacturacionNombre : tipoFinanciacion.getNombre()) {
+      AssertHelper.entityExists(
+          !(tipoFinanciacionRepository.findByNombreLangAndNombreValueAndActivoIsTrue(tipoFacturacionNombre.getLang(),
+              tipoFacturacionNombre.getValue()).isPresent()),
+          TipoFinanciacion.class, TipoFinanciacion.class);
+    }
 
     tipoFinanciacion.setActivo(Boolean.TRUE);
     TipoFinanciacion returnValue = tipoFinanciacionRepository.save(tipoFinanciacion);
@@ -65,11 +69,14 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   public TipoFinanciacion update(TipoFinanciacion tipoFinanciacionActualizar) {
     log.debug("update(TipoFinanciacion tipoFinanciacionActualizar) - start");
 
-    AssertHelper.idNotNull(tipoFinanciacionActualizar.getId(), TipoFinanciacion.class);
-    tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacionActualizar.getNombre())
-        .ifPresent(tipoFinanciacionExistente -> AssertHelper.entityExists(
-            Objects.equals(tipoFinanciacionActualizar.getId(), tipoFinanciacionExistente.getId()),
-            TipoFinanciacion.class, TipoFinanciacion.class));
+    for (TipoFinanciacionNombre tipoFacturacionNombre : tipoFinanciacionActualizar.getNombre()) {
+      AssertHelper.idNotNull(tipoFinanciacionActualizar.getId(), TipoFinanciacion.class);
+      tipoFinanciacionRepository.findByNombreLangAndNombreValueAndActivoIsTrue(
+          tipoFacturacionNombre.getLang(), tipoFacturacionNombre.getValue())
+          .ifPresent(tipoFinanciacionExistente -> AssertHelper.entityExists(
+              Objects.equals(tipoFinanciacionActualizar.getId(), tipoFinanciacionExistente.getId()),
+              TipoFinanciacion.class, TipoFinanciacion.class));
+    }
 
     return tipoFinanciacionRepository.findById(tipoFinanciacionActualizar.getId()).map(tipoFinanciacion -> {
       tipoFinanciacion.setNombre(tipoFinanciacionActualizar.getNombre());
@@ -157,10 +164,14 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
         return tipoFinanciacion;
       }
 
-      tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacion.getNombre())
-          .ifPresent(tipoFinanciacionExistente -> AssertHelper.entityExists(
-              Objects.equals(tipoFinanciacion.getId(), tipoFinanciacionExistente.getId()),
-              TipoFinanciacion.class, TipoFinanciacion.class));
+      for (TipoFinanciacionNombre tipoFacturacionNombre : tipoFinanciacion.getNombre()) {
+        tipoFinanciacionRepository
+            .findByNombreLangAndNombreValueAndActivoIsTrue(tipoFacturacionNombre.getLang(),
+                tipoFacturacionNombre.getValue())
+            .ifPresent(tipoFinanciacionExistente -> AssertHelper.entityExists(
+                Objects.equals(tipoFinanciacion.getId(), tipoFinanciacionExistente.getId()),
+                TipoFinanciacion.class, TipoFinanciacion.class));
+      }
 
       tipoFinanciacion.setActivo(true);
 
