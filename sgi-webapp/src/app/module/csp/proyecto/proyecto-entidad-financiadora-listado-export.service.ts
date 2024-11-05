@@ -234,9 +234,9 @@ export class ProyectoEntidadFinanciadoraListadoExportService
       entidadTable += '\n';
       entidadTable += entidadFinanciadora.fuenteFinanciacion?.nombre ?? '';
       entidadTable += '\n';
-      entidadTable += entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre) : ''
+      entidadTable += entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre) : '';
       entidadTable += '\n';
-      entidadTable += entidadFinanciadora.tipoFinanciacion?.nombre ?? '';
+      entidadTable += entidadFinanciadora.tipoFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.tipoFinanciacion?.nombre) : '';
       entidadTable += '\n';
       entidadTable += entidadFinanciadora.importeFinanciacion ?? '';
       entidadTable += '\n';
@@ -262,8 +262,8 @@ export class ProyectoEntidadFinanciadoraListadoExportService
       elementsRow.push(entidadFinanciadora.empresa?.nombre ?? '');
       elementsRow.push(entidadFinanciadora.empresa?.numeroIdentificacion ?? '');
       elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.nombre ?? '');
-      elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ?? '');
-      elementsRow.push(entidadFinanciadora.tipoFinanciacion?.nombre ?? '');
+      elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre) : '');
+      elementsRow.push(entidadFinanciadora.tipoFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.tipoFinanciacion?.nombre) : '');
       elementsRow.push(entidadFinanciadora.importeFinanciacion ?? '');
       elementsRow.push(entidadFinanciadora.porcentajeFinanciacion ?? '');
       elementsRow.push(this.notIsNullAndNotUndefined(entidadFinanciadora.ajena) ? this.getI18nBooleanYesNo(entidadFinanciadora.ajena) : '');

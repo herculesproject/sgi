@@ -54,7 +54,7 @@
             {{'csp.solicitud-entidad-financiadora.tipo-financiacion' | translate}}
           </th>
           <td mat-cell *matCellDef="let element">
-            {{element.tipoFinanciacion?.nombre}}
+            {{element.tipoFinanciacion?.nombre | i18nFieldValue}}
           </td>
         </ng-container>
 
@@ -145,7 +145,7 @@
             {{'csp.solicitud-entidad-financiadora.tipo-financiacion' | translate}}
           </th>
           <td mat-cell *matCellDef="let wrapper">
-            {{wrapper.value.tipoFinanciacion?.nombre}}
+            {{wrapper.value.tipoFinanciacion?.nombre | i18nFieldValue}}
           </td>
         </ng-container>
 

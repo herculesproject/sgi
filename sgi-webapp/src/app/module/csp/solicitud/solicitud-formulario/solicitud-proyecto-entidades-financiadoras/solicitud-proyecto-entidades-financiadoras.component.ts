@@ -126,7 +126,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
           case 'ambito':
             return this.languageService.getFieldValue(entidadFinanciadora.value.fuenteFinanciacion?.tipoAmbitoGeografico.nombre);
           case 'tipoFinanciacion':
-            return entidadFinanciadora.value.tipoFinanciacion?.nombre;
+            return this.languageService.getFieldValue(entidadFinanciadora.value.tipoFinanciacion?.nombre);
           case 'porcentajeFinanciacion':
             return entidadFinanciadora.value.porcentajeFinanciacion;
           default:
@@ -246,7 +246,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
           case 'ambito':
             return entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre) : '';
           case 'tipoFinanciacion':
-            return entidadFinanciadora.tipoFinanciacion?.nombre;
+            return entidadFinanciadora.tipoFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.tipoFinanciacion?.nombre) : '';
           case 'porcentajeFinanciacion':
             return entidadFinanciadora.porcentajeFinanciacion;
           case 'importeFinanciacion':

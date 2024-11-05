@@ -37,7 +37,7 @@ export interface ITipoFase extends TipoConfiguracionI18n {
 export interface ITipoEnlace extends TipoConfiguracion {
 }
 
-export interface ITipoFinanciacion extends TipoConfiguracion {
+export interface ITipoFinanciacion extends TipoConfiguracionI18n {
 }
 
 export interface ITipoUnidadGestion extends TipoConfiguracion {
