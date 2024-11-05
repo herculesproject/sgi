@@ -1,6 +1,7 @@
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IEmpresa } from '@core/models/sgemp/empresa';
+import { TIPO_FINANCIACION_RESPONSE_CONVERTER } from '@core/services/csp/tipo-financiacion/tipo-financiacion-response.converter';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ProyectoEntidadFinanciadoraConverter extends SgiBaseConverter<IProyectoEntidadFinanciadoraBackend, IProyectoEntidadFinanciadora> {
@@ -14,7 +15,7 @@ class ProyectoEntidadFinanciadoraConverter extends SgiBaseConverter<IProyectoEnt
       empresa: { id: value.entidadRef } as IEmpresa,
       proyectoId: value.proyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
-      tipoFinanciacion: value.tipoFinanciacion,
+      tipoFinanciacion: TIPO_FINANCIACION_RESPONSE_CONVERTER.toTarget(value.tipoFinanciacion),
       porcentajeFinanciacion: value.porcentajeFinanciacion,
       importeFinanciacion: value.importeFinanciacion,
       ajena: value.ajena
@@ -30,7 +31,7 @@ class ProyectoEntidadFinanciadoraConverter extends SgiBaseConverter<IProyectoEnt
       entidadRef: value.empresa?.id,
       proyectoId: value.proyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
-      tipoFinanciacion: value.tipoFinanciacion,
+      tipoFinanciacion: TIPO_FINANCIACION_RESPONSE_CONVERTER.fromTarget(value.tipoFinanciacion),
       porcentajeFinanciacion: value.porcentajeFinanciacion,
       importeFinanciacion: value.importeFinanciacion,
       ajena: value.ajena

@@ -83,7 +83,7 @@ export class TipoFinanciacionModalComponent
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       nombre: new FormControl(this.tipoFinanciacion?.nombre ?? [], I18nValidators.required),
-      descripcion: new FormControl(this.tipoFinanciacion?.descripcion ?? ''),
+      descripcion: new FormControl(this.tipoFinanciacion?.descripcion ?? []),
     });
 
     return formGroup;

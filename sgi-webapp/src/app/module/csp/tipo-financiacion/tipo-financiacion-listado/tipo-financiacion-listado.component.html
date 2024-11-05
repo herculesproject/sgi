@@ -48,7 +48,7 @@
       <ng-container matColumnDef="descripcion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.tipo-financiacion.descripcion' | translate}}
         </th>
-        <td mat-cell *matCellDef="let tipoFinanciacion">{{tipoFinanciacion.descripcion}}</td>
+        <td mat-cell *matCellDef="let tipoFinanciacion">{{tipoFinanciacion.descripcion | i18nFieldValue}}</td>
       </ng-container>
 
       <!-- Activo -->

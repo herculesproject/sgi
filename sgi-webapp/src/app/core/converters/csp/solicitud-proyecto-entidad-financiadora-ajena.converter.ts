@@ -1,6 +1,7 @@
 import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/csp/backend/solicitud-proyecto-entidad-financiadora-ajena-backend';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { IEmpresa } from '@core/models/sgemp/empresa';
+import { TIPO_FINANCIACION_RESPONSE_CONVERTER } from '@core/services/csp/tipo-financiacion/tipo-financiacion-response.converter';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class SolicitudProyectoEntidadFinanciadoraAjenaConverter extends
@@ -15,7 +16,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaConverter extends
       empresa: { id: value.entidadRef } as IEmpresa,
       solicitudProyectoId: value.solicitudProyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
-      tipoFinanciacion: value.tipoFinanciacion,
+      tipoFinanciacion: TIPO_FINANCIACION_RESPONSE_CONVERTER.toTarget(value.tipoFinanciacion),
       porcentajeFinanciacion: value.porcentajeFinanciacion,
       importeFinanciacion: value.importeFinanciacion
     };
@@ -30,7 +31,7 @@ class SolicitudProyectoEntidadFinanciadoraAjenaConverter extends
       entidadRef: value.empresa.id,
       solicitudProyectoId: value.solicitudProyectoId,
       fuenteFinanciacion: value.fuenteFinanciacion,
-      tipoFinanciacion: value.tipoFinanciacion,
+      tipoFinanciacion: TIPO_FINANCIACION_RESPONSE_CONVERTER.fromTarget(value.tipoFinanciacion),
       porcentajeFinanciacion: value.porcentajeFinanciacion,
       importeFinanciacion: value.importeFinanciacion
     };
