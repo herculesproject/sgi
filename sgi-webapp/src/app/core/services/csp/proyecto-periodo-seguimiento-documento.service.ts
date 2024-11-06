@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento-documento.converter';
-import { IProyectoPeriodoSeguimientoDocumentoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-documento-backend';
 import { IProyectoPeriodoSeguimientoDocumento } from '@core/models/csp/proyecto-periodo-seguimiento-documento';
 import { environment } from '@env';
 import { SgiMutableRestService } from '@sgi/framework/http';
+import { IProyectoPeriodoSeguimientoDocumentoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento-response';
+import { PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento.converter';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectoPeriodoSeguimientoDocumentoService
-  extends SgiMutableRestService<number, IProyectoPeriodoSeguimientoDocumentoBackend, IProyectoPeriodoSeguimientoDocumento> {
+  extends SgiMutableRestService<number, IProyectoPeriodoSeguimientoDocumentoResponse, IProyectoPeriodoSeguimientoDocumento> {
   private static readonly MAPPING = '/proyectoperiodoseguimientodocumentos';
 
   constructor(protected http: HttpClient) {

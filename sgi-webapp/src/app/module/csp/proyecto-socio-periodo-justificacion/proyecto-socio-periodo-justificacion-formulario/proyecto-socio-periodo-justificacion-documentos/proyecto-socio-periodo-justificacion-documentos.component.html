@@ -5,18 +5,18 @@
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="arbol-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
           <button mat-button *ngIf="viewMode === VIEW_MODE.NEW">
-            {{node.title | translate}}
+            {{node.title | i18nFieldValue | translate}}
           </button>
           <button color="primary" mat-button *ngIf="(viewMode !== VIEW_MODE.NEW && node !== viewingNode)"
             (click)="showNodeDetails(node)">
-            {{node.title}}
+            {{node.title | i18nFieldValue}}
             <mat-icon class="mat-icon-rtl-mirror">
               {{ 'visibility'}}
             </mat-icon>
           </button>
           <button color="primary" mat-button *ngIf="(viewMode !== VIEW_MODE.NEW && node === viewingNode)"
             (click)="hideNodeDetails()">
-            {{node.title}}
+            {{node.title | i18nFieldValue}}
             <mat-icon class="mat-icon-rtl-mirror">
               {{ 'visibility_off'}}
             </mat-icon>
@@ -28,7 +28,7 @@
             <mat-icon class="mat-icon-rtl-mirror">
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
-            {{node.title | translate}}{{node.childs.length > 0 ? '' : '\*'}}
+            {{node.title | i18nFieldValue | translate}}{{node.childs.length > 0 ? '' : '\*'}}
           </button>
         </mat-tree-node>
       </mat-tree>

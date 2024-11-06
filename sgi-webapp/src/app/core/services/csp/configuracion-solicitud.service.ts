@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONFIGURACION_SOLICITUD_CONVERTER } from '@core/converters/csp/configuracion-solicitud.converter';
-import { DOCUMENTO_REQUERIDO_SOLICITUD_CONVERTER } from '@core/converters/csp/documento-requerido-solicitud.converter';
 import { IConfiguracionSolicitudBackend } from '@core/models/csp/backend/configuracion-solicitud-backend';
-import { IDocumentoRequeridoSolicitudBackend } from '@core/models/csp/backend/documento-requerido-solicitud-backend';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
+import { IDocumentoRequeridoSolicitudResponse } from '@core/services/csp/documento-requerido-solicitud/documento-requerido-solicitud-response';
+import { DOCUMENTO_REQUERIDO_SOLICITUD_CONVERTER } from '@core/services/csp/documento-requerido-solicitud/documento-requerido-solicitud.converter';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -32,7 +32,7 @@ export class ConfiguracionSolicitudService extends SgiMutableRestService<number,
    * @param id convocatoria
    */
   findAllConvocatoriaDocumentoRequeridoSolicitud(id: number): Observable<SgiRestListResult<IDocumentoRequeridoSolicitud>> {
-    return this.find<IDocumentoRequeridoSolicitudBackend, IDocumentoRequeridoSolicitud>(
+    return this.find<IDocumentoRequeridoSolicitudResponse, IDocumentoRequeridoSolicitud>(
       `${this.endpointUrl}/${id}/documentorequiridosolicitudes`,
       undefined,
       DOCUMENTO_REQUERIDO_SOLICITUD_CONVERTER

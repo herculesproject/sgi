@@ -1,22 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento-documento.converter';
 import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento.converter';
-import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
-import { IProyectoPeriodoSeguimientoDocumentoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-documento-backend';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { IProyectoPeriodoSeguimientoDocumento } from '@core/models/csp/proyecto-periodo-seguimiento-documento';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IProyectoPeriodoSeguimientoDocumentoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento-response';
+import { PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento.converter';
 import { PROYECTO_PERIODO_SEGUIMIENTO_PRESENTACION_DOCUMENTACION_REQUEST_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-presentacion-documentacion-request.converter';
+import { IProyectoPeriodoSeguimientoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectoPeriodoSeguimientoService
-  extends SgiMutableRestService<number, IProyectoPeriodoSeguimientoBackend, IProyectoPeriodoSeguimiento>  {
+  extends SgiMutableRestService<number, IProyectoPeriodoSeguimientoResponse, IProyectoPeriodoSeguimiento>  {
   private static readonly MAPPING = '/proyectoperiodoseguimientos';
 
   constructor(protected http: HttpClient) {
@@ -47,7 +47,7 @@ export class ProyectoPeriodoSeguimientoService
    * @return la lista de ProyectoPeridoSeguimientoDocumento
    */
   findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoPeriodoSeguimientoDocumento>> {
-    return this.find<IProyectoPeriodoSeguimientoDocumentoBackend, IProyectoPeriodoSeguimientoDocumento>(
+    return this.find<IProyectoPeriodoSeguimientoDocumentoResponse, IProyectoPeriodoSeguimientoDocumento>(
       `${this.endpointUrl}/${id}/proyectoperiodoseguimientodocumentos`,
       options,
       PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_CONVERTER
@@ -69,7 +69,7 @@ export class ProyectoPeriodoSeguimientoService
 
   updateFechaPresentacionDocumentacion(periodoSeguimiento: IProyectoPeriodoSeguimiento) {
     const url = `${this.endpointUrl}/${periodoSeguimiento.id}/presentacion-documentacion`;
-    return this.http.patch<IProyectoPeriodoSeguimientoBackend>(
+    return this.http.patch<IProyectoPeriodoSeguimientoResponse>(
       url,
       PROYECTO_PERIODO_SEGUIMIENTO_PRESENTACION_DOCUMENTACION_REQUEST_CONVERTER.fromTarget(periodoSeguimiento),
     ).pipe(

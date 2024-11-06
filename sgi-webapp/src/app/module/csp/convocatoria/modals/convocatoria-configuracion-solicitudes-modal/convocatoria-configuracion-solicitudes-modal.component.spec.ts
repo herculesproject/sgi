@@ -13,6 +13,7 @@ import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { CspSharedModule } from '../../../shared/csp-shared.module';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent, ConvocatoriaConfiguracionSolicitudesModalData } from './convocatoria-configuracion-solicitudes-modal.component';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
   let component: ConvocatoriaConfiguracionSolicitudesModalComponent;
@@ -22,7 +23,7 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
     activo: true,
     descripcion: '',
     id: 1,
-    nombre: ''
+    nombre: [{ lang: 'es', value: '' }] as unknown as I18nFieldValue[]
   };
 
   const documentoRequerido: IDocumentoRequeridoSolicitud = {

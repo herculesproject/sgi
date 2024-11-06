@@ -9,25 +9,25 @@
               <mat-icon class="mat-icon-rtl-mirror">
                 {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
-              {{node.title}}{{node.required ? '\*' : ''}}
+              {{node.title | i18nFieldValue}}{{node.required ? '\*' : ''}}
             </button>
           </ng-container>
 
           <ng-container *ngIf="!!node.documento">
             <button mat-button *ngIf="viewMode === VIEW_MODE.NEW">
-              {{node.title}}{{node.required ? '\*' : ''}}
+              {{node.title | i18nFieldValue}}{{node.required ? '\*' : ''}}
             </button>
 
             <button mat-button color="primary" *ngIf="(viewMode !== VIEW_MODE.NEW && node !== viewingNode)"
               (click)="showNodeDetails(node)">
-              {{node.title}}{{node.required ? '\*' : ''}}
+              {{node.title | i18nFieldValue}}{{node.required ? '\*' : ''}}
               <mat-icon class="mat-icon-rtl-mirror">
                 {{ 'visibility'}}
               </mat-icon>
             </button>
             <button color="primary" mat-button *ngIf="(viewMode !== VIEW_MODE.NEW && node === viewingNode)"
               (click)="hideNodeDetails()">
-              {{node.title}}{{node.required ? '\*' : ''}}
+              {{node.title | i18nFieldValue}}{{node.required ? '\*' : ''}}
               <mat-icon class="mat-icon-rtl-mirror">
                 {{ 'visibility_off'}}
               </mat-icon>
@@ -40,7 +40,7 @@
             <mat-icon class="mat-icon-rtl-mirror">
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
-            {{node.title | translate}}{{node.required ? '\*' : ''}}
+            {{node.title | i18nFieldValue | translate}}{{node.required ? '\*' : ''}}
           </button>
         </mat-tree-node>
       </mat-tree>

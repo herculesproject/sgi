@@ -29,7 +29,6 @@ import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/pr
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
 import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyecto-paquete-trabajo-backend';
-import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
 import { IProyectoProrrogaBackend } from '@core/models/csp/backend/proyecto-prorroga-backend';
 import { IProyectoProyectoSgeBackend } from '@core/models/csp/backend/proyecto-proyecto-sge-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
@@ -114,6 +113,7 @@ import { IProyectosCompetitivosPersonasResponse } from './proyectos-competitivos
 import { PROYECTOS_COMPETITIVOS_PERSONAS_RESPONSE_CONVERTER } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response.converter';
 import { IRequerimientoJustificacionResponse } from './requerimiento-justificacion/requerimiento-justificacion-response';
 import { REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from './requerimiento-justificacion/requerimiento-justificacion-response.converter';
+import { IProyectoPeriodoSeguimientoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
 
 @Injectable({
   providedIn: 'root'
@@ -337,7 +337,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    */
   findAllProyectoPeriodoSeguimientoProyecto(id: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IProyectoPeriodoSeguimiento>> {
-    return this.find<IProyectoPeriodoSeguimientoBackend, IProyectoPeriodoSeguimiento>(
+    return this.find<IProyectoPeriodoSeguimientoResponse, IProyectoPeriodoSeguimiento>(
       `${this.endpointUrl}/${id}/proyectoperiodoseguimientos`,
       options,
       PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER

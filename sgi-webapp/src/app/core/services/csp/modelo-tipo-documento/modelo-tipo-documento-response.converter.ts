@@ -2,6 +2,7 @@ import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from '../modelo-tipo-fase/modelo-tipo-fase-response.converter';
 import { IModeloTipoDocumentoResponse } from './modelo-tipo-documento-response';
+import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from '../tipo-documento/tipo-documento-response.converter';
 
 class ModeloTipoDocumentoResponseConverter extends SgiBaseConverter<IModeloTipoDocumentoResponse, IModeloTipoDocumento> {
   toTarget(value: IModeloTipoDocumentoResponse): IModeloTipoDocumento {
@@ -11,7 +12,7 @@ class ModeloTipoDocumentoResponseConverter extends SgiBaseConverter<IModeloTipoD
     return {
       id: value.id,
       modeloEjecucion: value.modeloEjecucion,
-      tipoDocumento: value.tipoDocumento,
+      tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento) : null,
       modeloTipoFase: value.modeloTipoFase ? MODELO_TIPO_FASE_RESPONSE_CONVERTER.toTarget(value.modeloTipoFase) : null,
       activo: value.activo
     };
@@ -23,7 +24,7 @@ class ModeloTipoDocumentoResponseConverter extends SgiBaseConverter<IModeloTipoD
     return {
       id: value.id,
       modeloEjecucion: value.modeloEjecucion,
-      tipoDocumento: value.tipoDocumento,
+      tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento) : null,
       modeloTipoFase: value.modeloTipoFase ? MODELO_TIPO_FASE_RESPONSE_CONVERTER.fromTarget(value.modeloTipoFase) : null,
       activo: value.activo
     };

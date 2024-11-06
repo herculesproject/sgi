@@ -2,6 +2,7 @@ import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-docume
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { TIPO_FASE_RESPONSE_CONVERTER } from '../tipo-fase/tipo-fase-response.converter';
+import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from '../tipo-documento/tipo-documento-response.converter';
 
 class SolicitudDocumentoResponseConverter extends SgiBaseConverter<ISolicitudDocumentoResponse, ISolicitudDocumento> {
 
@@ -15,7 +16,7 @@ class SolicitudDocumentoResponseConverter extends SgiBaseConverter<ISolicitudDoc
       comentario: value.comentario,
       documentoRef: value.documentoRef,
       nombre: value.nombre,
-      tipoDocumento: value.tipoDocumento,
+      tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento) : null,
       tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.toTarget(value.tipoFase) : null
     };
   }
@@ -30,7 +31,7 @@ class SolicitudDocumentoResponseConverter extends SgiBaseConverter<ISolicitudDoc
       comentario: value.comentario,
       documentoRef: value.documentoRef,
       nombre: value.nombre,
-      tipoDocumento: value.tipoDocumento,
+      tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento) : null,
       tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.fromTarget(value.tipoFase) : null
     };
   }

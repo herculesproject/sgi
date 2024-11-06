@@ -116,8 +116,7 @@ export class SelectTipoDocumentoComponent extends SelectServiceExtendedComponent
       }
       let filterNullTipoFase = false;
       const findOptions: SgiRestFindOptions = {
-        filter: new RSQLSgiRestFilter('tipoDocumento.activo', SgiRestFilterOperator.EQUALS, 'true'),
-        sort: new RSQLSgiRestSort('tipoDocumento.nombre', SgiRestSortDirection.ASC)
+        filter: new RSQLSgiRestFilter('tipoDocumento.activo', SgiRestFilterOperator.EQUALS, 'true')
       };
       if (this.requestByTipoFase) {
         if (this.tipoFaseId === null) {
@@ -137,10 +136,7 @@ export class SelectTipoDocumentoComponent extends SelectServiceExtendedComponent
       );
     }
     else {
-      const findOptions: SgiRestFindOptions = {
-        sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
-      };
-      return this.service.findAll(findOptions).pipe(map(response => response.items));
+      return this.service.findAll().pipe(map(response => response.items));
     }
   }
 

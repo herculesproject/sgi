@@ -1,11 +1,11 @@
-import { IProyectoPeriodoSeguimientoBackend } from '@core/models/csp/backend/proyecto-periodo-seguimiento-backend';
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
+import { IProyectoPeriodoSeguimientoResponse } from '@core/services/csp/proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
-class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeriodoSeguimientoBackend, IProyectoPeriodoSeguimiento> {
+class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeriodoSeguimientoResponse, IProyectoPeriodoSeguimiento> {
 
-  toTarget(value: IProyectoPeriodoSeguimientoBackend): IProyectoPeriodoSeguimiento {
+  toTarget(value: IProyectoPeriodoSeguimientoResponse): IProyectoPeriodoSeguimiento {
     if (!value) {
       return value as unknown as IProyectoPeriodoSeguimiento;
     }
@@ -20,13 +20,13 @@ class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeri
       tipoSeguimiento: value.tipoSeguimiento,
       observaciones: value.observaciones,
       convocatoriaPeriodoSeguimientoId: value.convocatoriaPeriodoSeguimientoId,
-      fechaPresentacionDocumentacion: value.fechaPresentacionDocumentacion
+      fechaPresentacionDocumentacion: LuxonUtils.fromBackend(value.fechaPresentacionDocumentacion)
     };
   }
 
-  fromTarget(value: IProyectoPeriodoSeguimiento): IProyectoPeriodoSeguimientoBackend {
+  fromTarget(value: IProyectoPeriodoSeguimiento): IProyectoPeriodoSeguimientoResponse {
     if (!value) {
-      return value as unknown as IProyectoPeriodoSeguimientoBackend;
+      return value as unknown as IProyectoPeriodoSeguimientoResponse;
     }
     return {
       id: value.id,
@@ -39,7 +39,7 @@ class ProyectoPeriodoSeguimientoConverter extends SgiBaseConverter<IProyectoPeri
       tipoSeguimiento: value.tipoSeguimiento,
       observaciones: value.observaciones,
       convocatoriaPeriodoSeguimientoId: value.convocatoriaPeriodoSeguimientoId,
-      fechaPresentacionDocumentacion: value.fechaPresentacionDocumentacion
+      fechaPresentacionDocumentacion: LuxonUtils.toBackend(value.fechaPresentacionDocumentacion)
     };
   }
 }

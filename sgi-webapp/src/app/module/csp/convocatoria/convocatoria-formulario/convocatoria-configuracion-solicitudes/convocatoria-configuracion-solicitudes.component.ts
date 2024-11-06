@@ -98,7 +98,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
       (wrapper: StatusWrapper<IDocumentoRequeridoSolicitud>, property: string) => {
         switch (property) {
           case 'nombre':
-            return wrapper.value.tipoDocumento.nombre;
+            return wrapper.value.tipoDocumento?.nombre ? this.languageService.getFieldValue(wrapper.value.tipoDocumento?.nombre) : '';
           case 'descripcion':
             return wrapper.value.tipoDocumento.descripcion;
           case 'observaciones':

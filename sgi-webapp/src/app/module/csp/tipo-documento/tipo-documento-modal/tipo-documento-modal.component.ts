@@ -1,11 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { TipoDocumentoService } from '@core/services/csp/tipo-documento.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -79,7 +80,7 @@ export class TipoDocumentoModalComponent extends DialogActionComponent<ITipoDocu
 
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
-      nombre: new FormControl(this.tipoDocumento?.nombre ?? '', Validators.required),
+      nombre: new FormControl(this.tipoDocumento?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
       descripcion: new FormControl(this.tipoDocumento?.descripcion ?? '')
     });
   }

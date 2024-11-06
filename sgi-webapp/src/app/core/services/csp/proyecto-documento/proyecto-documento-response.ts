@@ -1,5 +1,5 @@
 import { ITipoFaseResponse } from '@core/services/csp/tipo-fase/tipo-fase-response';
-import { ITipoDocumento } from '../../../models/csp/tipos-configuracion';
+import { ITipoDocumentoResponse } from '../tipo-documento/tipo-documento-response';
 
 export interface IProyectoDocumentoResponse {
   id: number;
@@ -7,7 +7,7 @@ export interface IProyectoDocumentoResponse {
   nombre: string;
   documentoRef: string;
   tipoFase: ITipoFaseResponse;
-  tipoDocumento: ITipoDocumento;
+  tipoDocumento: ITipoDocumentoResponse;
   comentario: string;
   visible: boolean;
 }
