@@ -7,6 +7,7 @@ import { FieldType } from '@ngx-formly/material/form-field';
         [formControl]="formControl"
         [formlyAttributes]="field"
         [required]="to.required"
+        [onlyEmpresasPrincipales]="to.onlyEmpresasPrincipales"
       >
       </sgi-select-empresa>
  `
