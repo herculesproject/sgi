@@ -12,7 +12,7 @@ import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.serv
 import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
@@ -96,18 +96,14 @@ export class SelectTipoEnlaceComponent extends SelectServiceExtendedComponent<IT
         return of([]);
       }
       const findOptions: SgiRestFindOptions = {
-        filter: new RSQLSgiRestFilter('tipoEnlace.activo', SgiRestFilterOperator.EQUALS, 'true'),
-        sort: new RSQLSgiRestSort('tipoEnlace.nombre', SgiRestSortDirection.ASC)
+        filter: new RSQLSgiRestFilter('tipoEnlace.activo', SgiRestFilterOperator.EQUALS, 'true')
       };
       return this.modeloEjecucionService.findModeloTipoEnlace(this.modeloEjecucionId, findOptions).pipe(
         map(response => response.items.map(item => item.tipoEnlace))
       );
     }
     else {
-      const findOptions: SgiRestFindOptions = {
-        sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
-      };
-      return this.service.findAll(findOptions).pipe(map(response => response.items));
+      return this.service.findAll().pipe(map(response => response.items));
     }
   }
 

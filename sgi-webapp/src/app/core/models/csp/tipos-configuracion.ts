@@ -14,6 +14,13 @@ interface TipoConfiguracionI18n {
   activo: boolean;
 }
 
+interface TipoConfiguracionI18nNombre {
+  id: number;
+  nombre: I18nFieldValue[];
+  descripcion?: string;
+  activo: boolean;
+}
+
 
 // tslint:disable: no-empty-interface
 export interface IModeloEjecucion extends TipoConfiguracion {
@@ -34,7 +41,7 @@ export interface ITipoFinalidad extends TipoConfiguracionI18n {
 export interface ITipoFase extends TipoConfiguracionI18n {
 }
 
-export interface ITipoEnlace extends TipoConfiguracion {
+export interface ITipoEnlace extends TipoConfiguracionI18nNombre {
 }
 
 export interface ITipoFinanciacion extends TipoConfiguracionI18n {

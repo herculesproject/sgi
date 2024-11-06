@@ -71,6 +71,7 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
   }
 
   ngOnInit(): void {

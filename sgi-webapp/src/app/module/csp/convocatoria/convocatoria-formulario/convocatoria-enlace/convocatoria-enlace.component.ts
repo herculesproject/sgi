@@ -8,6 +8,7 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -47,6 +48,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
+    private languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.ENLACES, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaEnlaceFragment;
@@ -64,7 +66,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
           case 'descripcion':
             return wrapper.value.descripcion;
           case 'tipoEnlace':
-            return wrapper.value.tipoEnlace.nombre;
+            return this.languageService.getFieldValue(wrapper.value.tipoEnlace.nombre);
           default:
             return wrapper[property];
         }

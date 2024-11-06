@@ -2,18 +2,37 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
-import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { ITipoEnlaceResponse } from './tipo-enlace/tipo-enlace-response';
+import { TIPO_ENLACE_RESPONSE_CONVERTER } from './tipo-enlace/tipo-enlace-response.converter';
+
+// tslint:disable-next-line: variable-name
+const _TipoEnlaceServiceMixinBase:
+  CreateCtor<ITipoEnlace, ITipoEnlace, ITipoEnlaceResponse, ITipoEnlaceResponse> &
+  UpdateCtor<number, ITipoEnlace, ITipoEnlace, ITipoEnlaceResponse, ITipoEnlaceResponse> &
+  FindAllCtor<ITipoEnlace, ITipoEnlaceResponse> &
+  typeof SgiRestBaseService = mixinFindAll(
+    mixinUpdate(
+      mixinCreate(
+        SgiRestBaseService,
+        TIPO_ENLACE_RESPONSE_CONVERTER,
+        TIPO_ENLACE_RESPONSE_CONVERTER
+      ),
+      TIPO_ENLACE_RESPONSE_CONVERTER,
+      TIPO_ENLACE_RESPONSE_CONVERTER
+    ),
+    TIPO_ENLACE_RESPONSE_CONVERTER
+  );
 
 @Injectable({
   providedIn: 'root'
 })
-export class TipoEnlaceService extends SgiRestService<number, ITipoEnlace> {
+export class TipoEnlaceService extends _TipoEnlaceServiceMixinBase {
   private static readonly MAPPING = '/tipoenlaces';
 
   constructor(protected http: HttpClient) {
     super(
-      TipoEnlaceService.name,
       `${environment.serviceServers.csp}${TipoEnlaceService.MAPPING}`,
       http
     );
