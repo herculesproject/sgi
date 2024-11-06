@@ -1,13 +1,17 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -173,7 +177,11 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
    * @return el objeto ProyectoSocioPeriodoJustificacionDocumento
    */
   private ProyectoSocioPeriodoJustificacionDocumento generarMockProyectoSocioPeriodoJustificacionDocumento(Long id) {
-    TipoDocumento tipoDocumento = TipoDocumento.builder().id(1L).nombre("tipo1").activo(Boolean.TRUE).build();
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "tipo1"));
+
+    TipoDocumento tipoDocumento = TipoDocumento.builder().id(1L).nombre(nombreTipoDocumento).activo(Boolean.TRUE)
+        .build();
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = ProyectoSocioPeriodoJustificacionDocumento
         .builder().id(id).nombre("nombre-" + id).comentario("comentario").documentoRef("001")
         .proyectoSocioPeriodoJustificacionId(1L).tipoDocumento(tipoDocumento).visible(Boolean.TRUE).build();

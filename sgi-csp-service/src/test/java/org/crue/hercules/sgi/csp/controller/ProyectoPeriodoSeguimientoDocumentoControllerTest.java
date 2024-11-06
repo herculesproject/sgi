@@ -1,9 +1,14 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -243,10 +248,12 @@ class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseControllerTe
    * @return el objeto ProyectoPeriodoSeguimientoDocumento
    */
   private ProyectoPeriodoSeguimientoDocumento generarMockProyectoPeriodoSeguimientoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "TipoDocumento" + (id != null ? id : 1)));
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId((id != null ? id : 1));
-    tipoDocumento.setNombre("TipoDocumento" + (id != null ? id : 1));
+    tipoDocumento.setNombre(nombreTipoDocumento);
     tipoDocumento.setDescripcion("descripcion-" + (id != null ? id : 1));
     tipoDocumento.setActivo(Boolean.TRUE);
 

@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProrrogaDocumentoNotFoundException;
@@ -10,10 +12,12 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProrrogaDocumentoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -656,6 +660,8 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
    * @return el objeto ProrrogaDocumento
    */
   private ProrrogaDocumento generarMockProrrogaDocumento(Long id, Long proyectoProrrogaId, Long tipoDocumentoId) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombreTipoDocumento"));
 
     // @formatter:off
     return ProrrogaDocumento.builder()
@@ -665,7 +671,7 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
         .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
         .tipoDocumento(TipoDocumento.builder()
             .id(tipoDocumentoId)
-            .nombre("nombreTipoDocumento")
+            .nombre(nombreTipoDocumento)
             .activo(Boolean.TRUE)
             .build())
         .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))

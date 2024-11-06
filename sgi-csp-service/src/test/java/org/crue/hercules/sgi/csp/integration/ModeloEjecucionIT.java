@@ -332,7 +332,7 @@ class ModeloEjecucionIT extends BaseIT {
 
   /**
    * 
-   * MODELO TIPO FASE DOCUMENTO
+   * MODELO TIPO DOCUMENTO
    * 
    */
 
@@ -344,7 +344,7 @@ class ModeloEjecucionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoDocumento.nombre,desc";
+    String sort = "tipoDocumento.id,desc";
     String filter = "tipoDocumento.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
@@ -365,11 +365,17 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(modeloTipoDocumentos.get(0).getTipoDocumento().getNombre())
+    Assertions
+        .assertThat(
+            I18nHelper.getValueForLanguage(modeloTipoDocumentos.get(0).getTipoDocumento().getNombre(), Language.ES))
         .as("get(0).getTipoDocumento().getNombre())").isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoDocumentos.get(1).getTipoDocumento().getNombre())
+    Assertions
+        .assertThat(
+            I18nHelper.getValueForLanguage(modeloTipoDocumentos.get(1).getTipoDocumento().getNombre(), Language.ES))
         .as("get(1).getTipoDocumento().getNombre())").isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoDocumentos.get(2).getTipoDocumento().getNombre())
+    Assertions
+        .assertThat(
+            I18nHelper.getValueForLanguage(modeloTipoDocumentos.get(2).getTipoDocumento().getNombre(), Language.ES))
         .as("get(2).getTipoDocumento().getNombre())").isEqualTo("nombre-" + String.format("%03d", 1));
   }
 

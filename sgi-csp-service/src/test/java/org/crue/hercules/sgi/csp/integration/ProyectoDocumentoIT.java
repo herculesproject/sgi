@@ -1,10 +1,14 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -158,10 +162,13 @@ class ProyectoDocumentoIT extends BaseIT {
    * @return el objeto ProyectoDocumento
    */
   private ProyectoDocumento generarMockProyectoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombre-001"));
+
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(1L);
     tipoDocumento.setActivo(true);
-    tipoDocumento.setNombre("nombre-001");
+    tipoDocumento.setNombre(nombreTipoDocumento);
 
     ProyectoDocumento proyectoDocumento = new ProyectoDocumento();
     proyectoDocumento.setId(id);

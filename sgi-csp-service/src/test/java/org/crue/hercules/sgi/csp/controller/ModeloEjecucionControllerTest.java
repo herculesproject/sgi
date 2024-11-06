@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
@@ -734,7 +735,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ModeloTipoDocumento modeloTipoDocumento = tiposDocumentoResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloTipoDocumento.getTipoDocumento().getNombre())
+      Assertions
+          .assertThat(I18nHelper.getValueForLanguage(modeloTipoDocumento.getTipoDocumento().getNombre(), Language.ES))
           .isEqualTo("TipoDocumento" + String.format("%03d", i));
     }
   }
@@ -1419,9 +1421,12 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
 
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
+
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
-    tipoDocumento.setNombre(nombre);
+    tipoDocumento.setNombre(nombreTipoDocumento);
     tipoDocumento.setDescripcion("descripcion-" + id);
     tipoDocumento.setActivo(Boolean.TRUE);
 

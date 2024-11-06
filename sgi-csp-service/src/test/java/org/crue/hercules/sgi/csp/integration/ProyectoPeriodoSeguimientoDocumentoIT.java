@@ -1,10 +1,14 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.util.Collections;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -165,10 +169,12 @@ class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
    * @return el objeto ProyectoPeriodoSeguimientoDocumento
    */
   private ProyectoPeriodoSeguimientoDocumento generarMockProyectoPeriodoSeguimientoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "TipoDocumento" + (id != null ? id : 1)));
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId((id != null ? id : 1));
-    tipoDocumento.setNombre("TipoDocumento" + (id != null ? id : 1));
+    tipoDocumento.setNombre(nombreTipoDocumento);
     tipoDocumento.setDescripcion("descripcion-" + (id != null ? id : 1));
     tipoDocumento.setActivo(Boolean.TRUE);
 

@@ -1,21 +1,22 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
-import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
-import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +39,16 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
 
     Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
     rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
-    
+
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
-    
+
     Set<RolSocioDescripcion> rolSocioDescripcion = new HashSet<>();
     rolSocioDescripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
-    
+
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "tipo1"));
+
     // @formatter:off
     RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()
         .abreviatura(rolSocioAbreviatura)
@@ -82,7 +86,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
             Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z"), null));
 
     TipoDocumento tipoDocumento = entityManager
-        .persistAndFlush(TipoDocumento.builder().nombre("tipo1").activo(Boolean.TRUE).build());
+        .persistAndFlush(TipoDocumento.builder().nombre(nombreTipoDocumento).activo(Boolean.TRUE).build());
 
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento1 = entityManager
         .persistAndFlush(ProyectoSocioPeriodoJustificacionDocumento.builder().nombre("doc1").documentoRef("001")

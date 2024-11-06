@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
@@ -39,10 +40,14 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
         false);
     entityManager.persistAndFlush(modeloEjecucion2);
 
-    TipoDocumento tipoDocumento1 = new TipoDocumento(null, "nombre-1", "descripcion-1", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento1 = new HashSet<>();
+    nombreTipoDocumento1.add(new TipoDocumentoNombre(Language.ES, "nombre-1"));
+    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, "descripcion-1", true);
     entityManager.persistAndFlush(tipoDocumento1);
 
-    TipoDocumento tipoDocumento2 = new TipoDocumento(null, "nombre-2", "descripcion-2", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento2 = new HashSet<>();
+    nombreTipoDocumento2.add(new TipoDocumentoNombre(Language.ES, "nombre-2"));
+    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, "descripcion-2", true);
     entityManager.persistAndFlush(tipoDocumento2);
 
     ModeloTipoDocumento modeloTipoDocumento1 = new ModeloTipoDocumento(null, tipoDocumento1, modeloEjecucion1, null,
@@ -83,10 +88,14 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
         false);
     entityManager.persistAndFlush(modeloEjecucion2);
 
-    TipoDocumento tipoDocumento1 = new TipoDocumento(null, "nombre-1", "descripcion-1", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento1 = new HashSet<>();
+    nombreTipoDocumento1.add(new TipoDocumentoNombre(Language.ES, "nombre-1"));
+    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, "descripcion-1", true);
     entityManager.persistAndFlush(tipoDocumento1);
 
-    TipoDocumento tipoDocumento2 = new TipoDocumento(null, "nombre-2", "descripcion-2", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento2 = new HashSet<>();
+    nombreTipoDocumento2.add(new TipoDocumentoNombre(Language.ES, "nombre-2"));
+    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, "descripcion-2", true);
     entityManager.persistAndFlush(tipoDocumento2);
 
     ModeloTipoDocumento modeloTipoDocumento1 = new ModeloTipoDocumento(null, tipoDocumento1, modeloEjecucion1, null,
@@ -145,10 +154,14 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
     ModeloTipoFase modeloTipoFase2 = new ModeloTipoFase(null, tipoFase2, modeloEjecucion2, true, true, true, true);
     entityManager.persistAndFlush(modeloTipoFase2);
 
-    TipoDocumento tipoDocumento1 = new TipoDocumento(null, "nombre-1", "descripcion-1", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento1 = new HashSet<>();
+    nombreTipoDocumento1.add(new TipoDocumentoNombre(Language.ES, "nombre-1"));
+    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, "descripcion-1", true);
     entityManager.persistAndFlush(tipoDocumento1);
 
-    TipoDocumento tipoDocumento2 = new TipoDocumento(null, "nombre-2", "descripcion-2", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento2 = new HashSet<>();
+    nombreTipoDocumento2.add(new TipoDocumentoNombre(Language.ES, "nombre-2"));
+    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, "descripcion-2", true);
     entityManager.persistAndFlush(tipoDocumento2);
 
     ModeloTipoDocumento modeloTipoDocumento1 = new ModeloTipoDocumento(null, tipoDocumento1, modeloEjecucion1,
@@ -218,10 +231,14 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
     ModeloTipoFase modeloTipoFase2 = new ModeloTipoFase(null, tipoFase2, modeloEjecucion2, true, true, true, true);
     entityManager.persistAndFlush(modeloTipoFase2);
 
-    TipoDocumento tipoDocumento1 = new TipoDocumento(null, "nombre-1", "descripcion-1", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento1 = new HashSet<>();
+    nombreTipoDocumento1.add(new TipoDocumentoNombre(Language.ES, "nombre-1"));
+    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, "descripcion-1", true);
     entityManager.persistAndFlush(tipoDocumento1);
 
-    TipoDocumento tipoDocumento2 = new TipoDocumento(null, "nombre-2", "descripcion-2", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento2 = new HashSet<>();
+    nombreTipoDocumento2.add(new TipoDocumentoNombre(Language.ES, "nombre-2"));
+    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, "descripcion-2", true);
     entityManager.persistAndFlush(tipoDocumento2);
 
     ModeloTipoDocumento modeloTipoDocumento1 = new ModeloTipoDocumento(null, tipoDocumento1, modeloEjecucion1,

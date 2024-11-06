@@ -1,9 +1,13 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,20 +25,27 @@ class TipoDocumentoRepositoryTest extends BaseRepositoryTest {
   void findByNombreAndActivoIsTrue_ReturnsTipoDocumento() throws Exception {
 
     // given: 2 TipoDocumento de los que 1 coincide con el nombre buscado
-    TipoDocumento tipoDocumento1 = new TipoDocumento(null, "nombre-tipoDocumento1", "descripcion-tipoDocumento1", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento1 = new HashSet<>();
+    nombreTipoDocumento1.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento1"));
+    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, "descripcion-tipoDocumento1", true);
     entityManager.persistAndFlush(tipoDocumento1);
 
-    TipoDocumento tipoDocumento2 = new TipoDocumento(null, "nombre-tipoDocumento2", "descripcion-tipoDocumento2", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento2 = new HashSet<>();
+    nombreTipoDocumento2.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento2"));
+    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, "descripcion-tipoDocumento2", true);
     entityManager.persistAndFlush(tipoDocumento2);
 
-    TipoDocumento tipoDocumento3 = new TipoDocumento(null, "nombre-tipoDocumento1", "descripcion-tipoDocumento1",
+    Set<TipoDocumentoNombre> nombreTipoDocumento3 = new HashSet<>();
+    nombreTipoDocumento3.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento1"));
+    TipoDocumento tipoDocumento3 = new TipoDocumento(null, nombreTipoDocumento3, "descripcion-tipoDocumento1",
         false);
     entityManager.persistAndFlush(tipoDocumento3);
 
     String nombreBuscado = "nombre-tipoDocumento1";
 
     // when: se busca el TipoDocumentopor nombre
-    TipoDocumento tipoDocumentoEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado).get();
+    TipoDocumento tipoDocumentoEncontrado = repository
+        .findByNombreLangAndNombreValueAndActivoIsTrue(Language.ES, nombreBuscado).get();
 
     // then: Se recupera el TipoDocumento con el nombre buscado
     Assertions.assertThat(tipoDocumentoEncontrado.getId()).as("getId").isNotNull();
@@ -48,16 +59,21 @@ class TipoDocumentoRepositoryTest extends BaseRepositoryTest {
   void findByNombreAndActivoIsTrueNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 TipoDocumento que no coinciden con el nombre buscado
-    TipoDocumento tipoDocumento1 = new TipoDocumento(null, "nombre-tipoDocumento1", "descripcion-tipoDocumento1", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento1 = new HashSet<>();
+    nombreTipoDocumento1.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento1"));
+    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, "descripcion-tipoDocumento1", true);
     entityManager.persistAndFlush(tipoDocumento1);
 
-    TipoDocumento tipoDocumento2 = new TipoDocumento(null, "nombre-tipoDocumento", "descripcion-tipoDocumento2", true);
+    Set<TipoDocumentoNombre> nombreTipoDocumento2 = new HashSet<>();
+    nombreTipoDocumento2.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento"));
+    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, "descripcion-tipoDocumento2", true);
     entityManager.persistAndFlush(tipoDocumento2);
 
     String nombreBuscado = "nombre-tipoDocumento-noexiste";
 
     // when: se busca el TipoDocumento por nombre
-    Optional<TipoDocumento> tipoDocumentoEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado);
+    Optional<TipoDocumento> tipoDocumentoEncontrado = repository
+        .findByNombreLangAndNombreValueAndActivoIsTrue(Language.ES, nombreBuscado);
 
     // then: Se recupera el TipoDocumento con el nombre buscado
     Assertions.assertThat(tipoDocumentoEncontrado).isEqualTo(Optional.empty());

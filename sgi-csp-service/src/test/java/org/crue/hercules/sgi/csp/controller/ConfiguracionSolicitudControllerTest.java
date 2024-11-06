@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -19,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.service.ConfiguracionSolicitudService;
@@ -44,6 +43,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ConfiguracionSolicitudControllerTest
@@ -385,6 +386,9 @@ class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
     Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
     nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-1"));
 
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombre-1"));
+
     // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(1L)
@@ -404,7 +408,7 @@ class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
 
     TipoDocumento tipoDocumento = TipoDocumento.builder()
         .id(1L)
-        .nombre("nombre-1")
+        .nombre(nombreTipoDocumento)
         .activo(Boolean.TRUE)
         .build();
 

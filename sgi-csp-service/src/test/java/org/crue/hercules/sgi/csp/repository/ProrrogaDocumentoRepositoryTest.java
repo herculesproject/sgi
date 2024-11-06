@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -199,10 +200,12 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
    * @return el objeto ModeloTipoFase
    */
   private TipoDocumento generarMockTipoDocumento(String suffix) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "tipo-documento-" + suffix));
 
     // @formatter:off
     TipoDocumento tipoDocumento = TipoDocumento.builder()
-        .nombre("tipo-documento-" + suffix)
+        .nombre(nombreTipoDocumento)
         .descripcion("descripcion-tipo-documento-" + suffix)
         .activo(Boolean.TRUE)
         .build();

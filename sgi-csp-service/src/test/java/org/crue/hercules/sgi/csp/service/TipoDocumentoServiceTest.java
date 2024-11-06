@@ -1,21 +1,29 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolationException;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.service.impl.TipoDocumentoServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,24 +33,23 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * TipoDocumentoServiceTest
  */
+@Import({ TipoDocumentoServiceImpl.class })
 class TipoDocumentoServiceTest extends BaseServiceTest {
 
-  @Mock
+  @MockBean
   private TipoDocumentoRepository tipoDocumentoRepository;
 
+  @Autowired
   private TipoDocumentoService tipoDocumentoService;
-
-  @BeforeEach
-  void setUp() throws Exception {
-    tipoDocumentoService = new TipoDocumentoServiceImpl(tipoDocumentoRepository);
-  }
 
   @Test
   void create_ReturnsTipoDocumento() {
     // given: Un nuevo TipoDocumento
     TipoDocumento tipoDocumento = generarMockTipoDocumento(null);
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumento.getNombre()))
+    BDDMockito
+        .given(tipoDocumentoRepository.findByNombreLangAndNombreValueAndActivoIsTrue(ArgumentMatchers.<Language>any(),
+            ArgumentMatchers.<String>any()))
         .willReturn(Optional.empty());
 
     BDDMockito.given(tipoDocumentoRepository.save(tipoDocumento)).will((InvocationOnMock invocation) -> {
@@ -57,7 +64,8 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: El TipoDocumento se crea correctamente
     Assertions.assertThat(tipoDocumentoCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(tipoDocumentoCreado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(tipoDocumentoCreado.getNombre()).as("getNombre").isEqualTo(tipoDocumento.getNombre());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoCreado.getNombre(), Language.ES)).as("getNombre")
+        .isEqualTo(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES));
     Assertions.assertThat(tipoDocumentoCreado.getActivo()).as("getActivo").isEqualTo(tipoDocumento.getActivo());
   }
 
@@ -79,14 +87,17 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(null, "nombreRepetido");
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "nombreRepetido");
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoNew.getNombre()))
+    BDDMockito
+        .given(tipoDocumentoRepository.findByNombreLangAndNombreValueAndActivoIsTrue(ArgumentMatchers.<Language>any(),
+            ArgumentMatchers.<String>any()))
         .willReturn(Optional.of(tipoDocumento));
 
     // when: Creamos el TipoDocumento
     // then: Lanza una excepcion porque hay otro TipoDocumento con ese nombre
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.create(tipoDocumentoNew))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe Tipo Documento con el valor %s", tipoDocumentoNew.getNombre());
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessageContaining("Ya existe un tipo de documento con el nombre '%s'",
+            I18nHelper.getValueForLanguage(tipoDocumentoNew.getNombre(), Language.ES));
   }
 
   @Test
@@ -95,7 +106,9 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
     TipoDocumento tipoDocumentoNombreActualizado = generarMockTipoDocumento(1L, "NombreActualizado");
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoNombreActualizado.getNombre()))
+    BDDMockito
+        .given(tipoDocumentoRepository.findByNombreLangAndNombreValueAndActivoIsTrue(ArgumentMatchers.<Language>any(),
+            ArgumentMatchers.<String>any()))
         .willReturn(Optional.of(tipoDocumento));
 
     BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
@@ -109,8 +122,9 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: El TipoDocumento se actualiza correctamente.
     Assertions.assertThat(tipoDocumentoActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(tipoDocumentoActualizado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(tipoDocumentoActualizado.getNombre()).as("getNombre()")
-        .isEqualTo(tipoDocumentoNombreActualizado.getNombre());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoActualizado.getNombre(), Language.ES))
+        .as("getNombre()")
+        .isEqualTo(I18nHelper.getValueForLanguage(tipoDocumentoActualizado.getNombre(), Language.ES));
 
   }
 
@@ -149,7 +163,8 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: El TipoDocumento se activa correctamente.
     Assertions.assertThat(tipoDocumentoActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(tipoDocumentoActualizado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(tipoDocumentoActualizado.getNombre()).as("getNombre()").isEqualTo(tipoDocumento.getNombre());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoActualizado.getNombre(), Language.ES))
+        .as("getNombre()").isEqualTo(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES));
     Assertions.assertThat(tipoDocumentoActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(tipoDocumento.getDescripcion());
     Assertions.assertThat(tipoDocumentoActualizado.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
@@ -176,14 +191,17 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
 
     BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(tipoDocumento));
-    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(ArgumentMatchers.<String>any()))
+    BDDMockito
+        .given(tipoDocumentoRepository.findByNombreLangAndNombreValueAndActivoIsTrue(ArgumentMatchers.<Language>any(),
+            ArgumentMatchers.<String>any()))
         .willReturn(Optional.of(tipoDocumentoExistente));
 
     // when: activamos el TipoDocumento
     // then: Lanza una excepcion porque el TipoDocumento no existe
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.enable(tipoDocumento.getId()))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe Tipo Documento con el valor %s", tipoDocumento.getNombre());
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessageContaining("Ya existe un tipo de documento con el nombre '%s'",
+            I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES));
 
   }
 
@@ -210,7 +228,8 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: El TipoDocumento se desactiva correctamente.
     Assertions.assertThat(tipoDocumentoActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(tipoDocumentoActualizado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(tipoDocumentoActualizado.getNombre()).as("getNombre()").isEqualTo(tipoDocumento.getNombre());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoActualizado.getNombre(), Language.ES))
+        .as("getNombre()").isEqualTo(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES));
     Assertions.assertThat(tipoDocumentoActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(tipoDocumento.getDescripcion());
     Assertions.assertThat(tipoDocumentoActualizado.getActivo()).as("getActivo()").isFalse();
@@ -234,14 +253,17 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     TipoDocumento tipoDocumentoUpdated = generarMockTipoDocumento(1L, "nombreRepetido");
     TipoDocumento tipoDocumento = generarMockTipoDocumento(2L, "nombreRepetido");
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoUpdated.getNombre()))
+    BDDMockito
+        .given(tipoDocumentoRepository.findByNombreLangAndNombreValueAndActivoIsTrue(ArgumentMatchers.<Language>any(),
+            ArgumentMatchers.<String>any()))
         .willReturn(Optional.of(tipoDocumento));
 
     // when: Actualizamos el TipoDocumento
     // then: Lanza una excepcion porque ya existe otro TipoDocumento con ese nombre
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.update(tipoDocumentoUpdated))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Tipo Documento de Tipo Documento ya existe", tipoDocumentoUpdated.getNombre());
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessageContaining("Ya existe un tipo de documento con el nombre '%s'",
+            I18nHelper.getValueForLanguage(tipoDocumentoUpdated.getNombre(), Language.ES));
   }
 
   @Test
@@ -279,7 +301,8 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       TipoDocumento tipoDocumento = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES))
+          .isEqualTo("TipoDocumento" + String.format("%03d", i));
     }
   }
 
@@ -318,7 +341,8 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       TipoDocumento tipoDocumento = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES))
+          .isEqualTo("TipoDocumento" + String.format("%03d", i));
     }
   }
 
@@ -335,7 +359,8 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     // then: el TipoDocumento
     Assertions.assertThat(tipoDocumento).as("isNotNull()").isNotNull();
     Assertions.assertThat(tipoDocumento.getId()).as("getId()").isEqualTo(idBuscado);
-    Assertions.assertThat(tipoDocumento.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-1");
     Assertions.assertThat(tipoDocumento.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoDocumento.getActivo()).as("getActivo()").isTrue();
 
@@ -370,10 +395,12 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
    * @return el objeto TipoDocumento
    */
   private TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
-    tipoDocumento.setNombre(nombre);
+    tipoDocumento.setNombre(nombreTipoDocumento);
     tipoDocumento.setDescripcion("descripcion-" + id);
     tipoDocumento.setActivo(Boolean.TRUE);
 

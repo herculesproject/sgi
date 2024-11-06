@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
@@ -23,6 +24,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ModeloTipoDocumentoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -558,7 +560,8 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       ModeloTipoDocumento modeloTipoDocumento = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(modeloTipoDocumento.getTipoDocumento().getNombre())
+      Assertions
+          .assertThat(I18nHelper.getValueForLanguage(modeloTipoDocumento.getTipoDocumento().getNombre(), Language.ES))
           .isEqualTo("TipoDocumento" + String.format("%03d", i));
     }
   }
@@ -570,10 +573,12 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
    * @return el objeto TipoDocumento
    */
   private TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
-    tipoDocumento.setNombre(nombre);
+    tipoDocumento.setNombre(nombreTipoDocumento);
     tipoDocumento.setDescripcion("descripcion-" + id);
     tipoDocumento.setActivo(Boolean.TRUE);
 

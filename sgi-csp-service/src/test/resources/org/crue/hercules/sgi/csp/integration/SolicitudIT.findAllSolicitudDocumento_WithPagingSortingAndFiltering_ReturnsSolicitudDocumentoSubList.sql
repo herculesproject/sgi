@@ -73,7 +73,10 @@ UPDATE test.solicitud SET estado_solicitud_id = 1 WHERE id = 1;
 UPDATE test.solicitud SET estado_solicitud_id = 2 WHERE id = 2;
 
 -- TIPO DOCUMENTO
-INSERT INTO test.tipo_documento (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
+
+-- TIPO_DOCUMENTO_NOMBRE
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (1, 'es', 'nombre-001');
 
 -- SOLICITUD DOCUMENTO
  INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, nombre, tipo_documento_id)

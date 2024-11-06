@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.Convocatoria.Estado;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -23,12 +24,12 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
-import org.crue.hercules.sgi.csp.model.Convocatoria.Estado;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -707,11 +708,13 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
    * @return el objeto TipoDocumento
    */
   private TipoDocumento generarMockTipoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombreTipoDocumento-" + id));
 
     // @formatter:off
     return TipoDocumento.builder()
         .id(id)
-        .nombre("nombreTipoDocumento-" + id)
+        .nombre(nombreTipoDocumento)
         .descripcion("descripcionTipoDocumento-" + id)
         .activo(Boolean.TRUE)
         .build();

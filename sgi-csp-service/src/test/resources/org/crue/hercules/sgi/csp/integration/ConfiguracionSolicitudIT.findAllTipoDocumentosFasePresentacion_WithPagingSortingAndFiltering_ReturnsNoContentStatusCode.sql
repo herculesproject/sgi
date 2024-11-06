@@ -56,23 +56,36 @@ INSERT INTO test.configuracion_solicitud
 (id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
 VALUES(2, 2, FALSE, 2, 54321);
 
+
 -- TIPO DOCUMENTO
-INSERT INTO test.tipo_documento
-(id, activo, descripcion, nombre)
-VALUES
-(1, true, NULL, 'Bases convocatoria'),
-(2, true, NULL, 'Formulario solicitud'),
-(3, true, NULL, 'Borrador contrato'),
-(4, true, NULL, 'Presupuesto'),
-(5, true, NULL, 'Solicitud baja miembro equipo'),
-(6, true, NULL, 'Solicitud cambio IP'),
-(7, true, NULL, 'Memoria científica'),
-(8, true, NULL, 'Justificación'),
-(9, true, NULL, 'Justificante asistencia congreso'),
-(10, true, NULL, 'Documento técnico'),
-(11, true, NULL, 'Documento de gestión'),
-(12, true, NULL, 'CVN'),
-(13, true, NULL, 'CVA');
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (2, 'descripcion-002', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (3, 'descripcion-003', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (4, 'descripcion-004', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (5, 'descripcion-005', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (6, 'descripcion-006', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (7, 'descripcion-007', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (8, 'descripcion-008', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (9, 'descripcion-009', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (10, 'descripcion-010', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (11, 'descripcion-011', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (12, 'descripcion-012', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (13, 'descripcion-013', true);
+
+-- TIPO_DOCUMENTO_NOMBRE
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (1, 'es', 'Bases convocatoria');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (2, 'es', 'Formulario solicitud');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (3, 'es', 'Borrador contrato');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (4, 'es', 'Presupuesto');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (5, 'es', 'Solicitud baja miembro equipo');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (6, 'es', 'Solicitud cambio IP');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (7, 'es', 'Memoria científica');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (8, 'es', 'Justificación');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (9, 'es', 'Justificante asistencia congreso');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (10, 'es', 'Documento técnico');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (11, 'es', 'Documento de gestión');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (12, 'es', 'CVN');
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (13, 'es', 'CVA');
 
 
 -- DOCUMENTO REQUERIDO SOLICITUD

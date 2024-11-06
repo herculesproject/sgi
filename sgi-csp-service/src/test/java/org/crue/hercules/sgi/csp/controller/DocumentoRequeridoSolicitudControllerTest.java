@@ -1,10 +1,15 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.crue.hercules.sgi.csp.exceptions.DocumentoRequeridoSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -224,11 +229,13 @@ class DocumentoRequeridoSolicitudControllerTest extends BaseControllerTest {
    * @return el objeto TipoDocumento
    */
   private TipoDocumento generarMockTipoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombreTipoDocumento-" + id));
 
     // @formatter:off
     return TipoDocumento.builder()
         .id(id)
-        .nombre("nombreTipoDocumento-" + id)
+        .nombre(nombreTipoDocumento)
         .descripcion("descripcionTipoDocumento-" + id)
         .activo(Boolean.TRUE)
         .build();

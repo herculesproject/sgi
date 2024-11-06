@@ -1,7 +1,10 @@
 package org.crue.hercules.sgi.csp.dto.sgp;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
+
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,7 +59,7 @@ public class PersonaOutput implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
-    private String nombre;
+    private Collection<TipoDocumentoNombre> nombre;
   }
 
   @EqualsAndHashCode(callSuper = false)

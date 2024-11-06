@@ -1191,11 +1191,13 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
    * @return el objeto TipoDocumento
    */
   private TipoDocumento generarMockTipoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombreTipoDocumento-" + id));
 
     // @formatter:off
     return TipoDocumento.builder()
         .id(id)
-        .nombre("nombreTipoDocumento-" + id)
+        .nombre(nombreTipoDocumento)
         .descripcion("descripcionTipoDocumento-" + id)
         .activo(Boolean.TRUE)
         .build();

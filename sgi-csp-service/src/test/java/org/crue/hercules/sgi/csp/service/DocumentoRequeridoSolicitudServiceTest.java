@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
@@ -1069,11 +1070,13 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    * @return el objeto TipoDocumento
    */
   private TipoDocumento generarMockTipoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombreTipoDocumento-" + id));
 
     // @formatter:off
     return TipoDocumento.builder()
         .id(id)
-        .nombre("nombreTipoDocumento-" + id)
+        .nombre(nombreTipoDocumento)
         .descripcion("descripcionTipoDocumento-" + id)
         .activo(Boolean.TRUE)
         .build();

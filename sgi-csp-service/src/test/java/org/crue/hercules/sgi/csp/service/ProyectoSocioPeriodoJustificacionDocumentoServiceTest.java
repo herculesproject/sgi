@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
@@ -12,9 +14,11 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNot
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioPeriodoJustificacionDocumentoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -311,7 +315,10 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
    */
   private ProyectoSocioPeriodoJustificacionDocumento generarMockProyectoSocioPeriodoJustificacionDocumento(Long id,
       Long proyectoSocioPeriodoJustificacionId) {
-    TipoDocumento tipoDocumento = TipoDocumento.builder().nombre("tipo1").activo(Boolean.TRUE).build();
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "tipo1" + (id != null ? id : 1)));
+
+    TipoDocumento tipoDocumento = TipoDocumento.builder().nombre(nombreTipoDocumento).activo(Boolean.TRUE).build();
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = ProyectoSocioPeriodoJustificacionDocumento
         .builder().id(id).nombre("nombre-" + id).comentario("comentario").documentoRef("001")
         .proyectoSocioPeriodoJustificacionId(proyectoSocioPeriodoJustificacionId).tipoDocumento(tipoDocumento)

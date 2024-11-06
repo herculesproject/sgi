@@ -65,7 +65,10 @@ INSERT INTO test.modelo_tipo_hito (id, modelo_ejecucion_id, tipo_hito_id, solici
 INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario) values(1, 1, 1,'2021-10-22T00:00:00Z', 'comentario-1');
 
 -- TIPO DOCUMENTO
-INSERT INTO test.tipo_documento (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
+INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
+
+-- TIPO_DOCUMENTO_NOMBRE
+INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (1, 'es', 'nombre-001');
 
 -- MODELO TIPO DOCUMENTO
 INSERT INTO test.modelo_tipo_documento (id, tipo_documento_id, modelo_ejecucion_id, modelo_tipo_fase_id, activo) VALUES (1, 1, 1, 1, true);

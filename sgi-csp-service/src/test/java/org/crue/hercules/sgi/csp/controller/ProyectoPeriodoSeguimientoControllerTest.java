@@ -2,9 +2,9 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoSeguimientoPresentacionDocumentacionInput;
@@ -12,9 +12,11 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundEx
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ProyectoPeriodoSeguimientoControllerTest
@@ -461,10 +465,12 @@ class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest {
   }
 
   private ProyectoPeriodoSeguimientoDocumento generarMockProyectoPeriodoSeguimientoDocumento(Long id) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "TipoDocumento" + (id != null ? id : 1)));
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId((id != null ? id : 1));
-    tipoDocumento.setNombre("TipoDocumento" + (id != null ? id : 1));
+    tipoDocumento.setNombre(nombreTipoDocumento);
     tipoDocumento.setDescripcion("descripcion-" + (id != null ? id : 1));
     tipoDocumento.setActivo(Boolean.TRUE);
 
