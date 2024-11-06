@@ -10,11 +10,14 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { CKEditorTemplate } from './types/ckeditor-template';
+import { I18nCkeditorTypeComponent } from './types/i18n-ckeditor';
+import { I18nInputTypeComponent } from './types/i18n-input';
 import { I18nTextareaTypeComponent } from './types/i18n-textarea.type';
 import { SelectEntityTypeComponent } from './types/select-entity.type';
 import { SelectProcedimientosTypeComponent } from './types/select-procedimientos.type';
 import { TipoValorSocialComponent } from './types/tipo-valor-social.component';
 import { IDateBetweenValidatorOptions, IDateValidatorOptions, dateIsAfter, dateIsBetween } from './validators/date.validator';
+import { emailPrincipalUniqueValidator } from './validators/email-principal-unique.validator';
 import { emailValidator } from './validators/email.validator';
 import { fieldArrayMax } from './validators/field-array-max.validator';
 import { IMulticheckboxValidatorOptions, multicheckboxRestricted } from './validators/multicheckbox.validator';
@@ -24,8 +27,6 @@ import { PanelWrapperComponent } from './wrappers/panel/panel.wrapper';
 import { SubtitleDivWrapperComponent } from './wrappers/subtitle-div/subtitle-div.wrapper';
 import { TitleDivWrapperComponent } from './wrappers/title-div/title-div.wrapper';
 import { WarnDivWrapperComponent } from './wrappers/warn-div/warn-div.wrapper';
-import { I18nInputTypeComponent } from './types/i18n-input';
-import { I18nCkeditorTypeComponent } from './types/i18n-ckeditor';
 
 @NgModule({
   declarations: [
@@ -130,6 +131,11 @@ import { I18nCkeditorTypeComponent } from './types/i18n-ckeditor';
         {
           name: 'email',
           validation: emailValidator,
+          options: {}
+        },
+        {
+          name: 'email-principal-unique',
+          validation: emailPrincipalUniqueValidator,
           options: {}
         },
         {
