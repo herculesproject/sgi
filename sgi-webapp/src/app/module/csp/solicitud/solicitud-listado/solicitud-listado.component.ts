@@ -191,7 +191,9 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       fuenteFinanciacion: new FormControl(undefined),
       palabrasClave: new FormControl(null),
       formularioSolicitud: new FormControl(null),
-      rolUniversidad: new FormControl(null)
+      rolUniversidad: new FormControl(null),
+      finalidad: new FormControl(null),
+      unidadGestion: new FormControl(null)
     });
 
     this.filter = this.createFilter();
@@ -453,7 +455,9 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         .and('convocatoria.entidadesFinanciadoras.fuenteFinanciacion.id',
           SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString())
         .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value)
-        .and('solicitudProyecto.rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString());
+        .and('solicitudProyecto.rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString())
+        .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.id?.toString())
+        .and('convocatoria.finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString());
 
       const palabrasClave = controls.palabrasClave.value as string[];
       if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {

@@ -138,6 +138,22 @@
       </div>
 
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
+        <!-- Unidad de gestión -->
+        <mat-form-field fxFlex="33%">
+          <mat-label>{{'csp.solicitud.unidad-gestion' | translate}}</mat-label>
+          <sgi-select-unidad-gestion #unidadGestion formControlName="unidadGestion">
+          </sgi-select-unidad-gestion>
+        </mat-form-field>
+
+        <!-- Finalidad -->
+        <mat-form-field fxFlex="33%">
+          <mat-label>{{'csp.solicitud.finalidad' | translate}}</mat-label>
+          <sgi-select-tipo-finalidad formControlName="finalidad" extended="false">
+          </sgi-select-tipo-finalidad>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- plazoAbierto -->
         <mat-checkbox class="checkplazo" color="primary" formControlName="plazoAbierto">{{'csp.solicitud.plazo.abierto'
           | translate}}
