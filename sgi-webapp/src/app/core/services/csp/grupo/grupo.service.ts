@@ -11,11 +11,13 @@ import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autoriza
 import { IGrupoResponsableEconomico } from '@core/models/csp/grupo-responsable-economico';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { ISolicitud } from '@core/models/csp/solicitud';
+import { LuxonUtils } from '@core/utils/luxon-utils';
 import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate,
   SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
 } from '@sgi/framework/http';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGrupoEnlaceResponse } from '../grupo-enlace/grupo-enlace-response';
@@ -354,6 +356,33 @@ export class GrupoService extends _GrupoMixinBase {
       `${this.endpointUrl}/${id}/solicitud`
     ).pipe(
       map(response => SOLICITUD_RESUMEN_RESPONSE_CONVERTER.toTarget(response))
+    );
+  }
+
+  /**
+ * Muestra los grupos a los que pertenece el investigador actual
+ *
+ * @param personaRef Identificador de la persona
+ * @param fechaIinicio fecha de inicio de participacion de la persona
+ * @param fechaFin fecha de fin de participacion de la persona
+ */
+  findGruposPersona(personaRef: string, fechaInicio?: DateTime, fechaFin?: DateTime): Observable<IGrupo[]> {
+    let params = new HttpParams();
+    params = params.append('personaRef', personaRef);
+
+    if (fechaInicio) {
+      params = params.append('fechaInicio', LuxonUtils.toBackend(fechaInicio));
+    }
+
+    if (fechaFin) {
+      params = params.append('fechaFin', LuxonUtils.toBackend(fechaFin));
+    }
+
+    return this.http.get<IGrupoResponse[]>(
+      `${this.endpointUrl}/persona`,
+      { params }
+    ).pipe(
+      map(response => response ? GRUPO_RESPONSE_CONVERTER.toTargetArray(response) : [])
     );
   }
 
