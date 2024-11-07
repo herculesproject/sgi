@@ -1148,6 +1148,27 @@ public class SolicitudService {
   }
 
   /**
+   * Obtiene los ids de {@link Solicitud} modificadas que esten activos y que
+   * cumplan las condiciones indicadas en el filtro de búsqueda
+   *
+   * @param query información del filtro.
+   * @return el listado de ids de {@link Solicitud}.
+   */
+  public List<Long> findIdsSolicitudesModificadas(String query) {
+    log.debug("findIdsSolicitudesModificadas(String query) - start");
+
+    Specification<Solicitud> specs = SolicitudSpecifications.activos()
+        .and(SgiRSQLJPASupport.toSpecification(query,
+            SolicitudPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
+
+    List<Long> returnValue = repository.findIds(specs);
+
+    log.debug("findIdsSolicitudesModificadas(String query) - end");
+
+    return returnValue;
+  }
+
+  /**
    * Hace las comprobaciones necesarias para determinar si la {@link Solicitud}
    * puede ser modificada para cambiar el estado y añadir
    * nuevos documentos.

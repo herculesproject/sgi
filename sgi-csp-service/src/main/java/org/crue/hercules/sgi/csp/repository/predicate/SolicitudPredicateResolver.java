@@ -25,8 +25,19 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud_;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad_;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidad;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio_;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto_;
+import org.crue.hercules.sgi.csp.model.SolicitudRrhh;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
@@ -40,6 +51,7 @@ import io.github.perplexhub.rsql.RSQLOperators;
 public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Solicitud> {
   private enum Property {
     FECHA_ELIMINACION("fechaEliminacion"),
+    FECHA_MODIFICACION("fechaModificacion"),
     REFERENCIA_CONVOCATORIA("referenciaConvocatoria"),
     PLAN_INVESTIGACION("planInvestigacion"),
     ABIERTO_PLAZO_PRESENTACION_SOLICITUD("abiertoPlazoPresentacionSolicitud"),
@@ -172,6 +184,43 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
     }
   }
 
+  private Predicate buildByFechaModificacion(ComparisonNode node, Root<Solicitud> root, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.GREATER_THAN_OR_EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    String fechaModificacionArgument = node.getArguments().get(0);
+    Instant fechaModificacion = Instant.parse(fechaModificacionArgument);
+    Join<Solicitud, SolicitudProyecto> joinSolicitudProyecto = root.join(Solicitud_.solicitudProyecto, JoinType.LEFT);
+    Join<Solicitud, SolicitudRrhh> joinSolicitudRrhh = root.join(Solicitud_.solicitudRrhh, JoinType.LEFT);
+    ListJoin<Solicitud, SolicitudDocumento> joinDocumentos = root.join(Solicitud_.documentos, JoinType.LEFT);
+    ListJoin<Solicitud, SolicitudModalidad> joinModalidades = root.join(Solicitud_.modalidades, JoinType.LEFT);
+    ListJoin<SolicitudProyecto, SolicitudProyectoEntidad> joinEntidadesSolicitudProyecto = joinSolicitudProyecto
+        .join(SolicitudProyecto_.entidades, JoinType.LEFT);
+    ListJoin<SolicitudProyecto, SolicitudProyectoEquipo> joinEquipoSolicitudProyecto = joinSolicitudProyecto
+        .join(SolicitudProyecto_.equipo, JoinType.LEFT);
+    ListJoin<SolicitudProyecto, SolicitudProyectoPresupuesto> joinPresupuestoSolicitudProyecto = joinSolicitudProyecto
+        .join(SolicitudProyecto_.presupuesto, JoinType.LEFT);
+    ListJoin<SolicitudProyecto, SolicitudProyectoResponsableEconomico> joinResponsableEconomicoSolicitudProyecto = joinSolicitudProyecto
+        .join(SolicitudProyecto_.responsablesEconomicos, JoinType.LEFT);
+    ListJoin<SolicitudProyecto, SolicitudProyectoSocio> joinSociosSolicitudProyecto = joinSolicitudProyecto
+        .join(SolicitudProyecto_.socios, JoinType.LEFT);
+    ListJoin<SolicitudProyectoSocio, SolicitudProyectoSocioEquipo> joinEquipoSociosSolicitudProyecto = joinSociosSolicitudProyecto
+        .join(SolicitudProyectoSocio_.equipo, JoinType.LEFT);
+
+    return cb.or(cb.greaterThanOrEqualTo(root.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinDocumentos.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinEntidadesSolicitudProyecto.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinEquipoSociosSolicitudProyecto.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinEquipoSolicitudProyecto.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinModalidades.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinPresupuestoSolicitudProyecto.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinResponsableEconomicoSolicitudProyecto.get(Auditable_.lastModifiedDate),
+            fechaModificacion),
+        cb.greaterThanOrEqualTo(joinSociosSolicitudProyecto.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinSolicitudProyecto.get(Auditable_.lastModifiedDate), fechaModificacion),
+        cb.greaterThanOrEqualTo(joinSolicitudRrhh.get(Auditable_.lastModifiedDate), fechaModificacion));
+  }
+
   @Override
   public boolean isManaged(ComparisonNode node) {
     Property property = Property.fromCode(node.getSelector());
@@ -189,6 +238,8 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
     switch (property) {
       case FECHA_ELIMINACION:
         return buildByFechaEliminacion(node, root, criteriaBuilder);
+      case FECHA_MODIFICACION:
+        return buildByFechaModificacion(node, root, criteriaBuilder);
       case REFERENCIA_CONVOCATORIA:
         return buildByReferenciaConvocatoria(node, root, criteriaBuilder);
       case PLAN_INVESTIGACION:
