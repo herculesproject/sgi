@@ -144,6 +144,8 @@ public class ProyectoController {
   public static final String PATH_GASTOS_PROYECTO = PATH_ID + PATH_SEPARATOR + "gastos-proyecto";
   public static final String PATH_INIT_FECHA_INICIO = PATH_ID + PATH_SEPARATOR + "init-fecha-inicio";
   public static final String PATH_INVESTIGADORES_PRINCIPALES = PATH_ID + PATH_SEPARATOR + "investigadoresprincipales";
+  public static final String PATH_INVESTIGADORES_PRINCIPALES_ACTUALES = PATH_ID + PATH_SEPARATOR
+      + "investigadoresprincipalesactuales";
   public static final String PATH_MODIFICABLE = PATH_ID + PATH_SEPARATOR + "modificable";
   public static final String PATH_PRORROGAS = PATH_ID + PATH_SEPARATOR + "proyecto-prorrogas";
   public static final String PATH_REQUERIMIENTOS_JUSTIFICACION = PATH_ID + PATH_SEPARATOR
@@ -1482,6 +1484,27 @@ public class ProyectoController {
 
   /**
    * Devuelve una lista filtrada de investigadores principales del
+   * {@link Proyecto}.
+   *
+   * Son investiador principales los {@link ProyectoEquipo} que tienen el
+   * {@link RolProyecto} con el flag {@link RolProyecto#rolPrincipal} a
+   * <code>true</code>.
+   * 
+   * @param id Identificador del {@link Proyecto}.
+   * @return la lista investigadores principales del {@link Proyecto}.
+   */
+  @GetMapping(PATH_INVESTIGADORES_PRINCIPALES)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V', 'CSP-PRO-E')")
+  public ResponseEntity<List<ProyectoEquipo>> findInvestigadoresPrincipales(@PathVariable Long id) {
+    log.debug("findInvestigadoresPrincipales(Long id) - start");
+    List<ProyectoEquipo> returnValue = proyectoEquipoService.findInvestigadoresPrincipales(id);
+    log.debug("findInvestigadoresPrincipales(Long id) - end");
+    return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista filtrada de investigadores principales del
    * {@link Proyecto} en el momento actual.
    *
    * Son investiador principales los {@link ProyectoEquipo} que a fecha actual
@@ -1492,9 +1515,9 @@ public class ProyectoController {
    * @return la lista investigadores principales del {@link Proyecto} en el
    *         momento actual.
    */
-  @GetMapping(PATH_INVESTIGADORES_PRINCIPALES)
+  @GetMapping(PATH_INVESTIGADORES_PRINCIPALES_ACTUALES)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-EJEC-V', 'CSP-EJEC-E', 'CSP-EJEC-INV-VR')")
-  public ResponseEntity<List<ProyectoEquipo>> findInvestigadoresPrincipales(@PathVariable Long id) {
+  public ResponseEntity<List<ProyectoEquipo>> findInvestigadoresPrincipalesActuales(@PathVariable Long id) {
     log.debug("findInvestigadoresPrincipales(Long id) - start");
     List<ProyectoEquipo> returnValue = proyectoEquipoService.findInvestigadoresPrincipales(id);
     log.debug("findInvestigadoresPrincipales(Long id) - end");
