@@ -16,8 +16,11 @@
     <div fxLayout="row">
       <mat-form-field>
         <mat-label>{{'csp.tipo-documento.descripcion' | translate}}</mat-label>
-        <textarea matInput formControlName="descripcion"
-          placeholder="{{'csp.tipo-documento.descripcion' | translate}}"></textarea>
+        <sgi-i18n-textarea matInput formControlName="descripcion"
+          placeholder="{{'csp.tipo-documento.descripcion' | translate}}"></sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.controls.descripcion.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamDescripcionEntity}}
+        </mat-error>
       </mat-form-field>
     </div>
   </form>

@@ -100,7 +100,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
           case 'nombre':
             return wrapper.value.tipoDocumento?.nombre ? this.languageService.getFieldValue(wrapper.value.tipoDocumento?.nombre) : '';
           case 'descripcion':
-            return wrapper.value.tipoDocumento.descripcion;
+            return wrapper.value.tipoDocumento.descripcion ? this.languageService.getFieldValue(wrapper.value.tipoDocumento?.descripcion) : '';
           case 'observaciones':
             return wrapper.value.observaciones;
           default:

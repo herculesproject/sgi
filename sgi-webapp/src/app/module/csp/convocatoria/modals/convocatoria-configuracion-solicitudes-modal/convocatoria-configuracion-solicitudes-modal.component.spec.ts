@@ -21,7 +21,7 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
 
   const tipoDocumento: ITipoDocumento = {
     activo: true,
-    descripcion: '',
+    descripcion: [{ lang: 'es', value: '' }] as unknown as I18nFieldValue[],
     id: 1,
     nombre: [{ lang: 'es', value: '' }] as unknown as I18nFieldValue[]
   };

@@ -86,7 +86,7 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
           case 'nombre':
             return wrapper.value.tipoDocumento?.nombre ? this.languageService.getFieldValue(wrapper.value.tipoDocumento?.nombre) : '';
           case 'descripcion':
-            return wrapper.value.tipoDocumento.descripcion;
+            return wrapper.value.tipoDocumento.descripcion ? this.languageService.getFieldValue(wrapper.value.tipoDocumento?.descripcion) : '';
           case 'nombreFase':
             return wrapper.value.modeloTipoFase?.tipoFase?.nombre ? this.languageService.getFieldValue(wrapper.value.modeloTipoFase.tipoFase.nombre) : '';
           default:

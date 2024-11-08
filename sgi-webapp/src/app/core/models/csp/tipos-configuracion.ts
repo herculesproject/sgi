@@ -22,11 +22,7 @@ export interface IModeloEjecucion extends TipoConfiguracion {
   solicitudSinConvocatoria: boolean;
 }
 
-export interface ITipoDocumento {
-  id: number;
-  nombre: I18nFieldValue[];
-  descripcion: string;
-  activo: boolean;
+export interface ITipoDocumento extends TipoConfiguracionI18n {
 }
 
 export interface ITipoHito extends TipoConfiguracion {

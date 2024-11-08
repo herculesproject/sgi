@@ -13,6 +13,7 @@ import { switchMap } from 'rxjs/operators';
 
 const TIPO_DOCUMENTO_KEY = marker('csp.tipo-documento');
 const TIPO_DOCUMENTO_NOMBRE_KEY = marker('csp.tipo-documento.nombre');
+const TIPO_DOCUMENTO_DESCRIPCION_KEY = marker('csp.tipo-documento.descripcion');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -24,6 +25,7 @@ export class TipoDocumentoModalComponent extends DialogActionComponent<ITipoDocu
   private readonly tipoDocumento: ITipoDocumento;
   title: string;
   msgParamNombreEntity = {};
+  msgParamDescripcionEntity = {};
 
   constructor(
     matDialogRef: MatDialogRef<TipoDocumentoModalComponent>,
@@ -50,6 +52,11 @@ export class TipoDocumentoModalComponent extends DialogActionComponent<ITipoDocu
       TIPO_DOCUMENTO_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      TIPO_DOCUMENTO_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.isEdit()) {
       this.translate.get(
@@ -81,7 +88,7 @@ export class TipoDocumentoModalComponent extends DialogActionComponent<ITipoDocu
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
       nombre: new FormControl(this.tipoDocumento?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
-      descripcion: new FormControl(this.tipoDocumento?.descripcion ?? '')
+      descripcion: new FormControl(this.tipoDocumento?.descripcion ?? [], I18nValidators.maxLength(250))
     });
   }
 
