@@ -16,6 +16,7 @@ import { ConfigService as ConfigCnfService } from '@core/services/cnf/config.ser
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { FacturaPrevistaPendienteService } from '@core/services/sge/factura-prevista-pendiente/factura-prevista-pendiente.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
@@ -73,7 +74,8 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
     private readonly proyectoService: ProyectoService,
     private readonly exportService: FacturasPrevistasPendientesListadoExportService,
     private readonly dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
     this.elementosPagina = [5, 10, 25, 100];
@@ -246,7 +248,7 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
           case 'estadoValidacionIP.estado':
             return facturaPrevistaPendiente.estadoValidacionIP?.estado ? this.translate.instant(TIPO_ESTADO_VALIDACION_MAP.get(facturaPrevistaPendiente.estadoValidacionIP?.estado)) : '';
           case 'tipoFacturacion.nombre':
-            return facturaPrevistaPendiente.tipoFacturacion?.nombre ?? '';
+            return facturaPrevistaPendiente.tipoFacturacion?.nombre ? this.languageService.getFieldValue(facturaPrevistaPendiente.tipoFacturacion?.nombre) : '';
           default:
             return facturaPrevistaPendiente[property];
         }

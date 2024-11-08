@@ -12,6 +12,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
@@ -78,7 +79,9 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
     public actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService) {
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
+  ) {
 
     super(actionService.FRAGMENT.CALENDARIO_FACTURACION, actionService, translate);
     this.formPart = this.fragment as ProyectoCalendarioFacturacionFragment;
@@ -127,7 +130,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
     this.dataSource.sortingDataAccessor = (wrapper, property) => {
       switch (property) {
         case 'tipoFacturacion':
-          return wrapper.value.tipoFacturacion.nombre;
+          return this.languageService.getFieldValue(wrapper.value.tipoFacturacion.nombre);
         case 'importeTotal':
           return this.getImporteTotal(wrapper.value.importeBase, wrapper.value.porcentajeIVA);
         case 'validacionIP':
