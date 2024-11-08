@@ -136,6 +136,7 @@ DELETE FROM test.programa;
 DELETE FROM test.tipo_ambito_geografico_nombre;
 DELETE FROM test.tipo_ambito_geografico;
 DELETE FROM test.tipo_documento_nombre;
+DELETE FROM test.tipo_documento_descripcion;
 DELETE FROM test.tipo_documento;
 DELETE FROM test.tipo_enlace;
 DELETE FROM test.tipo_fase_nombre;

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -27,17 +28,23 @@ class TipoDocumentoRepositoryTest extends BaseRepositoryTest {
     // given: 2 TipoDocumento de los que 1 coincide con el nombre buscado
     Set<TipoDocumentoNombre> nombreTipoDocumento1 = new HashSet<>();
     nombreTipoDocumento1.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento1"));
-    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, "descripcion-tipoDocumento1", true);
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento1 = new HashSet<>();
+    descripcionTipoDocumento1.add(new TipoDocumentoDescripcion(Language.ES, "descripcion-tipoDocumento1"));
+    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, descripcionTipoDocumento1, true);
     entityManager.persistAndFlush(tipoDocumento1);
 
     Set<TipoDocumentoNombre> nombreTipoDocumento2 = new HashSet<>();
     nombreTipoDocumento2.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento2"));
-    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, "descripcion-tipoDocumento2", true);
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento2 = new HashSet<>();
+    descripcionTipoDocumento2.add(new TipoDocumentoDescripcion(Language.ES, "descripcion-tipoDocumento2"));
+    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, descripcionTipoDocumento2, true);
     entityManager.persistAndFlush(tipoDocumento2);
 
     Set<TipoDocumentoNombre> nombreTipoDocumento3 = new HashSet<>();
     nombreTipoDocumento3.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento1"));
-    TipoDocumento tipoDocumento3 = new TipoDocumento(null, nombreTipoDocumento3, "descripcion-tipoDocumento1",
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento3 = new HashSet<>();
+    descripcionTipoDocumento3.add(new TipoDocumentoDescripcion(Language.ES, "descripcion-tipoDocumento1"));
+    TipoDocumento tipoDocumento3 = new TipoDocumento(null, nombreTipoDocumento3, descripcionTipoDocumento3,
         false);
     entityManager.persistAndFlush(tipoDocumento3);
 
@@ -61,12 +68,16 @@ class TipoDocumentoRepositoryTest extends BaseRepositoryTest {
     // given: 2 TipoDocumento que no coinciden con el nombre buscado
     Set<TipoDocumentoNombre> nombreTipoDocumento1 = new HashSet<>();
     nombreTipoDocumento1.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento1"));
-    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, "descripcion-tipoDocumento1", true);
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento1 = new HashSet<>();
+    descripcionTipoDocumento1.add(new TipoDocumentoDescripcion(Language.ES, "descripcion-tipoDocumento1"));
+    TipoDocumento tipoDocumento1 = new TipoDocumento(null, nombreTipoDocumento1, descripcionTipoDocumento1, true);
     entityManager.persistAndFlush(tipoDocumento1);
 
     Set<TipoDocumentoNombre> nombreTipoDocumento2 = new HashSet<>();
     nombreTipoDocumento2.add(new TipoDocumentoNombre(Language.ES, "nombre-tipoDocumento"));
-    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, "descripcion-tipoDocumento2", true);
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento2 = new HashSet<>();
+    descripcionTipoDocumento2.add(new TipoDocumentoDescripcion(Language.ES, "descripcion-tipoDocumento2"));
+    TipoDocumento tipoDocumento2 = new TipoDocumento(null, nombreTipoDocumento2, descripcionTipoDocumento2, true);
     entityManager.persistAndFlush(tipoDocumento2);
 
     String nombreBuscado = "nombre-tipoDocumento-noexiste";

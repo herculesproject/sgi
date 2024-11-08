@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -100,7 +101,8 @@ class TipoDocumentoIT extends BaseIT {
     Assertions.assertThat(tipoDocumentoDisabled.getId()).as("getId()").isEqualTo(idTipoDocumento);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoDisabled.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-1");
-    Assertions.assertThat(tipoDocumentoDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoDocumentoDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -119,7 +121,8 @@ class TipoDocumentoIT extends BaseIT {
     Assertions.assertThat(tipoDocumentoDisabled.getId()).as("getId()").isEqualTo(idTipoDocumento);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoDisabled.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-1");
-    Assertions.assertThat(tipoDocumentoDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoDocumentoDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
@@ -138,7 +141,8 @@ class TipoDocumentoIT extends BaseIT {
     Assertions.assertThat(tipoDocumento.getId()).as("getId()").isEqualTo(idTipoDocumento);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-1");
-    Assertions.assertThat(tipoDocumento.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoDocumento.getActivo()).as("getActivo()").isTrue();
   }
 
@@ -150,7 +154,7 @@ class TipoDocumentoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -183,7 +187,7 @@ class TipoDocumentoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -231,10 +235,13 @@ class TipoDocumentoIT extends BaseIT {
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
 
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento = new HashSet<>();
+    descripcionTipoDocumento.add(new TipoDocumentoDescripcion(Language.ES, "descripcion-" + id));
+
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
     tipoDocumento.setNombre(nombreTipoDocumento);
-    tipoDocumento.setDescripcion("descripcion-" + id);
+    tipoDocumento.setDescripcion(descripcionTipoDocumento);
     tipoDocumento.setActivo(Boolean.TRUE);
 
     return tipoDocumento;

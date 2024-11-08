@@ -57,11 +57,11 @@ VALUES(2, 2, TRUE, 1, 12345);
 INSERT INTO test.modelo_tipo_fase (id, tipo_fase_id, modelo_ejecucion_id, solicitud, convocatoria, proyecto, activo) VALUES (1, 1, 1, true, true, true, true);
 
 -- TIPO DOCUMENTO
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (2, 'descripcion-002', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (3, 'descripcion-003', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (4, 'descripcion-004', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (5, 'descripcion-005', true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (1, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (2, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (3, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (4, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (5, true);
 
 -- TIPO_DOCUMENTO_NOMBRE
 INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (1, 'es', 'nombre-001');
@@ -69,6 +69,13 @@ INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES 
 INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (3, 'es', 'nombre-003');
 INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (4, 'es', 'nombre-004');
 INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (5, 'es', 'nombre-005');
+
+-- TIPO_DOCUMENTO_DESCRIPCION
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (2, 'es', 'descripcion-002');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (3, 'es', 'descripcion-003');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (4, 'es', 'descripcion-004');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (5, 'es', 'descripcion-005');
 
 -- MODELO TIPO DOCUMENTO
 INSERT INTO test.modelo_tipo_documento (id, tipo_documento_id, modelo_ejecucion_id, modelo_tipo_fase_id, activo) VALUES (1, 1, 1, 1, true);

@@ -56,21 +56,20 @@ INSERT INTO test.configuracion_solicitud
 (id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud) 
 VALUES(2, 2, FALSE, 2, 54321);
 
-
 -- TIPO DOCUMENTO
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (2, 'descripcion-002', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (3, 'descripcion-003', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (4, 'descripcion-004', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (5, 'descripcion-005', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (6, 'descripcion-006', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (7, 'descripcion-007', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (8, 'descripcion-008', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (9, 'descripcion-009', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (10, 'descripcion-010', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (11, 'descripcion-011', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (12, 'descripcion-012', true);
-INSERT INTO test.tipo_documento (id, descripcion, activo) VALUES (13, 'descripcion-013', true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (1, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (2, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (3, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (4, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (5, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (6, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (7, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (8, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (9, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (10, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (11, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (12, true);
+INSERT INTO test.tipo_documento (id, activo) VALUES (13, true);
 
 -- TIPO_DOCUMENTO_NOMBRE
 INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (1, 'es', 'Bases convocatoria');
@@ -87,6 +86,20 @@ INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES 
 INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (12, 'es', 'CVN');
 INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES (13, 'es', 'CVA');
 
+-- TIPO_DOCUMENTO_DESCRIPCION
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (2, 'es', 'descripcion-002');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (3, 'es', 'descripcion-003');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (4, 'es', 'descripcion-004');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (5, 'es', 'descripcion-005');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (6, 'es', 'descripcion-006');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (7, 'es', 'descripcion-007');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (8, 'es', 'descripcion-008');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (9, 'es', 'descripcion-009');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (10, 'es', 'descripcion-010');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (11, 'es', 'descripcion-011');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (12, 'es', 'descripcion-012');
+INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (13, 'es', 'descripcion-013');
 
 -- DOCUMENTO REQUERIDO SOLICITUD
 INSERT INTO test.documento_requerido_solicitud

@@ -11,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.service.impl.TipoDocumentoServiceImpl;
@@ -165,8 +166,9 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(tipoDocumentoActualizado.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoActualizado.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES));
-    Assertions.assertThat(tipoDocumentoActualizado.getDescripcion()).as("getDescripcion()")
-        .isEqualTo(tipoDocumento.getDescripcion());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoActualizado.getDescripcion(), Language.ES))
+        .as("getDescripcion()")
+        .isEqualTo(I18nHelper.getValueForLanguage(tipoDocumento.getDescripcion(), Language.ES));
     Assertions.assertThat(tipoDocumentoActualizado.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
 
   }
@@ -230,8 +232,9 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(tipoDocumentoActualizado.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoActualizado.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES));
-    Assertions.assertThat(tipoDocumentoActualizado.getDescripcion()).as("getDescripcion()")
-        .isEqualTo(tipoDocumento.getDescripcion());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumentoActualizado.getDescripcion(), Language.ES))
+        .as("getDescripcion()")
+        .isEqualTo(I18nHelper.getValueForLanguage(tipoDocumento.getDescripcion(), Language.ES));
     Assertions.assertThat(tipoDocumentoActualizado.getActivo()).as("getActivo()").isFalse();
 
   }
@@ -361,7 +364,8 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(tipoDocumento.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-1");
-    Assertions.assertThat(tipoDocumento.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoDocumento.getActivo()).as("getActivo()").isTrue();
 
   }
@@ -398,10 +402,13 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
 
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento = new HashSet<>();
+    descripcionTipoDocumento.add(new TipoDocumentoDescripcion(Language.ES, "descripcion-" + id));
+
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
     tipoDocumento.setNombre(nombreTipoDocumento);
-    tipoDocumento.setDescripcion("descripcion-" + id);
+    tipoDocumento.setDescripcion(descripcionTipoDocumento);
     tipoDocumento.setActivo(Boolean.TRUE);
 
     return tipoDocumento;
