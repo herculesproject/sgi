@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
@@ -542,7 +543,7 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ModeloTipoEnlace modeloTipoEnlace = modeloTipoEnlacesResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloTipoEnlace.getTipoEnlace().getNombre())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(modeloTipoEnlace.getTipoEnlace().getNombre(), Language.ES))
           .isEqualTo("TipoEnlace" + String.format("%03d", i));
     }
   }
@@ -1179,9 +1180,12 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
 
+    Set<TipoEnlaceNombre> tipoEnlaceNombre = new HashSet<>();
+    tipoEnlaceNombre.add(new TipoEnlaceNombre(Language.ES, nombre));
+
     TipoEnlace tipoEnlace = new TipoEnlace();
     tipoEnlace.setId(id);
-    tipoEnlace.setNombre(nombre);
+    tipoEnlace.setNombre(tipoEnlaceNombre);
     tipoEnlace.setDescripcion("descripcion-" + id);
     tipoEnlace.setActivo(Boolean.TRUE);
 

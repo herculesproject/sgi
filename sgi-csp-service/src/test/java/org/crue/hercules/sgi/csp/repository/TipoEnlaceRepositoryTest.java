@@ -1,9 +1,13 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,7 +27,8 @@ class TipoEnlaceRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(generarMockTipoEnlace(1L, Boolean.FALSE));
 
     // when: find given nombre
-    TipoEnlace dataFound = repository.findByNombreAndActivoIsTrue(data.getNombre()).get();
+    TipoEnlace dataFound = repository.findByNombreValueAndActivoIsTrue(data.getNombre().iterator().next().getValue())
+        .get();
 
     // then: TipoEnlace with given name is found
     Assertions.assertThat(dataFound).isNotNull();
@@ -41,7 +46,8 @@ class TipoEnlaceRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(generarMockTipoEnlace(1L, Boolean.FALSE));
 
     // when: find given nombre
-    Optional<TipoEnlace> dataFound = repository.findByNombreAndActivoIsTrue(data.getNombre());
+    Optional<TipoEnlace> dataFound = repository
+        .findByNombreValueAndActivoIsTrue(data.getNombre().iterator().next().getValue());
 
     // then: TipoEnlace with given name is not found
     Assertions.assertThat(dataFound).isEqualTo(Optional.empty());
@@ -55,6 +61,9 @@ class TipoEnlaceRepositoryTest extends BaseRepositoryTest {
    * @return TipoEnlace
    */
   private TipoEnlace generarMockTipoEnlace(Long id, Boolean activo) {
-    return TipoEnlace.builder().nombre("nombre-" + id).descripcion("descripcion-" + id).activo(activo).build();
+    Set<TipoEnlaceNombre> nombre = new HashSet<>();
+    nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-" + id));
+
+    return TipoEnlace.builder().nombre(nombre).descripcion("descripcion-" + id).activo(activo).build();
   }
 }

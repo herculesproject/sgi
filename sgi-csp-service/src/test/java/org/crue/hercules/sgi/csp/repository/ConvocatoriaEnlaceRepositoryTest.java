@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
@@ -142,8 +143,11 @@ class ConvocatoriaEnlaceRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(convocatoria);
 
+    Set<TipoEnlaceNombre> tipoEnlaceNombre = new HashSet<>();
+    tipoEnlaceNombre.add(new TipoEnlaceNombre(Language.ES, "nombreTipoEnlace" + suffix));
+
     TipoEnlace tipoEnlace = TipoEnlace.builder()
-        .nombre("nombreTipoEnlace" + suffix)
+        .nombre(tipoEnlaceNombre)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoEnlace);

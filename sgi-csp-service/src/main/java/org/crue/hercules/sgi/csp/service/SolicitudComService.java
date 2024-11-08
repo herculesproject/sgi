@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -273,7 +274,7 @@ public class SolicitudComService {
           .url(enlace.getUrl())
           .build();
       if (enlace.getTipoEnlace() != null) {
-        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
+        nuevoEnlace.setTipoEnlace(I18nHelper.getValueForCurrentLanguage(enlace.getTipoEnlace().getNombre()));
       }
       enlaces.add(nuevoEnlace);
     }

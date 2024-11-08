@@ -21,6 +21,6 @@ public class Enlace implements Serializable {
   private static final long serialVersionUID = 1L;
   private String descripcion;
   private String url;
-  private String tipoEnlace;
+  private String tipoEnlace; // TODO: preguntar
 
 }

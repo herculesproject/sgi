@@ -214,7 +214,7 @@ class ModeloEjecucionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoEnlace.nombre,desc";
+    String sort = "tipoEnlace.nombre.value,desc";
     String filter = "tipoEnlace.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
@@ -235,11 +235,14 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(modeloTipoEnlaces.get(0).getTipoEnlace().getNombre())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(modeloTipoEnlaces.get(0).getTipoEnlace().getNombre(), Language.ES))
         .as("get(0).getTipoEnlace().getNombre())").isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoEnlaces.get(1).getTipoEnlace().getNombre())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(modeloTipoEnlaces.get(1).getTipoEnlace().getNombre(), Language.ES))
         .as("get(1).getTipoEnlace().getNombre())").isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoEnlaces.get(2).getTipoEnlace().getNombre())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(modeloTipoEnlaces.get(2).getTipoEnlace().getNombre(), Language.ES))
         .as("get(2).getTipoEnlace().getNombre())").isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
@@ -248,7 +251,7 @@ class ModeloEjecucionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoEnlace.nombre,desc";
+    String sort = "tipoEnlace.nombre.value,desc";
     String filter = "tipoEnlace.descripcion=ke=00";
 
     Long idModeloEjecucion = 5L;

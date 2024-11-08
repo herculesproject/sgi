@@ -6,7 +6,9 @@ import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
@@ -18,8 +20,10 @@ import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -281,6 +285,9 @@ class SolicitudComServiceTest {
   }
 
   private ConvocatoriaEnlace buildMockConvocatoriaEnlace(Long id) {
+    Set<TipoEnlaceNombre> nombre = new HashSet<>();
+    nombre.add(new TipoEnlaceNombre(Language.ES, "ENLACE MOCKED"));
+
     return ConvocatoriaEnlace.builder()
         .convocatoriaId(1L)
         .descripcion("Enlace Test")
@@ -288,7 +295,7 @@ class SolicitudComServiceTest {
         .tipoEnlace(TipoEnlace.builder()
             .id(1L)
             .activo(Boolean.TRUE)
-            .nombre("ENLACE MOCKED")
+            .nombre(nombre)
             .build())
         .build();
   }

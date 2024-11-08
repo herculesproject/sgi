@@ -1,14 +1,25 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import org.crue.hercules.sgi.csp.model.BaseActivableEntity.OnActivar;
+import org.crue.hercules.sgi.csp.validation.UniqueNombreTipoEnlaceActivo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +34,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@UniqueNombreTipoEnlaceActivo(groups = {
+    BaseEntity.Create.class, BaseEntity.Update.class, OnActivar.class })
 public class TipoEnlace extends BaseEntity {
 
   /**
@@ -38,10 +51,11 @@ public class TipoEnlace extends BaseEntity {
   private Long id;
 
   /** Nombre */
-  @Column(name = "nombre", length = 50, nullable = false)
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_enlace_nombre", joinColumns = @JoinColumn(name = "tipo_enlace_id"))
   @NotEmpty
-  @Size(max = 50)
-  private String nombre;
+  @Valid
+  private Set<TipoEnlaceNombre> nombre = new HashSet<>();
 
   /** Descripción */
   @Column(name = "descripcion", length = 250)
@@ -52,4 +66,15 @@ public class TipoEnlace extends BaseEntity {
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   private Boolean activo;
 
+  /**
+   * Interfaz para marcar validaciones en la creación de la entidad.
+   */
+  public interface OnCrear {
+  }
+
+  /**
+   * Interfaz para marcar validaciones en la actualizacion de la entidad.
+   */
+  public interface OnActualizar {
+  }
 }
