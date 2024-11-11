@@ -19,7 +19,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { ProgramaService } from '@core/services/csp/programa.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -118,7 +117,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     protected snackBarService: SnackBarService,
     private solicitudService: SolicitudService,
     private personaService: PersonaService,
-    private programaService: ProgramaService,
     private matDialog: MatDialog,
     private readonly translate: TranslateService,
     private convocatoriaService: ConvocatoriaService,
@@ -193,7 +191,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       formularioSolicitud: new FormControl(null),
       rolUniversidad: new FormControl(null),
       finalidad: new FormControl(null),
-      unidadGestion: new FormControl(null)
+      unidadGestion: new FormControl(null),
+      estadoSolicitudHistorico: new FormControl(null),
+      fechaEstadoSolicitudDesde: new FormControl(null),
+      fechaEstadoSolicitudHasta: new FormControl(null)
     });
 
     this.filter = this.createFilter();
@@ -458,6 +459,15 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         .and('solicitudProyecto.rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString())
         .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.id?.toString())
         .and('convocatoria.finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString());
+
+      if (controls.estadoSolicitudHistorico.value) {
+        rsqlFilter
+          .and('historicoEstado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitudHistorico.value.toString())
+          .and('historicoEstadoFechaDesde',
+            SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEstadoSolicitudDesde.value))
+          .and('historicoEstadoFechaHasta',
+            SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaEstadoSolicitudHasta.value))
+      }
 
       const palabrasClave = controls.palabrasClave.value as string[];
       if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {
