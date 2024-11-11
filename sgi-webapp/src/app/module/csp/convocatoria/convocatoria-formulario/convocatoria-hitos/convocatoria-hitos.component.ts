@@ -11,6 +11,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -54,6 +55,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.HITOS, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaHitosFragment;
@@ -69,7 +71,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
           case 'fechaInicio':
             return wrapper.value.fecha;
           case 'tipoHito':
-            return wrapper.value.tipoHito.nombre;
+            return this.languageService.getFieldValue(wrapper.value.tipoHito.nombre);
           case 'comentario':
             return wrapper.value.comentario;
           default:

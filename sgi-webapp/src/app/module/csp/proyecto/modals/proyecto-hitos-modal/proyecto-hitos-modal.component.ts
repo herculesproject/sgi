@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -15,6 +15,7 @@ import { ConfigService } from '@core/services/cnf/config.service';
 import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service';
 import { EmailService } from '@core/services/com/email/email.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
@@ -78,7 +79,8 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
     private emailTplService: EmailTplService,
     private emailService: EmailService,
     private sgiApiTaskService: SgiApiTaskService,
-    private convocatoriaService: ConvocatoriaService
+    private convocatoriaService: ConvocatoriaService,
+    private readonly languageService: LanguageService
   ) {
     super(matDialogRef, !!data?.hito?.tipoHito);
   }
@@ -345,7 +347,7 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
       this.data.tituloProyecto,
       tituloConvocatoria,
       this.formGroup.get('fecha').value ?? DateTime.now(),
-      this.formGroup.get('tipoHito').value?.nombre ?? '',
+      this.formGroup.get('tipoHito').value?.nombre ? this.languageService.getFieldValue(this.formGroup.get('tipoHito').value?.nombre) : '',
       this.formGroup.get('comentario').value ?? ''
     ).subscribe(
       (template) => {

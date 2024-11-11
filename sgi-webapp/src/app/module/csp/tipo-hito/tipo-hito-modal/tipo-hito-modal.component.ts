@@ -1,11 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { TipoHitoService } from '@core/services/csp/tipo-hito.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -80,7 +81,7 @@ export class TipoHitoModalComponent extends DialogActionComponent<ITipoHito> imp
 
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      nombre: new FormControl(this.tipoHito?.nombre ?? '', Validators.required),
+      nombre: new FormControl(this.tipoHito?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
       descripcion: new FormControl(this.tipoHito?.descripcion ?? '')
     });
     return formGroup;

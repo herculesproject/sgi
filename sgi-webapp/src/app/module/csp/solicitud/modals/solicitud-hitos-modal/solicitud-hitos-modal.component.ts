@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
@@ -12,6 +12,7 @@ import { ISendEmailTask } from '@core/models/tp/send-email-task';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service';
 import { EmailService } from '@core/services/com/email/email.service';
+import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
 import { TranslateService } from '@ngx-translate/core';
@@ -72,7 +73,8 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
     private configService: ConfigService,
     private emailTplService: EmailTplService,
     private emailSErvice: EmailService,
-    private sgiApiTaskService: SgiApiTaskService
+    private sgiApiTaskService: SgiApiTaskService,
+    private readonly languageService: LanguageService
   ) {
     super(matDialogRef, !!data.hito?.id);
   }
@@ -165,7 +167,7 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
       this.data.tituloSolicitud,
       this.data.tituloConvocatoria,
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
-      this.formGroup.get('tipoHito').value?.nombre ?? '',
+      this.formGroup.get('tipoHito').value?.nombre ? this.languageService.getFieldValue(this.formGroup.get('tipoHito').value?.nombre) : '',
       this.formGroup.get('comentario').value ?? ''
     ).subscribe(
       (template) => {

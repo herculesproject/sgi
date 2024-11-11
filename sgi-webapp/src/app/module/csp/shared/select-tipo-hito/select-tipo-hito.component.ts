@@ -5,6 +5,7 @@ import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { Module } from '@core/module';
@@ -12,7 +13,7 @@ import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.serv
 import { TipoHitoService } from '@core/services/csp/tipo-hito.service';
 import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
@@ -99,6 +100,10 @@ export class SelectTipoHitoComponent extends SelectServiceExtendedComponent<ITip
     };
 
     this.addTarget = TipoHitoModalComponent;
+
+    this.sortWith = (o1: SelectValue<ITipoHito>, o2: SelectValue<ITipoHito>) => {
+      return o1?.displayText.localeCompare(o2?.displayText)
+    };
   }
 
   protected loadServiceOptions(): Observable<ITipoHito[]> {
@@ -108,8 +113,7 @@ export class SelectTipoHitoComponent extends SelectServiceExtendedComponent<ITip
         return of([]);
       }
       const findOptions: SgiRestFindOptions = {
-        filter: new RSQLSgiRestFilter('tipoHito.activo', SgiRestFilterOperator.EQUALS, 'true'),
-        sort: new RSQLSgiRestSort('tipoHito.nombre', SgiRestSortDirection.ASC)
+        filter: new RSQLSgiRestFilter('tipoHito.activo', SgiRestFilterOperator.EQUALS, 'true')
       };
       if (this.relation === 'convocatoria' || this.relation === 'proyecto' || this.relation === 'solicitud') {
         findOptions.filter.and(this.relation, SgiRestFilterOperator.EQUALS, 'true');
@@ -120,10 +124,7 @@ export class SelectTipoHitoComponent extends SelectServiceExtendedComponent<ITip
       );
     }
     else {
-      const findOptions: SgiRestFindOptions = {
-        sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
-      };
-      return this.service.findTodos(findOptions).pipe(map(response => response.items));
+      return this.service.findTodos().pipe(map(response => response.items));
     }
   }
 

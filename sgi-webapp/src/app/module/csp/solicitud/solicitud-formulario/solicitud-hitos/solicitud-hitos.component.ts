@@ -19,6 +19,7 @@ import { switchMap } from 'rxjs/operators';
 import { SolicitudHitosModalComponent, SolicitudHitosModalComponentData } from '../../modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudHitosFragment } from './solicitud-hitos.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const SOLICITUD_HITO_KEY = marker('csp.solicitud-hito');
@@ -55,7 +56,8 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
-    private authService: SgiAuthService
+    private authService: SgiAuthService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.HITOS, actionService, translate);
 
@@ -73,7 +75,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
           case 'fechaInicio':
             return wrapper.value.fecha;
           case 'tipoHito':
-            return wrapper.value.tipoHito.nombre;
+            return this.languageService.getFieldValue(wrapper.value.tipoHito.nombre);
           case 'comentario':
             return wrapper.value.comentario;
           default:

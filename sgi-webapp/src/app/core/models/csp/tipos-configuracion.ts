@@ -25,7 +25,11 @@ export interface IModeloEjecucion extends TipoConfiguracion {
 export interface ITipoDocumento extends TipoConfiguracionI18n {
 }
 
-export interface ITipoHito extends TipoConfiguracion {
+export interface ITipoHito {
+  id: number;
+  nombre: I18nFieldValue[];
+  descripcion?: string;
+  activo: boolean;
 }
 
 export interface ITipoFinalidad extends TipoConfiguracionI18n {

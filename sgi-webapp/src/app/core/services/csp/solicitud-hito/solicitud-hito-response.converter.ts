@@ -1,9 +1,10 @@
 import { IGenericEmailText } from '@core/models/com/generic-email-text';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
-import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { ISendEmailTask } from '@core/models/tp/send-email-task';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { ITipoHitoResponse } from '../tipo-hito/tipo-hito-response';
+import { TIPO_HITO_RESPONSE_CONVERTER } from '../tipo-hito/tipo-hito-response.converter';
 import { ISolicitudHitoResponse } from './solicitud-hito-response';
 
 class SolicitudHitoResponseConverter extends SgiBaseConverter<ISolicitudHitoResponse, ISolicitudHito> {
@@ -15,7 +16,7 @@ class SolicitudHitoResponseConverter extends SgiBaseConverter<ISolicitudHitoResp
     return {
       id: value.id,
       fecha: LuxonUtils.fromBackend(value.fecha),
-      tipoHito: value.tipoHito,
+      tipoHito: value.tipoHito ? TIPO_HITO_RESPONSE_CONVERTER.toTarget(value.tipoHito) : null,
       comentario: value.comentario,
       solicitudId: value.solicitudId,
       createdBy: value.createdBy,
@@ -40,7 +41,7 @@ class SolicitudHitoResponseConverter extends SgiBaseConverter<ISolicitudHitoResp
       fecha: LuxonUtils.toBackend(value.fecha),
       tipoHito: {
         id: value.tipoHito.id
-      } as ITipoHito,
+      } as ITipoHitoResponse,
       comentario: value.comentario,
       solicitudId: value.solicitudId,
       createdBy: value.createdBy,

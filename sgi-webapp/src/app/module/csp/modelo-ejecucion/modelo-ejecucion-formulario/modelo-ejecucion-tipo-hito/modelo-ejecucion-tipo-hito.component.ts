@@ -11,6 +11,7 @@ import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -49,7 +50,8 @@ export class ModeloEjecucionTipoHitoComponent extends FragmentComponent implemen
     private readonly dialogService: DialogService,
     private matDialog: MatDialog,
     actionService: ModeloEjecucionActionService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.TIPO_HITOS, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -79,7 +81,7 @@ export class ModeloEjecucionTipoHitoComponent extends FragmentComponent implemen
       (wrapper: StatusWrapper<IModeloTipoHito>, property: string) => {
         switch (property) {
           case 'nombre':
-            return wrapper.value.tipoHito.nombre;
+            return this.languageService.getFieldValue(wrapper.value.tipoHito.nombre);
           case 'descripcion':
             return wrapper.value.tipoHito.descripcion;
           case 'convocatorias':

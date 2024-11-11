@@ -6,7 +6,7 @@
       <!-- Tipo hito Column -->
       <ng-container matColumnDef="tipoHito">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.proyecto-hito.tipo' | translate}} </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.tipoHito.nombre}} </td>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.tipoHito.nombre | i18nFieldValue}} </td>
       </ng-container>
 
       <!-- Fecha Column -->

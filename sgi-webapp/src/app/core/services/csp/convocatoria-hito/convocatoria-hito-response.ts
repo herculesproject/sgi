@@ -1,4 +1,5 @@
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { ITipoHitoResponse } from '../tipo-hito/tipo-hito-response';
 
 export interface IConvocatoriaHitoResponse {
   /** Id */
@@ -6,7 +7,7 @@ export interface IConvocatoriaHitoResponse {
   /** Fecha inicio  */
   fecha: string;
   /** Tipo de hito */
-  tipoHito: ITipoHito;
+  tipoHito: ITipoHitoResponse;
   /** Comentario */
   comentario: string;
   /** Id de Convocatoria */

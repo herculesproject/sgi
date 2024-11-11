@@ -17,6 +17,8 @@ import { IModeloTipoDocumentoResponse } from './modelo-tipo-documento/modelo-tip
 import { MODELO_TIPO_DOCUMENTO_RESPONSE_CONVERTER } from './modelo-tipo-documento/modelo-tipo-documento-response.converter';
 import { IModeloTipoFaseResponse } from './modelo-tipo-fase/modelo-tipo-fase-response';
 import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from './modelo-tipo-fase/modelo-tipo-fase-response.converter';
+import { MODELO_TIPO_HITO_RESPONSE_CONVERTER } from './modelo-tipo-hito/modelo-tipo-hito-response.converter';
+import { IModeloTipoHitoResponse } from './modelo-tipo-hito/modelo-tipo-hito-response';
 
 @Injectable({
   providedIn: 'root'
@@ -83,34 +85,11 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
   }
 
   findModeloTipoHito(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
-    return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos`, options);
-  }
-
-  /**
-   * Muestra los tipo de hitos de solicitudes para un modelo de ejecución concreto
-   * @param id modelo de ejecucion
-   * @param options opciones de búsqueda.
-   */
-  findModeloTipoHitoSolicitud(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
-    return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos/solicitud`, options);
-  }
-
-  /**
-   * Muestra los tipo de hitos de convocatorias para un modelo de ejecución concreto
-   * @param id modelo de ejecucion
-   * @param options opciones de búsqueda.
-   */
-  findModeloTipoHitoConvocatoria(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
-    return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos/convocatoria`, options);
-  }
-
-  /**
-   * Muestra los tipo de hitos de proyectos para un modelo de ejecución concreto
-   * @param id modelo de ejecucion
-   * @param options opciones de búsqueda.
-   */
-  findModeloTipoHitoProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
-    return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos/proyecto`, options);
+    return this.find<IModeloTipoHitoResponse, IModeloTipoHito>(
+      `${this.endpointUrl}/${id}/modelotipohitos`,
+      options,
+      MODELO_TIPO_HITO_RESPONSE_CONVERTER
+    );
   }
 
   /**

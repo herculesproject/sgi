@@ -18,6 +18,7 @@ import { switchMap } from 'rxjs/operators';
 import { ProyectoHitosModalComponent, ProyectoHitosModalComponentData } from '../../modals/proyecto-hitos-modal/proyecto-hitos-modal.component';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoHitosFragment } from './proyecto-hitos.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const PROYECTO_HITO_KEY = marker('csp.proyecto-hito')
@@ -49,7 +50,8 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
     public actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.HITOS, actionService, translate);
     this.formPart = this.fragment as ProyectoHitosFragment;
@@ -67,7 +69,7 @@ export class ProyectoHitosComponent extends FragmentComponent implements OnInit,
           case 'fecha':
             return wrapper.value.fecha;
           case 'tipoHito':
-            return wrapper.value.tipoHito.nombre;
+            return this.languageService.getFieldValue(wrapper.value.tipoHito.nombre);
           case 'comentario':
             return wrapper.value.comentario;
           default:
