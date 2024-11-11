@@ -7,11 +7,13 @@ import java.util.Optional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.ListAttribute;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud_;
@@ -55,7 +57,10 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
     REFERENCIA_CONVOCATORIA("referenciaConvocatoria"),
     PLAN_INVESTIGACION("planInvestigacion"),
     ABIERTO_PLAZO_PRESENTACION_SOLICITUD("abiertoPlazoPresentacionSolicitud"),
-    PENDIENTE("pendiente");
+    PENDIENTE("pendiente"),
+    HISTORICO_ESTADO("historicoEstado"),
+    HISTORICO_ESTADO_FECHA_DESDE("historicoEstadoFechaDesde"),
+    HISTORICO_ESTADO_FECHA_HASTA("historicoEstadoFechaHasta");
 
     private String code;
 
@@ -221,6 +226,52 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
         cb.greaterThanOrEqualTo(joinSolicitudRrhh.get(Auditable_.lastModifiedDate), fechaModificacion));
   }
 
+  private Predicate buildByHistoricoEstado(ComparisonNode node, Root<Solicitud> root, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    EstadoSolicitud.Estado estado = EstadoSolicitud.Estado.valueOf(node.getArguments().get(0));
+
+    ListJoin<Solicitud, EstadoSolicitud> joinEstados = joinList(root, Solicitud_.estados, JoinType.LEFT);
+
+    return cb.equal(joinEstados.get(EstadoSolicitud_.estado), estado);
+  }
+
+  private Predicate buildByHistoricoEstadoFechaDesde(ComparisonNode node, Root<Solicitud> root, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.GREATER_THAN_OR_EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    Instant fechaDesde = Instant.parse(node.getArguments().get(0));
+
+    ListJoin<Solicitud, EstadoSolicitud> joinEstados = joinList(root, Solicitud_.estados, JoinType.LEFT);
+
+    return cb.greaterThanOrEqualTo(joinEstados.get(EstadoSolicitud_.fechaEstado), fechaDesde);
+  }
+
+  private Predicate buildByHistoricoEstadoFechaHasta(ComparisonNode node, Root<Solicitud> root, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.LESS_THAN_OR_EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    Instant fechaDesde = Instant.parse(node.getArguments().get(0));
+
+    ListJoin<Solicitud, EstadoSolicitud> joinEstados = joinList(root, Solicitud_.estados, JoinType.LEFT);
+
+    return cb.lessThanOrEqualTo(joinEstados.get(EstadoSolicitud_.fechaEstado), fechaDesde);
+  }
+
+  @SuppressWarnings("unchecked")
+  private <K, Z> ListJoin<K, Z> joinList(From<?, K> from, ListAttribute<K, Z> attribute, JoinType joinType) {
+    for (Join<K, ?> join : from.getJoins()) {
+      boolean sameName = join.getAttribute().getName().equals(attribute.getName());
+
+      if (sameName && join.getJoinType().equals(joinType)) {
+        return (ListJoin<K, Z>) join;
+      }
+    }
+
+    return from.join(attribute, joinType);
+  }
+
   @Override
   public boolean isManaged(ComparisonNode node) {
     Property property = Property.fromCode(node.getSelector());
@@ -242,6 +293,12 @@ public class SolicitudPredicateResolver implements SgiRSQLPredicateResolver<Soli
         return buildByFechaModificacion(node, root, criteriaBuilder);
       case REFERENCIA_CONVOCATORIA:
         return buildByReferenciaConvocatoria(node, root, criteriaBuilder);
+      case HISTORICO_ESTADO:
+        return buildByHistoricoEstado(node, root, criteriaBuilder);
+      case HISTORICO_ESTADO_FECHA_DESDE:
+        return buildByHistoricoEstadoFechaDesde(node, root, criteriaBuilder);
+      case HISTORICO_ESTADO_FECHA_HASTA:
+        return buildByHistoricoEstadoFechaHasta(node, root, criteriaBuilder);
       case PLAN_INVESTIGACION:
         return buildByPlanInvestigacion(node, root, criteriaBuilder);
       case ABIERTO_PLAZO_PRESENTACION_SOLICITUD:
