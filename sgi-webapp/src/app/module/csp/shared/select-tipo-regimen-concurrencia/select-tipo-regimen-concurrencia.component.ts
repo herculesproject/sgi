@@ -4,12 +4,12 @@ import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipos-configuracion';
 import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia.service';
 import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoRegimenConcurrenciaModalComponent } from '../../tipo-regimen-concurrencia/tipo-regimen-concurrencia-modal/tipo-regimen-concurrencia-modal.component';
@@ -39,13 +39,14 @@ export class SelectTipoRegimenConcurrenciaComponent extends SelectServiceExtende
     super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = TipoRegimenConcurrenciaModalComponent;
+    this.sortWith = (o1: SelectValue<ITipoRegimenConcurrencia>, o2: SelectValue<ITipoRegimenConcurrencia>) => {
+      return o1?.displayText.localeCompare(o2?.displayText)
+    };
+
   }
 
   protected loadServiceOptions(): Observable<ITipoRegimenConcurrencia[]> {
-    const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
-    };
-    return this.service.findAll(findOptions).pipe(map(response => response.items));
+    return this.service.findAll().pipe(map(response => response.items));
   }
 
   protected isAddAuthorized(): boolean {
