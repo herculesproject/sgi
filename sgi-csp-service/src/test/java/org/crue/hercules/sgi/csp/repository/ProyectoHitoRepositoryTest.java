@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,8 +134,11 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(proyecto);
 
+    Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
+    nombreTipoHito.add(new TipoHitoNombre(Language.ES, "tipoHito" + suffix));
+
     TipoHito tipoHito = TipoHito.builder()
-        .nombre("tipoHito" + suffix)
+        .nombre(nombreTipoHito)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoHito);

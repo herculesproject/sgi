@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.dto.SolicitudHitoInput;
@@ -17,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudHitoAvisoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudHitoRepository;
@@ -26,6 +29,7 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -402,10 +406,13 @@ class SolicitudHitoServiceTest extends BaseServiceTest {
   }
 
   private TipoHito generarTipoHito(Long id) {
+    Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
+    nombreTipoHito.add(new TipoHitoNombre(Language.ES, "TipoHito"));
+
     // @formatter:off
     return TipoHito.builder()
         .id(id)
-        .nombre("TipoHito")
+        .nombre(nombreTipoHito)
         .activo(true)
         .build();
     // @formatter:on

@@ -45,9 +45,13 @@ INSERT INTO test.convocatoria
 (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
 VALUES(2, 'unidad-002', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-002', 'objeto-002', 'observaciones-002', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', true);
 
---TIPO HITO
-insert into test.tipo_hito (id,nombre,descripcion,activo) values (1,'nombre-1','descripcion-1',true);
-insert into test.tipo_hito (id,nombre,descripcion,activo) values (2,'nombre-2','descripcion-2',true);
+-- TIPO HITO
+INSERT INTO test.tipo_hito (id, descripcion, activo) VALUES (1, 'descripcion-1', true);
+INSERT INTO test.tipo_hito (id, descripcion, activo) VALUES (2, 'descripcion-2', true);
+
+-- TIPO HITO NOMBRE
+INSERT INTO test.tipo_hito_nombre (tipo_hito_id, lang, value_) VALUES (1, 'es', 'nombre-1');
+INSERT INTO test.tipo_hito_nombre (tipo_hito_id, lang, value_) VALUES (2, 'es', 'nombre-2');
 
 -- MODELO TIPO HITO
 INSERT INTO test.modelo_tipo_hito (id, modelo_ejecucion_id, tipo_hito_id, solicitud, proyecto, convocatoria, activo) VALUES (1, 1, 1, true, true, true, true);

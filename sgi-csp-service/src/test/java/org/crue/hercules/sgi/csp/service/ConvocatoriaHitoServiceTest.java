@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrenciaNombre;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
@@ -641,10 +642,12 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
    * @return el objeto TipoHito
    */
   private TipoHito generarMockTipoHito(Long id, Boolean activo) {
+    Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
+    nombreTipoHito.add(new TipoHitoNombre(Language.ES, "nombre-" + id));
 
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id);
-    tipoHito.setNombre("nombre-" + id);
+    tipoHito.setNombre(nombreTipoHito);
     tipoHito.setDescripcion("descripcion-" + id);
     tipoHito.setActivo(activo);
 

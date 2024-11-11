@@ -74,7 +74,10 @@ UPDATE test.solicitud SET estado_solicitud_id = 1 WHERE id = 1;
 UPDATE test.solicitud SET estado_solicitud_id = 2 WHERE id = 2;
 
 -- TIPO HITO
-INSERT INTO test.tipo_Hito (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
+INSERT INTO test.tipo_hito (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
+
+-- TIPO HITO NOMBRE
+INSERT INTO test.tipo_hito_nombre (tipo_hito_id, lang, value_) VALUES (1, 'es', 'nombre-001');
 
 -- SOLICITUD HITO
 INSERT INTO test.solicitud_hito (id, solicitud_id, tipo_hito_id, fecha, comentario ) 

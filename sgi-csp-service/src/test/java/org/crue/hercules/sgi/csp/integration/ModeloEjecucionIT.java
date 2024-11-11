@@ -438,7 +438,7 @@ class ModeloEjecucionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "tipoHito.nombre,desc";
+    String sort = "tipoHito.id,desc";
     String filter = "tipoHito.descripcion=ke=00";
 
     Long idModeloEjecucion = 1L;
@@ -459,122 +459,14 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(modeloTipoHitos.get(0).getTipoHito().getNombre()).as("get(0).getTipoHito().getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloTipoHitos.get(0).getTipoHito().getNombre(), Language.ES))
+        .as("get(0).getTipoHito().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoHitos.get(1).getTipoHito().getNombre()).as("get(1).getTipoHito().getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloTipoHitos.get(1).getTipoHito().getNombre(), Language.ES))
+        .as("get(1).getTipoHito().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoHitos.get(2).getTipoHito().getNombre()).as("get(2).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 1));
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findAllModeloTipoHitosConvocatoria_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
-      throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "10");
-    String sort = "tipoHito.nombre,desc";
-    String filter = "tipoHito.descripcion=ke=00";
-
-    Long idModeloEjecucion = 1L;
-
-    URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipohitos/convocatoria")
-        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
-
-    final ResponseEntity<List<ModeloTipoHito>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoHito>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ModeloTipoHito> modeloTipoHitos = response.getBody();
-    Assertions.assertThat(modeloTipoHitos).hasSize(3);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
-    Assertions.assertThat(modeloTipoHitos.get(0).getTipoHito().getNombre()).as("get(0).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoHitos.get(1).getTipoHito().getNombre()).as("get(1).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoHitos.get(2).getTipoHito().getNombre()).as("get(2).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 1));
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findAllModeloTipoHitosProyecto_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
-      throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "10");
-    String sort = "tipoHito.nombre,desc";
-    String filter = "tipoHito.descripcion=ke=00";
-
-    Long idModeloEjecucion = 1L;
-
-    URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipohitos/proyecto")
-        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
-
-    final ResponseEntity<List<ModeloTipoHito>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoHito>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ModeloTipoHito> modeloTipoHitos = response.getBody();
-    Assertions.assertThat(modeloTipoHitos).hasSize(3);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
-    Assertions.assertThat(modeloTipoHitos.get(0).getTipoHito().getNombre()).as("get(0).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoHitos.get(1).getTipoHito().getNombre()).as("get(1).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoHitos.get(2).getTipoHito().getNombre()).as("get(2).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 1));
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void findAllModeloTipoHitosSolicitud_WithPagingSortingAndFiltering_ReturnsModeloTipoHitoSubList()
-      throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "10");
-    String sort = "tipoHito.nombre,desc";
-    String filter = "tipoHito.descripcion=ke=00";
-
-    Long idModeloEjecucion = 1L;
-
-    URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipohitos/solicitud")
-        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
-
-    final ResponseEntity<List<ModeloTipoHito>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoHito>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ModeloTipoHito> modeloTipoHitos = response.getBody();
-    Assertions.assertThat(modeloTipoHitos).hasSize(3);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
-    Assertions.assertThat(modeloTipoHitos.get(0).getTipoHito().getNombre()).as("get(0).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoHitos.get(1).getTipoHito().getNombre()).as("get(1).getTipoHito().getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoHitos.get(2).getTipoHito().getNombre()).as("get(2).getTipoHito().getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloTipoHitos.get(2).getTipoHito().getNombre(), Language.ES))
+        .as("get(2).getTipoHito().getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 

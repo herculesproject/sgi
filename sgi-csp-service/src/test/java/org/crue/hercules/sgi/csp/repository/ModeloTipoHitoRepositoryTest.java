@@ -1,11 +1,15 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,7 +27,10 @@ class ModeloTipoHitoRepositoryTest extends BaseRepositoryTest {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-me-1", "descripcion-me-1", Boolean.TRUE,
         Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
-    TipoHito tipoHito = new TipoHito(null, "nombre-tf-1", "descripcion-tf-1", Boolean.TRUE);
+
+    Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
+    nombreTipoHito.add(new TipoHitoNombre(Language.ES, "nombre-tf-1"));
+    TipoHito tipoHito = new TipoHito(null, nombreTipoHito, "descripcion-tf-1", Boolean.TRUE);
     entityManager.persistAndFlush(tipoHito);
     ModeloTipoHito modeloTipoHito = new ModeloTipoHito(null, tipoHito, modeloEjecucion, Boolean.TRUE, Boolean.TRUE,
         Boolean.TRUE, Boolean.TRUE);
@@ -50,7 +57,10 @@ class ModeloTipoHitoRepositoryTest extends BaseRepositoryTest {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-me-1", "descripcion-me-1", Boolean.TRUE,
         Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
-    TipoHito tipoHito = new TipoHito(null, "nombre-tf-1", "descripcion-tf-1", Boolean.TRUE);
+
+    Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
+    nombreTipoHito.add(new TipoHitoNombre(Language.ES, "nombre-tf-1"));
+    TipoHito tipoHito = new TipoHito(null, nombreTipoHito, "descripcion-tf-1", Boolean.TRUE);
     entityManager.persistAndFlush(tipoHito);
 
     // when: find by ModeloEjecucion and TipoHito

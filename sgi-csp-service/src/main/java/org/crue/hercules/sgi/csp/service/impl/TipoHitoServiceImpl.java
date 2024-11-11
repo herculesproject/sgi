@@ -1,8 +1,15 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.Objects;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
+import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
+import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.TipoHitoSpecifications;
@@ -14,19 +21,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Validated
 public class TipoHitoServiceImpl implements TipoHitoService {
 
   private final TipoHitoRepository tipoHitoRepository;
-
-  public TipoHitoServiceImpl(TipoHitoRepository tipoHitoRepository) {
-    this.tipoHitoRepository = tipoHitoRepository;
-  }
+  private final Validator validator;
 
   /**
    * Guardar {@link TipoHito}.
@@ -36,13 +44,11 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    */
   @Override
   @Transactional
-  public TipoHito create(TipoHito tipoHito) {
+  @Validated({ BaseEntity.Create.class })
+  public TipoHito create(@Valid TipoHito tipoHito) {
     log.debug("create(TipoHito tipoHito) - start");
 
     AssertHelper.idIsNull(tipoHito.getId(), TipoHito.class);
-    AssertHelper.entityExists(
-        !(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
-        TipoHito.class, TipoHito.class);
 
     tipoHito.setActivo(Boolean.TRUE);
     TipoHito returnValue = tipoHitoRepository.save(tipoHito);
@@ -59,14 +65,11 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    */
   @Override
   @Transactional
-  public TipoHito update(TipoHito tipoHitoActualizar) {
+  @Validated({ BaseEntity.Update.class })
+  public TipoHito update(@Valid TipoHito tipoHitoActualizar) {
     log.debug("update(TipoHito tipoHitoActualizar) - start");
 
     AssertHelper.idNotNull(tipoHitoActualizar.getId(), TipoHito.class);
-    tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHitoActualizar.getNombre()).ifPresent(
-        tipoHitoExistente -> AssertHelper.entityExists(
-            Objects.equals(tipoHitoActualizar.getId(), tipoHitoExistente.getId()),
-            TipoHito.class, TipoHito.class));
 
     return tipoHitoRepository.findById(tipoHitoActualizar.getId()).map(tipoHito -> {
       tipoHito.setNombre(tipoHitoActualizar.getNombre());
@@ -147,9 +150,13 @@ public class TipoHitoServiceImpl implements TipoHitoService {
         return tipoHito;
       }
 
-      AssertHelper.entityExists(
-          !(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
-          TipoHito.class, TipoHito.class);
+      // Invocar validaciones asociadas a OnActivar
+      Set<ConstraintViolation<TipoHito>> result = validator.validate(
+          tipoHito,
+          BaseActivableEntity.OnActivar.class);
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
+      }
 
       tipoHito.setActivo(true);
       TipoHito returnValue = tipoHitoRepository.save(tipoHito);

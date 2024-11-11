@@ -1,9 +1,13 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,19 +25,26 @@ class TipoHitoRepositoryTest extends BaseRepositoryTest {
   void findByNombreAndActivoIsTrue_ReturnsTipoHito() throws Exception {
 
     // given: 2 TipoHito de los que 1 coincide con el nombre buscado
-    TipoHito tipoHito1 = new TipoHito(null, "nombre-tipoHito1", "descripcion-tipoHito1", true);
+    Set<TipoHitoNombre> nombreTipoHito1 = new HashSet<>();
+    nombreTipoHito1.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito1"));
+    TipoHito tipoHito1 = new TipoHito(null, nombreTipoHito1, "descripcion-tipoHito1", true);
     entityManager.persistAndFlush(tipoHito1);
 
-    TipoHito tipoHito2 = new TipoHito(null, "nombre-tipoHito2", "descripcion-tipoHito2", true);
+    Set<TipoHitoNombre> nombreTipoHito2 = new HashSet<>();
+    nombreTipoHito2.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito2"));
+    TipoHito tipoHito2 = new TipoHito(null, nombreTipoHito2, "descripcion-tipoHito2", true);
     entityManager.persistAndFlush(tipoHito2);
 
-    TipoHito tipoHito3 = new TipoHito(null, "nombre-tipoHito1", "descripcion-tipoHito1", false);
+    Set<TipoHitoNombre> nombreTipoHito3 = new HashSet<>();
+    nombreTipoHito3.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito1"));
+    TipoHito tipoHito3 = new TipoHito(null, nombreTipoHito3, "descripcion-tipoHito1", false);
     entityManager.persistAndFlush(tipoHito3);
 
     String nombreBuscado = "nombre-tipoHito1";
 
     // when: se busca el TipoHitopor nombre
-    TipoHito tipoHitoEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado).get();
+    TipoHito tipoHitoEncontrado = repository.findByNombreLangAndNombreValueAndActivoIsTrue(Language.ES, nombreBuscado)
+        .get();
 
     // then: Se recupera el TipoHito con el nombre buscado
     Assertions.assertThat(tipoHitoEncontrado.getId()).as("getId").isNotNull();
@@ -47,16 +58,21 @@ class TipoHitoRepositoryTest extends BaseRepositoryTest {
   void findByNombreAndActivoIsTrueNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 TipoHito que no coinciden con el nombre buscado
-    TipoHito tipoHito1 = new TipoHito(null, "nombre-tipoHito1", "descripcion-tipoHito1", true);
+    Set<TipoHitoNombre> nombreTipoHito1 = new HashSet<>();
+    nombreTipoHito1.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito1"));
+    TipoHito tipoHito1 = new TipoHito(null, nombreTipoHito1, "descripcion-tipoHito1", true);
     entityManager.persistAndFlush(tipoHito1);
 
-    TipoHito tipoHito2 = new TipoHito(null, "nombre-tipoHito", "descripcion-tipoHito2", true);
+    Set<TipoHitoNombre> nombreTipoHito2 = new HashSet<>();
+    nombreTipoHito2.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito"));
+    TipoHito tipoHito2 = new TipoHito(null, nombreTipoHito2, "descripcion-tipoHito2", true);
     entityManager.persistAndFlush(tipoHito2);
 
     String nombreBuscado = "nombre-tipoHito-noexiste";
 
     // when: se busca el TipoHito por nombre
-    Optional<TipoHito> tipoHitoEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado);
+    Optional<TipoHito> tipoHitoEncontrado = repository.findByNombreLangAndNombreValueAndActivoIsTrue(Language.ES,
+        nombreBuscado);
 
     // then: Se recupera el TipoHito con el nombre buscado
     Assertions.assertThat(tipoHitoEncontrado).isEqualTo(Optional.empty());
