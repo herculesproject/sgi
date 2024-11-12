@@ -5,7 +5,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { Observable, Subject, Subscription, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -43,6 +43,8 @@ export abstract class SelectCommonComponent<T>
   readonly controlType = 'sgi-select';
 
   private isInitialValue = true;
+
+  private loadOptionsHandler$ = new Subject<void>();
 
   get tabIndex(): number { return -1; }
 
@@ -358,6 +360,7 @@ export abstract class SelectCommonComponent<T>
       this.ready = true;
       this.stateChanges.next();
 
+      this.initLoadOptionsHandler();
       this.loadData();
     });
   }
@@ -463,23 +466,7 @@ export abstract class SelectCommonComponent<T>
    * If the currente value is missing from the options and showMissingOption is true, then the value will be added.
    */
   protected loadData(): void {
-    this.loadOptions().pipe(
-      map(options => {
-        return this.toSelectValue(options);
-      })
-    ).subscribe((options) => {
-      this.selectValues = options;
-      this.selectValues.sort(this.sortWith);
-
-      this.addMissingOptionIfNeccesary();
-
-      if (this.ready) {
-        // Hack to trigger refresh
-        this.matSelect.setDisabledState(this.disabled);
-      }
-      this.stateChanges.next();
-      this.selectValuesChange.next(options);
-    });
+    this.loadOptionsHandler$.next();
   }
 
   /**
@@ -487,6 +474,37 @@ export abstract class SelectCommonComponent<T>
    */
   protected loadOptions(): Observable<T[]> {
     return of(this.options);
+  }
+
+  /**
+   * Initializes the subscription that manages the loading of options.
+   * 
+   * This method sets up an observable subscription to listen for events that trigger
+   * the loading of options. When a new load event is received, any previous loading
+   * process is canceled to avoid unnecessary operations, thanks to the use of `switchMap`.
+   */
+  private initLoadOptionsHandler(): void {
+    this.subscriptions.push(
+      this.loadOptionsHandler$.pipe(
+        switchMap(() => this.loadOptions())
+      ).pipe(
+        map(options => {
+          return this.toSelectValue(options);
+        })
+      ).subscribe((options) => {
+        this.selectValues = options;
+        this.selectValues.sort(this.sortWith);
+
+        this.addMissingOptionIfNeccesary();
+
+        if (this.ready) {
+          // Hack to trigger refresh
+          this.matSelect.setDisabledState(this.disabled);
+        }
+        this.stateChanges.next();
+        this.selectValuesChange.next(options);
+      })
+    );
   }
 
 }
