@@ -83,7 +83,7 @@ export class ModeloEjecucionTipoHitoComponent extends FragmentComponent implemen
           case 'nombre':
             return this.languageService.getFieldValue(wrapper.value.tipoHito.nombre);
           case 'descripcion':
-            return wrapper.value.tipoHito.descripcion;
+            return wrapper.value.tipoHito.descripcion ? this.languageService.getFieldValue(wrapper.value.tipoHito.descripcion) : '';
           case 'convocatorias':
             return wrapper.value.convocatoria;
           case 'solicitudes':

@@ -13,6 +13,7 @@ import { switchMap } from 'rxjs/operators';
 
 const TIPO_HITO_KEY = marker('csp.tipo-hito');
 const TIPO_HITO_NOMBRE_KEY = marker('csp.tipo-hito.nombre');
+const TIPO_HITO_DESCRIPCION_KEY = marker('csp.tipo-hito.descripcion');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
 @Component({
@@ -25,6 +26,7 @@ export class TipoHitoModalComponent extends DialogActionComponent<ITipoHito> imp
   private readonly tipoHito: ITipoHito;
   title: string;
   msgParamNombreEntity = {};
+  msgParamDescripcionEntity = {};
 
   constructor(
     matDialogRef: MatDialogRef<TipoHitoModalComponent>,
@@ -52,6 +54,11 @@ export class TipoHitoModalComponent extends DialogActionComponent<ITipoHito> imp
       TIPO_HITO_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      TIPO_HITO_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     if (this.isEdit()) {
       this.translate.get(
@@ -82,7 +89,7 @@ export class TipoHitoModalComponent extends DialogActionComponent<ITipoHito> imp
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       nombre: new FormControl(this.tipoHito?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
-      descripcion: new FormControl(this.tipoHito?.descripcion ?? '')
+      descripcion: new FormControl(this.tipoHito?.descripcion ?? [], I18nValidators.maxLength(250))
     });
     return formGroup;
   }
