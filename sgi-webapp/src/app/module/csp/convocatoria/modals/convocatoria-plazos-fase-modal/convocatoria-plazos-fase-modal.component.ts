@@ -1,25 +1,26 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTabGroup } from '@angular/material/tabs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { DEFAULT_PREFIX_RECIPIENTS_CSP_CONV_FASES } from '@core/models/cnf/config-keys';
 import { IGenericEmailText } from '@core/models/com/generic-email-text';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { ISendEmailTask } from '@core/models/tp/send-email-task';
+import { ConfigService } from '@core/services/cnf/config.service';
 import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service';
 import { EmailService } from '@core/services/com/email/email.service';
-import { ConfigService } from '@core/services/cnf/config.service';
+import { IConvocatoriaFaseAviso } from '@core/services/csp/convocatoria-fase/convocatoria-fase-aviso';
+import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { pairwise, startWith, switchMap, tap } from 'rxjs/operators';
-import { DEFAULT_PREFIX_RECIPIENTS_CSP_CONV_FASES } from '@core/models/cnf/config-keys';
-import { IConvocatoriaFaseAviso } from '@core/services/csp/convocatoria-fase/convocatoria-fase-aviso';
-import { MatTabGroup } from '@angular/material/tabs';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -82,7 +83,8 @@ export class ConvocatoriaPlazosFaseModalComponent
     private configService: ConfigService,
     private emailTplService: EmailTplService,
     private emailService: EmailService,
-    private sgiApiTaskService: SgiApiTaskService
+    private sgiApiTaskService: SgiApiTaskService,
+    private languageService: LanguageService
   ) {
     super(matDialogRef, !data.plazo.fechaInicio);
   }
@@ -323,7 +325,7 @@ export class ConvocatoriaPlazosFaseModalComponent
       this.data.tituloConvocatoria,
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),
-      this.formGroup.get('tipoFase').value?.nombre ?? '',
+      this.languageService.getFieldValue(this.formGroup.get('tipoFase').value?.nombre) ?? '',
       this.formGroup.get('observaciones').value ?? ''
     ).subscribe(
       (template) => {

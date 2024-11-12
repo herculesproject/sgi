@@ -1,29 +1,30 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { DEFAULT_PREFIX_RECIPIENTS_CSP_PRO_FASES } from '@core/models/cnf/config-keys';
 import { IGenericEmailText } from '@core/models/com/generic-email-text';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IProyectoFase } from '@core/models/csp/proyecto-fase';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { ISendEmailTask } from '@core/models/tp/send-email-task';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service';
 import { EmailService } from '@core/services/com/email/email.service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { IProyectoFaseAviso } from '@core/services/csp/proyecto-fase/proyecto-fase-aviso';
+import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
-import { map, pairwise, startWith, switchMap } from 'rxjs/operators';
-import { DEFAULT_PREFIX_RECIPIENTS_CSP_PRO_FASES } from '@core/models/cnf/config-keys';
 import { Observable, of } from 'rxjs';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { map, pairwise, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -89,7 +90,8 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
     private emailTplService: EmailTplService,
     private emailService: EmailService,
     private sgiApiTaskService: SgiApiTaskService,
-    private convocatoriaService: ConvocatoriaService
+    private convocatoriaService: ConvocatoriaService,
+    private languageService: LanguageService
   ) {
     super(matDialogRef, !!data.plazo?.tipoFase);
   }
@@ -344,7 +346,7 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
       tituloConvocatoria,
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),
-      this.formGroup.get('tipoFase').value?.nombre ?? '',
+      this.languageService.getFieldValue(this.formGroup.get('tipoFase').value?.nombre) ?? '',
       this.formGroup.get('observaciones').value ?? ''
     ).subscribe(
       (template) => {
