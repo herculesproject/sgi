@@ -13,6 +13,8 @@ import { environment } from '@env';
 import { RSQLSgiRestFilter, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IModeloTipoDocumentoResponse } from './modelo-tipo-documento/modelo-tipo-documento-response';
+import { MODELO_TIPO_DOCUMENTO_RESPONSE_CONVERTER } from './modelo-tipo-documento/modelo-tipo-documento-response.converter';
 import { IModeloTipoFaseResponse } from './modelo-tipo-fase/modelo-tipo-fase-response';
 import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from './modelo-tipo-fase/modelo-tipo-fase-response.converter';
 
@@ -73,7 +75,11 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
    * @param options opciones de búsqueda.
    */
   findModeloTipoDocumento(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoDocumento>> {
-    return this.find<IModeloTipoDocumento, IModeloTipoDocumento>(`${this.endpointUrl}/${id}/modelotipodocumentos`, options);
+    return this.find<IModeloTipoDocumentoResponse, IModeloTipoDocumento>(
+      `${this.endpointUrl}/${id}/modelotipodocumentos`,
+      options,
+      MODELO_TIPO_DOCUMENTO_RESPONSE_CONVERTER
+    );
   }
 
   findModeloTipoHito(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
