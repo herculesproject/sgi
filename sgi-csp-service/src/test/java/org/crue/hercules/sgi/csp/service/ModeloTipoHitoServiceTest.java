@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.repository.ModeloEjecucionRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoHitoRepository;
@@ -503,10 +504,13 @@ class ModeloTipoHitoServiceTest extends BaseServiceTest {
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, nombre));
 
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-" + id));
+
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id);
     tipoHito.setNombre(nombreTipoHito);
-    tipoHito.setDescripcion("descripcion-" + id);
+    tipoHito.setDescripcion(descripcionTipoHito);
     tipoHito.setActivo(Boolean.TRUE);
     return tipoHito;
   }

@@ -59,10 +59,13 @@ INSERT INTO test.modelo_tipo_fase (id, tipo_fase_id, modelo_ejecucion_id, solici
 INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-18T00:00:00Z', '2020-11-01T23:59:59Z', 'observaciones-1');
 
 -- TIPO HITO
-INSERT INTO test.tipo_hito (id, descripcion, activo) VALUES (1, 'descripcion-1', true);
+INSERT INTO test.tipo_hito (id, activo) VALUES (1, true);
 
 -- TIPO HITO NOMBRE
 INSERT INTO test.tipo_hito_nombre (tipo_hito_id, lang, value_) VALUES (1, 'es', 'nombre-1');
+
+-- TIPO HITO DESCRIPCIÓN
+INSERT INTO test.tipo_hito_descripcion (tipo_hito_id, lang, value_) VALUES (1, 'es', 'descripcion-1');
 
 -- MODELO TIPO HITO
 INSERT INTO test.modelo_tipo_hito (id, modelo_ejecucion_id, tipo_hito_id, solicitud, proyecto, convocatoria, activo) VALUES (1, 1, 1, true, true, true, true);

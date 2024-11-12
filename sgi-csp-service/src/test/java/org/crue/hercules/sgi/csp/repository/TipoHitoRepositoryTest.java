@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -27,17 +28,23 @@ class TipoHitoRepositoryTest extends BaseRepositoryTest {
     // given: 2 TipoHito de los que 1 coincide con el nombre buscado
     Set<TipoHitoNombre> nombreTipoHito1 = new HashSet<>();
     nombreTipoHito1.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito1"));
-    TipoHito tipoHito1 = new TipoHito(null, nombreTipoHito1, "descripcion-tipoHito1", true);
+    Set<TipoHitoDescripcion> descripcionTipoHito1 = new HashSet<>();
+    descripcionTipoHito1.add(new TipoHitoDescripcion(Language.ES, "descripcion-tipoHito1"));
+    TipoHito tipoHito1 = new TipoHito(null, nombreTipoHito1, descripcionTipoHito1, true);
     entityManager.persistAndFlush(tipoHito1);
 
     Set<TipoHitoNombre> nombreTipoHito2 = new HashSet<>();
     nombreTipoHito2.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito2"));
-    TipoHito tipoHito2 = new TipoHito(null, nombreTipoHito2, "descripcion-tipoHito2", true);
+    Set<TipoHitoDescripcion> descripcionTipoHito2 = new HashSet<>();
+    descripcionTipoHito2.add(new TipoHitoDescripcion(Language.ES, "descripcion-tipoHito2"));
+    TipoHito tipoHito2 = new TipoHito(null, nombreTipoHito2, descripcionTipoHito2, true);
     entityManager.persistAndFlush(tipoHito2);
 
     Set<TipoHitoNombre> nombreTipoHito3 = new HashSet<>();
     nombreTipoHito3.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito1"));
-    TipoHito tipoHito3 = new TipoHito(null, nombreTipoHito3, "descripcion-tipoHito1", false);
+    Set<TipoHitoDescripcion> descripcionTipoHito3 = new HashSet<>();
+    descripcionTipoHito3.add(new TipoHitoDescripcion(Language.ES, "descripcion-tipoHito1"));
+    TipoHito tipoHito3 = new TipoHito(null, nombreTipoHito3, descripcionTipoHito3, false);
     entityManager.persistAndFlush(tipoHito3);
 
     String nombreBuscado = "nombre-tipoHito1";
@@ -60,12 +67,16 @@ class TipoHitoRepositoryTest extends BaseRepositoryTest {
     // given: 2 TipoHito que no coinciden con el nombre buscado
     Set<TipoHitoNombre> nombreTipoHito1 = new HashSet<>();
     nombreTipoHito1.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito1"));
-    TipoHito tipoHito1 = new TipoHito(null, nombreTipoHito1, "descripcion-tipoHito1", true);
+    Set<TipoHitoDescripcion> descripcionTipoHito1 = new HashSet<>();
+    descripcionTipoHito1.add(new TipoHitoDescripcion(Language.ES, "descripcion-tipoHito1"));
+    TipoHito tipoHito1 = new TipoHito(null, nombreTipoHito1, descripcionTipoHito1, true);
     entityManager.persistAndFlush(tipoHito1);
 
     Set<TipoHitoNombre> nombreTipoHito2 = new HashSet<>();
     nombreTipoHito2.add(new TipoHitoNombre(Language.ES, "nombre-tipoHito"));
-    TipoHito tipoHito2 = new TipoHito(null, nombreTipoHito2, "descripcion-tipoHito2", true);
+    Set<TipoHitoDescripcion> descripcionTipoHito2 = new HashSet<>();
+    descripcionTipoHito2.add(new TipoHitoDescripcion(Language.ES, "descripcion-tipoHito2"));
+    TipoHito tipoHito2 = new TipoHito(null, nombreTipoHito2, descripcionTipoHito2, true);
     entityManager.persistAndFlush(tipoHito2);
 
     String nombreBuscado = "nombre-tipoHito-noexiste";

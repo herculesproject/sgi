@@ -439,7 +439,7 @@ class ModeloEjecucionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoHito.id,desc";
-    String filter = "tipoHito.descripcion=ke=00";
+    String filter = "tipoHito.descripcion.value=ke=00";
 
     Long idModeloEjecucion = 1L;
 

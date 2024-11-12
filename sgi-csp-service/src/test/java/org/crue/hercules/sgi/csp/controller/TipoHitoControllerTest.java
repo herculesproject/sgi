@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -78,7 +79,7 @@ class TipoHitoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
 
@@ -118,7 +119,7 @@ class TipoHitoControllerTest extends BaseControllerTest {
         // then: Modifica el TipoHito y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1-modificado"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
 
@@ -326,7 +327,7 @@ class TipoHitoControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
 
@@ -354,7 +355,8 @@ class TipoHitoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(tipoHito.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(tipoHito.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoHito.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(tipoHito.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
 
@@ -403,7 +405,8 @@ class TipoHitoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(tipoHito.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoHito.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(tipoHito.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
   }
 
@@ -446,10 +449,13 @@ class TipoHitoControllerTest extends BaseControllerTest {
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, nombre));
 
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-" + id));
+
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id);
     tipoHito.setNombre(nombreTipoHito);
-    tipoHito.setDescripcion("descripcion-" + id);
+    tipoHito.setDescripcion(descripcionTipoHito);
     tipoHito.setActivo(Boolean.TRUE);
     return tipoHito;
   }

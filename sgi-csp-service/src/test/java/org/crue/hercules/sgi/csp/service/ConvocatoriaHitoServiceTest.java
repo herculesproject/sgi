@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrenciaNombre;
@@ -645,10 +646,13 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, "nombre-" + id));
 
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-" + id));
+
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id);
     tipoHito.setNombre(nombreTipoHito);
-    tipoHito.setDescripcion("descripcion-" + id);
+    tipoHito.setDescripcion(descripcionTipoHito);
     tipoHito.setActivo(activo);
 
     return tipoHito;

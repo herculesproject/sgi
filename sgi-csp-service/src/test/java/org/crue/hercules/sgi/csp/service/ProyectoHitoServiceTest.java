@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
@@ -832,10 +833,13 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, "nombre-hito-" + String.format("%03d", id)));
 
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-hito-" + String.format("%03d", id)));
+
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id);
     tipoHito.setNombre(nombreTipoHito);
-    tipoHito.setDescripcion("descripcion-hito-" + String.format("%03d", id));
+    tipoHito.setDescripcion(descripcionTipoHito);
     tipoHito.setActivo(activo);
 
     return tipoHito;

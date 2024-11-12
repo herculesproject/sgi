@@ -11,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
 import org.crue.hercules.sgi.csp.service.impl.TipoHitoServiceImpl;
@@ -373,10 +374,13 @@ class TipoHitoServiceTest extends BaseServiceTest {
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, nombre));
 
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-" + id));
+
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id);
     tipoHito.setNombre(nombreTipoHito);
-    tipoHito.setDescripcion("descripcion-" + id);
+    tipoHito.setDescripcion(descripcionTipoHito);
     tipoHito.setActivo(Boolean.TRUE);
     return tipoHito;
   }

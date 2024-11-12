@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoDocumentoService;
@@ -1237,10 +1238,13 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, nombre));
 
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-" + id));
+
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id);
     tipoHito.setNombre(nombreTipoHito);
-    tipoHito.setDescripcion("descripcion-" + id);
+    tipoHito.setDescripcion(descripcionTipoHito);
     tipoHito.setActivo(Boolean.TRUE);
 
     ModeloTipoHito modeloTipoHito = new ModeloTipoHito();

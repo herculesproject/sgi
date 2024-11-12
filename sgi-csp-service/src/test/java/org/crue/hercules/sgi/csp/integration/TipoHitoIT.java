@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -60,7 +61,8 @@ class TipoHitoIT extends BaseIT {
     Assertions.assertThat(tipoHito.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoHito.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("TipoHito1");
-    Assertions.assertThat(tipoHito.getDescripcion()).as("getDescripcion()").isEqualTo("Descripcion1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoHito.getDescripcion(), Language.ES)).as("getDescripcion()")
+        .isEqualTo("Descripcion1");
     Assertions.assertThat(tipoHito.getActivo()).as("getActivo()").isTrue();
   }
 
@@ -98,7 +100,8 @@ class TipoHitoIT extends BaseIT {
     Assertions.assertThat(tipoHitoDisabled.getId()).as("getId()").isEqualTo(idTipoHito);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoHitoDisabled.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre1");
-    Assertions.assertThat(tipoHitoDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripción1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoHitoDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripción1");
     Assertions.assertThat(tipoHitoDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -117,7 +120,8 @@ class TipoHitoIT extends BaseIT {
     Assertions.assertThat(tipoHitoDisabled.getId()).as("getId()").isEqualTo(idTipoHito);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoHitoDisabled.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre1");
-    Assertions.assertThat(tipoHitoDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripción1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoHitoDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripción1");
     Assertions.assertThat(tipoHitoDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
@@ -151,7 +155,7 @@ class TipoHitoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_HITO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -188,7 +192,7 @@ class TipoHitoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_HITO_CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -236,10 +240,13 @@ class TipoHitoIT extends BaseIT {
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, nombre));
 
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-" + id));
+
     TipoHito tipoHito = new TipoHito();
     tipoHito.setId(id);
     tipoHito.setNombre(nombreTipoHito);
-    tipoHito.setDescripcion("descripcion-" + id);
+    tipoHito.setDescripcion(descripcionTipoHito);
     tipoHito.setActivo(Boolean.TRUE);
     return tipoHito;
   }

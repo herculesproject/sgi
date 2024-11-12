@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHitoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,11 @@ class ModeloTipoHitoRepositoryTest extends BaseRepositoryTest {
 
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, "nombre-tf-1"));
-    TipoHito tipoHito = new TipoHito(null, nombreTipoHito, "descripcion-tf-1", Boolean.TRUE);
+
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-tf-1"));
+
+    TipoHito tipoHito = new TipoHito(null, nombreTipoHito, descripcionTipoHito, Boolean.TRUE);
     entityManager.persistAndFlush(tipoHito);
     ModeloTipoHito modeloTipoHito = new ModeloTipoHito(null, tipoHito, modeloEjecucion, Boolean.TRUE, Boolean.TRUE,
         Boolean.TRUE, Boolean.TRUE);
@@ -60,7 +65,11 @@ class ModeloTipoHitoRepositoryTest extends BaseRepositoryTest {
 
     Set<TipoHitoNombre> nombreTipoHito = new HashSet<>();
     nombreTipoHito.add(new TipoHitoNombre(Language.ES, "nombre-tf-1"));
-    TipoHito tipoHito = new TipoHito(null, nombreTipoHito, "descripcion-tf-1", Boolean.TRUE);
+
+    Set<TipoHitoDescripcion> descripcionTipoHito = new HashSet<>();
+    descripcionTipoHito.add(new TipoHitoDescripcion(Language.ES, "descripcion-tf-1"));
+
+    TipoHito tipoHito = new TipoHito(null, nombreTipoHito, descripcionTipoHito, Boolean.TRUE);
     entityManager.persistAndFlush(tipoHito);
 
     // when: find by ModeloEjecucion and TipoHito

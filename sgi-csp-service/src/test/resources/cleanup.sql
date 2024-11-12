@@ -149,6 +149,7 @@ DELETE FROM test.tipo_financiacion_descripcion;
 DELETE FROM test.tipo_financiacion_nombre;
 DELETE FROM test.tipo_financiacion;
 DELETE FROM test.tipo_hito_nombre;
+DELETE FROM test.tipo_hito_descripcion;
 DELETE FROM test.tipo_hito;
 DELETE FROM test.tipo_origen_fuente_financiacion_nombre;
 DELETE FROM test.tipo_origen_fuente_financiacion;
