@@ -1,7 +1,7 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IRolSocioRequest } from './rol-socio-request';
-import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class RolSocioRequestConverter extends SgiBaseConverter<IRolSocioRequest, IRolSocio> {
   toTarget(value: IRolSocioRequest): IRolSocio {
@@ -25,7 +25,7 @@ class RolSocioRequestConverter extends SgiBaseConverter<IRolSocioRequest, IRolSo
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
       abreviatura: value.abreviatura ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.abreviatura) : [],
       coordinador: value.coordinador,
-      descripcion: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
+      descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.descripcion) : [],
     };
   }
 }
