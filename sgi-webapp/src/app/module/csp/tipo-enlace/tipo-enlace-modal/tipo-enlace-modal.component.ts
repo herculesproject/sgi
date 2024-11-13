@@ -80,8 +80,8 @@ export class TipoEnlaceModalComponent extends DialogActionComponent<ITipoEnlace>
 
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      nombre: new FormControl(this.tipoEnlace?.nombre ?? '', I18nValidators.required),
-      descripcion: new FormControl(this.tipoEnlace?.descripcion ?? '')
+      nombre: new FormControl(this.tipoEnlace?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
+      descripcion: new FormControl(this.tipoEnlace?.descripcion ?? [], I18nValidators.maxLength(250))
     });
 
     return formGroup;

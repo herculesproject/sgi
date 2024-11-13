@@ -43,7 +43,7 @@ export class TipoEnlaceService extends _TipoEnlaceServiceMixinBase {
    * @param options opciones de búsqueda.
    */
   findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<ITipoEnlace>> {
-    return this.find<ITipoEnlace, ITipoEnlace>(`${this.endpointUrl}/todos`, options);
+    return this.find<ITipoEnlaceResponse, ITipoEnlace>(`${this.endpointUrl}/todos`, options, TIPO_ENLACE_RESPONSE_CONVERTER);
   }
 
   /**

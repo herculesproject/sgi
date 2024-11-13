@@ -6,6 +6,7 @@ import { FieldOrientation } from '@core/models/rep/field-orientation.enum';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,12 +24,13 @@ const ENLACE_TIPO_FIELD = 'enlaceTipo';
 const ENLACE_URL_FIELD = 'enlaceUrl';
 
 @Injectable()
-export class ConvocatoriaEnlaceListadoExportService extends AbstractTableExportFillService<IConvocatoriaReportData, IConvocatoriaReportOptions>{
+export class ConvocatoriaEnlaceListadoExportService extends AbstractTableExportFillService<IConvocatoriaReportData, IConvocatoriaReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private convocatoriaService: ConvocatoriaService
+    private convocatoriaService: ConvocatoriaService,
+    private languageService: LanguageService
   ) {
     super(translate);
   }
@@ -125,7 +127,7 @@ export class ConvocatoriaEnlaceListadoExportService extends AbstractTableExportF
 
       let enlaceContent = convocatoriaEnlace?.url ?? '';
       enlaceContent += ' - ';
-      enlaceContent += convocatoriaEnlace?.tipoEnlace ? convocatoriaEnlace.tipoEnlace.nombre ?? '' : '';
+      enlaceContent += convocatoriaEnlace?.tipoEnlace ? convocatoriaEnlace.tipoEnlace.nombre ? this.languageService.getFieldValue(convocatoriaEnlace.tipoEnlace.nombre) : '' : '';
 
       enlaceElementsRow.push(enlaceContent);
 
@@ -143,7 +145,7 @@ export class ConvocatoriaEnlaceListadoExportService extends AbstractTableExportF
   private fillRowsEntidadExcel(elementsRow: any[], convocatoriaEnlace: IConvocatoriaEnlace) {
     if (convocatoriaEnlace) {
       elementsRow.push(convocatoriaEnlace.url ?? '');
-      elementsRow.push(convocatoriaEnlace.tipoEnlace ? convocatoriaEnlace.tipoEnlace?.nombre ?? '' : '');
+      elementsRow.push(convocatoriaEnlace.tipoEnlace ? convocatoriaEnlace.tipoEnlace?.nombre ? this.languageService.getFieldValue(convocatoriaEnlace.tipoEnlace?.nombre) : '' : '');
     } else {
       elementsRow.push('');
       elementsRow.push('');

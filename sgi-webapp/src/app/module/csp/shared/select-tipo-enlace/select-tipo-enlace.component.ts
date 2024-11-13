@@ -5,6 +5,7 @@ import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { Module } from '@core/module';
@@ -87,6 +88,10 @@ export class SelectTipoEnlaceComponent extends SelectServiceExtendedComponent<IT
     };
 
     this.addTarget = TipoEnlaceModalComponent;
+    this.sortWith = (o1: SelectValue<ITipoEnlace>, o2: SelectValue<ITipoEnlace>) => {
+      return o1?.displayText.localeCompare(o2?.displayText)
+    };
+
   }
 
   protected loadServiceOptions(): Observable<ITipoEnlace[]> {
