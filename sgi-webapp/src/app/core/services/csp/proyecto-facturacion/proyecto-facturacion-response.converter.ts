@@ -2,6 +2,7 @@ import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { TIPO_FACTURACION_RESPONSE_CONVERTER } from '../tipo-facturacion/tipo-facturacion-response.converter';
 import { IProyectoFacturacionResponse } from './proyecto-facturacion-response';
 
 class ProyectoFacturacionResponseConverter extends
@@ -19,7 +20,7 @@ class ProyectoFacturacionResponseConverter extends
       numeroPrevision: value.numeroPrevision,
       porcentajeIVA: value.porcentajeIVA,
       proyectoId: value.proyectoId,
-      tipoFacturacion: value.tipoFacturacion,
+      tipoFacturacion: TIPO_FACTURACION_RESPONSE_CONVERTER.toTarget(value.tipoFacturacion),
       proyectoProrroga: value.proyectoProrrogaId ? { id: value.proyectoProrrogaId } as IProyectoProrroga : null,
       proyectoSgeRef: value.proyectoSgeRef
     };
@@ -36,7 +37,7 @@ class ProyectoFacturacionResponseConverter extends
       numeroPrevision: value.numeroPrevision,
       porcentajeIVA: value.porcentajeIVA,
       proyectoId: value.proyectoId,
-      tipoFacturacion: value.tipoFacturacion,
+      tipoFacturacion: TIPO_FACTURACION_RESPONSE_CONVERTER.fromTarget(value.tipoFacturacion),
       proyectoProrrogaId: value.proyectoProrroga?.id,
       proyectoSgeRef: value.proyectoSgeRef
     };
