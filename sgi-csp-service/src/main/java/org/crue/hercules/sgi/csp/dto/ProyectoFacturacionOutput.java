@@ -3,12 +3,14 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Collection;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.crue.hercules.sgi.csp.model.TipoFacturacionNombre;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -51,7 +53,7 @@ public class ProyectoFacturacionOutput implements Serializable {
   @Builder
   public static class TipoFacturacion implements Serializable {
     Long id;
-    String nombre;
+    Collection<TipoFacturacionNombre> nombre;
   }
 
 }
