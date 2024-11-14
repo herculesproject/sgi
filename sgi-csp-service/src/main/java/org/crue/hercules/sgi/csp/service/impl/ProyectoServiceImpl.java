@@ -2278,13 +2278,12 @@ public class ProyectoServiceImpl implements ProyectoService {
       }
     }
 
-    // Cambio de fecha fin definitiva si el estado se va a modificar a RENUNCIADO o
-    // RESCINDIDO
-    Instant fechaActual = Instant.now();
+    // Cambio de fecha fin definitiva si el estado se va a modificar a RENUNCIADO o RESCINDIDO
+    Instant fechaEstado = estadoProyecto.getFechaEstado() != null ? estadoProyecto.getFechaEstado() : Instant.now();
     if (estadoProyecto.getEstado() == EstadoProyecto.Estado.RENUNCIADO
         || estadoProyecto.getEstado() == EstadoProyecto.Estado.RESCINDIDO) {
 
-      Instant fechaFinNew = fechaActual.atZone(sgiConfigProperties.getTimeZone().toZoneId()).withHour(23)
+      Instant fechaFinNew = fechaEstado.atZone(sgiConfigProperties.getTimeZone().toZoneId()).withHour(23)
           .withMinute(59).withSecond(59).withNano(0).toInstant();
 
       Instant fechaFinPrevious = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
@@ -2299,7 +2298,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     }
 
     // Se cambia el estado del proyecto
-    estadoProyecto.setFechaEstado(fechaActual);
+    estadoProyecto.setFechaEstado(fechaEstado);
     estadoProyecto = estadoProyectoRepository.save(estadoProyecto);
     proyecto.setEstado(estadoProyecto);
 
