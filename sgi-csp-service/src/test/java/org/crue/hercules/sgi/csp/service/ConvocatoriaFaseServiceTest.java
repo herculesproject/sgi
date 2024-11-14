@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -657,12 +658,14 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
    */
   private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
       Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
-
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(
+        new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)));
     // @formatter:off
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
         : ModeloEjecucion.builder()
             .id(modeloEjecucionId)
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
+            .nombre(nombreModeloEjecucion)
             .activo(Boolean.TRUE)
             .build();
 

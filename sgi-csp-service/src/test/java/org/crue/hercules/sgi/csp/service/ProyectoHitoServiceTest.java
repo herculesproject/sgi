@@ -22,6 +22,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
@@ -774,9 +775,12 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   private Proyecto generarMockProyecto(Long id) {
     EstadoProyecto estadoProyecto = generarMockEstadoProyecto(1L);
 
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombre-modelo-ejecucion"));
+
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
-    modeloEjecucion.setNombre("nombre-modelo-ejecucion");
+    modeloEjecucion.setNombre(nombreModeloEjecucion);
 
     TipoFinalidad tipoFinalidad = new TipoFinalidad();
     tipoFinalidad.setId(1L);

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
@@ -30,18 +31,21 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
   void findAllByProyectoSocioId_ReturnsProyectoSocioPeriodoJustificacion() throws Exception {
 
     // given: 1 ProyectoSocioPeriodoJustificacion para el ProyectoSocioId buscado
-    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false);
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, nombreModeloEjecucion, "descripcion-1", true, false,
+        false, false);
     entityManager.persistAndFlush(modeloEjecucion);
 
     Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
     abreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
-    
+
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
-    
+
     Set<RolSocioDescripcion> descripcion = new HashSet<>();
     descripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
-    
+
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .abreviatura(abreviatura)

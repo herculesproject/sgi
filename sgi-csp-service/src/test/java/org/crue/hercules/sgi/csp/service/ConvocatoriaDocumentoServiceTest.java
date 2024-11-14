@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -1088,12 +1089,14 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
    */
   private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
       Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
-
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(
+        new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)));
     // @formatter:off
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
         : ModeloEjecucion.builder()
             .id(modeloEjecucionId)
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
+            .nombre(nombreModeloEjecucion)
             .activo(Boolean.TRUE)
             .build();
 

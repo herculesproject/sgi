@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.exceptions.ModeloTipoDocumentoNotFoundException
 import org.crue.hercules.sgi.csp.exceptions.ModeloTipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
@@ -608,9 +609,12 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
    * @return el objeto ModeloTipoDocumento
    */
   private ModeloTipoDocumento generarMockModeloTipoDocumento(Long id, Long idTipoDocumento, Long idModeloTipoFase) {
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecion-1"));
+
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
-    modeloEjecucion.setNombre("nombreModeloEjecion-1");
+    modeloEjecucion.setNombre(nombreModeloEjecucion);
     modeloEjecucion.setActivo(Boolean.TRUE);
 
     ModeloTipoDocumento modeloTipoDocumento = new ModeloTipoDocumento();
@@ -635,9 +639,12 @@ class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
    * @return el objeto ModeloTipoDocumento
    */
   private ModeloTipoFase generarMockModeloTipoFase(Long id, Long idTipoFase) {
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecion-1"));
+
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
-    modeloEjecucion.setNombre("nombreModeloEjecion-1");
+    modeloEjecucion.setNombre(nombreModeloEjecucion);
 
     Set<TipoFaseNombre> nombreTipoFase = new HashSet<>();
     nombreTipoFase.add(new TipoFaseNombre(Language.ES, "nombre-" + idTipoFase));

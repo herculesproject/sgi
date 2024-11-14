@@ -31,9 +31,13 @@ INSERT INTO test.tipo_hito_descripcion (tipo_hito_id, lang, value_) VALUES (12, 
 INSERT INTO test.tipo_hito_descripcion (tipo_hito_id, lang, value_) VALUES (13, 'es', 'descripcion-013');
 INSERT INTO test.tipo_hito_descripcion (tipo_hito_id, lang, value_) VALUES (14, 'es', 'descripcion-014');
 
--- MODELO EJECUCION
-INSERT INTO test.modelo_ejecucion (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
-INSERT INTO test.modelo_ejecucion (id, nombre, descripcion, activo) VALUES (2, 'nombre-002', 'descripcion-002', true);
+-- MODELO_EJECUCION
+INSERT INTO test.modelo_ejecucion (id, descripcion, activo) VALUES (1, 'descripcion-001', true);
+INSERT INTO test.modelo_ejecucion (id, descripcion, activo) VALUES (2, 'descripcion-002', true);
+
+-- MODELO_EJECUCION_NOMBRE
+INSERT INTO test.modelo_ejecucion_nombre (modelo_ejecucion_id, lang, value_) VALUES (1, 'es', 'nombre-001');
+INSERT INTO test.modelo_ejecucion_nombre (modelo_ejecucion_id, lang, value_) VALUES (2, 'es', 'nombre-002');
 
 -- MODELO TIPO HITO
 INSERT INTO test.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (1, 1, 1, true, true, true, true);

@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToAccessProyectoException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
@@ -966,13 +967,16 @@ class ProyectoServiceTest extends BaseServiceTest {
   private Proyecto generarMockProyecto(Long id) {
     EstadoProyecto estadoProyecto = generarMockEstadoProyecto(1L);
 
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion"));
+
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
-    modeloEjecucion.setNombre("nombreModeloEjecucion");
+    modeloEjecucion.setNombre(nombreModeloEjecucion);
 
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad"));
-    
+
     TipoFinalidad tipoFinalidad = new TipoFinalidad();
     tipoFinalidad.setId(1L);
     tipoFinalidad.setNombre(nombreTipoFinalidad);

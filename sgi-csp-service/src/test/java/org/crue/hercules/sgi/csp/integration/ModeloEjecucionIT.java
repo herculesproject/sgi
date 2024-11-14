@@ -2,10 +2,13 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
@@ -109,7 +112,8 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ModeloEjecucion modeloEjecucionDisabled = response.getBody();
     Assertions.assertThat(modeloEjecucionDisabled.getId()).as("getId()").isEqualTo(idModeloEjecucion);
-    Assertions.assertThat(modeloEjecucionDisabled.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucionDisabled.getNombre(), Language.ES))
+        .as("getNombre()").isEqualTo("nombre-1");
     Assertions.assertThat(modeloEjecucionDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(modeloEjecucionDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
@@ -127,7 +131,8 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ModeloEjecucion modeloEjecucionDisabled = response.getBody();
     Assertions.assertThat(modeloEjecucionDisabled.getId()).as("getId()").isEqualTo(idModeloEjecucion);
-    Assertions.assertThat(modeloEjecucionDisabled.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucionDisabled.getNombre(), Language.ES))
+        .as("getNombre()").isEqualTo("nombre-1");
     Assertions.assertThat(modeloEjecucionDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(modeloEjecucionDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
@@ -145,7 +150,8 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ModeloEjecucion modeloEjecucion = response.getBody();
     Assertions.assertThat(modeloEjecucion.getId()).as("getId()").isEqualTo(idModeloEjecucion);
-    Assertions.assertThat(modeloEjecucion.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-1");
     Assertions.assertThat(modeloEjecucion.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(modeloEjecucion.getActivo()).as("getActivo()").isTrue();
   }
@@ -175,7 +181,7 @@ class ModeloEjecucionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre,desc";
+    String sort = "id,desc";
     String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
@@ -193,11 +199,14 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(modelosEjecucion.get(0).getNombre()).as("get(0).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modelosEjecucion.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modelosEjecucion.get(1).getNombre()).as("get(1).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modelosEjecucion.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modelosEjecucion.get(2).getNombre()).as("get(2).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modelosEjecucion.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
@@ -554,8 +563,12 @@ class ModeloEjecucionIT extends BaseIT {
    */
   private ModeloEjecucion generarMockModeloEjecucion(Long id, String nombre) {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
+
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, nombre));
+
     modeloEjecucion.setId(id);
-    modeloEjecucion.setNombre(nombre);
+    modeloEjecucion.setNombre(nombreModeloEjecucion);
     modeloEjecucion.setDescripcion("descripcion-" + id);
     modeloEjecucion.setActivo(Boolean.TRUE);
     modeloEjecucion.setExterno(Boolean.FALSE);

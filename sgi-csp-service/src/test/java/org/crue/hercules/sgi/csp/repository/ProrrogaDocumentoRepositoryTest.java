@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -92,10 +93,12 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
    * @return el objeto Proyecto
    */
   private Proyecto generarMockProyecto(String suffix) {
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
     // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
-        .nombre("nombreModeloEjecucion" + suffix)
+        .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
         .contrato(Boolean.FALSE)
         .externo(Boolean.FALSE)

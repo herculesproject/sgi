@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -1695,11 +1696,15 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
   private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
       Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
 
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(
+        new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)));
+
     // @formatter:off
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
         : ModeloEjecucion.builder()
             .id(modeloEjecucionId)
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
+            .nombre(nombreModeloEjecucion)
             .activo(Boolean.TRUE)
             .build();
             

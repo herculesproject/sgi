@@ -3,9 +3,7 @@ package org.crue.hercules.sgi.csp.controller;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.groups.Default;
 
-import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
@@ -13,7 +11,6 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
-import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoDocumentoService;
@@ -28,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -195,8 +191,7 @@ public class ModeloEjecucionController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-E')")
-  public ModeloEjecucion update(
-      @Validated({ Update.class, Default.class }) @RequestBody ModeloEjecucion modeloEjecucion, @PathVariable Long id) {
+  public ModeloEjecucion update(@Valid @RequestBody ModeloEjecucion modeloEjecucion, @PathVariable Long id) {
     log.debug("update(ModeloEjecucion modeloEjecucion, Long id) - start");
     modeloEjecucion.setId(id);
     ModeloEjecucion returnValue = modeloEjecucionService.update(modeloEjecucion);

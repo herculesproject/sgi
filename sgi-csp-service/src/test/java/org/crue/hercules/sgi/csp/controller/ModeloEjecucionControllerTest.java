@@ -8,6 +8,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
@@ -96,28 +97,31 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
   void create_ReturnsModeloEjecucion() throws Exception {
     // given: Un ModeloEjecucion nuevo
-    String modeloEjecucionJson = "{ \"nombre\": \"nombre-1\", \"descripcion\": \"descripcion-1\", \"externo\": false, \"contrato\": false }";
+    ModeloEjecucion data = generarMockModeloEjecucion(1L, "nombre-1");
+    data.setId(null);
 
     BDDMockito.given(modeloEjecucionService.create(ArgumentMatchers.<ModeloEjecucion>any()))
-        .will((InvocationOnMock invocation) -> {
-          ModeloEjecucion modeloEjecucionCreado = invocation.getArgument(0);
-          modeloEjecucionCreado.setId(1L);
-          if (modeloEjecucionCreado.getActivo() == null) {
-            modeloEjecucionCreado.setActivo(true);
+        .willAnswer(new Answer<ModeloEjecucion>() {
+          @Override
+          public ModeloEjecucion answer(InvocationOnMock invocation) throws Throwable {
+            ModeloEjecucion givenData = invocation.getArgument(0, ModeloEjecucion.class);
+            ModeloEjecucion newData = new ModeloEjecucion();
+            BeanUtils.copyProperties(givenData, newData);
+            newData.setId(1L);
+            return newData;
           }
-          return modeloEjecucionCreado;
         });
 
     // when: Creamos un ModeloEjecucion
     mockMvc
         .perform(MockMvcRequestBuilders.post(MODELO_EJECUCION_CONTROLLER_BASE_PATH)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(modeloEjecucionJson))
+            .content(mapper.writeValueAsString(data)))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Crea el nuevo ModeloEjecucion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("nombre-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
@@ -145,23 +149,20 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
   void update_ReturnsModeloEjecucion() throws Exception {
     // given: Un ModeloEjecucion a modificar
-    String modeloEjecucionJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true, \"externo\": false, \"contrato\": false  }";
-    ModeloEjecucion modeloEjecucionSinModificar = generarMockModeloEjecucion(1L, "nombre-1");
+    ModeloEjecucion data = generarMockModeloEjecucion(1L, "nombre-1-modificado");
 
-    BDDMockito.given(modeloEjecucionService.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(modeloEjecucionSinModificar);
     BDDMockito.given(modeloEjecucionService.update(ArgumentMatchers.<ModeloEjecucion>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
     // when: Actualizamos el ModeloEjecucion
     mockMvc
-        .perform(MockMvcRequestBuilders.put(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, data.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(modeloEjecucionJson))
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(data)))
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Modifica el ModeloEjecucion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("nombre-1-modificado"))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1-modificado"))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true))
         .andExpect(MockMvcResultMatchers.jsonPath("externo").value(false))
@@ -172,17 +173,18 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
   void update_WithIdNotExist_Returns404() throws Exception {
     // given: Un ModeloEjecucion a modificar
-    String modeloEjecucionJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true, \"externo\": false, \"contrato\": false }";
+    ModeloEjecucion data = generarMockModeloEjecucion(1L, "nombre-1-modificado");
+
     BDDMockito.given(modeloEjecucionService.update(ArgumentMatchers.<ModeloEjecucion>any()))
         .will((InvocationOnMock invocation) -> {
           throw new ModeloEjecucionNotFoundException(((ModeloEjecucion) invocation.getArgument(0)).getId());
         });
 
-    // when: Actualizamos el ModeloEjecucion
+    // when: Actualizamos el TipoDocumento
     mockMvc
         .perform(MockMvcRequestBuilders.put(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(modeloEjecucionJson))
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(data)))
         // then: No encuentra el ModeloEjecucion y devuelve un 404
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -231,7 +233,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
         // then: return enabled ModeloEjecucion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(modeloEjecucion.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(modeloEjecucion.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(modeloEjecucion.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
@@ -280,7 +283,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
         // then: return disabled ModeloEjecucion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(modeloEjecucion.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(modeloEjecucion.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
   }
@@ -336,7 +340,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     for (int i = 31; i < 37; i++) {
       ModeloEjecucion modeloEjecucion = modelosEjecucionResponse.get(i);
-      Assertions.assertThat(modeloEjecucion.getNombre()).isEqualTo("ModeloEjecucion" + String.format("%03d", i + 1));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES))
+          .isEqualTo("ModeloEjecucion" + String.format("%03d", i + 1));
     }
   }
 
@@ -411,7 +416,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ModeloEjecucion modeloEjecucion = modelosEjecucionResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloEjecucion.getNombre()).isEqualTo("ModeloEjecucion" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES))
+          .isEqualTo("ModeloEjecucion" + String.format("%03d", i));
     }
   }
 
@@ -460,7 +466,7 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
         // then: Devuelve ModeloEjecucion
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("nombre-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
@@ -1094,9 +1100,15 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
    */
   private ModeloEjecucion generarMockModeloEjecucion(Long id, String nombre) {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
+
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, nombre));
+
     modeloEjecucion.setId(id);
-    modeloEjecucion.setNombre(nombre);
+    modeloEjecucion.setNombre(nombreModeloEjecucion);
     modeloEjecucion.setDescripcion("descripcion-" + id);
+    modeloEjecucion.setExterno(Boolean.FALSE);
+    modeloEjecucion.setContrato(Boolean.FALSE);
     modeloEjecucion.setActivo(Boolean.TRUE);
 
     return modeloEjecucion;

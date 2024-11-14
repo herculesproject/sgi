@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
@@ -33,11 +34,17 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
   void findByModeloEjecucionIdAndTipoDocumentoId_ReturnsModeloTipoDocumentoList() throws Exception {
     // given: 2 ModeloTipoDocumento de los que 1 coincide con los ids de
     // ModeloEjecucion y TipoDocumento
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion1 = new HashSet<>();
+    nombreModeloEjecucion1.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, nombreModeloEjecucion1, "descripcion-1", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion1);
 
-    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion2 = new HashSet<>();
+    nombreModeloEjecucion2.add(new ModeloEjecucionNombre(Language.ES, "nombre-2"));
+    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, nombreModeloEjecucion2, "descripcion-2", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion2);
 
@@ -85,11 +92,17 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
   void findByModeloEjecucionIdAndTipoDocumentoId_NoExiste_ReturnsEmptyList() throws Exception {
     // given: 2 ModeloTipoDocumento que no coinciden con los ids de
     // ModeloEjecucion y TipoDocumento
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion1 = new HashSet<>();
+    nombreModeloEjecucion1.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, nombreModeloEjecucion1, "descripcion-1", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion1);
 
-    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion2 = new HashSet<>();
+    nombreModeloEjecucion2.add(new ModeloEjecucionNombre(Language.ES, "nombre-2"));
+    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, nombreModeloEjecucion2, "descripcion-2", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion2);
 
@@ -131,11 +144,17 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
       throws Exception {
     // given: 2 ModeloTipoDocumento de los que 1 coincide con los ids de
     // ModeloEjecucion, ModeloTipoFase y TipoDocumento
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion1 = new HashSet<>();
+    nombreModeloEjecucion1.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, nombreModeloEjecucion1, "descripcion-1", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion1);
 
-    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion2 = new HashSet<>();
+    nombreModeloEjecucion2.add(new ModeloEjecucionNombre(Language.ES, "nombre-2"));
+    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, nombreModeloEjecucion2, "descripcion-2", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion2);
 
@@ -212,11 +231,17 @@ class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
       throws Exception {
     // given: 2 ModeloTipoDocumento que no coinciden con los ids de
     // ModeloEjecucion, ModeloTipoFase y TipoDocumento
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion1 = new HashSet<>();
+    nombreModeloEjecucion1.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, nombreModeloEjecucion1, "descripcion-1", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion1);
 
-    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion2 = new HashSet<>();
+    nombreModeloEjecucion2.add(new ModeloEjecucionNombre(Language.ES, "nombre-2"));
+    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, nombreModeloEjecucion2, "descripcion-2", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion2);
 

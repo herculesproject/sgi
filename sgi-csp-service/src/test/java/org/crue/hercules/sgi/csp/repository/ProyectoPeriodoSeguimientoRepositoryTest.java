@@ -3,13 +3,17 @@ package org.crue.hercules.sgi.csp.repository;
 import java.time.Instant;
 import java.time.Period;
 import java.time.ZoneOffset;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,10 +26,12 @@ class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest {
 
   @Test
   void findAllByProyectoIdOrderByFechaInicial_ReturnsProyectoPeriodoSeguimientoList() throws Exception {
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion"));
 
     // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
-        .nombre("nombreModeloEjecucion")
+        .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
         .contrato(Boolean.FALSE)
         .externo(Boolean.FALSE)
@@ -82,9 +88,11 @@ class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest {
   @Test
   void findAllByProyectoIdOrderByFechaInicio_ReturnsNull() throws Exception {
     // given: 10 ProyectoPeriodoSeguimiento
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion"));
     // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
-        .nombre("nombreModeloEjecucion")
+        .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
         .contrato(Boolean.FALSE)
         .externo(Boolean.FALSE)

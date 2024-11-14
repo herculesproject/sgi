@@ -1,5 +1,8 @@
--- MODELO EJECUCION
-INSERT INTO test.modelo_ejecucion (id, nombre, descripcion, activo) VALUES (1, 'nombre-me-1', 'descripcion-me-1', true);
+-- MODELO_EJECUCION
+INSERT INTO test.modelo_ejecucion (id, descripcion, activo) VALUES (1, 'descripcion-me-1', true);
+
+-- MODELO_EJECUCION_NOMBRE
+INSERT INTO test.modelo_ejecucion_nombre (modelo_ejecucion_id, lang, value_) VALUES (1, 'es', 'nombre-me-1');
 
 -- TIPO_FINALIDAD
 INSERT INTO test.tipo_finalidad (id, activo) VALUES (1, true);

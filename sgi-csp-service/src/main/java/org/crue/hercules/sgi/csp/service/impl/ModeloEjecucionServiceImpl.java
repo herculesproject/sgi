@@ -1,10 +1,17 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
+import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
+import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
-import org.crue.hercules.sgi.csp.model.ModeloEjecucion_;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.repository.ModeloEjecucionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
@@ -12,17 +19,15 @@ import org.crue.hercules.sgi.csp.repository.specification.ModeloEjecucionSpecifi
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,6 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Validated
 public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_FIELD = "field";
@@ -39,12 +46,7 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
 
   private final ModeloEjecucionRepository modeloEjecucionRepository;
   private final ProyectoRepository proyectoRepository;
-
-  public ModeloEjecucionServiceImpl(ModeloEjecucionRepository modeloEjecucionRepository,
-      ProyectoRepository proyectoRepository) {
-    this.modeloEjecucionRepository = modeloEjecucionRepository;
-    this.proyectoRepository = proyectoRepository;
-  }
+  private final Validator validator;
 
   /**
    * Guardar un nuevo {@link ModeloEjecucion}.
@@ -54,17 +56,11 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
    */
   @Override
   @Transactional
-  public ModeloEjecucion create(ModeloEjecucion modeloEjecucion) {
+  @Validated({ BaseEntity.Create.class })
+  public ModeloEjecucion create(@Valid ModeloEjecucion modeloEjecucion) {
     log.debug("create(ModeloEjecucion modeloEjecucion) - start");
 
     AssertHelper.idIsNull(modeloEjecucion.getId(), ModeloEjecucion.class);
-    Assert.isTrue(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()).isPresent()),
-        () -> ProblemMessage.builder()
-            .key(MSG_ENTITY_EXISTS)
-            .parameter(MSG_KEY_ENTITY,
-                ApplicationContextSupport.getMessage(MSG_MODEL_MODELO_EJECUCION))
-            .parameter(MSG_KEY_FIELD, modeloEjecucion.getNombre())
-            .build());
 
     modeloEjecucion.setActivo(true);
 
@@ -83,19 +79,11 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
    */
   @Override
   @Transactional
-  public ModeloEjecucion update(ModeloEjecucion modeloEjecucionActualizar) {
+  @Validated({ BaseEntity.Update.class })
+  public ModeloEjecucion update(@Valid ModeloEjecucion modeloEjecucionActualizar) {
     log.debug("update(ModeloEjecucion modeloEjecucionActualizar) - start");
 
     AssertHelper.idNotNull(modeloEjecucionActualizar.getId(), ModeloEjecucion.class);
-    modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucionActualizar.getNombre())
-        .ifPresent(modeloEjecucionExistente -> Assert
-            .isTrue(modeloEjecucionActualizar.getId().equals(modeloEjecucionExistente.getId()),
-                () -> ProblemMessage.builder()
-                    .key(MSG_ENTITY_EXISTS)
-                    .parameter(MSG_KEY_ENTITY,
-                        ApplicationContextSupport.getMessage(MSG_MODEL_MODELO_EJECUCION))
-                    .parameter(MSG_KEY_FIELD, modeloEjecucionExistente.getNombre())
-                    .build()));
 
     return modeloEjecucionRepository.findById(modeloEjecucionActualizar.getId()).map(modeloEjecucion -> {
       modeloEjecucion.setNombre(modeloEjecucionActualizar.getNombre());
@@ -128,8 +116,13 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
         return modeloEjecucion;
       }
 
-      AssertHelper.entityExists(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre())
-          .isPresent()), ModeloEjecucion.class, ModeloEjecucion.class);
+      // Invocar validaciones asociadas a OnActivar
+      Set<ConstraintViolation<ModeloEjecucion>> result = validator.validate(
+          modeloEjecucion,
+          BaseActivableEntity.OnActivar.class);
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
+      }
 
       modeloEjecucion.setActivo(true);
       ModeloEjecucion returnValue = modeloEjecucionRepository.save(modeloEjecucion);
@@ -178,9 +171,7 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
         .and(ModeloEjecucionSpecifications.activos())
         .and(SgiRSQLJPASupport.toSpecification(query));
 
-    List<ModeloEjecucion> returnValue = modeloEjecucionRepository.findAll(specs,
-        Sort.by(Sort.Direction.ASC, ModeloEjecucion_.NOMBRE));
-    log.debug("findAll(String query) - end");
+    List<ModeloEjecucion> returnValue = modeloEjecucionRepository.findAll(specs);
     return returnValue;
   }
 

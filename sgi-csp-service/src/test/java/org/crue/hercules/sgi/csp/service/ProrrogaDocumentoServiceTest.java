@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProrrogaDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -639,12 +640,14 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
   }
 
   private Proyecto generarMockProyecto() {
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion"));
     // @formatter:off
     return Proyecto.builder()
         .id(1L)
         .modeloEjecucion(ModeloEjecucion.builder()
             .id(1L)
-            .nombre("nombreModeloEjecucion")
+            .nombre(nombreModeloEjecucion)
             .activo(Boolean.TRUE)
             .build())
         .activo(Boolean.TRUE)

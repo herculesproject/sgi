@@ -1,12 +1,16 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -63,9 +67,12 @@ class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
   }
 
   private Proyecto generarMockProyecto(Long proyectoId) {
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion"));
+
     // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
-        .nombre("nombreModeloEjecucion")
+        .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
         .externo(Boolean.FALSE)
         .contrato(Boolean.FALSE)

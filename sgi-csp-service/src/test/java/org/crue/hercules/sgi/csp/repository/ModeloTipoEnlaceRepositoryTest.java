@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
@@ -29,11 +30,17 @@ class ModeloTipoEnlaceRepositoryTest extends BaseRepositoryTest {
 
     // given: 2 ModeloTipoEnlace de los que 1 coincide con los ids de
     // ModeloEjecucion y TipoEnlace
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion1 = new HashSet<>();
+    nombreModeloEjecucion1.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, nombreModeloEjecucion1, "descripcion-1", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion1);
 
-    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion2 = new HashSet<>();
+    nombreModeloEjecucion2.add(new ModeloEjecucionNombre(Language.ES, "nombre-2"));
+    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, nombreModeloEjecucion2, "descripcion-2", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion2);
 
@@ -83,11 +90,17 @@ class ModeloTipoEnlaceRepositoryTest extends BaseRepositoryTest {
 
     // given: 2 ModeloEjecucion que no coinciden con los ids de
     // ModeloEjecucion y TipoEnlace
-    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion1 = new HashSet<>();
+    nombreModeloEjecucion1.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+    ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, nombreModeloEjecucion1, "descripcion-1", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion1);
 
-    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true, false, false,
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion2 = new HashSet<>();
+    nombreModeloEjecucion2.add(new ModeloEjecucionNombre(Language.ES, "nombre-2"));
+    ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, nombreModeloEjecucion2, "descripcion-2", true, false,
+        false,
         false);
     entityManager.persistAndFlush(modeloEjecucion2);
 

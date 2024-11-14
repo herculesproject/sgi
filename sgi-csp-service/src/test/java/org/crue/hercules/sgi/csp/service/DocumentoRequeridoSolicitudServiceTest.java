@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -1145,11 +1146,14 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
   }
 
   private ModeloEjecucion generarMockModeloEjecucion(Long modeloEjecucionId) {
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
+    nombreModeloEjecucion.add(
+        new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)));
     // @formatter:off
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
         : ModeloEjecucion.builder()
             .id(modeloEjecucionId)
-            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))
+            .nombre(nombreModeloEjecucion)
             .activo(Boolean.TRUE)
             .build();
     // @formatter:on

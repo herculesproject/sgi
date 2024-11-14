@@ -24,9 +24,10 @@ class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
     // given: 2 ProyectoSocioEquipo de los que 1 coincide con el
     // idProyectoSocio
     // buscado
-
+    Set<ModeloEjecucionNombre> nombreModeloEjecucion1 = new HashSet<>();
+    nombreModeloEjecucion1.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
     ModeloEjecucion modeloEjecucion1 = entityManager
-        .persistAndFlush(new ModeloEjecucion(null, "nombre-1", "descripcion-1", true, false, false, false));
+        .persistAndFlush(new ModeloEjecucion(null, nombreModeloEjecucion1, "descripcion-1", true, false, false, false));
 
     // @formatter:off
     Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder()
