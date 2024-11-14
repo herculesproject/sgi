@@ -27,7 +27,6 @@ import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { anioValidator } from '@core/validators/anio-validator';
 import { DateValidator } from '@core/validators/date-validator';
-import { I18nValidators } from '@core/validators/i18n-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
@@ -775,7 +774,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       formgroup.get('finalidad').setValidators([
         Validators.required, IsEntityValidator.isValid()]);
       formgroup.get('ambitoGeografico').setValidators([
-        I18nValidators.required]);
+        Validators.required]);
       formgroup.get('confidencial').setValidators([
         Validators.required]);
       formgroup.get('coordinado').setValidators([
