@@ -258,7 +258,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       {
         validators: [
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
-          DateValidator.isAfterOrEqual('fechaInicio', 'fechaFinDefinitiva'),
+          this.isAfterOrEqualAndNotRenunciadoOrRescindido('fechaInicio', 'fechaFinDefinitiva'),
           this.validateCanAddfechaFinDefinitiva()
         ]
       });
@@ -435,19 +435,44 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       const fechaInicioControl = formGroup.controls.fechaInicio;
       const fechaFinControl = formGroup.controls.fechaFin;
       const fechaFinDefinitivaControl = formGroup.controls.fechaFinDefinitiva;
+      const isEstadoRenunciado = [Estado.RENUNCIADO, Estado.RESCINDIDO].includes(formGroup.controls.estado.value);
 
       if (fechaInicioControl.errors && fechaFinControl.errors) {
         return;
       }
 
-      if (!fechaInicioControl.value && !fechaFinControl.value && !!fechaFinDefinitivaControl.value) {
+      if (!isEstadoRenunciado && !fechaInicioControl.value && !fechaFinControl.value && !!fechaFinDefinitivaControl.value) {
         fechaFinDefinitivaControl.setErrors({ fechaFinRequired: true });
         fechaFinDefinitivaControl.markAsTouched({ onlySelf: true });
-      } else if (fechaFinDefinitivaControl.errors) {
+      } else if (fechaFinDefinitivaControl.errors?.fechaFinRequired) {
         delete fechaFinDefinitivaControl.errors.fechaFinRequired;
         fechaFinDefinitivaControl.updateValueAndValidity({ onlySelf: true });
       }
 
+    };
+  }
+
+  private isAfterOrEqualAndNotRenunciadoOrRescindido(firstDateFieldName: string, secondDateFieldName: string): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+
+      const fechaAnteriorControl = formGroup.controls[firstDateFieldName];
+      const fechaPosteriorControl = formGroup.controls[secondDateFieldName];
+
+      if (fechaPosteriorControl.errors && !fechaPosteriorControl.errors.after) {
+        return;
+      }
+
+      const fechaAnteriorDate: DateTime = fechaAnteriorControl.value;
+      const fechaPosteriorDate: DateTime = fechaPosteriorControl.value;
+      const isEstadoRenunciado = [Estado.RENUNCIADO, Estado.RESCINDIDO].includes(formGroup.controls.estado.value);
+
+      if (!isEstadoRenunciado && fechaPosteriorDate && (fechaAnteriorDate > fechaPosteriorDate)) {
+        fechaPosteriorControl.setErrors({ after: true });
+        fechaPosteriorControl.markAsTouched({ onlySelf: true });
+      } else if (fechaPosteriorControl.errors?.after) {
+        delete fechaPosteriorControl.errors.after;
+        fechaPosteriorControl.updateValueAndValidity({ onlySelf: true });
+      }
     };
   }
 
