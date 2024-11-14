@@ -1,6 +1,7 @@
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response.converter';
 import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
 import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
 import { TIPO_REGIMEN_CONCURRENCIA_RESPONSE_CONVERTER } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia-response.converter';
@@ -16,7 +17,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
     return {
       id: value.id,
       unidadGestion: { id: +value.unidadGestionRef } as IUnidadGestion,
-      modeloEjecucion: value.modeloEjecucion,
+      modeloEjecucion: MODELO_EJECUCION_RESPONSE_CONVERTER.toTarget(value.modeloEjecucion),
       codigo: value.codigo,
       fechaPublicacion: LuxonUtils.fromBackend(value.fechaPublicacion),
       fechaProvisional: LuxonUtils.fromBackend(value.fechaProvisional),
@@ -46,7 +47,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
     return {
       id: value.id,
       unidadGestionRef: String(value.unidadGestion?.id),
-      modeloEjecucion: value.modeloEjecucion,
+      modeloEjecucion: MODELO_EJECUCION_RESPONSE_CONVERTER.fromTarget(value.modeloEjecucion),
       codigo: value.codigo,
       fechaPublicacion: LuxonUtils.toBackend(value.fechaPublicacion),
       fechaProvisional: LuxonUtils.toBackend(value.fechaProvisional),

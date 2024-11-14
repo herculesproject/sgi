@@ -76,7 +76,7 @@ export class ConvocatoriaDatosGeneralesPublicFragment extends FormFragment<IConv
   buildPatch(convocatoria: IConvocatoria): { [key: string]: any } {
     this.convocatoria = convocatoria;
     return {
-      modeloEjecucion: convocatoria.modeloEjecucion?.nombre ?? '',
+      modeloEjecucion: convocatoria.modeloEjecucion?.nombre ? this.languageService.getFieldValue(convocatoria?.modeloEjecucion?.nombre) : '',
       unidadGestion: convocatoria.unidadGestion?.acronimo ?? '',
       codigo: convocatoria.codigo,
       fechaPublicacion: convocatoria.fechaPublicacion,

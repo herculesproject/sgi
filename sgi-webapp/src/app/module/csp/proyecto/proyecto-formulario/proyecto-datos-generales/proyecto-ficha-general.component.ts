@@ -341,7 +341,7 @@ export class ProyectoFichaGeneralComponent extends FormFragmentComponent<IProyec
 
   setTextoInfoModeloEjecucionConvocatoria() {
     this.translate.get(
-      this.formPart.modeloEjecucionConvocatoria.nombre,
+      this.languageService.getFieldValue(this.formPart.modeloEjecucionConvocatoria.nombre),
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).pipe(
       switchMap((value) => {

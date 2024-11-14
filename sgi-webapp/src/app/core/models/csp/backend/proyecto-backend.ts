@@ -1,10 +1,10 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
+import { IModeloEjecucionResponse } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response';
 import { ITipoAmbitoGeograficoResponse } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response';
 import { ITipoFinalidadResponse } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response';
 import { IEstadoProyectoResponse } from '../../../services/csp/estado-proyecto/estado-proyecto-response';
 import { CausaExencion } from '../proyecto';
-import { IModeloEjecucion } from '../tipos-configuracion';
 import { IProyectoIVABackend } from './proyecto-iva-backend';
 
 export interface IProyectoBackend {
@@ -29,7 +29,7 @@ export interface IProyectoBackend {
   /** Fecha Fin Definitiva */
   fechaFinDefinitiva: string;
   /** modelo ejecucion */
-  modeloEjecucion: IModeloEjecucion;
+  modeloEjecucion: IModeloEjecucionResponse;
   /** finalidad */
   finalidad: ITipoFinalidadResponse;
   /** Id de Convocatoria */

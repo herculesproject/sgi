@@ -10,25 +10,47 @@ import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { IModeloUnidad } from '@core/models/csp/modelo-unidad';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
-import { RSQLSgiRestFilter, SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http/';
+import { CreateCtor, FindAllCtor, FindByIdCtor, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IModeloEjecucionResponse } from './modelo-ejecucion/modelo-ejecucion-response';
+import { MODELO_EJECUCION_RESPONSE_CONVERTER } from './modelo-ejecucion/modelo-ejecucion-response.converter';
 import { IModeloTipoDocumentoResponse } from './modelo-tipo-documento/modelo-tipo-documento-response';
 import { MODELO_TIPO_DOCUMENTO_RESPONSE_CONVERTER } from './modelo-tipo-documento/modelo-tipo-documento-response.converter';
 import { IModeloTipoFaseResponse } from './modelo-tipo-fase/modelo-tipo-fase-response';
 import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from './modelo-tipo-fase/modelo-tipo-fase-response.converter';
-import { MODELO_TIPO_HITO_RESPONSE_CONVERTER } from './modelo-tipo-hito/modelo-tipo-hito-response.converter';
 import { IModeloTipoHitoResponse } from './modelo-tipo-hito/modelo-tipo-hito-response';
+import { MODELO_TIPO_HITO_RESPONSE_CONVERTER } from './modelo-tipo-hito/modelo-tipo-hito-response.converter';
+
+const _ModeloEjecucionServiceMixinBase:
+  CreateCtor<IModeloEjecucion, IModeloEjecucion, IModeloEjecucionResponse, IModeloEjecucionResponse> &
+  UpdateCtor<number, IModeloEjecucion, IModeloEjecucion, IModeloEjecucionResponse, IModeloEjecucionResponse> &
+  FindByIdCtor<number, IModeloEjecucion, IModeloEjecucionResponse> &
+  FindAllCtor<IModeloEjecucion, IModeloEjecucionResponse> &
+  typeof SgiRestBaseService = mixinFindAll(
+    mixinFindById(
+      mixinUpdate(
+        mixinCreate(
+          SgiRestBaseService,
+          MODELO_EJECUCION_RESPONSE_CONVERTER,
+          MODELO_EJECUCION_RESPONSE_CONVERTER
+        ),
+        MODELO_EJECUCION_RESPONSE_CONVERTER,
+        MODELO_EJECUCION_RESPONSE_CONVERTER
+      ),
+      MODELO_EJECUCION_RESPONSE_CONVERTER
+    ),
+    MODELO_EJECUCION_RESPONSE_CONVERTER
+  );
 
 @Injectable({
   providedIn: 'root'
 })
-export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecucion> {
+export class ModeloEjecucionService extends _ModeloEjecucionServiceMixinBase {
   private static readonly MAPPING = '/modeloejecuciones';
 
   constructor(protected http: HttpClient) {
     super(
-      ModeloEjecucionService.name,
       `${environment.serviceServers.csp}${ModeloEjecucionService.MAPPING}`,
       http
     );
@@ -104,7 +126,9 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
    * @param options opciones de búsqueda.
    */
   findAllTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloEjecucion>> {
-    return this.find<IModeloEjecucion, IModeloEjecucion>(`${this.endpointUrl}/todos`, options);
+    return this.find<IModeloEjecucionResponse, IModeloEjecucion>(`${this.endpointUrl}/todos`,
+      options,
+      MODELO_EJECUCION_RESPONSE_CONVERTER);
   }
 
   /**

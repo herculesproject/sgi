@@ -185,7 +185,7 @@ export class ConvocatoriaGeneralListadoExportService
     elementsRow.push(convocatoria.convocatoria?.formularioSolicitud ?
       this.translate.instant(FORMULARIO_SOLICITUD_MAP.get(convocatoria.convocatoria?.formularioSolicitud)) : '');
     elementsRow.push(convocatoria.convocatoria?.unidadGestion?.nombre ?? '');
-    elementsRow.push(convocatoria.convocatoria?.modeloEjecucion?.nombre ?? '');
+    elementsRow.push(convocatoria.convocatoria?.modeloEjecucion?.nombre ? this.languageService.getFieldValue(convocatoria.convocatoria?.modeloEjecucion?.nombre) : '');
     elementsRow.push(convocatoria.convocatoria?.finalidad?.nombre ? this.languageService.getFieldValue(convocatoria.convocatoria.finalidad.nombre) ?? '' : '');
     elementsRow.push(convocatoria.convocatoria?.codigoInterno ?? '');
     elementsRow.push(convocatoria.convocatoria?.codigo ?? '');

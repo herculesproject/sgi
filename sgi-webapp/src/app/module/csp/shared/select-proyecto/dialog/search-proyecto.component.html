@@ -187,7 +187,7 @@
           {{'csp.proyecto.modelo-ejecucion' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.modeloEjecucion.nombre}}
+          {{element.modeloEjecucion.nombre | i18nFieldValue}}
         </td>
       </ng-container>
 

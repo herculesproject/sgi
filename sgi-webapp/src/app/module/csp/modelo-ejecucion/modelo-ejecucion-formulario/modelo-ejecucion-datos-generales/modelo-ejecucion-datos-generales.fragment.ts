@@ -2,6 +2,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { FormFragment } from '@core/services/action-service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -22,7 +23,7 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
 
   protected buildFormGroup(): FormGroup {
     const fb = new FormGroup({
-      nombre: new FormControl(''),
+      nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(50)]),
       descripcion: new FormControl(''),
       externo: new FormControl(false),
       contrato: new FormControl(false),

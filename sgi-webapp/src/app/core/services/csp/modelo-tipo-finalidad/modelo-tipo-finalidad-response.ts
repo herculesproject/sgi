@@ -1,9 +1,9 @@
-import { IModeloEjecucion } from "@core/models/csp/tipos-configuracion";
+import { IModeloEjecucionResponse } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response';
 import { ITipoFinalidadResponse } from "../tipo-finalidad/tipo-finalidad-response";
 
 export interface IModeloTipoFinalidadResponse {
   id: number;
   tipoFinalidad: ITipoFinalidadResponse;
-  modeloEjecucion: IModeloEjecucion;
+  modeloEjecucion: IModeloEjecucionResponse;
   activo: boolean;
 }

@@ -274,7 +274,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(LuxonUtils.toBackend(proyecto.estado?.fechaEstado));
     elementsRow.push(proyecto.ambitoGeografico?.nombre);
     elementsRow.push(proyecto.unidadGestion?.nombre);
-    elementsRow.push(proyecto.modeloEjecucion?.nombre);
+    elementsRow.push(proyecto.modeloEjecucion?.nombre ? this.languageService.getFieldValue(proyecto?.modeloEjecucion?.nombre) : '');
     elementsRow.push(this.languageService.getFieldValue(proyecto.finalidad?.nombre) ?? []);
     elementsRow.push(toString(proyecto.anio))
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaInicio));

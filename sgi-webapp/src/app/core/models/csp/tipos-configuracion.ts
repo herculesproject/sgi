@@ -15,7 +15,11 @@ interface TipoConfiguracionI18n {
 }
 
 // tslint:disable: no-empty-interface
-export interface IModeloEjecucion extends TipoConfiguracion {
+export interface IModeloEjecucion {
+  id: number;
+  nombre: I18nFieldValue[];
+  descripcion?: string;
+  activo: boolean;
   externo: boolean;
   contrato: boolean;
   solicitudSinConvocatoria: boolean;

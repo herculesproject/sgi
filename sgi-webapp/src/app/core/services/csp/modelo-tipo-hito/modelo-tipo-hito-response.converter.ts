@@ -2,7 +2,7 @@ import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { TIPO_HITO_RESPONSE_CONVERTER } from '../tipo-hito/tipo-hito-response.converter';
 import { IModeloTipoHitoResponse } from './modelo-tipo-hito-response';
-
+import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response.converter';
 
 class ModeloTipoHitoResponseConverter extends SgiBaseConverter<IModeloTipoHitoResponse, IModeloTipoHito> {
   toTarget(value: IModeloTipoHitoResponse): IModeloTipoHito {
@@ -11,7 +11,7 @@ class ModeloTipoHitoResponseConverter extends SgiBaseConverter<IModeloTipoHitoRe
     }
     return {
       id: value.id,
-      modeloEjecucion: value.modeloEjecucion,
+      modeloEjecucion: value.modeloEjecucion ? MODELO_EJECUCION_RESPONSE_CONVERTER.toTarget(value.modeloEjecucion) : null,
       tipoHito: value.tipoHito ? TIPO_HITO_RESPONSE_CONVERTER.toTarget(value.tipoHito) : null,
       convocatoria: value.convocatoria,
       proyecto: value.proyecto,
@@ -25,7 +25,7 @@ class ModeloTipoHitoResponseConverter extends SgiBaseConverter<IModeloTipoHitoRe
     }
     return {
       id: value.id,
-      modeloEjecucion: value.modeloEjecucion,
+      modeloEjecucion: value.modeloEjecucion ? MODELO_EJECUCION_RESPONSE_CONVERTER.fromTarget(value.modeloEjecucion) : null,
       tipoHito: value.tipoHito ? TIPO_HITO_RESPONSE_CONVERTER.fromTarget(value.tipoHito) : null,
       convocatoria: value.convocatoria,
       proyecto: value.proyecto,

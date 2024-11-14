@@ -4,6 +4,7 @@ import { Component, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { Module } from '@core/module';
@@ -113,6 +114,9 @@ export class SelectModeloEjecucionComponent extends SelectServiceExtendedCompone
     super(defaultErrorStateMatcher, ngControl, languageService, platformLocation);
     this.addTarget = `/${Module.CSP.path}/${CSP_ROUTE_NAMES.MODELO_EJECUCION}/${ROUTE_NAMES.NEW}`;
 
+    this.sortWith = (o1: SelectValue<IModeloEjecucion>, o2: SelectValue<IModeloEjecucion>) => {
+      return o1?.displayText.localeCompare(o2?.displayText)
+    };
   }
 
   protected loadServiceOptions(): Observable<IModeloEjecucion[]> {

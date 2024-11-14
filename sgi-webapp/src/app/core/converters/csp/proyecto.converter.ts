@@ -2,12 +2,13 @@ import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response.converter';
 import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
+import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '../../services/csp/estado-proyecto/estado-proyecto-response.converter';
 import { PROYECTO_IVA_CONVERTER } from './proyecto-iva.converter';
-import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
 
 class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
 
@@ -27,7 +28,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       fechaInicioStarted: value.fechaInicioStarted,
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       fechaFinDefinitiva: LuxonUtils.fromBackend(value.fechaFinDefinitiva),
-      modeloEjecucion: value.modeloEjecucion,
+      modeloEjecucion: MODELO_EJECUCION_RESPONSE_CONVERTER.toTarget(value.modeloEjecucion),
       finalidad: TIPO_FINALIDAD_RESPONSE_CONVERTER.toTarget(value.finalidad),
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
@@ -76,7 +77,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       fechaFinDefinitiva: LuxonUtils.toBackend(value.fechaFinDefinitiva),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       unidadGestionRef: String(value.unidadGestion?.id),
-      modeloEjecucion: value.modeloEjecucion,
+      modeloEjecucion: MODELO_EJECUCION_RESPONSE_CONVERTER.fromTarget(value.modeloEjecucion),
       finalidad: TIPO_FINALIDAD_RESPONSE_CONVERTER.fromTarget(value.finalidad),
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
