@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.TipoHito;
@@ -28,7 +29,10 @@ class ModeloTipoHitoRepositoryTest extends BaseRepositoryTest {
     // given: data ModeloTipoHito to find by ModeloEjecucion and TipoHito
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombre-me-1"));
-    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, nombreModeloEjecucion, "descripcion-me-1", Boolean.TRUE,
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion1 = new HashSet<>();
+    descripcionModeloEjecucion1.add(new ModeloEjecucionDescripcion(Language.ES, "descripcion-me-1"));
+    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, nombreModeloEjecucion, descripcionModeloEjecucion1,
+        Boolean.TRUE,
         Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
 
@@ -64,7 +68,10 @@ class ModeloTipoHitoRepositoryTest extends BaseRepositoryTest {
     // given: data ModeloTipoHito to find by ModeloEjecucion and TipoHito
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombre-me-1"));
-    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, nombreModeloEjecucion, "descripcion-me-1", Boolean.TRUE,
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion1 = new HashSet<>();
+    descripcionModeloEjecucion1.add(new ModeloEjecucionDescripcion(Language.ES, "descripcion-me-1"));
+    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, nombreModeloEjecucion, descripcionModeloEjecucion1,
+        Boolean.TRUE,
         Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     entityManager.persistAndFlush(modeloEjecucion);
 

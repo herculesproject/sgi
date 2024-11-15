@@ -11,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.repository.ModeloEjecucionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
@@ -29,7 +30,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -346,7 +346,8 @@ class ModeloEjecucionServiceTest extends BaseServiceTest {
     Assertions.assertThat(modeloEjecucion.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-1");
-    Assertions.assertThat(modeloEjecucion.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucion.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(modeloEjecucion.getActivo()).as("getActivo()").isTrue();
 
   }
@@ -383,10 +384,13 @@ class ModeloEjecucionServiceTest extends BaseServiceTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, nombre));
 
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion = new HashSet<>();
+    descripcionModeloEjecucion.add(new ModeloEjecucionDescripcion(Language.ES, "descripcion-" + id));
+
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(id);
     modeloEjecucion.setNombre(nombreModeloEjecucion);
-    modeloEjecucion.setDescripcion("descripcion-" + id);
+    modeloEjecucion.setDescripcion(descripcionModeloEjecucion);
     modeloEjecucion.setActivo(Boolean.TRUE);
 
     return modeloEjecucion;

@@ -740,4 +740,32 @@
 
     <dropColumn columnName="nombre" tableName="modelo_ejecucion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-32">
+    <createTable tableName="modelo_ejecucion_descripcion">
+      <column name="modelo_ejecucion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="modelo_ejecucion_descripcion" columnNames="modelo_ejecucion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id"
+      baseTableName="modelo_ejecucion_descripcion"
+      constraintName="FK_MODELOEJECUCIONDESCRIPCION_MODELOEJECUCION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}modelo_ejecucion_descripcion(modelo_ejecucion_id, value_, lang)
+      SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}modelo_ejecucion WHERE
+      descripcion IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="modelo_ejecucion" />
+  </changeSet>
 </databaseChangeLog>

@@ -1,8 +1,11 @@
 -- MODELO_EJECUCION
-INSERT INTO test.modelo_ejecucion (id, descripcion, activo) VALUES (1, 'descripcion-me-1', true);
+INSERT INTO test.modelo_ejecucion (id, activo) VALUES (1, true);
 
 -- MODELO_EJECUCION_NOMBRE
 INSERT INTO test.modelo_ejecucion_nombre (modelo_ejecucion_id, lang, value_) VALUES (1, 'es', 'nombre-me-1');
+
+-- MODELO_EJECUCION_DESCRIPCION
+INSERT INTO test.modelo_ejecucion_descripcion (modelo_ejecucion_id, lang, value_) VALUES (1, 'es', 'descripcion-me-1');
 
 -- TIPO HITO
 INSERT INTO test.tipo_hito (id, activo) VALUES (1, true);

@@ -27,8 +27,11 @@ class ProyectoEquipoRepositoryTest extends BaseRepositoryTest {
 
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion1 = new HashSet<>();
+    descripcionModeloEjecucion1.add(new ModeloEjecucionDescripcion(Language.ES, "descripcion-1"));
     ModeloEjecucion modeloEjecucion1 = entityManager
-        .persistAndFlush(new ModeloEjecucion(null, nombreModeloEjecucion, "descripcion-1", true, false, false, false));
+        .persistAndFlush(
+            new ModeloEjecucion(null, nombreModeloEjecucion, descripcionModeloEjecucion1, true, false, false, false));
 
     // @formatter:off
     Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder()

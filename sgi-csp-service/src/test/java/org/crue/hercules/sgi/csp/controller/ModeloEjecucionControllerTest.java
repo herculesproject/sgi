@@ -8,6 +8,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
@@ -122,7 +123,7 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
 
@@ -163,7 +164,7 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
         // then: Modifica el ModeloEjecucion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1-modificado"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true))
         .andExpect(MockMvcResultMatchers.jsonPath("externo").value(false))
         .andExpect(MockMvcResultMatchers.jsonPath("contrato").value(false));
@@ -235,7 +236,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(modeloEjecucion.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(modeloEjecucion.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(modeloEjecucion.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
 
@@ -285,7 +287,8 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(modeloEjecucion.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(modeloEjecucion.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
   }
 
@@ -467,7 +470,7 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
 
@@ -1104,9 +1107,12 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, nombre));
 
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion = new HashSet<>();
+    descripcionModeloEjecucion.add(new ModeloEjecucionDescripcion(Language.ES, "descripcion-" + id));
+
     modeloEjecucion.setId(id);
     modeloEjecucion.setNombre(nombreModeloEjecucion);
-    modeloEjecucion.setDescripcion("descripcion-" + id);
+    modeloEjecucion.setDescripcion(descripcionModeloEjecucion);
     modeloEjecucion.setExterno(Boolean.FALSE);
     modeloEjecucion.setContrato(Boolean.FALSE);
     modeloEjecucion.setActivo(Boolean.TRUE);

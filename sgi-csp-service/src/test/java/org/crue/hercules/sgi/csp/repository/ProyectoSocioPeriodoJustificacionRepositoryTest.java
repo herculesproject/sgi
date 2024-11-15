@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -33,7 +34,10 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
     // given: 1 ProyectoSocioPeriodoJustificacion para el ProyectoSocioId buscado
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombre-1"));
-    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, nombreModeloEjecucion, "descripcion-1", true, false,
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion1 = new HashSet<>();
+    descripcionModeloEjecucion1.add(new ModeloEjecucionDescripcion(Language.ES, "descripcion-1"));
+    ModeloEjecucion modeloEjecucion = new ModeloEjecucion(null, nombreModeloEjecucion, descripcionModeloEjecucion1,
+        true, false,
         false, false);
     entityManager.persistAndFlush(modeloEjecucion);
 

@@ -19,7 +19,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity.OnActivar;
 import org.crue.hercules.sgi.csp.validation.UniqueNombreModeloEjecucionActivo;
@@ -64,9 +63,11 @@ public class ModeloEjecucion extends BaseEntity {
   private Set<ModeloEjecucionNombre> nombre = new HashSet<>();
 
   /** Descripcion. */
-  @Column(name = "descripcion", length = 250, nullable = true)
-  @Size(max = 250)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "modelo_ejecucion_descripcion", joinColumns = @JoinColumn(name = "modelo_ejecucion_id"))
+  @Valid
+  @Builder.Default
+  private Set<ModeloEjecucionDescripcion> descripcion = new HashSet<>();
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

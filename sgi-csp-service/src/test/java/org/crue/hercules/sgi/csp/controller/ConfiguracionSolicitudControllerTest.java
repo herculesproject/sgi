@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
@@ -325,11 +326,14 @@ class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-1"));
 
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion = new HashSet<>();
+    descripcionModeloEjecucion.add(new ModeloEjecucionDescripcion(Language.ES, "descripcionModeloEjecucion-1"));
+
     // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .id(modeloEjecucionId)
         .nombre(nombreModeloEjecucion)
-        .descripcion("descripcionModeloEjecucion-1")
+        .descripcion(descripcionModeloEjecucion)
         .activo(Boolean.TRUE)
         .build();
     // @formatter:on

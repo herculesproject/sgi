@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucionDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
@@ -114,7 +115,8 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(modeloEjecucionDisabled.getId()).as("getId()").isEqualTo(idModeloEjecucion);
     Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucionDisabled.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-1");
-    Assertions.assertThat(modeloEjecucionDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucionDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(modeloEjecucionDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -133,7 +135,8 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(modeloEjecucionDisabled.getId()).as("getId()").isEqualTo(idModeloEjecucion);
     Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucionDisabled.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-1");
-    Assertions.assertThat(modeloEjecucionDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucionDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(modeloEjecucionDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
@@ -152,7 +155,8 @@ class ModeloEjecucionIT extends BaseIT {
     Assertions.assertThat(modeloEjecucion.getId()).as("getId()").isEqualTo(idModeloEjecucion);
     Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucion.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-1");
-    Assertions.assertThat(modeloEjecucion.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(modeloEjecucion.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(modeloEjecucion.getActivo()).as("getActivo()").isTrue();
   }
 
@@ -160,7 +164,7 @@ class ModeloEjecucionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void findAll_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH)
         .queryParam("q", filter).build(false).toUri();
@@ -182,7 +186,7 @@ class ModeloEjecucionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -567,9 +571,12 @@ class ModeloEjecucionIT extends BaseIT {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, nombre));
 
+    Set<ModeloEjecucionDescripcion> descripcionModeloEjecucion = new HashSet<>();
+    descripcionModeloEjecucion.add(new ModeloEjecucionDescripcion(Language.ES, "descripcion-" + id));
+
     modeloEjecucion.setId(id);
     modeloEjecucion.setNombre(nombreModeloEjecucion);
-    modeloEjecucion.setDescripcion("descripcion-" + id);
+    modeloEjecucion.setDescripcion(descripcionModeloEjecucion);
     modeloEjecucion.setActivo(Boolean.TRUE);
     modeloEjecucion.setExterno(Boolean.FALSE);
     modeloEjecucion.setContrato(Boolean.FALSE);

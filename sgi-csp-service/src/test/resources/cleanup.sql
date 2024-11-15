@@ -132,6 +132,7 @@ DELETE FROM test.modelo_tipo_finalidad;
 DELETE FROM test.modelo_tipo_hito;
 DELETE FROM test.modelo_unidad;
 DELETE FROM test.modelo_ejecucion_nombre;
+DELETE FROM test.modelo_ejecucion_descripcion;
 DELETE FROM test.modelo_ejecucion;
 DELETE FROM test.programa;
 DELETE FROM test.tipo_ambito_geografico_nombre;
