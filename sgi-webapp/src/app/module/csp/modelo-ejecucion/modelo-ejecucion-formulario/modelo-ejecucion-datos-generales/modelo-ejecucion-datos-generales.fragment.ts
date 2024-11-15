@@ -24,7 +24,7 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
   protected buildFormGroup(): FormGroup {
     const fb = new FormGroup({
       nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(50)]),
-      descripcion: new FormControl(''),
+      descripcion: new FormControl([], I18nValidators.maxLength(250)),
       externo: new FormControl(false),
       contrato: new FormControl(false),
       solicitudSinConvocatoria: new FormControl(false)

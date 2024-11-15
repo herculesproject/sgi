@@ -11,7 +11,7 @@ class ModeloEjecucionResponseConverter extends SgiBaseConverter<IModeloEjecucion
     return {
       id: value.id,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.descripcion) : [],
       externo: value.externo,
       contrato: value.contrato,
       solicitudSinConvocatoria: value.solicitudSinConvocatoria,
@@ -25,7 +25,7 @@ class ModeloEjecucionResponseConverter extends SgiBaseConverter<IModeloEjecucion
     return {
       id: value.id,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.descripcion) : [],
       externo: value.externo,
       contrato: value.contrato,
       solicitudSinConvocatoria: value.solicitudSinConvocatoria,

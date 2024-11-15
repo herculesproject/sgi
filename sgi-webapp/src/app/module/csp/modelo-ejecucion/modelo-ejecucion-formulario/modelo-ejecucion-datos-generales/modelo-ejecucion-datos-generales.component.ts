@@ -10,6 +10,7 @@ import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.serv
 import { ModeloEjecucionDatosGeneralesFragment } from './modelo-ejecucion-datos-generales.fragment';
 
 const MODELO_EJECUCION_NOMBRE_KEY = marker('csp.modelo-ejecucion.nombre');
+const MODELO_EJECUCION_DESCRIPCION_KEY = marker('csp.modelo-ejecucion.descripcion');
 
 @Component({
   selector: 'sgi-modelo-ejecucion-datos-generales',
@@ -24,6 +25,7 @@ export class ModeloEjecucionDatosGeneralesComponent extends FormFragmentComponen
   key: number;
 
   msgParamNombreEntity = {};
+  msgParamDescripcionEntity = {}
 
   constructor(
     readonly actionService: ModeloEjecucionActionService,
@@ -56,6 +58,11 @@ export class ModeloEjecucionDatosGeneralesComponent extends FormFragmentComponen
       MODELO_EJECUCION_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      MODELO_EJECUCION_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
 }
