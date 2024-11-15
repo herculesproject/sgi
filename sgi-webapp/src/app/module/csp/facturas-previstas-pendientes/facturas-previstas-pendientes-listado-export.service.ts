@@ -80,7 +80,6 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
       }
 
       const maxNumEntidasFinanciadoras = Math.max(...facturasPrevistasPendientes.map(f => f.entidadesFinanciadoras?.length ?? 0));
-      const titleEntidadConvocante = this.translate.instant(ENTIDAD_FINANCIADORA_KEY);
 
       for (let i = 0; i < maxNumEntidasFinanciadoras; i++) {
         rowReport.elements.push((facturaPrevistaPendiente.entidadesFinanciadoras?.length ?? 0) > i ? facturaPrevistaPendiente.entidadesFinanciadoras[i].empresa?.nombre : '');
@@ -147,7 +146,8 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
               })
             )
           }, 10),
-          toArray()
+          toArray(),
+          map(response => response.sort((a, b) => this.compareFechaEmision(b, a)))
         );
       })
     );
@@ -259,6 +259,12 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
         toArray()
       ))
     )
+  }
+
+  private compareFechaEmision(itemA: IFacturaPrevistaPendienteReportData, itemB: IFacturaPrevistaPendienteReportData): number {
+    const fechaEmisionInMillisItemA = itemA?.fechaEmision?.toMillis() ?? 0;
+    const fechaEmisionInMillisItemB = itemB?.fechaEmision?.toMillis() ?? 0;
+    return fechaEmisionInMillisItemB - fechaEmisionInMillisItemA;
   }
 
 }
