@@ -3,6 +3,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
 import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
+import { TIPO_REGIMEN_CONCURRENCIA_RESPONSE_CONVERTER } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
@@ -24,7 +25,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       objeto: value.objeto,
       observaciones: value.observaciones,
       finalidad: TIPO_FINALIDAD_RESPONSE_CONVERTER.toTarget(value.finalidad),
-      regimenConcurrencia: value.regimenConcurrencia,
+      regimenConcurrencia: TIPO_REGIMEN_CONCURRENCIA_RESPONSE_CONVERTER.toTarget(value.regimenConcurrencia),
       formularioSolicitud: value.formularioSolicitud,
       estado: value.estado,
       duracion: value.duracion,
@@ -54,7 +55,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       objeto: value.objeto,
       observaciones: value.observaciones,
       finalidad: TIPO_FINALIDAD_RESPONSE_CONVERTER.fromTarget(value.finalidad),
-      regimenConcurrencia: value.regimenConcurrencia,
+      regimenConcurrencia: TIPO_REGIMEN_CONCURRENCIA_RESPONSE_CONVERTER.fromTarget(value.regimenConcurrencia),
       formularioSolicitud: value.formularioSolicitud,
       estado: value.estado,
       duracion: value.duracion,
