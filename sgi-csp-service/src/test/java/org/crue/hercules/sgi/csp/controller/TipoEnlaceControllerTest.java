@@ -9,6 +9,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.TipoEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.csp.service.TipoEnlaceService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -78,7 +79,8 @@ class TipoEnlaceControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(
             MockMvcResultMatchers.jsonPath("nombre[0].value").value(data.getNombre().iterator().next().getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(data.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(data.getDescripcion().iterator().next().getValue()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(data.getActivo()));
   }
 
@@ -132,7 +134,8 @@ class TipoEnlaceControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(data.getId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("nombre[0].value").value(data.getNombre().iterator().next().getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(data.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(data.getDescripcion().iterator().next().getValue()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(data.getActivo()));
   }
 
@@ -206,7 +209,8 @@ class TipoEnlaceControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(tipoEnlace.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(tipoEnlace.getNombre().iterator().next().getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoEnlace.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(tipoEnlace.getDescripcion().iterator().next().getValue()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
 
@@ -253,7 +257,8 @@ class TipoEnlaceControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(tipoEnlace.getNombre().iterator().next().getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoEnlace.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(tipoEnlace.getDescripcion().iterator().next().getValue()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
   }
 
@@ -472,7 +477,11 @@ class TipoEnlaceControllerTest extends BaseControllerTest {
   private TipoEnlace generarMockTipoEnlace(Long id, Boolean activo) {
     Set<TipoEnlaceNombre> nombre = new HashSet<>();
     nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-" + id));
-    return TipoEnlace.builder().id(id).nombre(nombre).descripcion("descripcion-" + id).activo(activo).build();
+
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-" + id));
+
+    return TipoEnlace.builder().id(id).nombre(nombre).descripcion(descripcion).activo(activo).build();
   }
 
 }

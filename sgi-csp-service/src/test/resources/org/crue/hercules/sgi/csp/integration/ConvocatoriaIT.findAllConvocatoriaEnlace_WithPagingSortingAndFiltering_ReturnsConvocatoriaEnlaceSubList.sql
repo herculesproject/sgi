@@ -46,10 +46,13 @@ INSERT INTO test.convocatoria
 VALUES(2, 'unidad-002', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-002', 'objeto-002', 'observaciones-002', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', 'PROYECTO', true);
 
 --TIPO ENLACE
-INSERT INTO test.tipo_enlace (id,descripcion,activo) VALUES (1,'descripcion-1',true);
+INSERT INTO test.tipo_enlace (id,activo) VALUES (1,true);
 
 -- TIPO_ENLACE_NOMBRE
 INSERT INTO test.tipo_enlace_nombre (tipo_enlace_id, lang, value_) VALUES(1, 'es', 'nombre-1');
+
+-- TIPO_ENLACE_DESCRIPCION
+INSERT INTO test.tipo_enlace_descripcion (tipo_enlace_id, lang, value_) VALUES(1, 'es', 'descripcion-1');
 
 --CONVOCATORIA ENLACE
 INSERT INTO  test.convocatoria_enlace(id, convocatoria_id, url, descripcion, tipo_enlace_id) VALUES (1, 1, 'www.url1.com','descripcion-001', 1);

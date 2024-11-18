@@ -684,4 +684,32 @@
 
     <dropColumn columnName="nombre" tableName="tipo_enlace" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-30">
+    <createTable tableName="tipo_enlace_descripcion">
+      <column name="tipo_enlace_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_enlace_descripcion"
+      columnNames="tipo_enlace_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_enlace_id"
+      baseTableName="tipo_enlace_descripcion"
+      constraintName="FK_TIPOENLACEDESCRIPCION_TIPOENLACE" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_enlace_descripcion(tipo_enlace_id, value_, lang) SELECT id,
+      descripcion, '${defaultLang}' FROM ${schemaPrefix}tipo_enlace WHERE descripcion IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="tipo_enlace" />
+  </changeSet>
 </databaseChangeLog>

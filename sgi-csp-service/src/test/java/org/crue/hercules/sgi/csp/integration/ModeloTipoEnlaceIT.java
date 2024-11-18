@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -114,7 +115,10 @@ class ModeloTipoEnlaceIT extends BaseIT {
     Set<TipoEnlaceNombre> nombre = new HashSet<>();
     nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-" + id));
 
-    return TipoEnlace.builder().id(id).nombre(nombre).descripcion("descripcion-" + id).activo(activo).build();
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-" + id));
+
+    return TipoEnlace.builder().id(id).nombre(nombre).descripcion(descripcion).activo(activo).build();
   }
 
   /**

@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
@@ -644,10 +645,13 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     Set<TipoEnlaceNombre> nombre = new HashSet<>();
     nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-" + id));
 
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-" + id));
+
     TipoEnlace tipoEnlace = new TipoEnlace();
     tipoEnlace.setId(id);
     tipoEnlace.setNombre(nombre);
-    tipoEnlace.setDescripcion("descripcion-" + id);
+    tipoEnlace.setDescripcion(descripcion);
     tipoEnlace.setActivo(activo);
 
     return tipoEnlace;

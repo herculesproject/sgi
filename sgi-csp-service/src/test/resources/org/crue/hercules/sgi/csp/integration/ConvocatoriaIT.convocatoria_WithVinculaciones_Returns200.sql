@@ -35,10 +35,13 @@ VALUES(1, 'unidad-001', 1, 'codigo-001', '2021-10-15T23:59:59Z', '2021-10-16T23:
 -- VINCULACIONES
 
 --TIPO ENLACE
-insert into test.tipo_enlace (id,descripcion,activo) values (1,'descripcion-1',true);
+insert into test.tipo_enlace (id,activo) values (1,true);
 
 -- TIPO_ENLACE_NOMBRE
 INSERT INTO test.tipo_enlace_nombre (tipo_enlace_id, lang, value_) VALUES(1, 'es', 'nombre-1');
+
+-- TIPO_ENLACE_DESCRIPCION
+INSERT INTO test.tipo_enlace_descripcion (tipo_enlace_id, lang, value_) VALUES(1, 'es', 'descripcion-1');
 
 -- MODELO TIPO ENLACE
 INSERT INTO test.modelo_tipo_enlace (id, tipo_enlace_id, modelo_ejecucion_id, activo) VALUES (1, 1, 1, true);

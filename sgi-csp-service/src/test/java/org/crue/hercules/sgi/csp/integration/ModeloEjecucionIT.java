@@ -215,7 +215,7 @@ class ModeloEjecucionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoEnlace.nombre.value,desc";
-    String filter = "tipoEnlace.descripcion=ke=00";
+    String filter = "tipoEnlace.descripcion.value=ke=00";
 
     Long idModeloEjecucion = 1L;
 
@@ -252,7 +252,7 @@ class ModeloEjecucionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "tipoEnlace.nombre.value,desc";
-    String filter = "tipoEnlace.descripcion=ke=00";
+    String filter = "tipoEnlace.descripcion.value=ke=00";
 
     Long idModeloEjecucion = 5L;
 

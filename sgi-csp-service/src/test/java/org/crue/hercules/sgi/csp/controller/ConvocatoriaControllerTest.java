@@ -42,6 +42,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
@@ -1269,10 +1270,13 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     Set<TipoEnlaceNombre> nombre = new HashSet<>();
     nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-" + id));
 
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-" + id));
+
     TipoEnlace tipoEnlace = new TipoEnlace();
     tipoEnlace.setId(id);
     tipoEnlace.setNombre(nombre);
-    tipoEnlace.setDescripcion("descripcion-" + id);
+    tipoEnlace.setDescripcion(descripcion);
     tipoEnlace.setActivo(activo);
 
     return tipoEnlace;
@@ -2195,13 +2199,16 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     Set<TipoEnlaceNombre> nombre = new HashSet<>();
     nombre.add(new TipoEnlaceNombre(Language.ES, "tipoEnlace" + id));
 
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcionEnlace-" + id));
+
     ConvocatoriaEnlace convocatoriaEnlace = new ConvocatoriaEnlace();
     convocatoriaEnlace.setId(id);
     convocatoriaEnlace.setConvocatoriaId(id);
     convocatoriaEnlace.setDescripcion("descripcion-" + id);
     convocatoriaEnlace.setUrl("www.url" + id + ".es");
     convocatoriaEnlace.setTipoEnlace(TipoEnlace.builder().id(id).nombre(nombre)
-        .descripcion("descripcionEnlace" + id).activo(Boolean.TRUE).build());
+        .descripcion(descripcion).activo(Boolean.TRUE).build());
 
     return convocatoriaEnlace;
   }

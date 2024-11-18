@@ -16,7 +16,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity.OnActivar;
 import org.crue.hercules.sgi.csp.validation.UniqueNombreTipoEnlaceActivo;
@@ -58,23 +57,13 @@ public class TipoEnlace extends BaseEntity {
   private Set<TipoEnlaceNombre> nombre = new HashSet<>();
 
   /** Descripción */
-  @Column(name = "descripcion", length = 250)
-  @Size(max = 250)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_enlace_descripcion", joinColumns = @JoinColumn(name = "tipo_enlace_id"))
+  @Valid
+  private Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   private Boolean activo;
 
-  /**
-   * Interfaz para marcar validaciones en la creación de la entidad.
-   */
-  public interface OnCrear {
-  }
-
-  /**
-   * Interfaz para marcar validaciones en la actualizacion de la entidad.
-   */
-  public interface OnActualizar {
-  }
 }

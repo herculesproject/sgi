@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
@@ -1183,10 +1184,13 @@ class ModeloEjecucionControllerTest extends BaseControllerTest {
     Set<TipoEnlaceNombre> tipoEnlaceNombre = new HashSet<>();
     tipoEnlaceNombre.add(new TipoEnlaceNombre(Language.ES, nombre));
 
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-" + id));
+
     TipoEnlace tipoEnlace = new TipoEnlace();
     tipoEnlace.setId(id);
     tipoEnlace.setNombre(tipoEnlaceNombre);
-    tipoEnlace.setDescripcion("descripcion-" + id);
+    tipoEnlace.setDescripcion(descripcion);
     tipoEnlace.setActivo(Boolean.TRUE);
 
     ModeloTipoEnlace modeloTipoEnlace = new ModeloTipoEnlace();

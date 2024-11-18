@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -39,13 +40,19 @@ class ModeloTipoEnlaceRepositoryTest extends BaseRepositoryTest {
     Set<TipoEnlaceNombre> nombre1 = new HashSet<>();
     nombre1.add(new TipoEnlaceNombre(Language.ES, "nombre-1"));
 
-    TipoEnlace tipoEnlace1 = new TipoEnlace(null, nombre1, "descripcion-1", true);
+    Set<TipoEnlaceDescripcion> descripcion1 = new HashSet<>();
+    descripcion1.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-1"));
+
+    TipoEnlace tipoEnlace1 = new TipoEnlace(null, nombre1, descripcion1, true);
     entityManager.persistAndFlush(tipoEnlace1);
 
     Set<TipoEnlaceNombre> nombre2 = new HashSet<>();
     nombre2.add(new TipoEnlaceNombre(Language.ES, "nombre-2"));
 
-    TipoEnlace tipoEnlace2 = new TipoEnlace(null, nombre2, "descripcion-2", true);
+    Set<TipoEnlaceDescripcion> descripcion2 = new HashSet<>();
+    descripcion2.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-2"));
+
+    TipoEnlace tipoEnlace2 = new TipoEnlace(null, nombre2, descripcion2, true);
     entityManager.persistAndFlush(tipoEnlace2);
 
     ModeloTipoEnlace modeloTipoEnlace1 = new ModeloTipoEnlace(null, tipoEnlace1, modeloEjecucion1, true);
@@ -87,13 +94,19 @@ class ModeloTipoEnlaceRepositoryTest extends BaseRepositoryTest {
     Set<TipoEnlaceNombre> nombre1 = new HashSet<>();
     nombre1.add(new TipoEnlaceNombre(Language.ES, "nombre-1"));
 
-    TipoEnlace tipoEnlace1 = new TipoEnlace(null, nombre1, "descripcion-1", true);
+    Set<TipoEnlaceDescripcion> descripcion1 = new HashSet<>();
+    descripcion1.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-1"));
+
+    TipoEnlace tipoEnlace1 = new TipoEnlace(null, nombre1, descripcion1, true);
     entityManager.persistAndFlush(tipoEnlace1);
 
     Set<TipoEnlaceNombre> nombre2 = new HashSet<>();
     nombre2.add(new TipoEnlaceNombre(Language.ES, "nombre-2"));
 
-    TipoEnlace tipoEnlace2 = new TipoEnlace(null, nombre2, "descripcion-2", true);
+    Set<TipoEnlaceDescripcion> descripcion2 = new HashSet<>();
+    descripcion2.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-2"));
+
+    TipoEnlace tipoEnlace2 = new TipoEnlace(null, nombre2, descripcion2, true);
     entityManager.persistAndFlush(tipoEnlace2);
 
     ModeloTipoEnlace modeloTipoEnlace1 = new ModeloTipoEnlace(null, tipoEnlace1, modeloEjecucion1, true);

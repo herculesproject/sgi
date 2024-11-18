@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -51,8 +52,10 @@ class TipoEnlaceIT extends BaseIT {
     Set<TipoEnlaceNombre> nombre = new HashSet<>();
     nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-1"));
 
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-1"));
     // given: new TipoEnlace
-    TipoEnlace data = TipoEnlace.builder().nombre(nombre).descripcion("descripcion-1").activo(Boolean.TRUE).build();
+    TipoEnlace data = TipoEnlace.builder().nombre(nombre).descripcion(descripcion).activo(Boolean.TRUE).build();
 
     // when: create TipoEnlace
     final ResponseEntity<TipoEnlace> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
@@ -73,8 +76,11 @@ class TipoEnlaceIT extends BaseIT {
   void update_ReturnsTipoEnlace() throws Exception {
     Set<TipoEnlaceNombre> nombre = new HashSet<>();
     nombre.add(new TipoEnlaceNombre(Language.ES, "nombre-updated"));
+
+    Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcion-updated"));
     // given: existing TipoEnlace to be updated
-    TipoEnlace data = TipoEnlace.builder().id(1L).nombre(nombre).descripcion("descripcion-updated")
+    TipoEnlace data = TipoEnlace.builder().id(1L).nombre(nombre).descripcion(descripcion)
         .activo(Boolean.TRUE).build();
 
     // when: update TipoEnlace
@@ -105,7 +111,8 @@ class TipoEnlaceIT extends BaseIT {
     Assertions.assertThat(tipoEnlaceDisabled.getId()).as("getId()").isEqualTo(idTipoEnlace);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoEnlaceDisabled.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-1");
-    Assertions.assertThat(tipoEnlaceDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoEnlaceDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoEnlaceDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -124,7 +131,8 @@ class TipoEnlaceIT extends BaseIT {
     Assertions.assertThat(tipoEnlaceDisabled.getId()).as("getId()").isEqualTo(idTipoEnlace);
     Assertions.assertThat(I18nHelper.getValueForLanguage(tipoEnlaceDisabled.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-001");
-    Assertions.assertThat(tipoEnlaceDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(tipoEnlaceDisabled.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(tipoEnlaceDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
@@ -142,7 +150,8 @@ class TipoEnlaceIT extends BaseIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-1");
-    Assertions.assertThat(responseData.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
@@ -159,7 +168,7 @@ class TipoEnlaceIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     // when: find TipoEnlace
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -201,7 +210,7 @@ class TipoEnlaceIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     // when: find TipoEnlace
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)

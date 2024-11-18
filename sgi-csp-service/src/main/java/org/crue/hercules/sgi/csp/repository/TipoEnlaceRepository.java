@@ -10,12 +10,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface TipoEnlaceRepository extends JpaRepository<TipoEnlace, Long>, JpaSpecificationExecutor<TipoEnlace> {
 
   /**
-   * Obtiene la entidad {@link TipoEnlace} activa con el nombre indicado
+   * Obtiene la entidad {@link TipoEnlace} activa con el nombre indicado y el lang
    *
    * @param nombre el nombre de {@link TipoEnlace}.
+   * @param lang   el land de {@link TipoEnlace}.
    * @return el {@link TipoEnlace} con el nombre indicado
    */
-  Optional<TipoEnlace> findByNombreValueAndActivoIsTrue(String nombre);
-
-  Optional<TipoEnlace> findByNombreLangAndNombreValueAndActivoIsTrue(Language lang, String value);
+  Optional<TipoEnlace> findByNombreLangAndNombreValueAndActivoIsTrue(Language lang, String nombre);
 }
