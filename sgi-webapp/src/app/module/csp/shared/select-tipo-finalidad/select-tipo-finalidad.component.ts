@@ -1,4 +1,4 @@
-import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { PlatformLocation } from '@angular/common';
 import { Component, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -57,6 +57,22 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
   private _modeloEjecucionId: number;
 
   @Input()
+  get modeloEjecucionIdRequired(): boolean {
+    return this._modeloEjecucionIdRequired;
+  }
+  set modeloEjecucionIdRequired(value: boolean) {
+    const newValue = coerceBooleanProperty(value);
+    const changes = this._modeloEjecucionIdRequired !== newValue;
+    this._modeloEjecucionIdRequired = newValue;
+    if (this.ready && changes) {
+      this.loadData();
+    }
+    this.stateChanges.next();
+  }
+  // tslint:disable-next-line: variable-name
+  private _modeloEjecucionIdRequired: boolean = false;
+
+  @Input()
   get excluded(): ITipoFinalidad[] {
     return this._excluded;
   }
@@ -108,6 +124,10 @@ export class SelectTipoFinalidadComponent extends SelectServiceExtendedComponent
   }
 
   protected loadServiceOptions(): Observable<ITipoFinalidad[]> {
+    if (this.modeloEjecucionIdRequired && !!!this.modeloEjecucionId) {
+      return of([] as ITipoFinalidad[]);
+    }
+
     if (this.requestByModeloEjecucion) {
       // If empty, null or zero, an empty array is returned
       if (!!!this.modeloEjecucionId) {

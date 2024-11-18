@@ -104,7 +104,7 @@
         <mat-label>{{'csp.solicitud.modelo-ejecucion' | translate}}</mat-label>
         <sgi-select-modelo-ejecucion #modeloEjecucion formControlName="modeloEjecucion"
           [required]="!(this.formPart.isOrigenSolicitudConvocatoriaNoSGI$ | async)"
-          [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
+          [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id" [unidadGestionRefRequired]="true"
           [onlyAllowedInSolicitudesSinConvocatoria]="this.formPart.isOrigenSolicitudSinConvocatoria$ | async"
           [resetOnChange]="unidadGestion.selectionChange">
         </sgi-select-modelo-ejecucion>
@@ -130,7 +130,7 @@
         <sgi-select-tipo-finalidad formControlName="finalidad"
           [required]="!(this.formPart.isOrigenSolicitudConvocatoriaNoSGI$ | async)"
           [unidadGestionRef]="formGroup.controls.unidadGestion.value?.id"
-          [modeloEjecucionId]="formGroup.controls.modeloEjecucion.value?.id"
+          [modeloEjecucionId]="formGroup.controls.modeloEjecucion.value?.id" [modeloEjecucionIdRequired]="true"
           [resetOnChange]="modeloEjecucion.selectionChange">
         </sgi-select-tipo-finalidad>
         <mat-error *ngIf="formGroup.controls.finalidad.errors?.required">

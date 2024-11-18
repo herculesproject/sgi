@@ -49,6 +49,22 @@ export class SelectModeloEjecucionComponent extends SelectServiceExtendedCompone
   }
 
   @Input()
+  get unidadGestionRefRequired(): boolean {
+    return this._unidadGestionRefRequired;
+  }
+  set unidadGestionRefRequired(value: boolean) {
+    const newValue = coerceBooleanProperty(value);
+    const changes = this._unidadGestionRefRequired !== newValue;
+    this._unidadGestionRefRequired = newValue;
+    if (this.ready && changes) {
+      this.loadData();
+    }
+    this.stateChanges.next();
+  }
+  // tslint:disable-next-line: variable-name
+  private _unidadGestionRefRequired: boolean = false;
+
+  @Input()
   get externo(): boolean {
     return this._externo;
   }
@@ -101,6 +117,10 @@ export class SelectModeloEjecucionComponent extends SelectServiceExtendedCompone
 
   protected loadServiceOptions(): Observable<IModeloEjecucion[]> {
     const findOptions: SgiRestFindOptions = {};
+
+    if (this.unidadGestionRefRequired && !!!this.unidadGestionRef) {
+      return of([] as IModeloEjecucion[]);
+    }
 
     if (this.requestByExterno) {
       findOptions.filter = (new RSQLSgiRestFilter('externo', SgiRestFilterOperator.EQUALS, this.externo.toString()));

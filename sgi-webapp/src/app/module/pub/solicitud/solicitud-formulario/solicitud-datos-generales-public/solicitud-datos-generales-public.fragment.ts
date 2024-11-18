@@ -5,8 +5,7 @@ import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-en
 import { Estado } from '@core/models/csp/estado-solicitud';
 import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
-import { ISolicitud } from '@core/models/csp/solicitud';
-import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
+import { ISolicitud, OrigenSolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
 import { IEmpresa } from '@core/models/sgemp/empresa';
@@ -48,7 +47,6 @@ export interface SolicitudRrhhAreaAnepPublicListado {
 
 export class SolicitudDatosGeneralesPublicFragment extends FormFragment<SolicitudDatosGeneralesPublic> {
   public solicitud: SolicitudDatosGeneralesPublic;
-  private solicitudGrupo: ISolicitudGrupo;
   public solicitanteRef: string;
 
   entidadesConvocantes = [] as IConvocatoriaEntidadConvocante[];
@@ -306,19 +304,18 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
 
   setDatosConvocatoria(convocatoria: IConvocatoria) {
     this.subscriptions.push(
-      this.unidadGestionService.findById(convocatoria.unidadGestion.id).subscribe(unidadGestion => {
-        this.solicitud.unidadGestion = unidadGestion;
-      })
-    );
-
-    this.subscriptions.push(
       this.loadEntidadesConvocantesModalidad(this.getValue().publicKey, convocatoria.id).subscribe(entidadesConvocantes => {
         this.entidadesConvocantesModalidad$.next(entidadesConvocantes);
       })
     );
 
     this.solicitud.convocatoriaId = convocatoria.id;
+    this.solicitud.origenSolicitud = OrigenSolicitud.CONVOCATORIA_SGI;
     this.tipoFormularioSolicitud = convocatoria.formularioSolicitud;
+    this.solicitud.convocatoriaExterna = convocatoria.codigo;
+    this.solicitud.tipoFinalidad = convocatoria.finalidad;
+    this.solicitud.modeloEjecucion = convocatoria.modeloEjecucion;
+    this.solicitud.unidadGestion = convocatoria.unidadGestion;
     this.solicitud.solicitante = {
       id: this.solicitanteRef
     } as IPersona;

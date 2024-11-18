@@ -391,6 +391,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     this.solicitud.convocatoriaId = convocatoria.id;
     this.solicitud.origenSolicitud = OrigenSolicitud.CONVOCATORIA_SGI;
     this.tipoFormularioSolicitud = convocatoria.formularioSolicitud;
+    this.solicitud.convocatoriaExterna = convocatoria.codigo;
     this.solicitanteRef = this.authService.authStatus$?.getValue()?.userRefId;
     this.solicitud.solicitante = {
       id: this.solicitanteRef

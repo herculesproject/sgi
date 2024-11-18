@@ -104,9 +104,9 @@ export class CambioEstadoModalComponent extends DialogActionComponent<IEstadoSol
     super(matDialogRef, true);
 
     if (this.data?.isTutor) {
-      this.estadosNuevos = ESTADO_MAP_TUTOR.get(this.data.estadoActual);
+      this.estadosNuevos = ESTADO_MAP_TUTOR.get(this.data.estadoActual) ?? new Map<Estado, string>();
     } else if (this.data?.isInvestigador) {
-      this.estadosNuevos = ESTADO_MAP_INVESTIGADOR.get(this.data.estadoActual);
+      this.estadosNuevos = ESTADO_MAP_INVESTIGADOR.get(this.data.estadoActual) ?? new Map<Estado, string>();
     } else {
       const estados = new Map<string, string>();
       ESTADO_MAP.forEach((value, key) => {
