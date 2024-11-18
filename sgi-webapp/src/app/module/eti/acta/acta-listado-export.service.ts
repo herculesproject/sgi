@@ -74,7 +74,7 @@ export class ActaListadoExportService extends AbstractTableExportService<IActaRe
     const findOptions = reportConfig.reportOptions?.findOptions;
     findOptions.page.index = 0;
     findOptions.page.size = undefined;
-    findOptions.sort = new RSQLSgiRestSort('convocatoriaReunion.comite.comite', SgiRestSortDirection.ASC).and('numero', SgiRestSortDirection.ASC);
+    findOptions.sort = new RSQLSgiRestSort('convocatoriaReunion.comite.codigo', SgiRestSortDirection.ASC).and('numero', SgiRestSortDirection.ASC);
 
     return this.actaService.findActivasWithEvaluaciones(findOptions).pipe(
       map((actas) => {
