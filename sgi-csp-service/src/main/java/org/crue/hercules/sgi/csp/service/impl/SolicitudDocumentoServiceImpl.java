@@ -71,10 +71,8 @@ public class SolicitudDocumentoServiceImpl implements SolicitudDocumentoService 
     Assert.isTrue(solicitudService.modificableEstadoAndDocumentos(solicitudDocumento.getSolicitudId()),
         () -> ProblemMessage.builder()
             .key(MSG_PROBLEM_ACCION_DENEGADA)
-            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(
-                MSG_MODEL_SOLICITUD))
-            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(
-                MSG_MODEL_SOLICITUD_DOCUMENTO))
+            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD))
+            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_SOLICITUD_DOCUMENTO))
             .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_MODIFICAR))
             .build());
 

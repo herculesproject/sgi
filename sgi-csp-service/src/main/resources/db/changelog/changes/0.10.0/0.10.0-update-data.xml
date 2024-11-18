@@ -15,7 +15,10 @@
       <column
         name="tipo_finalidad_id"
         valueComputed="(SELECT c.tipo_finalidad_id FROM ${schemaPrefix}convocatoria c WHERE c.id = solicitud.convocatoria_id)" />
-      <where>convocatoria_id IS NOT NULL</where>
+      <column
+        name="convocatoria_externa"
+        valueComputed="(SELECT c.codigo FROM ${schemaPrefix}convocatoria c WHERE c.id = solicitud.convocatoria_id)" />
+     <where>convocatoria_id IS NOT NULL</where>
     </update>
     <update tableName="solicitud">
       <column name="origen_solicitud" value="CONVOCATORIA_NO_SGI" />

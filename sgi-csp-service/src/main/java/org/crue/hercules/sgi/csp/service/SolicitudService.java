@@ -1320,6 +1320,7 @@ public class SolicitudService {
     boolean modificableConvocatoriaSGI = solicitud.getOrigenSolicitud().equals(OrigenSolicitud.CONVOCATORIA_SGI)
         && Arrays.asList(
             Estado.BORRADOR,
+            Estado.RECHAZADA,
             Estado.SUBSANACION,
             Estado.EXCLUIDA_PROVISIONAL,
             Estado.EXCLUIDA_DEFINITIVA,
