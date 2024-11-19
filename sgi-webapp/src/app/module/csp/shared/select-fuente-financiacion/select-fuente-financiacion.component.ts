@@ -4,6 +4,7 @@ import { NgControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { SelectValue } from '@core/component/select-common/select-common.component';
 import { SelectServiceExtendedComponent } from '@core/component/select-service-extended/select-service-extended.component';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
@@ -48,6 +49,9 @@ export class SelectFuenteFinanciacionComponent extends SelectServiceExtendedComp
     super(defaultErrorStateMatcher, ngControl, languageService, platformLocation, dialog);
 
     this.addTarget = FuenteFinanciacionModalComponent;
+    this.sortWith = (o1: SelectValue<IFuenteFinanciacion>, o2: SelectValue<IFuenteFinanciacion>) => {
+      return o1?.displayText.localeCompare(o2?.displayText)
+    };
   }
 
   protected loadServiceOptions(): Observable<IFuenteFinanciacion[]> {

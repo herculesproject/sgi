@@ -4,7 +4,7 @@ import { ITipoAmbitoGeografico, ITipoOrigenFuenteFinanciacion } from './tipos-co
 export interface IFuenteFinanciacion {
   id: number;
   nombre: I18nFieldValue[];
-  descripcion: string;
+  descripcion: I18nFieldValue[];
   fondoEstructural: boolean;
   tipoAmbitoGeografico: ITipoAmbitoGeografico;
   tipoOrigenFuenteFinanciacion: ITipoOrigenFuenteFinanciacion;

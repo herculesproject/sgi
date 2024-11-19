@@ -12,7 +12,7 @@ class FuenteFinanciacionRequestConverter extends SgiBaseConverter<IFuenteFinanci
     return {
       id: undefined,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombre) : [],
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.descripcion) : [],
       fondoEstructural: value.fondoEstructural,
       tipoAmbitoGeografico: { id: value.tipoAmbitoGeograficoId } as ITipoAmbitoGeografico,
       tipoOrigenFuenteFinanciacion: { id: value.tipoOrigenFuenteFinanciacionId } as ITipoOrigenFuenteFinanciacion,
@@ -25,7 +25,7 @@ class FuenteFinanciacionRequestConverter extends SgiBaseConverter<IFuenteFinanci
     }
     return {
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.descripcion) : [],
       fondoEstructural: value.fondoEstructural,
       tipoAmbitoGeograficoId: value.tipoAmbitoGeografico?.id,
       tipoOrigenFuenteFinanciacionId: value.tipoOrigenFuenteFinanciacion?.id,
