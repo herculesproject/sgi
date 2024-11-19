@@ -3,17 +3,20 @@ package org.crue.hercules.sgi.csp.controller;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ConvocatoriaConceptoGastoControllerTest
@@ -73,8 +78,8 @@ class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest {
         // then: new ConvocatoriaConceptoGasto is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.nombre")
-            .value(convocatoriaConceptoGasto.getConceptoGasto().getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.nombre[0].value").value(
+            I18nHelper.getValueForLanguage(convocatoriaConceptoGasto.getConceptoGasto().getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.descripcion")
             .value(convocatoriaConceptoGasto.getConceptoGasto().getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.activo")
@@ -121,8 +126,9 @@ class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest {
         // then: ConvocatoriaConceptoGasto is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(convocatoriaConceptoGasto.getObservaciones()))
-        .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.nombre")
-            .value(convocatoriaConceptoGastoExistente.getConceptoGasto().getNombre()));
+        .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(convocatoriaConceptoGastoExistente.getConceptoGasto().getNombre(),
+                Language.ES)));
   }
 
   @Test
@@ -353,9 +359,12 @@ class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaConceptoGasto
    */
   private ConvocatoriaConceptoGasto generarMockConvocatoriaConceptoGasto(Long id, Boolean permitido) {
+    Set<ConceptoGastoNombre> nombreConceptoGasto = new HashSet<>();
+    nombreConceptoGasto.add(new ConceptoGastoNombre(Language.ES, "nombre-" + (id != null ? id : 1)));
+
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setDescripcion("Descripcion");
-    conceptoGasto.setNombre("nombre-" + (id != null ? id : 1));
+    conceptoGasto.setNombre(nombreConceptoGasto);
     conceptoGasto.setActivo(true);
 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();

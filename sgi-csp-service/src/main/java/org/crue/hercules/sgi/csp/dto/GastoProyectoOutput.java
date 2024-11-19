@@ -3,7 +3,9 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto.TipoEstadoGasto;
 
 import lombok.AllArgsConstructor;
@@ -34,7 +36,7 @@ public class GastoProyectoOutput implements Serializable {
   @Builder
   public static class ConceptoGasto implements Serializable {
     private Long id;
-    private String nombre;
+    private Collection<ConceptoGastoNombre> nombre;
     private String descripcion;
   }
 

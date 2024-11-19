@@ -2,10 +2,15 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -96,7 +101,8 @@ class ConceptoGastoIT extends BaseIT {
 
     ConceptoGasto conceptoGasto = response.getBody();
     Assertions.assertThat(conceptoGasto.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(conceptoGasto.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGasto.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-001");
     Assertions.assertThat(conceptoGasto.getDescripcion()).as("descripcion-001")
         .isEqualTo(conceptoGasto.getDescripcion());
     Assertions.assertThat(conceptoGasto.getActivo()).as("getActivo()").isFalse();
@@ -116,7 +122,8 @@ class ConceptoGastoIT extends BaseIT {
 
     ConceptoGasto conceptoGasto = response.getBody();
     Assertions.assertThat(conceptoGasto.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(conceptoGasto.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGasto.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-001");
     Assertions.assertThat(conceptoGasto.getDescripcion()).as("descripcion-001")
         .isEqualTo(conceptoGasto.getDescripcion());
     Assertions.assertThat(conceptoGasto.getActivo()).as("getActivo()").isTrue();
@@ -135,7 +142,8 @@ class ConceptoGastoIT extends BaseIT {
 
     ConceptoGasto conceptoGasto = response.getBody();
     Assertions.assertThat(conceptoGasto.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(conceptoGasto.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGasto.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-001");
     Assertions.assertThat(conceptoGasto.getDescripcion()).as("descripcion-001")
         .isEqualTo(conceptoGasto.getDescripcion());
     Assertions.assertThat(conceptoGasto.getActivo()).as("getActivo()").isTrue();
@@ -148,7 +156,7 @@ class ConceptoGastoIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre,desc";
+    String sort = "id,desc";
     String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -159,19 +167,19 @@ class ConceptoGastoIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ConceptoGasto> conceptoGastoes = response.getBody();
-    Assertions.assertThat(conceptoGastoes).hasSize(3);
+    final List<ConceptoGasto> conceptoGastos = response.getBody();
+    Assertions.assertThat(conceptoGastos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(conceptoGastoes.get(0).getNombre()).as("get(0).getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(conceptoGastoes.get(1).getNombre()).as("get(1).getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(conceptoGastoes.get(2).getNombre()).as("get(2).getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 1));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGastos.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())").isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGastos.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())").isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGastos.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())").isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
   @Sql
@@ -181,7 +189,7 @@ class ConceptoGastoIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre,desc";
+    String sort = "id,desc";
     String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
@@ -192,18 +200,21 @@ class ConceptoGastoIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ConceptoGasto> conceptoGastoes = response.getBody();
-    Assertions.assertThat(conceptoGastoes).hasSize(3);
+    final List<ConceptoGasto> conceptoGastos = response.getBody();
+    Assertions.assertThat(conceptoGastos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(conceptoGastoes.get(0).getNombre()).as("get(0).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGastos.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(conceptoGastoes.get(1).getNombre()).as("get(1).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGastos.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(conceptoGastoes.get(2).getNombre()).as("get(2).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGastos.get(2).getNombre(), Language.ES))
+        .as("get(2).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
@@ -214,7 +225,7 @@ class ConceptoGastoIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre,desc";
+    String sort = "id,desc";
     String filter = "descripcion=ke=00";
 
     Long proyectoId = 1L;
@@ -228,17 +239,17 @@ class ConceptoGastoIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ConceptoGasto> conceptoGastoes = response.getBody();
-    Assertions.assertThat(conceptoGastoes).hasSize(2);
+    final List<ConceptoGasto> conceptoGastos = response.getBody();
+    Assertions.assertThat(conceptoGastos).hasSize(2);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
 
-    Assertions.assertThat(conceptoGastoes.get(0).getNombre()).as("get(0).getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(conceptoGastoes.get(1).getNombre()).as("get(1).getNombre())")
-        .isEqualTo("nombre-" + String.format("%03d", 1));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGastos.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())").isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(conceptoGastos.get(1).getNombre(), Language.ES))
+        .as("get(1).getNombre())").isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
   /**
@@ -259,9 +270,12 @@ class ConceptoGastoIT extends BaseIT {
    * @return el objeto ConceptoGasto
    */
   private ConceptoGasto generarMockConceptoGasto(Long id, String nombre) {
+    Set<ConceptoGastoNombre> nombreConceptoGasto = new HashSet<>();
+    nombreConceptoGasto.add(new ConceptoGastoNombre(Language.ES, nombre));
+
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id);
-    conceptoGasto.setNombre(nombre);
+    conceptoGasto.setNombre(nombreConceptoGasto);
     conceptoGasto.setDescripcion("descripcion-" + id);
     conceptoGasto.setActivo(true);
     conceptoGasto.setCostesIndirectos(true);

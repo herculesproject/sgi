@@ -7,6 +7,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -151,8 +152,10 @@ class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(convocatoria);
 
+    Set<ConceptoGastoNombre> nombreConceptoGasto = new HashSet<>();
+    nombreConceptoGasto.add(new ConceptoGastoNombre(Language.ES, "nombreConceptoGasto" + suffix));
     ConceptoGasto conceptoGasto = ConceptoGasto.builder()
-        .nombre("nombreConceptoGasto" + suffix)
+        .nombre(nombreConceptoGasto)
         .activo(Boolean.TRUE)
         .costesIndirectos(true)
         .build();
