@@ -31,7 +31,9 @@
       <!-- Convocatoria Column -->
       <ng-container matColumnDef="motivo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.asistente.motivo' | translate}} </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.motivo | i18nFieldValue}} </td>
+        <td mat-cell *matCellDef="let wrapper">
+          <sgi-i18n-table-field [field]="wrapper.value.motivo"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
 

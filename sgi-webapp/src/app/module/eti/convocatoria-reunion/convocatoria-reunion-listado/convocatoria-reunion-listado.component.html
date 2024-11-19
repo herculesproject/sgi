@@ -109,7 +109,9 @@
       <ng-container matColumnDef="lugar">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoria-reunion.lugar' | translate}}
         </th>
-        <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.lugar | i18nFieldValue}} </td>
+        <td mat-cell *matCellDef="let convocatoriaReunion">
+          <sgi-i18n-table-field [field]="convocatoriaReunion.lugar"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
       <!-- Convocatoria Column -->
