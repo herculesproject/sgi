@@ -2278,7 +2278,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       }
     }
 
-    // Cambio de fecha fin definitiva si el estado se va a modificar a RENUNCIADO o RESCINDIDO
+    // Cambio de fecha fin definitiva si el estado se va a modificar a RENUNCIADO o
+    // RESCINDIDO
     Instant fechaEstado = estadoProyecto.getFechaEstado() != null ? estadoProyecto.getFechaEstado() : Instant.now();
     if (estadoProyecto.getEstado() == EstadoProyecto.Estado.RENUNCIADO
         || estadoProyecto.getEstado() == EstadoProyecto.Estado.RESCINDIDO) {
@@ -2398,7 +2399,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   public List<Long> findIdsProyectosModificados(String query) {
     log.debug("findIdsProyectosModificados(String query) - start");
 
-    Specification<Proyecto> specs = ProyectoSpecifications.activos().and(ProyectoSpecifications.confidencial(false))
+    Specification<Proyecto> specs = ProyectoSpecifications.activos()
         .and(SgiRSQLJPASupport.toSpecification(query,
             ProyectoPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
 
@@ -2421,7 +2422,7 @@ public class ProyectoServiceImpl implements ProyectoService {
   public List<Long> findIdsProyectosEliminados(String query) {
     log.debug("findIdsProyectosEliminados(String query) - start");
 
-    Specification<Proyecto> specs = ProyectoSpecifications.notActivos().and(ProyectoSpecifications.confidencial(false))
+    Specification<Proyecto> specs = ProyectoSpecifications.notActivos()
         .and(SgiRSQLJPASupport.toSpecification(query,
             ProyectoPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
 
