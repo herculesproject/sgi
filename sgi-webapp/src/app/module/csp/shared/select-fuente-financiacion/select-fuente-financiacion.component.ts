@@ -9,7 +9,6 @@ import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion/fuente-financiacion.service';
 import { LanguageService } from '@core/services/language.service';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FuenteFinanciacionModalComponent } from '../../fuente-financiacion/fuente-financiacion-modal/fuente-financiacion-modal.component';
@@ -52,13 +51,11 @@ export class SelectFuenteFinanciacionComponent extends SelectServiceExtendedComp
   }
 
   protected loadServiceOptions(): Observable<IFuenteFinanciacion[]> {
-    const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
-    };
+
     if (this._todos) {
-      return this.service.findTodos(findOptions).pipe(map(response => response.items));
+      return this.service.findTodos().pipe(map(response => response.items));
     } else {
-      return this.service.findAll(findOptions).pipe(map(response => response.items));
+      return this.service.findAll().pipe(map(response => response.items));
     }
   }
 

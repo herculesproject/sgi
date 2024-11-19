@@ -11,7 +11,7 @@ class FuenteFinanciacionResponseConverter extends SgiBaseConverter<IFuenteFinanc
     }
     return {
       id: value.id,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       descripcion: value.descripcion,
       fondoEstructural: value.fondoEstructural,
       tipoAmbitoGeografico: {
@@ -31,7 +31,7 @@ class FuenteFinanciacionResponseConverter extends SgiBaseConverter<IFuenteFinanc
     }
     return {
       id: value.id,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       descripcion: value.descripcion,
       fondoEstructural: value.fondoEstructural,
       tipoAmbitoGeografico: {

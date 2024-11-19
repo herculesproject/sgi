@@ -209,7 +209,7 @@ export class ConvocatoriaEntidadFinanciadoraListadoExportService
       entidadTable += '\n';
       entidadTable += entidadFinanciadora.empresa?.numeroIdentificacion ?? '';
       entidadTable += '\n';
-      entidadTable += entidadFinanciadora.fuenteFinanciacion?.nombre ?? '';
+      entidadTable += entidadFinanciadora.fuenteFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.nombre) : '';
       entidadTable += '\n';
       entidadTable += entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre) : '';
       entidadTable += '\n';

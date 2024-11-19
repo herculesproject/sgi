@@ -11,7 +11,7 @@ export interface IPeriodoAmortizacionRequest {
   },
   fuenteFinanciacion: {
     id: string,
-    nombre: string
+    nombre: I18nFieldValue[]
   },
   fecha: string;
   importe: number;

@@ -30,7 +30,7 @@
           {{'csp.solicitud-desglose-presupuesto.entidades.entidades-financiadoras.fuente-financiacion' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.entidadFinanciadora.fuenteFinanciacion?.nombre}}
+          {{element.entidadFinanciadora.fuenteFinanciacion?.nombre | i18nFieldValue}}
         </td>
       </ng-container>
 

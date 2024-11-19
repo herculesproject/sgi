@@ -1,4 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { ISolicitudProyecto, TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { ISolicitudProyectoEntidad } from '@core/models/csp/solicitud-proyecto-entidad';
@@ -14,7 +15,7 @@ import { SolicitudProyectoEntidadFinanciadoraAjenaData } from '../solicitud-proy
 export interface EntidadFinanciadoraDesglosePresupuesto {
   solicitudProyectoEntidadId: number;
   entidadFinanciadora: IEntidadFinanciadora;
-  fuenteFinanciacion: string;
+  fuenteFinanciacion: I18nFieldValue[];
   ajena: boolean;
 }
 

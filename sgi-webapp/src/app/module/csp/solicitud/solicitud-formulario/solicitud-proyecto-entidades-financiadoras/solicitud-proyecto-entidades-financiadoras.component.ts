@@ -122,7 +122,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
           case 'cif':
             return entidadFinanciadora.value.empresa?.numeroIdentificacion;
           case 'fuenteFinanciacion':
-            return entidadFinanciadora.value.fuenteFinanciacion?.nombre;
+            return this.languageService.getFieldValue(entidadFinanciadora.value.fuenteFinanciacion?.nombre);
           case 'ambito':
             return this.languageService.getFieldValue(entidadFinanciadora.value.fuenteFinanciacion?.tipoAmbitoGeografico.nombre);
           case 'tipoFinanciacion':
@@ -242,7 +242,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
           case 'cif':
             return entidadFinanciadora.empresa?.numeroIdentificacion;
           case 'fuenteFinanciacion':
-            return entidadFinanciadora.fuenteFinanciacion?.nombre;
+            return this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.nombre);
           case 'ambito':
             return entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico.nombre) : '';
           case 'tipoFinanciacion':

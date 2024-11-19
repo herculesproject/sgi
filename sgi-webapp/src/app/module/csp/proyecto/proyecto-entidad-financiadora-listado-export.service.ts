@@ -232,7 +232,7 @@ export class ProyectoEntidadFinanciadoraListadoExportService
       entidadTable += '\n';
       entidadTable += entidadFinanciadora.empresa?.numeroIdentificacion ?? '';
       entidadTable += '\n';
-      entidadTable += entidadFinanciadora.fuenteFinanciacion?.nombre ?? '';
+      entidadTable += entidadFinanciadora.fuenteFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.nombre) : '';
       entidadTable += '\n';
       entidadTable += entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre) : '';
       entidadTable += '\n';
@@ -261,7 +261,7 @@ export class ProyectoEntidadFinanciadoraListadoExportService
     if (entidadFinanciadora) {
       elementsRow.push(entidadFinanciadora.empresa?.nombre ?? '');
       elementsRow.push(entidadFinanciadora.empresa?.numeroIdentificacion ?? '');
-      elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.nombre ?? '');
+      elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.nombre) : '');
       elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre) : '');
       elementsRow.push(entidadFinanciadora.tipoFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.tipoFinanciacion?.nombre) : '');
       elementsRow.push(entidadFinanciadora.importeFinanciacion ?? '');

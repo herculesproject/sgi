@@ -46,7 +46,8 @@
       <!-- Fuente Financiacion Column -->
       <ng-container matColumnDef="fuenteFinanciacion">
         <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.fuente-financiacion' | translate}} </th>
-        <td mat-cell *matCellDef="let element">{{element.entidadFinanciadora.fuenteFinanciacion?.nombre}}</td>
+        <td mat-cell *matCellDef="let element">{{element.entidadFinanciadora.fuenteFinanciacion?.nombre |
+          i18nFieldValue}}</td>
       </ng-container>
 
       <!-- Acciones Column -->

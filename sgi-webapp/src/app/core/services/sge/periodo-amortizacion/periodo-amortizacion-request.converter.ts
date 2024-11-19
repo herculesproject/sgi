@@ -7,7 +7,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IPeriodoAmortizacionRequest } from './periodo-amortizacion-request';
 
-class PeriodoAmortizacionRequestConverter extends SgiBaseConverter<IPeriodoAmortizacionRequest, IProyectoPeriodoAmortizacion>{
+class PeriodoAmortizacionRequestConverter extends SgiBaseConverter<IPeriodoAmortizacionRequest, IProyectoPeriodoAmortizacion> {
   toTarget(value: IPeriodoAmortizacionRequest): IProyectoPeriodoAmortizacion {
     if (!value) {
       return value as unknown as IProyectoPeriodoAmortizacion;
