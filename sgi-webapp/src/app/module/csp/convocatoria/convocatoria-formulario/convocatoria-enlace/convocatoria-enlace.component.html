@@ -24,7 +24,9 @@
       <ng-container matColumnDef="tipoEnlace">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.convocatoria-enlace.tipo-enlace' | translate}}
         </th>
-        <td mat-cell *matCellDef="let enlace">{{enlace.value.tipoEnlace?.nombre | i18nFieldValue}}</td>
+        <td mat-cell *matCellDef="let enlace">
+          <sgi-i18n-table-field [field]="enlace.value.tipoEnlace?.nombre"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
       <!-- Acciones Column -->
