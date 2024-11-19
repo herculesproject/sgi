@@ -17,12 +17,12 @@
     <div fxLayoutAlign="center center" fxFlex="10%" fxHide.xs fxHide.sm>
       <mat-select [value]="selectedLanguage" (selectionChange)="selectLanguage($event.value)">
         <mat-select-trigger class="mat-option">
-          <span><mat-icon [svgIcon]="selectedLanguage.icon"></mat-icon>{{selectedLanguage.translateKey |
-            translate}}</span>
+          <span>{{selectedLanguage.translateKey |
+            translate}} ({{selectedLanguage.codeExtended}})</span>
         </mat-select-trigger>
         <mat-option *ngFor="let language of languages" [value]="language">
-          <span><mat-icon [svgIcon]="language.icon"></mat-icon>{{language.translateKey |
-            translate}}</span>
+          <span>{{language.translateKey |
+            translate}} ({{language.codeExtended}})</span>
         </mat-option>
       </mat-select>
     </div>

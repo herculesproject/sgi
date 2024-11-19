@@ -8,11 +8,11 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { BrowserModule, Meta } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SgiErrorHttpInterceptor } from '@core/error-http-interceptor';
+import { Language } from '@core/i18n/language';
+import { LocaleId } from '@core/i18n/locale-id';
 import { SgiLanguageHttpInterceptor } from '@core/languague-http-interceptor';
 import { SgiRequestHttpInterceptor } from '@core/request-http-interceptor';
 import { ResourcePublicService } from '@core/services/cnf/resource-public.service';
-import { Language } from '@core/i18n/language';
-import { LocaleId } from '@core/i18n/locale-id';
 import { LanguageService } from '@core/services/language.service';
 import { TimeZoneService } from '@core/services/timezone.service';
 import { TIME_ZONE } from '@core/time-zone';
@@ -33,7 +33,6 @@ import { AppComponent } from './app.component';
 import { BlockModule } from './block/block.module';
 import { ConfigService } from './core/services/config.service';
 import { HomeComponent } from './home/home.component';
-import { IconModule } from '@material/icon.module';
 
 export class SgiTranslateLoader implements TranslateLoader {
   constructor(
@@ -95,7 +94,6 @@ const bootstrapLanguageService = (languageService: LanguageService) => {
     CoreModule,
     LoggerModule.forRoot(environment.loggerConfig),
     MaterialDesignModule,
-    IconModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

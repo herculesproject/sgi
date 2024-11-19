@@ -19,6 +19,9 @@ function isI18nValue(field: I18nFieldValue | I18nFieldValueResponse): field is I
   return true;
 }
 
+/**
+ * @deprecated Use specific implementations, this dosen't append prefix
+ */
 @Injectable()
 @Pipe({
   name: 'i18nFieldValue',

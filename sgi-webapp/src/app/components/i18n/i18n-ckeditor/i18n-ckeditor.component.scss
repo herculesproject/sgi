@@ -1,37 +1,13 @@
 :host {
-  .mat-select {
-    max-width: 140px;
-  }
-
-  .option {
-    .text-language {
-      float: left;
-      margin-left: 20px;
-      line-height: 2;
+  .ckeditor-i18n {
+    .mat-select {
+      max-width: 140px;
     }
 
-    .img-language {
-      float: left;
-      top: 20px;
-      margin-left: 20px;
-      width: 30px;
-      height: 25px;
+    mat-select-trigger {
+      display: flex;
+      gap: 5px;
     }
   }
 
-  .select-trigger {
-    display: flex;
-    gap: 5px;
-
-    .text-language {
-      float: left;
-    }
-
-    .img-language {
-      float: left;
-      width: 25px;
-      height: 20px;
-      margin-left: 0px;
-    }
-  }
 }

@@ -1,11 +1,11 @@
 <div class="input-multilang">
   <mat-select matPrefix [(ngModel)]="selectedLanguage">
-    <mat-select-trigger class="select-trigger">
-      <mat-icon [svgIcon]="selectedLanguage.icon"></mat-icon>
+    <mat-select-trigger>
+      <span>{{selectedLanguage.codeExtended}}</span>
     </mat-select-trigger>
     <mat-option *ngFor="let language of availableLanguages" [value]="language">
-      <span><mat-icon [svgIcon]="language.icon"></mat-icon>{{language.translateKey |
-        translate}}</span>
+      <span>{{language.translateKey |
+        translate}} ({{language.codeExtended}})</span>
     </mat-option>
   </mat-select>
 
