@@ -1,7 +1,7 @@
-import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '../concepto-gasto/concepto-gasto-response.converter';
 import { IGastoProyectoResponse } from './gasto-proyecto-response';
 
 class GastoProyectoResponseConverter extends SgiBaseConverter<IGastoProyectoResponse, IGastoProyecto>{
@@ -13,11 +13,7 @@ class GastoProyectoResponseConverter extends SgiBaseConverter<IGastoProyectoResp
       id: value.id,
       proyectoId: value.proyectoId,
       gastoRef: value.gastoRef,
-      conceptoGasto: {
-        id: value.conceptoGasto?.id,
-        nombre: value.conceptoGasto?.nombre,
-        descripcion: value.conceptoGasto?.descripcion
-      } as IConceptoGasto,
+      conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.toTarget(value.conceptoGasto) : null,
       estado: {
         id: value.estado?.id,
         estado: value.estado?.estado,
@@ -38,11 +34,7 @@ class GastoProyectoResponseConverter extends SgiBaseConverter<IGastoProyectoResp
       id: value.id,
       proyectoId: value.proyectoId,
       gastoRef: value.gastoRef,
-      conceptoGasto: {
-        id: value.conceptoGasto.id,
-        nombre: value.conceptoGasto.nombre,
-        descripcion: value.conceptoGasto.descripcion
-      },
+      conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.fromTarget(value.conceptoGasto) : null,
       estado: {
         id: value.estado.id,
         estado: value.estado.estado,

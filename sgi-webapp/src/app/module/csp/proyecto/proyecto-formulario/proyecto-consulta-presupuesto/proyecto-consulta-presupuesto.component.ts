@@ -16,6 +16,7 @@ import { ProyectoActionService } from '../../proyecto.action.service';
 import { ProyectoConsultaPresupuestoExportModalComponent } from './export/proyecto-consulta-presupuesto-export-modal.component';
 import { IConsultaPresupuestoExportData } from './export/proyecto-consulta-presupuesto-export.service';
 import { ProyectoConsultaPresupuestoFragment } from './proyecto-consulta-presupuesto.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const ANUALIDAD_GENERICA_KEY = marker('csp.proyecto-presupuesto.generica');
 
@@ -102,7 +103,8 @@ export class ProyectoConsultaPresupuestoComponent extends FragmentComponent impl
     private matDialog: MatDialog,
     private readonly translate: TranslateService,
     private codigoEconomicoGastoService: CodigoEconomicoGastoService,
-    private readonly cnfService: ConfigService
+    private readonly cnfService: ConfigService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.CONSULTA_PRESUPUESTO, actionService, translate);
     this.formPart = this.fragment as ProyectoConsultaPresupuestoFragment;
@@ -177,7 +179,7 @@ export class ProyectoConsultaPresupuestoComponent extends FragmentComponent impl
   }
 
   displayerConcepto(concepto: IAnualidadGasto): string {
-    return concepto.conceptoGasto.nombre;
+    return this.languageService.getFieldValue(concepto.conceptoGasto.nombre);
   }
 
   private convertToRowTree(anualidadesGastos: IAnualidadGasto[]): RowTreePresupuesto[] {

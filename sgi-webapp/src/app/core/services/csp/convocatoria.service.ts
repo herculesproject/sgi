@@ -2,7 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
 import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto-codigo-ec.converter';
-import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto.converter';
 import { CONVOCATORIA_ENLACE_CONVERTER } from '@core/converters/csp/convocatoria-enlace.converter';
 import { CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/convocatoria-entidad-convocante.converter';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
@@ -13,7 +12,6 @@ import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.conver
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
-import { IConvocatoriaConceptoGastoBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-backend';
 import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-codigo-ec-backend';
 import { IConvocatoriaEnlaceBackend } from '@core/models/csp/backend/convocatoria-enlace-backend';
 import { IConvocatoriaEntidadConvocanteBackend } from '@core/models/csp/backend/convocatoria-entidad-convocante-backend';
@@ -47,6 +45,8 @@ import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
+import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto.converter';
 import { IConvocatoriaFaseResponse } from './convocatoria-fase/convocatoria-fase-response';
 import { CONVOCATORIA_FASE_RESPONSE_CONVERTER } from './convocatoria-fase/convocatoria-fase-response.converter';
 import { IConvocatoriaHitoResponse } from './convocatoria-hito/convocatoria-hito-response';
@@ -289,7 +289,7 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    * @param options opciones de búsqueda.
    */
   findAllConvocatoriaConceptoGastosPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
-    return this.find<IConvocatoriaConceptoGastoBackend, IConvocatoriaConceptoGasto>(
+    return this.find<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto>(
       `${this.endpointUrl}/${id}/convocatoriagastos/permitidos`,
       undefined,
       CONVOCATORIA_CONCEPTO_GASTO_CONVERTER
@@ -302,7 +302,7 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    * @param options opciones de búsqueda.
    */
   findAllConvocatoriaConceptoGastosNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
-    return this.find<IConvocatoriaConceptoGastoBackend, IConvocatoriaConceptoGasto>(
+    return this.find<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto>(
       `${this.endpointUrl}/${id}/convocatoriagastos/nopermitidos`,
       undefined,
       CONVOCATORIA_CONCEPTO_GASTO_CONVERTER

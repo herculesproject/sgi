@@ -12,6 +12,7 @@ import { IPartidaGasto } from '@core/models/csp/partida-gasto';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { LanguageService } from '@core/services/language.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
@@ -74,7 +75,8 @@ export class PartidaGastoModalComponent extends DialogFormComponent<IPartidaGast
     private convocatoriaService: ConvocatoriaService,
     private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
     private codigoEconomicoGastoService: CodigoEconomicoGastoService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(matDialogRef, !!data.partidaGasto?.conceptoGasto);
   }
@@ -385,7 +387,7 @@ export class PartidaGastoModalComponent extends DialogFormComponent<IPartidaGast
       (conceptoGastoCodigoEc: ConvocatoriaConceptoGastoCodigoEc, property: string) => {
         switch (property) {
           case 'conceptoGasto':
-            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.conceptoGasto.nombre;
+            return this.languageService.getFieldValue(conceptoGastoCodigoEc.convocatoriaConceptoGasto.conceptoGasto.nombre);
           case 'importeMaximo':
             return conceptoGastoCodigoEc.convocatoriaConceptoGasto.importeMaximo;
           case 'permitidoDesde':
@@ -403,7 +405,7 @@ export class PartidaGastoModalComponent extends DialogFormComponent<IPartidaGast
       (conceptoGastoCodigoEc: ConvocatoriaConceptoGastoCodigoEc, property: string) => {
         switch (property) {
           case 'conceptoGasto':
-            return conceptoGastoCodigoEc.convocatoriaConceptoGasto.conceptoGasto.nombre;
+            return this.languageService.getFieldValue(conceptoGastoCodigoEc.convocatoriaConceptoGasto.conceptoGasto.nombre);
           case 'noPermitidoDesde':
             return conceptoGastoCodigoEc.convocatoriaConceptoGasto.mesInicial;
           case 'noPermitidoHasta':

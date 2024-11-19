@@ -12,6 +12,7 @@ import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@s
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ISolicitudProyectoPresupuetoModalData, SolicitudProyectoPresupuestoListadoExportModalComponent } from '../../solicitud/modals/solicitud-proyecto-presupuesto-listado-export-modal/solicitud-proyecto-presupuesto-listado-export-modal.component';
+import { LanguageService } from '@core/services/language.service';
 
 const TITLE_PRESUPUESTO_COMPLETO = marker('title.csp.presupuesto-completo');
 const TITLE_PRESUPUESTO_ENTIDAD = marker('title.csp.presupuesto-entidad');
@@ -101,7 +102,8 @@ export class SolicitiudPresupuestoModalComponent extends DialogCommonComponent {
     private readonly solicitudProyectoEntidadService: SolicitudProyectoEntidadService,
     private readonly empresaService: EmpresaService,
     private matDialog: MatDialog,
-    private readonly cnfService: ConfigService
+    private readonly cnfService: ConfigService,
+    private readonly languageService: LanguageService
   ) {
     super(matDialogRef);
     this.title = this.data.entidadId ? TITLE_PRESUPUESTO_ENTIDAD : TITLE_PRESUPUESTO_COMPLETO;
@@ -256,8 +258,11 @@ export class SolicitiudPresupuestoModalComponent extends DialogCommonComponent {
       const anualidadA = a.anualidad ?? '';
       const anualidadB = b.anualidad ?? '';
 
+      const conceptoGastoA = a.conceptoGasto?.nombre ? this.languageService.getFieldValue(a.conceptoGasto.nombre) : '';
+      const conceptoGastoB = b.conceptoGasto?.nombre ? this.languageService.getFieldValue(b.conceptoGasto.nombre) : '';
+
       return anualidadB.toLocaleString().localeCompare(anualidadA.toLocaleString())
-        || a.conceptoGasto?.nombre.localeCompare(b.conceptoGasto?.nombre);
+        || conceptoGastoA.localeCompare(conceptoGastoB);
     });
   }
 

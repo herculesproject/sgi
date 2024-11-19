@@ -9,7 +9,7 @@
           {{'csp.solicitud-desglose-presupuesto.global.concepto-gasto' | translate}}
         </th>
         <td mat-cell *matCellDef="let wrapper">
-          {{wrapper.value.conceptoGasto.nombre}}
+          <sgi-i18n-table-field [field]="wrapper.value.conceptoGasto.nombre"></sgi-i18n-table-field>
         </td>
       </ng-container>
 

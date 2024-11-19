@@ -3,6 +3,7 @@ import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { concatAll, concatMap, map } from 'rxjs/operators';
 
@@ -19,6 +20,7 @@ export class ProyectoConsultaPresupuestoFragment extends Fragment {
   constructor(
     key: number,
     private proyectoService: ProyectoService,
+    private readonly languageService: LanguageService
   ) {
     super(key);
     this.setComplete(true);
@@ -80,10 +82,10 @@ export class ProyectoConsultaPresupuestoFragment extends Fragment {
     const founded: string[] = [];
 
     return anualidadesGastos.filter((anualidad: IAnualidadGasto) => {
-      if (founded.includes(anualidad.conceptoGasto.nombre)) {
+      if (founded.includes(this.languageService.getFieldValue(anualidad.conceptoGasto.nombre))) {
         return false;
       }
-      founded.push(anualidad.conceptoGasto.nombre);
+      founded.push(this.languageService.getFieldValue(anualidad.conceptoGasto.nombre));
       return true;
     });
   }

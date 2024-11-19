@@ -18,6 +18,7 @@ import { switchMap } from 'rxjs/operators';
 import { CONVOCATORIA_ROUTE_NAMES } from '../../convocatoria-route-names';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-concepto-gasto.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_CODIGO_ECONOMICO = marker('msg.csp.convocatoria-concepto-gasto.listado.codigo-economico.delete');
@@ -71,6 +72,7 @@ export class ConvocatoriaConceptoGastoComponent extends FragmentComponent implem
     private dialogService: DialogService,
     private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
     private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.ELEGIBILIDAD, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaConceptoGastoFragment;
@@ -107,6 +109,12 @@ export class ConvocatoriaConceptoGastoComponent extends FragmentComponent implem
     this.dataSourcePermitidos.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaConceptoGasto>, property: string) => {
         switch (property) {
+          case 'conceptoGasto.nombre':
+            return wrapper.value.conceptoGasto?.nombre ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.nombre) : '';
+          case 'conceptoGasto.descripcion':
+            return wrapper.value.conceptoGasto?.descripcion ?? '';
+          case 'conceptoGasto.costesIndirectos':
+            return wrapper.value.conceptoGasto?.costesIndirectos ?? '';
           default:
             return wrapper.value[property];
         }
@@ -115,6 +123,12 @@ export class ConvocatoriaConceptoGastoComponent extends FragmentComponent implem
     this.dataSourceNoPermitidos.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaConceptoGasto>, property: string) => {
         switch (property) {
+          case 'conceptoGasto.nombre':
+            return wrapper.value.conceptoGasto?.nombre ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.nombre) : '';
+          case 'conceptoGasto.descripcion':
+            return wrapper.value.conceptoGasto?.descripcion ?? '';
+          case 'conceptoGasto.costesIndirectos':
+            return wrapper.value.conceptoGasto?.costesIndirectos ?? '';
           default:
             return wrapper.value[property];
         }

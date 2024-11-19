@@ -1,11 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -88,7 +89,7 @@ export class ConceptoGastoModalComponent extends DialogActionComponent<IConcepto
 
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
-      nombre: new FormControl(this.conceptoGasto?.nombre ?? '', Validators.required),
+      nombre: new FormControl(this.conceptoGasto?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
       descripcion: new FormControl(this.conceptoGasto?.descripcion ?? ''),
       costesIndirectos: new FormControl(this.conceptoGasto?.costesIndirectos, Validators.required)
     });

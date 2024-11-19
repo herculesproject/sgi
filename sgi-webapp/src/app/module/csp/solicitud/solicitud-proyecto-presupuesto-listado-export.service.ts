@@ -15,6 +15,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
 import { map, switchMap, takeLast } from 'rxjs/operators';
 import { ISolicitudListadoData } from './solicitud-listado/solicitud-listado.component';
+import { LanguageService } from '@core/services/language.service';
 
 const SOLICITUD_PROYECTO_PRESUPUESTO_KEY = marker('csp.solicitud-proyecto-presupuesto.titulo');
 const SOLICITUD_PROYECTO_PRESUPUESTO_ANUALIDAD_KEY = marker('csp.solicitud-proyecto-presupuesto.anualidad');
@@ -39,7 +40,8 @@ export class SolicitudProyectoPresupuestoListadoExportService extends AbstractTa
     protected readonly translate: TranslateService,
     private readonly decimalPipe: DecimalPipe,
     private readonly solicitudService: SolicitudService,
-    protected reportService: ReportService
+    protected reportService: ReportService,
+    private readonly languageService: LanguageService
   ) {
     super(reportService);
   }
@@ -186,7 +188,7 @@ export class SolicitudProyectoPresupuestoListadoExportService extends AbstractTa
     if (solicitudPresupuestoData.solicitudesPresupuesto.length > 0) {
       solicitudPresupuestoData.solicitudesPresupuesto.forEach(solicitudPresupuesto => {
         elementsRow.push(solicitudPresupuesto?.anualidad ?? '');
-        elementsRow.push(solicitudPresupuesto?.conceptoGasto ? solicitudPresupuesto?.conceptoGasto.nombre ?? '' : '');
+        elementsRow.push(solicitudPresupuesto?.conceptoGasto?.nombre ? this.languageService.getFieldValue(solicitudPresupuesto?.conceptoGasto.nombre) : '');
         elementsRow.push(solicitudPresupuesto?.importePresupuestado ? this.decimalPipe.transform(solicitudPresupuesto?.importePresupuestado, '2.2-2') ?? '' : '');
         elementsRow.push(solicitudPresupuesto?.importeSolicitado ? this.decimalPipe.transform(solicitudPresupuesto?.importeSolicitado, '2.2-2') ?? '' : '');
       });

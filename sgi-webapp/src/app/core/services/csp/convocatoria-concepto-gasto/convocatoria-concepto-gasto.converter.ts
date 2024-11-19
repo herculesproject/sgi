@@ -1,16 +1,17 @@
-import { IConvocatoriaConceptoGastoBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-backend';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '../concepto-gasto/concepto-gasto-response.converter';
+import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto-response';
 
-class ConvocatoriaConceptoGastoConverter extends SgiBaseConverter<IConvocatoriaConceptoGastoBackend, IConvocatoriaConceptoGasto> {
+class ConvocatoriaConceptoGastoConverter extends SgiBaseConverter<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto> {
 
-  toTarget(value: IConvocatoriaConceptoGastoBackend): IConvocatoriaConceptoGasto {
+  toTarget(value: IConvocatoriaConceptoGastoResponse): IConvocatoriaConceptoGasto {
     if (!value) {
       return value as unknown as IConvocatoriaConceptoGasto;
     }
     return {
       id: value.id,
-      conceptoGasto: value.conceptoGasto,
+      conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.toTarget(value.conceptoGasto) : null,
       convocatoriaId: value.convocatoriaId,
       observaciones: value.observaciones,
       importeMaximo: value.importeMaximo,
@@ -21,13 +22,13 @@ class ConvocatoriaConceptoGastoConverter extends SgiBaseConverter<IConvocatoriaC
     };
   }
 
-  fromTarget(value: IConvocatoriaConceptoGasto): IConvocatoriaConceptoGastoBackend {
+  fromTarget(value: IConvocatoriaConceptoGasto): IConvocatoriaConceptoGastoResponse {
     if (!value) {
-      return value as unknown as IConvocatoriaConceptoGastoBackend;
+      return value as unknown as IConvocatoriaConceptoGastoResponse;
     }
     return {
       id: value.id,
-      conceptoGasto: value.conceptoGasto,
+      conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.fromTarget(value.conceptoGasto) : null,
       convocatoriaId: value.convocatoriaId,
       observaciones: value.observaciones,
       importeMaximo: value.importeMaximo,

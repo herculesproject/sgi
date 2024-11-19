@@ -53,8 +53,10 @@
     <ng-container matColumnDef="conceptoGasto">
       <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.concepto-gasto' | translate}}
       </mat-header-cell>
-      <mat-cell *matCellDef="let element">{{!!!element.childs.length ?
-        element.item.conceptoGasto.nombre: ''}}</mat-cell>
+      <mat-cell *matCellDef="let element">
+        <sgi-i18n-table-field [field]="!!!element.childs.length ? element.item.conceptoGasto.nombre: ''">
+        </sgi-i18n-table-field>
+      </mat-cell>
     </ng-container>
     <ng-container matColumnDef="observaciones">
       <mat-header-cell *matHeaderCellDef>{{'csp.solicitud-proyecto-presupuesto.observaciones' | translate}}

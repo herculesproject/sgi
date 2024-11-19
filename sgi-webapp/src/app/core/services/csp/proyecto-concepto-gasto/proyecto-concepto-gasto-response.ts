@@ -1,9 +1,9 @@
-import { IConceptoGasto } from '../concepto-gasto';
+import { IConceptoGastoResponse } from "../concepto-gasto/concepto-gasto-response";
 
-export interface IProyectoConceptoGastoBackend {
+export interface IProyectoConceptoGastoResponse {
   id: number;
   proyectoId: number;
-  conceptoGasto: IConceptoGasto;
+  conceptoGasto: IConceptoGastoResponse;
   permitido: boolean;
   importeMaximo: number;
   fechaInicio: string;

@@ -21,7 +21,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'csp.proyecto-concepto-gasto' | translate}} </th>
         <td mat-cell *matCellDef="let element">
-          {{element.conceptoGasto}}
+          <sgi-i18n-table-field [field]="element.conceptoGasto"></sgi-i18n-table-field>
         </td>
       </ng-container>
 
@@ -145,7 +145,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{'csp.proyecto-concepto-gasto' | translate}} </th>
         <td mat-cell *matCellDef="let element">
-          {{element.conceptoGasto}}
+          <sgi-i18n-table-field [field]="element.conceptoGasto"></sgi-i18n-table-field>
         </td>
       </ng-container>
 

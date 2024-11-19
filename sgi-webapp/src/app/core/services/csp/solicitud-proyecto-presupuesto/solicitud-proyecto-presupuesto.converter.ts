@@ -1,18 +1,19 @@
-import { ISolicitudProyectoPresupuestoBackend } from '@core/models/csp/backend/solicitud-proyecto-presupuesto-backend';
 import { ISolicitudProyectoEntidad } from '@core/models/csp/solicitud-proyecto-entidad';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
+import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '@core/services/csp/concepto-gasto/concepto-gasto-response.converter';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { ISolicitudProyectoPresupuestoResponse } from './solicitud-proyecto-presupuesto-response';
 
-class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudProyectoPresupuestoBackend, ISolicitudProyectoPresupuesto> {
+class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudProyectoPresupuestoResponse, ISolicitudProyectoPresupuesto> {
 
-  toTarget(value: ISolicitudProyectoPresupuestoBackend): ISolicitudProyectoPresupuesto {
+  toTarget(value: ISolicitudProyectoPresupuestoResponse): ISolicitudProyectoPresupuesto {
     if (!value) {
       return value as unknown as ISolicitudProyectoPresupuesto;
     }
     return {
       id: value.id,
       solicitudProyectoId: value.solicitudProyectoId,
-      conceptoGasto: value.conceptoGasto,
+      conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.toTarget(value.conceptoGasto) : null,
       solicitudProyectoEntidad: { id: value.solicitudProyectoEntidadId } as ISolicitudProyectoEntidad,
       anualidad: value.anualidad,
       importeSolicitado: value.importeSolicitado,
@@ -21,15 +22,15 @@ class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudP
     };
   }
 
-  fromTarget(value: ISolicitudProyectoPresupuesto): ISolicitudProyectoPresupuestoBackend {
+  fromTarget(value: ISolicitudProyectoPresupuesto): ISolicitudProyectoPresupuestoResponse {
     if (!value) {
-      return value as unknown as ISolicitudProyectoPresupuestoBackend;
+      return value as unknown as ISolicitudProyectoPresupuestoResponse;
     }
     return {
       id: value.id,
       solicitudProyectoId: value.solicitudProyectoId,
       solicitudProyectoEntidadId: value.solicitudProyectoEntidad?.id,
-      conceptoGasto: value.conceptoGasto,
+      conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.fromTarget(value.conceptoGasto) : null,
       anualidad: value.anualidad,
       importeSolicitado: value.importeSolicitado,
       importePresupuestado: value.importePresupuestado,

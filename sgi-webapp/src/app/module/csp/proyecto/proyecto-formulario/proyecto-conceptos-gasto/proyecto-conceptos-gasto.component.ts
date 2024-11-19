@@ -19,6 +19,7 @@ import { CONVOCATORIA_CONCEPTO_GASTO_ID_KEY } from '../../../proyecto-concepto-g
 import { PROYECTO_ROUTE_NAMES } from '../../proyecto-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ConceptoGastoListado, ProyectoConceptosGastoFragment } from './proyecto-conceptos-gasto.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_CODIGO_ECONOMICO = marker('msg.csp.proyecto-concepto-gasto.listado.codigo-economico.delete');
@@ -73,6 +74,7 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
     private dialogService: DialogService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.ELEGIBILIDAD, actionService, translate);
     this.formPart = this.fragment as ProyectoConceptosGastoFragment;
@@ -108,18 +110,22 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
     }));
 
     this.dataSourcePermitidos.sortingDataAccessor =
-      (wrapper: ConceptoGastoListado, property: string) => {
+      (listadocg: ConceptoGastoListado, property: string) => {
         switch (property) {
+          case 'conceptoGasto.nombre':
+            return listadocg?.conceptoGasto ? this.languageService.getFieldValue(listadocg.conceptoGasto) : '';
           default:
-            return wrapper[property];
+            return listadocg[property];
         }
       };
 
     this.dataSourceNoPermitidos.sortingDataAccessor =
-      (wrapper: ConceptoGastoListado, property: string) => {
+      (listadocg: ConceptoGastoListado, property: string) => {
         switch (property) {
+          case 'conceptoGasto.nombre':
+            return listadocg?.conceptoGasto ? this.languageService.getFieldValue(listadocg.conceptoGasto) : '';
           default:
-            return wrapper[property];
+            return listadocg[property];
         }
       };
   }
@@ -194,7 +200,7 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
   }
 
   displayerCosteIndirecto(costeIndirecto: IProyectoConceptoGasto): string {
-    const nombreCosteIndirecto = costeIndirecto?.conceptoGasto?.nombre;
+    const nombreCosteIndirecto = costeIndirecto?.conceptoGasto?.nombre ? this.languageService.getFieldValue(costeIndirecto.conceptoGasto.nombre) : '';
     let mesesCosteIndirecto = '';
     if (costeIndirecto?.fechaInicio) {
       mesesCosteIndirecto = ' (' + costeIndirecto.fechaInicio + (costeIndirecto.fechaFin ? (' - ' + costeIndirecto.fechaFin) : '') + ')';

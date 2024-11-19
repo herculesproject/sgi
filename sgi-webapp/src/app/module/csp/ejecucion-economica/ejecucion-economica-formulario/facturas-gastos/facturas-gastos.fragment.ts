@@ -6,7 +6,9 @@ import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
@@ -26,9 +28,11 @@ export class FacturasGastosFragment extends FacturasJustificantesFragment {
     proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     proyectoConceptoGastoService: ProyectoConceptoGastoService,
     configuracion: IConfiguracion,
+    languageService: LanguageService,
+    private readonly translateService: TranslateService
   ) {
     super(key, proyectoSge, relaciones, proyectoService, proyectoAnualidadService,
-      gastoProyectoService, proyectoConceptoGastoCodigoEcService, proyectoConceptoGastoService, configuracion);
+      gastoProyectoService, proyectoConceptoGastoCodigoEcService, proyectoConceptoGastoService, configuracion, languageService, translateService);
   }
 
   protected onInitialize(): void {

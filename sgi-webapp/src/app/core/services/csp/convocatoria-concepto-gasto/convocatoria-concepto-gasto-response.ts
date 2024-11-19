@@ -1,10 +1,10 @@
-import { IConceptoGasto } from '../concepto-gasto';
+import { IConceptoGastoResponse } from '@core/services/csp/concepto-gasto/concepto-gasto-response';
 
-export interface IConvocatoriaConceptoGastoBackend {
+export interface IConvocatoriaConceptoGastoResponse {
   /** id */
   id: number;
   /** ConceptoGasto */
-  conceptoGasto: IConceptoGasto;
+  conceptoGasto: IConceptoGastoResponse;
   /** Id de Convocatoria */
   convocatoriaId: number;
   /** Observaciones */

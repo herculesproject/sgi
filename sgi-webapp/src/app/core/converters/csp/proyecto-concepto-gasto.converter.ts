@@ -1,17 +1,18 @@
-import { IProyectoConceptoGastoBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-backend';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
+import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '@core/services/csp/concepto-gasto/concepto-gasto-response.converter';
+import { IProyectoConceptoGastoResponse } from '@core/services/csp/proyecto-concepto-gasto/proyecto-concepto-gasto-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
-class ProyectoConceptoGastoConverter extends SgiBaseConverter<IProyectoConceptoGastoBackend, IProyectoConceptoGasto> {
+class ProyectoConceptoGastoConverter extends SgiBaseConverter<IProyectoConceptoGastoResponse, IProyectoConceptoGasto> {
 
-  toTarget(value: IProyectoConceptoGastoBackend): IProyectoConceptoGasto {
+  toTarget(value: IProyectoConceptoGastoResponse): IProyectoConceptoGasto {
     if (!value) {
       return value as unknown as IProyectoConceptoGasto;
     }
     return {
       id: value.id,
-      conceptoGasto: value.conceptoGasto,
+      conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.toTarget(value.conceptoGasto) : null,
       proyectoId: value.proyectoId,
       observaciones: value.observaciones,
       importeMaximo: value.importeMaximo,
@@ -22,13 +23,13 @@ class ProyectoConceptoGastoConverter extends SgiBaseConverter<IProyectoConceptoG
     };
   }
 
-  fromTarget(value: IProyectoConceptoGasto): IProyectoConceptoGastoBackend {
+  fromTarget(value: IProyectoConceptoGasto): IProyectoConceptoGastoResponse {
     if (!value) {
-      return value as unknown as IProyectoConceptoGastoBackend;
+      return value as unknown as IProyectoConceptoGastoResponse;
     }
     return {
       id: value.id,
-      conceptoGasto: value.conceptoGasto,
+      conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.fromTarget(value.conceptoGasto) : null,
       proyectoId: value.proyectoId,
       observaciones: value.observaciones,
       importeMaximo: value.importeMaximo,

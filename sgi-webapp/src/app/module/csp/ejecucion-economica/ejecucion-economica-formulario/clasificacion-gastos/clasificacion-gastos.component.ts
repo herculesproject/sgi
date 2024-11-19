@@ -20,6 +20,7 @@ import { DatoEconomicoDetalleClasificacionModalData, FacturasJustificantesClasif
 import { GastosClasficadosSgiEnum } from '../facturas-justificantes.fragment';
 import { ClasificacionGasto, ClasificacionGastosFragment } from './clasificacion-gastos.fragment';
 import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '@core/services/language.service';
 
 const MODAL_CLASIFICACION_TITLE_KEY = marker('title.csp.ejecucion-economica.clasificacion.detalle-gasto');
 const MSG_ACCEPT_CLASIFICACION = marker('csp.ejecucion-economica.clasificacion-gastos.aceptar');
@@ -57,7 +58,8 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
     private ejecucionEconomicaService: EjecucionEconomicaService,
     private gastoProyectoService: GastoProyectoService,
     private proyectoProyectoSgeService: ProyectoProyectoSgeService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.CLASIFICACION_GASTOS, actionService, translate);
     this.formPart = this.fragment as ClasificacionGastosFragment;
@@ -77,7 +79,7 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
         case 'clasificacionSGE':
           return gasto.clasificacionSGE?.nombre;
         case 'conceptoGasto':
-          return gasto.conceptoGasto?.nombre;
+          return gasto.conceptoGasto?.nombre ? this.languageService.getFieldValue(gasto.conceptoGasto.nombre) : '';
         case 'aplicacionPresupuestaria':
           return gasto.partidaPresupuestaria;
         case 'codigoEconomico':

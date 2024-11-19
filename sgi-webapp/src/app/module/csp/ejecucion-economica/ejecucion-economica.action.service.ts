@@ -17,10 +17,12 @@ import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp
 import { ProyectoSeguimientoJustificacionService } from '@core/services/csp/proyecto-seguimiento-justificacion/proyecto-seguimiento-justificacion.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
+import { LanguageService } from '@core/services/language.service';
 import { CalendarioFacturacionService } from '@core/services/sge/calendario-facturacion.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
 import { GastoService } from '@core/services/sge/gasto/gasto.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
+import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { EJECUCION_ECONOMICA_DATA_KEY } from './ejecucion-economica-data.resolver';
 import { ClasificacionGastosFragment } from './ejecucion-economica-formulario/clasificacion-gastos/clasificacion-gastos.fragment';
@@ -111,7 +113,9 @@ export class EjecucionEconomicaActionService extends ActionService {
     proyectoProyectoSgeService: ProyectoProyectoSgeService,
     proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     proyectoSeguimientoJustificacionService: ProyectoSeguimientoJustificacionService,
-    proyectoPeriodoJustificacionSeguimientoService: ProyectoPeriodoJustificacionSeguimientoService
+    proyectoPeriodoJustificacionSeguimientoService: ProyectoPeriodoJustificacionSeguimientoService,
+    private readonly languageService: LanguageService,
+    private readonly translateService: TranslateService
   ) {
     super();
 
@@ -190,19 +194,19 @@ export class EjecucionEconomicaActionService extends ActionService {
       id, this.data.proyectoSge, this.data.relaciones,
       proyectoService, proyectoAnualidadService,
       gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
-      proyectoConceptoGastoService, this.data.configuracion);
+      proyectoConceptoGastoService, this.data.configuracion, this.languageService, this.translateService);
 
     this.viajesDietas = new ViajesDietasFragment(
       id, this.data.proyectoSge, this.data.relaciones,
       proyectoService, proyectoAnualidadService,
       gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
-      proyectoConceptoGastoService, this.data.configuracion);
+      proyectoConceptoGastoService, this.data.configuracion, this.languageService, this.translateService);
 
     this.personalContratado = new PersonalContratadoFragment(
       id, this.data.proyectoSge, this.data.relaciones,
       proyectoService, proyectoAnualidadService,
       gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
-      proyectoConceptoGastoService, this.data.configuracion);
+      proyectoConceptoGastoService, this.data.configuracion, this.languageService, this.translateService);
 
     this.clasificacionGastos = new ClasificacionGastosFragment(
       id,
@@ -213,7 +217,8 @@ export class EjecucionEconomicaActionService extends ActionService {
       gastoProyectoService,
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,
-      this.data.configuracion
+      this.data.configuracion,
+      this.translateService
     );
 
     this.validacionGastos = new ValidacionGastosFragment(

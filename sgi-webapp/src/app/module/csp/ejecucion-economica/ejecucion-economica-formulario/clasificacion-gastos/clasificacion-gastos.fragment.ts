@@ -1,3 +1,5 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { Language } from '@core/i18n/language';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { CardinalidadRelacionSgiSge, IConfiguracion } from '@core/models/csp/configuracion';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
@@ -19,6 +21,7 @@ import { concatAll, concatMap, map, mergeMap, switchMap, takeLast, tap } from 'r
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IColumnDefinition } from '../desglose-economico.fragment';
 import { GastosClasficadosSgiEnum } from '../facturas-justificantes.fragment';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface ClasificacionGasto extends IDatoEconomico {
   proyecto: IProyecto;
@@ -57,7 +60,8 @@ export class ClasificacionGastosFragment extends Fragment {
     private gastoProyectoService: GastoProyectoService,
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
-    private readonly config: IConfiguracion
+    private readonly config: IConfiguracion,
+    private readonly translate: TranslateService
   ) {
     super(key);
     this.setComplete(true);
@@ -233,7 +237,7 @@ export class ClasificacionGastosFragment extends Fragment {
           return of(datoEconomico);
         } else {
           datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
-          datoEconomico.conceptoGasto = { nombre: 'Sin clasificar' } as IConceptoGasto;
+          datoEconomico.conceptoGasto = { nombre: [{ lang: Language.ES, value: this.translate.instant('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar') } as I18nFieldValue] } as IConceptoGasto;
           return of(datoEconomico);
         }
       })

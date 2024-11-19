@@ -19,6 +19,10 @@ import { Observable, from, of } from 'rxjs';
 import { combineAll, concatMap, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 import { DesgloseEconomicoFragment, IColumnDefinition, IDesgloseEconomicoExportData, IRowConfig, RowTreeDesglose } from './desglose-economico.fragment';
+import { LanguageService } from '@core/services/language.service';
+import { Language } from '@core/i18n/language';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface IDesglose extends IDatoEconomico {
   proyecto: IProyecto;
@@ -79,6 +83,8 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private configuracion: IConfiguracion,
+    private readonly languageService: LanguageService,
+    private readonly translate: TranslateService
   ) {
     super(key, proyectoSge, relaciones, proyectoService, proyectoAnualidadService, configuracion);
     this.setComplete(true);
@@ -467,14 +473,14 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
       return 0;
     }
 
-    const nombreConceptoGastoItemA = this.getItemLevel(itemA, 1)?.item?.conceptoGasto?.nombre ?? '';
-    const nombreConceptoGastoItemB = this.getItemLevel(itemB, 1)?.item?.conceptoGasto?.nombre ?? '';
+    const nombreConceptoGastoItemA = this.getItemLevel(itemA, 1)?.item?.conceptoGasto?.nombre ? this.languageService.getFieldValue(this.getItemLevel(itemA, 1)?.item?.conceptoGasto?.nombre) : '';
+    const nombreConceptoGastoItemB = this.getItemLevel(itemB, 1)?.item?.conceptoGasto?.nombre ? this.languageService.getFieldValue(this.getItemLevel(itemB, 1)?.item?.conceptoGasto?.nombre) : '';
     return nombreConceptoGastoItemA.localeCompare(nombreConceptoGastoItemB);
   }
 
   protected compareConceptoGastoNombreDesglose(itemA: IDesglose, itemB: IDesglose): number {
-    const nombreConceptoGastoItemA = itemA?.conceptoGasto?.nombre ?? '';
-    const nombreConceptoGastoItemB = itemB?.conceptoGasto?.nombre ?? '';
+    const nombreConceptoGastoItemA = itemA?.conceptoGasto?.nombre ? this.languageService.getFieldValue(itemA?.conceptoGasto?.nombre) : '';
+    const nombreConceptoGastoItemB = itemB?.conceptoGasto?.nombre ? this.languageService.getFieldValue(itemB?.conceptoGasto?.nombre) : '';
     return nombreConceptoGastoItemA.localeCompare(nombreConceptoGastoItemB);
   }
 
@@ -627,7 +633,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
         }
         else {
           datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
-          datoEconomico.conceptoGasto = { nombre: 'Sin clasificar' } as IConceptoGasto;
+          datoEconomico.conceptoGasto = { nombre: [{ lang: Language.ES, value: this.translate.instant('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar') } as I18nFieldValue] } as IConceptoGasto;
         }
         return datoEconomico;
       }),
@@ -648,7 +654,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
   private fillDatoEconomicoClasificacionWithElegibilidad(datoEconomico: IDesglose): Observable<IDesglose> {
     if (!datoEconomico.codigoEconomico?.id) {
       datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
-      datoEconomico.conceptoGasto = { nombre: 'Sin clasificar' } as IConceptoGasto;
+      datoEconomico.conceptoGasto = { nombre: [{ lang: Language.ES, value: this.translate.instant('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar') } as I18nFieldValue] } as IConceptoGasto;
       return of(datoEconomico);
     }
 
@@ -695,7 +701,7 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
           return of(datoEconomico);
         } else {
           datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
-          datoEconomico.conceptoGasto = { nombre: 'Sin clasificar' } as IConceptoGasto;
+          datoEconomico.conceptoGasto = { nombre: [{ lang: Language.ES, value: this.translate.instant('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar') } as I18nFieldValue] } as IConceptoGasto;
           return of(datoEconomico);
         }
       })

@@ -16,6 +16,7 @@ import { GastoDetalleModalData as GastoDetalleEditarModalData, ValidacionGastosE
 import { ValidacionGastosHistoricoModalComponent } from '../../modals/validacion-gastos-historico-modal/validacion-gastos-historico-modal.component';
 import { GastoDetalleModalData, ValidacionGastosModalComponent } from '../../modals/validacion-gastos-modal/validacion-gastos-modal.component';
 import { ESTADO_TIPO_MAP, EstadoTipo, ValidacionGasto, ValidacionGastosFragment } from './validacion-gastos.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 @Component({
   selector: 'sgi-validacion-gastos',
@@ -40,6 +41,7 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
     private matDialog: MatDialog,
     private gastoService: GastoService,
     private gastoProyectoService: GastoProyectoService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.VALIDACION_GASTOS, actionService);
     this.formPart = this.fragment as ValidacionGastosFragment;
@@ -59,7 +61,7 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
         case 'clasificacionSGE':
           return gasto.clasificacionSGE?.nombre;
         case 'conceptoGasto':
-          return gasto.conceptoGasto?.nombre;
+          return gasto.conceptoGasto?.nombre ? this.languageService.getFieldValue(gasto.conceptoGasto.nombre) : '';
         case 'aplicacionPresupuestaria':
           return gasto.partidaPresupuestaria;
         case 'codigoEconomico':
@@ -73,9 +75,11 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
     this.subscriptions.push(this.formPart.gastos$.subscribe(
       (data) => {
         data.sort((a, b) => {
+          const conceptoGastoA = a.conceptoGasto?.nombre ? this.languageService.getFieldValue(a.conceptoGasto.nombre) : '';
+          const conceptoGastoB = b.conceptoGasto?.nombre ? this.languageService.getFieldValue(b.conceptoGasto.nombre) : '';
           return b.anualidad.localeCompare(a.anualidad)
             || a.proyecto?.titulo.localeCompare(b.proyecto?.titulo)
-            || a.conceptoGasto?.nombre.localeCompare(b.conceptoGasto?.nombre)
+            || conceptoGastoA.localeCompare(conceptoGastoB)
             || a.clasificacionSGE?.nombre.localeCompare(b.clasificacionSGE?.nombre)
             || a.partidaPresupuestaria.localeCompare(b.partidaPresupuestaria)
             || `${a.codigoEconomico?.id} ${a.codigoEconomico?.nombre ? '-' : ''} ${a.codigoEconomico?.nombre}`

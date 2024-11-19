@@ -17,6 +17,7 @@ import { NGXLogger } from 'ngx-logger';
 import { from, merge, Observable, of } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { IConvocatoriaReportData, IConvocatoriaReportOptions } from './convocatoria-listado-export.service';
+import { LanguageService } from '@core/services/language.service';
 
 const ELEGIBILIDAD_KEY = marker('csp.convocatoria-elegibilidad');
 const CONCEPTO_GASTO_CODIGO_ECONOMICO_KEY = marker('csp.convocatoria-elegibilidad.codigo-economico');
@@ -58,6 +59,7 @@ export class ConvocatoriaConceptoGastoListadoExportService extends AbstractTable
     private readonly convocatoriaService: ConvocatoriaService,
     private readonly convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
     private readonly codigoEconomicoGastoService: CodigoEconomicoGastoService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -330,7 +332,7 @@ export class ConvocatoriaConceptoGastoListadoExportService extends AbstractTable
     }).forEach(convocatoriaConceptoGasto => {
       const conceptoGastoElementsRow: any[] = [];
 
-      let content = convocatoriaConceptoGasto.conceptoGasto?.nombre ?? '';
+      let content = convocatoriaConceptoGasto.conceptoGasto?.nombre ? this.languageService.getFieldValue(convocatoriaConceptoGasto.conceptoGasto.nombre) : '';
       content += '\n';
       content += convocatoriaConceptoGasto.importeMaximo ?? '';
       content += '\n';
@@ -368,7 +370,7 @@ export class ConvocatoriaConceptoGastoListadoExportService extends AbstractTable
     convocatoriaConceptoGasto: IConvocatoriaConceptoGastoListadoExport,
     maxNumCodigosConceptosGastos: number) {
     if (convocatoriaConceptoGasto) {
-      elementsRow.push(convocatoriaConceptoGasto.conceptoGasto?.nombre ?? '');
+      elementsRow.push(convocatoriaConceptoGasto.conceptoGasto?.nombre ? this.languageService.getFieldValue(convocatoriaConceptoGasto.conceptoGasto.nombre) : '');
       elementsRow.push(convocatoriaConceptoGasto.importeMaximo ?? '');
       elementsRow.push(convocatoriaConceptoGasto?.mesInicial ? convocatoriaConceptoGasto?.mesInicial.toString() ?? '' : '');
       elementsRow.push(convocatoriaConceptoGasto?.mesFinal ? convocatoriaConceptoGasto?.mesFinal.toString() ?? '' : '');

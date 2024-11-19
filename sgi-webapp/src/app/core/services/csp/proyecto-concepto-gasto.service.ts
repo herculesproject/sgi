@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto-codigo-ec.converter';
 import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
-import { IProyectoConceptoGastoBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-backend';
 import { IProyectoConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-codigo-ec-backend';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { IProyectoConceptoGastoCodigoEc } from '@core/models/csp/proyecto-concepto-gasto-codigo-ec';
@@ -12,12 +11,13 @@ import {
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IProyectoConceptoGastoResponse } from './proyecto-concepto-gasto/proyecto-concepto-gasto-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectoConceptoGastoService
-  extends SgiMutableRestService<number, IProyectoConceptoGastoBackend, IProyectoConceptoGasto> {
+  extends SgiMutableRestService<number, IProyectoConceptoGastoResponse, IProyectoConceptoGasto> {
   private static readonly MAPPING = '/proyectoconceptosgasto';
 
   constructor(protected http: HttpClient) {
@@ -36,7 +36,7 @@ export class ProyectoConceptoGastoService
         .and('permitido', SgiRestFilterOperator.EQUALS, permitido.toString()),
     };
 
-    return this.find<IProyectoConceptoGastoBackend, IProyectoConceptoGasto>(
+    return this.find<IProyectoConceptoGastoResponse, IProyectoConceptoGasto>(
       this.endpointUrl,
       options,
       PROYECTO_CONCEPTO_GASTO_CONVERTER

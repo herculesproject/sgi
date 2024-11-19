@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto-codigo-ec.converter';
-import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto.converter';
-import { IConvocatoriaConceptoGastoBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-backend';
 import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-codigo-ec-backend';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
@@ -10,12 +8,14 @@ import { environment } from '@env';
 import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
+import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto.converter';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConvocatoriaConceptoGastoService
-  extends SgiMutableRestService<number, IConvocatoriaConceptoGastoBackend, IConvocatoriaConceptoGasto> {
+  extends SgiMutableRestService<number, IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto> {
   private static readonly MAPPING = '/convocatoriaconceptogastos';
 
   constructor(protected http: HttpClient) {

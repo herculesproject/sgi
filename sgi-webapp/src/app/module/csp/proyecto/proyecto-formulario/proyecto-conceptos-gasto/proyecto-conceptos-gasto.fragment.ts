@@ -13,6 +13,7 @@ import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable, Subject, from, merge, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { compareConceptoGasto, getFechaFinConceptoGasto, getFechaInicioConceptoGasto } from '../../../proyecto-concepto-gasto/proyecto-concepto-gasto.utils';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 const PROYECTO_CONCEPTO_GASTO_NO_COINCIDE_KEY = marker('info.csp.proyecto-concepto-gasto.no-coincide-convocatoria');
 const PROYECTO_CONCEPTO_GASTO_CODIGOS_ECONONOMICOS_NO_COINCIDE_KEY = marker('info.csp.proyecto-concepto-gasto.codigo-economicos-no-coinciden-convocatoria');
@@ -33,7 +34,7 @@ export interface ConceptoGastoListado {
   proyectoConceptoGasto: StatusWrapper<IProyectoConceptoGasto>;
   convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
   help: HelpIcon;
-  conceptoGasto: string;
+  conceptoGasto: I18nFieldValue[];
   descripcion: string;
   costesIndirectos: boolean;
   importeMaximo: number;

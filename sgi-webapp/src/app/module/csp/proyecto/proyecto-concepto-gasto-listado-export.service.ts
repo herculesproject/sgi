@@ -9,6 +9,7 @@ import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
@@ -16,7 +17,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
-import { from, merge, Observable, of } from 'rxjs';
+import { Observable, from, merge, of } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { IProyectoReportData, IProyectoReportOptions } from './proyecto-listado-export.service';
 
@@ -60,8 +61,8 @@ export class ProyectoConceptoGastoListadoExportService extends AbstractTableExpo
     private readonly proyectoService: ProyectoService,
     private readonly proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private readonly codigoEconomicoGastoService: CodigoEconomicoGastoService,
-
-    private readonly luxonDatePipe: LuxonDatePipe
+    private readonly luxonDatePipe: LuxonDatePipe,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -332,7 +333,7 @@ export class ProyectoConceptoGastoListadoExportService extends AbstractTableExpo
     }).forEach(proyectoConceptoGasto => {
       const conceptoGastoElementsRow: any[] = [];
 
-      let content = proyectoConceptoGasto.conceptoGasto?.nombre ?? '';
+      let content = proyectoConceptoGasto?.conceptoGasto?.nombre ? this.languageService.getFieldValue(proyectoConceptoGasto.conceptoGasto.nombre) : '';
       content += '\n';
       content += proyectoConceptoGasto.importeMaximo ?? '';
       content += '\n';
@@ -370,7 +371,7 @@ export class ProyectoConceptoGastoListadoExportService extends AbstractTableExpo
     proyectoConceptoGasto: IProyectoConceptoGastoListadoExport,
     maxNumCodigosConceptosGastos: number) {
     if (proyectoConceptoGasto) {
-      elementsRow.push(proyectoConceptoGasto.conceptoGasto?.nombre ?? '');
+      elementsRow.push(proyectoConceptoGasto.conceptoGasto?.nombre ? this.languageService.getFieldValue(proyectoConceptoGasto.conceptoGasto.nombre) : '');
       elementsRow.push(proyectoConceptoGasto.importeMaximo ?? '');
       elementsRow.push(LuxonUtils.toBackend(proyectoConceptoGasto?.fechaInicio) ?? '');
       elementsRow.push(LuxonUtils.toBackend(proyectoConceptoGasto?.fechaFin) ?? '');

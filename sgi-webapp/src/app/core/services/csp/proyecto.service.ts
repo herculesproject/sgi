@@ -5,7 +5,6 @@ import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-
 import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto-codigo-ec.converter';
 import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
 import { PROYECTO_CONTEXTO_CONVERTER } from '@core/converters/csp/proyecto-contexto.converter';
-import { PROYECTO_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-documento/proyecto-documento-response.converter';
 import { PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/proyecto-entidad-convocante.converter';
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
@@ -20,10 +19,8 @@ import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { IProyectoAreaConocimientoBackend } from '@core/models/csp/backend/proyecto-area-conocimiento-backend';
 import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
 import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto-clasificacion-backend';
-import { IProyectoConceptoGastoBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-backend';
 import { IProyectoConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-codigo-ec-backend';
 import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
-import { IProyectoDocumentoResponse } from '@core/services/csp/proyecto-documento/proyecto-documento-response';
 import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proyecto-entidad-convocante-backend';
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
@@ -68,6 +65,8 @@ import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-just
 import { ESTADO_PROYECTO_REQUEST_CONVERTER } from '@core/services/csp/estado-proyecto/estado-proyecto-request.converter';
 import { IEstadoProyectoResponse } from '@core/services/csp/estado-proyecto/estado-proyecto-response';
 import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/estado-proyecto/estado-proyecto-response.converter';
+import { IProyectoDocumentoResponse } from '@core/services/csp/proyecto-documento/proyecto-documento-response';
+import { PROYECTO_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-documento/proyecto-documento-response.converter';
 import { environment } from '@env';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
@@ -90,6 +89,7 @@ import { IProyectoAnualidadResponse } from './proyecto-anualidad/proyecto-anuali
 import { PROYECTO_ANUALIDAD_RESPONSE_CONVERTER } from './proyecto-anualidad/proyecto-anualidad-response.converter';
 import { IProyectoAnualidadResumenResponse } from './proyecto-anualidad/proyecto-anualidad-resumen-response';
 import { PROYECTO_ANUALIDAD_RESUMEN_RESPONSE_CONVERTER } from './proyecto-anualidad/proyecto-anualidad-resumen-response.converter';
+import { IProyectoConceptoGastoResponse } from './proyecto-concepto-gasto/proyecto-concepto-gasto-response';
 import { IProyectoEquipoResponse } from './proyecto-equipo/proyecto-equipo-response';
 import { PROYECTO_EQUIPO_RESPONSE_CONVERTER } from './proyecto-equipo/proyecto-equipo-response.converter';
 import { IProyectoFacturacionResponse } from './proyecto-facturacion/proyecto-facturacion-response';
@@ -105,6 +105,7 @@ import { IProyectoPartidaPresupuestariaResponse } from './proyecto-partida-presu
 import { PROYECTO_PARTIDA_PRESUPUESTARIA_RESPONSE_CONVERTER } from './proyecto-partida-presupuestaria/proyecto-partida-presupuestaria-response.converter';
 import { IProyectoPeriodoJustificacionResponse } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response';
 import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
+import { IProyectoPeriodoSeguimientoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
 import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico/proyecto-responsable-economico-response';
 import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
 import { IProyectoSocioResponse } from './proyecto-socio/proyecto-socio-response';
@@ -113,7 +114,6 @@ import { IProyectosCompetitivosPersonasResponse } from './proyectos-competitivos
 import { PROYECTOS_COMPETITIVOS_PERSONAS_RESPONSE_CONVERTER } from './proyectos-competitivos-personas/proyectos-competitivos-personas-response.converter';
 import { IRequerimientoJustificacionResponse } from './requerimiento-justificacion/requerimiento-justificacion-response';
 import { REQUERIMIENTO_JUSTIFICACION_RESPONSE_CONVERTER } from './requerimiento-justificacion/requerimiento-justificacion-response.converter';
-import { IProyectoPeriodoSeguimientoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
 
 @Injectable({
   providedIn: 'root'
@@ -572,7 +572,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options opciones de búsqueda.
    */
   findAllProyectoConceptosGastoPermitidos(id: number): Observable<SgiRestListResult<IProyectoConceptoGasto>> {
-    return this.find<IProyectoConceptoGastoBackend, IProyectoConceptoGasto>(
+    return this.find<IProyectoConceptoGastoResponse, IProyectoConceptoGasto>(
       `${this.endpointUrl}/${id}/proyectoconceptosgasto/permitidos`,
       undefined,
       PROYECTO_CONCEPTO_GASTO_CONVERTER
@@ -585,7 +585,7 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param options opciones de búsqueda.
    */
   findAllProyectoConceptosGastoNoPermitidos(id: number): Observable<SgiRestListResult<IProyectoConceptoGasto>> {
-    return this.find<IProyectoConceptoGastoBackend, IProyectoConceptoGasto>(
+    return this.find<IProyectoConceptoGastoResponse, IProyectoConceptoGasto>(
       `${this.endpointUrl}/${id}/proyectoconceptosgasto/nopermitidos`,
       undefined,
       PROYECTO_CONCEPTO_GASTO_CONVERTER
