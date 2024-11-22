@@ -76,6 +76,7 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
@@ -1045,7 +1046,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   private void createInformeAllLanguages(String tituloInforme, Informe informe, Long idMemoria, Long idFormulario) {
-    for (Language lang : cnfService.getAvailableLanguages()) {
+    for (Language lang : I18nConfig.get().getEnabledLanguages()) {
       Resource informePdf = reportService.getMXX(idMemoria, idFormulario, lang);
       // Se sube el informe a sgdoc
       String fileName = tituloInforme + "_" + idMemoria + LocalDate.now() + ".pdf";

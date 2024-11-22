@@ -46,6 +46,7 @@ import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiBlockchainService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -651,7 +652,7 @@ public class ActaServiceImpl implements ActaService {
   }
 
   private void generarDocumentosActa(Long idActa) {
-    for (Language language : configService.getAvailableLanguages()) {
+    for (Language language : I18nConfig.get().getEnabledLanguages()) {
       ActaDocumento actaDocumento = null;
       Resource informePdf = reportService.getInformeActa(idActa, language);
       // Se sube el informe a sgdoc

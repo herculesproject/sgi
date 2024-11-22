@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
+import org.crue.hercules.sgi.eti.dto.DocumentoOutput;
 import org.crue.hercules.sgi.eti.dto.MemoriaInput;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
@@ -31,6 +32,7 @@ import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.MemoriaTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -65,6 +67,7 @@ import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
@@ -72,6 +75,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -870,6 +874,13 @@ class MemoriaServiceTest extends BaseServiceTest {
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 4L);
     Evaluacion evaluacionNueva = generarMockEvaluacion(null, String.format("%03d", 1), 4L, 1L, 2);
 
+    BDDMockito
+        .given(informeService.create(ArgumentMatchers.any(Informe.class)))
+        .willAnswer(AdditionalAnswers.returnsFirstArg());
+    BDDMockito
+        .given(sgdocService.uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.nullable(Resource.class)))
+        .willReturn(new DocumentoOutput());
+
     memoriaService.enviarSecretaria(memoria.getId(), "user-001");
 
     Assertions.assertThat(memoriaActualizada.getId()).isEqualTo(1L);
@@ -904,6 +915,13 @@ class MemoriaServiceTest extends BaseServiceTest {
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 18L);
     Evaluacion evaluacionNueva = generarMockEvaluacion(null, String.format("%03d", 1), 18L, 1L, 2);
 
+    BDDMockito
+        .given(informeService.create(ArgumentMatchers.any(Informe.class)))
+        .willAnswer(AdditionalAnswers.returnsFirstArg());
+    BDDMockito
+        .given(sgdocService.uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.nullable(Resource.class)))
+        .willReturn(new DocumentoOutput());
+
     // when: enviamos la memoria
     memoriaService.enviarSecretaria(memoria.getId(), "user-001");
 
@@ -929,6 +947,13 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 12L);
 
+    BDDMockito
+        .given(informeService.create(ArgumentMatchers.any(Informe.class)))
+        .willAnswer(AdditionalAnswers.returnsFirstArg());
+    BDDMockito
+        .given(sgdocService.uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.nullable(Resource.class)))
+        .willReturn(new DocumentoOutput());
+
     // when: enviamos la memoria
     memoriaService.enviarSecretaria(memoria.getId(), "user-001");
 
@@ -951,6 +976,13 @@ class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(memoriaRepository.findById(1L)).willReturn(Optional.of(memoria));
 
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 17L);
+
+    BDDMockito
+        .given(informeService.create(ArgumentMatchers.any(Informe.class)))
+        .willAnswer(AdditionalAnswers.returnsFirstArg());
+    BDDMockito
+        .given(sgdocService.uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.nullable(Resource.class)))
+        .willReturn(new DocumentoOutput());
 
     // when: enviamos la memoria
     memoriaService.enviarSecretaria(memoria.getId(), "user-001");
@@ -975,6 +1007,13 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 3L);
 
+    BDDMockito
+        .given(informeService.create(ArgumentMatchers.any(Informe.class)))
+        .willAnswer(AdditionalAnswers.returnsFirstArg());
+    BDDMockito
+        .given(sgdocService.uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.nullable(Resource.class)))
+        .willReturn(new DocumentoOutput());
+
     // when: enviamos la memoria
     memoriaService.enviarSecretaria(memoria.getId(), "user-001");
 
@@ -998,6 +1037,13 @@ class MemoriaServiceTest extends BaseServiceTest {
 
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 3L);
 
+    BDDMockito
+        .given(informeService.create(ArgumentMatchers.any(Informe.class)))
+        .willAnswer(AdditionalAnswers.returnsFirstArg());
+    BDDMockito
+        .given(sgdocService.uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.nullable(Resource.class)))
+        .willReturn(new DocumentoOutput());
+
     // when: enviamos la memoria
     memoriaService.enviarSecretaria(memoria.getId(), "user-001");
 
@@ -1020,6 +1066,13 @@ class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(memoriaRepository.findById(1L)).willReturn(Optional.of(memoria));
 
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 3L);
+
+    BDDMockito
+        .given(informeService.create(ArgumentMatchers.any(Informe.class)))
+        .willAnswer(AdditionalAnswers.returnsFirstArg());
+    BDDMockito
+        .given(sgdocService.uploadInforme(ArgumentMatchers.anyString(), ArgumentMatchers.nullable(Resource.class)))
+        .willReturn(new DocumentoOutput());
 
     // when: enviamos la memoria
     memoriaService.enviarSecretaria(memoria.getId(), "user-001");
