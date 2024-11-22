@@ -27,12 +27,19 @@
     </update>
   </changeSet>
 
-  <changeSet context="!test" author="master" id="00.08.00-config">
+  <changeSet context="!test" author="master" id="00.08.00-config-i18n">
     <insert tableName="config">
-      <column name="name" value="web-languages-header" />
+      <column name="name" value="i18n-enabled-languages" />
       <column name="description"
-        value="Códigos de lenguas por defecto que aparecerán en la cabecera (es,en,eu)" />
-      <column name="value" value="${defaultLang}" />
+        value="Listado JSON de los códigos de idioma habilitados" />
+      <column name="value" value="[&quot;${defaultLang}&quot;]" />
+    </insert>
+
+    <insert tableName="config">
+      <column name="name" value="i18n-languages-priority" />
+      <column name="description"
+        value="Orden de prioridad de idiomas en formato JSON" />
+      <column name="value" value="[&quot;es&quot;, &quot;en&quot;, &quot;eu&quot;]" />
     </insert>
 
     <update tableName="resources">
