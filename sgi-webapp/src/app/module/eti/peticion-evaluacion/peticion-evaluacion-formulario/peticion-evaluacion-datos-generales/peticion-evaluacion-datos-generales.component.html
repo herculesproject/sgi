@@ -82,10 +82,14 @@
       <!-- Órgano financiador-->
       <mat-form-field fxFlex="40%" *ngIf="formGroup.controls.existeFinanciacion.value">
         <mat-label>{{'eti.peticion-evaluacion.organo-financiador' | translate}}</mat-label>
-        <input #nombre matInput formControlName="financiacion" type="text"
-          [required]="FormGroupUtil.hasValidator(this.formGroup,'financiacion','required')" maxlength="100">
+        <sgi-i18n-input #nombre formControlName="financiacion"
+          [required]="FormGroupUtil.hasValidator(this.formGroup,'financiacion','required')" maxlength="250">
+        </sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.financiacion.errors?.required">
           {{'error.required.entity' | translate:msgParamFinanciacionEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.financiacion.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamFinanciacionEntity}}
         </mat-error>
       </mat-form-field>
       <!-- Importe financiación-->

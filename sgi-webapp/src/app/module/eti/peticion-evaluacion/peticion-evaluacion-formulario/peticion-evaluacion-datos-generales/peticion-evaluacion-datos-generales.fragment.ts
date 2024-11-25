@@ -59,7 +59,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       tipoActividad: [{ value: null, disabled: this.readonly }, Validators.required],
       tipoInvestigacionTutelada: [{ value: null, disabled: this.readonly }],
       existeFinanciacion: [{ value: null, disabled: this.readonly }, Validators.required],
-      financiacion: [{ value: '', disabled: this.readonly }],
+      financiacion: [{ value: '', disabled: this.readonly }, I18nValidators.maxLength(250)],
       importeFinanciacion: [{ value: '', disabled: this.readonly }],
       estadoFinanciacion: [{ value: null, disabled: this.readonly }],
       fechaInicio: [{ value: null, disabled: this.readonly }, Validators.required],

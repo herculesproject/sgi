@@ -19,7 +19,7 @@ export interface IPeticionEvaluacionResponse {
   /** Existe fuente financiacion */
   existeFinanciacion: boolean;
   /** Referencia fuente financiacion */
-  fuenteFinanciacion: string;
+  fuenteFinanciacion: I18nFieldValueResponse[];
   /** Estado fuente financiacion */
   estadoFinanciacion: EstadoFinanciacion;
   /** Importe fuente financiacion */
