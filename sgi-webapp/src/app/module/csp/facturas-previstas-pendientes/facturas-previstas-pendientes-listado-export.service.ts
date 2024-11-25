@@ -105,7 +105,7 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
         }
         return from(facturasPrevistasPendientes).pipe(
           mergeMap(facturaPrevistaPendiente => {
-            return this.proyectoService.modificable(+facturaPrevistaPendiente.proyectoIdSGI).pipe(
+            return this.proyectoService.visible(+facturaPrevistaPendiente.proyectoIdSGI).pipe(
               filter(isModificableByCurrentUser => isModificableByCurrentUser),
               switchMap(() =>
                 of(facturaPrevistaPendiente).pipe(

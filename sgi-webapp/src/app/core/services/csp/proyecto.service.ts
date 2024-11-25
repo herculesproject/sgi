@@ -758,6 +758,18 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
   }
 
   /**
+   * Comprueba si tiene permisos de visualizacion del proyecto
+   *
+   * @param id Id del proyecto
+   */
+  visible(id: number): Observable<boolean> {
+    const url = `${this.endpointUrl}/${id}/visible`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(response => response.status === 200)
+    );
+  }
+
+  /**
    * Devuelve los objetos {@link IProyectoAnualidad} asociados a un {@link IProyecto}
    *
    * @param id Id del proyecto

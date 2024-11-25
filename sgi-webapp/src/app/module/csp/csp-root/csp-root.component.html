@@ -42,9 +42,9 @@
   <sgi-menu-item-external *ngIf="!!nombreSistemaGestionExterno && !!urlSistemaGestionExterno"
     [route]="urlSistemaGestionExterno" icon="logout" [title]="nombreSistemaGestionExterno">
   </sgi-menu-item-external>
-  <sgi-menu-group *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-E', 'CSP-GIN-V', 'CSP-PRO-E']"
+  <sgi-menu-group *sgiHasAnyAuthorityForAnyUO="['CSP-GIN-E', 'CSP-GIN-V', 'CSP-PRO-E', 'CSP-PRO-V']"
     title="{{'menu.csp.listados' | translate}}" icon="receipt_long">
-    <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E']"
+    <sgi-menu-subitem *sgiHasAnyAuthorityForAnyUO="['CSP-PRO-E', 'CSP-PRO-V']"
       [route]="[CSP_ROUTE_NAMES.FACTURAS_PREVISTAS_PENDIENTES]"
       title="{{'menu.csp.facturas-previstas-pendientes' | translate}}">
     </sgi-menu-subitem>

@@ -165,10 +165,16 @@
       <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
     </table>
     <div class="paginator-export">
-      <button mat-button matTooltip="{{'btn.export' | translate}}" (click)="openExportModal()"
-        [disabled]="!dataSource.data?.length">
-        <mat-icon color="primary">insert_chart_outlined</mat-icon>
-      </button>
+      <div>
+        <button mat-button matTooltip="{{'btn.export' | translate}} {{'export.type.csv' | translate}}"
+          (click)="exportCSV()" [disabled]="!dataSource.data?.length">
+          <mat-icon color="primary">text_fields</mat-icon>
+        </button>
+        <button mat-button matTooltip="{{'btn.export' | translate}} {{'export.type.xlsx' | translate}}"
+          (click)="exportXLSX()" [disabled]="!dataSource.data?.length">
+          <mat-icon color="primary">functions</mat-icon>
+        </button>
+      </div>
       <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
       </mat-paginator>
     </div>

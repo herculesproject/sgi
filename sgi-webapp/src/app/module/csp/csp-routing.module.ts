@@ -393,7 +393,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_FACTURAS_PREVISTAS_PENDIENTES_TITLE,
-          hasAuthorityForAnyUO: 'CSP-PRO-E'
+          hasAnyAuthorityForAnyUO: ['CSP-PRO-E', 'CSP-PRO-V']
         }
       },
       {

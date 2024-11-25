@@ -1,19 +1,22 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
-import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
+import { SgiError } from '@core/errors/sgi-error';
 import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
 import { ITipoFacturacion } from '@core/models/csp/tipo-facturacion';
+import { OutputReport } from '@core/models/rep/output-report.enum';
 import { IFacturaPrevistaPendiente } from '@core/models/sge/factura-prevista-pendiente';
 import { ConfigService as ConfigCnfService } from '@core/services/cnf/config.service';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { DialogService } from '@core/services/dialog.service';
+import { IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { FacturaPrevistaPendienteService } from '@core/services/sge/factura-prevista-pendiente/factura-prevista-pendiente.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -23,7 +26,10 @@ import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, forkJoin, from, Observable, of, Subscription } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
-import { FacturasPrevistasPendientesListadoExportModalComponent } from '../modals/facturas-previstas-pendientes-listado-export-modal/facturas-previstas-pendientes-listado-export-modal.component';
+import { FacturasPrevistasPendientesListadoExportService } from '../facturas-previstas-pendientes-listado-export.service';
+
+const MSG_DOWNLOAD_ERROR = marker('error.file.download');
+const WARN_EXPORT_EXCEL_KEY = marker('msg.export.max-registros-warning');
 
 export interface IFacturaPrevistaPendienteListadoData extends IFacturaPrevistaPendiente {
   fechaEmision: DateTime;
@@ -52,7 +58,7 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   private subscriptions: Subscription[] = [];
-  private limiteRegistrosExportacionExcel: string;
+  private limiteRegistrosExportacionExcel: number;
 
   get TIPO_ESTADO_VALIDACION_MAP() {
     return TIPO_ESTADO_VALIDACION_MAP;
@@ -60,12 +66,13 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly matDialog: MatDialog,
     private readonly configService: ConfigService,
     private readonly configCnfService: ConfigCnfService,
     private readonly empresaService: EmpresaService,
     private readonly facturaPrevistaPendienteService: FacturaPrevistaPendienteService,
     private readonly proyectoService: ProyectoService,
+    private readonly exportService: FacturasPrevistasPendientesListadoExportService,
+    private readonly dialogService: DialogService,
     private readonly translate: TranslateService
   ) {
     super();
@@ -83,7 +90,7 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
 
     this.subscriptions.push(
       this.configCnfService.getLimiteRegistrosExportacionExcel('csp-exp-max-num-registros-excel-listado-facturas-previstas-pendientes').subscribe(value => {
-        this.limiteRegistrosExportacionExcel = value;
+        this.limiteRegistrosExportacionExcel = value ? +value : null;
       }));
   }
 
@@ -109,8 +116,8 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
           }
           return from(facturasPrevistasPendientes).pipe(
             mergeMap(facturaPrevistaPendiente => {
-              return this.proyectoService.modificable(+facturaPrevistaPendiente.proyectoIdSGI).pipe(
-                filter(isModificableByCurrentUser => isModificableByCurrentUser),
+              return this.proyectoService.visible(+facturaPrevistaPendiente.proyectoIdSGI).pipe(
+                filter(isVisibleByCurrentUser => isVisibleByCurrentUser),
                 switchMap(() =>
                   of(facturaPrevistaPendiente).pipe(
                     switchMap(facturaPrevistaPendiente =>
@@ -163,24 +170,48 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
   }
 
   /**
-   * Clean filters an reload the table
+   * Clean filters
    */
   onClearFilters(): void {
     this.resetFilters();
-    this.onSearch();
   }
 
-  openExportModal(): void {
-    const data: IBaseExportModalData = {
-      findOptions: this.getFindOptions(),
-      totalRegistrosExportacionExcel: this.dataSource.data.length,
-      limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
-    };
+  exportCSV(): void {
+    this.export(OutputReport.CSV);
+  }
 
-    const config = {
-      data
+  exportXLSX(): void {
+    this.export(OutputReport.XLSX);
+  }
+
+  private export(outputType: OutputReport): void {
+    if (this.isTotalRegistosGreatherThanLimite(this.dataSource.data.length)) {
+      this.dialogService.showInfoDialog(WARN_EXPORT_EXCEL_KEY, { max: this.limiteRegistrosExportacionExcel });
+      return;
+    }
+
+    this.problems$.next([]);
+    this.subscriptions.push(this.exportService.export(this.getReportOptions(outputType)).subscribe(
+      () => { },
+      ((error: Error) => {
+        if (error instanceof SgiError) {
+          this.problems$.next([error]);
+        } else {
+          this.problems$.next([new SgiError(MSG_DOWNLOAD_ERROR)]);
+        }
+      })
+    ));
+  }
+
+  private getReportOptions(outputType: OutputReport): IReportConfig<IReportOptions> {
+    const reportModalData: IReportConfig<IReportOptions> = {
+      outputType
     };
-    this.matDialog.open(FacturasPrevistasPendientesListadoExportModalComponent, config);
+    return reportModalData;
+  }
+
+  private isTotalRegistosGreatherThanLimite(totalRegistrosExportacion: number): boolean {
+    return totalRegistrosExportacion && this.limiteRegistrosExportacionExcel && totalRegistrosExportacion > this.limiteRegistrosExportacionExcel;
   }
 
   private initColumns(): void {
