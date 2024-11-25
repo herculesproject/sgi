@@ -1,18 +1,4 @@
-@import "colors.scss";
-
 :host {
-  .mat-icon.danger {
-    color: map-get($sgi-custom-colors, danger);
-  }
-
-  .busqueda {
-    padding: 10px 20px 10px 20px;
-
-    .buttons-final {
-      padding: 10px 0px 10px 0px;
-    }
-  }
-
   .formulario {
     padding: 10px 20px 10px 20px;
 
@@ -31,10 +17,21 @@
     }
   }
 
+  table {
+
+    .mat-cell.mat-column-entidadesFinanciadoras,
+    .mat-cell.mat-column-comentario {
+      max-width: 10vw;
+      overflow: hidden;
+      padding-right: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
   .paginator-export {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-
 }
