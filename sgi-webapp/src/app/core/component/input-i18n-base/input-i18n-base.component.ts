@@ -112,11 +112,11 @@ export abstract class InputI18nBaseComponent
   // tslint:disable-next-line: variable-name
   private _errorStateMatcher: ErrorStateMatcher;
 
-  get availableLanguages(): Language[] {
-    return this._availableLanguages;
+  get enabledLanguages(): Language[] {
+    return this._enabledLanguages;
   }
   // tslint:disable-next-line: variable-name
-  _availableLanguages = Language.values();
+  private _enabledLanguages = Language.values();
 
   set selectedLanguage(value: Language) {
     if (this._selectedLanguage != value) {
@@ -215,7 +215,7 @@ export abstract class InputI18nBaseComponent
       // the `providers` to avoid running into a circular import.
       this.ngControl.valueAccessor = this;
     }
-    this._availableLanguages = this.languageService.getAvailableLanguages();
+    this._enabledLanguages = this.languageService.getEnabledLanguages();
     this._selectedLanguage = this.languageService.getLanguage();
     this.languageService.languageChange$.pipe(takeUntil(this._destroy)).subscribe((lang) => this.selectedLanguage = lang);
 

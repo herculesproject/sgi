@@ -4,7 +4,7 @@
       <span>{{selectedLanguage?.translateKey| translate}}
         ({{selectedLanguage.codeExtended}})</span>
     </mat-select-trigger>
-    <mat-option *ngFor="let language of availableLanguages" [value]="language">
+    <mat-option *ngFor="let language of enabledLanguages" [value]="language">
       <span>{{language.translateKey |
         translate}} ({{language.codeExtended}})</span>
     </mat-option>

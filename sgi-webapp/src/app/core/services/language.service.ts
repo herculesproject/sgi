@@ -7,7 +7,8 @@ import { environment } from '@env';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
+import { ConfigGlobal } from 'src/app/module/adm/config-global/config-global.component';
 
 
 @Injectable({
@@ -16,8 +17,10 @@ import { map } from 'rxjs/operators';
 export class LanguageService {
 
   private language: Language = Language.ES;
-  private availableLanguages: Language[] = [Language.ES];
-  private availableLanguages$: BehaviorSubject<Language[]> = new BehaviorSubject<Language[]>(this.availableLanguages);
+  private enabledLanguages: Language[] = [Language.ES];
+  private languagesPriority: Language[] = [Language.ES];
+  private readonly enabledLanguages$: BehaviorSubject<Language[]> = new BehaviorSubject<Language[]>(this.enabledLanguages);
+  private readonly languagesPriority$: BehaviorSubject<Language[]> = new BehaviorSubject<Language[]>(this.languagesPriority);
   private cookieService: CookieService;
   private translateService: TranslateService;
 
@@ -28,10 +31,23 @@ export class LanguageService {
   }
 
   async _bootstrap() {
-    this.loadAvailableLanguages().subscribe(
-      (languages) => {
-        this.availableLanguages = languages;
-        this.availableLanguages$.next(this.availableLanguages);
+    this.loadEnabledLanguages().pipe(
+      switchMap((available) => {
+        return this.loadLanguagePriority().pipe(
+          map((priorities) => {
+            return {
+              available,
+              priorities
+            }
+          })
+        )
+      })
+    ).subscribe(
+      (config) => {
+        this.enabledLanguages = config.available;
+        this.languagesPriority = config.priorities;
+        this.enabledLanguages$.next(this.enabledLanguages);
+        this.languagesPriority$.next(this.languagesPriority);
         this.initialize();
       },
       (error) => {
@@ -43,12 +59,12 @@ export class LanguageService {
     this.translateService = this.injector.get<TranslateService>(TranslateService);
   }
 
-  public getAvailableLanguages(): Language[] {
-    return this.availableLanguages;
+  public getEnabledLanguages(): Language[] {
+    return this.enabledLanguages;
   }
 
-  public onAvailableLanguagesChange(): Observable<Language[]> {
-    return this.availableLanguages$.asObservable();
+  public onEnabledLanguagesChange(): Observable<Language[]> {
+    return this.enabledLanguages$.asObservable();
   }
 
   public getLanguage(): Language {
@@ -77,7 +93,7 @@ export class LanguageService {
   }
 
   public getField<T extends I18nFieldValue>(field: T[]): T {
-    if (!Array.isArray(field)) {
+    if (!Array.isArray(field) || field?.length === 0) {
       return null;
     }
     let fieldValue = field.filter(f => f.lang === this.language);
@@ -85,9 +101,15 @@ export class LanguageService {
       return fieldValue[0];
     }
     else {
-      fieldValue = field.filter(f => f.value?.length);
-      if (fieldValue.length) {
-        return fieldValue[0];
+      let other: T[] = [];
+      let idx = 0;
+      do {
+        const lang = this.languagesPriority[idx];
+        other = field.filter(f => f.lang === lang);
+        idx++;
+      } while (other.length === 0 && idx < this.languagesPriority.length)
+      if (other.length) {
+        return other[0];
       }
       else {
         return null;
@@ -95,9 +117,15 @@ export class LanguageService {
     }
   }
 
-  private loadAvailableLanguages(): Observable<Language[]> {
-    return this.http.get<IConfigValue>(`${environment.serviceServers.cnf}/public/config/web-languages-header`).pipe(
-      map(response => response.value.split(',').map(m => Language.fromCode(m)))
+  private loadEnabledLanguages(): Observable<Language[]> {
+    return this.http.get<IConfigValue>(`${environment.serviceServers.cnf}/public/config/${ConfigGlobal.I18N_ENABLED_LANGUAGES}`).pipe(
+      map(response => JSON.parse(response.value).map(m => Language.fromCode(m)))
+    );
+  }
+
+  private loadLanguagePriority(): Observable<Language[]> {
+    return this.http.get<IConfigValue>(`${environment.serviceServers.cnf}/public/config/${ConfigGlobal.I18N_LANGUAGES_PRIORITY}`).pipe(
+      map(response => JSON.parse(response.value).map(m => Language.fromCode(m)))
     );
   }
 
@@ -105,17 +133,17 @@ export class LanguageService {
     const cookieLanguage = Language.fromCode(this.cookieService.get('sgi-locale'));
     const browserLanguage = Language.fromCode(this.translateService.getBrowserLang());
     const defaultLanguage = Language.fromCode(this.translateService.getDefaultLang())
-    if (this.availableLanguages.includes(cookieLanguage)) {
+    if (this.enabledLanguages.includes(cookieLanguage)) {
       this.switchLanguage(cookieLanguage, false)
     }
-    else if (this.availableLanguages.includes(browserLanguage)) {
+    else if (this.enabledLanguages.includes(browserLanguage)) {
       this.switchLanguage(browserLanguage, true);
     }
-    else if (this.availableLanguages.includes(defaultLanguage)) {
+    else if (this.enabledLanguages.includes(defaultLanguage)) {
       this.switchLanguage(defaultLanguage, true)
     }
     else {
-      this.switchLanguage(this.availableLanguages[0], true);
+      this.switchLanguage(this.enabledLanguages[0], true);
     }
   }
 

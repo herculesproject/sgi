@@ -77,6 +77,16 @@ export abstract class ConfigSelectMultipleComponent implements OnInit, OnDestroy
   // tslint:disable-next-line: variable-name
   private _required = false;
 
+  @Input()
+  set asJSON(value: boolean) {
+    this._asJSON = coerceBooleanProperty(value);
+  }
+  get asJSON(): boolean {
+    return this._asJSON;
+  }
+  // tslint:disable-next-line: variable-name
+  private _asJSON = false;
+
   @Output()
   readonly error = new EventEmitter<Error>();
 
@@ -109,7 +119,7 @@ export abstract class ConfigSelectMultipleComponent implements OnInit, OnDestroy
   }
 
   save(): void {
-    const newValue = this.formGroup.controls.configValue.value?.map(value => value.key).join(',');
+    const newValue = this._asJSON ? this.formGroup.controls.configValue.value?.map(value => value.key) : this.formGroup.controls.configValue.value?.map(value => value.key).join(',');
     this.subscriptions.push(
       this.updateValue(this.key, newValue)
         .subscribe(
@@ -124,7 +134,14 @@ export abstract class ConfigSelectMultipleComponent implements OnInit, OnDestroy
   }
 
   hasChanges(): boolean {
-    return this.configValue?.value !== this.formGroup.controls.configValue.value?.map(value => value.key).join(',');
+    const controlValue: string[] = this.formGroup.controls.configValue.value?.map(value => value.key);
+    const configValue: string[] = this.configValue?.value;
+    if (!!controlValue && !!configValue) {
+      if (controlValue.length === configValue.length) {
+        return !configValue.every((c) => controlValue.includes(c));
+      }
+    }
+    return true;
   }
 
   private initFormGroup(): void {
@@ -163,7 +180,7 @@ export abstract class ConfigSelectMultipleComponent implements OnInit, OnDestroy
         (configValue) => {
           const selectOption: KeyValue<string, string>[] = [];
           if (configValue?.value) {
-            const values = configValue.value.split(',');
+            const values = this.asJSON ? JSON.parse(configValue.value) : configValue.value.split(',');
             this.configValue = configValue;
             values.forEach(element => {
               selectOption.push({
@@ -182,6 +199,6 @@ export abstract class ConfigSelectMultipleComponent implements OnInit, OnDestroy
 
 
   protected abstract getValue(key: string): Observable<IConfigValue>;
-  protected abstract updateValue(key: string, newValue: string): Observable<IConfigValue>;
+  protected abstract updateValue(key: string, newValue: string[]): Observable<IConfigValue>;
 
 }

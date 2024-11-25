@@ -40,9 +40,9 @@ export class HeaderComponent implements OnDestroy {
     this.anchoPantalla = window.innerWidth;
     this.subscriptions.push(this.layout.activeModule$.subscribe((res) => this.module = res));
     this.subscriptions.push(this.configService.getNumeroLogosCabecera().subscribe((num) => this.numLogosCabecera = Number(num)));
-    this._languages = languageService.getAvailableLanguages();
+    this._languages = languageService.getEnabledLanguages();
     this._selectedLanguage = languageService.getLanguage();
-    this.subscriptions.push(languageService.onAvailableLanguagesChange().subscribe((langs) => this._languages = langs));
+    this.subscriptions.push(languageService.onEnabledLanguagesChange().subscribe((langs) => this._languages = langs));
     this.subscriptions.push(languageService.languageChange$.subscribe((lang) => this._selectedLanguage = lang));
   }
 
