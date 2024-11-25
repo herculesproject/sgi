@@ -118,9 +118,11 @@ public class PeticionEvaluacion extends BaseEntity {
   @Column(name = "existe_financiacion", nullable = false)
   private Boolean existeFinanciacion;
 
-  /** Fuente financiacion */
-  @Column(name = "fuente_financiacion", length = 250)
-  private String fuenteFinanciacion;
+   /** Fuente financiacion */
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "peticion_evaluacion_fuente_financiacion", joinColumns = @JoinColumn(name = "peticion_evaluacion_id"))
+  @Valid
+  private Set<PeticionEvaluacionFuenteFinanciacion> fuenteFinanciacion = new HashSet<>();
 
   /** Estado Financiación */
   @Column(name = "estado_financiacion", length = 50)

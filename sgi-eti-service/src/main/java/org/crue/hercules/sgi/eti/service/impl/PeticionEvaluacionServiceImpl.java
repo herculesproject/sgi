@@ -94,7 +94,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     peticionEvaluacion.setCodigo(codigoPeticionEvaluacion.toString());
 
     if (peticionEvaluacion.getExisteFinanciacion().booleanValue()) {
-      AssertHelper.fieldNotNull(peticionEvaluacion.getFuenteFinanciacion(), PeticionEvaluacion.class,
+      AssertHelper.i18nFieldNotNull(peticionEvaluacion.getFuenteFinanciacion(), PeticionEvaluacion.class,
           MSG_FIELD_FUENTE_FINANCIACION);
       AssertHelper.entityNotNull(peticionEvaluacion.getEstadoFinanciacion(), PeticionEvaluacion.class,
           EstadoFinanciacion.class);
@@ -234,7 +234,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     AssertHelper.i18nFieldNotNull(peticionEvaluacionActualizar.getTitulo(), PeticionEvaluacion.class, MSG_FIELD_TITULO);
 
     if (peticionEvaluacionActualizar.getExisteFinanciacion().booleanValue()) {
-      AssertHelper.fieldNotNull(peticionEvaluacionActualizar.getFuenteFinanciacion(), PeticionEvaluacion.class,
+      AssertHelper.i18nFieldNotNull(peticionEvaluacionActualizar.getFuenteFinanciacion(), PeticionEvaluacion.class,
           MSG_FIELD_FUENTE_FINANCIACION);
       AssertHelper.entityNotNull(peticionEvaluacionActualizar.getEstadoFinanciacion(), PeticionEvaluacion.class,
           EstadoFinanciacion.class);

@@ -1293,4 +1293,34 @@
     <dropColumn columnName="motivo" tableName="asistentes" />
   </changeSet>
 
+  <changeSet author="user (generated)" id="00.07.00-24">
+    <!-- Fuente financiación -->
+    <createTable tableName="peticion_evaluacion_fuente_financiacion">
+      <column name="peticion_evaluacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="peticion_evaluacion_fuente_financiacion"
+      columnNames="peticion_evaluacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id"
+      baseTableName="peticion_evaluacion_fuente_financiacion"
+      constraintName="FK_PETICIONEVALUACIONFUENTEFINANCIACIONPETICIONEVALUACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}peticion_evaluacion_fuente_financiacion(peticion_evaluacion_id,
+      lang,value_) SELECT id, '${defaultLang}', fuente_financiacion FROM
+      ${schemaPrefix}peticion_evaluacion WHERE fuente_financiacion IS NOT NULL</sql>
+
+    <dropColumn columnName="fuente_financiacion" tableName="peticion_evaluacion" />
+  </changeSet>
+
 </databaseChangeLog>
