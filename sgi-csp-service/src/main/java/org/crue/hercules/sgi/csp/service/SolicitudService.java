@@ -1450,7 +1450,7 @@ public class SolicitudService {
     return convocatoriaEntidadFinanciadoraRepository.existsByConvocatoriaId(convocatoriaId);
   }
 
-  private String getFuentesFinanciacion(Solicitud solicitud) {
+  private List<I18nFieldValueDto> getFuentesFinanciacion(Solicitud solicitud) {
     // Se concatenará el campo "nombre" de la entidad de los registros que
     // existan en la tabla "Convocatoria Entidad Financiadora" de la convocatoria
     // asociada a la solicitud (en caso de que la solicitud tenga asociada una
@@ -1463,9 +1463,13 @@ public class SolicitudService {
     }
     List<ConvocatoriaEntidadFinanciadora> entidadesFinanciadoras = convocatoriaEntidadFinanciadoraRepository
         .findByConvocatoriaId(convocatoriaId);
-    return entidadesFinanciadoras.stream()
+    List<I18nFieldValueDto> value = new ArrayList<>();
+    if (!entidadesFinanciadoras.isEmpty()){
+      value.add(new I18nFieldValueDto(Language.ES,  entidadesFinanciadoras.stream()
         .map(entidadFinanciadora -> entidadFinanciadora.getFuenteFinanciacion().getNombre())
-        .collect(Collectors.joining(", "));
+        .collect(Collectors.joining(", "))));
+    }
+    return value;
   }
 
   private List<I18nFieldValueDto> getResumen(SolicitudProyecto solicitudProyecto) {

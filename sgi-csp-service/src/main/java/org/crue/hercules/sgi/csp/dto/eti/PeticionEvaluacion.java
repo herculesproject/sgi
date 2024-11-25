@@ -38,7 +38,7 @@ public class PeticionEvaluacion implements Serializable {
   /** Existe financiacion */
   private Boolean existeFinanciacion;
   /** Fuente financiacion */
-  private String fuenteFinanciacion;
+  private List<I18nFieldValueDto> fuenteFinanciacion;
   /** Estado Financiación */
   private EstadoFinanciacion estadoFinanciacion;
   /** Importe Financiación */
