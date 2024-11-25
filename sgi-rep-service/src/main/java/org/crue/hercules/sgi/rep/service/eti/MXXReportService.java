@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.crue.hercules.sgi.framework.exception.NotFoundException;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDefinicionDto;
@@ -170,7 +171,7 @@ public class MXXReportService extends SgiReportDocxService {
 
   private InputStream getReportDefinitionStream(FormularioDto formulario, Language language) {
     List<Language> otherLanguages = new ArrayList<>();
-    for (Language lang : Language.values()) {
+    for (Language lang : I18nConfig.get().getEnabledLanguages()) {
       if (lang != language) {
         otherLanguages.add(lang);
       }

@@ -202,7 +202,7 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
 
   protected void addDataEvaluacion(EvaluacionDto evaluacion, HashMap<String, Object> dataReport, Language lang) {
     dataReport.put("tituloProyecto",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
     dataReport.put("referenciaProyecto", evaluacion.getMemoria().getPeticionEvaluacion().getCodigo());
     dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
     try {
@@ -251,8 +251,8 @@ public abstract class InformeEvaluacionEvaluadorBaseReportService extends SgiRep
     }
 
     dataReport.put("nombreInvestigacion",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang));
-    if (I18nHelper.getFieldValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang)
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getComite().getNombre(), lang));
+    if (I18nHelper.getField(evaluacion.getMemoria().getComite().getNombre(), lang)
         .map(ComiteNombreDto::getGenero).orElse(null) == ComiteNombreDto.Genero.F) {
       String i18nDela = ApplicationContextSupport.getMessage("common.dela");
       dataReport.put("del", i18nDela);

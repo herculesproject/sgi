@@ -119,7 +119,7 @@ public class SgiFormlyService {
   private void parseComentarios(ApartadoOutput apartadoOutput, Language lang) {
     if (null != apartadoOutput.getComentarios() && !apartadoOutput.getComentarios().isEmpty()) {
       apartadoOutput.getComentarios().stream().forEach(c -> apartadoOutput.getElementos()
-          .add(ElementOutput.builder().content(I18nHelper.getValueForLanguage(c.getTexto(), lang)).tipo(COMMENT_TYPE)
+          .add(ElementOutput.builder().content(I18nHelper.getFieldValue(c.getTexto(), lang)).tipo(COMMENT_TYPE)
               .nombre("").build()));
     }
   }

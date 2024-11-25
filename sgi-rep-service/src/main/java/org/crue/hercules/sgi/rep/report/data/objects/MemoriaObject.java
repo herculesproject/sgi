@@ -41,7 +41,7 @@ public class MemoriaObject {
       if (dto.getComite() != null) {
         this.comite = new ComiteObject(dto.getComite(), lang);
       }
-      this.titulo = I18nHelper.getValueForLanguage(dto.getTitulo(), lang);
+      this.titulo = I18nHelper.getFieldValue(dto.getTitulo(), lang);
       this.personaRef = dto.getPersonaRef();
       this.tipo = dto.getTipo();
       if (dto.getEstadoActual() != null) {

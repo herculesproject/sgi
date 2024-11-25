@@ -47,7 +47,7 @@ public class PeticionEvaluacionObject {
       this.id = dto.getId();
       this.solicitudConvocatoriaRef = dto.getSolicitudConvocatoriaRef();
       this.codigo = dto.getCodigo();
-      this.titulo = I18nHelper.getValueForLanguage(dto.getTitulo(), lang);
+      this.titulo = I18nHelper.getFieldValue(dto.getTitulo(), lang);
       if (dto.getTipoActividad() != null) {
         this.tipoActividad = new TipoActividadObject(dto.getTipoActividad(), lang);
       }
@@ -60,16 +60,16 @@ public class PeticionEvaluacionObject {
       this.importeFinanciacion = dto.getImporteFinanciacion();
       this.fechaInicio = dto.getFechaInicio();
       this.fechaFin = dto.getFechaFin();
-      this.resumen = I18nHelper.getValueForLanguage(dto.getResumen(), lang);
+      this.resumen = I18nHelper.getFieldValue(dto.getResumen(), lang);
       this.valorSocial = dto.getValorSocial();
       if (dto.getOtroValorSocial() != null) {
-        this.otroValorSocial = I18nHelper.getValueForLanguage(dto.getOtroValorSocial(), lang);
+        this.otroValorSocial = I18nHelper.getFieldValue(dto.getOtroValorSocial(), lang);
       }
       if (dto.getObjetivos() != null) {
-        this.objetivos = I18nHelper.getValueForLanguage(dto.getObjetivos(), lang);
+        this.objetivos = I18nHelper.getFieldValue(dto.getObjetivos(), lang);
       }
       if (dto.getDisMetodologico() != null) {
-        this.disMetodologico = I18nHelper.getValueForLanguage(dto.getDisMetodologico(), lang);
+        this.disMetodologico = I18nHelper.getFieldValue(dto.getDisMetodologico(), lang);
       }
       this.externo = dto.getExterno();
       this.tieneFondosPropios = dto.getTieneFondosPropios();

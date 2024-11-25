@@ -36,12 +36,12 @@ public class InformeEvaluacionRetrospectivaReportService extends InformeEvaluaci
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(),
         dataReport);
     dataReport.put("tituloProyecto",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
 
     dataReport.put("lugar", evaluacion.getConvocatoriaReunion().getNumeroActa());
 
     dataReport.put("nombreInvestigacion",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang));
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getComite().getNombre(), lang));
 
     dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
 

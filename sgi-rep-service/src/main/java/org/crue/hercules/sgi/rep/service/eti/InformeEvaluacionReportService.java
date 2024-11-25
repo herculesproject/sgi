@@ -59,7 +59,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
     addDataPersona(evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef(), dataReport);
 
     dataReport.put("titulo",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
 
     String i18nDe = ApplicationContextSupport.getMessage("common.de");
     String pattern = String.format("EEEE dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
@@ -74,7 +74,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
     dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
 
     dataReport.put("nombreInvestigacion",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang));
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getComite().getNombre(), lang));
 
     if (ObjectUtils.isNotEmpty(evaluacion.getMemoria().getEstadoActual())) {
       dataReport.put("retrospectiva", !evaluacion.getMemoria().getEstadoActual().getId().equals(
@@ -102,7 +102,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
       dataReport.put("seguimientoFinal", false);
     }
 
-    if (I18nHelper.getFieldValueForLanguage(evaluacion.getMemoria()
+    if (I18nHelper.getField(evaluacion.getMemoria()
         .getComite().getNombre(), lang)
         .map(ComiteNombreDto::getGenero).orElse(null) == ComiteNombreDto.Genero.M) {
       dataReport.put("preposicionComite", ApplicationContextSupport.getMessage("common.del"));
@@ -110,7 +110,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
       dataReport.put("preposicionComite", ApplicationContextSupport.getMessage("common.dela"));
     }
 
-    if (I18nHelper.getFieldValueForLanguage(evaluacion.getMemoria()
+    if (I18nHelper.getField(evaluacion.getMemoria()
         .getComite().getNombre(), lang)
         .map(ComiteNombreDto::getGenero).orElse(null) == ComiteNombreDto.Genero.M) {
       dataReport.put("comisionComite", ApplicationContextSupport.getMessage("comite.comision.masculino"));
@@ -129,7 +129,7 @@ public class InformeEvaluacionReportService extends InformeEvaluacionEvaluadorBa
     dataReport.put("dictamen", DictamenI18n.getI18nMessageFromEnum(evaluacion.getDictamen().getId()));
 
     dataReport.put("comentarioNoProcedeEvaluar",
-        !evaluacion.getComentario().isEmpty() ? I18nHelper.getValueForLanguage(evaluacion.getComentario(), lang)
+        !evaluacion.getComentario().isEmpty() ? I18nHelper.getFieldValue(evaluacion.getComentario(), lang)
             : null);
 
     Integer mesesArchivadaPendienteCorrecciones = configuracionService.findConfiguracion()

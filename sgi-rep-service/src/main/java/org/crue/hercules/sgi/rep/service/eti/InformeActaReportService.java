@@ -106,13 +106,13 @@ public class InformeActaReportService extends SgiReportDocxService {
     dataReport.put("comite", acta.getConvocatoriaReunion().getComite().getCodigo());
 
     dataReport.put("nombreInvestigacion",
-        I18nHelper.getValueForLanguage(acta.getConvocatoriaReunion().getComite().getNombre(), lang));
+        I18nHelper.getFieldValue(acta.getConvocatoriaReunion().getComite().getNombre(), lang));
 
     String patternFechaConv = String.format("dd '%s' MMMM '%s' yyyy", i18nDe, i18nDe);
     Instant fechaEvaluacion = acta.getConvocatoriaReunion().getFechaEvaluacion();
     dataReport.put("fechaConvocatoria", formatInstantToString(fechaEvaluacion, patternFechaConv));
 
-    dataReport.put("lugar", I18nHelper.getValueForLanguage(acta.getConvocatoriaReunion().getLugar(), lang));
+    dataReport.put("lugar", I18nHelper.getFieldValue(acta.getConvocatoriaReunion().getLugar(), lang));
 
     dataReport.put("isVideoconferencia", acta.getConvocatoriaReunion().getVideoconferencia());
 
@@ -147,7 +147,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     dataReport.put("tipoConvocatoria", TipoConvocatoriaReunionI18n
         .getI18nMessageFromEnumAndLocale(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getId(), locale));
 
-    dataReport.put("resumenActa", I18nHelper.getValueForLanguage(acta.getResumen(), lang));
+    dataReport.put("resumenActa", I18nHelper.getFieldValue(acta.getResumen(), lang));
 
     String codigoActa = acta.getNumero() + "/" + formatInstantToString(fechaEvaluacion, "YYYY") + "/" + acta
         .getConvocatoriaReunion().getComite().getCodigo();
@@ -160,7 +160,7 @@ public class InformeActaReportService extends SgiReportDocxService {
     dataReport.put("numeroEvaluacionesRevisiones",
         null != numeroEvaluacionesRevisiones ? numeroEvaluacionesRevisiones : 0);
 
-    dataReport.put("ordenDelDia", I18nHelper.getValueForLanguage(acta.getConvocatoriaReunion().getOrdenDia(), lang));
+    dataReport.put("ordenDelDia", I18nHelper.getFieldValue(acta.getConvocatoriaReunion().getOrdenDia(), lang));
 
     List<MemoriaEvaluadaDto> memorias = actaService.findAllMemoriasEvaluadasSinRevMinimaByActaId(acta.getId());
 
@@ -197,7 +197,7 @@ public class InformeActaReportService extends SgiReportDocxService {
       } catch (Exception e) {
         log.error(e.getMessage());
       }
-      asistenteReportData.setMotivo(I18nHelper.getValueForLanguage(asistente.getMotivo(), lang));
+      asistenteReportData.setMotivo(I18nHelper.getFieldValue(asistente.getMotivo(), lang));
       asistentesReportData.add(asistenteReportData);
     });
 
@@ -248,7 +248,7 @@ public class InformeActaReportService extends SgiReportDocxService {
       memoriaEvaluada.setPersonaRef(memoria.getPersonaRef());
       memoriaEvaluada
           .setTipoEvaluacion(TipoEvaluacionI18n.getI18nMessageFromEnumAndLocale(memoria.getTipoEvaluacionId(), locale));
-      memoriaEvaluada.setTitulo(I18nHelper.getValueForCurrentLanguage(memoria.getTitulo()));
+      memoriaEvaluada.setTitulo(I18nHelper.getFieldValue(memoria.getTitulo()));
       memoriaEvaluada.setVersion(memoria.getVersion());
       try {
         PersonaDto persona = personaService.findById(memoria.getPersonaRef());
@@ -296,7 +296,7 @@ public class InformeActaReportService extends SgiReportDocxService {
           .forEach(memoria -> {
             ActaComentariosMemoriaReportOutput comentariosMemoriaReportOutput = new ActaComentariosMemoriaReportOutput();
             comentariosMemoriaReportOutput.setNumReferenciaMemoria(memoria.getNumReferencia());
-            comentariosMemoriaReportOutput.setTituloProyecto(I18nHelper.getValueForLanguage(memoria.getTitulo(), lang));
+            comentariosMemoriaReportOutput.setTituloProyecto(I18nHelper.getFieldValue(memoria.getTitulo(), lang));
             comentariosMemoriaReportOutput
                 .setDictamen(DictamenI18n.getI18nMessageFromEnumAndLocale(memoria.getDictamenId(), locale));
             comentariosMemoriaReportOutput.setBloques(new ArrayList<>());

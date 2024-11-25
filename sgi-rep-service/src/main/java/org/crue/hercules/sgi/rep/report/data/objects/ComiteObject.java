@@ -23,7 +23,7 @@ public class ComiteObject {
     if (dto != null) {
       this.id = dto.getId();
       this.codigo = dto.getCodigo();
-      this.nombre = I18nHelper.getFieldValueForLanguage(dto.getNombre(), lang).orElse(null);
+      this.nombre = I18nHelper.getField(dto.getNombre(), lang).orElse(null);
       this.activo = dto.getActivo();
     }
   }

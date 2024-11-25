@@ -31,7 +31,7 @@ public class MemoriaPeticionEvaluacionObject {
     if (dto != null) {
       this.id = dto.getId();
       this.numReferencia = dto.getNumReferencia();
-      this.titulo = I18nHelper.getValueForLanguage(dto.getTitulo(), lang);
+      this.titulo = I18nHelper.getFieldValue(dto.getTitulo(), lang);
       if (dto.getComite() != null) {
         this.comite = new ComiteObject(dto.getComite(), lang);
       }

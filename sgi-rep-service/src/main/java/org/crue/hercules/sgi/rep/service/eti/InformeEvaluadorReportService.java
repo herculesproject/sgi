@@ -52,7 +52,7 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
     }
     dataReport.put("tipoActividad", tipoActividad);
     dataReport.put("titulo",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(), lang));
     dataReport.put("fechaInicio",
         formatInstantToString(evaluacion.getMemoria().getPeticionEvaluacion().getFechaInicio(),
             lang));
@@ -60,11 +60,11 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
         lang));
     dataReport.put("financiacion", evaluacion.getMemoria().getPeticionEvaluacion().getFuenteFinanciacion());
     dataReport.put("resumen",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getPeticionEvaluacion().getResumen(), lang));
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getPeticionEvaluacion().getResumen(), lang));
 
     dataReport.put("comite", evaluacion.getMemoria().getComite().getCodigo());
     dataReport.put("nombreInvestigacion",
-        I18nHelper.getValueForLanguage(evaluacion.getMemoria().getComite().getNombre(), lang));
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getComite().getNombre(), lang));
 
     Long dictamenId = evaluacion.getDictamen() != null ? evaluacion.getDictamen().getId() : null;
 

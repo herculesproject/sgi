@@ -65,7 +65,7 @@ public class ActaComentarioObject {
         private String texto;
 
         private Comentario(ComentarioDto dto, Language lang) {
-          this.texto = I18nHelper.getValueForLanguage(dto.getTexto(), lang);
+          this.texto = I18nHelper.getFieldValue(dto.getTexto(), lang);
         }
       }
     }

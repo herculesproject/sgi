@@ -5,11 +5,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
@@ -37,7 +39,8 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
   private final EvaluationContext context;
   private EvaluationContext envContext;
   private boolean isStrict;
-  private Language requestedLang;
+  private final Language requestedLang;
+  private final List<Language> languagePriorities;
 
   // --
   private final StandardEvaluationContext rootContext;
@@ -71,6 +74,7 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
     registerFunction(rootContext, F_LINKED_TREE_MAP_IN, String.class, String.class);
     registerFunction(rootContext, F_OBJECT_EQUALS, String.class, String.class);
 
+    this.languagePriorities = I18nConfig.get().getLanguagePriorities();
   }
 
   @Override
@@ -90,8 +94,13 @@ public class CustomSpELRenderDataCompute implements RenderDataCompute {
               // Si no hay ningún valor, retornamos null
               return null;
             } else {
-              // Por ahora retornamos el primer valor;
-              return collectedValues.values().toArray()[0];
+              String other = null;
+              Iterator<Language> itPriority = this.languagePriorities.iterator();
+              do {
+                Language lang = itPriority.next();
+                other = collectedValues.get(lang);
+              } while (other == null && itPriority.hasNext());
+              return other;
             }
           }
         }

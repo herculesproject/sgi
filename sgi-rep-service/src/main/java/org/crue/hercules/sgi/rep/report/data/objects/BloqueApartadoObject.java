@@ -46,7 +46,7 @@ public class BloqueApartadoObject {
       private String personaCreated;
 
       private Comentario(ComentarioDto dto, Language lang) {
-        this.texto = I18nHelper.getValueForLanguage(dto.getTexto(), lang);
+        this.texto = I18nHelper.getFieldValue(dto.getTexto(), lang);
         this.sexoPersonaCreated = dto.getSexoPersonaCreated();
         this.personaCreated = dto.getPersonaCreated();
       }
