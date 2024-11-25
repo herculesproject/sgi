@@ -144,7 +144,7 @@ public class GrupoEquipoService {
     authorityHelper.checkUserHasAuthorityViewGrupo(grupoId);
 
     Specification<GrupoEquipo> specs = GrupoEquipoSpecifications.byGrupoId(grupoId)
-        .and(SgiRSQLJPASupport.toSpecification(query, GrupoEquipoPredicateResolver.getInstance()));
+        .and(SgiRSQLJPASupport.toSpecification(query, GrupoEquipoPredicateResolver.getInstance(sgiConfigProperties)));
 
     Page<GrupoEquipo> returnValue = repository.findAll(specs, paging);
     log.debug("findAll(Long grupoId, String query, Pageable paging) - end");
@@ -361,7 +361,7 @@ public class GrupoEquipoService {
     log.debug("findAll(String query, Pageable paging) - start");
 
     Specification<GrupoEquipo> specs = SgiRSQLJPASupport.toSpecification(query,
-        GrupoEquipoPredicateResolver.getInstance());
+        GrupoEquipoPredicateResolver.getInstance(sgiConfigProperties));
     Page<GrupoEquipo> returnValue = repository.findAll(specs, paging);
 
     log.debug("findAll(String query, Pageable paging) - end");

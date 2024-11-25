@@ -9,6 +9,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo_;
@@ -22,6 +23,8 @@ import io.github.perplexhub.rsql.RSQLOperators;
 public class GrupoEquipoPredicateResolver implements SgiRSQLPredicateResolver<GrupoEquipo> {
 
   public enum Property {
+    /* Activo en la fecha actual */
+    ACTIVO("activo"),
     /* Fecha participacion anterior a */
     FECHA_PARTICIPACION_ANTERIOR("fechaParticipacionAnterior"),
     /* Fecha participacion posterior a */
@@ -47,11 +50,14 @@ public class GrupoEquipoPredicateResolver implements SgiRSQLPredicateResolver<Gr
     }
   }
 
-  private GrupoEquipoPredicateResolver() {
+  private final SgiConfigProperties sgiConfigProperties;
+
+  private GrupoEquipoPredicateResolver(SgiConfigProperties sgiConfigProperties) {
+    this.sgiConfigProperties = sgiConfigProperties;
   }
 
-  public static GrupoEquipoPredicateResolver getInstance() {
-    return new GrupoEquipoPredicateResolver();
+  public static GrupoEquipoPredicateResolver getInstance(SgiConfigProperties sgiConfigProperties) {
+    return new GrupoEquipoPredicateResolver(sgiConfigProperties);
   }
 
   @Override
@@ -69,6 +75,8 @@ public class GrupoEquipoPredicateResolver implements SgiRSQLPredicateResolver<Gr
     }
 
     switch (property) {
+      case ACTIVO:
+        return buildByActivo(node, root, criteriaBuilder);
       case FECHA_PARTICIPACION_ANTERIOR:
         return buildByFechaParticipacionAnterior(node, root, criteriaBuilder);
       case FECHA_PARTICIPACION_POSTERIOR:
@@ -76,6 +84,57 @@ public class GrupoEquipoPredicateResolver implements SgiRSQLPredicateResolver<Gr
       default:
         return null;
     }
+  }
+
+  private Predicate buildByActivo(ComparisonNode node, Root<GrupoEquipo> root, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    boolean activoArgument = Boolean.parseBoolean(node.getArguments().get(0));
+
+    Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
+
+    Join<GrupoEquipo, Grupo> joinGrupo = root.join(GrupoEquipo_.grupo, JoinType.LEFT);
+
+    Predicate greaterThanFechaInicio = cb.or(
+        cb.lessThanOrEqualTo(root.get(GrupoEquipo_.fechaInicio), fechaActual),
+        cb.and(
+            cb.isNull(root.get(GrupoEquipo_.fechaInicio)),
+            cb.or(
+                cb.lessThanOrEqualTo(joinGrupo.get(Grupo_.fechaInicio), fechaActual))));
+
+    Predicate lowerThanFechaFin = cb.or(
+        cb.greaterThanOrEqualTo(root.get(GrupoEquipo_.fechaFin), fechaActual),
+        cb.and(
+            cb.isNull(root.get(GrupoEquipo_.fechaFin)),
+            cb.or(
+                cb.isNull(joinGrupo.get(Grupo_.fechaFin)),
+                cb.greaterThanOrEqualTo(joinGrupo.get(Grupo_.fechaFin), fechaActual))));
+
+    Predicate activoFechaActual = cb.and(
+        greaterThanFechaInicio,
+        lowerThanFechaFin);
+
+    Predicate lowerThanFechaInicio = cb.or(
+        cb.greaterThanOrEqualTo(root.get(GrupoEquipo_.fechaInicio), fechaActual),
+        cb.and(
+            cb.isNull(root.get(GrupoEquipo_.fechaInicio)),
+            cb.or(
+                cb.isNull(joinGrupo.get(Grupo_.fechaInicio)),
+                cb.greaterThanOrEqualTo(joinGrupo.get(Grupo_.fechaInicio), fechaActual))));
+
+    Predicate greaterThanFechaFin = cb.or(
+        cb.lessThanOrEqualTo(root.get(GrupoEquipo_.fechaFin), fechaActual),
+        cb.and(
+            cb.isNull(root.get(GrupoEquipo_.fechaFin)),
+            cb.or(
+                cb.lessThanOrEqualTo(joinGrupo.get(Grupo_.fechaFin), fechaActual))));
+
+    Predicate noActivoFechaActual = cb.or(
+        lowerThanFechaInicio,
+        greaterThanFechaFin);
+
+    return activoArgument ? activoFechaActual : noActivoFechaActual;
   }
 
   private Predicate buildByFechaParticipacionAnterior(ComparisonNode node, Root<GrupoEquipo> root, CriteriaBuilder cb) {
