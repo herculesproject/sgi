@@ -2383,7 +2383,24 @@ public class ProyectoServiceImpl implements ProyectoService {
   public boolean modificable(Long proyectoId) {
     log.debug("modificable(Long proyectoId) - start");
     boolean isModificable = proyectoHelper.hasUserAuthorityModifyProyecto(proyectoId);
-    log.debug("modificable(Long proyectoId) - start");
+    log.debug("modificable(Long proyectoId) - end");
+    return isModificable;
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si el {@link Proyecto}
+   * puede ser visualizado.
+   * 
+   * @param proyectoId Id del {@link Proyecto}.
+   * @return true si puede ser visualizado / false si no puede ser visualizado
+   */
+  @Override
+  public boolean visible(Long proyectoId) {
+    log.debug("visible(Long proyectoId) - start");
+    Optional<Proyecto> proyecto = repository.findById(proyectoId);
+
+    boolean isModificable = proyecto.isPresent() && proyectoHelper.hasUserAuthorityViewUO(proyecto.get());
+    log.debug("visible(Long proyectoId) - start");
     return isModificable;
   }
 

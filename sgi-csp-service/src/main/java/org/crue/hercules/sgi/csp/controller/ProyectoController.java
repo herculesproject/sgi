@@ -147,6 +147,7 @@ public class ProyectoController {
   public static final String PATH_INVESTIGADORES_PRINCIPALES_ACTUALES = PATH_ID + PATH_SEPARATOR
       + "investigadoresprincipalesactuales";
   public static final String PATH_MODIFICABLE = PATH_ID + PATH_SEPARATOR + "modificable";
+  public static final String PATH_VISIBLE = PATH_ID + PATH_SEPARATOR + "visible";
   public static final String PATH_PRORROGAS = PATH_ID + PATH_SEPARATOR + "proyecto-prorrogas";
   public static final String PATH_REQUERIMIENTOS_JUSTIFICACION = PATH_ID + PATH_SEPARATOR
       + "requerimientos-justificacion";
@@ -1162,6 +1163,22 @@ public class ProyectoController {
     log.debug("modificable(Long id) - start");
     boolean returnValue = service.modificable(id);
     log.debug("modificable(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Hace las comprobaciones necesarias para determinar si el {@link Proyecto}
+   * puede ser consultado por el usuario
+   * 
+   * @param id Id del {@link Proyecto}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = PATH_VISIBLE, method = RequestMethod.HEAD)
+  @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-E', 'CSP-PRO-V')")
+  public ResponseEntity<Void> visible(@PathVariable Long id) {
+    log.debug("visible(Long id) - start");
+    boolean returnValue = service.visible(id);
+    log.debug("visible(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
