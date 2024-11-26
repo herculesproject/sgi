@@ -17,6 +17,8 @@ import { IModeloEjecucionResponse } from './modelo-ejecucion/modelo-ejecucion-re
 import { MODELO_EJECUCION_RESPONSE_CONVERTER } from './modelo-ejecucion/modelo-ejecucion-response.converter';
 import { IModeloTipoDocumentoResponse } from './modelo-tipo-documento/modelo-tipo-documento-response';
 import { MODELO_TIPO_DOCUMENTO_RESPONSE_CONVERTER } from './modelo-tipo-documento/modelo-tipo-documento-response.converter';
+import { IModeloTipoEnlaceResponse } from './modelo-tipo-enlace/modelo-tipo-enlace-response';
+import { MODELO_TIPO_ENLACE_RESPONSE_CONVERTER } from './modelo-tipo-enlace/modelo-tipo-enlace-response.converter';
 import { IModeloTipoFaseResponse } from './modelo-tipo-fase/modelo-tipo-fase-response';
 import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from './modelo-tipo-fase/modelo-tipo-fase-response.converter';
 import { IModeloTipoHitoResponse } from './modelo-tipo-hito/modelo-tipo-hito-response';
@@ -57,7 +59,7 @@ export class ModeloEjecucionService extends _ModeloEjecucionServiceMixinBase {
   }
 
   findModeloTipoEnlace(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoEnlace>> {
-    return this.find<IModeloTipoEnlace, IModeloTipoEnlace>(`${this.endpointUrl}/${id}/modelotipoenlaces`, options);
+    return this.find<IModeloTipoEnlaceResponse, IModeloTipoEnlace>(`${this.endpointUrl}/${id}/modelotipoenlaces`, options, MODELO_TIPO_ENLACE_RESPONSE_CONVERTER);
   }
 
   hasProyectosAsociados(id: number): Observable<boolean> {

@@ -1,5 +1,6 @@
 import { IConvocatoriaEnlaceBackend } from '@core/models/csp/backend/convocatoria-enlace-backend';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
+import { TIPO_ENLACE_RESPONSE_CONVERTER } from '@core/services/csp/tipo-enlace/tipo-enlace-response.converter';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ConvocatoriaEnlaceConverter extends SgiBaseConverter<IConvocatoriaEnlaceBackend, IConvocatoriaEnlace> {
@@ -10,7 +11,7 @@ class ConvocatoriaEnlaceConverter extends SgiBaseConverter<IConvocatoriaEnlaceBa
     }
     return {
       id: value.id,
-      tipoEnlace: value.tipoEnlace,
+      tipoEnlace: TIPO_ENLACE_RESPONSE_CONVERTER.toTarget(value.tipoEnlace),
       activo: value.activo,
       convocatoriaId: value.convocatoriaId,
       url: value.url,
@@ -24,7 +25,7 @@ class ConvocatoriaEnlaceConverter extends SgiBaseConverter<IConvocatoriaEnlaceBa
     }
     return {
       id: value.id,
-      tipoEnlace: value.tipoEnlace,
+      tipoEnlace: TIPO_ENLACE_RESPONSE_CONVERTER.fromTarget(value.tipoEnlace),
       activo: value.activo,
       convocatoriaId: value.convocatoriaId,
       url: value.url,
