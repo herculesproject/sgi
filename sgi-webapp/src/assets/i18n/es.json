@@ -2698,6 +2698,7 @@
   "msg.csp.proyecto.copiar-apartadados-fechas.responsableEconomico": "Responsable económico",
   "msg.csp.proyecto.copiar-apartadados-fechas.socios": "Socios",
   "msg.csp.proyecto.info-modificar-fechas": "Se han modificado las fechas del proyecto. Debe revisar y modificar manualmente, si procede, las fechas incluidas en los apartados:",
+  "msg.csp.proyecto.info-modificar-fechas.fecha-fin-definitiva-menor": "El proyecto pasará a tener una fecha fin definitiva menor que su fecha de inicio. Para poder guardar el proyecto, es probable que tenga que revisar o eliminar, si procede, las fechas incluidas en los apartados:",
   "msg.csp.proyecto.modelo-ejecucion.vinculaciones": "No se puede modificar el valor de este campo porque tiene dependencias en alguno de los apartados fases, hitos o documentos. Si desea modificar este valor deberá eliminar previamente los datos de esos apartados",
   "msg.csp.proyecto.paquetes-trabajo.existentes": "Para poder modificar este valor debe eliminar los datos del apartado Paquetes de trabajo",
   "msg.csp.proyecto.responsable-economico.sin-vigencia": "No se puede añadir un responsable económico cuando el existente no tiene una fecha de inicio establecida",
