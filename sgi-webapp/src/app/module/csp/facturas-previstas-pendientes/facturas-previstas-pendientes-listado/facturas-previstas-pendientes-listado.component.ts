@@ -205,7 +205,10 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
 
   private getReportOptions(outputType: OutputReport): IReportConfig<IReportOptions> {
     const reportModalData: IReportConfig<IReportOptions> = {
-      outputType
+      outputType,
+      reportOptions: {
+        findOptions: this.getFindOptions()
+      }
     };
     return reportModalData;
   }
