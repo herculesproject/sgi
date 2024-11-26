@@ -169,7 +169,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         palabrasClave: this.service.findPalabrasClave(proyecto.id).pipe(map(({ items }) => items.map(proyectoPalabraClave => proyectoPalabraClave.palabraClave))),
         rolUniversidad: this.getRolUniversidad(proyecto),
         solicitudProyecto: this.getSocilictudProyecto(proyecto),
-        ultimaProrroga: this.getUltimaProrroga(proyecto),
+        ultimaProrroga: this.getUltimaProrrogaTiempo(proyecto),
         unidadGestion: this.getUnidadGestion(proyecto.unidadGestion.id),
         proyectosSgeIds: this.service.findAllProyectosSgeProyecto(proyecto.id).pipe(map(({ items }) => items.map(p => p.proyectoSge.id)))
       }).pipe(
@@ -220,7 +220,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       codigoInterno: new FormControl(null, [Validators.maxLength(50)]),
       codigoExterno: new FormControl(null, [Validators.maxLength(50)]),
       fechaInicio: new FormControl(null),
-      fechaFin: new FormControl(null, [this.buildValidatorFechaFin()]),
+      fechaFin: new FormControl(null),
       fechaFinDefinitiva: new FormControl(null),
       convocatoria: new FormControl({
         value: '',
@@ -259,6 +259,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         validators: [
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
           this.isAfterOrEqualAndNotRenunciadoOrRescindido('fechaInicio', 'fechaFinDefinitiva'),
+          this.isFechaFinAfterOrEqualFechaUltimaProrroga(),
           this.validateCanAddfechaFinDefinitiva()
         ]
       });
@@ -472,6 +473,35 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       } else if (fechaPosteriorControl.errors?.after) {
         delete fechaPosteriorControl.errors.after;
         fechaPosteriorControl.updateValueAndValidity({ onlySelf: true });
+      }
+    };
+  }
+
+  /**
+   * Comprueba que la fecha de fin sea posterior o igual a la fecha de la ultima prorroga de tiempo o importe y tiempo si la fecha definitiva no esta informada
+   */
+  private isFechaFinAfterOrEqualFechaUltimaProrroga(): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+
+      const fechaFinControl = formGroup.controls.fechaFin;
+      const fechaFinDefinitivaControl = formGroup.controls.fechaFinDefinitiva;
+
+      if (fechaFinControl.errors && !fechaFinControl.errors.afterThanProrroga) {
+        return;
+      }
+
+      const fechaFinDate: DateTime = fechaFinControl.value;
+      const fechaFinDefinitivaDate: DateTime = fechaFinDefinitivaControl.value;
+
+      if (!!this.ultimaProrroga
+        && fechaFinDate
+        && !fechaFinDefinitivaDate
+        && this.ultimaProrroga.fechaFin > fechaFinDate) {
+        fechaFinControl.setErrors({ afterThanProrroga: true });
+        fechaFinControl.markAsTouched({ onlySelf: true });
+      } else if (fechaFinControl.errors?.afterThanProrroga) {
+        delete fechaFinControl.errors.afterThanProrroga;
+        fechaFinControl.updateValueAndValidity({ onlySelf: true });
       }
     };
   }
@@ -721,8 +751,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         Validators.required
       ]);
       formgroup.get('fechaFin').setValidators([
-        Validators.required,
-        this.buildValidatorFechaFin()
+        Validators.required
       ]);
       this.abiertoRequired = true;
     } else if (proyecto.estado.estado === Estado.RENUNCIADO || proyecto.estado.estado === Estado.RESCINDIDO) {
@@ -796,18 +825,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
    */
   private getUnidadGestion(id: number): Observable<IUnidadGestion> {
     return this.unidadGestionService.findById(id);
-  }
-
-  private buildValidatorFechaFin(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (this.ultimaProrroga
-        && control.value
-        && this.ultimaProrroga.tipo !== Tipo.IMPORTE
-        && this.ultimaProrroga.fechaFin <= control.value) {
-        return { afterThanProrroga: true };
-      }
-      return null;
-    };
   }
 
   private subscribeToOnChangeHasPopulatedSocios(): void {
@@ -908,9 +925,10 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     return this.solicitudService.findSolicitudProyecto(proyecto.solicitudId);
   }
 
-  private getUltimaProrroga(proyecto: IProyecto): Observable<IProyectoProrroga> {
+  private getUltimaProrrogaTiempo(proyecto: IProyecto): Observable<IProyectoProrroga> {
     const options: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('numProrroga', SgiRestSortDirection.DESC)
+      sort: new RSQLSgiRestSort('numProrroga', SgiRestSortDirection.DESC),
+      filter: new RSQLSgiRestFilter('tipo', SgiRestFilterOperator.IN, [Tipo.TIEMPO, Tipo.TIEMPO_IMPORTE])
     };
 
     return this.service.findAllProyectoProrrogaProyecto(proyecto.id, options).pipe(
