@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
+import org.crue.hercules.sgi.csp.model.FuenteFinanciacionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
@@ -522,11 +523,14 @@ class ProyectoEntidadFinanciadoraServiceTest extends BaseServiceTest {
    * @return el objeto ConvocatoriaEntidadFinanciadora
    */
   private ProyectoEntidadFinanciadora generarMockProyectoEntidadFinanciadora(Long id) {
+    Set<FuenteFinanciacionNombre> tipoFinanciacionNombre = new HashSet<>();
+    tipoFinanciacionNombre.add(new FuenteFinanciacionNombre(Language.ES, "nombreFuenteFinanciacion"));
+
     FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()
     // @formatter:off
       .id(id == null ? 1 : id)
       .activo(true)
-      .nombre("nombreFuenteFinanciacion")
+      .nombre(tipoFinanciacionNombre)
       .build();
     // @formatter:on
 

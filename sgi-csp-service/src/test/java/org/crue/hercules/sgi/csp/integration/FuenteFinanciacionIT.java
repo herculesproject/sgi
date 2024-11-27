@@ -3,11 +3,15 @@ package org.crue.hercules.sgi.csp.integration;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.FuenteFinanciacionController;
 import org.crue.hercules.sgi.csp.dto.FuenteFinanciacionInput;
 import org.crue.hercules.sgi.csp.dto.FuenteFinanciacionOutput;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -60,8 +64,8 @@ class FuenteFinanciacionIT extends BaseIT {
 
     FuenteFinanciacionOutput fuenteFinanciacionCreado = response.getBody();
     Assertions.assertThat(fuenteFinanciacionCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(fuenteFinanciacionCreado.getNombre()).as("getNombre()")
-        .isEqualTo(fuenteFinanciacion.getNombre());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacionCreado.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES));
     Assertions.assertThat(fuenteFinanciacionCreado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(fuenteFinanciacion.getDescripcion());
     Assertions.assertThat(fuenteFinanciacionCreado.getFondoEstructural()).as("getFondoEstructural()")
@@ -80,7 +84,9 @@ class FuenteFinanciacionIT extends BaseIT {
   void update_ReturnsFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
     FuenteFinanciacionInput fuenteFinanciacion = generarMockFuenteFinanciacionInput();
-    fuenteFinanciacion.setNombre("nombre-actualizado");
+    List<I18nFieldValueDto> nombre = new ArrayList<>();
+    nombre.add(new I18nFieldValueDto(Language.ES, "nuevo-actualizado"));
+    fuenteFinanciacion.setNombre(nombre);
 
     final ResponseEntity<FuenteFinanciacionOutput> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, fuenteFinanciacion),
@@ -90,8 +96,8 @@ class FuenteFinanciacionIT extends BaseIT {
 
     FuenteFinanciacionOutput fuenteFinanciacionActualizado = response.getBody();
     Assertions.assertThat(fuenteFinanciacionActualizado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(fuenteFinanciacionActualizado.getNombre()).as("getNombre()")
-        .isEqualTo(fuenteFinanciacion.getNombre());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacionActualizado.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES));
     Assertions.assertThat(fuenteFinanciacionActualizado.getDescripcion()).as("getDescripcion()")
         .isEqualTo(fuenteFinanciacion.getDescripcion());
     Assertions.assertThat(fuenteFinanciacionActualizado.getFondoEstructural()).as("getFondoEstructural()")
@@ -117,7 +123,7 @@ class FuenteFinanciacionIT extends BaseIT {
 
     FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
     Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES)).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
         .isEqualTo(fuenteFinanciacion.getDescripcion());
     Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
@@ -142,7 +148,7 @@ class FuenteFinanciacionIT extends BaseIT {
 
     FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
     Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES)).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
         .isEqualTo(fuenteFinanciacion.getDescripcion());
     Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
@@ -167,7 +173,7 @@ class FuenteFinanciacionIT extends BaseIT {
 
     FuenteFinanciacionOutput fuenteFinanciacion = response.getBody();
     Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciacion.getNombre(), Language.ES)).as("getNombre()").isEqualTo("nombre-001");
     Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
         .isEqualTo(fuenteFinanciacion.getDescripcion());
     Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isTrue();
@@ -185,7 +191,7 @@ class FuenteFinanciacionIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre,desc";
+    String sort = "nombre.value,desc";
     String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -203,11 +209,11 @@ class FuenteFinanciacionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(fuenteFinanciaciones.get(0).getNombre()).as("get(0).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(0).getNombre(), Language.ES)).as("get(0).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(fuenteFinanciaciones.get(1).getNombre()).as("get(1).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(1).getNombre(), Language.ES)).as("get(1).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(fuenteFinanciaciones.get(2).getNombre()).as("get(2).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(2).getNombre(), Language.ES)).as("get(2).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
@@ -219,7 +225,7 @@ class FuenteFinanciacionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "nombre,desc";
+    String sort = "nombre.value,desc";
     String filter = "descripcion=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
@@ -237,17 +243,21 @@ class FuenteFinanciacionIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(fuenteFinanciaciones.get(0).getNombre()).as("get(0).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(0).getNombre(), Language.ES)).as("get(0).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(fuenteFinanciaciones.get(1).getNombre()).as("get(1).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(1).getNombre(), Language.ES)).as("get(1).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(fuenteFinanciaciones.get(2).getNombre()).as("get(2).getNombre())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(fuenteFinanciaciones.get(2).getNombre(), Language.ES)).as("get(2).getNombre())")
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
   private FuenteFinanciacionInput generarMockFuenteFinanciacionInput() {
+    
+    List<I18nFieldValueDto> nombre = new ArrayList<>();
+    nombre.add(new I18nFieldValueDto(Language.ES, "nombre"));
+
     FuenteFinanciacionInput fuenteFinanciacion = new FuenteFinanciacionInput();
-    fuenteFinanciacion.setNombre("nombre");
+    fuenteFinanciacion.setNombre(nombre);
     fuenteFinanciacion.setDescripcion("descripcion");
     fuenteFinanciacion.setFondoEstructural(true);
     fuenteFinanciacion.setTipoAmbitoGeograficoId(1L);

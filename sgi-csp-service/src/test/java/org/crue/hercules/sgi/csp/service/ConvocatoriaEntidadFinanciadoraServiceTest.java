@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
+import org.crue.hercules.sgi.csp.model.FuenteFinanciacionNombre;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
@@ -621,9 +622,12 @@ class ConvocatoriaEntidadFinanciadoraServiceTest extends BaseServiceTest {
    * @return el objeto ConvocatoriaEntidadFinanciadora
    */
   private ConvocatoriaEntidadFinanciadora generarMockConvocatoriaEntidadFinanciadora(Long id, Long convocatoriaId) {
+    Set<FuenteFinanciacionNombre> tipoFinanciacionNombre = new HashSet<>();
+    tipoFinanciacionNombre.add(new FuenteFinanciacionNombre(Language.ES, "nombreFuenteFinanciacion"));
+
     FuenteFinanciacion fuenteFinanciacion = new FuenteFinanciacion();
     fuenteFinanciacion.setId(id == null ? 1 : id);
-    fuenteFinanciacion.setNombre("nombreFuenteFinanciacion");
+    fuenteFinanciacion.setNombre(tipoFinanciacionNombre);
     fuenteFinanciacion.setActivo(true);
 
     Set<TipoFinanciacionNombre> nombre = new HashSet<>();

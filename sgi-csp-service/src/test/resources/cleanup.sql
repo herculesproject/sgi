@@ -124,6 +124,7 @@ DELETE FROM test.autorizacion;
 DELETE FROM test.convocatoria_palabra_clave;
 DELETE FROM test.convocatoria_entidad_convocante;
 DELETE FROM test.convocatoria;
+DELETE FROM test.fuente_financiacion_nombre;
 DELETE FROM test.fuente_financiacion;
 DELETE FROM test.modelo_tipo_enlace;
 DELETE FROM test.modelo_tipo_documento;

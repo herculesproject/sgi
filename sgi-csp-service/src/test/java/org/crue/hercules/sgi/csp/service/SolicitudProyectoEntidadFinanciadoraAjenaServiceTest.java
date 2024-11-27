@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoEntidadFinanciadoraAjenaNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
+import org.crue.hercules.sgi.csp.model.FuenteFinanciacionNombre;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
@@ -471,10 +472,14 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
    * @return el objeto SolicitudProyectoEntidadFinanciadoraAjena
    */
   private SolicitudProyectoEntidadFinanciadoraAjena generarMockSolicitudProyectoEntidadFinanciadoraAjena(Long id) {
+
+    Set<FuenteFinanciacionNombre> tipoFinanciacionNombre = new HashSet<>();
+    tipoFinanciacionNombre.add(new FuenteFinanciacionNombre(Language.ES, "nombreFuenteFinanciacion"));
+
     // @formatter:off
     FuenteFinanciacion fuenteFinanciacion = FuenteFinanciacion.builder()
         .id(id == null ? 1 : id)
-        .nombre("nombreFuenteFinanciacion")
+        .nombre(tipoFinanciacionNombre)
         .activo(true)
         .build();
 

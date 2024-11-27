@@ -60,8 +60,11 @@ INSERT INTO test.tipo_origen_fuente_financiacion (id, activo) VALUES (1, true);
 INSERT INTO test.tipo_origen_fuente_financiacion_nombre (tipo_origen_fuente_financiacion_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- FUENTE FINANCIACION
-INSERT INTO test.fuente_financiacion (id, nombre, descripcion, fondo_estructural, tipo_ambito_geografico_id, tipo_origen_fuente_financiacion_id, activo) 
-  VALUES (1, 'nombre-001', 'descripcion-001', true, 1, 1, true);
+INSERT INTO test.fuente_financiacion (id, descripcion, fondo_estructural, tipo_ambito_geografico_id, tipo_origen_fuente_financiacion_id, activo) 
+  VALUES (1, 'descripcion-001', true, 1, 1, true);
+
+  -- FUENTE FINANCIACION NOMBRE
+INSERT INTO test.fuente_financiacion_nombre (fuente_financiacion_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- TIPO FINANCIACION
 INSERT INTO test.tipo_financiacion (id, activo) VALUES (1, true);
