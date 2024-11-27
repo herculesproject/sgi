@@ -23,7 +23,7 @@
       <!-- fecha Estado-->
       <mat-form-field>
         <mat-label>{{'csp.proyecto.estado-proyecto.fecha' | translate}}</mat-label>
-        <input matInput formControlName="fechaEstado" [ngxMatDatetimePicker]="fechaEstado">
+        <input matInput formControlName="fechaEstado" [ngxMatDatetimePicker]="fechaEstado" required>
         <mat-datepicker-toggle matSuffix [for]="fechaEstado"></mat-datepicker-toggle>
         <ngx-mat-datetime-picker #fechaEstado showSeconds="true">
         </ngx-mat-datetime-picker>
