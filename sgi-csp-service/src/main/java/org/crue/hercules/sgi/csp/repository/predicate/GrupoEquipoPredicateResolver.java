@@ -8,11 +8,16 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo;
 import org.crue.hercules.sgi.csp.model.GrupoEquipo_;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigacion_;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigador;
+import org.crue.hercules.sgi.csp.model.GrupoLineaInvestigador_;
 import org.crue.hercules.sgi.csp.model.Grupo_;
 import org.crue.hercules.sgi.csp.util.PredicateResolverUtil;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
@@ -25,6 +30,8 @@ public class GrupoEquipoPredicateResolver implements SgiRSQLPredicateResolver<Gr
   public enum Property {
     /* Activo en la fecha actual */
     ACTIVO("activo"),
+    /* Adscrito a linea investigacion */
+    ADSCRITO_LINEA_INVESTIGACION("adscritoLineaInvestigacion"),
     /* Fecha participacion anterior a */
     FECHA_PARTICIPACION_ANTERIOR("fechaParticipacionAnterior"),
     /* Fecha participacion posterior a */
@@ -77,6 +84,8 @@ public class GrupoEquipoPredicateResolver implements SgiRSQLPredicateResolver<Gr
     switch (property) {
       case ACTIVO:
         return buildByActivo(node, root, criteriaBuilder);
+      case ADSCRITO_LINEA_INVESTIGACION:
+        return buildByAdscriptoLineaInvestigacion(node, root, query, criteriaBuilder);
       case FECHA_PARTICIPACION_ANTERIOR:
         return buildByFechaParticipacionAnterior(node, root, criteriaBuilder);
       case FECHA_PARTICIPACION_POSTERIOR:
@@ -135,6 +144,29 @@ public class GrupoEquipoPredicateResolver implements SgiRSQLPredicateResolver<Gr
         greaterThanFechaFin);
 
     return activoArgument ? activoFechaActual : noActivoFechaActual;
+  }
+
+  private Predicate buildByAdscriptoLineaInvestigacion(ComparisonNode node, Root<GrupoEquipo> root,
+      CriteriaQuery<?> query, CriteriaBuilder cb) {
+    PredicateResolverUtil.validateOperatorIsSupported(node, RSQLOperators.EQUAL);
+    PredicateResolverUtil.validateOperatorArgumentNumber(node, 1);
+
+    Long lineaInvestigacionId = Long.valueOf(node.getArguments().get(0));
+
+    Subquery<String> subquery = query.subquery(String.class);
+    Root<GrupoLineaInvestigador> subRoot = subquery.from(GrupoLineaInvestigador.class);
+    Join<GrupoLineaInvestigador, GrupoLineaInvestigacion> joinGrupoLineaInvestigacion = subRoot
+        .join(GrupoLineaInvestigador_.grupoLineaInvestigacion);
+
+    subquery.select(subRoot.get(GrupoLineaInvestigador_.personaRef))
+        .distinct(true)
+        .where(cb.and(
+            cb.equal(subRoot.get(GrupoLineaInvestigador_.personaRef), root.get(GrupoEquipo_.personaRef)),
+            cb.equal(joinGrupoLineaInvestigacion.get(GrupoLineaInvestigacion_.grupoId), root.get(GrupoEquipo_.grupoId)),
+            cb.equal(joinGrupoLineaInvestigacion.get(GrupoLineaInvestigacion_.lineaInvestigacionId),
+                lineaInvestigacionId)));
+
+    return cb.exists(subquery);
   }
 
   private Predicate buildByFechaParticipacionAnterior(ComparisonNode node, Root<GrupoEquipo> root, CriteriaBuilder cb) {
