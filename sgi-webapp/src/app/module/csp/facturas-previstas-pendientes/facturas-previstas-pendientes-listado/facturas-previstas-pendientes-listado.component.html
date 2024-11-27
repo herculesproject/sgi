@@ -166,15 +166,13 @@
     </table>
     <div class="paginator-export">
       <div class="export-buttons">
-        <button mat-icon-button color="primary"
-          matTooltip="{{'btn.export.csv' | translate}}" (click)="exportCSV()"
-          [disabled]="!dataSource.data?.length">
-          <mat-icon>text_fields</mat-icon>
-        </button>
-        <button mat-icon-button color="primary"
-          matTooltip="{{'btn.export.xlsx' | translate}}" (click)="exportXLSX()"
+        <button mat-icon-button color="primary" matTooltip="{{'btn.export.xlsx' | translate}}" (click)="exportXLSX()"
           [disabled]="!dataSource.data?.length">
           <mat-icon>functions</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" matTooltip="{{'btn.export.csv' | translate}}" (click)="exportCSV()"
+          [disabled]="!dataSource.data?.length">
+          <mat-icon>text_fields</mat-icon>
         </button>
       </div>
       <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
