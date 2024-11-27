@@ -175,6 +175,8 @@ export class MiembrosGruposInvestigacionListadoComponent extends AbstractMenuCon
    */
   onClearFilters(): void {
     this.resetFilters();
+    this.clearProblems();
+    this.dataSource.data = [];
   }
 
   exportCSV(): void {
@@ -270,9 +272,9 @@ export class MiembrosGruposInvestigacionListadoComponent extends AbstractMenuCon
     const filters = new RSQLSgiRestFilter('grupo.nombre', SgiRestFilterOperator.LIKE_ICASE, controls.grupoNombre.value)
       .and('grupo.codigo', SgiRestFilterOperator.LIKE_ICASE, controls.grupoCodigo.value)
       .and('grupo.proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.grupoProyectoSge.value)
-      .and('grupo.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value)
+      .and('personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.id)
       .and('grupo.proyectoSgeRef', SgiRestFilterOperator.EQUALS_ICASE, controls.grupoProyectoSge.value)
-      .and('grupo.lineasInvestigacion.id', SgiRestFilterOperator.EQUALS, controls.grupoLineaInvestigacion.value?.id?.toString());
+      .and('adscritoLineaInvestigacion', SgiRestFilterOperator.EQUALS, controls.grupoLineaInvestigacion.value?.id?.toString());
 
     if (controls.miembrosActivos.value !== 'todos') {
       filters.and('activo', SgiRestFilterOperator.EQUALS, controls.miembrosActivos.value);

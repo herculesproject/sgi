@@ -174,6 +174,8 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
    */
   onClearFilters(): void {
     this.resetFilters();
+    this.clearProblems();
+    this.dataSource.data = [];
   }
 
   exportCSV(): void {
