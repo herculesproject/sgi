@@ -881,4 +881,32 @@
 
     <dropColumn columnName="descripcion" tableName="fuente_financiacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-37">
+    <createTable tableName="linea_investigacion_nombre">
+      <column name="linea_investigacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(1000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="linea_investigacion_nombre" columnNames="linea_investigacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="linea_investigacion_id"
+      baseTableName="linea_investigacion_nombre"
+      constraintName="FK_LINEAINVESTIGACIONNOMBRE_LINEAINVESTIGACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="linea_investigacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}linea_investigacion_nombre(linea_investigacion_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}linea_investigacion WHERE nombre IS
+      NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="linea_investigacion" />
+  </changeSet>
 </databaseChangeLog>

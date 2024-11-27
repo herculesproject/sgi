@@ -164,6 +164,7 @@ DELETE FROM test.tipo_regimen_concurrencia;
 DELETE FROM test.concepto_gasto_nombre;
 DELETE FROM test.concepto_gasto_descripcion;
 DELETE FROM test.concepto_gasto;
+DELETE FROM test.linea_investigacion_nombre;
 DELETE FROM test.linea_investigacion;
 DELETE FROM test.tipo_facturacion_nombre;
 DELETE FROM test.tipo_facturacion;
