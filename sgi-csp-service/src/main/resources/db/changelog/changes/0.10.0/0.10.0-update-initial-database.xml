@@ -852,4 +852,33 @@
 
     <dropColumn columnName="nombre" tableName="fuente_financiacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-36">
+    <createTable tableName="fuente_financiacion_descripcion">
+      <column name="fuente_financiacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="fuente_financiacion_descripcion"
+      columnNames="fuente_financiacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id"
+      baseTableName="fuente_financiacion_descripcion"
+      constraintName="FK_FUENTEFINANCIACIONDESCRIPCION_FUENTEFINANCICION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}fuente_financiacion_descripcion(fuente_financiacion_id, value_,
+      lang) SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}fuente_financiacion WHERE
+      descripcion IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="fuente_financiacion" />
+  </changeSet>
 </databaseChangeLog>

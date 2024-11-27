@@ -18,16 +18,8 @@ public interface FuenteFinanciacionRepository
   /**
    * Obtiene la entidad {@link FuenteFinanciacion} activo con el nombre indicado
    *
-   * @param nombre el nombre de {@link FuenteFinanciacion}.
-   * @return el {@link FuenteFinanciacion} con el nombre indicado
-   */
-  Optional<FuenteFinanciacion> findByNombreValueAndActivoIsTrue(String nombre);
-
-  /**
-   * Obtiene la entidad {@link FuenteFinanciacion} activo con el nombre indicado
-   *
-   * @param nombre el nombre de {@link FuenteFinanciacion}.
-   * @param language   el lang de {@link FuenteFinanciacion}.
+   * @param nombre   el nombre de {@link FuenteFinanciacion}.
+   * @param language el lang de {@link FuenteFinanciacion}.
    * @return el {@link FuenteFinanciacion} con el nombre indicado
    */
   Optional<FuenteFinanciacion> findByNombreLangAndNombreValueAndActivoIsTrue(Language language, String nombre);

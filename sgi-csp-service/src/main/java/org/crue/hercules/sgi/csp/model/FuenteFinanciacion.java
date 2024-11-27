@@ -39,8 +39,6 @@ import lombok.experimental.SuperBuilder;
 @UniqueNombreFuenteFinanciacionActiva(groups = { OnActualizar.class, OnActivar.class, OnCrear.class })
 @ActivableIsActivo(entityClass = FuenteFinanciacion.class, groups = { OnActualizar.class })
 public class FuenteFinanciacion extends BaseActivableEntity {
-  public static final int NOMBRE_LENGTH = 50;
-  public static final int DESCRIPCION_LENGTH = 250;
 
   /** Id */
   @Id
@@ -57,8 +55,10 @@ public class FuenteFinanciacion extends BaseActivableEntity {
   private Set<FuenteFinanciacionNombre> nombre = new HashSet<>();
 
   /** Descripcion */
-  @Column(name = "descripcion", length = DESCRIPCION_LENGTH, nullable = true)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "fuente_financiacion_descripcion", joinColumns = @JoinColumn(name = "fuente_financiacion_id"))
+  @Valid
+  private Set<FuenteFinanciacionDescripcion> descripcion = new HashSet<>();
 
   /** Fondo estructural */
   @Column(name = "fondo_estructural", nullable = false)

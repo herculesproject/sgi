@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
+import org.crue.hercules.sgi.csp.model.FuenteFinanciacionDescripcion;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacionNombre;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
@@ -44,25 +45,36 @@ class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
     Set<FuenteFinanciacionNombre> tipoFinanciacionNombre1 = new HashSet<>();
     tipoFinanciacionNombre1.add(new FuenteFinanciacionNombre(Language.ES, "nombre-1"));
 
+    Set<FuenteFinanciacionDescripcion> descripcionFuenteFinanciacion1 = new HashSet<>();
+    descripcionFuenteFinanciacion1.add(new FuenteFinanciacionDescripcion(Language.ES, "descripcion-1"));
+
     FuenteFinanciacion fuenteFinanciacion1 = FuenteFinanciacion.builder().nombre(
         tipoFinanciacionNombre1)
-        .descripcion("descripcion-1").fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
+        .descripcion(
+            descripcionFuenteFinanciacion1)
+        .fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
         .tipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion).activo(true).build();
     entityManager.persistAndFlush(fuenteFinanciacion1);
 
     Set<FuenteFinanciacionNombre> tipoFinanciacionNombre2 = new HashSet<>();
     tipoFinanciacionNombre2.add(new FuenteFinanciacionNombre(Language.ES, "nombre-2"));
 
+    Set<FuenteFinanciacionDescripcion> descripcionFuenteFinanciacion2 = new HashSet<>();
+    descripcionFuenteFinanciacion2.add(new FuenteFinanciacionDescripcion(Language.ES, "descripcion-2"));
+
     FuenteFinanciacion fuenteFinanciacion2 = FuenteFinanciacion.builder().nombre(
         tipoFinanciacionNombre2)
-        .descripcion("descripcion-2").fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
+        .descripcion(
+            descripcionFuenteFinanciacion2)
+        .fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
         .tipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion).activo(true).build();
     entityManager.persistAndFlush(fuenteFinanciacion2);
 
     String nombreBuscado = "nombre-1";
 
     // when: se busca el FuenteFinanciacion nombre
-    FuenteFinanciacion fuenteFinanciacionEncontrado = repository.findByNombreValueAndActivoIsTrue(nombreBuscado).get();
+    FuenteFinanciacion fuenteFinanciacionEncontrado = repository
+        .findByNombreLangAndNombreValueAndActivoIsTrue(Language.ES, nombreBuscado).get();
 
     // then: Se recupera el FuenteFinanciacion con el nombre buscado
     Assertions.assertThat(fuenteFinanciacionEncontrado.getId()).as("getId").isNotNull();
@@ -100,18 +112,28 @@ class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
     Set<FuenteFinanciacionNombre> tipoFinanciacionNombre1 = new HashSet<>();
     tipoFinanciacionNombre1.add(new FuenteFinanciacionNombre(Language.ES, "nombre1"));
 
+    Set<FuenteFinanciacionDescripcion> descripcionFuenteFinanciacion1 = new HashSet<>();
+    descripcionFuenteFinanciacion1.add(new FuenteFinanciacionDescripcion(Language.ES, "descripcion-1"));
+
     FuenteFinanciacion fuenteFinanciacion1 = FuenteFinanciacion.builder().nombre(
         tipoFinanciacionNombre1)
-        .descripcion("descripcion-1").fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
+        .descripcion(
+            descripcionFuenteFinanciacion1)
+        .fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
         .tipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion).activo(true).build();
     entityManager.persistAndFlush(fuenteFinanciacion1);
 
     Set<FuenteFinanciacionNombre> tipoFinanciacionNombre2 = new HashSet<>();
     tipoFinanciacionNombre2.add(new FuenteFinanciacionNombre(Language.ES, "nombre2"));
 
+    Set<FuenteFinanciacionDescripcion> descripcionFuenteFinanciacion2 = new HashSet<>();
+    descripcionFuenteFinanciacion2.add(new FuenteFinanciacionDescripcion(Language.ES, "descripcion-2"));
+
     FuenteFinanciacion fuenteFinanciacion2 = FuenteFinanciacion.builder().nombre(
         tipoFinanciacionNombre2)
-        .descripcion("descripcion-2").fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
+        .descripcion(
+            descripcionFuenteFinanciacion2)
+        .fondoEstructural(true).tipoAmbitoGeografico(tipoAmbitoGeografico)
         .tipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion).activo(true).build();
     entityManager.persistAndFlush(fuenteFinanciacion2);
 
@@ -119,7 +141,7 @@ class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
 
     // when: se busca el FuenteFinanciacion por nombre
     Optional<FuenteFinanciacion> fuenteFinanciacionEncontrado = repository
-        .findByNombreValueAndActivoIsTrue(nombreBuscado);
+        .findByNombreLangAndNombreValueAndActivoIsTrue(Language.ES, nombreBuscado);
 
     // then: No hay ningun FuenteFinanciacion con el nombre buscado
     Assertions.assertThat(fuenteFinanciacionEncontrado).isEqualTo(Optional.empty());
