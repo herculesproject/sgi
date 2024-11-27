@@ -35,7 +35,7 @@ export interface ConceptoGastoListado {
   convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
   help: HelpIcon;
   conceptoGasto: I18nFieldValue[];
-  descripcion: string;
+  descripcion: I18nFieldValue[];
   costesIndirectos: boolean;
   importeMaximo: number;
   fechaInicio: DateTime;

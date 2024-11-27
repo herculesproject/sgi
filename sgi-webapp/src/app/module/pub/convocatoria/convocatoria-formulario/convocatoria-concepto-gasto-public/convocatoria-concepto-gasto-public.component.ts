@@ -97,6 +97,8 @@ export class ConvocatoriaConceptoGastoPublicComponent extends FragmentComponent 
         switch (property) {
           case 'conceptoGasto.nombre':
             return wrapper.value.conceptoGasto?.nombre ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.nombre) : '';
+          case 'conceptoGasto.descripcion':
+            return wrapper.value.conceptoGasto?.descripcion ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.descripcion) : '';
           default:
             return wrapper.value[property];
         }
@@ -107,6 +109,8 @@ export class ConvocatoriaConceptoGastoPublicComponent extends FragmentComponent 
         switch (property) {
           case 'conceptoGasto.nombre':
             return wrapper.value.conceptoGasto?.nombre ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.nombre) : '';
+          case 'conceptoGasto.descripcion':
+            return wrapper.value.conceptoGasto?.descripcion ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.descripcion) : '';
           default:
             return wrapper.value[property];
         }

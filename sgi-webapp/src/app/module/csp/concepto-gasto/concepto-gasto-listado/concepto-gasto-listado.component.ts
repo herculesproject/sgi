@@ -76,6 +76,9 @@ export class ConceptoGastoListadoComponent extends AbstractTablePaginationCompon
       if (column === 'nombre') {
         return 'nombre.value';
       }
+      if (column === 'descripcion') {
+        return 'descripcion.value';
+      }
       return column;
     }
   }

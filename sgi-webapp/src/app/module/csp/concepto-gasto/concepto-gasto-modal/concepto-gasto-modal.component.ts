@@ -13,6 +13,7 @@ import { switchMap } from 'rxjs/operators';
 
 const CONCEPTO_GASTO_KEY = marker('csp.concepto-gasto');
 const CONCEPTO_GASTO_NOMBRE_KEY = marker('csp.concepto-gasto.nombre');
+const CONCEPTO_GASTO_DESCRIPCION_KEY = marker('csp.concepto-gasto.descripcion');
 const CONCEPTO_GASTO_COSTES_INDIRECTOS = marker('label.costes-indirectos');
 const TITLE_NEW_ENTITY = marker('title.new.entity');
 
@@ -25,6 +26,7 @@ export class ConceptoGastoModalComponent extends DialogActionComponent<IConcepto
 
   private readonly conceptoGasto: IConceptoGasto;
   msgParamNombreEntity = {};
+  msgParamDescripcionEntity = {};
   msgParamCostesIndirectos = {};
   title: string;
 
@@ -54,6 +56,11 @@ export class ConceptoGastoModalComponent extends DialogActionComponent<IConcepto
       CONCEPTO_GASTO_NOMBRE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamNombreEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      CONCEPTO_GASTO_DESCRIPCION_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamDescripcionEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
     this.translate.get(
       CONCEPTO_GASTO_COSTES_INDIRECTOS,
@@ -90,7 +97,7 @@ export class ConceptoGastoModalComponent extends DialogActionComponent<IConcepto
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
       nombre: new FormControl(this.conceptoGasto?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
-      descripcion: new FormControl(this.conceptoGasto?.descripcion ?? ''),
+      descripcion: new FormControl(this.conceptoGasto?.descripcion ?? [], I18nValidators.maxLength(250)),
       costesIndirectos: new FormControl(this.conceptoGasto?.costesIndirectos, Validators.required)
     });
   }

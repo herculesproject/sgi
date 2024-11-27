@@ -114,6 +114,8 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
         switch (property) {
           case 'conceptoGasto.nombre':
             return listadocg?.conceptoGasto ? this.languageService.getFieldValue(listadocg.conceptoGasto) : '';
+          case 'conceptoGasto.descripcion':
+            return listadocg?.descripcion ? this.languageService.getFieldValue(listadocg.descripcion) : '';
           default:
             return listadocg[property];
         }
@@ -124,6 +126,8 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
         switch (property) {
           case 'conceptoGasto.nombre':
             return listadocg?.conceptoGasto ? this.languageService.getFieldValue(listadocg.conceptoGasto) : '';
+          case 'conceptoGasto.descripcion':
+            return listadocg?.descripcion ? this.languageService.getFieldValue(listadocg.descripcion) : '';
           default:
             return listadocg[property];
         }

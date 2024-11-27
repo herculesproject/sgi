@@ -8,7 +8,7 @@ export interface IConceptoGasto {
   nombre: I18nFieldValue[];
 
   /** Descripcion */
-  descripcion: string;
+  descripcion: I18nFieldValue[];
 
   /** Contes Indirectos */
   costesIndirectos: boolean;

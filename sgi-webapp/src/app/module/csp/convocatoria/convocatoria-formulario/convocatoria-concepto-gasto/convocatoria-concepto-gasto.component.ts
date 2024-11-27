@@ -112,7 +112,7 @@ export class ConvocatoriaConceptoGastoComponent extends FragmentComponent implem
           case 'conceptoGasto.nombre':
             return wrapper.value.conceptoGasto?.nombre ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.nombre) : '';
           case 'conceptoGasto.descripcion':
-            return wrapper.value.conceptoGasto?.descripcion ?? '';
+            return wrapper.value.conceptoGasto?.descripcion ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.descripcion) : '';
           case 'conceptoGasto.costesIndirectos':
             return wrapper.value.conceptoGasto?.costesIndirectos ?? '';
           default:
@@ -126,7 +126,7 @@ export class ConvocatoriaConceptoGastoComponent extends FragmentComponent implem
           case 'conceptoGasto.nombre':
             return wrapper.value.conceptoGasto?.nombre ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.nombre) : '';
           case 'conceptoGasto.descripcion':
-            return wrapper.value.conceptoGasto?.descripcion ?? '';
+            return wrapper.value.conceptoGasto?.descripcion ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.descripcion) : '';
           case 'conceptoGasto.costesIndirectos':
             return wrapper.value.conceptoGasto?.costesIndirectos ?? '';
           default:
