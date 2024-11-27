@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -26,12 +27,17 @@ class ConceptoGastoRespositoryTest extends BaseRepositoryTest {
     // given: 2 ConceptoGasto de los que 1 coincide con el nombre buscado
     Set<ConceptoGastoNombre> nombreConceptoGasto1 = new HashSet<>();
     nombreConceptoGasto1.add(new ConceptoGastoNombre(Language.ES, "nombre-1"));
-    ConceptoGasto conceptoGasto1 = new ConceptoGasto(null, nombreConceptoGasto1, "descripcion-1", true, true);
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto1 = new HashSet<>();
+    descripcionConceptoGasto1.add(new ConceptoGastoDescripcion(Language.ES, "descripcion-1"));
+    ConceptoGasto conceptoGasto1 = new ConceptoGasto(null, nombreConceptoGasto1, descripcionConceptoGasto1, true, true);
     entityManager.persistAndFlush(conceptoGasto1);
 
     Set<ConceptoGastoNombre> nombreConceptoGasto2 = new HashSet<>();
     nombreConceptoGasto2.add(new ConceptoGastoNombre(Language.ES, "nombre-2"));
-    ConceptoGasto conceptoGasto2 = new ConceptoGasto(null, nombreConceptoGasto2, "descripcion-2", true, false);
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto2 = new HashSet<>();
+    descripcionConceptoGasto2.add(new ConceptoGastoDescripcion(Language.ES, "descripcion-2"));
+    ConceptoGasto conceptoGasto2 = new ConceptoGasto(null, nombreConceptoGasto2, descripcionConceptoGasto2, true,
+        false);
     entityManager.persistAndFlush(conceptoGasto2);
 
     String nombreBuscado = "nombre-1";
@@ -53,12 +59,17 @@ class ConceptoGastoRespositoryTest extends BaseRepositoryTest {
     // given: 2 ConceptoGasto que no coinciden con el nombre buscado
     Set<ConceptoGastoNombre> nombreConceptoGasto1 = new HashSet<>();
     nombreConceptoGasto1.add(new ConceptoGastoNombre(Language.ES, "nombre-1"));
-    ConceptoGasto conceptoGasto1 = new ConceptoGasto(null, nombreConceptoGasto1, "descripcion-1", true, true);
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto1 = new HashSet<>();
+    descripcionConceptoGasto1.add(new ConceptoGastoDescripcion(Language.ES, "descripcion-1"));
+    ConceptoGasto conceptoGasto1 = new ConceptoGasto(null, nombreConceptoGasto1, descripcionConceptoGasto1, true, true);
     entityManager.persistAndFlush(conceptoGasto1);
 
     Set<ConceptoGastoNombre> nombreConceptoGasto2 = new HashSet<>();
     nombreConceptoGasto2.add(new ConceptoGastoNombre(Language.ES, "nombre-2"));
-    ConceptoGasto conceptoGasto2 = new ConceptoGasto(null, nombreConceptoGasto2, "descripcion-2", true, false);
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto2 = new HashSet<>();
+    descripcionConceptoGasto2.add(new ConceptoGastoDescripcion(Language.ES, "descripcion-2"));
+    ConceptoGasto conceptoGasto2 = new ConceptoGasto(null, nombreConceptoGasto2, descripcionConceptoGasto2, true,
+        false);
     entityManager.persistAndFlush(conceptoGasto2);
 
     String nombreBuscado = "nombre-noexiste";

@@ -10,6 +10,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
@@ -80,8 +81,8 @@ class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.nombre[0].value").value(
             I18nHelper.getValueForLanguage(convocatoriaConceptoGasto.getConceptoGasto().getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.descripcion")
-            .value(convocatoriaConceptoGasto.getConceptoGasto().getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.descripcion[0].value").value(
+            I18nHelper.getValueForLanguage(convocatoriaConceptoGasto.getConceptoGasto().getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.activo")
             .value(convocatoriaConceptoGasto.getConceptoGasto().getActivo()));
   }
@@ -362,8 +363,11 @@ class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest {
     Set<ConceptoGastoNombre> nombreConceptoGasto = new HashSet<>();
     nombreConceptoGasto.add(new ConceptoGastoNombre(Language.ES, "nombre-" + (id != null ? id : 1)));
 
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto = new HashSet<>();
+    descripcionConceptoGasto.add(new ConceptoGastoDescripcion(Language.ES, "Descripcion"));
+
     ConceptoGasto conceptoGasto = new ConceptoGasto();
-    conceptoGasto.setDescripcion("Descripcion");
+    conceptoGasto.setDescripcion(descripcionConceptoGasto);
     conceptoGasto.setNombre(nombreConceptoGasto);
     conceptoGasto.setActivo(true);
 

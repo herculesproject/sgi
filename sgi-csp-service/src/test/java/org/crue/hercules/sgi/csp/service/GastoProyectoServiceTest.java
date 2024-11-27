@@ -4,15 +4,19 @@ import static org.mockito.ArgumentMatchers.anyLong;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto.TipoEstadoGasto;
 import org.crue.hercules.sgi.csp.model.GastoProyecto;
 import org.crue.hercules.sgi.csp.repository.EstadoGastoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.GastoProyectoRepository;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -77,10 +81,12 @@ class GastoProyectoServiceTest extends BaseServiceTest {
   }
 
   private ConceptoGasto buildMockConceptoGasto() {
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto = new HashSet<>();
+    descripcionConceptoGasto.add(new ConceptoGastoDescripcion(Language.ES, "Testing concepto gasto"));
     return ConceptoGasto.builder()
         .activo(Boolean.TRUE)
         .id(1L)
-        .descripcion("Testing concepto gasto")
+        .descripcion(descripcionConceptoGasto)
         .build();
   }
 

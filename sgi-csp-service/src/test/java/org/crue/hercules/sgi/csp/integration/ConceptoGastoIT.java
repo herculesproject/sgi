@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -157,7 +158,7 @@ class ConceptoGastoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
@@ -190,7 +191,7 @@ class ConceptoGastoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -226,7 +227,7 @@ class ConceptoGastoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     Long proyectoId = 1L;
 
@@ -273,10 +274,13 @@ class ConceptoGastoIT extends BaseIT {
     Set<ConceptoGastoNombre> nombreConceptoGasto = new HashSet<>();
     nombreConceptoGasto.add(new ConceptoGastoNombre(Language.ES, nombre));
 
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto = new HashSet<>();
+    descripcionConceptoGasto.add(new ConceptoGastoDescripcion(Language.ES, "descripcion-" + id));
+
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id);
     conceptoGasto.setNombre(nombreConceptoGasto);
-    conceptoGasto.setDescripcion("descripcion-" + id);
+    conceptoGasto.setDescripcion(descripcionConceptoGasto);
     conceptoGasto.setActivo(true);
     conceptoGasto.setCostesIndirectos(true);
 

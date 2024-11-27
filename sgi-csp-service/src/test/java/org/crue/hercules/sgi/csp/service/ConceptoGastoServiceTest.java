@@ -11,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.repository.ConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConceptoGastoServiceImpl;
@@ -390,10 +391,13 @@ class ConceptoGastoServiceTest extends BaseServiceTest {
     Set<ConceptoGastoNombre> nombreConceptoGasto = new HashSet<>();
     nombreConceptoGasto.add(new ConceptoGastoNombre(Language.ES, nombre));
 
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto = new HashSet<>();
+    descripcionConceptoGasto.add(new ConceptoGastoDescripcion(Language.ES, "descripcion-" + id));
+
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id);
     conceptoGasto.setNombre(nombreConceptoGasto);
-    conceptoGasto.setDescripcion("descripcion-" + id);
+    conceptoGasto.setDescripcion(descripcionConceptoGasto);
     conceptoGasto.setActivo(true);
     conceptoGasto.setCostesIndirectos(true);
 

@@ -39,7 +39,10 @@ INSERT INTO test.convocatoria
 VALUES(1, 'unidad-001', 1, 'codigo-001', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-001', 'objeto-001', 'observaciones-001', 1, 1, 'REGISTRADA', 12, 1, 'AYUDAS', true);
 
 -- CONCEPTO_GASTO
-INSERT INTO test.concepto_gasto (id, descripcion, costes_indirectos, activo) VALUES (1, 'descripcion-1', true,  true);
+INSERT INTO test.concepto_gasto (id, costes_indirectos, activo) VALUES (1, true,  true);
 
 -- CONCEPTO_GASTO_NOMBRE
 INSERT INTO test.concepto_gasto_nombre (concepto_gasto_id, lang, value_) VALUES (1, 'es', 'conceptoGasto-1');
+
+-- CONCEPTO_GASTO_DESCRIPCION
+INSERT INTO test.concepto_gasto_descripcion (concepto_gasto_id, lang, value_) VALUES (1, 'es', 'descripcion-1');

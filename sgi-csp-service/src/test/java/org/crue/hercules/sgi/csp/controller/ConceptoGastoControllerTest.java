@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.service.ConceptoGastoService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -72,7 +73,8 @@ class ConceptoGastoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(conceptoGasto.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(conceptoGasto.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(conceptoGasto.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(conceptoGasto.getActivo()));
   }
 
@@ -117,7 +119,8 @@ class ConceptoGastoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(conceptoGasto.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(conceptoGastoExistente.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(conceptoGastoExistente.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(conceptoGastoExistente.getActivo()));
   }
 
@@ -167,7 +170,8 @@ class ConceptoGastoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(conceptoGasto.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(conceptoGasto.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(conceptoGasto.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(conceptoGasto.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
 
@@ -212,7 +216,8 @@ class ConceptoGastoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(conceptoGasto.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(conceptoGasto.getNombre(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(conceptoGasto.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(I18nHelper.getValueForLanguage(conceptoGasto.getDescripcion(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(false));
   }
 
@@ -446,10 +451,13 @@ class ConceptoGastoControllerTest extends BaseControllerTest {
     Set<ConceptoGastoNombre> nombreConceptoGasto = new HashSet<>();
     nombreConceptoGasto.add(new ConceptoGastoNombre(Language.ES, nombre));
 
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto = new HashSet<>();
+    descripcionConceptoGasto.add(new ConceptoGastoDescripcion(Language.ES, "descripcion-" + id));
+
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id);
     conceptoGasto.setNombre(nombreConceptoGasto);
-    conceptoGasto.setDescripcion("descripcion-" + id);
+    conceptoGasto.setDescripcion(descripcionConceptoGasto);
     conceptoGasto.setActivo(true);
     conceptoGasto.setCostesIndirectos(true);
 

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto.TipoEstadoGasto;
 
@@ -37,7 +38,7 @@ public class GastoProyectoOutput implements Serializable {
   public static class ConceptoGasto implements Serializable {
     private Long id;
     private Collection<ConceptoGastoNombre> nombre;
-    private String descripcion;
+    private Collection<ConceptoGastoDescripcion> descripcion;
   }
 
   @Data

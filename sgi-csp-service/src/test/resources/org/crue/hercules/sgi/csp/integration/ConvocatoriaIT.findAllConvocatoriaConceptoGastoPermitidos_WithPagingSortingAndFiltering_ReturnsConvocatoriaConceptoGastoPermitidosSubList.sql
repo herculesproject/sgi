@@ -54,14 +54,19 @@ INSERT INTO test.convocatoria
 VALUES(2, 'unidad-002', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-002', 'objeto-002', 'observaciones-002', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', 'PROYECTO', true);
 
 -- CONCEPTO_GASTO
-INSERT INTO test.concepto_gasto (id, descripcion, costes_indirectos, activo) VALUES (1, 'descripcion-1', true, true);
-INSERT INTO test.concepto_gasto (id, descripcion, costes_indirectos, activo) VALUES (2, 'descripcion-2', true, true);
-INSERT INTO test.concepto_gasto (id, descripcion, costes_indirectos, activo) VALUES (3, 'descripcion-3', true, true);
+INSERT INTO test.concepto_gasto (id, costes_indirectos, activo) VALUES (1, true, true);
+INSERT INTO test.concepto_gasto (id, costes_indirectos, activo) VALUES (2, true, true);
+INSERT INTO test.concepto_gasto (id, costes_indirectos, activo) VALUES (3, true, true);
 
 -- CONCEPTO_GASTO_NOMBRE
 INSERT INTO test.concepto_gasto_nombre (concepto_gasto_id, lang, value_) VALUES (1, 'es', 'nombre-1');
 INSERT INTO test.concepto_gasto_nombre (concepto_gasto_id, lang, value_) VALUES (2, 'es', 'nombre-2');
 INSERT INTO test.concepto_gasto_nombre (concepto_gasto_id, lang, value_) VALUES (3, 'es', 'nombre-3');
+
+-- CONCEPTO_GASTO_DESCRIPCION
+INSERT INTO test.concepto_gasto_descripcion (concepto_gasto_id, lang, value_) VALUES (1, 'es', 'descripcion-1');
+INSERT INTO test.concepto_gasto_descripcion (concepto_gasto_id, lang, value_) VALUES (2, 'es', 'descripcion-2');
+INSERT INTO test.concepto_gasto_descripcion (concepto_gasto_id, lang, value_) VALUES (3, 'es', 'descripcion-3');
 
 --CONVOCATORIA CONCEPTO GASTO
 INSERT INTO  test.convocatoria_concepto_gasto(id, convocatoria_id, concepto_gasto_id, observaciones,permitido) VALUES (1, 1, 1,'obs-001', true);

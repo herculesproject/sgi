@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity.OnActivar;
 import org.crue.hercules.sgi.csp.validation.UniqueNombreConceptoGastoActivo;
@@ -58,10 +57,11 @@ public class ConceptoGasto extends BaseEntity {
   @Builder.Default
   private Set<ConceptoGastoNombre> nombre = new HashSet<>();
 
-  /** Descripcion */
-  @Column(name = "descripcion", length = 250, nullable = true)
-  @Size(max = 250)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "concepto_gasto_descripcion", joinColumns = @JoinColumn(name = "concepto_gasto_id"))
+  @Valid
+  @Builder.Default
+  private Set<ConceptoGastoDescripcion> descripcion = new HashSet<>();
 
   /** Costes indirectos */
   @Column(name = "costes_indirectos", columnDefinition = "boolean default false", nullable = false)

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -234,10 +235,13 @@ class ConvocatoriaConceptoGastoIT extends BaseIT {
     Set<ConceptoGastoNombre> nombreConceptoGasto = new HashSet<>();
     nombreConceptoGasto.add(new ConceptoGastoNombre(Language.ES, "nombre-00" + (id == null ? 1 : id)));
 
+    Set<ConceptoGastoDescripcion> descripcionConceptoGasto = new HashSet<>();
+    descripcionConceptoGasto.add(new ConceptoGastoDescripcion(Language.ES, "descripcion-00" + (id == null ? 1 : id)));
+
     ConceptoGasto conceptoGasto = new ConceptoGasto();
     conceptoGasto.setId(id == null ? 1 : id);
     conceptoGasto.setActivo(true);
-    conceptoGasto.setDescripcion("descripcion-00" + (id == null ? 1 : id));
+    conceptoGasto.setDescripcion(descripcionConceptoGasto);
     conceptoGasto.setNombre(nombreConceptoGasto);
 
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();

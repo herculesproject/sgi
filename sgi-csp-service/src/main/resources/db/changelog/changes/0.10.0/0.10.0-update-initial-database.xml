@@ -795,4 +795,32 @@
 
     <dropColumn columnName="nombre" tableName="concepto_gasto" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-34">
+    <createTable tableName="concepto_gasto_descripcion">
+      <column name="concepto_gasto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="concepto_gasto_descripcion" columnNames="concepto_gasto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="concepto_gasto_id"
+      baseTableName="concepto_gasto_descripcion"
+      constraintName="FK_CONCEPTOGASTODESCRIPCION_CONCEPTOGASTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}concepto_gasto_descripcion(concepto_gasto_id, value_, lang)
+      SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}concepto_gasto WHERE descripcion
+      IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="concepto_gasto" />
+  </changeSet>
 </databaseChangeLog>
