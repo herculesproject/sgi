@@ -58,7 +58,8 @@ public class InformeEvaluadorReportService extends InformeEvaluacionEvaluadorBas
             lang));
     dataReport.put("fechaFin", formatInstantToString(evaluacion.getMemoria().getPeticionEvaluacion().getFechaFin(),
         lang));
-    dataReport.put("financiacion", evaluacion.getMemoria().getPeticionEvaluacion().getFuenteFinanciacion());
+    dataReport.put("financiacion",
+        I18nHelper.getFieldValue(evaluacion.getMemoria().getPeticionEvaluacion().getFuenteFinanciacion(), lang));
     dataReport.put("resumen",
         I18nHelper.getFieldValue(evaluacion.getMemoria().getPeticionEvaluacion().getResumen(), lang));
 

@@ -55,7 +55,7 @@ public class PeticionEvaluacionObject {
         this.tipoInvestigacionTutelada = new TipoInvestigacionTuteladaObject(dto.getTipoInvestigacionTutelada(), lang);
       }
       this.existeFinanciacion = dto.getExisteFinanciacion();
-      this.fuenteFinanciacion = dto.getFuenteFinanciacion();
+      this.fuenteFinanciacion = I18nHelper.getFieldValue(dto.getFuenteFinanciacion(), lang);
       this.estadoFinanciacion = dto.getEstadoFinanciacion();
       this.importeFinanciacion = dto.getImporteFinanciacion();
       this.fechaInicio = dto.getFechaInicio();

@@ -60,7 +60,7 @@ public class PeticionEvaluacionDto extends BaseRestDto {
   private transient TipoActividadDto tipoActividad;
   private transient TipoInvestigacionTuteladaDto tipoInvestigacionTutelada;
   private Boolean existeFinanciacion;
-  private String fuenteFinanciacion;
+  private List<I18nFieldValueDto> fuenteFinanciacion;
   private EstadoFinanciacion estadoFinanciacion;
   private BigDecimal importeFinanciacion;
   private Instant fechaInicio;

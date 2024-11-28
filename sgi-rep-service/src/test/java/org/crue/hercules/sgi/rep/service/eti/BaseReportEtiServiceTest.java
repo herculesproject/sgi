@@ -106,7 +106,6 @@ abstract class BaseReportEtiServiceTest extends BaseReportServiceTest {
     return PeticionEvaluacionDto.builder().id(
         idPeticionEvaluacion)
         .tipoActividad(TipoActividadDto.builder().id(1L).nombre("nombreTipoActividad").build())
-        .fuenteFinanciacion("fuenteFinanciacion")
         .estadoFinanciacion(EstadoFinanciacion.CONCEDIDO)
         .tipoInvestigacionTutelada(TipoInvestigacionTuteladaDto.builder().nombre("nombre").build())
         .build();
