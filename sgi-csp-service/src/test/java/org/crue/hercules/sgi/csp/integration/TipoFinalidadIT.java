@@ -171,7 +171,7 @@ class TipoFinalidadIT extends BaseIT {
   void findAll_WithPagingSortingAndFiltering_ReturnsTipoFinalidadSubList() throws Exception {
 
     // given: data for TipoFinalidad
-    String filter = "descripcion.value=ke=00,descripcion.lang==es";
+    String filter = "descripcion.value=ke=00";
 
     // when: find TipoFinalidad
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("q", filter)
@@ -198,7 +198,7 @@ class TipoFinalidadIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "nombre.value,desc";
-    String filter = "descripcion.value=ke=00,descripcion.lang==es";
+    String filter = "descripcion.value=ke=00";
 
     // when: find TipoFinalidad
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
