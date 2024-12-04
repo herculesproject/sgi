@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Directive,
   DoCheck,
@@ -62,6 +63,7 @@ export abstract class InputI18nBaseComponent
       this._value = newValue;
     }
     this.editingValue = this.getCurrentEditingValue();
+    this.switchToPriorizedLanguage();
 
     this.propagateChanges()
   }
@@ -217,7 +219,10 @@ export abstract class InputI18nBaseComponent
     }
     this._enabledLanguages = this.languageService.getEnabledLanguages();
     this._selectedLanguage = this.languageService.getLanguage();
-    this.languageService.languageChange$.pipe(takeUntil(this._destroy)).subscribe((lang) => this.selectedLanguage = lang);
+    this.languageService.languageChange$.pipe(takeUntil(this._destroy)).subscribe((lang) => {
+      this.selectedLanguage = lang;
+      this.switchToPriorizedLanguage();
+    });
 
     this.errorStateMatcher = this._errorStateMatcher || this.defaultErrorStateMatcher;
   }
@@ -237,6 +242,15 @@ export abstract class InputI18nBaseComponent
           }
         }
       );
+  }
+
+  private switchToPriorizedLanguage(): void {
+    if (this.value?.length) {
+      const priorizedValue = this.languageService.getField(this.value);
+      if (priorizedValue && priorizedValue.lang.toString() !== this.selectedLanguage.code) {
+        this.selectedLanguage = Language.fromCode(priorizedValue.lang.toString());
+      }
+    }
   }
 
   ngDoCheck(): void {

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { Language } from '@core/i18n/language';
 import { IConfigValue } from '@core/models/cnf/config-value';
 import { environment } from '@env';
@@ -92,11 +93,11 @@ export class LanguageService {
     return '';
   }
 
-  public getField<T extends I18nFieldValue>(field: T[]): T {
+  public getField<T extends I18nFieldValue | I18nFieldValueResponse>(field: T[]): T {
     if (!Array.isArray(field) || field?.length === 0) {
       return null;
     }
-    let fieldValue = field.filter(f => f.lang === this.language);
+    let fieldValue = field.filter(f => f.lang.toString() === this.language.code);
     if (fieldValue.length) {
       return fieldValue[0];
     }
@@ -105,7 +106,7 @@ export class LanguageService {
       let idx = 0;
       do {
         const lang = this.languagesPriority[idx];
-        other = field.filter(f => f.lang === lang);
+        other = field.filter(f => f.lang.toString() === lang.code);
         idx++;
       } while (other.length === 0 && idx < this.languagesPriority.length)
       if (other.length) {

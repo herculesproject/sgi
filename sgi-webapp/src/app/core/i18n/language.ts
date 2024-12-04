@@ -23,4 +23,8 @@ export class Language {
 
     return null;
   }
+
+  public toString = (): string => {
+    return this.code;
+  }
 }
