@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.repository.predicate;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -9,6 +10,7 @@ import javax.persistence.criteria.Subquery;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLPredicateResolver;
@@ -60,7 +62,8 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
     return instance;
   }
 
-  private static Predicate buildFilterTitulo(ComparisonNode node, Root<PeticionEvaluacion> root, CriteriaBuilder cb) {
+  private static Predicate buildFilterTitulo(ComparisonNode node, Root<PeticionEvaluacion> root, CriteriaQuery<?> query,
+      CriteriaBuilder cb) {
     ComparisonOperator operator = node.getOperator();
     if (!operator.equals(RSQLOperators.IGNORE_CASE_LIKE) && !operator.equals(RSQLOperators.LIKE)) {
       // Unsupported Operator
@@ -71,9 +74,17 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
     String tituloFilter = node.getArguments().get(0);
-    Predicate titulo = cb.like(root.join(PeticionEvaluacion_.titulo).get(PeticionEvaluacionTitulo_.VALUE),
-        tituloFilter);
-    return cb.and(titulo);
+
+    Subquery<PeticionEvaluacionTitulo> subquery = query.subquery(PeticionEvaluacionTitulo.class);
+    Root<PeticionEvaluacion> rootSubquery = subquery.from(PeticionEvaluacion.class);
+    Join<PeticionEvaluacion, PeticionEvaluacionTitulo> join = rootSubquery.join(PeticionEvaluacion_.TITULO);
+
+    subquery.select(join);
+    subquery.where(
+        cb.and(cb.like(join.get(PeticionEvaluacionTitulo_.value), tituloFilter)),
+        cb.equal(root, rootSubquery));
+
+    return cb.exists(subquery);
   }
 
   private static Predicate buildFilterPersona(ComparisonNode node, Root<PeticionEvaluacion> root,
@@ -157,7 +168,7 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
 
     switch (property) {
       case TITULO:
-        return buildFilterTitulo(node, root, criteriaBuilder);
+        return buildFilterTitulo(node, root, query, criteriaBuilder);
       case PERSONA:
         return buildFilterPersona(node, root, criteriaBuilder);
       case CODIGO:
