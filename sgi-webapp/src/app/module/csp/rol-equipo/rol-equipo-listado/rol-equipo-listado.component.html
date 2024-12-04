@@ -55,7 +55,8 @@
   <!-- FIN Buscador de roles de equipo -->
   <!-- Listado de roles de equipo -->
   <div class="mat-elevation-z4">
-    <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
+    <table mat-table [dataSource]="rolEquipo$ | async" matSort matSortActive="id" matSortDirection="asc"
+      matSortDisableClear>
       <!-- Nombre -->
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.rol-equipo.nombre' | translate}}
