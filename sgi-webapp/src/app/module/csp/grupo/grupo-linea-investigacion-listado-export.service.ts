@@ -5,12 +5,12 @@ import { IGrupoLineaEquipoInstrumental } from '@core/models/csp/grupo-linea-equi
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { IGrupoLineaInvestigador } from '@core/models/csp/grupo-linea-investigador';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
-import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { IPersona } from '@core/models/sgp/persona';
 import { GrupoEquipoInstrumentalService } from '@core/services/csp/grupo-equipo-instrumental/grupo-equipo-instrumental.service';
 import { GrupoLineaInvestigacionService } from '@core/services/csp/grupo-linea-investigacion/grupo-linea-investigacion.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { LineaInvestigacionService } from '@core/services/csp/linea-investigacion/linea-investigacion.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
@@ -18,7 +18,6 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
-import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
 import { concat, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
@@ -54,13 +53,13 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private luxonDatePipe: LuxonDatePipe,
     private readonly grupoService: GrupoService,
     private personaService: PersonaService,
     private grupoLineaInvestigacionService: GrupoLineaInvestigacionService,
     private lineaInvestigacionService: LineaInvestigacionService,
     private clasificacionService: ClasificacionService,
-    private grupoEquipoInstrumentalService: GrupoEquipoInstrumentalService
+    private grupoEquipoInstrumentalService: GrupoEquipoInstrumentalService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -437,7 +436,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
     grupoLineasClasificacion: GrupoLineaClasificacionListado[], maxNumClasificaciones: number, maxNumNiveles: number,
     grupoLineasEquipoInstrumental: IGrupoLineaEquipoInstrumental[], maxNumEquipoInstrumental: number) {
     if (grupoLineaInvestigacion) {
-      elementsRow.push(grupoLineaInvestigacion?.lineaInvestigacion?.nombre ?? '');
+      elementsRow.push(grupoLineaInvestigacion?.lineaInvestigacion?.nombre ? this.languageService.getFieldValue(grupoLineaInvestigacion.lineaInvestigacion.nombre) : '');
       elementsRow.push(LuxonUtils.toBackend(grupoLineaInvestigacion.fechaInicio) ?? '');
       elementsRow.push(LuxonUtils.toBackend(grupoLineaInvestigacion.fechaFin) ?? '');
 

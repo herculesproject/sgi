@@ -10,6 +10,7 @@ import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investiga
 import { ROUTE_NAMES } from '@core/route.names';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -51,7 +52,8 @@ export class GrupoLineaInvestigacionComponent extends FragmentComponent implemen
     public actionService: GrupoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.LINEA_INVESTIGACION, actionService, translate);
     this.formPart = this.fragment as GrupoLineaInvestigacionFragment;
@@ -65,7 +67,7 @@ export class GrupoLineaInvestigacionComponent extends FragmentComponent implemen
       (wrapper: StatusWrapper<IGrupoLineaInvestigacion>, property: string) => {
         switch (property) {
           case 'nombre':
-            return wrapper.value.lineaInvestigacion?.nombre;
+            return wrapper.value.lineaInvestigacion?.nombre ? this.languageService.getFieldValue(wrapper.value.lineaInvestigacion?.nombre) : '';
           case 'fechaInicio':
             return wrapper.value.fechaInicio;
           case 'fechaFin':
