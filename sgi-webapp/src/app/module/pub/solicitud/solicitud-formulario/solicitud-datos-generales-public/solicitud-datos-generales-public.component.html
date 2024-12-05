@@ -294,7 +294,7 @@
                 {{'csp.solicitud-entidad-convocante.plan' | translate}}
               </th>
               <td mat-cell *matCellDef="let entidadConvocanteModalidad">
-                {{ entidadConvocanteModalidad.plan?.nombre }}
+                <sgi-i18n-table-field [field]="entidadConvocanteModalidad.plan?.nombre"></sgi-i18n-table-field>
               </td>
             </ng-container>
 
@@ -304,8 +304,9 @@
                 {{'csp.solicitud-entidad-convocante.programa' | translate}}
               </th>
               <td mat-cell *matCellDef="let entidadConvocanteModalidad">
-                {{ entidadConvocanteModalidad.entidadConvocante.programa?.padre?.id ?
-                entidadConvocanteModalidad.entidadConvocante.programa?.nombre : ''}}
+                <sgi-i18n-table-field
+                  [field]="entidadConvocanteModalidad.entidadConvocante.programa?.padre?.id ? entidadConvocanteModalidad.entidadConvocante.programa?.nombre : ''">
+                </sgi-i18n-table-field>
               </td>
             </ng-container>
 
@@ -315,7 +316,8 @@
                 {{'csp.solicitud-entidad-convocante.modalidad' | translate}}
               </th>
               <td mat-cell *matCellDef="let entidadConvocanteModalidad">
-                {{ entidadConvocanteModalidad.modalidad?.value.programa?.nombre }}
+                <sgi-i18n-table-field
+                  [field]="entidadConvocanteModalidad.modalidad?.value.programa?.nombre"></sgi-i18n-table-field>
               </td>
             </ng-container>
 

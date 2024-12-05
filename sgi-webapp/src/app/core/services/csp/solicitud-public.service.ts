@@ -1,19 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
-import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
-import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
 import { SOLICITUD_CONVERTER } from '@core/converters/csp/solicitud.converter';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
-import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
-import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
+import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
+import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
+import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
 import { environment } from '@env';
 import {
   CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
@@ -23,6 +22,7 @@ import { map } from 'rxjs/operators';
 import { ISolicitanteExternoResponse } from './solicitante-externo/solicitante-externo-response';
 import { SOLICITANTE_EXTERNO_RESPONSE_CONVERTER } from './solicitante-externo/solicitante-externo-response.converter';
 import { SolicitudModalidadService } from './solicitud-modalidad.service';
+import { ISolicitudModalidadResponse } from './solicitud-modalidad/solicitud-modalidad-response';
 import { ISolicitudRrhhResponse } from './solicitud-rrhh/solicitud-rrhh-response';
 import { SOLICITUD_RRHH_RESPONSE_CONVERTER } from './solicitud-rrhh/solicitud-rrhh-response.converter';
 
@@ -99,10 +99,10 @@ export class SolicitudPublicService extends _SolicitudMixinBase {
   }
 
   findAllSolicitudModalidades(solicitudPublicId: string, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudModalidad>> {
-    return this.find<ISolicitudModalidadBackend, ISolicitudModalidad>(
+    return this.find<ISolicitudModalidadResponse, ISolicitudModalidad>(
       `${this.endpointUrl}/${solicitudPublicId}${SolicitudModalidadService.MAPPING}`,
       options,
-      SOLICITUD_MODALIDAD_CONVERTER
+      SOLICITUD_MODALIDAD_RESPONSE_CONVERTER
     );
   }
 

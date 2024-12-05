@@ -5,7 +5,6 @@ import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-
 import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto-codigo-ec.converter';
 import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
 import { PROYECTO_CONTEXTO_CONVERTER } from '@core/converters/csp/proyecto-contexto.converter';
-import { PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/proyecto-entidad-convocante.converter';
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
 import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
@@ -21,7 +20,6 @@ import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
 import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto-clasificacion-backend';
 import { IProyectoConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-codigo-ec-backend';
 import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
-import { IProyectoEntidadConvocanteBackend } from '@core/models/csp/backend/proyecto-entidad-convocante-backend';
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
@@ -67,6 +65,8 @@ import { IEstadoProyectoResponse } from '@core/services/csp/estado-proyecto/esta
 import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/estado-proyecto/estado-proyecto-response.converter';
 import { IProyectoDocumentoResponse } from '@core/services/csp/proyecto-documento/proyecto-documento-response';
 import { PROYECTO_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-documento/proyecto-documento-response.converter';
+import { IProyectoEntidadConvocanteResponse } from '@core/services/csp/proyecto-entidad-convocante/proyecto-entidad-convocante-response';
+import { PROYECTO_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-entidad-convocante/proyecto-entidad-convocante-response.converter';
 import { environment } from '@env';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
@@ -309,10 +309,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @returns Listado de ProyectoEntidadConvocante.
    */
   findAllEntidadConvocantes(idProyecto: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoEntidadConvocante>> {
-    return this.find<IProyectoEntidadConvocanteBackend, IProyectoEntidadConvocante>(
+    return this.find<IProyectoEntidadConvocanteResponse, IProyectoEntidadConvocante>(
       `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`,
       options,
-      PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER
+      PROYECTO_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER
     );
   }
 
@@ -320,11 +320,11 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
     idProyecto: number,
     entidadesConvocantes: IProyectoEntidadConvocante[]
   ): Observable<IProyectoEntidadConvocante[]> {
-    return this.http.patch<IProyectoEntidadConvocanteBackend[]>(
+    return this.http.patch<IProyectoEntidadConvocanteResponse[]>(
       `${this.endpointUrl}/${idProyecto}/${ProyectoService.ENTIDAD_CONVOCANTES_MAPPING}`,
-      PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER.fromTargetArray(entidadesConvocantes)
+      PROYECTO_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER.fromTargetArray(entidadesConvocantes)
     ).pipe(
-      map((response => PROYECTO_ENTIDAD_CONVOCANTE_CONVERTER.toTargetArray(response)))
+      map((response => PROYECTO_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER.toTargetArray(response)))
     );
   }
 

@@ -12,7 +12,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { switchMap } from 'rxjs/operators';
-import { CambioEstadoModalComponent, SolicitudCambioEstadoModalComponentData } from 'src/app/module/csp/solicitud/modals/cambio-estado-modal/cambio-estado-modal.component';
+import { SolicitudCambioEstadoModalComponentData } from 'src/app/module/csp/solicitud/modals/cambio-estado-modal/cambio-estado-modal.component';
 import { CambioEstadoPublicModalComponent, SolicitudCambioEstadoPublicModalComponentData } from '../modals/cambio-estado-public-modal/cambio-estado-public-modal.component';
 import { SOLICITUD_PUBLIC_ROUTE_NAMES } from '../solicitud-public-route-names';
 import { SolicitudPublicActionService } from '../solicitud-public.action.service';

@@ -11,6 +11,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { ISolicitud, ORIGEN_SOLICITUD_MAP, TIPO_SOLICITUD_GRUPO_MAP, TipoSolicitudGrupo } from '@core/models/csp/solicitud';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
@@ -115,7 +116,8 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
   constructor(
     public readonly actionService: SolicitudActionService,
     private matDialog: MatDialog,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as SolicitudDatosGeneralesFragment;
@@ -136,12 +138,11 @@ export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISol
           case 'entidadConvocante':
             return entidadConvocanteModalidad.entidadConvocante.entidad.nombre;
           case 'plan':
-            return entidadConvocanteModalidad.plan?.nombre;
+            return this.languageService.getFieldValue(entidadConvocanteModalidad.plan?.nombre);
           case 'programaConvocatoria':
-            return entidadConvocanteModalidad.entidadConvocante.programa?.padre?.id ?
-              entidadConvocanteModalidad.entidadConvocante.programa?.nombre : '';
+            return entidadConvocanteModalidad.entidadConvocante.programa?.padre?.id ? this.languageService.getFieldValue(entidadConvocanteModalidad.entidadConvocante.programa?.nombre) : '';
           case 'modalidadSolicitud':
-            return entidadConvocanteModalidad.modalidad?.value.programa?.nombre;
+            return this.languageService.getFieldValue(entidadConvocanteModalidad.modalidad?.value.programa?.nombre);
           default:
             return entidadConvocanteModalidad[property];
         }

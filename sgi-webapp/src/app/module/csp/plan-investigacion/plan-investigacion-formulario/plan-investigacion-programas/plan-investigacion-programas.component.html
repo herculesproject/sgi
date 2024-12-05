@@ -1,4 +1,4 @@
-<sgi-fragment title="{{'csp.plan-investigacion.programa' | translate}} {{actionService.getPrograma.nombre}}">
+<sgi-fragment title="{{'csp.plan-investigacion.programa' | translate}}">
 
   <!-- Validacion si no tiene programa -->
   <div *ngIf="dataSource.data.length === 0" class="vacio">
@@ -13,21 +13,21 @@
             <button mat-icon-button disabled></button>
             <mat-checkbox *ngIf="viewMode === 'new'" class="checkbox" color="primary" [checked]="node === checkedNode"
               (change)="onCheckNode(node, $event)" matTooltip="{{node.programa.value.descripcion}}">
-              <span class="break-spaces">{{node.programa.value.nombre}}</span>
+              <sgi-i18n-tree-field [field]="node.programa.value.nombre" class="break-spaces"></sgi-i18n-tree-field>
             </mat-checkbox>
-            <button color="primary" class="break-spaces" mat-button *ngIf="(viewMode !== 'new' && node !== viewingNode)"
+            <button color="primary" mat-button *ngIf="(viewMode !== 'new' && node !== viewingNode)"
               (click)="showNodeDetails(node)" matTooltip="{{node.programa.value.descripcion}}">
               <mat-icon class="mat-icon-rtl-mirror">
                 {{ 'visibility'}}
               </mat-icon>
-              {{node.programa.value.nombre}}
+              <sgi-i18n-tree-field [field]="node.programa.value.nombre" class="break-spaces"></sgi-i18n-tree-field>
             </button>
-            <button color="primary" class="break-spaces" mat-button *ngIf="(viewMode !== 'new' && node === viewingNode)"
+            <button color="primary" mat-button *ngIf="(viewMode !== 'new' && node === viewingNode)"
               (click)="hideNodeDetails()" matTooltip="{{node.programa.value.descripcion}}">
               <mat-icon class="mat-icon-rtl-mirror">
                 {{ 'visibility_off'}}
               </mat-icon>
-              {{node.programa.value.nombre}}
+              <sgi-i18n-tree-field [field]="node.programa.value.nombre" class="break-spaces"></sgi-i18n-tree-field>
             </button>
           </li>
         </mat-tree-node>
@@ -42,22 +42,21 @@
               </button>
               <mat-checkbox *ngIf="viewMode === 'new'" class="checkbox" color="primary" [checked]="node === checkedNode"
                 (change)="onCheckNode(node, $event)" matTooltip="{{node.programa.value.descripcion}}">
-                <span class="break-spaces">{{node.programa.value.nombre}}</span>
+                <sgi-i18n-tree-field [field]="node.programa.value.nombre" class="break-spaces"></sgi-i18n-tree-field>
               </mat-checkbox>
-              <button class="break-spaces" mat-button *ngIf="(viewMode !== 'new' && node !== viewingNode)"
-                (click)="showNodeDetails(node)" matTooltip="{{node.programa.value.descripcion}}">
+              <button mat-button *ngIf="(viewMode !== 'new' && node !== viewingNode)" (click)="showNodeDetails(node)"
+                matTooltip="{{node.programa.value.descripcion}}">
                 <mat-icon color="primary" class="mat-icon-rtl-mirror">
                   {{ 'visibility'}}
                 </mat-icon>
-                {{node.programa.value.nombre}}
+                <sgi-i18n-tree-field [field]="node.programa.value.nombre" class="break-spaces"></sgi-i18n-tree-field>
               </button>
-              <button color="primary" class="break-spaces" mat-button
-                *ngIf="(viewMode !== 'new' && node === viewingNode)" (click)="hideNodeDetails()"
-                matTooltip="{{node.programa.value.descripcion}}">
+              <button color="primary" mat-button *ngIf="(viewMode !== 'new' && node === viewingNode)"
+                (click)="hideNodeDetails()" matTooltip="{{node.programa.value.descripcion}}">
                 <mat-icon class="mat-icon-rtl-mirror">
                   {{ 'visibility_off'}}
                 </mat-icon>
-                {{node.programa.value.nombre}}
+                <sgi-i18n-tree-field [field]="node.programa.value.nombre" class="break-spaces"></sgi-i18n-tree-field>
               </button>
             </div>
             <ul [class.arbol-invisible]="!treeControl.isExpanded(node)">
@@ -77,8 +76,9 @@
         <div fxFlex="50%" fxFlex.xs="100%">
           <mat-form-field class="input-form">
             <mat-label>{{'csp.plan-investigacion-programa.nombre' | translate}}</mat-label>
-            <input matInput type="text" placeholder="{{'csp.plan-investigacion.programa.nombre' | translate}}"
+            <sgi-i18n-input type="text" placeholder="{{'csp.plan-investigacion.programa.nombre' | translate}}"
               formControlName="nombre" required>
+            </sgi-i18n-input>
             <mat-error *ngIf="formGroup.get('nombre').errors?.required">
               {{'error.required.entity' | translate:msgParamNombreEntity}}
             </mat-error>
@@ -102,13 +102,16 @@
       </div>
       <div class="separation-button">
         <button *ngIf="viewMode === 'new' || viewMode === 'edit'" color="accent" mat-raised-button
-          (click)="acceptDetail()">{{'btn.ok' | translate}}</button>
-        <button *ngIf="viewMode === 'new' || viewMode === 'edit'" class="link-cancelar" mat-button><span
-            class="underline" (click)="cancelDetail()">{{'btn.cancel' | translate}}</span></button>
+          [disabled]="!this.formGroup.valid" (click)="acceptDetail()">
+          {{'btn.ok' | translate}}
+        </button>
+        <button *ngIf="viewMode === 'new' || viewMode === 'edit'" class="link-cancelar" mat-button>
+          <span class="underline" (click)="cancelDetail()">{{'btn.cancel' | translate}}</span>
+        </button>
         <button *ngIf="viewMode === 'view'" color="accent" mat-raised-button
-          (click)="switchToEdit()">{{'btn.edit.entity'| translate:msgParamEntity}}</button>
-        <button *ngIf="viewMode === 'view'" color="warn" aria-label="Center Align" mat-raised-button
-          (click)="deleteDetail()">
+          (click)="switchToEdit()">{{'btn.edit.entity'| translate:msgParamEntity}}
+        </button>
+        <button *ngIf="viewMode === 'view'" color="warn" mat-raised-button (click)="deleteDetail()">
           {{'btn.delete.entity' | translate:msgParamEntity}}
         </button>
       </div>
@@ -119,7 +122,7 @@
   </div>
 
   <div class="separation-button">
-    <button color="three" aria-label="Center Align" mat-raised-button (click)="switchToNew()">
+    <button color="three" mat-raised-button (click)="switchToNew()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{ 'btn.add.entity' | translate:msgParamEntity }}
     </button>

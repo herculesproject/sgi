@@ -16,7 +16,7 @@
               <button mat-icon-button disabled></button>
               <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode" [disabled]="data.readonly"
                 (change)="onCheckNode(node, $event)" matTooltip="{{node.programa.descripcion}}">
-                <span class="break-spaces">{{node.programa.nombre}}</span>
+                <sgi-i18n-table-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-table-field>
               </mat-checkbox>
             </li>
           </mat-tree-node>
@@ -31,7 +31,7 @@
                 <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
                   [disabled]="data.readonly" (change)="onCheckNode(node, $event)"
                   matTooltip="{{node.programa.descripcion}}">
-                  <span class="break-spaces">{{node.programa.nombre}}</span>
+                  <sgi-i18n-table-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-table-field>
                 </mat-checkbox>
               </div>
               <ul [class.arbol-invisible]="!treeControl.isExpanded(node)">

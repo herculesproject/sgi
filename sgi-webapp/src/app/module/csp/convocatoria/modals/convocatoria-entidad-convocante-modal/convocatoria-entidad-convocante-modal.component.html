@@ -29,7 +29,7 @@
               <button mat-icon-button disabled></button>
               <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode" [disabled]="data.readonly"
                 (change)="onCheckNode(node, $event)" matTooltip="{{node.programa.value.descripcion}}">
-                <span class="break-spaces">{{node.programa.value.nombre}}</span>
+                <sgi-i18n-tree-field [field]="node.programa.value.nombre" class="break-spaces"></sgi-i18n-tree-field>
               </mat-checkbox>
             </li>
           </mat-tree-node>
@@ -44,7 +44,7 @@
                 <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
                   [disabled]="data.readonly" (change)="onCheckNode(node, $event)"
                   matTooltip="{{node.programa.value.descripcion}}">
-                  <span class="break-spaces">{{node.programa.value.nombre}}</span>
+                  <sgi-i18n-tree-field [field]="node.programa.value.nombre" class="break-spaces"></sgi-i18n-tree-field>
                 </mat-checkbox>
               </div>
               <ul [class.arbol-invisible]="!treeControl.isExpanded(node)">
@@ -62,6 +62,7 @@
     *ngIf="!data.readonly">
     <mat-icon class="save-icon">save</mat-icon>{{textSaveOrUpdate | translate}}
   </button>
-  <button class="link-cancelar" mat-button type="button" mat-dialog-close>{{'btn.cancel' |
-    translate}}</button>
+  <button class="link-cancelar" mat-button type="button" mat-dialog-close>
+    {{'btn.cancel' | translate}}
+  </button>
 </mat-dialog-actions>

@@ -5,10 +5,11 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { FormularioSolicitud, FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
+import { FORMULARIO_SOLICITUD_MAP, FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
-import { ISolicitud, TipoSolicitudGrupo, TIPO_SOLICITUD_GRUPO_MAP } from '@core/models/csp/solicitud';
+import { ISolicitud, TIPO_SOLICITUD_GRUPO_MAP, TipoSolicitudGrupo } from '@core/models/csp/solicitud';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ClasificacionPublicModalComponent, TipoClasificacionPublic } from 'src/app/esb/sgo/shared/clasificacion-public-modal/clasificacion-public-modal.component';
@@ -92,7 +93,8 @@ export class SolicitudDatosGeneralesPublicComponent extends FormFragmentComponen
   constructor(
     public readonly actionService: SolicitudPublicActionService,
     private matDialog: MatDialog,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as SolicitudDatosGeneralesPublicFragment;
@@ -113,12 +115,12 @@ export class SolicitudDatosGeneralesPublicComponent extends FormFragmentComponen
           case 'entidadConvocante':
             return entidadConvocanteModalidad.entidadConvocante.entidad.nombre;
           case 'plan':
-            return entidadConvocanteModalidad.plan?.nombre;
+            return this.languageService.getFieldValue(entidadConvocanteModalidad.plan?.nombre);
           case 'programaConvocatoria':
             return entidadConvocanteModalidad.entidadConvocante.programa?.padre?.id ?
-              entidadConvocanteModalidad.entidadConvocante.programa?.nombre : '';
+              this.languageService.getFieldValue(entidadConvocanteModalidad.entidadConvocante.programa?.nombre) : '';
           case 'modalidadSolicitud':
-            return entidadConvocanteModalidad.modalidad?.value.programa?.nombre;
+            return this.languageService.getFieldValue(entidadConvocanteModalidad.modalidad?.value.programa?.nombre);
           default:
             return entidadConvocanteModalidad[property];
         }

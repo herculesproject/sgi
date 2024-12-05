@@ -2,7 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
 import { CONVOCATORIA_ENLACE_CONVERTER } from '@core/converters/csp/convocatoria-enlace.converter';
-import { CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/convocatoria-entidad-convocante.converter';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
 import { CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-gestora.converter';
 import { CONVOCATORIA_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/convocatoria-periodo-justificacion.converter';
@@ -11,7 +10,6 @@ import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.conver
 import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaEnlaceBackend } from '@core/models/csp/backend/convocatoria-enlace-backend';
-import { IConvocatoriaEntidadConvocanteBackend } from '@core/models/csp/backend/convocatoria-entidad-convocante-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IConvocatoriaEntidadGestoraBackend } from '@core/models/csp/backend/convocatoria-entidad-gestora-backend';
 import { IConvocatoriaPeriodoJustificacionBackend } from '@core/models/csp/backend/convocatoria-periodo-justificacion-backend';
@@ -36,6 +34,8 @@ import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
 import { IConvocatoriaDocumentoResponse } from '@core/services/csp/convocatoria-documento/convocatoria-documento-response';
 import { CONVOCATORIA_DOCUMENTO_CONVERTER } from '@core/services/csp/convocatoria-documento/convocatoria-documento.converter';
+import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response';
+import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
 import { environment } from '@env';
 import { FindByIdCtor, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, mixinFindById } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
@@ -111,10 +111,10 @@ export class ConvocatoriaPublicService extends _ConvocatoriaMixinBase {
 
   findAllConvocatoriaEntidadConvocantes(id: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
-    return this.find<IConvocatoriaEntidadConvocanteBackend, IConvocatoriaEntidadConvocante>(
+    return this.find<IConvocatoriaEntidadConvocanteResponse, IConvocatoriaEntidadConvocante>(
       `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`,
       options,
-      CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER
     );
   }
 

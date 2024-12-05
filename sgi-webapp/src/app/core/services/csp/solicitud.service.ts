@@ -1,21 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/convocatoria-entidad-convocante.converter';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
 import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.converter';
 import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
-import { SOLICITUD_MODALIDAD_CONVERTER } from '@core/converters/csp/solicitud-modalidad.converter';
 import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-area-conocimiento.converter';
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
 import { SOLICITUD_PROYECTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto.converter';
 import { SOLICITUD_CONVERTER } from '@core/converters/csp/solicitud.converter';
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
-import { IConvocatoriaEntidadConvocanteBackend } from '@core/models/csp/backend/convocatoria-entidad-convocante-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
-import { ISolicitudModalidadBackend } from '@core/models/csp/backend/solicitud-modalidad-backend';
 import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/backend/solicitud-proyecto-area-conocimiento-backend';
 import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
 import { ISolicitudProyectoClasificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-clasificacion-backend';
@@ -47,8 +43,11 @@ import { ISolicitudProyectoPresupuestoTotales } from '@core/models/csp/solicitud
 import { ISolicitudProyectoResponsableEconomico } from '@core/models/csp/solicitud-proyecto-responsable-economico';
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
+import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response';
+import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
 import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
 import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
+import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -71,6 +70,7 @@ import { SOLICITUD_GRUPO_RESPONSE_CONVERTER } from './solicitud-grupo/solicitud-
 import { ISolicitudHitoResponse } from './solicitud-hito/solicitud-hito-response';
 import { SOLICITUD_HITO_RESPONSE_CONVERTER } from './solicitud-hito/solicitud-hito-response.converter';
 import { SolicitudModalidadService } from './solicitud-modalidad.service';
+import { ISolicitudModalidadResponse } from './solicitud-modalidad/solicitud-modalidad-response';
 import { SOLICITUD_PALABRACLAVE_REQUEST_CONVERTER } from './solicitud-palabra-clave/solicitud-palabra-clave-request.converter';
 import { ISolicitudPalabraClaveResponse } from './solicitud-palabra-clave/solicitud-palabra-clave-response';
 import { SOLICITUD_PALABRACLAVE_RESPONSE_CONVERTER } from './solicitud-palabra-clave/solicitud-palabra-clave-response.converter';
@@ -142,10 +142,10 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de modalidades de la solicitud
    */
   findAllSolicitudModalidades(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudModalidad>> {
-    return this.find<ISolicitudModalidadBackend, ISolicitudModalidad>(
+    return this.find<ISolicitudModalidadResponse, ISolicitudModalidad>(
       `${this.endpointUrl}/${solicitudId}${SolicitudModalidadService.MAPPING}`,
       options,
-      SOLICITUD_MODALIDAD_CONVERTER
+      SOLICITUD_MODALIDAD_RESPONSE_CONVERTER
     );
   }
 
@@ -613,10 +613,10 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
 
   findAllConvocatoriaEntidadConvocantes(id: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
-    return this.find<IConvocatoriaEntidadConvocanteBackend, IConvocatoriaEntidadConvocante>(
+    return this.find<IConvocatoriaEntidadConvocanteResponse, IConvocatoriaEntidadConvocante>(
       `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`,
       options,
-      CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER
     );
   }
 

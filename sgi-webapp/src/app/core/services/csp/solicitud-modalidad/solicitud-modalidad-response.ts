@@ -1,6 +1,6 @@
-import { IPrograma } from '../programa';
+import { IProgramaResponse } from '../programa/programa-response';
 
-export interface ISolicitudModalidadBackend {
+export interface ISolicitudModalidadResponse {
   /** Id */
   id: number;
   /** Id de Solicitud */
@@ -8,7 +8,7 @@ export interface ISolicitudModalidadBackend {
   /** EntidadRef */
   entidadRef: string;
   /** Programa */
-  programa: IPrograma;
+  programa: IProgramaResponse;
   /** Programa de la convocatoria */
   programaConvocatoriaId: number;
 }

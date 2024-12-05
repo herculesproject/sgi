@@ -6,11 +6,9 @@ import { MatTree, MatTreeNestedDataSource } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IPrograma } from '@core/models/csp/programa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
-import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -150,9 +148,7 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
   }
 
   switchToNew() {
-    const newNode = new NodePrograma(new StatusWrapper<IPrograma>({
-      padre: {} as IPrograma
-    } as IPrograma));
+    const newNode = this.formPart.createEmptyNode();
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;
     this.loadDetails(this.viewingNode);

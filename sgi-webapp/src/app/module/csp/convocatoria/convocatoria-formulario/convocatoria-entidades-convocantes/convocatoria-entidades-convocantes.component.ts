@@ -7,6 +7,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { switchMap } from 'rxjs/operators';
@@ -41,6 +42,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.ENTIDADES_CONVOCANTES, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaEntidadesConvocantesFragment;
@@ -50,6 +52,23 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
     super.ngOnInit();
 
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor =
+      (entidadConvocante: ConvocatoriaEntidadConvocanteData, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return entidadConvocante?.empresa?.nombre;
+          case 'cif':
+            return entidadConvocante?.empresa?.numeroIdentificacion;
+          case 'plan':
+            return this.languageService.getFieldValue(entidadConvocante?.plan?.nombre);
+          case 'programa':
+            return this.languageService.getFieldValue(entidadConvocante?.programa?.nombre);
+          case 'itemPrograma':
+            return this.languageService.getFieldValue(entidadConvocante?.modalidad?.nombre);
+          default:
+            return entidadConvocante[property];
+        }
+      };
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.data$.subscribe(
       (data) => {

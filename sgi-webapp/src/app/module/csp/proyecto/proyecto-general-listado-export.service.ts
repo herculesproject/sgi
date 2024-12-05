@@ -272,10 +272,10 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(proyecto.codigoInterno);
     elementsRow.push(proyecto.estado?.estado ? this.translate.instant(ESTADO_MAP.get(proyecto.estado?.estado)) : '');
     elementsRow.push(LuxonUtils.toBackend(proyecto.estado?.fechaEstado));
-    elementsRow.push(proyecto.ambitoGeografico?.nombre);
+    elementsRow.push(this.languageService.getFieldValue(proyecto.ambitoGeografico?.nombre));
     elementsRow.push(proyecto.unidadGestion?.nombre);
     elementsRow.push(proyecto.modeloEjecucion?.nombre ? this.languageService.getFieldValue(proyecto?.modeloEjecucion?.nombre) : '');
-    elementsRow.push(this.languageService.getFieldValue(proyecto.finalidad?.nombre) ?? []);
+    elementsRow.push(this.languageService.getFieldValue(proyecto.finalidad?.nombre));
     elementsRow.push(toString(proyecto.anio))
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaInicio));
     elementsRow.push(LuxonUtils.toBackend(proyecto.fechaFin));
@@ -283,7 +283,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.confidencial) ? this.getI18nBooleanYesNo(proyecto.confidencial) : '');
     elementsRow.push(proyecto.clasificacionCVN ? this.translate.instant(CLASIFICACION_CVN_MAP.get(proyecto.clasificacionCVN)) : '');
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.coordinado) ? this.getI18nBooleanYesNo(proyecto.coordinado) : '');
-    elementsRow.push(proyecto.rolUniversidad?.nombre);
+    elementsRow.push(this.languageService.getFieldValue(proyecto.rolUniversidad?.nombre));
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.colaborativo) ? this.getI18nBooleanYesNo(proyecto.colaborativo) : '');
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.ivaDeducible) ? this.getI18nBooleanYesNo(proyecto.ivaDeducible) : '');
     elementsRow.push(this.percentPipe.transform(proyecto.iva?.iva / 100));

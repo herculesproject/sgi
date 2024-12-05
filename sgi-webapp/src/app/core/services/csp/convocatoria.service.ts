@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
 import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto-codigo-ec.converter';
 import { CONVOCATORIA_ENLACE_CONVERTER } from '@core/converters/csp/convocatoria-enlace.converter';
-import { CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER } from '@core/converters/csp/convocatoria-entidad-convocante.converter';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
 import { CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-gestora.converter';
 import { CONVOCATORIA_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/convocatoria-periodo-justificacion.converter';
@@ -14,7 +13,6 @@ import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convo
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-codigo-ec-backend';
 import { IConvocatoriaEnlaceBackend } from '@core/models/csp/backend/convocatoria-enlace-backend';
-import { IConvocatoriaEntidadConvocanteBackend } from '@core/models/csp/backend/convocatoria-entidad-convocante-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IConvocatoriaEntidadGestoraBackend } from '@core/models/csp/backend/convocatoria-entidad-gestora-backend';
 import { IConvocatoriaPeriodoJustificacionBackend } from '@core/models/csp/backend/convocatoria-periodo-justificacion-backend';
@@ -41,6 +39,8 @@ import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { IConvocatoriaDocumentoResponse } from '@core/services/csp/convocatoria-documento/convocatoria-documento-response';
 import { CONVOCATORIA_DOCUMENTO_CONVERTER } from '@core/services/csp/convocatoria-documento/convocatoria-documento.converter';
+import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response';
+import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
@@ -198,10 +198,10 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
 
   findAllConvocatoriaEntidadConvocantes(id: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
-    return this.find<IConvocatoriaEntidadConvocanteBackend, IConvocatoriaEntidadConvocante>(
+    return this.find<IConvocatoriaEntidadConvocanteResponse, IConvocatoriaEntidadConvocante>(
       `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`,
       options,
-      CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER
     );
   }
 
@@ -564,11 +564,11 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
     convocatoriaId: number,
     entidadesConvocantes: IConvocatoriaEntidadConvocante[]
   ): Observable<IConvocatoriaEntidadConvocante[]> {
-    return this.http.patch<IConvocatoriaEntidadConvocanteBackend[]>(
+    return this.http.patch<IConvocatoriaEntidadConvocanteResponse[]>(
       `${this.endpointUrl}/${convocatoriaId}/convocatoriaentidadconvocantes`,
-      CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER.fromTargetArray(entidadesConvocantes)
+      CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER.fromTargetArray(entidadesConvocantes)
     ).pipe(
-      map((response => CONVOCATORIA_ENTIDAD_CONVOCANTE_CONVERTER.toTargetArray(response)))
+      map((response => CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER.toTargetArray(response)))
     );
   }
 
