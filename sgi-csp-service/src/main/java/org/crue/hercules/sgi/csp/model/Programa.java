@@ -19,7 +19,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.BaseActivableEntity.OnActivar;
 import org.crue.hercules.sgi.csp.validation.UniqueNombreProgramaActivo;
@@ -45,8 +44,6 @@ public class Programa extends BaseEntity {
    */
   private static final long serialVersionUID = 1L;
 
-  public static final int DESCRIPCION_LENGTH = 4000;
-
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)
@@ -63,9 +60,11 @@ public class Programa extends BaseEntity {
   private Set<ProgramaNombre> nombre = new HashSet<>();
 
   /** Descripcion. */
-  @Column(name = "descripcion", length = Programa.DESCRIPCION_LENGTH, nullable = true, columnDefinition = "clob")
-  @Size(max = Programa.DESCRIPCION_LENGTH)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "programa_descripcion", joinColumns = @JoinColumn(name = "programa_id"))
+  @Valid
+  @Builder.Default
+  private Set<ProgramaDescripcion> descripcion = new HashSet<>();
 
   /** Programa padre. */
   @ManyToOne

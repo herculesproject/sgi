@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.ProgramaDescripcion;
 import org.crue.hercules.sgi.csp.model.ProgramaNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -105,7 +106,8 @@ class ProgramaIT extends BaseIT {
     Assertions.assertThat(programa.getId()).as("getId()").isNotNull();
     Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-001");
-    Assertions.assertThat(programa.getDescripcion()).as("descripcion-001").isEqualTo(programa.getDescripcion());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getDescripcion(), Language.ES)).as("descripcion-001")
+        .isEqualTo("descripcion-001");
     Assertions.assertThat(programa.getActivo()).as("getActivo()").isFalse();
   }
 
@@ -125,7 +127,8 @@ class ProgramaIT extends BaseIT {
     Assertions.assertThat(programa.getId()).as("getId()").isNotNull();
     Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-001");
-    Assertions.assertThat(programa.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getDescripcion(), Language.ES)).as("getDescripcion()")
+        .isEqualTo("descripcion-001");
     Assertions.assertThat(programa.getActivo()).as("getActivo()").isTrue();
   }
 
@@ -143,7 +146,8 @@ class ProgramaIT extends BaseIT {
     Assertions.assertThat(programa.getId()).as("getId()").isEqualTo(idPrograma);
     Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-001");
-    Assertions.assertThat(programa.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getDescripcion(), Language.ES)).as("getDescripcion()")
+        .isEqualTo("descripcion-001");
     Assertions.assertThat(programa.getActivo()).as("getActivo()").isTrue();
   }
 
@@ -156,7 +160,7 @@ class ProgramaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/plan").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -193,7 +197,7 @@ class ProgramaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/plan/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -230,7 +234,7 @@ class ProgramaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     Long programaId = 1L;
 
@@ -282,10 +286,13 @@ class ProgramaIT extends BaseIT {
     Set<ProgramaNombre> nombrePrograma = new HashSet<>();
     nombrePrograma.add(new ProgramaNombre(Language.ES, nombre));
 
+    Set<ProgramaDescripcion> descripcionPrograma = new HashSet<>();
+    descripcionPrograma.add(new ProgramaDescripcion(Language.ES, "descripcion-" + String.format("%03d", id)));
+
     Programa programa = new Programa();
     programa.setId(id);
     programa.setNombre(nombrePrograma);
-    programa.setDescripcion("descripcion-" + String.format("%03d", id));
+    programa.setDescripcion(descripcionPrograma);
 
     if (idProgramaPadre != null) {
       programa.setPadre(generarMockPrograma(idProgramaPadre));

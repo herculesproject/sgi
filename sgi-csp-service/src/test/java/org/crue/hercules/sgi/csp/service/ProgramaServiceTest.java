@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.ProgramaDescripcion;
 import org.crue.hercules.sgi.csp.model.ProgramaNombre;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProgramaServiceImpl;
@@ -593,10 +594,13 @@ class ProgramaServiceTest extends BaseServiceTest {
     Set<ProgramaNombre> nombrePrograma = new HashSet<>();
     nombrePrograma.add(new ProgramaNombre(Language.ES, nombre));
 
+    Set<ProgramaDescripcion> descripcionPrograma = new HashSet<>();
+    descripcionPrograma.add(new ProgramaDescripcion(Language.ES, "descripcion-" + id));
+
     Programa programa = new Programa();
     programa.setId(id);
     programa.setNombre(nombrePrograma);
-    programa.setDescripcion("descripcion-" + id);
+    programa.setDescripcion(descripcionPrograma);
 
     if (idProgramaPadre != null) {
       programa.setPadre(generarMockPrograma(idProgramaPadre));

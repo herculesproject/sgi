@@ -56,14 +56,19 @@ INSERT INTO test.configuracion_solicitud
 VALUES(1, 1, TRUE, 1, 12345, 'PROYECTO');
 
 -- PROGRAMA
-INSERT INTO test.programa (id, descripcion, programa_padre_id, activo) VALUES (1, 'descripcion-001', null, true);
-INSERT INTO test.programa (id, descripcion, programa_padre_id, activo) VALUES (2, 'descripcion-002', 1,    true);
-INSERT INTO test.programa (id, descripcion, programa_padre_id, activo) VALUES (3, 'descripcion-003', 1,    true);
+INSERT INTO test.programa (id, programa_padre_id, activo) VALUES (1, null, true);
+INSERT INTO test.programa (id, programa_padre_id, activo) VALUES (2, 1,    true);
+INSERT INTO test.programa (id, programa_padre_id, activo) VALUES (3, 1,    true);
 
 -- PROGRAMA_NOMBRE
 INSERT INTO test.programa_nombre (programa_id, lang, value_) VALUES (1,  'es', 'nombre-001');
 INSERT INTO test.programa_nombre (programa_id, lang, value_) VALUES (2,  'es', 'nombre-002');
 INSERT INTO test.programa_nombre (programa_id, lang, value_) VALUES (3,  'es', 'nombre-003');
+
+-- PROGRAMA_DESCRIPCION
+INSERT INTO test.programa_descripcion (programa_id, lang, value_) VALUES (1,  'es', 'descripcion-001');
+INSERT INTO test.programa_descripcion (programa_id, lang, value_) VALUES (2,  'es', 'descripcion-002');
+INSERT INTO test.programa_descripcion (programa_id, lang, value_) VALUES (3,  'es', 'descripcion-003');
 
 -- CONVOCATORIA ENTIDAD CONVOCANTE
 INSERT INTO test.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_ref, programa_id) VALUES (1, 1, 'entidad-001', 1);

@@ -54,10 +54,13 @@ INSERT INTO test.convocatoria
 VALUES(2, 'unidad-002', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-002', 'objeto-002', 'observaciones-002', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', 'PROYECTO', true);
 
 -- PROGRAMA
-INSERT INTO test.programa (id, descripcion, programa_padre_id, activo) VALUES (1, 'descripcion-001', null, true);
+INSERT INTO test.programa (id, programa_padre_id, activo) VALUES (1, null, true);
 
 -- PROGRAMA_NOMBRE
 INSERT INTO test.programa_nombre (programa_id, lang, value_) VALUES (1, 'es', 'nombre-001');
+
+-- PROGRAMA_DESCRIPCION
+INSERT INTO test.programa_descripcion (programa_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
 
 -- CONVOCATORIA ENTIDAD CONVOCANTE
 INSERT INTO test.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_ref, programa_id) VALUES (1, 1, 'entidad-001', 1);

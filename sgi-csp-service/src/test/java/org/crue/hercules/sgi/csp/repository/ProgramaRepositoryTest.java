@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.ProgramaDescripcion;
 import org.crue.hercules.sgi.csp.model.ProgramaNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -28,13 +29,19 @@ class ProgramaRepositoryTest extends BaseRepositoryTest {
     Set<ProgramaNombre> nombrePrograma1 = new HashSet<>();
     nombrePrograma1.add(new ProgramaNombre(Language.ES, "nombre-1"));
 
-    Programa programa1 = new Programa(null, nombrePrograma1, "descripcion-1", null, true);
+    Set<ProgramaDescripcion> descripcionPrograma1 = new HashSet<>();
+    descripcionPrograma1.add(new ProgramaDescripcion(Language.ES, "descripcion-1"));
+
+    Programa programa1 = new Programa(null, nombrePrograma1, descripcionPrograma1, null, true);
     entityManager.persistAndFlush(programa1);
 
     Set<ProgramaNombre> nombrePrograma2 = new HashSet<>();
     nombrePrograma2.add(new ProgramaNombre(Language.ES, "nombre-2"));
 
-    Programa programa2 = new Programa(null, nombrePrograma2, "descripcion-2", programa1, true);
+    Set<ProgramaDescripcion> descripcionPrograma2 = new HashSet<>();
+    descripcionPrograma2.add(new ProgramaDescripcion(Language.ES, "descripcion-2"));
+
+    Programa programa2 = new Programa(null, nombrePrograma2, descripcionPrograma2, programa1, true);
     entityManager.persistAndFlush(programa2);
 
     List<Long> idsPadreBuscados = Arrays.asList(programa1.getId());
@@ -58,13 +65,19 @@ class ProgramaRepositoryTest extends BaseRepositoryTest {
     Set<ProgramaNombre> nombrePrograma1 = new HashSet<>();
     nombrePrograma1.add(new ProgramaNombre(Language.ES, "nombre-1"));
 
-    Programa programa1 = new Programa(null, nombrePrograma1, "descripcion-1", null, true);
+    Set<ProgramaDescripcion> descripcionPrograma1 = new HashSet<>();
+    descripcionPrograma1.add(new ProgramaDescripcion(Language.ES, "descripcion-1"));
+
+    Programa programa1 = new Programa(null, nombrePrograma1, descripcionPrograma1, null, true);
     entityManager.persistAndFlush(programa1);
 
     Set<ProgramaNombre> nombrePrograma2 = new HashSet<>();
     nombrePrograma2.add(new ProgramaNombre(Language.ES, "nombre-2"));
 
-    Programa programa2 = new Programa(null, nombrePrograma2, "descripcion-2", programa1, true);
+    Set<ProgramaDescripcion> descripcionPrograma2 = new HashSet<>();
+    descripcionPrograma2.add(new ProgramaDescripcion(Language.ES, "descripcion-2"));
+
+    Programa programa2 = new Programa(null, nombrePrograma2, descripcionPrograma2, programa1, true);
     entityManager.persistAndFlush(programa2);
 
     List<Long> idsPadreBuscados = Arrays.asList(programa2.getId());
