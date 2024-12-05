@@ -3,10 +3,8 @@ package org.crue.hercules.sgi.csp.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEntidadConvocanteNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.EntidadConvocanteDuplicatedException;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
@@ -51,9 +49,6 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
   private static final String MSG_KEY_FIELD = "field";
   private static final String MSG_KEY_ACTION = "action";
   private static final String MSG_FIELD_ACTION_CREAR = "action.crear";
-  private static final String MSG_FIELD_ACTION_MODIFICAR = "action.modificar";
-  private static final String MSG_FIELD_ACTION_ELIMINAR = "action.eliminar";
-  private static final String MSG_KEY_ENTIDAD_REF = "entidadRef";
   private static final String MSG_MODEL_PROGRAMA = "org.crue.hercules.sgi.csp.model.Programa.message";
   private static final String MSG_MODEL_CONVOCATORIA_ENTIDAD_CONVOCANTE = "org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante.message";
   private static final String MSG_ENTITY_INACTIVO = "org.springframework.util.Assert.inactivo.message";
@@ -176,176 +171,6 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
 
     log.debug(
         "updateEntidadesConvocantesConvocatoria(Long convocatoriaId, List<ConvocatoriaEntidadConvocante> entidadesConvocantes) - end");
-    return returnValue;
-  }
-
-  /**
-   * Guardar un nuevo {@link ConvocatoriaEntidadConvocante}.
-   *
-   * @param convocatoriaEntidadConvocante la entidad
-   *                                      {@link ConvocatoriaEntidadConvocante} a
-   *                                      guardar.
-   * @return la entidad {@link ConvocatoriaEntidadConvocante} persistida.
-   */
-  @Override
-  @Transactional
-  public ConvocatoriaEntidadConvocante create(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante) {
-    log.debug("create(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante) - start");
-
-    AssertHelper.idIsNull(convocatoriaEntidadConvocante.getId(), ConvocatoriaEntidadConvocante.class);
-    AssertHelper.idNotNull(convocatoriaEntidadConvocante.getConvocatoriaId(), Convocatoria.class);
-
-    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaEntidadConvocante.getConvocatoriaId())
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEntidadConvocante.getConvocatoriaId()));
-
-    // comprobar si convocatoria es modificable
-    Assert.isTrue(
-        convocatoriaService.isRegistradaConSolicitudesOProyectos(convocatoriaEntidadConvocante.getConvocatoriaId(),
-            convocatoria.getUnidadGestionRef(), new String[] {
-                ConvocatoriaAuthorityHelper.CSP_CON_C,
-                ConvocatoriaAuthorityHelper.CSP_CON_E
-            }),
-        () -> ProblemMessage.builder()
-            .key(MSG_PROBLEM_ACCION_DENEGADA_PERMISOS)
-            .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_CONVOCATORIA_ENTIDAD_CONVOCANTE))
-            .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_CREAR))
-            .build());
-
-    AssertHelper.fieldExists(
-        !repository.findByConvocatoriaIdAndEntidadRefAndProgramaId(
-            convocatoriaEntidadConvocante.getConvocatoriaId(),
-            convocatoriaEntidadConvocante.getEntidadRef(),
-            convocatoriaEntidadConvocante.getPrograma().getId()).isPresent(),
-        ConvocatoriaEntidadConvocante.class, MSG_KEY_ENTIDAD_REF);
-
-    if (convocatoriaEntidadConvocante.getPrograma() != null) {
-      if (convocatoriaEntidadConvocante.getPrograma().getId() == null) {
-        convocatoriaEntidadConvocante.setPrograma(null);
-      } else {
-        convocatoriaEntidadConvocante
-            .setPrograma(programaRepository.findById(convocatoriaEntidadConvocante.getPrograma().getId())
-                .orElseThrow(() -> new ProgramaNotFoundException(convocatoriaEntidadConvocante.getPrograma().getId())));
-        Assert.isTrue(convocatoriaEntidadConvocante.getPrograma().getActivo(),
-            () -> ProblemMessage.builder()
-                .key(MSG_ENTITY_INACTIVO)
-                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_PROGRAMA))
-                .parameter(MSG_KEY_FIELD, convocatoriaEntidadConvocante.getPrograma().getNombre())
-                .build());
-      }
-    }
-
-    ConvocatoriaEntidadConvocante returnValue = repository.save(convocatoriaEntidadConvocante);
-
-    log.debug("create(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante) - end");
-    return returnValue;
-  }
-
-  /**
-   * Actualizar {@link ConvocatoriaEntidadConvocante}.
-   *
-   * @param convocatoriaEntidadConvocanteActualizar la entidad
-   *                                                {@link ConvocatoriaEntidadConvocante}
-   *                                                a actualizar.
-   * @return la entidad {@link ConvocatoriaEntidadConvocante} persistida.
-   */
-  @Override
-  @Transactional
-  public ConvocatoriaEntidadConvocante update(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteActualizar) {
-    log.debug("update(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteActualizar) - start");
-
-    AssertHelper.idNotNull(convocatoriaEntidadConvocanteActualizar.getId(), ConvocatoriaEntidadConvocante.class);
-
-    return repository.findById(convocatoriaEntidadConvocanteActualizar.getId()).map(convocatoriaEntidadConvocante -> {
-
-      // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.isRegistradaConSolicitudesOProyectos(convocatoriaEntidadConvocante.getConvocatoriaId(),
-              null, new String[] { ConvocatoriaAuthorityHelper.CSP_CON_E }),
-          () -> ProblemMessage.builder()
-              .key(MSG_PROBLEM_ACCION_DENEGADA_PERMISOS)
-              .parameter(MSG_KEY_ENTITY,
-                  ApplicationContextSupport.getMessage(MSG_MODEL_CONVOCATORIA_ENTIDAD_CONVOCANTE))
-              .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_MODIFICAR))
-              .build());
-
-      repository
-          .findByConvocatoriaIdAndEntidadRefAndProgramaId(
-              convocatoriaEntidadConvocanteActualizar.getConvocatoriaId(),
-              convocatoriaEntidadConvocanteActualizar.getEntidadRef(),
-              convocatoriaEntidadConvocanteActualizar.getPrograma().getId())
-          .ifPresent(convocatoriaR -> AssertHelper.fieldExists(
-              convocatoriaEntidadConvocante.getId().equals(convocatoriaR.getId()),
-              Convocatoria.class, MSG_KEY_ENTIDAD_REF));
-
-      if (convocatoriaEntidadConvocanteActualizar.getPrograma() != null) {
-        if (convocatoriaEntidadConvocanteActualizar.getPrograma().getId() == null) {
-          convocatoriaEntidadConvocanteActualizar.setPrograma(null);
-        } else {
-          convocatoriaEntidadConvocanteActualizar.setPrograma(
-              programaRepository.findById(convocatoriaEntidadConvocanteActualizar.getPrograma().getId()).orElseThrow(
-                  () -> new ProgramaNotFoundException(convocatoriaEntidadConvocanteActualizar.getPrograma().getId())));
-          Assert.isTrue(convocatoriaEntidadConvocanteActualizar.getPrograma().getActivo(),
-              () -> ProblemMessage.builder()
-                  .key(MSG_ENTITY_INACTIVO)
-                  .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_PROGRAMA))
-                  .parameter(MSG_KEY_FIELD, convocatoriaEntidadConvocanteActualizar.getPrograma().getNombre())
-                  .build());
-        }
-      }
-
-      convocatoriaEntidadConvocante.setPrograma(convocatoriaEntidadConvocanteActualizar.getPrograma());
-
-      ConvocatoriaEntidadConvocante returnValue = repository.save(convocatoriaEntidadConvocante);
-      log.debug("update(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteActualizar) - end");
-      return returnValue;
-    }).orElseThrow(
-        () -> new ConvocatoriaEntidadConvocanteNotFoundException(convocatoriaEntidadConvocanteActualizar.getId()));
-  }
-
-  /**
-   * Elimina el {@link ConvocatoriaEntidadConvocante}.
-   *
-   * @param id Id del {@link ConvocatoriaEntidadConvocante}.
-   */
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    log.debug("delete(Long id) - start");
-
-    AssertHelper.idNotNull(id, ConvocatoriaEntidadConvocante.class);
-
-    Optional<ConvocatoriaEntidadConvocante> entidadConvocante = repository.findById(id);
-    if (entidadConvocante.isPresent()) {
-      // comprobar si convocatoria es modificable
-      Assert.isTrue(
-          convocatoriaService.isRegistradaConSolicitudesOProyectos(entidadConvocante.get().getConvocatoriaId(),
-              null, new String[] { ConvocatoriaAuthorityHelper.CSP_CON_E }),
-          () -> ProblemMessage.builder()
-              .key(MSG_PROBLEM_ACCION_DENEGADA_PERMISOS)
-              .parameter(MSG_KEY_ENTITY,
-                  ApplicationContextSupport.getMessage(MSG_MODEL_CONVOCATORIA_ENTIDAD_CONVOCANTE))
-              .parameter(MSG_KEY_ACTION, ApplicationContextSupport.getMessage(MSG_FIELD_ACTION_ELIMINAR))
-              .build());
-    } else {
-      throw new ConvocatoriaEntidadConvocanteNotFoundException(id);
-    }
-
-    repository.deleteById(id);
-    log.debug("delete(Long id) - end");
-  }
-
-  /**
-   * Obtiene {@link ConvocatoriaEntidadConvocante} por su id.
-   *
-   * @param id el id de la entidad {@link ConvocatoriaEntidadConvocante}.
-   * @return la entidad {@link ConvocatoriaEntidadConvocante}.
-   */
-  @Override
-  public ConvocatoriaEntidadConvocante findById(Long id) {
-    log.debug("findById(Long id)  - start");
-    final ConvocatoriaEntidadConvocante returnValue = repository.findById(id)
-        .orElseThrow(() -> new ConvocatoriaEntidadConvocanteNotFoundException(id));
-    log.debug("findById(Long id)  - end");
     return returnValue;
   }
 

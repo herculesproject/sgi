@@ -362,32 +362,6 @@ class SolicitudModalidadServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_ReturnsSoliciud() {
-    // given: Un SolicitudModalidad con el id buscado
-    Long idBuscado = 1L;
-    BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.of(generarMockSolicitudModalidad(idBuscado)));
-
-    // when: Buscamos el SolicitudModalidad por su id
-    SolicitudModalidad solicitudModalidad = service.findById(idBuscado);
-
-    // then: el SolicitudModalidad
-    Assertions.assertThat(solicitudModalidad).as("isNotNull()").isNotNull();
-    Assertions.assertThat(solicitudModalidad.getId()).as("getId()").isEqualTo(idBuscado);
-  }
-
-  @Test
-  void findById_WithIdNotExist_ThrowsProgramaNotFoundException() throws Exception {
-    // given: Ningun SolicitudModalidad con el id buscado
-    Long idBuscado = 1L;
-    BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
-
-    // when: Buscamos el SolicitudModalidad por su id
-    // then: lanza un SolicitudModalidadNotFoundException
-    Assertions.assertThatThrownBy(() -> service.findById(idBuscado))
-        .isInstanceOf(SolicitudModalidadNotFoundException.class);
-  }
-
-  @Test
   void findAll_ReturnsPage() {
     // given: Una lista con 37 SolicitudModalidad
     Long solicitudId = 1L;

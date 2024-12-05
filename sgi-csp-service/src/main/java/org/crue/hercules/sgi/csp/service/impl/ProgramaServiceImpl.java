@@ -1,25 +1,29 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
+import org.crue.hercules.sgi.csp.model.BaseActivableEntity;
+import org.crue.hercules.sgi.csp.model.BaseEntity;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProgramaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,15 +32,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Validated
 public class ProgramaServiceImpl implements ProgramaService {
 
-  private static final String MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE = "plan.exists";
-  private static final String MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN = "programa.exists";
   private final ProgramaRepository repository;
-
-  public ProgramaServiceImpl(ProgramaRepository programaRepository) {
-    this.repository = programaRepository;
-  }
+  private final Validator validator;
 
   /**
    * Guardar un nuevo {@link Programa}.
@@ -46,7 +47,8 @@ public class ProgramaServiceImpl implements ProgramaService {
    */
   @Override
   @Transactional
-  public Programa create(Programa programa) {
+  @Validated({ BaseEntity.Create.class })
+  public Programa create(@Valid Programa programa) {
     log.debug("create(Programa programa) - start");
 
     AssertHelper.idIsNull(programa.getId(), Programa.class);
@@ -58,14 +60,6 @@ public class ProgramaServiceImpl implements ProgramaService {
         programa.setPadre(repository.findById(programa.getPadre().getId())
             .orElseThrow(() -> new ProgramaNotFoundException(programa.getPadre().getId())));
       }
-    }
-
-    if (programa.getPadre() == null) {
-      Assert.isTrue(!existPlanWithNombre(programa.getNombre(), null),
-          ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE));
-    } else {
-      Assert.isTrue(!existProgramaNombre(programa.getPadre().getId(), programa.getNombre(), null),
-          ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN));
     }
 
     programa.setActivo(true);
@@ -84,7 +78,8 @@ public class ProgramaServiceImpl implements ProgramaService {
    */
   @Override
   @Transactional
-  public Programa update(Programa programaActualizar) {
+  @Validated({ BaseEntity.Update.class })
+  public Programa update(@Valid Programa programaActualizar) {
     log.debug("update(Programa programaActualizar) - start");
 
     AssertHelper.idNotNull(programaActualizar.getId(), Programa.class);
@@ -99,15 +94,6 @@ public class ProgramaServiceImpl implements ProgramaService {
     }
 
     return repository.findById(programaActualizar.getId()).map(programa -> {
-      if (programa.getPadre() == null) {
-        Assert.isTrue(!existPlanWithNombre(programaActualizar.getNombre(), programaActualizar.getId()),
-            ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE));
-      } else {
-        Assert.isTrue(!existProgramaNombre(programaActualizar.getPadre().getId(), programaActualizar.getNombre(),
-            programa.getId()),
-            ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN));
-      }
-
       programa.setNombre(programaActualizar.getNombre());
       programa.setDescripcion(programaActualizar.getDescripcion());
       programa.setPadre(programaActualizar.getPadre());
@@ -137,12 +123,12 @@ public class ProgramaServiceImpl implements ProgramaService {
         return programa;
       }
 
-      if (programa.getPadre() == null) {
-        Assert.isTrue(!existPlanWithNombre(programa.getNombre(), programa.getId()),
-            ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PLAN_CON_EL_MISMO_NOMBRE));
-      } else {
-        Assert.isTrue(!existProgramaNombre(programa.getPadre().getId(), programa.getNombre(), programa.getId()),
-            ApplicationContextSupport.getMessage(MESSAGE_YA_EXISTE_UN_PROGRAMA_CON_EL_MISMO_NOMBRE_EN_EL_PLAN));
+      // Invocar validaciones asociadas a OnActivar
+      Set<ConstraintViolation<Programa>> result = validator.validate(
+          programa,
+          BaseActivableEntity.OnActivar.class);
+      if (!result.isEmpty()) {
+        throw new ConstraintViolationException(result);
       }
 
       programa.setActivo(true);
@@ -263,66 +249,6 @@ public class ProgramaServiceImpl implements ProgramaService {
     Page<Programa> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllHijosPrograma(Long programaId, String query, Pageable pageable) - end");
     return returnValue;
-  }
-
-  /**
-   * Comprueba si existe algun plan ({@link Programa} con padre null) con el
-   * nombre indicado.
-   *
-   * @param nombre            nombre del plan.
-   * @param programaIdExcluir Identificador del {@link Programa} que se excluye de
-   *                          la busqueda.
-   * @return true si existe algun plan con ese nombre.
-   */
-  private boolean existPlanWithNombre(String nombre, Long programaIdExcluir) {
-    log.debug("existPlanWithNombre(String nombre, Long programaIdExcluir) - start");
-    Specification<Programa> specPlanesByNombre = ProgramaSpecifications.planesByNombre(nombre, programaIdExcluir);
-
-    boolean returnValue = !repository.findAll(specPlanesByNombre, Pageable.unpaged()).isEmpty();
-
-    log.debug("existPlanWithNombre(String nombre, Long programaIdExcluir) - end");
-    return returnValue;
-  }
-
-  /**
-   * Comprueba si existe {@link Programa} con el nombre indicado en el arbol del
-   * programa indicado.
-   *
-   * @param programaId        Identificador del {@link Programa}.
-   * @param nombre            nombre del programa.
-   * @param programaIdExcluir Identificador del {@link Programa} que se excluye de
-   *                          la busqueda.
-   * @return true si existe algun {@link Programa} con ese nombre.
-   */
-  private boolean existProgramaNombre(Long programaId, String nombre, Long programaIdExcluir) {
-    log.debug("existProgramaNombre(Long programaId, String nombre, Long programaIdExcluir) - start");
-
-    // Busca el programa raiz
-    Programa programaRaiz = repository.findById(programaId).map(programa -> {
-      return programa;
-    }).orElseThrow(() -> new ProgramaNotFoundException(programaId));
-
-    while (programaRaiz != null && programaRaiz.getPadre() != null) {
-      programaRaiz = repository.findById(programaRaiz.getPadre().getId()).orElse(null);
-    }
-
-    // Busca el nombre desde el nodo raiz nivel a nivel
-    boolean nombreEncontrado = false;
-
-    List<Programa> programasHijos = programaRaiz == null ? new LinkedList<>()
-        : repository.findByPadreIdInAndActivoIsTrue(Arrays.asList(programaRaiz.getId()));
-    nombreEncontrado = programasHijos.stream()
-        .anyMatch(programa -> programa.getNombre().equals(nombre) && !programa.getId().equals(programaIdExcluir));
-
-    while (!nombreEncontrado && !programasHijos.isEmpty()) {
-      programasHijos = repository
-          .findByPadreIdInAndActivoIsTrue(programasHijos.stream().map(Programa::getId).collect(Collectors.toList()));
-      nombreEncontrado = programasHijos.stream()
-          .anyMatch(programa -> programa.getNombre().equals(nombre) && !programa.getId().equals(programaIdExcluir));
-    }
-
-    log.debug("existProgramaNombre(Long programaId, String nombre, Long programaIdExcluir) - end");
-    return nombreEncontrado;
   }
 
 }

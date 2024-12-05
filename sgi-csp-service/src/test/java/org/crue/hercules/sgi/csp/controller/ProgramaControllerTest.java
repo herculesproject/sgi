@@ -1,14 +1,17 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.ProgramaNombre;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -27,6 +30,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ProgramaControllerTest
@@ -64,7 +69,8 @@ class ProgramaControllerTest extends BaseControllerTest {
         // then: new Programa is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(programa.getActivo()));
   }
@@ -93,7 +99,10 @@ class ProgramaControllerTest extends BaseControllerTest {
     // given: Existing Programa to be updated
     Programa programaExistente = generarMockPrograma(1L);
     Programa programa = generarMockPrograma(1L);
-    programa.setNombre("nuevo-nombre");
+
+    Set<ProgramaNombre> nombrePrograma = new HashSet<>();
+    nombrePrograma.add(new ProgramaNombre(Language.ES, "nuevo-nombre"));
+    programa.setNombre(nombrePrograma);
 
     BDDMockito.given(service.update(ArgumentMatchers.<Programa>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -107,7 +116,8 @@ class ProgramaControllerTest extends BaseControllerTest {
         // then: Programa is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(programaExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(programaExistente.getActivo()));
   }
@@ -119,7 +129,7 @@ class ProgramaControllerTest extends BaseControllerTest {
     Long id = 1L;
     Programa programa = generarMockPrograma(1L);
 
-    BDDMockito.willThrow(new ProgramaNotFoundException(id)).given(service).update(ArgumentMatchers.<Programa>any());
+    BDDMockito.given(service.update(ArgumentMatchers.<Programa>any())).willThrow(new ProgramaNotFoundException(id));
 
     // when: update Programa
     mockMvc
@@ -153,7 +163,8 @@ class ProgramaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Programa is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
@@ -196,7 +207,8 @@ class ProgramaControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: Programa is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(false));
   }
@@ -236,7 +248,7 @@ class ProgramaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested Programa is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("nombre-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
@@ -300,7 +312,8 @@ class ProgramaControllerTest extends BaseControllerTest {
         });
     for (int i = 31; i <= 37; i++) {
       Programa programa = tiposFaseResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES))
+          .isEqualTo("Programa" + String.format("%03d", i));
     }
   }
 
@@ -369,7 +382,8 @@ class ProgramaControllerTest extends BaseControllerTest {
         });
     for (int i = 31; i <= 37; i++) {
       Programa programa = tiposFaseResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES))
+          .isEqualTo("Programa" + String.format("%03d", i));
     }
   }
 
@@ -444,7 +458,8 @@ class ProgramaControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       Programa programa = programasResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(programa.getNombre(), Language.ES))
+          .isEqualTo("Programa" + String.format("%03d", i));
     }
   }
 
@@ -494,9 +509,12 @@ class ProgramaControllerTest extends BaseControllerTest {
    * @return el objeto Programa
    */
   private Programa generarMockPrograma(Long id, String nombre, Long idProgramaPadre) {
+    Set<ProgramaNombre> nombrePrograma = new HashSet<>();
+    nombrePrograma.add(new ProgramaNombre(Language.ES, nombre));
+
     Programa programa = new Programa();
     programa.setId(id);
-    programa.setNombre(nombre);
+    programa.setNombre(nombrePrograma);
     programa.setDescripcion("descripcion-" + id);
 
     if (idProgramaPadre != null) {

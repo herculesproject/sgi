@@ -198,21 +198,6 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
   }
 
   /**
-   * Obtiene una entidad {@link SolicitudModalidad} por id.
-   * 
-   * @param id Identificador de la entidad {@link SolicitudModalidad}.
-   * @return solicitudModalidad la entidad {@link SolicitudModalidad}.
-   */
-  @Override
-  public SolicitudModalidad findById(Long id) {
-    log.debug("findById(Long id) - start");
-    final SolicitudModalidad returnValue = repository.findById(id)
-        .orElseThrow(() -> new SolicitudModalidadNotFoundException(id));
-    log.debug("findById(Long id) - end");
-    return returnValue;
-  }
-
-  /**
    * Obtiene las {@link SolicitudModalidad} para una {@link Solicitud}.
    *
    * @param solicitudId el id de la {@link Solicitud}.

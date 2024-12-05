@@ -245,7 +245,7 @@ class ProyectoFaseIT extends BaseIT {
         .asunto("asunto")
         .contenido("contenido mail")
         .destinatarios(destinatarios)
-        .incluirIpsProyecto(new Boolean(Boolean.TRUE))
+        .incluirIpsProyecto(Boolean.TRUE)
         .fechaEnvio(Instant.now().plus(15, ChronoUnit.MINUTES))
         .build();
   }

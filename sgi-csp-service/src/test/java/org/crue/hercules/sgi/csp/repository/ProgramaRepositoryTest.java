@@ -1,10 +1,14 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.ProgramaNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,10 +25,16 @@ class ProgramaRepositoryTest extends BaseRepositoryTest {
   @Test
   void findByPadreIdInAndActivoIsTrue_ReturnsPrograma() throws Exception {
     // given: 2 Programa de los que 1 coincide con el id padre buscado
-    Programa programa1 = new Programa(null, "nombre-1", "descripcion-1", null, true);
+    Set<ProgramaNombre> nombrePrograma1 = new HashSet<>();
+    nombrePrograma1.add(new ProgramaNombre(Language.ES, "nombre-1"));
+
+    Programa programa1 = new Programa(null, nombrePrograma1, "descripcion-1", null, true);
     entityManager.persistAndFlush(programa1);
 
-    Programa programa2 = new Programa(null, "nombre-2", "descripcion-2", programa1, true);
+    Set<ProgramaNombre> nombrePrograma2 = new HashSet<>();
+    nombrePrograma2.add(new ProgramaNombre(Language.ES, "nombre-2"));
+
+    Programa programa2 = new Programa(null, nombrePrograma2, "descripcion-2", programa1, true);
     entityManager.persistAndFlush(programa2);
 
     List<Long> idsPadreBuscados = Arrays.asList(programa1.getId());
@@ -45,10 +55,16 @@ class ProgramaRepositoryTest extends BaseRepositoryTest {
   @Test
   void findByPadreIdInAndActivoIsTrue_IdNoExiste_ReturnsEmptyList() throws Exception {
     // given: 2 Programa que no coinciden con el id padre buscado
-    Programa programa1 = new Programa(null, "nombre-1", "descripcion-1", null, true);
+    Set<ProgramaNombre> nombrePrograma1 = new HashSet<>();
+    nombrePrograma1.add(new ProgramaNombre(Language.ES, "nombre-1"));
+
+    Programa programa1 = new Programa(null, nombrePrograma1, "descripcion-1", null, true);
     entityManager.persistAndFlush(programa1);
 
-    Programa programa2 = new Programa(null, "nombre-2", "descripcion-2", programa1, true);
+    Set<ProgramaNombre> nombrePrograma2 = new HashSet<>();
+    nombrePrograma2.add(new ProgramaNombre(Language.ES, "nombre-2"));
+
+    Programa programa2 = new Programa(null, nombrePrograma2, "descripcion-2", programa1, true);
     entityManager.persistAndFlush(programa2);
 
     List<Long> idsPadreBuscados = Arrays.asList(programa2.getId());
