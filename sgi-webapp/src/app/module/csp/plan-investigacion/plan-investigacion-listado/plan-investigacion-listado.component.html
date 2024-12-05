@@ -58,7 +58,9 @@
       <ng-container matColumnDef="descripcion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.plan-investigacion.descripcion' | translate}}
         </th>
-        <td mat-cell *matCellDef="let programa">{{programa.descripcion}}</td>
+        <td mat-cell *matCellDef="let programa">
+          <sgi-i18n-table-field [field]="programa.descripcion"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
       <!-- Activo -->

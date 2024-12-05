@@ -1,6 +1,6 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatTree, MatTreeNestedDataSource } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -9,6 +9,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -83,8 +84,8 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
       this.dataSource.data = programas;
     });
     this.formGroup = new FormGroup({
-      nombre: new FormControl('', [Validators.required, Validators.maxLength(200)]),
-      descripcion: new FormControl('', [Validators.maxLength(4000)]),
+      nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(200)]),
+      descripcion: new FormControl([], [I18nValidators.maxLength(4000)]),
     });
     this.switchToNone();
   }

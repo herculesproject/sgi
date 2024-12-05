@@ -8,7 +8,7 @@ export interface IPrograma {
   nombre: I18nFieldValue[];
 
   /** descripcion  */
-  descripcion: string;
+  descripcion: I18nFieldValue[];
 
   /** padre  */
   padre: IPrograma;

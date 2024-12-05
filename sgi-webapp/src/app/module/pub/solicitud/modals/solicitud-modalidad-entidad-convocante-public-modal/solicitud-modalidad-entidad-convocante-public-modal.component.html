@@ -30,7 +30,7 @@
               </mat-label>
               <mat-checkbox *ngIf="node.programa.id !== data.programa?.id" class="checkbox" color="primary"
                 [checked]="node === checkedNode" (change)="onCheckNode(node, $event)" [disabled]="this.data.readonly"
-                matTooltip="{{node.programa.descripcion}}">
+                matTooltip="{{node.programa.descripcion | i18nFieldTooltip}}">
                 <sgi-i18n-tree-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-tree-field>
               </mat-checkbox>
             </li>
@@ -44,13 +44,13 @@
                   </mat-icon>
                 </button>
 
-                <mat-label *ngIf="node === rootNode" matTooltip="{{node.programa.descripcion}}">
+                <mat-label *ngIf="node === rootNode" matTooltip="{{node.programa.descripcion | i18nFieldTooltip}}">
                   <sgi-i18n-tree-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-tree-field>
                 </mat-label>
 
                 <mat-checkbox *ngIf="node !== rootNode" class="checkbox" color="primary"
                   [checked]="node === checkedNode" (change)="onCheckNode(node, $event)" [disabled]="this.data.readonly"
-                  matTooltip="{{node.programa.descripcion}}">
+                  matTooltip="{{node.programa.descripcion | i18nFieldTooltip}}">
                   <sgi-i18n-tree-field [field]="node.programa.nombre" class="break-spaces"></sgi-i18n-tree-field>
                 </mat-checkbox>
               </div>
