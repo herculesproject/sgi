@@ -119,13 +119,13 @@
 
     <div class="paginator-export">
       <div *ngIf="!actionService.isInvestigador">
-        <button mat-button matTooltip="{{'btn.export' | translate}} {{'export.type.csv' | translate}}"
-          (click)="exportCSV()" [disabled]="!dataSource.data?.length">
-          <mat-icon color="primary">text_fields</mat-icon>
+        <button mat-icon-button color="primary" matTooltip="{{'btn.export.xlsx' | translate}}" (click)="exportXLSX()"
+          [disabled]="!dataSource.data?.length">
+          <mat-icon>functions</mat-icon>
         </button>
-        <button mat-button matTooltip="{{'btn.export' | translate}} {{'export.type.xlsx' | translate}}"
-          (click)="exportXLSX()" [disabled]="!dataSource.data?.length">
-          <mat-icon color="primary">functions</mat-icon>
+        <button mat-icon-button color="primary" matTooltip="{{'btn.export.csv' | translate}}" (click)="exportCSV()"
+          [disabled]="!dataSource.data?.length">
+          <mat-icon>text_fields</mat-icon>
         </button>
       </div>
       <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons>
