@@ -10,7 +10,7 @@
     </mat-option>
   </mat-select>
 
-  <ckeditor [editor]="CkEditor" [config]="config" [(ngModel)]="editingValue" [required]="required"
-    [disabled]="disabled">
+  <ckeditor [editor]="CkEditor" [config]="config" [(ngModel)]="editingValue" [required]="required" [disabled]="disabled"
+    (change)="onEdit()">
   </ckeditor>
 </div>

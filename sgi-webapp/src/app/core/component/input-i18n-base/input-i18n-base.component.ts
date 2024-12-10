@@ -30,6 +30,7 @@ export abstract class InputI18nBaseComponent
   protected abstract uid: string;
 
   readonly stateChanges: Subject<void> = new Subject<void>();
+  private hasBeenEditedByUser = false;
 
   /** Unique id of the element. */
   @Input()
@@ -63,7 +64,10 @@ export abstract class InputI18nBaseComponent
       this._value = newValue;
     }
     this.editingValue = this.getCurrentEditingValue();
-    this.switchToPriorizedLanguage();
+
+    if (!this.hasBeenEditedByUser) {
+      this.switchToPriorizedLanguage();
+    }
 
     this.propagateChanges()
   }
@@ -131,6 +135,10 @@ export abstract class InputI18nBaseComponent
   }
   // tslint:disable-next-line: variable-name
   _selectedLanguage = null;
+
+  public onEdit() {
+    this.hasBeenEditedByUser = true;
+  }
 
   set editingValue(value: string) {
     if (this._editingValue === value) {

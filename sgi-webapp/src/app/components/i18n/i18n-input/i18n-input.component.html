@@ -9,6 +9,6 @@
     </mat-option>
   </mat-select>
 
-  <input matInput [(ngModel)]="editingValue" [disabled]="disabled" [placeholder]="placeholder">
+  <input matInput [(ngModel)]="editingValue" [disabled]="disabled" [placeholder]="placeholder" (change)="onEdit()">
 
 </div>
