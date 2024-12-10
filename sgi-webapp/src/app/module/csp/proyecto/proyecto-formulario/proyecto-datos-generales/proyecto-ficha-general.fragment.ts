@@ -31,8 +31,8 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, from, merge, of } from 'rxjs';
-import { catchError, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, merge, of } from 'rxjs';
+import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../proyecto-relaciones/proyecto-relaciones.fragment';
 
 interface IProyectoDatosGenerales extends IProyecto {
@@ -259,7 +259,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         validators: [
           DateValidator.isAfter('fechaInicio', 'fechaFin'),
           this.isAfterOrEqualAndNotRenunciadoOrRescindido('fechaInicio', 'fechaFinDefinitiva'),
-          this.isFechaFinAfterOrEqualFechaUltimaProrroga(),
+          this.isFechaFinBeforeOrEqualFechaUltimaProrroga(),
+          this.isFechaFinDefinitivaBeforeOrEqualFechaUltimaProrroga(),
           this.validateCanAddfechaFinDefinitiva()
         ]
       });
@@ -478,9 +479,9 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
   }
 
   /**
-   * Comprueba que la fecha de fin sea posterior o igual a la fecha de la ultima prorroga de tiempo o importe y tiempo si la fecha definitiva no esta informada
+   * Comprueba que la fecha de fin sea anterior o igual a la fecha de la ultima prorroga de tiempo o importe y tiempo si la fecha definitiva no esta informada
    */
-  private isFechaFinAfterOrEqualFechaUltimaProrroga(): ValidatorFn {
+  private isFechaFinBeforeOrEqualFechaUltimaProrroga(): ValidatorFn {
     return (formGroup: FormGroup): ValidationErrors | null => {
 
       const fechaFinControl = formGroup.controls.fechaFin;
@@ -502,6 +503,32 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       } else if (fechaFinControl.errors?.afterThanProrroga) {
         delete fechaFinControl.errors.afterThanProrroga;
         fechaFinControl.updateValueAndValidity({ onlySelf: true });
+      }
+    };
+  }
+
+  /**
+   * Comprueba que la fecha de fin definitiva sea anterior o igual a la fecha de la ultima prorroga de tiempo o importe y tiempo si la fecha definitiva esta informada
+   */
+  private isFechaFinDefinitivaBeforeOrEqualFechaUltimaProrroga(): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+
+      const fechaFinDefinitivaControl = formGroup.controls.fechaFinDefinitiva;
+
+      if (fechaFinDefinitivaControl.errors && !fechaFinDefinitivaControl.errors.afterThanProrroga) {
+        return;
+      }
+
+      const fechaFinDefinitivaDate: DateTime = fechaFinDefinitivaControl.value;
+
+      if (!!this.ultimaProrroga
+        && !!fechaFinDefinitivaDate
+        && this.ultimaProrroga.fechaFin > fechaFinDefinitivaDate) {
+        fechaFinDefinitivaControl.setErrors({ afterThanProrroga: true });
+        fechaFinDefinitivaControl.markAsTouched({ onlySelf: true });
+      } else if (fechaFinDefinitivaControl.errors?.afterThanProrroga) {
+        delete fechaFinDefinitivaControl.errors.afterThanProrroga;
+        fechaFinDefinitivaControl.updateValueAndValidity({ onlySelf: true });
       }
     };
   }

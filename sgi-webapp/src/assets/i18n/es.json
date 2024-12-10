@@ -1882,6 +1882,7 @@
   "error.after.param": "Tiene que ser posterior {gender,select,male{al} female{a la} other{El/La}} {entity}",
   "error.afterOrEqual.param": "Tiene que ser posterior o igual {gender,select,male{al} female{a la} other{El/La}} {entity}",
   "error.afterThanProrroga.fecha-fin": "La fecha de fin debe ser posterior a la fecha de fin de la prórroga",
+  "error.afterThanProrroga.fecha-fin-definitiva": "La fecha de fin definitiva debe ser posterior a la fecha de fin de la prórroga",
   "error.baremationCall.entity": "Error al lanzar el proceso de baremación de {gender,select,male{el} female{la} other{el/la}} {entity}",
   "error.before.fecha-inicio": "La Fecha Inicio debe ser anterior a la Fecha Fin",
   "error.before.hora-inicio": "La hora de inicio debe ser anterior a la hora de fin",
