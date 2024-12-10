@@ -478,8 +478,6 @@ public class ProyectoServiceImpl implements ProyectoService {
       data.setTotalImporteConcedido(proyectoActualizar.getTotalImporteConcedido());
       data.setTotalImportePresupuesto(proyectoActualizar.getTotalImportePresupuesto());
 
-      this.validarDatos(data, data.getEstado().getEstado());
-
       List<ProyectoEquipo> equipos = null;
       if (data.getFechaFinDefinitiva() == null && proyectoActualizar.getFechaFinDefinitiva() != null) {
         // Si se informa por primera vez la fecha fin definitiva del proyecto, se
@@ -499,6 +497,8 @@ public class ProyectoServiceImpl implements ProyectoService {
             proyectoActualizar.getFechaFin());
       }
       data.setFechaFinDefinitiva(proyectoActualizar.getFechaFinDefinitiva());
+
+      this.validarDatos(data, data.getEstado().getEstado());
 
       Proyecto returnValue = repository.save(data);
       if (!CollectionUtils.isEmpty(equipos)) {
