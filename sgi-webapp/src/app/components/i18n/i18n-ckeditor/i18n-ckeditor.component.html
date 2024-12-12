@@ -11,6 +11,6 @@
   </mat-select>
 
   <ckeditor [editor]="CkEditor" [config]="config" [(ngModel)]="editingValue" [required]="required" [disabled]="disabled"
-    (change)="onEdit()">
+    (change)="onEdit()" (focus)="onInputFocus()" (blur)="onInputBlur()">
   </ckeditor>
 </div>

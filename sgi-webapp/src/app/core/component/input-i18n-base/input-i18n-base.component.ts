@@ -1,7 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Directive,
   DoCheck,
@@ -31,6 +30,7 @@ export abstract class InputI18nBaseComponent
 
   readonly stateChanges: Subject<void> = new Subject<void>();
   private hasBeenEditedByUser = false;
+  private isPrioziationLocked = false;
 
   /** Unique id of the element. */
   @Input()
@@ -65,7 +65,7 @@ export abstract class InputI18nBaseComponent
     }
     this.editingValue = this.getCurrentEditingValue();
 
-    if (!this.hasBeenEditedByUser) {
+    if (!this.isPrioziationLocked && !this.hasBeenEditedByUser) {
       this.switchToPriorizedLanguage();
     }
 
@@ -127,7 +127,9 @@ export abstract class InputI18nBaseComponent
   set selectedLanguage(value: Language) {
     if (this._selectedLanguage != value) {
       this._selectedLanguage = value;
+      this.isPrioziationLocked = true;
       this.editingValue = this.getCurrentEditingValue();
+      this.isPrioziationLocked = false;
     }
   }
   get selectedLanguage(): Language {
@@ -135,10 +137,6 @@ export abstract class InputI18nBaseComponent
   }
   // tslint:disable-next-line: variable-name
   _selectedLanguage = null;
-
-  public onEdit() {
-    this.hasBeenEditedByUser = true;
-  }
 
   set editingValue(value: string) {
     if (this._editingValue === value) {
@@ -327,4 +325,14 @@ export abstract class InputI18nBaseComponent
     this.disabled = isDisabled;
   }
 
+  public onEdit(): void {
+    this.hasBeenEditedByUser = true;
+  }
+  onInputFocus(): void {
+    this.isPrioziationLocked = true;
+  }
+
+  onInputBlur(): void {
+    this.isPrioziationLocked = false;
+  }
 }

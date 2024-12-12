@@ -9,7 +9,7 @@
     </mat-option>
   </mat-select>
 
-  <textarea matInput [(ngModel)]="editingValue" [disabled]="disabled" [placeholder]="placeholder"
-    (change)="onEdit()"></textarea>
+  <textarea matInput [(ngModel)]="editingValue" [disabled]="disabled" [placeholder]="placeholder" (change)="onEdit()"
+    (focus)="onInputFocus()" (blur)="onInputBlur()"></textarea>
 
 </div>
