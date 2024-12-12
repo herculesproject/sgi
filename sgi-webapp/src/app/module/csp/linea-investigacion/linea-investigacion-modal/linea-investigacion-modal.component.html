@@ -4,8 +4,8 @@
     <div fxLayout="row" fxFlex="600px" style="margin-bottom: 100px">
       <mat-form-field>
         <mat-label>{{'csp.linea-investigacion.nombre' | translate}}</mat-label>
-        <sgi-i18n-input-linea-investigacion formControlName="nombre"
-          placeholder="{{'csp.linea-investigacion.nombre' | translate}}" required></sgi-i18n-input-linea-investigacion>
+        <sgi-input-linea-investigacion formControlName="nombre"
+          placeholder="{{'csp.linea-investigacion.nombre' | translate}}" required></sgi-input-linea-investigacion>
         <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
           {{'error.required.entity' | translate:msgParamNombreEntity}}
         </mat-error>

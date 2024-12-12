@@ -19,24 +19,24 @@ import { LineaInvestigacionService } from '@core/services/csp/linea-investigacio
 import { LanguageService } from '@core/services/language.service';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
 @Component({
-  selector: 'sgi-i18n-input-linea-investigacion',
-  templateUrl: './i18n-input-linea-investigacion.component.html',
-  styleUrls: ['./i18n-input-linea-investigacion.component.scss'],
+  selector: 'sgi-input-linea-investigacion',
+  templateUrl: './input-linea-investigacion.component.html',
+  styleUrls: ['./input-linea-investigacion.component.scss'],
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: forwardRef(() => I18nInputLineaInvestigacionComponent)
+      useExisting: forwardRef(() => InputLineaInvestigacionComponent)
     }
   ]
 })
-export class I18nInputLineaInvestigacionComponent extends InputI18nBaseComponent implements AfterContentInit {
+export class InputLineaInvestigacionComponent extends InputI18nBaseComponent implements AfterContentInit {
 
-  private readonly controlType = 'sgi-i18n-input-linea-investigacion';
+  private readonly controlType = 'sgi-input-linea-investigacion';
   /** Unique id for this input. */
   protected readonly uid = this.controlType + `-${nextUniqueId++}`;
 
@@ -55,10 +55,11 @@ export class I18nInputLineaInvestigacionComponent extends InputI18nBaseComponent
   }
 
   ngAfterContentInit() {
-    this.ngControl.control?.valueChanges?.pipe(
+    this.editValueChanges.pipe(
+      takeUntil(this._destroy),
       startWith(''),
       debounceTime(200),
-      switchMap(() => this.search(this.editingValue))
+      switchMap((value) => this.search(value))
     ).subscribe(
       (response => {
         this.searchResult$.next(response.items);
@@ -96,4 +97,7 @@ export class I18nInputLineaInvestigacionComponent extends InputI18nBaseComponent
     });
   }
 
+  public displayOptionAutocomplete(linea: ILineaInvestigacion) {
+    return linea.nombre.find(nombre => nombre.lang === this.selectedLanguage).value;
+  }
 }

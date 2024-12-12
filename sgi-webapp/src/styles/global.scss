@@ -442,11 +442,11 @@ mat-form-field {
   }
 }
 
-.mat-form-field-type-sgi-i18n-input-linea-investigacion,
-.mat-form-field-type-i18n-input-linea-investigacion {
+.mat-form-field-type-sgi-input-linea-investigacion,
+.mat-form-field-type-input-linea-investigacion {
   .mat-form-field-label-wrapper {
-    margin-left: 45px;
-    width: calc(100% - 45px);
+    margin-left: 50px;
+    width: calc(100% - 50px);
   }
 
   &.mat-form-field-should-float {

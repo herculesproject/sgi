@@ -29,6 +29,7 @@ export abstract class InputI18nBaseComponent
   protected abstract uid: string;
 
   readonly stateChanges: Subject<void> = new Subject<void>();
+  readonly editValueChanges: Subject<string> = new Subject<string>();
   private hasBeenEditedByUser = false;
   private isPrioziationLocked = false;
 
@@ -161,6 +162,7 @@ export abstract class InputI18nBaseComponent
     } else {
       this.stateChanges.next();
     }
+    this.editValueChanges.next(this.editingValue);
   }
   get editingValue(): string {
     return this._editingValue;
@@ -208,7 +210,7 @@ export abstract class InputI18nBaseComponent
 
   @Input('aria-describedby') userAriaDescribedBy: string;
 
-  private readonly _destroy = new Subject<void>()
+  protected readonly _destroy = new Subject<void>()
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
