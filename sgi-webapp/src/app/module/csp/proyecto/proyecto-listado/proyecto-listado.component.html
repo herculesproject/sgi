@@ -236,13 +236,18 @@
       </div>
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
         <!-- Rol Universidad -->
-        <div fxFlex="20%">
-          <mat-form-field fxFill>
-            <mat-label>{{'csp.proyecto.rol-participacion-universidad' | translate}}</mat-label>
-            <sgi-select-rol-socio formControlName="rolUniversidad" extended="false">
-            </sgi-select-rol-socio>
-          </mat-form-field>
-        </div>
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 3)) / 4)">
+          <mat-label>{{'csp.proyecto.rol-participacion-universidad' | translate}}</mat-label>
+          <sgi-select-rol-socio formControlName="rolUniversidad" extended="false">
+          </sgi-select-rol-socio>
+        </mat-form-field>
+
+        <!-- Pais socio -->
+        <mat-form-field fxFlex="0 1 calc((100% - (10px * 3)) / 4)" *ngIf="isProyectoSocioPaisFilterEnabled">
+          <mat-label>{{'csp.proyecto.pais.socio' | translate}}</mat-label>
+          <sgi-select-pais formControlName="paisSocio">
+          </sgi-select-pais>
+        </mat-form-field>
       </div>
       <!-- Palabras clave -->
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
