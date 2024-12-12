@@ -1,10 +1,14 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,10 +22,16 @@ class AreaTematicaRepositoryTest extends BaseRepositoryTest {
   @Test
   void findByPadreIdInAndActivoIsTrue_ReturnsAreaTematica() throws Exception {
     // given: 2 AreaTematica de los que 1 coincide con el id padre buscado
-    AreaTematica areaTematica1 = new AreaTematica(null, "nombre-1", "descripcion-1", null, true);
+    Set<AreaTematicaNombre> nombre1 = new HashSet<>();
+    nombre1.add(new AreaTematicaNombre(Language.ES, "nombre-1"));
+
+    AreaTematica areaTematica1 = new AreaTematica(null, nombre1, "descripcion-1", null, true);
     entityManager.persistAndFlush(areaTematica1);
 
-    AreaTematica areaTematica2 = new AreaTematica(null, "nombre-2", "descripcion-2", areaTematica1, true);
+    Set<AreaTematicaNombre> nombre2 = new HashSet<>();
+    nombre2.add(new AreaTematicaNombre(Language.ES, "nombre-2"));
+
+    AreaTematica areaTematica2 = new AreaTematica(null, nombre2, "descripcion-2", areaTematica1, true);
     entityManager.persistAndFlush(areaTematica2);
 
     List<Long> idsPadreBuscados = Arrays.asList(areaTematica1.getId());
@@ -42,10 +52,16 @@ class AreaTematicaRepositoryTest extends BaseRepositoryTest {
   @Test
   void findByPadreIdInAndActivoIsTrue_IdNoExiste_ReturnsEmptyList() throws Exception {
     // given: 2 AreaTematica que no coinciden con el id padre buscado
-    AreaTematica areaTematica1 = new AreaTematica(null, "nombre-1", "descripcion-1", null, true);
+    Set<AreaTematicaNombre> nombre1 = new HashSet<>();
+    nombre1.add(new AreaTematicaNombre(Language.ES, "nombre-1"));
+
+    AreaTematica areaTematica1 = new AreaTematica(null, nombre1, "descripcion-1", null, true);
     entityManager.persistAndFlush(areaTematica1);
 
-    AreaTematica areaTematica2 = new AreaTematica(null, "nombre-2", "descripcion-2", areaTematica1, true);
+    Set<AreaTematicaNombre> nombre2 = new HashSet<>();
+    nombre2.add(new AreaTematicaNombre(Language.ES, "nombre-2"));
+
+    AreaTematica areaTematica2 = new AreaTematica(null, nombre2, "descripcion-2", areaTematica1, true);
     entityManager.persistAndFlush(areaTematica2);
 
     List<Long> idsPadreBuscados = Arrays.asList(areaTematica2.getId());

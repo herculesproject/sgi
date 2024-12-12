@@ -8,6 +8,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -146,15 +147,21 @@ class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(convocatoria);
 
+    Set<AreaTematicaNombre> nombreAreaTematicaPadre = new HashSet<>();
+    nombreAreaTematicaPadre.add(new AreaTematicaNombre(Language.ES, "nombreAreaTematica" + suffix));
+
     AreaTematica areaTematicaPadre = AreaTematica.builder()
-        .nombre("nombreAreaTematica" + suffix)
+        .nombre(nombreAreaTematicaPadre)
         .descripcion("descripcionAreaTematica" + suffix)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(areaTematicaPadre);
 
+    Set<AreaTematicaNombre> nombreAreaTematica = new HashSet<>();
+    nombreAreaTematica.add(new AreaTematicaNombre(Language.ES, suffix));
+
     AreaTematica areaTematica = AreaTematica.builder()
-        .nombre(suffix)
+        .nombre(nombreAreaTematica)
         .descripcion("areaTematica" + suffix)
         .padre(areaTematicaPadre)
         .activo(Boolean.TRUE)

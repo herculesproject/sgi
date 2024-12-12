@@ -965,4 +965,31 @@
 
     <dropColumn columnName="descripcion" tableName="programa" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-40">
+    <createTable tableName="area_tematica_nombre">
+      <column name="area_tematica_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="area_tematica_nombre" columnNames="area_tematica_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="area_tematica_id"
+      baseTableName="area_tematica_nombre"
+      constraintName="FK_AREATEMATICANOMBRE_AREATEMATICA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="area_tematica" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}area_tematica_nombre(area_tematica_id, value_, lang) SELECT id,
+      nombre, '${defaultLang}' FROM ${schemaPrefix}area_tematica WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="area_tematica" />
+  </changeSet>
 </databaseChangeLog>

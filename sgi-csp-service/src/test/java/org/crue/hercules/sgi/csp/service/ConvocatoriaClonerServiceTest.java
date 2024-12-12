@@ -7,13 +7,16 @@ import static org.mockito.Mockito.verify;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.enums.TipoPartida;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
@@ -46,6 +49,7 @@ import org.crue.hercules.sgi.csp.repository.RequisitoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.RequisitoIPCategoriaProfesionalRepository;
 import org.crue.hercules.sgi.csp.repository.RequisitoIPNivelAcademicoRepository;
 import org.crue.hercules.sgi.csp.repository.RequisitoIPRepository;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -299,11 +303,15 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
   }
 
   private ConvocatoriaAreaTematica buildMockConvocatoriaAreaTematica(Long convocatoriaId) {
+    Set<AreaTematicaNombre> nombre = new HashSet<>();
+    nombre.add(new AreaTematicaNombre(Language.ES, "area-01-test"));
+
     return ConvocatoriaAreaTematica.builder()
         .areaTematica(AreaTematica.builder()
             .activo(Boolean.TRUE)
-            .descripcion("Testing")
-            .nombre("area-01-test")
+            .descripcion(
+                "Testing")
+            .nombre(nombre)
             .id(1L)
             .build())
         .convocatoriaId(convocatoriaId)

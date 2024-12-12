@@ -2,21 +2,29 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolationException;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.service.impl.AreaTematicaServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,17 +34,14 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * AreaTematicaServiceTest
  */
+@Import({ AreaTematicaServiceImpl.class })
 class AreaTematicaServiceTest extends BaseServiceTest {
 
-  @Mock
+  @MockBean
   private AreaTematicaRepository repository;
 
+  @Autowired
   private AreaTematicaService service;
-
-  @BeforeEach
-  void setUp() throws Exception {
-    service = new AreaTematicaServiceImpl(repository);
-  }
 
   @Test
   void create_ReturnsAreaTematica() {
@@ -213,13 +218,14 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     AreaTematica areaTematicaHijo = generarMockAreaTematica(2L, "A-002", "descripcion-2", 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(areaTematica));
-    BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(ArgumentMatchers.<Long>anyList()))
+    BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(Arrays.asList(1L)))
         .willReturn(Arrays.asList(areaTematicaHijo));
 
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque hay otro AreaTematica con ese nombre
-    Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Área Temática de Grupo ya existe");
+    Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(
+        ConstraintViolationException.class)
+        .hasMessage("create.areaTematica.Nombre: Ya existe un area tematica con el nombre 'A-002'");
   }
 
   @Test
@@ -231,7 +237,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(areaTematica));
     // se llama dos veces, primero para el nombre y luego la descripción
-    BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(ArgumentMatchers.<Long>anyList()))
+    BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(Arrays.asList(1L)))
         .willReturn(new ArrayList<>()).willReturn(Arrays.asList(areaTematicaHijo));
 
     // when: Creamos el AreaTematica
@@ -403,14 +409,14 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(3L)).willReturn(Optional.of(areaTematicaActualizado));
     BDDMockito.given(repository.findById(1L)).willReturn(Optional.of(areaTematica));
 
-    BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(ArgumentMatchers.<Long>anyList()))
+    BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(Arrays.asList(1L)))
         .willReturn(Arrays.asList(areaTematicaHijo));
 
     // when: Actualizamos el AreaTematica
     // then: Lanza una excepcion porque hay otro AreaTematica con ese nombre
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Área Temática de Grupo ya existe");
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessage("update.areaTematicaActualizar.Nombre: Ya existe un area tematica con el nombre 'A-002'");
   }
 
   @Test
@@ -423,7 +429,7 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(3L)).willReturn(Optional.of(areaTematicaActualizado));
     BDDMockito.given(repository.findById(1L)).willReturn(Optional.of(areaTematica));
 
-    BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(ArgumentMatchers.<Long>anyList()))
+    BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(Arrays.asList(1L)))
         .willReturn(new ArrayList<>()).willReturn(Arrays.asList(areaTematicaHijo));
 
     // when: Actualizamos el AreaTematica
@@ -577,7 +583,8 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // then: el AreaTematica
     Assertions.assertThat(areaTematica).as("isNotNull()").isNotNull();
     Assertions.assertThat(areaTematica.getId()).as("getId()").isEqualTo(idBuscado);
-    Assertions.assertThat(areaTematica.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematica.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-1");
     Assertions.assertThat(areaTematica.getActivo()).as("getActivo()").isTrue();
   }
 
@@ -629,7 +636,8 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       AreaTematica areaTematica = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(areaTematica.getNombre()).isEqualTo("nombre-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematica.getNombre(), Language.ES))
+          .isEqualTo("nombre-" + i);
     }
   }
 
@@ -670,7 +678,8 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       AreaTematica areaTematica = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(areaTematica.getNombre()).isEqualTo("nombre-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematica.getNombre(), Language.ES))
+          .isEqualTo("nombre-" + i);
     }
   }
 
@@ -711,7 +720,8 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       AreaTematica areaTematica = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(areaTematica.getNombre()).isEqualTo("nombre-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematica.getNombre(), Language.ES))
+          .isEqualTo("nombre-" + i);
     }
   }
 
@@ -753,7 +763,8 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       AreaTematica areaTematica = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(areaTematica.getNombre()).isEqualTo("nombre-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematica.getNombre(), Language.ES))
+          .isEqualTo("nombre-" + i);
     }
   }
 
@@ -776,9 +787,12 @@ class AreaTematicaServiceTest extends BaseServiceTest {
    * @return el objeto AreaTematica
    */
   private AreaTematica generarMockAreaTematica(Long id, String nombre, String descripcion, Long idAreaTematicaPadre) {
+    Set<AreaTematicaNombre> nombreAreaTematica = new HashSet<>();
+    nombreAreaTematica.add(new AreaTematicaNombre(Language.ES, nombre));
+
     AreaTematica areaTematica = new AreaTematica();
     areaTematica.setId(id);
-    areaTematica.setNombre(nombre);
+    areaTematica.setNombre(nombreAreaTematica);
     areaTematica.setDescripcion(descripcion);
 
     if (idAreaTematicaPadre != null) {

@@ -99,6 +99,7 @@ DELETE FROM test.convocatoria_documento;
 DELETE FROM test.documento_requerido_solicitud;
 DELETE FROM test.configuracion_solicitud;
 DELETE FROM test.convocatoria_area_tematica;
+DELETE FROM test.area_tematica_nombre;
 DELETE FROM test.area_tematica;
 DELETE FROM test.convocatoria_entidad_convocante;
 DELETE FROM test.convocatoria_entidad_financiadora;
