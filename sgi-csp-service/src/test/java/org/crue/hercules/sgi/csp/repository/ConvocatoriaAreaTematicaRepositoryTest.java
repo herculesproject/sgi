@@ -8,6 +8,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaDescripcion;
 import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
@@ -150,9 +151,12 @@ class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     Set<AreaTematicaNombre> nombreAreaTematicaPadre = new HashSet<>();
     nombreAreaTematicaPadre.add(new AreaTematicaNombre(Language.ES, "nombreAreaTematica" + suffix));
 
+    Set<AreaTematicaDescripcion> descripcionAreaTematicaPadre = new HashSet<>();
+    descripcionAreaTematicaPadre.add(new AreaTematicaDescripcion(Language.ES, "descripcionAreaTematica" + suffix));
+
     AreaTematica areaTematicaPadre = AreaTematica.builder()
         .nombre(nombreAreaTematicaPadre)
-        .descripcion("descripcionAreaTematica" + suffix)
+        .descripcion(descripcionAreaTematicaPadre)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(areaTematicaPadre);
@@ -160,9 +164,12 @@ class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
     Set<AreaTematicaNombre> nombreAreaTematica = new HashSet<>();
     nombreAreaTematica.add(new AreaTematicaNombre(Language.ES, suffix));
 
+    Set<AreaTematicaDescripcion> descripcionAreaTematica = new HashSet<>();
+    descripcionAreaTematica.add(new AreaTematicaDescripcion(Language.ES, "areaTematica" + suffix));
+
     AreaTematica areaTematica = AreaTematica.builder()
         .nombre(nombreAreaTematica)
-        .descripcion("areaTematica" + suffix)
+        .descripcion(descripcionAreaTematica)
         .padre(areaTematicaPadre)
         .activo(Boolean.TRUE)
         .build();

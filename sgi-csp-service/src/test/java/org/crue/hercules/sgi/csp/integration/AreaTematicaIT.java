@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaDescripcion;
 import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -102,7 +103,7 @@ class AreaTematicaIT extends BaseIT {
     Assertions.assertThat(areaTematicaDisabled.getId()).as("getId()").isEqualTo(idAreaTematica);
     Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematicaDisabled.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-001");
-    Assertions.assertThat(areaTematicaDisabled.getDescripcion())
+    Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematicaDisabled.getDescripcion(), Language.ES))
         .as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(areaTematicaDisabled.getPadre()).as("getPadre()").isNull();
     Assertions.assertThat(areaTematicaDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
@@ -123,7 +124,7 @@ class AreaTematicaIT extends BaseIT {
     Assertions.assertThat(areaTematicaDisabled.getId()).as("getId()").isEqualTo(idAreaTematica);
     Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematicaDisabled.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-001");
-    Assertions.assertThat(areaTematicaDisabled.getDescripcion())
+    Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematicaDisabled.getDescripcion(), Language.ES))
         .as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(areaTematicaDisabled.getPadre()).as("getPadre()").isNull();
     Assertions.assertThat(areaTematicaDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
@@ -143,7 +144,7 @@ class AreaTematicaIT extends BaseIT {
     Assertions.assertThat(areaTematica.getId()).as("getId()").isEqualTo(idAreaTematica);
     Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematica.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-001");
-    Assertions.assertThat(areaTematica.getDescripcion())
+    Assertions.assertThat(I18nHelper.getValueForLanguage(areaTematica.getDescripcion(), Language.ES))
         .as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(areaTematica.getActivo()).as("getActivo()").isTrue();
   }
@@ -156,7 +157,7 @@ class AreaTematicaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
         .build(false).toUri();
@@ -193,7 +194,7 @@ class AreaTematicaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/grupo").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -230,7 +231,7 @@ class AreaTematicaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/grupo/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -266,7 +267,7 @@ class AreaTematicaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "nombre.value,desc";
-    String filter = "descripcion=ke=00";
+    String filter = "descripcion.value=ke=00";
 
     Long areaTematicaId = 1L;
 
@@ -318,10 +319,13 @@ class AreaTematicaIT extends BaseIT {
     Set<AreaTematicaNombre> nombreAreaTematica = new HashSet<>();
     nombreAreaTematica.add(new AreaTematicaNombre(Language.ES, nombre));
 
+    Set<AreaTematicaDescripcion> descripcionAreaTematica = new HashSet<>();
+    descripcionAreaTematica.add(new AreaTematicaDescripcion(Language.ES, "descripcion-" + String.format("%03d", id)));
+
     AreaTematica areaTematica = new AreaTematica();
     areaTematica.setId(id);
     areaTematica.setNombre(nombreAreaTematica);
-    areaTematica.setDescripcion("descripcion-" + String.format("%03d", id));
+    areaTematica.setDescripcion(descripcionAreaTematica);
 
     if (idAreaTematicaPadre != null) {
       areaTematica.setPadre(generarMockAreaTematica(idAreaTematicaPadre));

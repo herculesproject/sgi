@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaDescripcion;
 import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,19 @@ class AreaTematicaRepositoryTest extends BaseRepositoryTest {
     Set<AreaTematicaNombre> nombre1 = new HashSet<>();
     nombre1.add(new AreaTematicaNombre(Language.ES, "nombre-1"));
 
-    AreaTematica areaTematica1 = new AreaTematica(null, nombre1, "descripcion-1", null, true);
+    Set<AreaTematicaDescripcion> descripcion1 = new HashSet<>();
+    descripcion1.add(new AreaTematicaDescripcion(Language.ES, "descripcion-1"));
+
+    AreaTematica areaTematica1 = new AreaTematica(null, nombre1, descripcion1, null, true);
     entityManager.persistAndFlush(areaTematica1);
 
     Set<AreaTematicaNombre> nombre2 = new HashSet<>();
     nombre2.add(new AreaTematicaNombre(Language.ES, "nombre-2"));
 
-    AreaTematica areaTematica2 = new AreaTematica(null, nombre2, "descripcion-2", areaTematica1, true);
+    Set<AreaTematicaDescripcion> descripcion2 = new HashSet<>();
+    descripcion2.add(new AreaTematicaDescripcion(Language.ES, "descripcion-2"));
+
+    AreaTematica areaTematica2 = new AreaTematica(null, nombre2, descripcion2, areaTematica1, true);
     entityManager.persistAndFlush(areaTematica2);
 
     List<Long> idsPadreBuscados = Arrays.asList(areaTematica1.getId());
@@ -55,13 +62,19 @@ class AreaTematicaRepositoryTest extends BaseRepositoryTest {
     Set<AreaTematicaNombre> nombre1 = new HashSet<>();
     nombre1.add(new AreaTematicaNombre(Language.ES, "nombre-1"));
 
-    AreaTematica areaTematica1 = new AreaTematica(null, nombre1, "descripcion-1", null, true);
+    Set<AreaTematicaDescripcion> decripcion1 = new HashSet<>();
+    decripcion1.add(new AreaTematicaDescripcion(Language.ES, "descripcion-1"));
+
+    AreaTematica areaTematica1 = new AreaTematica(null, nombre1, decripcion1, null, true);
     entityManager.persistAndFlush(areaTematica1);
 
     Set<AreaTematicaNombre> nombre2 = new HashSet<>();
     nombre2.add(new AreaTematicaNombre(Language.ES, "nombre-2"));
 
-    AreaTematica areaTematica2 = new AreaTematica(null, nombre2, "descripcion-2", areaTematica1, true);
+    Set<AreaTematicaDescripcion> decripcion2 = new HashSet<>();
+    decripcion2.add(new AreaTematicaDescripcion(Language.ES, "descripcion-2"));
+
+    AreaTematica areaTematica2 = new AreaTematica(null, nombre2, decripcion2, areaTematica1, true);
     entityManager.persistAndFlush(areaTematica2);
 
     List<Long> idsPadreBuscados = Arrays.asList(areaTematica2.getId());

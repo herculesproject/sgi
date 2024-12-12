@@ -12,6 +12,7 @@ import javax.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaDescripcion;
 import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.service.impl.AreaTematicaServiceImpl;
@@ -132,20 +133,14 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     // grupo
     AreaTematica areaTematicaNew = generarMockAreaTematica(null, "nombreRepetido", "descripcion-2", null);
     AreaTematica areaTematica = generarMockAreaTematica(1L, "nombreRepetido", "descripcion-1", null);
-
-    BDDMockito
-        .given(
-            repository.findAll(ArgumentMatchers.<Specification<AreaTematica>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<AreaTematica> page = new PageImpl<>(Arrays.asList(areaTematica), pageable, 0);
-          return page;
-        });
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<AreaTematica>>any()))
+        .willReturn(Arrays.asList(areaTematica));
 
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque hay otro grupo AreaTematica con ese nombre
-    Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un grupo con el mismo nombre");
+    Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew))
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessage("create.areaTematica.Nombre: Ya existe un area tematica con el nombre 'nombreRepetido'");
   }
 
   @Test
@@ -235,15 +230,18 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     AreaTematica areaTematica = generarMockAreaTematica(1L, "nombrePadre", "descripcionPadre", null);
     AreaTematica areaTematicaHijo = generarMockAreaTematica(2L, "A-002", "descripcionRepetida", 1L);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(areaTematica));
+    BDDMockito.given(repository.findById(1L)).willReturn(Optional.of(areaTematica));
+    BDDMockito.given(repository.findById(2L)).willReturn(Optional.of(areaTematicaHijo));
     // se llama dos veces, primero para el nombre y luego la descripción
     BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(Arrays.asList(1L)))
-        .willReturn(new ArrayList<>()).willReturn(Arrays.asList(areaTematicaHijo));
+        .willReturn(Arrays.asList(areaTematicaHijo));
 
     // when: Creamos el AreaTematica
     // then: Lanza una excepcion porque hay otro AreaTematica con ese nombre
-    Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Área Temática de Grupo ya existe");
+    Assertions.assertThatThrownBy(() -> service.create(areaTematicaNew))
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessage(
+            "create.areaTematica.Descripción: Ya existe un area tematica con la descripcion 'descripcionRepetida'");
   }
 
   @Test
@@ -314,19 +312,14 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     AreaTematica areaTematica = generarMockAreaTematica(2L, "nombreRepetido", "Descripcion-2", null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(areaTematicaActualizado));
-    BDDMockito
-        .given(
-            repository.findAll(ArgumentMatchers.<Specification<AreaTematica>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<AreaTematica> page = new PageImpl<>(Arrays.asList(areaTematica), pageable, 0);
-          return page;
-        });
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<AreaTematica>>any()))
+        .willReturn(Arrays.asList(areaTematica));
 
     // when: Actualizamos el AreaTematica
     // then: Lanza una excepcion porque hay otro grupo AreaTematica con ese nombre
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe un grupo con el mismo nombre");
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessage("update.areaTematicaActualizar.Nombre: Ya existe un area tematica con el nombre 'nombreRepetido'");
   }
 
   @Test
@@ -430,13 +423,14 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(1L)).willReturn(Optional.of(areaTematica));
 
     BDDMockito.given(repository.findByPadreIdInAndActivoIsTrue(Arrays.asList(1L)))
-        .willReturn(new ArrayList<>()).willReturn(Arrays.asList(areaTematicaHijo));
+        .willReturn(Arrays.asList(areaTematicaHijo));
 
     // when: Actualizamos el AreaTematica
     // then: Lanza una excepcion porque hay otro AreaTematica con esa descripcion
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Área Temática de Grupo ya existe");
+        .isInstanceOf(ConstraintViolationException.class)
+        .hasMessage(
+            "update.areaTematicaActualizar.Descripción: Ya existe un area tematica con la descripcion 'DescripcionRepetida'");
   }
 
   @Test
@@ -501,19 +495,13 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     AreaTematica areaTematicaRepetido = generarMockAreaTematica(2L, "nombreRepetido", "descripcion-2", null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(areaTematica));
-    BDDMockito
-        .given(
-            repository.findAll(ArgumentMatchers.<Specification<AreaTematica>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<AreaTematica> page = new PageImpl<>(Arrays.asList(areaTematicaRepetido), pageable, 0);
-          return page;
-        });
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<AreaTematica>>any()))
+        .willReturn(Arrays.asList(areaTematicaRepetido));
 
     // when: Activamos el AreaTematica
     // then: Lanza una excepcion porque hay otro AreaTematica con ese nombre
-    Assertions.assertThatThrownBy(() -> service.update(areaTematica)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un grupo con el mismo nombre");
+    Assertions.assertThatThrownBy(() -> service.update(areaTematica)).isInstanceOf(ConstraintViolationException.class)
+        .hasMessage("update.areaTematicaActualizar.Nombre: Ya existe un area tematica con el nombre 'nombreRepetido'");
   }
 
   @Test
@@ -790,10 +778,13 @@ class AreaTematicaServiceTest extends BaseServiceTest {
     Set<AreaTematicaNombre> nombreAreaTematica = new HashSet<>();
     nombreAreaTematica.add(new AreaTematicaNombre(Language.ES, nombre));
 
+    Set<AreaTematicaDescripcion> descripcionAreaTematica = new HashSet<>();
+    descripcionAreaTematica.add(new AreaTematicaDescripcion(Language.ES, descripcion));
+
     AreaTematica areaTematica = new AreaTematica();
     areaTematica.setId(id);
     areaTematica.setNombre(nombreAreaTematica);
-    areaTematica.setDescripcion(descripcion);
+    areaTematica.setDescripcion(descripcionAreaTematica);
 
     if (idAreaTematicaPadre != null) {
       areaTematica.setPadre(generarMockAreaTematica(idAreaTematicaPadre));

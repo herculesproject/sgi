@@ -10,11 +10,11 @@ import javax.validation.Payload;
 
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueNombreAreaTematicaActivoValidator.class)
-public @interface UniqueNombreAreaTematicaActivo {
-  String message() default "{org.crue.hercules.sgi.csp.validation.UniqueNombreAreaTematicaActivo.message}";
+@Constraint(validatedBy = UniqueDescripcionAreaTematicaActivoValidator.class)
+public @interface UniqueDescripcionAreaTematicaActivo {
+  String message() default "{org.crue.hercules.sgi.csp.validation.UniqueDescripcionAreaTematicaActivo.message}";
 
-  String field() default "name";
+  String field() default "descripcion";
 
   Class<?>[] groups() default {};
 

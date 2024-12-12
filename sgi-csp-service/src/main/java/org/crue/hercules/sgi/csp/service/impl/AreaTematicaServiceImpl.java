@@ -1,19 +1,14 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
-import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
+import org.crue.hercules.sgi.csp.model.AreaTematicaDescripcion;
 import org.crue.hercules.sgi.csp.model.BaseEntity;
-import org.crue.hercules.sgi.csp.model.Grupo;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.AreaTematicaPredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.AreaTematicaSpecifications;
@@ -41,7 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class AreaTematicaServiceImpl implements AreaTematicaService {
 
-  private static final String MESSAGE_GRUPO_DUPLICADO = "grupo.exists";
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_FIELD = "field";
   private static final String MSG_KEY_LENGTH = "length";
@@ -54,9 +48,6 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   private static final String MSG_PROBLEM_MAX_LENGTH = "org.springframework.util.Assert.maxLength.message";
 
   private final AreaTematicaRepository repository;
-
-  private static final int BUSCAR_NOMBRE = 1;
-  private static final int BUSCAR_DESCRIPCION = 2;
 
   public AreaTematicaServiceImpl(AreaTematicaRepository areaTematicaRepository) {
     this.repository = areaTematicaRepository;
@@ -71,7 +62,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
   @Override
   @Transactional
   @Validated({ BaseEntity.Create.class })
-  public AreaTematica create(AreaTematica areaTematica) {
+  public AreaTematica create(@Valid AreaTematica areaTematica) {
     log.debug("create(AreaTematica areaTematica) - start");
 
     AssertHelper.idIsNull(areaTematica.getId(), AreaTematica.class);
@@ -85,10 +76,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
       }
     }
 
-    if (areaTematica.getPadre() == null) {
-      Assert.isTrue(!existGrupoWithNombre(areaTematica.getNombre(), null),
-          ApplicationContextSupport.getMessage(MESSAGE_GRUPO_DUPLICADO));
-    } else {
+    if (areaTematica.getPadre() != null) {
       // nombre(back) ==> abreviatura(front)
       // descripcion(back) ==> nombre(front)
       Assert.isTrue(areaTematica.getPadre().getActivo(),
@@ -98,19 +86,24 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
               .parameter(MSG_KEY_FIELD, areaTematica.getPadre().getNombre())
               .build());
 
-      for (AreaTematicaNombre areaTematicaNombre : areaTematica.getNombre()) {
-        Assert.isTrue(areaTematicaNombre.getValue().length() <= 5,
-            () -> ProblemMessage.builder()
-                .key(MSG_PROBLEM_MAX_LENGTH)
-                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
-                .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_ABREVIATURA))
-                .parameter(MSG_KEY_LENGTH, "5")
-                .build());
-      }
+      Assert.isTrue(
+          areaTematica.getNombre().stream().allMatch(areaTematicaNombre -> areaTematicaNombre.getValue().length() <= 5),
+          () -> ProblemMessage.builder()
+              .key(MSG_PROBLEM_MAX_LENGTH)
+              .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
+              .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_ABREVIATURA))
+              .parameter(MSG_KEY_LENGTH, "5")
+              .build());
 
       AssertHelper.fieldNotNull(areaTematica.getDescripcion(), AreaTematica.class, MSG_FIELD_DESCRIPCION);
 
-      Assert.isTrue(areaTematica.getDescripcion().length() <= 50,
+      for (AreaTematicaDescripcion areaTematicaDescripcion : areaTematica.getDescripcion()) {
+        AssertHelper.fieldNotNull(areaTematicaDescripcion.getValue(), AreaTematica.class, MSG_FIELD_DESCRIPCION);
+      }
+
+      Assert.isTrue(
+          areaTematica.getDescripcion().stream()
+              .allMatch(areaTematicaDescripcion -> areaTematicaDescripcion.getValue().length() <= 50),
           () -> ProblemMessage.builder()
               .key(MSG_PROBLEM_MAX_LENGTH)
               .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
@@ -118,10 +111,6 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
               .parameter(MSG_KEY_LENGTH, "50")
               .build());
 
-      AssertHelper.entityExists(
-          !existAreaTematicaDescripcion(areaTematica.getPadre().getId(), areaTematica.getDescripcion(),
-              null, BUSCAR_DESCRIPCION),
-          Grupo.class, AreaTematica.class);
     }
 
     areaTematica.setActivo(true);
@@ -156,10 +145,7 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
     }
 
     return repository.findById(areaTematicaActualizar.getId()).map(areaTematica -> {
-      if (areaTematica.getPadre() == null) {
-        Assert.isTrue(!existGrupoWithNombre(areaTematicaActualizar.getNombre(), areaTematicaActualizar.getId()),
-            ApplicationContextSupport.getMessage(MESSAGE_GRUPO_DUPLICADO));
-      } else {
+      if (areaTematica.getPadre() != null) {
         // nombre(back) ==> abreviatura(front)
         // descripcion(back) ==> nombre(front)
         if (!Objects.equals(areaTematica.getPadre().getId(), areaTematicaActualizar.getPadre().getId())) {
@@ -171,20 +157,26 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
                   .build());
         }
 
-        for (AreaTematicaNombre areaTematicaNombre : areaTematica.getNombre()) {
+        Assert.isTrue(
+            areaTematica.getNombre().stream()
+                .allMatch(areaTematicaNombre -> areaTematicaNombre.getValue().length() <= 5),
+            () -> ProblemMessage.builder()
+                .key(MSG_PROBLEM_MAX_LENGTH)
+                .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
+                .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_ABREVIATURA))
+                .parameter(MSG_KEY_LENGTH, "5")
+                .build());
 
-          Assert.isTrue(areaTematicaNombre.getValue().length() <= 5,
-              () -> ProblemMessage.builder()
-                  .key(MSG_PROBLEM_MAX_LENGTH)
-                  .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
-                  .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_ABREVIATURA))
-                  .parameter(MSG_KEY_LENGTH, "5")
-                  .build());
+        for (AreaTematicaDescripcion areaTematicaDescripcion : areaTematicaActualizar.getDescripcion()) {
+
+          AssertHelper.fieldNotBlank(StringUtils.isNotBlank(areaTematicaDescripcion.getValue()),
+              AreaTematica.class,
+              MSG_FIELD_DESCRIPCION);
         }
 
-        AssertHelper.fieldNotNull(areaTematica.getDescripcion(), AreaTematica.class, MSG_FIELD_DESCRIPCION);
-
-        Assert.isTrue(areaTematica.getDescripcion().length() <= 50,
+        Assert.isTrue(
+            areaTematicaActualizar.getDescripcion().stream()
+                .allMatch(areaTematicaDescripcion -> areaTematicaDescripcion.getValue().length() <= 50),
             () -> ProblemMessage.builder()
                 .key(MSG_PROBLEM_MAX_LENGTH)
                 .parameter(MSG_KEY_ENTITY, ApplicationContextSupport.getMessage(MSG_MODEL_AREA_TEMATICA))
@@ -192,10 +184,6 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
                 .parameter(MSG_KEY_LENGTH, "50")
                 .build());
 
-        AssertHelper.entityExists(
-            !existAreaTematicaDescripcion(areaTematicaActualizar.getPadre().getId(),
-                areaTematicaActualizar.getDescripcion(), areaTematicaActualizar.getId(), BUSCAR_DESCRIPCION),
-            Grupo.class, AreaTematica.class);
       }
 
       areaTematica.setNombre(areaTematicaActualizar.getNombre());
@@ -228,9 +216,6 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
       }
 
       AssertHelper.fieldIsNull(areaTematica.getPadre(), AreaTematica.class, MSG_FIELD_PADRE);
-
-      Assert.isTrue(!existGrupoWithNombre(areaTematica.getNombre(), areaTematica.getId()),
-          ApplicationContextSupport.getMessage(MESSAGE_GRUPO_DUPLICADO));
 
       areaTematica.setActivo(true);
 
@@ -352,95 +337,6 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
     Page<AreaTematica> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllHijosAreaTematica(Long areaTematicaId, String query, Pageable pageable) - end");
     return returnValue;
-  }
-
-  /**
-   * Comprueba si existe algun grupo ({@link AreaTematica} con padre null) con el
-   * nombre indicado.
-   *
-   * @param nombre                nombre del grupo.
-   * @param areaTematicaIdExcluir Identificador del {@link AreaTematica} que se
-   *                              excluye de la busqueda.
-   * @return true si existe algun grupo con ese nombre.
-   */
-
-  private boolean existGrupoWithNombre(Collection<AreaTematicaNombre> nombre, Long areaTematicaIdExcluir) {
-    log.debug("existGrupoWithNombre(String nombre, Long areaTematicaIdExcluir) - start");
-    boolean returnValue = false;
-    for (AreaTematicaNombre areaTematicaNombre : nombre) {
-      Specification<AreaTematica> specGruposByNombre = AreaTematicaSpecifications.gruposByNombre(
-          areaTematicaNombre.getValue(),
-          areaTematicaIdExcluir);
-
-      returnValue = !repository.findAll(specGruposByNombre,
-          Pageable.unpaged()).isEmpty();
-    }
-
-    log.debug("existGrupoWithNombre(String nombre, Long areaTematicaIdExcluir) - end");
-    return returnValue;
-  }
-
-  /**
-   * Comprueba si existe {@link AreaTematica} con el nombre indicado en el arbol
-   * del areaTematica indicado.
-   *
-   * @param areaTematicaId        Identificador del {@link AreaTematica}.
-   * @param textoBuscar           nombre del areaTematica.
-   * @param areaTematicaIdExcluir Identificador del {@link AreaTematica} que se
-   *                              excluye de la busqueda.
-   * @return true si existe algun {@link AreaTematica} con ese nombre.
-   */
-
-  private boolean existAreaTematicaDescripcion(Long areaTematicaId, String textoBuscar,
-      Long areaTematicaIdExcluir, int tipoBusqueda) {
-    log.debug(
-        "existAreaTematicaNombreDescripcion(Long areaTematicaId, String textoBuscar,Long areaTematicaIdExcluir, int tipoBusqueda) - start");
-
-    // Busca el areaTematica raiz
-    AreaTematica areaTematicaRaiz = repository.findById(areaTematicaId).map(areaTematica -> areaTematica)
-        .orElseThrow(() -> new AreaTematicaNotFoundException(areaTematicaId));
-
-    while (areaTematicaRaiz.getPadre() != null) {
-      Optional<AreaTematica> areaTematicaPadre = repository.findById(areaTematicaRaiz.getPadre().getId());
-
-      if (areaTematicaPadre.isPresent()) {
-        areaTematicaRaiz = areaTematicaPadre.get();
-      }
-    }
-
-    // Busca el nombre desde el nodo raiz nivel a nivel
-    boolean textoEncontrado = false;
-
-    List<AreaTematica> areaTematicasHijos = repository
-        .findByPadreIdInAndActivoIsTrue(Arrays.asList(areaTematicaRaiz.getId()));
-
-    if (tipoBusqueda == BUSCAR_NOMBRE) {
-      textoEncontrado = areaTematicasHijos.stream()
-          .anyMatch(areaTematica -> areaTematica.getNombre().equals(textoBuscar)
-              && !Objects.equals(areaTematica.getId(), areaTematicaIdExcluir));
-    } else if (tipoBusqueda == BUSCAR_DESCRIPCION) {
-      textoEncontrado = areaTematicasHijos.stream()
-          .anyMatch(areaTematica -> areaTematica.getDescripcion().equals(textoBuscar)
-              && !Objects.equals(areaTematica.getId(), areaTematicaIdExcluir));
-    }
-
-    while (!textoEncontrado && !areaTematicasHijos.isEmpty()) {
-      areaTematicasHijos = repository.findByPadreIdInAndActivoIsTrue(
-          areaTematicasHijos.stream().map(AreaTematica::getId).collect(Collectors.toList()));
-      if (tipoBusqueda == BUSCAR_NOMBRE) {
-        textoEncontrado = areaTematicasHijos.stream()
-            .anyMatch(areaTematica -> areaTematica.getNombre().equals(textoBuscar)
-                && !Objects.equals(areaTematica.getId(), areaTematicaIdExcluir));
-      } else if (tipoBusqueda == BUSCAR_DESCRIPCION) {
-        textoEncontrado = areaTematicasHijos.stream()
-            .anyMatch(areaTematica -> areaTematica.getDescripcion().equals(textoBuscar)
-                && !Objects.equals(areaTematica.getId(), areaTematicaIdExcluir));
-      }
-    }
-
-    log.debug(
-        "existAreaTematicaDescripcion(Long areaTematicaId, String textoBuscar,Long areaTematicaIdExcluir, int tipoBusqueda) - end");
-    return textoEncontrado;
   }
 
 }

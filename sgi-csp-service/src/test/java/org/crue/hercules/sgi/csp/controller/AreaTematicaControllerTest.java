@@ -8,6 +8,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaDescripcion;
 import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.service.AreaTematicaService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -74,8 +75,8 @@ class AreaTematicaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(areaTematica.getNombre().iterator().next().getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion")
-            .value(areaTematica.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(areaTematica.getDescripcion().iterator().next().getValue()))
         .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(areaTematica.getActivo()));
   }
@@ -123,8 +124,8 @@ class AreaTematicaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(areaTematicaExistente.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(areaTematica.getNombre().iterator().next().getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion")
-            .value(areaTematica.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(areaTematica.getDescripcion().iterator().next().getValue()))
         .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(areaTematicaExistente.getActivo()));
   }
@@ -173,8 +174,8 @@ class AreaTematicaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(areaTematica.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(areaTematica.getNombre().iterator().next().getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion")
-            .value(areaTematica.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(areaTematica.getDescripcion().iterator().next().getValue()))
         .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
@@ -220,8 +221,8 @@ class AreaTematicaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(areaTematica.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(areaTematica.getNombre().iterator().next().getValue()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion")
-            .value(areaTematica.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value")
+            .value(areaTematica.getDescripcion().iterator().next().getValue()))
         .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
   }
@@ -262,7 +263,7 @@ class AreaTematicaControllerTest extends BaseControllerTest {
         // and the requested AreaTematica is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion[0].value").value("descripcion-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
@@ -598,10 +599,13 @@ class AreaTematicaControllerTest extends BaseControllerTest {
     Set<AreaTematicaNombre> nombreAreaTematica = new HashSet<>();
     nombreAreaTematica.add(new AreaTematicaNombre(Language.ES, nombre));
 
+    Set<AreaTematicaDescripcion> descripcionAreaTematica = new HashSet<>();
+    descripcionAreaTematica.add(new AreaTematicaDescripcion(Language.ES, "descripcion-" + id));
+
     AreaTematica areaTematica = new AreaTematica();
     areaTematica.setId(id);
     areaTematica.setNombre(nombreAreaTematica);
-    areaTematica.setDescripcion("descripcion-" + id);
+    areaTematica.setDescripcion(descripcionAreaTematica);
 
     if (idAreaTematicaPadre != null) {
       areaTematica.setPadre(generarMockAreaTematica(idAreaTematicaPadre));

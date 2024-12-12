@@ -36,10 +36,10 @@ INSERT INTO test.convocatoria
 VALUES(1, 'unidad-001', 1, 'codigo-001', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-001', 'objeto-001', 'observaciones-001', 1, 1, 'REGISTRADA', 12, 1, 'AYUDAS', true);
 
 -- AREA TEMATICA
-INSERT INTO test.area_tematica (id, descripcion, area_tematica_padre_id, activo) VALUES (1, 'descripcion-001', null, true);
-INSERT INTO test.area_tematica (id, descripcion, area_tematica_padre_id, activo) VALUES (2, 'A-1', 1, true);
-INSERT INTO test.area_tematica (id, descripcion, area_tematica_padre_id, activo) VALUES (3, 'descripcion-002', null, true);
-INSERT INTO test.area_tematica (id, descripcion, area_tematica_padre_id, activo) VALUES (4, 'A-2', 2, true);
+INSERT INTO test.area_tematica (id, area_tematica_padre_id, activo) VALUES (1, null, true);
+INSERT INTO test.area_tematica (id, area_tematica_padre_id, activo) VALUES (2, 1, true);
+INSERT INTO test.area_tematica (id, area_tematica_padre_id, activo) VALUES (3, null, true);
+INSERT INTO test.area_tematica (id, area_tematica_padre_id, activo) VALUES (4, 2, true);
 
 
 -- AREA_TEMATICA_NOMBRE
@@ -47,3 +47,9 @@ INSERT INTO test.area_tematica_nombre (area_tematica_id, lang, value_) VALUES (1
 INSERT INTO test.area_tematica_nombre (area_tematica_id, lang, value_) VALUES (2, 'es', 'A-1');
 INSERT INTO test.area_tematica_nombre (area_tematica_id, lang, value_) VALUES (3, 'es', 'nombre-002');
 INSERT INTO test.area_tematica_nombre (area_tematica_id, lang, value_) VALUES (4, 'es', 'A-2');
+
+-- AREA_TEMATICA_DESCRIPCION
+INSERT INTO test.area_tematica_descripcion (area_tematica_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
+INSERT INTO test.area_tematica_descripcion (area_tematica_id, lang, value_) VALUES (2, 'es', 'nombre-A-1');
+INSERT INTO test.area_tematica_descripcion (area_tematica_id, lang, value_) VALUES (3, 'es', 'descripcion-003');
+INSERT INTO test.area_tematica_descripcion (area_tematica_id, lang, value_) VALUES (4, 'es', 'nombre-A-2');

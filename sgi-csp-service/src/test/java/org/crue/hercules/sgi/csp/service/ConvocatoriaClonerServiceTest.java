@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.enums.TipoPartida;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.AreaTematicaDescripcion;
 import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -306,11 +307,13 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
     Set<AreaTematicaNombre> nombre = new HashSet<>();
     nombre.add(new AreaTematicaNombre(Language.ES, "area-01-test"));
 
+    Set<AreaTematicaDescripcion> descripcion = new HashSet<>();
+    descripcion.add(new AreaTematicaDescripcion(Language.ES, "Testing"));
+
     return ConvocatoriaAreaTematica.builder()
         .areaTematica(AreaTematica.builder()
             .activo(Boolean.TRUE)
-            .descripcion(
-                "Testing")
+            .descripcion(descripcion)
             .nombre(nombre)
             .id(1L)
             .build())
