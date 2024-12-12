@@ -180,7 +180,7 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
       proyectoTable += this.notIsNullAndNotUndefined(proyecto?.colaborativo) ?
         this.getI18nBooleanYesNo(proyecto?.colaborativo) : '';
       proyectoTable += '\n';
-      proyectoTable += proyecto?.areaTematica && proyecto?.areaTematica.nombre ? this.languageService.getFieldValue(proyecto?.areaTematica.nombre) : '';
+      proyectoTable += this.languageService.getFieldValue(proyecto?.areaTematica?.nombre);
 
       proyectoElementsRow.push(proyectoTable);
 
@@ -205,7 +205,7 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
       elementsRow.push(proyecto?.rolUniversidad?.nombre ?? '');
       elementsRow.push(this.notIsNullAndNotUndefined(proyecto?.colaborativo) ?
         this.getI18nBooleanYesNo(proyecto?.colaborativo) : '');
-      elementsRow.push(proyecto?.areaTematica && proyecto?.areaTematica.nombre ? this.languageService.getFieldValue(proyecto?.areaTematica.nombre) : '');
+      elementsRow.push(this.languageService.getFieldValue(proyecto?.areaTematica?.nombre));
     } else {
       elementsRow.push('');
       elementsRow.push('');

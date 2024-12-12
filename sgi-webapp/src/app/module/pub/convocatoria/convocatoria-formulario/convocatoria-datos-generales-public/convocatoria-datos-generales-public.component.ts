@@ -20,7 +20,7 @@ const AREA_TEMATICA_KEY = marker('csp.area-tematica');
 
 export interface AreaTematicaListadoPublic {
   padre: I18nFieldValue[];
-  areasTematicas: string;
+  areasTematicas: I18nFieldValue[][];
 }
 
 @Component({
@@ -73,7 +73,7 @@ export class ConvocatoriaDatosGeneralesPublicComponent extends FormFragmentCompo
       } else {
         const listadoAreas: AreaTematicaListadoPublic = {
           padre: data[0]?.padre.nombre,
-          areasTematicas: data.map(area => this.languageService.getFieldValue(area.convocatoriaAreaTematica.value.areaTematica.nombre)).join(', ')
+          areasTematicas: data.map(area => area.convocatoriaAreaTematica.value.areaTematica.nombre).sort(this.sortAreasTematicasByNombre)
         };
         this.convocatoriaAreaTematicas.data = [listadoAreas];
       }
@@ -92,5 +92,12 @@ export class ConvocatoriaDatosGeneralesPublicComponent extends FormFragmentCompo
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamAreaTematicaEntities = { entity: value });
   }
+
+
+  private sortAreasTematicasByNombre: (a1: I18nFieldValue[], a2: I18nFieldValue[]) => number = (a1, a2) => {
+    const nombreA = this.languageService.getFieldValue(a1);
+    const nombreB = this.languageService.getFieldValue(a2);
+    return nombreA.localeCompare(nombreB);
+  };
 
 }

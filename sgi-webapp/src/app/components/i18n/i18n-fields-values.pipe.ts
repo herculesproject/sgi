@@ -36,26 +36,24 @@ export class I18nFieldsValuesPipe implements PipeTransform, OnDestroy {
     let values = [];
 
     fields?.forEach((field: I18nFieldValue[] | I18nFieldValueResponse[]) => {
-      if (field.length) {
-        let request = isI18nFieldValue(field) ? field.filter(f => f.lang === lang) : field.filter(f => f.lang === lang.code);
-        if (request.length) {
-          values.push(this.getDisplayValue(request[0], lang));
+      let i18nFieldValue: I18nFieldValue[];
+      if (Array.isArray(field)) {
+        if (isI18nFieldValue(field)) {
+          i18nFieldValue = field;
         } else {
-          // Get other value
-          request = isI18nFieldValue(field) ? field.filter(f => f.value?.length) : field.filter(f => f.value?.length);
-          if (request.length) {
-            values.push(this.getDisplayValue(request[0], lang));
-          }
+          i18nFieldValue = field.map(v => { return { lang: Language.fromCode(v.lang), 'value': v.value } })
         }
+      } else {
+        i18nFieldValue = [];
+      }
+
+      const fieldValue = this.languageService.getField(i18nFieldValue);
+      if (fieldValue?.value) {
+        values.push(lang === fieldValue.lang ? fieldValue.value : `[${fieldValue.lang.codeExtended}] ${fieldValue.value}`)
       }
     });
 
     return values.join(', ');
-  }
-
-  private getDisplayValue(field: I18nFieldValue | I18nFieldValueResponse, lang: Language): string {
-    const fieldLanguage = typeof field.lang === 'string' ? Language.fromCode(field.lang) : field.lang;
-    return (fieldLanguage === lang ? '' : `[${fieldLanguage?.codeExtended}] `) + field.value;
   }
 
   private updateValue(fields: I18nFieldValue[][] | I18nFieldValueResponse[][], lang: Language): void {

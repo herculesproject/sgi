@@ -186,8 +186,9 @@
         <ng-container matColumnDef="nombre">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'csp.area-tematica.nombre' | translate}}
           </th>
-          <td mat-cell *matCellDef="let data" matTooltip="{{data.areasTematicas}}">
-            {{data.areasTematicas}}
+
+          <td mat-cell *matCellDef="let data" matTooltip="{{data.areasTematicas | i18nFieldsValues}}">
+            <sgi-i18n-table-list-fields [fields]="data.areasTematicas"></sgi-i18n-table-list-fields>
           </td>
         </ng-container>
         <ng-container matColumnDef="acciones">

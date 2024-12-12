@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { FormFragment } from '@core/services/action-service';
 import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
@@ -24,8 +24,8 @@ export class AreaTematicaDatosGeneralesFragment extends FormFragment<IAreaTemati
 
   protected buildFormGroup(): FormGroup {
     const fb = new FormGroup({
-      nombre: new FormControl('', [I18nValidators.maxLength(50)]),
-      descripcion: new FormControl('', [Validators.maxLength(250)]),
+      nombre: new FormControl([], [I18nValidators.maxLength(50)]),
+      descripcion: new FormControl([], [I18nValidators.maxLength(250)]),
     });
     return fb;
   }
