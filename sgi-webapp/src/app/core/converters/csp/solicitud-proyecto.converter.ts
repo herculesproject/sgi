@@ -1,6 +1,7 @@
 import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
+import { AREA_TEMATICA_RESPONSE_CONVERTER } from '@core/services/csp/area-tematica/area-tematica-response.converter';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBackend, ISolicitudProyecto> {
@@ -20,7 +21,7 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
       objetivos: value.objetivos,
       intereses: value.intereses,
       resultadosPrevistos: value.resultadosPrevistos,
-      areaTematica: value.areaTematica,
+      areaTematica: AREA_TEMATICA_RESPONSE_CONVERTER.toTarget(value.areaTematica),
       checklistRef: value.checklistRef,
       peticionEvaluacionRef: value.peticionEvaluacionRef,
       tipoPresupuesto: value.tipoPresupuesto,
@@ -50,7 +51,7 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
       objetivos: value.objetivos,
       intereses: value.intereses,
       resultadosPrevistos: value.resultadosPrevistos,
-      areaTematica: value.areaTematica,
+      areaTematica: AREA_TEMATICA_RESPONSE_CONVERTER.fromTarget(value.areaTematica),
       checklistRef: value.checklistRef,
       peticionEvaluacionRef: value.peticionEvaluacionRef,
       tipoPresupuesto: value.tipoPresupuesto,

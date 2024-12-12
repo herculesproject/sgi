@@ -6,8 +6,8 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
           <mat-label>{{'csp.area-tematica.nombre' | translate}}</mat-label>
-          <input matInput formControlName="nombre" type="text" id="nombre"
-            placeholder="{{'csp.area-tematica.nombre' | translate}}" required>
+          <sgi-i18n-input matInput formControlName="nombre" type="text" id="nombre"
+            placeholder="{{'csp.area-tematica.nombre' | translate}}"></sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
             {{'error.required.entity' | translate:msgParamNombreEntity}}
           </mat-error>

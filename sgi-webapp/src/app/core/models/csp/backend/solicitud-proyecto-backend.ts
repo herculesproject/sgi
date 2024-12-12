@@ -1,4 +1,4 @@
-import { IAreaTematica } from '../area-tematica';
+import { IAreaTematicaResponse } from '@core/services/csp/area-tematica/area-tematica-response';
 import { TipoPresupuesto } from '../solicitud-proyecto';
 
 export interface ISolicitudProyectoBackend {
@@ -12,7 +12,7 @@ export interface ISolicitudProyectoBackend {
   objetivos: string;
   intereses: string;
   resultadosPrevistos: string;
-  areaTematica: IAreaTematica;
+  areaTematica: IAreaTematicaResponse;
   checklistRef: string;
   peticionEvaluacionRef: string;
   tipoPresupuesto: TipoPresupuesto;

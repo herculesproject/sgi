@@ -6,6 +6,7 @@ import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,7 +33,8 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
     private readonly solicitudService: SolicitudService,
-    private readonly rolSocioService: RolSocioService
+    private readonly rolSocioService: RolSocioService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -178,7 +180,7 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
       proyectoTable += this.notIsNullAndNotUndefined(proyecto?.colaborativo) ?
         this.getI18nBooleanYesNo(proyecto?.colaborativo) : '';
       proyectoTable += '\n';
-      proyectoTable += proyecto?.areaTematica ? proyecto?.areaTematica.nombre : '';
+      proyectoTable += proyecto?.areaTematica && proyecto?.areaTematica.nombre ? this.languageService.getFieldValue(proyecto?.areaTematica.nombre) : '';
 
       proyectoElementsRow.push(proyectoTable);
 
@@ -203,7 +205,7 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
       elementsRow.push(proyecto?.rolUniversidad?.nombre ?? '');
       elementsRow.push(this.notIsNullAndNotUndefined(proyecto?.colaborativo) ?
         this.getI18nBooleanYesNo(proyecto?.colaborativo) : '');
-      elementsRow.push(proyecto?.areaTematica ? proyecto?.areaTematica.nombre : '');
+      elementsRow.push(proyecto?.areaTematica && proyecto?.areaTematica.nombre ? this.languageService.getFieldValue(proyecto?.areaTematica.nombre) : '');
     } else {
       elementsRow.push('');
       elementsRow.push('');

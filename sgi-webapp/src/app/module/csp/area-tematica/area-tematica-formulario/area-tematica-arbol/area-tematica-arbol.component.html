@@ -76,8 +76,8 @@
         <div fxFlex="50%" fxFlex.xs="100%">
           <mat-form-field class="input-form">
             <mat-label>{{'csp.area-tematica-arbol.nombre' | translate}}</mat-label>
-            <input #input matInput type="text" placeholder="{{'csp.area-tematica-arbol.nombre' | translate}}"
-              formControlName="nombre" required>
+            <sgi-i18n-input #input matInput type="text" placeholder="{{'csp.area-tematica-arbol.nombre' | translate}}"
+              formControlName="nombre" required></sgi-i18n-input>
             <mat-hint align="end">{{input.value?.length || 0}}/5</mat-hint>
             <mat-error *ngIf="formGroup.get('nombre').errors?.required">
               {{'error.required.entity' | translate:msgParamNombreEntity}}
@@ -92,8 +92,8 @@
         <div fxFlex="50%" fxFlex.xs="100%">
           <mat-form-field class="input-form">
             <mat-label>{{'csp.area-tematica-arbol.descripcion' | translate}}</mat-label>
-            <input matInput type="text" placeholder="{{'csp.area-tematica-arbol.descripcion' | translate}}"
-              formControlName="descripcion" required>
+            <sgi-i18n-input matInput type="text" placeholder="{{'csp.area-tematica-arbol.descripcion' | translate}}"
+              formControlName="descripcion" required></sgi-i18n-input>
             <mat-error *ngIf="formGroup.get('descripcion').errors?.required">
               {{'error.required.entity' | translate:msgParamDescripcionEntity}}
             </mat-error>

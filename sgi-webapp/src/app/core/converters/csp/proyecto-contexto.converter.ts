@@ -1,5 +1,6 @@
 import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
 import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
+import { AREA_TEMATICA_RESPONSE_CONVERTER } from '@core/services/csp/area-tematica/area-tematica-response.converter';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
 class ProyectoContextoConverter extends SgiBaseConverter<IProyectoContextoBackend, IProyectoContexto> {
@@ -15,7 +16,7 @@ class ProyectoContextoConverter extends SgiBaseConverter<IProyectoContextoBacken
       intereses: value.intereses,
       resultadosPrevistos: value.resultadosPrevistos,
       propiedadResultados: value.propiedadResultados,
-      areaTematica: value.areaTematica,
+      areaTematica: AREA_TEMATICA_RESPONSE_CONVERTER.toTarget(value.areaTematica),
     };
   }
 
@@ -30,7 +31,7 @@ class ProyectoContextoConverter extends SgiBaseConverter<IProyectoContextoBacken
       intereses: value.intereses,
       resultadosPrevistos: value.resultadosPrevistos,
       propiedadResultados: value.propiedadResultados,
-      areaTematica: value.areaTematica,
+      areaTematica: AREA_TEMATICA_RESPONSE_CONVERTER.fromTarget(value.areaTematica),
     };
   }
 }

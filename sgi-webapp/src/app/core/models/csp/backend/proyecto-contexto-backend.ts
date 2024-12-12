@@ -1,4 +1,4 @@
-import { IAreaTematica } from '../area-tematica';
+import { IAreaTematicaResponse } from '@core/services/csp/area-tematica/area-tematica-response';
 import { PropiedadResultados } from '../proyecto-contexto';
 
 export interface IProyectoContextoBackend {
@@ -8,5 +8,5 @@ export interface IProyectoContextoBackend {
   intereses: string;
   resultadosPrevistos: string;
   propiedadResultados: PropiedadResultados;
-  areaTematica: IAreaTematica;
+  areaTematica: IAreaTematicaResponse;
 }

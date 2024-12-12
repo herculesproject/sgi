@@ -288,7 +288,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     elementsRow.push(this.notIsNullAndNotUndefined(proyecto.ivaDeducible) ? this.getI18nBooleanYesNo(proyecto.ivaDeducible) : '');
     elementsRow.push(this.percentPipe.transform(proyecto.iva?.iva / 100));
     elementsRow.push(proyecto.causaExencion ? this.translate.instant(CAUSA_EXENCION_MAP.get(proyecto.causaExencion)) : '');
-    elementsRow.push(proyecto.contextoProyecto?.areaTematica?.nombre);
+    elementsRow.push(this.languageService.getFieldValue(proyecto.contextoProyecto?.areaTematica?.nombre));
     return elementsRow;
   }
 }

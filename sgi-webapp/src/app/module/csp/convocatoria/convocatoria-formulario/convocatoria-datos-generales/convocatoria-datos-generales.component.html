@@ -269,13 +269,15 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             {{'list.entity' | translate:msgParamAreaEntities}}
           </th>
-          <td mat-cell *matCellDef="let data">{{data.padre}}</td>
+          <td mat-cell *matCellDef="let data">
+            <sgi-i18n-table-field [field]="data.padre"></sgi-i18n-table-field>
+          </td>
         </ng-container>
         <ng-container matColumnDef="nombre">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'csp.area-tematica.nombre' | translate}}
           </th>
-          <td mat-cell *matCellDef="let data" matTooltip="{{data.areasTematicas}}">
-            {{data.areasTematicas}}
+          <td mat-cell *matCellDef="let data" matTooltip="{{data.areasTematicas | i18nFieldsValues}}">
+            <sgi-i18n-table-list-fields [fields]="data.areasTematicas"></sgi-i18n-table-list-fields>
           </td>
         </ng-container>
         <ng-container matColumnDef="acciones">

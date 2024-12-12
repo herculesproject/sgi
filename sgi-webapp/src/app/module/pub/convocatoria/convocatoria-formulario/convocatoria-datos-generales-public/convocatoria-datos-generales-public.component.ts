@@ -7,7 +7,9 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
 import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ConvocatoriaPublicActionService } from '../../convocatoria-public.action.service';
@@ -17,7 +19,7 @@ const AREA_KEY = marker('csp.area');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
 
 export interface AreaTematicaListadoPublic {
-  padre: string;
+  padre: I18nFieldValue[];
   areasTematicas: string;
 }
 
@@ -53,7 +55,8 @@ export class ConvocatoriaDatosGeneralesPublicComponent extends FormFragmentCompo
 
   constructor(
     protected actionService: ConvocatoriaPublicActionService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaDatosGeneralesPublicFragment;
@@ -70,7 +73,7 @@ export class ConvocatoriaDatosGeneralesPublicComponent extends FormFragmentCompo
       } else {
         const listadoAreas: AreaTematicaListadoPublic = {
           padre: data[0]?.padre.nombre,
-          areasTematicas: data.map(area => area.convocatoriaAreaTematica.value.areaTematica.nombre).join(', ')
+          areasTematicas: data.map(area => this.languageService.getFieldValue(area.convocatoriaAreaTematica.value.areaTematica.nombre)).join(', ')
         };
         this.convocatoriaAreaTematicas.data = [listadoAreas];
       }

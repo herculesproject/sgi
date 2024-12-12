@@ -8,8 +8,10 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { CLASIFICACION_CVN_MAP } from '@core/enums/clasificacion-cvn';
 import { FORMULARIO_SOLICITUD_MAP } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { ESTADO_MAP, IConvocatoria } from '@core/models/csp/convocatoria';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -36,8 +38,8 @@ const CONVOCATORIA_VINCULADA_TOOLTIP_KEY = marker('csp.convocatoria.campo.vincul
 const CONVOCATORIA_CODIGO_INTERNO_KEY = marker('csp.convocatoria.codigo-interno');
 
 export interface AreaTematicaListado {
-  padre: string;
-  areasTematicas: string;
+  padre: I18nFieldValue[];
+  areasTematicas: I18nFieldValue[][];
 }
 
 @Component({
@@ -90,7 +92,8 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaDatosGeneralesFragment;
@@ -107,7 +110,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
       } else {
         const listadoAreas: AreaTematicaListado = {
           padre: data[0]?.padre.nombre,
-          areasTematicas: data.map(area => area.convocatoriaAreaTematica.value.areaTematica.nombre).join(', ')
+          areasTematicas: data.map(area => area.convocatoriaAreaTematica.value.areaTematica.nombre).sort(this.sortAreasTematicasByNombre)
         };
         this.convocatoriaAreaTematicas.data = [listadoAreas];
       }
@@ -269,4 +272,11 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
       )
     );
   }
+
+  private sortAreasTematicasByNombre: (a1: I18nFieldValue[], a2: I18nFieldValue[]) => number = (a1, a2) => {
+    const nombreA = this.languageService.getFieldValue(a1);
+    const nombreB = this.languageService.getFieldValue(a2);
+    return nombreA.localeCompare(nombreB);
+  };
+
 }
