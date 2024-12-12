@@ -100,7 +100,7 @@
           {{'csp.convocatoria.plan-investigacion' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.entidadConvocante.programa?.nombre}}
+          <sgi-i18n-table-field [field]="element.entidadConvocante.programa?.nombre"></sgi-i18n-table-field>
         </td>
       </ng-container>
       <!-- Entidad Financiadora Column -->
