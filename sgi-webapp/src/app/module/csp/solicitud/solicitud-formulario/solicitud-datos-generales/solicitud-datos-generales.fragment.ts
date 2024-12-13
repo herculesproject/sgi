@@ -281,7 +281,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       if (solicitud.tipoSolicitudGrupo === TipoSolicitudGrupo.MODIFICACION) {
         this.getFormGroup().controls.grupo.enable();
       }
-    } else if (!this.readonly && solicitud?.estado?.estado === Estado.RECHAZADA) {
+    } else if (!this.readonly && solicitud?.estado?.estado === Estado.RECHAZADA
+      || (!this.readonly && solicitud?.estado?.estado === Estado.SUBSANACION
+        && solicitud.origenSolicitud === OrigenSolicitud.SIN_CONVOCATORIA
+        && solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO)) {
       this.getFormGroup().controls.observaciones.enable();
     }
 
