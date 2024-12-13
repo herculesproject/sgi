@@ -962,7 +962,7 @@
       <column name="lang" type="VARCHAR(2)">
         <constraints nullable="false" />
       </column>
-      <column name="value_" type="VARCHAR(4000)">
+      <column name="value_" type="CLOB">
         <constraints nullable="false" />
       </column>
     </createTable>
@@ -976,9 +976,13 @@
       initiallyDeferred="false"
       referencedColumnNames="id" referencedTableName="programa" validate="true" />
 
-    <sql>INSERT INTO ${schemaPrefix}programa_descripcion(programa_id, value_, lang) SELECT id,
-      descripcion, '${defaultLang}' FROM ${schemaPrefix}programa WHERE descripcion IS NOT NULL AND
-      NULLIF(TRIM(descripcion), '') IS NOT NULL</sql>
+    <sql dbms="!oracle">INSERT INTO ${schemaPrefix}programa_descripcion(programa_id, value_, lang)
+      SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}programa WHERE descripcion IS NOT
+      NULL AND NULLIF(TRIM(descripcion), '') IS NOT NULL</sql>
+
+    <sql dbms="oracle">INSERT INTO ${schemaPrefix}programa_descripcion(programa_id, value_, lang)
+      SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}programa WHERE descripcion IS NOT
+      NULL</sql>
 
     <dropColumn columnName="descripcion" tableName="programa" />
   </changeSet>

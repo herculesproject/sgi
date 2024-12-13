@@ -39,7 +39,7 @@ public class ProgramaDescripcion implements Serializable, I18nFieldValue {
   private Language lang;
 
   /** Descripcion */
-  @Column(name = "value_", length = 4000, nullable = false)
+  @Column(name = "value_", length = 4000, nullable = false, columnDefinition = "clob")
   @NotBlank
   @Size(max = 4000)
   private String value;
