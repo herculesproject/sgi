@@ -51,10 +51,10 @@ export class CategoriaProfesionalModalComponent extends DialogFormComponent<ICat
 
   ngOnInit(): void {
     super.ngOnInit();
-
+    this.setupI18N();
   }
 
-  protected setupI18N(): void {
+  private setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_CATEGORIA_PROFESIONAL_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

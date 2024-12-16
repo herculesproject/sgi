@@ -50,10 +50,10 @@ export class NivelAcademicoModalComponent extends DialogFormComponent<INivelAcad
 
   ngOnInit(): void {
     super.ngOnInit();
-
+    this.setupI18N();
   }
 
-  protected setupI18N(): void {
+  private setupI18N(): void {
     this.translate.get(
       CONVOCATORIA_NIVEL_ACADEMICO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR

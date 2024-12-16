@@ -89,10 +89,10 @@ export class SearchConvocatoriaModalComponent extends DialogCommonComponent impl
       fechaPublicacionHasta: new FormControl(null),
       abiertoPlazoPresentacionSolicitud: new FormControl(''),
     });
-
+    this.setupI18N();
   }
 
-  protected setupI18N(): void {
+  private setupI18N(): void {
     this.translate.get(
       ENTITY_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
