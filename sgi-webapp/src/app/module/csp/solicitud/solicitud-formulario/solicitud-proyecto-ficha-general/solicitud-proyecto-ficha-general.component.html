@@ -190,21 +190,25 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             {{'list.entity' | translate:msgParamAreaEntities}}
           </th>
-          <td mat-cell *matCellDef="let data">{{data.padre?.nombre}}</td>
+          <td mat-cell *matCellDef="let data">
+            <sgi-i18n-table-field [field]="data.padre?.nombre"></sgi-i18n-table-field>
+          </td>
         </ng-container>
         <ng-container matColumnDef="areaTematicaConvocatoria">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             {{'csp.area-tematica.nombre.convocatoria' | translate}}
           </th>
-          <td mat-cell *matCellDef="let data" matTooltip="{{data.areasTematicasConvocatoria}}">
-            {{data.areasTematicasConvocatoria}}
+          <td mat-cell *matCellDef="let data" matTooltip="{{data.areasTematicasConvocatoria | i18nFieldsValues}}">
+            <sgi-i18n-table-list-fields [fields]="data.areasTematicasConvocatoria"></sgi-i18n-table-list-fields>
           </td>
         </ng-container>
         <ng-container matColumnDef="areaTematicaSolicitud">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             {{'csp.area-tematica.nombre.solicitud' | translate}}
           </th>
-          <td mat-cell *matCellDef="let data"> {{data.areaTematicaSolicitud?.nombre}} </td>
+          <td mat-cell *matCellDef="let data">
+            <sgi-i18n-table-field [field]="data.areaTematicaSolicitud?.nombre"></sgi-i18n-table-field>
+          </td>
         </ng-container>
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef>{{'label.actions' | translate}}

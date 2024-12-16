@@ -8,11 +8,13 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { OrigenSolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto, TIPO_PRESUPUESTO_MAP, TipoPresupuesto } from '@core/models/csp/solicitud-proyecto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { AreaTematicaModalData, SolicitudAreaTematicaModalComponent } from '../../modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
@@ -31,7 +33,7 @@ const AREA_KEY = marker('csp.area');
 
 export interface AreaTematicaListado {
   padre: IAreaTematica;
-  areasTematicasConvocatoria: string;
+  areasTematicasConvocatoria: I18nFieldValue[][];
   areaTematicaSolicitud: IAreaTematica;
 }
 @Component({
@@ -67,7 +69,8 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
     private router: Router,
     private route: ActivatedRoute,
     private matDialog: MatDialog,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.PROYECTO_DATOS, actionService, translate);
     this.formPart = this.fragment as SolicitudProyectoFichaGeneralFragment;
@@ -201,7 +204,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
         this.areasConvocatoria = data[0]?.areaTematicaConvocatoria;
         const listadoAreas: AreaTematicaListado = {
           padre: data[0]?.rootTree,
-          areasTematicasConvocatoria: data[0]?.areaTematicaConvocatoria?.map(area => area.nombre).join(', '),
+          areasTematicasConvocatoria: data[0]?.areaTematicaConvocatoria.map(area => area.nombre).sort(this.sortAreasTematicasByNombre),
           areaTematicaSolicitud: data[0]?.areaTematicaSolicitud
         };
         this.listadoAreaTematicas.data = [listadoAreas];
@@ -233,5 +236,11 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
       }
     );
   }
+
+  private sortAreasTematicasByNombre: (a1: I18nFieldValue[], a2: I18nFieldValue[]) => number = (a1, a2) => {
+    const nombreA = this.languageService.getFieldValue(a1);
+    const nombreB = this.languageService.getFieldValue(a2);
+    return nombreA.localeCompare(nombreB);
+  };
 
 }
