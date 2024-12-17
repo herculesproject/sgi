@@ -81,7 +81,8 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
 
     subquery.select(join);
     subquery.where(
-        cb.and(cb.like(join.get(PeticionEvaluacionTitulo_.value), tituloFilter)),
+        cb.and(cb.like(join.get(PeticionEvaluacionTitulo_.value),
+            LIKE_WILDCARD_PERCENT + tituloFilter + LIKE_WILDCARD_PERCENT)),
         cb.equal(root, rootSubquery));
 
     return cb.exists(subquery);
@@ -115,7 +116,8 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
       throw new IllegalArgumentException(BAD_NUMBER_OF_ARGUMENTS_FOR + node.getSelector());
     }
     String codigoFilter = node.getArguments().get(0);
-    Predicate codigo = cb.like(root.get(PeticionEvaluacion_.codigo), codigoFilter);
+    Predicate codigo = cb.like(root.get(PeticionEvaluacion_.codigo),
+        LIKE_WILDCARD_PERCENT + codigoFilter + LIKE_WILDCARD_PERCENT);
     return cb.and(codigo);
   }
 
