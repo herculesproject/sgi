@@ -151,7 +151,7 @@ export class MiembrosGruposInvestigacionListadoExportService extends AbstractTab
 
       for (let i = 0; i < maxNumLineasInvestigacion; i++) {
         const lineaX = miembroGrupoInvestigacion.lineasInvestigacionGrupo[i];
-        rowReport.elements.push(lineaX?.lineaInvestigacion?.nombre ?? '');
+        rowReport.elements.push(lineaX?.lineaInvestigacion?.nombre ? this.languageService.getFieldValue(lineaX.lineaInvestigacion.nombre) : '');
 
         const maxNumParticipacionesLineaX = Math.max(...miembrosGruposInvestigacion.map(m => {
           return m.lineasInvestigacionGrupo[i]?.participaciones?.length ?? 0;
