@@ -458,7 +458,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value)
         .and('solicitudProyecto.rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString())
         .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.id?.toString())
-        .and('convocatoria.finalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString());
+        .and('tipoFinalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString());
 
       if (controls.estadoSolicitudHistorico.value) {
         rsqlFilter
