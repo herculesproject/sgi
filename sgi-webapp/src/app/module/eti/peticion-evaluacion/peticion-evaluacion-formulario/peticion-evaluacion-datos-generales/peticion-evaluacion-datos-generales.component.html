@@ -82,8 +82,8 @@
       <!-- Órgano financiador-->
       <mat-form-field fxFlex="40%" *ngIf="formGroup.controls.existeFinanciacion.value">
         <mat-label>{{'eti.peticion-evaluacion.organo-financiador' | translate}}</mat-label>
-        <sgi-i18n-input #nombre formControlName="financiacion"
-          [required]="FormGroupUtil.hasValidator(this.formGroup,'financiacion','required')" maxlength="250">
+        <sgi-i18n-input #nombre formControlName="financiacion" [required]="formGroup.controls.existeFinanciacion.value"
+          maxlength="250">
         </sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.financiacion.errors?.required">
           {{'error.required.entity' | translate:msgParamFinanciacionEntity}}
@@ -96,9 +96,9 @@
       <mat-form-field fxFlex="18%" *ngIf="formGroup.controls.existeFinanciacion.value">
         <mat-label>{{'eti.peticion-evaluacion.importe-financiacion' | translate}}</mat-label>
         <input matInput formControlName="importeFinanciacion" type="text" sgiInputWithThousandSeparator
-          [required]="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required')">
+          [required]="formGroup.controls.existeFinanciacion.value">
         <mat-error
-          *ngIf="FormGroupUtil.hasValidator(this.formGroup,'importeFinanciacion','required') && formGroup.controls.importeFinanciacion.errors?.required">
+          *ngIf="formGroup.controls.existeFinanciacion.value && formGroup.controls.importeFinanciacion.errors?.required">
           {{'error.required.entity' | translate:msgParamImporteFinanciacionEntity}}
         </mat-error>
         <mat-error *ngIf="formGroup.controls.importeFinanciacion.errors?.min">
@@ -112,9 +112,9 @@
       <mat-form-field fxFlex="15%" *ngIf="formGroup.controls.existeFinanciacion.value">
         <mat-label>{{'eti.peticion-evaluacion.estado-financiacion' | translate}}</mat-label>
         <sgi-select-enum formControlName="estadoFinanciacion" [enumMap]="ESTADO_FINANCIACION_MAP"
-          [required]="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required')"></sgi-select-enum>
+          [required]="formGroup.controls.existeFinanciacion.value"></sgi-select-enum>
         <mat-error
-          *ngIf="FormGroupUtil.hasValidator(this.formGroup,'estadoFinanciacion','required') && formGroup.controls.estadoFinanciacion.errors?.required">
+          *ngIf="formGroup.controls.existeFinanciacion.value && formGroup.controls.estadoFinanciacion.errors?.required">
           {{'error.required.entity' | translate:msgParamEstadoFinanciacionEntity}}
         </mat-error>
       </mat-form-field>

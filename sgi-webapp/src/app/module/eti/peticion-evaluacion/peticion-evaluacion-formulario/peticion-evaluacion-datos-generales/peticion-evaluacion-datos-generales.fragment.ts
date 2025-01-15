@@ -241,10 +241,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       } else {
         form.financiacion.clearValidators();
         form.estadoFinanciacion.clearValidators();
-        form.importeFinanciacion.setValidators([
-          Validators.min(1),
-          Validators.max(2_147_483_647)
-        ]);
+        form.importeFinanciacion.clearValidators();
       }
       form.financiacion.updateValueAndValidity();
       form.estadoFinanciacion.updateValueAndValidity();
