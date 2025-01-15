@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.sgemp.EmpresaOutput;
-import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.enums.ServiceType;
+import org.crue.hercules.sgi.csp.exceptions.SgiApiSgempFindEmpresaIdsByPaisIdException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -65,15 +65,21 @@ public class SgiApiSgempService extends SgiApiBaseService {
     HttpMethod httpMethod = HttpMethod.GET;
     String mergedURL = buildUri(serviceType, relativeUrl);
 
-    List<String> empresaIds = Optional.ofNullable(
-        super.<List<EmpresaOutput>>callEndpoint(mergedURL, httpMethod,
-            new ParameterizedTypeReference<List<EmpresaOutput>>() {
-            }, paisId)
-            .getBody())
-        .orElse(Collections.emptyList())
-        .stream()
-        .map(EmpresaOutput::getId)
-        .collect(Collectors.toList());
+    List<String> empresaIds = Collections.emptyList();
+    try {
+      empresaIds = Optional.ofNullable(
+          super.<List<EmpresaOutput>>callEndpoint(mergedURL, httpMethod,
+              new ParameterizedTypeReference<List<EmpresaOutput>>() {
+              }, paisId)
+              .getBody())
+          .orElse(Collections.emptyList())
+          .stream()
+          .map(EmpresaOutput::getId)
+          .collect(Collectors.toList());
+    } catch (Exception e) {
+      log.error("findAllEmpresaIdsByPaisId({}) -", paisId, e);
+      throw new SgiApiSgempFindEmpresaIdsByPaisIdException();
+    }
 
     log.debug("findAllEmpresaIdsByPaisId({}) - end", paisId);
     return empresaIds;
