@@ -1534,33 +1534,6 @@
     </insert>
   </changeSet>
 
-  <!-- Comite nombre -->
-  <changeSet context="!test" author="master" id="00.07.00-comine-nombre-eu">
-    <preConditions onFail="MARK_RAN">
-      <not>
-        <changeLogPropertyDefined property="defaultLang" value="eu" />
-      </not>
-    </preConditions>
-    <insert tableName="comite_nombre">
-      <column name="comite_id" valueNumeric="1" />
-      <column name="lang" value="eu" />
-      <column name="value_" value="EUSKERA Comisión de Ética de Investigación" />
-      <column name="genero" value="F" />
-    </insert>
-    <insert tableName="comite_nombre">
-      <column name="comite_id" valueNumeric="2" />
-      <column name="lang" value="eu" />
-      <column name="value_" value="EUSKERA Comité de Ética de Experimentación Animal" />
-      <column name="genero" value="M" />
-    </insert>
-    <insert tableName="comite_nombre">
-      <column name="comite_id" valueNumeric="3" />
-      <column name="lang" value="eu" />
-      <column name="value_" value="EUSKERA Comité de Ética de Bioseguridad en Experimentación" />
-      <column name="genero" value="M" />
-    </insert>
-  </changeSet>
-
   <!-- Formacion Especifica Nombre -->
   <changeSet context="!test" author="master" id="00.07.00-formacion-especifica-nombre-eu">
     <preConditions onFail="MARK_RAN">
