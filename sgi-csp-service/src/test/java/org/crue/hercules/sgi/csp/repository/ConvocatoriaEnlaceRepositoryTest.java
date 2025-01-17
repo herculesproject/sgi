@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -155,10 +156,13 @@ class ConvocatoriaEnlaceRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(tipoEnlace);
 
+    Set<ConvocatoriaEnlaceDescripcion> descripcionConvocatoriaEnlace = new HashSet<>();
+    descripcionConvocatoriaEnlace.add(new ConvocatoriaEnlaceDescripcion(Language.ES, "descripcion-1"));
+
     ConvocatoriaEnlace convocatoriaEnlace = ConvocatoriaEnlace.builder()
         .convocatoriaId(convocatoria.getId())
         .tipoEnlace(tipoEnlace)
-        .descripcion("descripcion-1")
+        .descripcion(descripcionConvocatoriaEnlace)
         .url("www.url1.com")
         .build();
     // @formatter:on

@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudPeticionEvaluacionData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoEnlaceNombre;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
@@ -288,9 +289,12 @@ class SolicitudComServiceTest {
     Set<TipoEnlaceNombre> nombre = new HashSet<>();
     nombre.add(new TipoEnlaceNombre(Language.ES, "ENLACE MOCKED"));
 
+    Set<ConvocatoriaEnlaceDescripcion> descripcionConvocatoriaEnlace = new HashSet<>();
+    descripcionConvocatoriaEnlace.add(new ConvocatoriaEnlaceDescripcion(Language.ES, "Enlace Test"));
+
     return ConvocatoriaEnlace.builder()
         .convocatoriaId(1L)
-        .descripcion("Enlace Test")
+        .descripcion(descripcionConvocatoriaEnlace)
         .id(id)
         .tipoEnlace(TipoEnlace.builder()
             .id(1L)

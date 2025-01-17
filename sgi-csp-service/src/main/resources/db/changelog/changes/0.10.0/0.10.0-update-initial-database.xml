@@ -1042,4 +1042,33 @@
 
     <dropColumn columnName="descripcion" tableName="area_tematica" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-42">
+    <createTable tableName="convocatoria_enlace_descripcion">
+      <column name="convocatoria_enlace_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_enlace_descripcion"
+      columnNames="convocatoria_enlace_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_enlace_id"
+      baseTableName="convocatoria_enlace_descripcion"
+      constraintName="FK_CONVOCATORIAENLACEDESCRIPCION_CONVOCATORIAENLACE" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_enlace" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}convocatoria_enlace_descripcion(convocatoria_enlace_id, value_,
+      lang) SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}convocatoria_enlace WHERE
+      descripcion IS NOT NULL AND NULLIF(TRIM(descripcion), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="convocatoria_enlace" />
+  </changeSet>
 </databaseChangeLog>

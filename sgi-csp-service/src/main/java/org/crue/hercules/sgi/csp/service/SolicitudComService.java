@@ -270,7 +270,7 @@ public class SolicitudComService {
     for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
       Enlace nuevoEnlace = Enlace
           .builder()
-          .descripcion(enlace.getDescripcion())
+          .descripcion(I18nHelper.getValueForCurrentLanguage(enlace.getDescripcion()))
           .url(enlace.getUrl())
           .build();
       if (enlace.getTipoEnlace() != null) {

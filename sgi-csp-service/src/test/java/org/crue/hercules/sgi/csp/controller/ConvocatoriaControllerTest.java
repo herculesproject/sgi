@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
@@ -73,6 +74,7 @@ import org.crue.hercules.sgi.csp.service.RequisitoEquipoCategoriaProfesionalServ
 import org.crue.hercules.sgi.csp.service.RequisitoEquipoNivelAcademicoService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPCategoriaProfesionalService;
 import org.crue.hercules.sgi.csp.service.RequisitoIPNivelAcademicoService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -1170,7 +1172,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ConvocatoriaEnlace convocatoriaEnlace = convocatoriaEnlaceResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(convocatoriaEnlace.getDescripcion()).isEqualTo("descripcion-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaEnlace.getDescripcion(), Language.ES))
+          .isEqualTo("descripcion-" + i);
     }
   }
 
@@ -1249,15 +1252,16 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
    */
   private ConvocatoriaEnlace generarMockConvocatoriaEnlace(Long id, Long convocatoriaId) {
 
-    // @formatter:off
+    Set<ConvocatoriaEnlaceDescripcion> descripcionConvocatoriaEnlace = new HashSet<>();
+    descripcionConvocatoriaEnlace.add(new ConvocatoriaEnlaceDescripcion(Language.ES, "descripcion-" + id));
+
     return ConvocatoriaEnlace.builder()
         .id(id)
         .convocatoriaId(convocatoriaId)
-        .descripcion("descripcion-" + id)
+        .descripcion(descripcionConvocatoriaEnlace)
         .url("www.url" + id + ".es")
         .tipoEnlace(generarMockTipoEnlace(1L, Boolean.TRUE))
         .build();
-    // @formatter:on
   }
 
   /**
@@ -2207,10 +2211,13 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     Set<TipoEnlaceDescripcion> descripcion = new HashSet<>();
     descripcion.add(new TipoEnlaceDescripcion(Language.ES, "descripcionEnlace-" + id));
 
+    Set<ConvocatoriaEnlaceDescripcion> descripcionConvocatoriaEnlace = new HashSet<>();
+    descripcionConvocatoriaEnlace.add(new ConvocatoriaEnlaceDescripcion(Language.ES, "descripcion-" + id));
+
     ConvocatoriaEnlace convocatoriaEnlace = new ConvocatoriaEnlace();
     convocatoriaEnlace.setId(id);
     convocatoriaEnlace.setConvocatoriaId(id);
-    convocatoriaEnlace.setDescripcion("descripcion-" + id);
+    convocatoriaEnlace.setDescripcion(descripcionConvocatoriaEnlace);
     convocatoriaEnlace.setUrl("www.url" + id + ".es");
     convocatoriaEnlace.setTipoEnlace(TipoEnlace.builder().id(id).nombre(nombre)
         .descripcion(descripcion).activo(Boolean.TRUE).build());

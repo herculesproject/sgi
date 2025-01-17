@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
@@ -31,6 +32,7 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoEnlaceRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaEnlaceServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -224,7 +226,11 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     ConvocatoriaEnlace convocatoriaEnlaceDescripcionActualizada = generarMockConvocatoriaEnlace(1L, convocatoriaId);
-    convocatoriaEnlaceDescripcionActualizada.setDescripcion("nuevaDescripcion");
+
+    Set<ConvocatoriaEnlaceDescripcion> descripcionConvocatoriaEnlace = new HashSet<>();
+    descripcionConvocatoriaEnlace.add(new ConvocatoriaEnlaceDescripcion(Language.ES, "nuevaDescripcion"));
+    convocatoriaEnlaceDescripcionActualizada.setDescripcion(descripcionConvocatoriaEnlace);
+    convocatoriaEnlaceDescripcionActualizada.setDescripcion(descripcionConvocatoriaEnlace);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoria));
@@ -244,8 +250,10 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // then: El ConvocatoriaEnlace se actualiza correctamente.
     Assertions.assertThat(convocatoriaEnlaceActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaEnlaceActualizado.getId()).as("getId()").isEqualTo(convocatoriaEnlace.getId());
-    Assertions.assertThat(convocatoriaEnlaceActualizado.getDescripcion()).as("getDescripcion()")
-        .isEqualTo(convocatoriaEnlaceDescripcionActualizada.getDescripcion());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaEnlaceActualizado.getDescripcion(), Language.ES))
+        .as("getDescripcion()")
+        .isEqualTo(
+            I18nHelper.getValueForLanguage(convocatoriaEnlaceDescripcionActualizada.getDescripcion(), Language.ES));
     Assertions.assertThat(convocatoriaEnlaceActualizado.getTipoEnlace()).as("getTipoEnlace()")
         .isEqualTo(convocatoriaEnlace.getTipoEnlace());
     Assertions.assertThat(convocatoriaEnlaceActualizado.getUrl()).as("getUrl()").isEqualTo(convocatoriaEnlace.getUrl());
@@ -288,7 +296,10 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     ConvocatoriaEnlace convocatoriaEnlaceDescripcionActualizada = generarMockConvocatoriaEnlace(1L, convocatoriaId);
     convocatoriaEnlaceDescripcionActualizada.getTipoEnlace().setId(null);
-    convocatoriaEnlaceDescripcionActualizada.setDescripcion("nuevaDescripcion");
+
+    Set<ConvocatoriaEnlaceDescripcion> descripcionConvocatoriaEnlace = new HashSet<>();
+    descripcionConvocatoriaEnlace.add(new ConvocatoriaEnlaceDescripcion(Language.ES, "nuevaDescripcion"));
+    convocatoriaEnlaceDescripcionActualizada.setDescripcion(descripcionConvocatoriaEnlace);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoria));
@@ -302,8 +313,10 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // then: El ConvocatoriaEnlace se actualiza correctamente.
     Assertions.assertThat(convocatoriaEnlaceActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaEnlaceActualizado.getId()).as("getId()").isEqualTo(convocatoriaEnlace.getId());
-    Assertions.assertThat(convocatoriaEnlaceActualizado.getDescripcion()).as("getDescripcion()")
-        .isEqualTo(convocatoriaEnlaceDescripcionActualizada.getDescripcion());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaEnlaceActualizado.getDescripcion(), Language.ES))
+        .as("getDescripcion()")
+        .isEqualTo(
+            I18nHelper.getValueForLanguage(convocatoriaEnlaceDescripcionActualizada.getDescripcion(), Language.ES));
     Assertions.assertThat(convocatoriaEnlaceActualizado.getTipoEnlace()).as("getTipoEnlace()").isNull();
     Assertions.assertThat(convocatoriaEnlaceActualizado.getUrl()).as("getUrl()").isEqualTo(convocatoriaEnlace.getUrl());
     Assertions.assertThat(convocatoriaEnlaceActualizado.getConvocatoriaId()).as("getConvocatoriaId()")
@@ -469,7 +482,8 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     // then: el ConvocatoriaEnlace
     Assertions.assertThat(convocatoriaEnlace).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaEnlace.getId()).as("getId()").isEqualTo(idBuscado);
-    Assertions.assertThat(convocatoriaEnlace.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaEnlace.getDescripcion(), Language.ES))
+        .as("getDescripcion()").isEqualTo("descripcion-1");
     Assertions.assertThat(convocatoriaEnlace.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(convocatoriaId);
 
   }
@@ -688,12 +702,14 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
    * @return el objeto ConvocatoriaEnlace
    */
   private ConvocatoriaEnlace generarMockConvocatoriaEnlace(Long id, Long convocatoriaId) {
+    Set<ConvocatoriaEnlaceDescripcion> descripcionConvocatoriaEnlace = new HashSet<>();
+    descripcionConvocatoriaEnlace.add(new ConvocatoriaEnlaceDescripcion(Language.ES, "descripcion-" + id));
 
     // @formatter:off
     return ConvocatoriaEnlace.builder()
         .id(id)
         .convocatoriaId(convocatoriaId)
-        .descripcion("descripcion-" + id)
+        .descripcion(descripcionConvocatoriaEnlace)
         .url("www.url" + id + ".es")
         .tipoEnlace(generarMockTipoEnlace(1L, Boolean.TRUE))
         .build();

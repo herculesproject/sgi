@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
@@ -44,6 +45,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinalidadNombre;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrenciaNombre;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -795,7 +797,7 @@ class ConvocatoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -814,11 +816,14 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(convocatoriasEnlaces.get(0).getDescripcion()).as("get(0).getDescripcion()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasEnlaces.get(0).getDescripcion(), Language.ES))
+        .as("get(0).getDescripcion()")
         .isEqualTo("descripcion-" + String.format("%03d", 3));
-    Assertions.assertThat(convocatoriasEnlaces.get(1).getDescripcion()).as("get(1).getDescripcion())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasEnlaces.get(1).getDescripcion(), Language.ES))
+        .as("get(1).getDescripcion())")
         .isEqualTo("descripcion-" + String.format("%03d", 2));
-    Assertions.assertThat(convocatoriasEnlaces.get(2).getDescripcion()).as("get(2).getDescripcion()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasEnlaces.get(2).getDescripcion(), Language.ES))
+        .as("get(2).getDescripcion()")
         .isEqualTo("descripcion-" + String.format("%03d", 1));
   }
 
@@ -874,10 +879,13 @@ class ConvocatoriaIT extends BaseIT {
     TipoEnlace tipoEnlace = new TipoEnlace();
     tipoEnlace.setId(1L);
 
+    Set<ConvocatoriaEnlaceDescripcion> descripcionConvocatoriaEnlace = new HashSet<>();
+    descripcionConvocatoriaEnlace.add(new ConvocatoriaEnlaceDescripcion(Language.ES, "descripcion-" + id));
+
     ConvocatoriaEnlace convocatoriaEnlace = new ConvocatoriaEnlace();
     convocatoriaEnlace.setId(id);
     convocatoriaEnlace.setUrl(url);
-    convocatoriaEnlace.setDescripcion("descripcion-" + id);
+    convocatoriaEnlace.setDescripcion(descripcionConvocatoriaEnlace);
     convocatoriaEnlace.setTipoEnlace(tipoEnlace);
 
     return convocatoriaEnlace;

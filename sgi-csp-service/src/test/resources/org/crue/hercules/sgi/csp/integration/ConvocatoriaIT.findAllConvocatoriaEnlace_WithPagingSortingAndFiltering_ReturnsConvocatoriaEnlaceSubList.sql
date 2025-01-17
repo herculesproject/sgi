@@ -62,13 +62,21 @@ INSERT INTO test.tipo_enlace_nombre (tipo_enlace_id, lang, value_) VALUES(1, 'es
 -- TIPO_ENLACE_DESCRIPCION
 INSERT INTO test.tipo_enlace_descripcion (tipo_enlace_id, lang, value_) VALUES(1, 'es', 'descripcion-1');
 
---CONVOCATORIA ENLACE
-INSERT INTO  test.convocatoria_enlace(id, convocatoria_id, url, descripcion, tipo_enlace_id) VALUES (1, 1, 'www.url1.com','descripcion-001', 1);
-INSERT INTO  test.convocatoria_enlace(id, convocatoria_id, url, descripcion, tipo_enlace_id) VALUES (2, 1, 'www.url1.com','descripcion-002', 1);
-INSERT INTO  test.convocatoria_enlace(id, convocatoria_id, url, descripcion, tipo_enlace_id) VALUES (3, 1, 'www.url1.com','descripcion-003', 1);
-INSERT INTO  test.convocatoria_enlace(id, convocatoria_id, url, descripcion, tipo_enlace_id) VALUES (4, 1, 'www.url1.com','descripcion-4', 1);
-INSERT INTO  test.convocatoria_enlace(id, convocatoria_id, url, descripcion, tipo_enlace_id) VALUES (5, 1, 'www.url1.com','descripcion-05', 1);
-INSERT INTO  test.convocatoria_enlace(id, convocatoria_id, url, descripcion, tipo_enlace_id) VALUES (6, 1, 'www.url1.com','descripcion-06', 1);
+-- CONVOCATORIA ENLACE
+INSERT INTO test.convocatoria_enlace (id, convocatoria_id, url, tipo_enlace_id) VALUES (1, 1, 'www.url1.com', 1);
+INSERT INTO test.convocatoria_enlace (id, convocatoria_id, url, tipo_enlace_id) VALUES (2, 1, 'www.url1.com', 1);
+INSERT INTO test.convocatoria_enlace (id, convocatoria_id, url, tipo_enlace_id) VALUES (3, 1, 'www.url1.com', 1);
+INSERT INTO test.convocatoria_enlace (id, convocatoria_id, url, tipo_enlace_id) VALUES (4, 1, 'www.url1.com', 1);
+INSERT INTO test.convocatoria_enlace (id, convocatoria_id, url, tipo_enlace_id) VALUES (5, 1, 'www.url1.com',1);
+INSERT INTO test.convocatoria_enlace (id, convocatoria_id, url, tipo_enlace_id) VALUES (6, 1, 'www.url1.com',1);
+
+-- CONVOCATORIA_ENLACE_DESCRIPCION
+INSERT INTO test.convocatoria_enlace_descripcion (convocatoria_enlace_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
+INSERT INTO test.convocatoria_enlace_descripcion (convocatoria_enlace_id, lang, value_) VALUES (2, 'es', 'descripcion-002');
+INSERT INTO test.convocatoria_enlace_descripcion (convocatoria_enlace_id, lang, value_) VALUES (3, 'es', 'descripcion-003');
+INSERT INTO test.convocatoria_enlace_descripcion (convocatoria_enlace_id, lang, value_) VALUES (4, 'es', 'descripcion-4');
+INSERT INTO test.convocatoria_enlace_descripcion (convocatoria_enlace_id, lang, value_) VALUES (5, 'es', 'descripcion-05');
+INSERT INTO test.convocatoria_enlace_descripcion (convocatoria_enlace_id, lang, value_) VALUES (6, 'es', 'descripcion-06');
 
 -- TIPO FASE
 INSERT INTO test.tipo_fase (id, activo) VALUES (1, true);
