@@ -1,6 +1,7 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
 import { ITipoEnlaceResponse } from "@core/services/csp/tipo-enlace/tipo-enlace-response";
 
-export interface IConvocatoriaEnlaceBackend {
+export interface IConvocatoriaEnlaceResponse {
   /** id */
   id: number;
   /** tipoEnlace */
@@ -12,5 +13,5 @@ export interface IConvocatoriaEnlaceBackend {
   /** URL */
   url: string;
   /** descripcion */
-  descripcion: string;
+  descripcion: I18nFieldValueResponse[];
 }

@@ -64,9 +64,9 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
           case 'url':
             return wrapper.value.url;
           case 'descripcion':
-            return wrapper.value.descripcion;
+            return this.languageService.getFieldValue(wrapper.value.descripcion);
           case 'tipoEnlace':
-            return this.languageService.getFieldValue(wrapper.value.tipoEnlace.nombre);
+            return this.languageService.getFieldValue(wrapper.value.tipoEnlace?.nombre);
           default:
             return wrapper[property];
         }
