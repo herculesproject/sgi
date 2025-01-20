@@ -17,6 +17,7 @@ import { IConvocatoriaFaseAviso } from '@core/services/csp/convocatoria-fase/con
 import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
@@ -217,7 +218,7 @@ export class ConvocatoriaPlazosFaseModalComponent
       fechaInicio: new FormControl(this.data?.plazo?.fechaInicio, Validators.required),
       fechaFin: new FormControl(this.data?.plazo?.fechaFin, Validators.required),
       tipoFase: new FormControl(this.data?.plazo?.tipoFase, Validators.required),
-      observaciones: new FormControl(this.data?.plazo?.observaciones, Validators.maxLength(250)),
+      observaciones: new FormControl(this.data?.plazo?.observaciones, I18nValidators.maxLength(2000)),
       generaAviso1: new FormControl(!!this.data?.plazo?.aviso1),
       generaAviso2: new FormControl(!!this.data?.plazo?.aviso2),
       aviso1: new FormGroup({
