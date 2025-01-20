@@ -905,7 +905,7 @@ class ConvocatoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "observaciones=ke=-00";
+    String filter = "observaciones.value=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -919,11 +919,14 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaFaseOutput> convocatoriasFases = response.getBody();
     Assertions.assertThat(convocatoriasFases).hasSize(3);
-    Assertions.assertThat(convocatoriasFases.get(0).getObservaciones()).as("get(0).getObservaciones()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasFases.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones()")
         .isEqualTo("observaciones-" + String.format("%03d", 3));
-    Assertions.assertThat(convocatoriasFases.get(1).getObservaciones()).as("get(1).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasFases.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 2));
-    Assertions.assertThat(convocatoriasFases.get(2).getObservaciones()).as("get(2).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasFases.get(2).getObservaciones(), Language.ES))
+        .as("get(2).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 1));
 
   }

@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.converter.ComConverter;
+import org.crue.hercules.sgi.csp.converter.ConvocatoriaFaseObservacionesConverter;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseAvisoInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseInput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
@@ -94,6 +95,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
   private final SolicitudRepository solicitudRepository;
   private final ProyectoEquipoRepository proyectoEquipoRepository;
   private final ConvocatoriaAuthorityHelper authorityHelper;
+  private final ConvocatoriaFaseObservacionesConverter convocatoriaFaseObservacionesConverter;
 
   public ConvocatoriaFaseServiceImpl(
       ConvocatoriaFaseRepository repository,
@@ -107,7 +109,8 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
       SgiApiComService emailService,
       SgiApiTpService sgiApiTaskService,
       SgiApiSgpService personaService,
-      ConvocatoriaAuthorityHelper authorityHelper) {
+      ConvocatoriaAuthorityHelper authorityHelper,
+      ConvocatoriaFaseObservacionesConverter convocatoriaFaseObservacionesConverter) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.configuracionSolicitudRepository = configuracionSolicitudRepository;
@@ -120,6 +123,7 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     this.solicitudRepository = solicitudRepository;
     this.proyectoEquipoRepository = proyectoEquipoRepository;
     this.authorityHelper = authorityHelper;
+    this.convocatoriaFaseObservacionesConverter = convocatoriaFaseObservacionesConverter;
   }
 
   /**
@@ -192,7 +196,8 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
         .convocatoriaId(convocatoriaFaseInput.getConvocatoriaId())
         .fechaInicio(convocatoriaFaseInput.getFechaInicio())
         .fechaFin(convocatoriaFaseInput.getFechaFin())
-        .observaciones(convocatoriaFaseInput.getObservaciones())
+        .observaciones(
+            this.convocatoriaFaseObservacionesConverter.convertAll(convocatoriaFaseInput.getObservaciones()))
         .tipoFase(modeloTipoFase.get().getTipoFase())
         .build();
 
@@ -331,7 +336,8 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
       convocatoriaFase.setFechaInicio(convocatoriaFaseActualizar.getFechaInicio());
       convocatoriaFase.setFechaFin(convocatoriaFaseActualizar.getFechaFin());
       convocatoriaFase.setTipoFase(modeloTipoFase.get().getTipoFase());
-      convocatoriaFase.setObservaciones(convocatoriaFaseActualizar.getObservaciones());
+      convocatoriaFase.setObservaciones(
+          this.convocatoriaFaseObservacionesConverter.convertAll(convocatoriaFaseActualizar.getObservaciones()));
 
       if (convocatoriaFaseActualizar.getAviso1() != null && convocatoriaFase.getConvocatoriaFaseAviso1() == null) {
         ConvocatoriaFaseAviso aviso1 = this.createAviso(convocatoriaFase.getId(),

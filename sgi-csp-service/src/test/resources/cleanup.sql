@@ -107,6 +107,7 @@ DELETE FROM test.convocatoria_entidad_financiadora;
 DELETE FROM test.convocatoria_entidad_gestora;
 DELETE FROM test.convocatoria_enlace_descripcion;
 DELETE FROM test.convocatoria_enlace;
+DELETE FROM test.convocatoria_fase_observaciones;
 DELETE FROM test.convocatoria_fase;
 DELETE FROM test.convocatoria_hito;
 DELETE FROM test.convocatoria_periodo_justificacion;

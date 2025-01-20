@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHitoAviso;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
@@ -848,7 +849,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ConvocatoriaFaseOutput convocatoriaFase = convocatoriaFaseResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(convocatoriaFase.getObservaciones()).isEqualTo("observaciones" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaFase.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones" + i);
     }
   }
 
@@ -902,6 +904,9 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     Set<TipoFaseDescripcion> descripcionTipoFase = new HashSet<>();
     descripcionTipoFase.add(new TipoFaseDescripcion(Language.ES, "descripcionFase" + id));
 
+    Set<ConvocatoriaFaseObservaciones> obsConvocatoriaFase = new HashSet<>();
+    obsConvocatoriaFase.add(new ConvocatoriaFaseObservaciones(Language.ES, "observaciones" + id));
+
     ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
     convocatoriaFase.setId(id);
     convocatoriaFase.setConvocatoriaId(id);
@@ -913,7 +918,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
             .descripcion(descripcionTipoFase)
             .activo(Boolean.TRUE)
             .build());
-    convocatoriaFase.setObservaciones("observaciones" + id);
+    convocatoriaFase.setObservaciones(obsConvocatoriaFase);
 
     return convocatoriaFase;
   }

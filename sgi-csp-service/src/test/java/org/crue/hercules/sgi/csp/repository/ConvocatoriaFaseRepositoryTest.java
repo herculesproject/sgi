@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -285,12 +286,15 @@ class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(tipoFase);
 
+    Set<ConvocatoriaFaseObservaciones> obsConvocatoriaFase = new HashSet<>();
+    obsConvocatoriaFase.add(new ConvocatoriaFaseObservaciones(Language.ES, "observaciones" + suffix));
+
     ConvocatoriaFase convocatoriaFase = ConvocatoriaFase.builder()
         .convocatoriaId(convocatoria.getId())
         .tipoFase(tipoFase)
         .fechaInicio(Instant.parse("2020-10-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-31T00:00:00Z"))
-        .observaciones("obervaciones" + suffix)
+        .observaciones(obsConvocatoriaFase)
         .build();
     // @formatter:on
     return entityManager.persistAndFlush(convocatoriaFase);

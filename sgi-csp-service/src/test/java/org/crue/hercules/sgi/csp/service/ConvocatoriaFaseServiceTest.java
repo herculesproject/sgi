@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.converter.ConvocatoriaFaseObservacionesConverter;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaFaseOutput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
@@ -22,6 +23,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
@@ -47,6 +49,7 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,6 +67,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.test.context.support.WithMockUser;
+
+import liquibase.repackaged.org.apache.commons.lang3.ObjectUtils;
 
 /**
  * ConvocatoriaFaseServiceTest
@@ -96,6 +101,8 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   private SgiApiTpService sgiApiTaskService;
   @Mock
   private SgiApiSgpService personaService;
+  @Mock
+  private ConvocatoriaFaseObservacionesConverter convocatoriaFaseObservacionesConverter;
 
   private ConvocatoriaAuthorityHelper authorityHelper;
   private ConvocatoriaFaseService service;
@@ -111,7 +118,8 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         emailService,
         sgiApiTaskService,
         personaService,
-        authorityHelper);
+        authorityHelper,
+        convocatoriaFaseObservacionesConverter);
   }
 
   @Test
@@ -133,6 +141,10 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         .given(modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockModeloTipoFase(1L, convocatoria, convocatoriaFase, Boolean.TRUE)));
+
+    BDDMockito
+        .given(convocatoriaFaseObservacionesConverter.convertAll(ArgumentMatchers.<I18nFieldValueDto>anyList()))
+        .willReturn(Set.of(new ConvocatoriaFaseObservaciones(Language.ES, "observaciones")));
 
     BDDMockito.given(repository.save(convocatoriaFase)).will((InvocationOnMock invocation) -> {
       ConvocatoriaFase convocatoriaFaseCreado = invocation.getArgument(0);
@@ -782,6 +794,14 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
    * @return el objeto ConvocatoriaFase
    */
   private ConvocatoriaFase generarMockConvocatoriaFase(Long id) {
+    Set<ConvocatoriaFaseObservaciones> obsConvocatoriaFase = new HashSet<>();
+    if (!ObjectUtils.isEmpty(id)) {
+      obsConvocatoriaFase
+          .add(new ConvocatoriaFaseObservaciones(Language.ES, "observaciones" + id));
+    } else {
+      obsConvocatoriaFase
+          .add(new ConvocatoriaFaseObservaciones(Language.ES, "observaciones"));
+    }
 
     // @formatter:off
     return ConvocatoriaFase.builder()
@@ -790,7 +810,7 @@ class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         .fechaInicio(Instant.parse("2020-10-19T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-28T00:00:00Z"))
         .tipoFase(generarMockTipoFase(1L, Boolean.TRUE))
-        .observaciones("observaciones" + id)
+        .observaciones(obsConvocatoriaFase)
         .build();
     // @formatter:on
   }

@@ -63,13 +63,22 @@ INSERT INTO test.tipo_fase_nombre (tipo_fase_id, lang, value_) VALUES (1, 'es', 
 INSERT INTO test.tipo_fase_descripcion (tipo_fase_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
 
 --CONVOCATORIA FASE
-INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1,'2020-10-01T00:00:00Z', '2020-10-02T23:59:59Z','observaciones-001');
-INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (2, 1, 1,'2020-10-10T00:00:00Z', '2020-10-12T23:59:59Z','observaciones-002');
-INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (3, 1, 1,'2020-10-13T00:00:00Z', '2020-10-20T23:59:59Z','observaciones-003');
-INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (4, 1, 1,'2020-10-06T00:00:00Z', '2020-10-08T23:59:59Z','observaciones4');
-INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (5, 1, 1,'2020-10-21T00:00:00Z', '2020-10-25T23:59:59Z','observaciones-05');
-INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (6, 1, 1,'2020-10-26T00:00:00Z', '2020-10-30T23:59:59Z','observaciones-06');
-INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (7, 2, 1,'2020-10-13T00:00:00Z', '2020-10-20T23:59:59Z','observaciones-003');
+INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin) VALUES (1, 1, 1,'2020-10-01T00:00:00Z', '2020-10-02T23:59:59Z');
+INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin) VALUES (2, 1, 1,'2020-10-10T00:00:00Z', '2020-10-12T23:59:59Z');
+INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin) VALUES (3, 1, 1,'2020-10-13T00:00:00Z', '2020-10-20T23:59:59Z');
+INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin) VALUES (4, 1, 1,'2020-10-06T00:00:00Z', '2020-10-08T23:59:59Z');
+INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin) VALUES (5, 1, 1,'2020-10-21T00:00:00Z', '2020-10-25T23:59:59Z');
+INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin) VALUES (6, 1, 1,'2020-10-26T00:00:00Z', '2020-10-30T23:59:59Z');
+INSERT INTO  test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin) VALUES (7, 2, 1,'2020-10-13T00:00:00Z', '2020-10-20T23:59:59Z');
+
+--CONVOCATORIA FASE OBSERVACIONES
+INSERT INTO  test.convocatoria_fase_observaciones(convocatoria_fase_id, lang, value_) VALUES (1, 'es', 'observaciones-001');
+INSERT INTO  test.convocatoria_fase_observaciones(convocatoria_fase_id, lang, value_) VALUES (2, 'es', 'observaciones-002');
+INSERT INTO  test.convocatoria_fase_observaciones(convocatoria_fase_id, lang, value_) VALUES (3, 'es', 'observaciones-003');
+INSERT INTO  test.convocatoria_fase_observaciones(convocatoria_fase_id, lang, value_) VALUES (4, 'es', 'observaciones4');
+INSERT INTO  test.convocatoria_fase_observaciones(convocatoria_fase_id, lang, value_) VALUES (5, 'es', 'observaciones-05');
+INSERT INTO  test.convocatoria_fase_observaciones(convocatoria_fase_id, lang, value_) VALUES (6, 'es', 'observaciones-06');
+INSERT INTO  test.convocatoria_fase_observaciones(convocatoria_fase_id, lang, value_) VALUES (7, 'es', 'observaciones-003');
 
 -- CONFIGURACION SOLICITUD
 INSERT INTO test.configuracion_solicitud 
