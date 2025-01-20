@@ -68,13 +68,21 @@ INSERT INTO test.concepto_gasto_descripcion (concepto_gasto_id, lang, value_) VA
 INSERT INTO test.concepto_gasto_descripcion (concepto_gasto_id, lang, value_) VALUES (2, 'es', 'descripcion-2');
 INSERT INTO test.concepto_gasto_descripcion (concepto_gasto_id, lang, value_) VALUES (3, 'es', 'descripcion-3');
 
---CONVOCATORIA CONCEPTO GASTO
-INSERT INTO  test.convocatoria_concepto_gasto(id, convocatoria_id, concepto_gasto_id, observaciones,permitido) VALUES (1, 1, 1,'obs-001', true);
-INSERT INTO  test.convocatoria_concepto_gasto(id, convocatoria_id, concepto_gasto_id, observaciones,permitido) VALUES (2, 1, 2,'obs-002', true);
-INSERT INTO  test.convocatoria_concepto_gasto(id, convocatoria_id, concepto_gasto_id, observaciones,permitido) VALUES (3, 1, 3,'obs-003', true);
-INSERT INTO  test.convocatoria_concepto_gasto(id, convocatoria_id, concepto_gasto_id, observaciones,permitido) VALUES (4, 1, 1,'obs-004', false);
-INSERT INTO  test.convocatoria_concepto_gasto(id, convocatoria_id, concepto_gasto_id, observaciones,permitido) VALUES (5, 1, 2,'obs-005', false);
-INSERT INTO  test.convocatoria_concepto_gasto(id, convocatoria_id, concepto_gasto_id, observaciones,permitido) VALUES (6, 1, 3,'obs-006', false);
+-- CONVOCATORIA_CONCEPTO_GASTO
+INSERT INTO test.convocatoria_concepto_gasto (id, convocatoria_id, concepto_gasto_id, permitido) VALUES (1, 1, 1, true);
+INSERT INTO test.convocatoria_concepto_gasto (id, convocatoria_id, concepto_gasto_id, permitido) VALUES (2, 1, 2, true);
+INSERT INTO test.convocatoria_concepto_gasto (id, convocatoria_id, concepto_gasto_id, permitido) VALUES (3, 1, 3, true);
+INSERT INTO test.convocatoria_concepto_gasto (id, convocatoria_id, concepto_gasto_id, permitido) VALUES (4, 1, 1, false);
+INSERT INTO test.convocatoria_concepto_gasto (id, convocatoria_id, concepto_gasto_id, permitido) VALUES (5, 1, 2, false);
+INSERT INTO test.convocatoria_concepto_gasto (id, convocatoria_id, concepto_gasto_id, permitido) VALUES (6, 1, 3, false);
+
+-- CONVOCATORIA_CONCEPTO_GASTO_OBSERVACIONES
+INSERT INTO test.convocatoria_concepto_gasto_observaciones (convocatoria_concepto_gasto_id, lang, value_) VALUES (1, 'es', 'obs-001');
+INSERT INTO test.convocatoria_concepto_gasto_observaciones (convocatoria_concepto_gasto_id, lang, value_) VALUES (2, 'es', 'obs-002');
+INSERT INTO test.convocatoria_concepto_gasto_observaciones (convocatoria_concepto_gasto_id, lang, value_) VALUES (3, 'es', 'obs-003');
+INSERT INTO test.convocatoria_concepto_gasto_observaciones (convocatoria_concepto_gasto_id, lang, value_) VALUES (4, 'es', 'obs-004');
+INSERT INTO test.convocatoria_concepto_gasto_observaciones (convocatoria_concepto_gasto_id, lang, value_) VALUES (5, 'es', 'obs-005');
+INSERT INTO test.convocatoria_concepto_gasto_observaciones (convocatoria_concepto_gasto_id, lang, value_) VALUES (6, 'es', 'obs-006');
 
 -- TIPO FASE
 INSERT INTO test.tipo_fase (id, activo) VALUES (1, true);

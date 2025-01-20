@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
@@ -428,13 +429,17 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
   }
 
   private ConvocatoriaConceptoGasto buildMockConvocatoriaConceptoGasto(Long convocatoriaClonedId) {
+    Set<ConvocatoriaConceptoGastoObservaciones> observacionesConvocatoriaConceptoGasto = new HashSet<>();
+    observacionesConvocatoriaConceptoGasto
+        .add(new ConvocatoriaConceptoGastoObservaciones(Language.ES, "testing"));
+
     return ConvocatoriaConceptoGasto.builder()
         .convocatoriaId(convocatoriaClonedId)
         .id(1L)
         .mesInicial(1)
         .mesFinal(11)
         .importeMaximo(new BigDecimal(11000000).doubleValue())
-        .observaciones("testing")
+        .observaciones(observacionesConvocatoriaConceptoGasto)
         .permitido(Boolean.TRUE)
         .conceptoGasto(ConceptoGasto.builder().build())
         .build();

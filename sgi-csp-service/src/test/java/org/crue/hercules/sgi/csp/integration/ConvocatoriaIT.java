@@ -1086,7 +1086,7 @@ class ConvocatoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "obs=ke=-00";
+    String filter = "obs.value=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -1106,11 +1106,17 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(convocatoriaConceptoGastos.get(0).getObservaciones()).as("get(0).getObservaciones()")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGastos.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones()")
         .isEqualTo("obs-" + String.format("%03d", 3));
-    Assertions.assertThat(convocatoriaConceptoGastos.get(1).getObservaciones()).as("get(1).getObservaciones())")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGastos.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())")
         .isEqualTo("obs-" + String.format("%03d", 2));
-    Assertions.assertThat(convocatoriaConceptoGastos.get(2).getObservaciones()).as("get(2).getObservaciones()")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGastos.get(2).getObservaciones(), Language.ES))
+        .as("get(2).getObservaciones()")
         .isEqualTo("obs-" + String.format("%03d", 1));
   }
 
@@ -1124,7 +1130,7 @@ class ConvocatoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "obs=ke=-00";
+    String filter = "obs.value=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -1144,11 +1150,17 @@ class ConvocatoriaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(convocatoriaConceptoGastos.get(0).getObservaciones()).as("get(0).getObservaciones()")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGastos.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones()")
         .isEqualTo("obs-" + String.format("%03d", 6));
-    Assertions.assertThat(convocatoriaConceptoGastos.get(1).getObservaciones()).as("get(1).getObservaciones())")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGastos.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())")
         .isEqualTo("obs-" + String.format("%03d", 5));
-    Assertions.assertThat(convocatoriaConceptoGastos.get(2).getObservaciones()).as("get(2).getObservaciones()")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGastos.get(2).getObservaciones(), Language.ES))
+        .as("get(2).getObservaciones()")
         .isEqualTo("obs-" + String.format("%03d", 4));
   }
 

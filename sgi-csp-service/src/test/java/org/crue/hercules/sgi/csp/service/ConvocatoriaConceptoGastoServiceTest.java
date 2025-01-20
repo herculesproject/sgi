@@ -12,12 +12,14 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundExc
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.repository.ConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaConceptoGastoServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -148,7 +150,8 @@ class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     // then: el ConvocatoriaConceptoGasto
     Assertions.assertThat(convocatoriaConceptoGasto).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaConceptoGasto.getId()).as("getId()").isEqualTo(idBuscado);
-    Assertions.assertThat(convocatoriaConceptoGasto.getObservaciones()).as("getObservaciones()").isEqualTo("Obs-1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGasto.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("Obs-1");
     Assertions.assertThat(convocatoriaConceptoGasto.getConvocatoriaId()).as("getConvocatoria()").isEqualTo(1L);
 
   }
@@ -219,10 +222,14 @@ class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
     conceptoGasto.setNombre(nombreConceptoGasto);
     conceptoGasto.setActivo(true);
 
+    Set<ConvocatoriaConceptoGastoObservaciones> observacionesConvocatoriaConceptoGasto = new HashSet<>();
+    observacionesConvocatoriaConceptoGasto
+        .add(new ConvocatoriaConceptoGastoObservaciones(Language.ES, "Obs-" + id));
+
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();
     convocatoriaConceptoGasto.setId(id);
     convocatoriaConceptoGasto.setConvocatoriaId(id == null ? 1 : id);
-    convocatoriaConceptoGasto.setObservaciones("Obs-" + id);
+    convocatoriaConceptoGasto.setObservaciones(observacionesConvocatoriaConceptoGasto);
     convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
     convocatoriaConceptoGasto.setImporteMaximo(400.0);
     convocatoriaConceptoGasto.setMesInicial(4);

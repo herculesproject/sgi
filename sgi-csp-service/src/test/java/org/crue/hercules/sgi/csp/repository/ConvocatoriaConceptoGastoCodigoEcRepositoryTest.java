@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -79,7 +80,6 @@ class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -90,7 +90,7 @@ class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest
 
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad" + suffix));
-    
+
     TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
         .nombre(nombreTipoFinalidad)
         .activo(Boolean.TRUE)
@@ -105,14 +105,15 @@ class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest
     entityManager.persistAndFlush(modeloTipoFinalidad);
 
     Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombre = new HashSet<>();
-    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia" + suffix));
+    tipoRegimenConcurrenciaNombre
+        .add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia" + suffix));
 
     TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder()
         .nombre(tipoRegimenConcurrenciaNombre)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoRegimenConcurrencia);
-    
+
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
 
@@ -151,10 +152,14 @@ class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest
         .build();
     entityManager.persistAndFlush(conceptoGasto);
 
+    Set<ConvocatoriaConceptoGastoObservaciones> observacionesConvocatoriaConceptoGasto = new HashSet<>();
+    observacionesConvocatoriaConceptoGasto
+        .add(new ConvocatoriaConceptoGastoObservaciones(Language.ES, "obs-1"));
+
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = ConvocatoriaConceptoGasto.builder()
         .convocatoriaId(convocatoria.getId())
         .conceptoGasto(conceptoGasto)
-        .observaciones("obs-1")
+        .observaciones(observacionesConvocatoriaConceptoGasto)
         .permitido(permitido).build();
     entityManager.persistAndFlush(convocatoriaConceptoGasto);
 
@@ -162,7 +167,7 @@ class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest
         .convocatoriaConceptoGastoId(convocatoriaConceptoGasto.getId())
         .codigoEconomicoRef("cod" + suffix)
         .build();
-    // @formatter:on
+
     return entityManager.persistAndFlush(convocatoriaConceptoGastoCodigoEc);
   }
 }

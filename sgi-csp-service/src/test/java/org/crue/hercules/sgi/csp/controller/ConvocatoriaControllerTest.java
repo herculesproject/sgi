@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
@@ -2035,7 +2036,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoResponse.get(i - 1);
-      Assertions.assertThat(convocatoriaConceptoGasto.getObservaciones()).isEqualTo("Obs-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGasto.getObservaciones(), Language.ES))
+          .isEqualTo("Obs-" + i);
     }
   }
 
@@ -2097,7 +2099,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoResponse.get(i - 1);
-      Assertions.assertThat(convocatoriaConceptoGasto.getObservaciones()).isEqualTo("Obs-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaConceptoGasto.getObservaciones(), Language.ES))
+          .isEqualTo("Obs-" + i);
     }
   }
 
@@ -2291,6 +2294,10 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     conceptoGasto.setId(id == null ? 1 : id);
     conceptoGasto.setActivo(true);
 
+    Set<ConvocatoriaConceptoGastoObservaciones> observacionesConvocatoriaConceptoGasto = new HashSet<>();
+    observacionesConvocatoriaConceptoGasto
+        .add(new ConvocatoriaConceptoGastoObservaciones(Language.ES, "Obs-" + id));
+
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();
     convocatoriaConceptoGasto.setId(id);
     convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
@@ -2298,7 +2305,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaConceptoGasto.setImporteMaximo(20.0);
     convocatoriaConceptoGasto.setMesInicial(1);
     convocatoriaConceptoGasto.setMesFinal(4);
-    convocatoriaConceptoGasto.setObservaciones("Obs-" + id);
+    convocatoriaConceptoGasto.setObservaciones(observacionesConvocatoriaConceptoGasto);
     convocatoriaConceptoGasto.setPermitido(permitido);
 
     return convocatoriaConceptoGasto;

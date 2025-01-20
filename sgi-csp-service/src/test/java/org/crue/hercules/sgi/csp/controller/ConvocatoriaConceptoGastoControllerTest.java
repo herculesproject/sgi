@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -112,7 +113,11 @@ class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest {
     // given: Existing ConvocatoriaConceptoGasto to be updated
     ConvocatoriaConceptoGasto convocatoriaConceptoGastoExistente = generarMockConvocatoriaConceptoGasto(1L);
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(1L);
-    convocatoriaConceptoGasto.setObservaciones("Observaciones nuevas");
+
+    Set<ConvocatoriaConceptoGastoObservaciones> observacionesConvocatoriaConceptoGasto = new HashSet<>();
+    observacionesConvocatoriaConceptoGasto
+        .add(new ConvocatoriaConceptoGastoObservaciones(Language.ES, "Observaciones nuevas"));
+    convocatoriaConceptoGasto.setObservaciones(observacionesConvocatoriaConceptoGasto);
 
     BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaConceptoGasto>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -126,7 +131,8 @@ class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest {
         .andDo(SgiMockMvcResultHandlers.printOnError())
         // then: ConvocatoriaConceptoGasto is updated
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(convocatoriaConceptoGasto.getObservaciones()))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value")
+            .value(I18nHelper.getValueForLanguage(convocatoriaConceptoGasto.getObservaciones(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("conceptoGasto.nombre[0].value")
             .value(I18nHelper.getValueForLanguage(convocatoriaConceptoGastoExistente.getConceptoGasto().getNombre(),
                 Language.ES)));
@@ -371,12 +377,16 @@ class ConvocatoriaConceptoGastoControllerTest extends BaseControllerTest {
     conceptoGasto.setNombre(nombreConceptoGasto);
     conceptoGasto.setActivo(true);
 
+    Set<ConvocatoriaConceptoGastoObservaciones> observacionesConvocatoriaConceptoGasto = new HashSet<>();
+    observacionesConvocatoriaConceptoGasto
+        .add(new ConvocatoriaConceptoGastoObservaciones(Language.ES, "Obs-" + (id != null ? id : 1)));
+
     ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();
     convocatoriaConceptoGasto.setId(id);
     convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
     convocatoriaConceptoGasto.setPermitido(permitido);
     convocatoriaConceptoGasto.setConvocatoriaId((id != null ? id : 1));
-    convocatoriaConceptoGasto.setObservaciones("Obs-" + (id != null ? id : 1));
+    convocatoriaConceptoGasto.setObservaciones(observacionesConvocatoriaConceptoGasto);
 
     return convocatoriaConceptoGasto;
   }
