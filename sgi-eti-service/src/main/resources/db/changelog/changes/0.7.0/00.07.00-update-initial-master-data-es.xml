@@ -964,14 +964,15 @@
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 1 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
       <column name="lang" value="es" />
       <column name="nombre"
-        value="Justificación del uso de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanoparticulas" />
+        value="Justificación del uso de agentes biológicos" />
       <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_1_2.json" />
     </insert>
     <insert tableName="apartado_definicion">
       <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 2 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
       <column name="lang" value="es" />
-      <column name="nombre" value="Personal que llevará a cabo las tareas animales" />
+      <column name="nombre"
+        value="Personal que llevará a cabo las tareas con agentes biológicos y/u organismos modificados genéticamente" />
       <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_2_1.json" />
     </insert>
     <insert tableName="apartado_definicion">
@@ -1084,22 +1085,6 @@
     </insert>
     <insert tableName="apartado_definicion">
       <column name="apartado_id"
-        valueComputed="(select id from ${schemaPrefix}apartado where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
-      <column name="lang" value="es" />
-      <column name="nombre"
-        value="Sustancias químicas peligrosas" />
-      <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_3_5_5.json" />
-    </insert>
-    <insert tableName="apartado_definicion">
-      <column name="apartado_id"
-        valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
-      <column name="lang" value="es" />
-      <column name="nombre"
-        value="Sustancias radiactivas, equipo radiológico, instalación radiactiva" />
-      <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_3_5_6.json" />
-    </insert>
-    <insert tableName="apartado_definicion">
-      <column name="apartado_id"
         valueComputed="(select id from ${schemaPrefix}apartado where orden = 6 and padre_id is null and bloque_id = (select id from ${schemaPrefix}bloque where orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))" />
       <column name="lang" value="es" />
       <column name="nombre" value="Frecuencia y periodicidad de uso" />
@@ -1182,38 +1167,6 @@
       <column name="nombre"
         value="Laboratorio de la Universidad" />
       <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_4_2_1_1.json" />
-    </insert>
-    <insert tableName="apartado_definicion">
-      <column name="apartado_id"
-        valueComputed="(select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))" />
-      <column name="lang" value="es" />
-      <column name="nombre"
-        value="Medidas de contención" />
-      <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_4_2_1_1_1.json" />
-    </insert>
-    <insert tableName="apartado_definicion">
-      <column name="apartado_id"
-        valueComputed="(select id from ${schemaPrefix}apartado where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))" />
-      <column name="lang" value="es" />
-      <column name="nombre"
-        value="Equipos de seguridad" />
-      <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_4_2_1_1_2.json" />
-    </insert>
-    <insert tableName="apartado_definicion">
-      <column name="apartado_id"
-        valueComputed="(select id from ${schemaPrefix}apartado where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))" />
-      <column name="lang" value="es" />
-      <column name="nombre"
-        value="Buenas prácticas de laboratorio" />
-      <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_4_2_1_1_3.json" />
-    </insert>
-    <insert tableName="apartado_definicion">
-      <column name="apartado_id"
-        valueComputed="(select id from ${schemaPrefix}apartado where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))" />
-      <column name="lang" value="es" />
-      <column name="nombre"
-        value="Instalaciones" />
-      <column name="esquema" valueClobFile="clob/es/m30/m30_apartado_4_2_1_1_4.json" />
     </insert>
     <insert tableName="apartado_definicion">
       <column name="apartado_id"

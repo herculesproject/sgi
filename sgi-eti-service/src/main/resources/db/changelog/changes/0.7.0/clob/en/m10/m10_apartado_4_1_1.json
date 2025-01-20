@@ -101,7 +101,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Note: possible damage/discomfort should be related to the interventions described in detail in the section <strong>'3.4.3 Description of interventions or tests'</strong></p><p>Please remember that the participant should be duly informed of the inconveniences and possible risks and benefits of the research and should be informed of this in <strong>the consent document</strong> (section '4.4.2 Minimum mandatory information').</p><p>For more information on the minimum information required, consult <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>article 15</a> of LIB 14/2007 and in <a href='https://www.um.es/it/web/comision-etica-investigacion/comision-etica/ceic' target='_blank'>Research Ethics Commission website page</a>.</p>"
+        "template": "<p>Note: possible damage/discomfort should be related to the interventions described in detail in the section <strong>'3.4.3 Description of interventions or tests'</strong></p><p>Please remember that the participant should be duly informed of the inconveniences and possible risks and benefits of the research and should be informed of this in <strong>the consent document</strong> (section '4.4.2 Minimum mandatory information').</p><p>For more information on the minimum information required, consult <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>article 15</a> of LIB 14/2007.</p>"
       }
     ]
   }

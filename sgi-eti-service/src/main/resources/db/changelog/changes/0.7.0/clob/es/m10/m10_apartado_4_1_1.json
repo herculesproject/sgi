@@ -101,7 +101,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: los posibles daños/molestias deben relacionarse con las intervenciones descritas detalladamente en el apartado <strong>'3.4.3 Descripción de las intervenciones o pruebas'</strong></p><p>Recuerde que el/la participante debe ser informado debidamente de las molestias y los posibles riesgos y beneficios de la investigación y debe ser informado de ello en <strong>el documento de consentimiento</strong> (apartado '4.4.2 Información obligatoria mínima').</p><p>Para obtener más información sobre la información mínima exigida consultar el <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>artículo 15</a> de la LIB 14/2007 y en <a href='https://www.um.es/it/web/comision-etica-investigacion/comision-etica/ceic' target='_blank'>página de la Web de la Comisión de Ética de Investigación</a>.</p>"
+        "template": "<p>Nota: los posibles daños/molestias deben relacionarse con las intervenciones descritas detalladamente en el apartado <strong>'3.4.3 Descripción de las intervenciones o pruebas'</strong></p><p>Recuerde que el/la participante debe ser informado debidamente de las molestias y los posibles riesgos y beneficios de la investigación y debe ser informado de ello en <strong>el documento de consentimiento</strong> (apartado '4.4.2 Información obligatoria mínima').</p><p>Para obtener más información sobre la información mínima exigida consultar el <a href='http://www.boe.es/buscar/act.php?id=BOE-A-2007-12945&p=20110602&tn=1#a15' target='_blank'>artículo 15</a> de la LIB 14/2007.</p>"
       }
     ]
   }

@@ -5,11 +5,11 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "2.1 Personal que llevará a cabo las tareas con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "2.1 Personal que llevará a cabo las tareas con agentes biológicos y/u organismos modificados genéticamente"
     },
     "fieldGroup": [
       {
-        "template": "<p>A continuación se muestran todas las personas integrantes del equipo investigador. Añadir en este apartado cualquier otra persona que colabore en el proyecto realizando tareas relacionadas con los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas.<br><br>Especificar por cada persona:<br><ul><li>Datos identificativos (nombre, E-mail, vinculación con la Universidad).</li><li>Formación específica en riesgos biológicos.</li><li>Organismo acreditador (especificar universidad u organismo).</li><li>Año.</li></ul></p>"
+        "template": "<p>Se deben de indicar todas las personas que colaboren en el proyecto realizando tareas relacionadas con los agentes biológicos y/u organismos modificados genéticamente.</p>"
       },
       {
         "wrappers": [
@@ -116,6 +116,12 @@
             }
           ]
         }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Nota: Recuerde que debe aportar copia de todas las acreditaciones del equipo investigador en el apartado '5.1 Acreditaciones' para que queden archivadas junto a la memoria del proyecto.</p>"
       }
     ]
   }

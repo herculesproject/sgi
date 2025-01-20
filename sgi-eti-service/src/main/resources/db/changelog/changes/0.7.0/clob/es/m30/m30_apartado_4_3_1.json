@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>¿Qué vacunación se ofrece al personal que manejará los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?</p>"
+        "template": "<p>¿Qué vacunación se ofrece al personal que manejará los agentes biológicos y/u organismos modificados genéticamente?</p>"
       },
       {
         "key": "vacunacionCheck",

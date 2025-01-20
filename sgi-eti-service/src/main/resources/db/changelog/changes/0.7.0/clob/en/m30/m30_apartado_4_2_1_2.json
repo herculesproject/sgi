@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Are tasks with biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles or part of them carried out in the premises of another centre or place?</p>"
+        "template": "<p>Are tasks with biological agents and/or genetically modified carried out in the premises of another centre or place?</p>"
       },
       {
         "key": "tareasAgentesBiologicos",
@@ -75,7 +75,7 @@
         }
       },
       {
-        "template": "<p>Please remember that the CBE report is only valid for work carried out in University Facilities, by University personnel or by any other person who, in application of current regulations, carries out their work there. NOTE: The facility is to comply with the containment requirements for biological agents, GMOs, hazardous chemicals, radioactive substances or nanoparticles and, where applicable, the respective authorisation/communication.</p>"
+        "template": "<p>Please remember that the committee report is only valid for work carried out in University Facilities, by University personnel or by any other person who, in application of current regulations, carries out their work there. NOTE: The facility is to comply with the containment requirements for biological agents and/or GMOs, where applicable, the respective authorisation/communication.</p>"
       }
     ]
   }

@@ -10,6 +10,12 @@
     "hideExpression": "!formState.mainModel.ap3_4 || !formState.mainModel.ap3_4.ap3_4_3 || !formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio || formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio === 'no'",
     "fieldGroup": [
       {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Type 1 GMO: One whose probability of causing a disease in living organisms or an adverse effect on the environment is negligible.</p><p>Type 2 GMO: One that can cause a disease in living organisms that is unlikely to spread to the community and effective prophylaxis or treatment is generally available; or that can cause a low adverse effect on the environment.</p><p>Type 3 GMO: One that can cause a serious disease in living organisms that poses a risk of spreading to the community but effective prophylaxis or treatment is generally available; or that can cause an adverse effect on the environment.</p><p>Type 4 GMO: One that can cause a serious disease in living organisms that is highly likely to spread to the community and there is no effective prophylaxis or treatment generally available; or that can cause a severe adverse effect on the environment.</p>"
+      },
+      {
         "type": "table-crud",
         "key": "microorganismosParasitosTable",
         "templateOptions": {

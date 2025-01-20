@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p> ¿Se contemplan medidas seguras para la manipulación de los agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?</p>"
+        "template": "<p>¿Se contemplan medidas seguras para la manipulación de los agentes biológicos y/u organismos modificados genéticamente?</p>"
       },
       {
         "key": "medidasSeguras",

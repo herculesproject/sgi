@@ -27,7 +27,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota:  En cada solicitud sólo debe haber una persona con Función D, que además será la persona que solicita la evaluación.</p><p>El resto de los integrantes del equipo, tendrán la función B o C en función de que realicen la eutanasia (B) o los procedimientos/intervenciones (C), y habrá tantos como personal con acreditación. Aquellos que todavía no han realizado el TBS trabajo bajo supervisión (requerido para la obtención de la acreditación) no se pueden incluir como integrantes del equipo en esa solicitud, hasta que hayan finalizado su TBS y hayan obtenido la capacitación.</p><p>Quienes posean las acreditaciones antiguas de categoría B y C, deben solicitar la acreditación para las nuevas funciones al mismo organismo acreditador.</p>"
+        "template": "<p>Nota: En cada solicitud sólo debe haber una persona con función 'd', que además será la persona que solicita la evaluación.</p><p>El resto de los integrantes del equipo, tendrán la función 'b' o 'c' en función de que realicen la eutanasia ('b') o los procedimientos/intervenciones ('c'), y habrá tantos como personal con acreditación. Aquellos que todavía no han realizado el TBS trabajo bajo supervisión (requerido para la obtención de la acreditación) no se pueden incluir como integrantes del equipo en esa solicitud, hasta que hayan finalizado su TBS y hayan obtenido la capacitación.</p><p>Quienes posean las acreditaciones antiguas de categoría B y C, deben solicitar la acreditación para las nuevas funciones al mismo organismo acreditador.</p>"
       },
       {
         "wrappers": [

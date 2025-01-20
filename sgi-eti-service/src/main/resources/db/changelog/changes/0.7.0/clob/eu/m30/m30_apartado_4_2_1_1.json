@@ -9,13 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Jarraian, zehaztu Unibertsitateko zer gelatan lan egingo den agente edo material biologikoarekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin.</p>"
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "Ikerketako Arlo Zientifiko eta Teknikoaren (IAZT) zerbitzu eta ataletako laborategi bat adierazi baduzu, ez duzu ondare kodea bete beharrik.</p>"
+        "template": "<p>Jarraian, zehaztu Unibertsitateko zer gelatan lan egingo den agente edo material biologikoarekin edo/eta genetikoki eraldatutako organismoekin.</p>"
       },
       {
         "type": "table-crud",
@@ -33,7 +27,7 @@
               "key": "codPatrimonial",
               "type": "i18n-input",
               "templateOptions": {
-                "label": "Ondare kodea",
+                "label": "Lokalaren kodea",
                 "order": 10
               }
             },

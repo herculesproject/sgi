@@ -91,19 +91,19 @@
                 "options": [
                   {
                     "value": "A",
-                    "label": "A"
+                    "label": "A: Ondorio alergiko posibleak"
                   },
                   {
                     "value": "D",
-                    "label": "D"
+                    "label": "D: Agentearen eraginpean egondako langileen zerrenda gorde egin behar da azken esposiziotik hamar urte baino gehiago igaro arte"
                   },
                   {
                     "value": "T",
-                    "label": "T"
+                    "label": "T: Toxina ekoizpena"
                   },
                   {
                     "value": "V",
-                    "label": "V"
+                    "label": "V: Txerto eraginkorra eskuragai"
                   }
                 ]
               }

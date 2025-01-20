@@ -9,48 +9,6 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Con respecto a la gestión de residuos biológicos, organismos modificados genéticamente, químicos y radiactivos, ¿conoce, aplica y tiene a su disposición el <a href='https://www.um.es/web/acti/contenido/servicios/radioproteccion-residuos/normas' target='_blank'>'Manual de Gestión de Residuos Peligrosos, Biológicos y Radiactivos de la Universidad'</a>?</p>"
-      },
-      {
-        "key": "manualGestionResiduos",
-        "type": "radio",
-        "templateOptions": {
-          "label": "Elige opción:",
-          "required": true,
-          "options": [
-            {
-              "value": "no",
-              "label": "No"
-            },
-            {
-              "value": "si",
-              "label": "Sí"
-            }
-          ]
-        }
-      },
-      {
-        "template": "<p>¿Dispone de registro como unidad productora de residuos peligrosos y biológicos en la Universidad?</p>"
-      },
-      {
-        "key": "productoraResiduosPeligrosos",
-        "type": "radio",
-        "templateOptions": {
-          "label": "Elige opción:",
-          "required": true,
-          "options": [
-            {
-              "value": "no",
-              "label": "No"
-            },
-            {
-              "value": "si",
-              "label": "Sí"
-            }
-          ]
-        }
-      },
-      {
         "template": "<p>¿Se contempla gestión externa de residuos peligrosos o biológicos?</p>"
       },
       {
@@ -125,6 +83,12 @@
           "info-div"
         ],
         "template": "<p>Un residuo peligroso es el que presenta una o varias de las siguientes características de peligrosidad: explosivo, cancerígeno, comburente, corrosivo, inflamable, infeccioso, irritante, tóxico, nocivo, mutagénico y/o ecotóxico. Si un residuo no presenta alguna de las anteriores características, no será considerado residuo peligroso y, por tanto, su gestión se realizará junto al resto de residuos urbanos.<br><br>Dentro de los residuos peligrosos que se producen en los laboratorios de docencia y de investigación de la Universidad destacan los residuos de origen químico, residuos biosanitarios del grupo III o biológicos, residuos radiactivos y residuos de animales de experimentación <strong>(SANDACH)</strong>.<br><br>La gestión de los residuos peligrosos de la Universidad se realiza a través de la Sección de Radioprotección y Residuos del ACTI con una empresa de gestión externa.</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>La gestión de los residuos sanitarios de la UPV/EHU se realiza a través de una empresa de gestión externa. El objeto del contrato con esta empresa abarca los residuos sanitarios de los Grupos ll y III, incluidos en el Decreto 21/2015, de 3 de marzo, sobre gestión de los residuos sanitarios en la Comunidad Autónoma de Euskadi. Los principales residuos sanitarios generados por la UPV/EHU son los siguientes:</p><ul><li>Grupo II - LER: 180103: Destacan los residuos cortantes y punzantes, fundamentalmente agujas, lancetas, pipetas, hojas de bisturí, portaobjetos, tubos capilares y otros tubos de vidrio, etc. y cualquier otro residuo que pueda crear una vía de entrada a los agentes patógenos. Así mismo, en actividades de análisis o experimentación microbiológica, se generan otros residuos sanitarios específicos, como placas Petri, hemocultivos, extractos líquidos, caldos, instrumental contaminado, filtros de campana de flujo laminar, vacunas con agentes vivos atenuados y sus viales, pequeños restos anatómicos que por su entidad no se incluyen en el ámbito de aplicación del Reglamento de sanidad mortuoria, etc.</li><li>Grupo III: Residuos de medicamentos Citotóxicos y Citostáticos-LER 180108: abarca a todos los restos de medicamentos anticancerosos no aptos para su uso terapéutico y a todo aquel material sanitario de un solo uso que haya estado en contacto con el fármaco, ya sea en su preparación (viales, filtros, bolsas, etc.) en la protección del manipulador (mascarilla, guantes, batas, etc.) o en la administración a los pacientes (agujas, jeringas, gasas, etc.). También se incluyen en este grupo los residuos de medicamentos desechados y/o caducados - LER 180109 no Citotóxicos o citostáticos.</li></ul>"
       }
     ]
   }

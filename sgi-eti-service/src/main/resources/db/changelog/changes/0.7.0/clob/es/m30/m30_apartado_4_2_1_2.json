@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>¿Las tareas con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas o parte de ellas se realizan en dependencias de otro centro o lugar?</p>"
+        "template": "<p>¿Las tareas con agentes biológicos u organismos modificados genéticamente se realizan en dependencias de otro centro o lugar?</p>"
       },
       {
         "key": "tareasAgentesBiologicos",
@@ -75,7 +75,7 @@
         }
       },
       {
-        "template": "<p>Se recuerda que el informe del CBE, sólo es válido para labores desarrolladas en Instalaciones de la Universidad, por personal de la Universidad o por cualquier otro que, en aplicación de la normativa vigente, desarrolle sus labores en la misma.NOTA: La instalación deberá cumplir con los requisitos de contención para AB, OMGs, SQP, SR o nanoparticulas y, en su caso, la autorización / comunicación correspondiente.</p>"
+        "template": "<p>Se recuerda que el informe del Comité, sólo es válido para labores desarrolladas en Instalaciones de la Universidad, por personal de la Universidad o por cualquier otro que, en aplicación de la normativa vigente, desarrolle sus labores en la misma. NOTA: La instalación deberá cumplir con los requisitos de contención para AB y/u OMGs y, en su caso, la autorización / comunicación correspondiente.</p>"
       }
     ]
   }

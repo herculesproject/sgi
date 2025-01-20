@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>EBBren txostena behar du.</p>"
+        "template": "<p>Esperimentazio prozesuak agente biologikoekin (AB) edo genetikoki eraldatutako organismoekin (GEO) lan egitea eskatzen badu 2 edo goragoko babes mailako laborategi batean, ebaluazioa eskatu behar zaio Agente Biologikoekin egindako Ikerketetarako Etika Batzordeari (ABIEB).</p>"
       },
       {
         "key": "tipoAgenteBiologico",

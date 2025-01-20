@@ -30,13 +30,6 @@
         }
       },
       {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "CBE report required",
-        "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'"
-      },
-      {
         "key": "tipoIsotopo",
         "type": "i18n-input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",

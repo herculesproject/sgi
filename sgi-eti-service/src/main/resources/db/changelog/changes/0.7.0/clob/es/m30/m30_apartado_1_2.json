@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "1.2 Justificación del uso de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias Radiactivas y/o nanopartículas"
+      "label": "1.2 Justificación del uso de agentes biológicos"
     },
     "fieldGroup": [
       {
-        "template": "<p>Exponer brevemente (máximo diez líneas) la necesidad de utilización de agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas.</p>"
+        "template": "<p>Exponer brevemente la necesidad de utilización de todos los agentes biológicos y/u organismos modificados genéticamente que se describen en la actividad de investigación.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Sustancias químicas peligrosas (SQP*),* según el Reglamento (CE) nº1272/2008 sobre clasificación, etiquetado y envasado de sustancias y mezclas (CLP).</p><p>Sustancias radiactivas e instalaciones radiactivas, según la normativa recogida en el R.D 1836/1999 y en el R.D. 783/2001. Equipos radiológicos, según el RD 1085/2009, de 3 de julio, por el que se aprueba el Reglamento sobre instalación y utilización de aparatos de Rayos X con fines de diagnóstico médico.</p>"
+        "template": "<p>Agentes biológicos: Los agentes biológicos se definen en el <a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144' target='_blank'>artículo 2 del Real Decreto 664/199, de 12 de mayo</a>, sobre la protección de los/las trabajadores/as contra los riesgos relacionados con la exposición a agentes biológicos durante el trabajo como 'los microorganismos, con inclusión de los genéticamente modificados, los cultivos celulares y los endoparásitos humanos, susceptibles de originar cualquier tipo de infección, alergia o toxicidad'.</p>"
       },
       {
         "key": "justificacion",

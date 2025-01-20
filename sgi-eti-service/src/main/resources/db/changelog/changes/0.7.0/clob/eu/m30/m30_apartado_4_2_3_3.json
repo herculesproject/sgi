@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p> Agente biologikoak, genetikoki eraldatutako organismoak, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak manipulatzeko segurtasun neurriak aurreikusten dira?</p>"
+        "template": "<p>Agente biologikoak edo/eta genetikoki eraldatutako organismoak manipulatzeko segurtasun neurriak aurreikusten dira?</p>"
       },
       {
         "key": "medidasSeguras",

@@ -91,19 +91,19 @@
                 "options": [
                   {
                     "value": "A",
-                    "label": "A"
+                    "label": "A: Posibles efectos alérgicos"
                   },
                   {
                     "value": "D",
-                    "label": "D"
+                    "label": "D: La lista de los trabajadores expuestos al agente debe conservarse durante más de diez años después de la última exposición"
                   },
                   {
                     "value": "T",
-                    "label": "T"
+                    "label": "T: Producción de toxinas"
                   },
                   {
                     "value": "V",
-                    "label": "V"
+                    "label": "V: Vacuna eficaz disponible"
                   }
                 ]
               }

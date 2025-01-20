@@ -5,11 +5,11 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "2.1 Agente biologikoekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin lotutako zereginak egingo dituzten langileak"
+      "label": "2.1 Agente biologikoekin edo/eta GEOekin zereginak egingo dituzten langileak"
     },
     "fieldGroup": [
       {
-        "template": "<p>Jarraian, ikertzaile taldeko kide guztiak ageri dira. Erantsi atal honetan agente biologikoekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin lotutako zereginak eginez proiektuan laguntzen duen beste edozein pertsona. <br><br>Zehaztu honako hauek pertsona bakoitzarentzat: <br><ul><li>Identifikazio datuak (izena, e-maila, Unibertsitatearekiko lotura). </li><li>Berariazko formakuntza arrisku biologikoetan. </li><li>Erakunde akreditatzailea (zehaztu unibertsitatea edo erakundea). </li><li>Urtea. </li></ul></p>"
+        "template": "<p>Ondoren, ikerketa taldeko kide guztiak ageri dira. Gehitu atal honetan agente biologikoekin edo/eta GEOekin lotutako lanak egiten proiektuan laguntzen duen beste edozein pertsona.</p>"
       },
       {
         "wrappers": [
@@ -116,6 +116,12 @@
             }
           ]
         }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Oharra: gogoratu ikertzaile taldearen akreditazio guztien kopiak aurkeztu behar dituzula '5.1 Akreditazioak' atalean, proiektuaren memoriarekin batera artxibatuta gera daitezen.</p>"
       }
     ]
   }

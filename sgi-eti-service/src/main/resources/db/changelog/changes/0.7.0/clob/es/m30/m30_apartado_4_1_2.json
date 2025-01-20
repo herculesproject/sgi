@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.2 Características del riesgo de los agentes biológicos y/o material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "4.1.2 Características del riesgo de los agentes biológicos y/o material biológico"
     },
     "fieldGroup": [
       {
-        "template": "<p>Los agentes biológicos, material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas que se utilizan ¿implican algún tipo de efecto potencialmente nocivo?</p>"
+        "template": "<p>Los agentes biológicos y/o material biológico que se utilizan ¿implican algún tipo de efecto potencialmente nocivo?</p>"
       },
       {
         "key": "agentesBiologicos",

@@ -1860,4 +1860,54 @@
     <sql>UPDATE ${schemaPrefix}apartado_definicion SET esquema = REPLACE(esquema,
       'formState.memoria.tipoMemoria.id !== 3', 'formState.memoria.tipo !== ''RATIFICACION''')</sql>
   </changeSet>
+
+  <!-- Eliminar apartados formly -->
+  <changeSet context="!test" author="master" id="00.07.00-formulario-delete-apartado">
+    <sql>DELETE FROM ${schemaPrefix}apartado WHERE id = (select id from ${schemaPrefix}apartado
+      where orden = 5 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and
+      bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and
+      formulario_id = (select id from ${schemaPrefix}formulario where
+      codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where
+      orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where
+      codigo='${formularioM30Code}')))</sql>
+    <sql>DELETE FROM ${schemaPrefix}apartado WHERE id = (select id from ${schemaPrefix}apartado
+      where orden = 6 and padre_id = (select id from ${schemaPrefix}apartado where orden = 5 and
+      bloque_id = (select id from ${schemaprefix}bloque where orden = 3 and padre_id is null and
+      formulario_id = (select id from ${schemaPrefix}formulario where
+      codigo='${formularioM30Code}'))) and bloque_id = (select id from ${schemaPrefix}bloque where
+      orden = 3 and formulario_id = (select id from ${schemaPrefix}formulario where
+      codigo='${formularioM30Code}')))</sql>
+    <sql>DELETE FROM ${schemaPrefix}apartado WHERE id = (select id from ${schemaPrefix}apartado
+      where orden = 1 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and
+      padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id
+      from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from
+      ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from
+      ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id
+      from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from
+      ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))</sql>
+    <sql>DELETE FROM ${schemaPrefix}apartado WHERE id = (select id from ${schemaPrefix}apartado
+      where orden = 2 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and
+      padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id
+      from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from
+      ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from
+      ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id
+      from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from
+      ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))</sql>
+    <sql>DELETE FROM ${schemaPrefix}apartado WHERE id = (select id from ${schemaPrefix}apartado
+      where orden = 3 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and
+      padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id
+      from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from
+      ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from
+      ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id
+      from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from
+      ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))</sql>
+    <sql>DELETE FROM ${schemaPrefix}apartado WHERE id = (select id from ${schemaPrefix}apartado
+      where orden = 4 and padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and
+      padre_id = (select id from ${schemaPrefix}apartado where orden = 1 and padre_id = (select id
+      from ${schemaPrefix}apartado where orden = 2 and bloque_id = (select id from
+      ${schemaprefix}bloque where orden = 4 and padre_id is null and formulario_id = (select id from
+      ${schemaPrefix}formulario where codigo='${formularioM30Code}'))) and bloque_id = (select id
+      from ${schemaPrefix}bloque where orden = 4 and formulario_id = (select id from
+      ${schemaPrefix}formulario where codigo='${formularioM30Code}')))))</sql>
+  </changeSet>
 </databaseChangeLog>

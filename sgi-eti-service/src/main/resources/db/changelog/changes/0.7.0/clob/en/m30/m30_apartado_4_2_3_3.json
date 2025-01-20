@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p> Are safe measures contemplated for the handling of biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles?</p>"
+        "template": "<p>Are safe measures contemplated for the handling of biological agents and/or genetically modified organisms?</p>"
       },
       {
         "key": "medidasSeguras",

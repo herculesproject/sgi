@@ -10,6 +10,12 @@
     "hideExpression": "!formState.mainModel.ap3_4 || !formState.mainModel.ap3_4.ap3_4_3 || !formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio || formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio === 'no'",
     "fieldGroup": [
       {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>1 motako GEOa: izaki bizidunengan gaixotasun bat edo ingurumenean ondorio kaltegarri bat eragiteko probabilitate hutsala duena.</p><p>2 motako GEOa: izaki bizidunei gaixotasun bat eragin diezaiekeena, kolektibitatera hedatzea oso zaila izanik eta, oro har, profilaxia edo tratamendu eraginkorra duena; edo ingurumenean ondorio kaltegarri txikia eragin dezakeena.</p><p>3 motako GEOa: izaki bizidunei gaixotasun larria eragin diezaiekeena, kolektibitatera hedatzeko arriskua duena eta, oro har, profilaxia edo tratamendu eraginkorra duena; edo ingurumenean ondorio kaltegarria eragin dezakeena.</p><p>4 motako GEOa: izaki bizidunei gaixotasun larria eragin diezaiekeena, kolektibitatera hedatzeko probabilitate handia duena eta, oro har, profilaxirik edo tratamendu eraginkorrik ez duena; edo ingurumenean ondorio kaltegarri larria eragin dezakeena.</p>"
+      },
+      {
         "type": "table-crud",
         "key": "microorganismosParasitosTable",
         "templateOptions": {

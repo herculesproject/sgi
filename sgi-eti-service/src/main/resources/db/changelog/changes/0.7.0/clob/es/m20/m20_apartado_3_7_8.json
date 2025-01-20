@@ -30,13 +30,6 @@
         }
       },
       {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "Se requiere informe del CBE",
-        "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'"
-      },
-      {
         "key": "tipoIsotopo",
         "type": "i18n-input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",

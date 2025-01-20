@@ -9,25 +9,25 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Jarraian, ikertzaile taldeko kide guztiak ageri dira. Gehitu atal honetan esperimentazio animaliekin lotutako zereginak eginez proiektuan laguntzen duen beste edozein pertsona. <br><br>Zehaztu hauek pertsona bakoitzeko:<br><ul><li>Identifikazio datuak (izena, e-maila, lotura eta maila akademikoa)</li><li>‘3.3 Diseinu metodologikoa’ atalean deskribatutakoaren arabera egingo dituen zeregin zehatzak (proiektuaren diseinua eta metodologia, prozedura/esku hartze bakoitza edo/eta eutanasia, gainbegiratzeko protokoloaren aplikazioa, etab.) </li></ul></p>"
+        "template": "<p>Jarraian, ikertzaile taldeko kide guztiak ageri dira. Gehitu atal honetan esperimentazio animaliekin lotutako zereginak eginez proiektuan laguntzen duen beste edozein pertsona. <br><br>Zehaztu hauek pertsona bakoitzeko:<br><ul><li>Identifikazio datuak (izena, e-maila, lotura eta maila akademikoa)</li><li>'3.3 Diseinu metodologikoa' atalean deskribatutakoaren arabera egingo dituen zeregin zehatzak (proiektuaren diseinua eta metodologia, prozedura/esku hartze bakoitza edo/eta eutanasia, gainbegiratzeko protokoloaren aplikazioa, etab.) </li></ul></p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Animaliekin egiten den esperimentazioari buruzko araudia etengabe berrikusten dute. Gaur egun, animaliekin esperimentatzeko beharrezko trebakuntza <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2015-3564' target='_blank'>ECC/566/2015</a> ministro aginduan zehaztuta dago. Jada ez dira aipatzen A, B, C eta D kategoriak, ‘funtzioak’ baizik. Labur esanda, hauxe da bien arteko baliokidetasuna: <br>Baimendutako trebakuntza ikastaroei buruzko informazioa <a href='https://secal.es' target='_blank'>SECALen</a> eta <a href='https://www.animalaria.org' target='_blank'>ANIMALARIAren</a> webguneetan kontsulta daiteke.</div><br><ul><li>A kategoria: a eta b funtzioa</li><li>B kategoria: b eta c funtzioa</li><li>C kategoria: c eta d funtzioa</li><li>D1 kategoria: e funtzioa</li><li>D2 kategoria: f eta b funtzioa</li></ul></p>"
+        "template": "<p>Animaliekin egiten den esperimentazioari buruzko araudia etengabe berrikusten dute. Gaur egun, animaliekin esperimentatzeko beharrezko trebakuntza <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2015-3564' target='_blank'>ECC/566/2015</a> ministro aginduan zehaztuta dago. Jada ez dira aipatzen A, B, C eta D kategoriak, 'funtzioak' baizik. Labur esanda, hauxe da bien arteko baliokidetasuna: <br>Baimendutako trebakuntza ikastaroei buruzko informazioa <a href='https://secal.es' target='_blank'>SECALen</a> eta <a href='https://www.animalaria.org' target='_blank'>ANIMALARIAren</a> webguneetan kontsulta daiteke.</div><br><ul><li>A kategoria: a eta b funtzioa</li><li>B kategoria: b eta c funtzioa</li><li>C kategoria: c eta d funtzioa</li><li>D1 kategoria: e funtzioa</li><li>D2 kategoria: f eta b funtzioa</li></ul></p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p> Oharra: gogoratu ikertzaile taldearen akreditazio guztien kopiak aurkeztu behar dituzula ‘5.1 Akreditazioak’ atalean, proiektuaren memoriarekin batera artxibatuta gera daitezen. </p>"
+        "template": "<p> Oharra: gogoratu ikertzaile taldearen akreditazio guztien kopiak aurkeztu behar dituzula '5.1 Akreditazioak' atalean, proiektuaren memoriarekin batera artxibatuta gera daitezen. </p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Oharra: eskaera bakoitzean D funtzioa duen pertsona bakar bat egongo da, eta ebaluazioaren eskatzailea izango da. </p><p>Taldeko gainerako kideek B edo C funtzioa izango dute, eutanasia (B) edo prozedurak/esku hartzeak (C) egiten dituzten kontuan hartuta, eta akreditazioa duten langileak adina egongo dira. Oraindik lan gainbegiratua (akreditazioa lortzeko eskatzen dute) egin ez dutenak ezin dira sartu taldekide gisa eskaera horretan, lan gainbegiratua amaitu eta akreditazioa lortzen duten arte. </p><p>B eta C kategorien akreditazio zaharrak dituztenek funtzio berrietarako akreditazioa eskatu behar diote erakunde akreditatzaile berberari. </p>"
+        "template": "<p>Oharra: eskaera bakoitzean 'd' funtzioa duen pertsona bakar bat egongo da, eta ebaluazioaren eskatzailea izango da. </p><p>Taldeko gainerako kideek 'b' edo 'c' funtzioa izango dute, eutanasia ('b') edo prozedurak/esku hartzeak ('c') egiten dituzten kontuan hartuta, eta akreditazioa duten langileak adina egongo dira. Oraindik lan gainbegiratua (akreditazioa lortzeko eskatzen dute) egin ez dutenak ezin dira sartu taldekide gisa eskaera horretan, lan gainbegiratua amaitu eta akreditazioa lortzen duten arte. </p><p>B eta C kategorien akreditazio zaharrak dituztenek funtzio berrietarako akreditazioa eskatu behar diote erakunde akreditatzaile berberari. </p>"
       },
       {
         "wrappers": [

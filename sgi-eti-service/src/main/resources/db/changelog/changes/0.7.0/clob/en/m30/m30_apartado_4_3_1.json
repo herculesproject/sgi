@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>What vaccination is offered to personnel who will handle biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles?</p>"
+        "template": "<p>What vaccination is offered to personnel who will handle biological agents and/or genetically modified organisms?</p>"
       },
       {
         "key": "vacunacionCheck",

@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.4 Harmful effects that may arise from the use of biological agents/material, hazardous chemicals, radioactive substances and/or nanoparticles"
+      "label": "4.1.4 Harmful effects that may arise from the use of biological agents and/or biological material"
     },
     "fieldGroup": [
       {
-        "template": "<p>Briefly describe the disease or harmful effects that may result from the use of biological agents and/or material, hazardous chemicals, radioactive substances and/or nanoparticles</p>"
+        "template": "<p>Briefly describe the disease or harmful effects that may result from the use of biological agents and/or biological material.</p>"
       },
       {
         "key": "efectosNocivos",

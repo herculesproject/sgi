@@ -9,13 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Next, specify in which location of the University the tasks with agents, biological material, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles will be carried out.</p>"
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "You do not need to fill out the asset code if you have indicated a laboratory of the services and sections of the Scientific and Technical Research Area (ACTI).</p>"
+        "template": "<p>Next, specify in which location of the University the tasks with agents, biological material and/or genetically modified organisms.</p>"
       },
       {
         "type": "table-crud",
@@ -33,7 +27,7 @@
               "key": "codPatrimonial",
               "type": "i18n-input",
               "templateOptions": {
-                "label": "Asset Code",
+                "label": "Location Code",
                 "order": 10
               }
             },

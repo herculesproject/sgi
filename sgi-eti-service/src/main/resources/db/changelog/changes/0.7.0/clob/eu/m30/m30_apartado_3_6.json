@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Jarraian, deskribatu zer maiztasunekin erabiltzen diren zehaztutako agente biologiko, genetikoki eraldatutako organismo, substantzia kimiko arriskutsu, substantzia erradioaktibo edo/eta nanopartikulak, hau da, lagina egunean edo astean zenbat aldiz erabiliko den manipulatzeko, kultibatzeko eta abarrerako, zenbat iraungo duen manipulazioak eta ea ekintza hori aldian behin errepikatuko den (adibidez, astean edo hilabetean zenbat aldiz, urtean zenbat hilabetez, etab.).</p>"
+        "template": "<p>Jarraian, deskribatu zer maiztasunekin erabiltzen diren zehaztutako agente biologiko, genetikoki eraldatutako organismo, hau da, lagina egunean edo astean zenbat aldiz erabiliko den manipulatzeko, kultibatzeko eta abarrerako, zenbat iraungo duen manipulazioak eta ea ekintza hori aldian behin errepikatuko den (adibidez, astean edo hilabetean zenbat aldiz, urtean zenbat hilabetez, etab.).</p>"
       },
       {
         "key": "frecuenciaPeriodicidad",

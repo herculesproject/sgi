@@ -5,11 +5,11 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "2.1 Personnel carrying out work with biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles"
+      "label": "2.1 Personnel carrying out work with biological agents and/or GMOS"
     },
     "fieldGroup": [
       {
-        "template": "<p>Below are all the members of the research team. Add in this section any other person who collaborates in the project carrying out tasks related to biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles.<br><br>Please specify for each person:<br><ul><li>Identification data (name, email, links to the University).</li><li>Specific training in biological risks.</li><li>Accrediting agency (specify university or agency).</li><li>Year.</li></ul></p>"
+        "template": "<p>Below are all the members of the research team. In this section you can add any other person collaborating in the project performing tasks related to biological agents and/or GMOs.</p>"
       },
       {
         "wrappers": [
@@ -117,6 +117,12 @@
             }
           ]
         }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Note: Please remember that you have to provide a copy of all the research team's accreditations '5.1 Accreditations' so that they are filed alongside the project report.</p>"
       }
     ]
   }

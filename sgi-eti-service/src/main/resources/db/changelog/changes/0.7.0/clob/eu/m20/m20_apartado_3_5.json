@@ -35,16 +35,16 @@
           "type": "array",
           "options": [
             {
-              "value": "animalarioCampusEspinardo",
-              "label": "Espinardo Campuseko animaliategia"
+              "value": "animalarioCampusAlava",
+              "label": "Arabako Campuseko animaliategia"
             },
             {
-              "value": "animalarioCampusCienciasSalud",
-              "label": "Osasun Zientzien Campuseko animaliategia (CEIB)"
+              "value": "animalarioCampusBizkaia",
+              "label": "Bizkaiko Campuseko animaliategia"
             },
             {
-              "value": "otros",
-              "label": "Beste batzuk (zehaztu)"
+              "value": "animalarioCampusGipuzkoa",
+              "label": "Gipuzkoako Campuseko animaliategia"
             }
           ]
         }

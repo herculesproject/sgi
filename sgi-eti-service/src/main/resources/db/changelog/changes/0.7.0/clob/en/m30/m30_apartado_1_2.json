@@ -5,17 +5,17 @@
       "expansion-panel"
     ],
     "templateOptions": {
-      "label": "1.2 Justification of the use of biological agents, genetically modified organisms, hazardous chemicals, Radioactive substances and/or nanoparticles"
+      "label": "1.2 Justification for the use of biological agents"
     },
     "fieldGroup": [
       {
-        "template": "<p>Briefly explain (maximum ten lines) the need to use biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles.</p>"
+        "template": "<p>Briefly outline the need for the use of all biological agents and GMOs described in the research activity.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Hazardous chemicals (hazardous chemicals*),* according to Regulation (EC) No. 1272/2008 on classification, labelling and packaging of substances and mixtures (CLP).</p><p>Radioactive substances and radioactive facilities, according to the regulations contained in Spanish Royal Decrees 1836/1999 and 783/2001. Radiological equipment, according to Spanish Royal Decree 1085/2009, of July 3 2009, which approves the Regulation on the installation and use of X-ray equipment for medical diagnostic purposes.</p>"
+        "template": "<p>Biological agents: Biological agents are defined in <a href='https://www.boe.es/buscar/act.php?id=BOE-A-1997-11144' target='_blank'>article 2 of Spanish Royal Decree 664/1997, of 12 May 1997</a>, on the protection of workers against risks related to exposure to biological agents during work such as 'microorganisms, including genetically modified organisms, cell cultures and human endoparasites, capable of causing any type of infection, allergy or toxicity'.</p>"
       },
       {
         "key": "justificacion",

@@ -30,13 +30,6 @@
         }
       },
       {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "EBBren txostena behar da.",
-        "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'"
-      },
-      {
         "key": "tipoIsotopo",
         "type": "i18n-input",
         "hideExpression": "!model.administracionIsotoposRadio || model.administracionIsotoposRadio === 'no'",

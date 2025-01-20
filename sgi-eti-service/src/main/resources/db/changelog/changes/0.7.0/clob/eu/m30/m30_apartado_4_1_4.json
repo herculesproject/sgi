@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "4.1.4 Agenteak, material biologikoa, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak erabiltzeak eragin ditzakeen efektu kaltegarriak "
+      "label": "4.1.4 Agenteak edo/eta material biologikoa erabiltzeak eragin ditzakeen efektu kaltegarriak "
     },
     "fieldGroup": [
       {
-        "template": "<p>Deskribatu labur-labur zer gaixotasun edo efektu kaltegarri eragin ditzakeen agente edo/eta material biologikoa, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak erabiltzeak.</p>"
+        "template": "<p>Deskribatu labur-labur zer gaixotasun edo efektu kaltegarri eragin ditzakeen agente edo/eta material biologikoa erabiltzeak.</p>"
       },
       {
         "key": "efectosNocivos",

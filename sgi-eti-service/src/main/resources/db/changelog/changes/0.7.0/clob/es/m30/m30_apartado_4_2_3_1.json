@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Además de para las personas que realizan las tareas con agentes biológicos, organismos modificados genéticamente, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas, ¿hay riesgo de exposición para otras personas?</p>"
+        "template": "<p>Además de para las personas que realizan las tareas con agentes biológicos y/u organismos modificados genéticamente ¿hay riesgo de exposición para otras personas?</p>"
       },
       {
         "key": "riesgoExposicion",

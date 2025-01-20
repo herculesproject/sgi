@@ -10,6 +10,12 @@
     "hideExpression": "!formState.mainModel.ap3_4 || !formState.mainModel.ap3_4.ap3_4_3 || !formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio || formState.mainModel.ap3_4.ap3_4_3.tareasUsoConfinadoRadio === 'no'",
     "fieldGroup": [
       {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>OMG Tipo 1: Aquel cuya probabilidad de causar una enfermedad en los seres vivos o un efecto adverso en el medio ambientes es insignificante.</p><p>OMG Tipo 2: Aquel que puede causar una enfermedad a los seres vivos, siendo poco probable que se propague a la colectividad y existiendo generalmente profilaxis o tratamiento eficaz; o puede causar un efecto adverso bajo en el medio ambiente.</p><p>OMG Tipo 3: Aquel que puede causar una enfermedad grave a los seres vivos, con riesgo de que se propague a la colectividad y existiendo generalmente una profilaxis o tratamiento eficaz; o puede causar un efecto adverso moderado en el medio ambiente.</p><p>OMT Tipo 4: Aquel que puede causar una enfermedad grave a los seres vivos con muchas probabilidades de que se propague a la colectividad y sin que exista generalmente una profilaxis o un tratamiento eficaz; o puede causar un efecto adverso alto en el medio ambiente.</p>"
+      },
+      {
         "type": "table-crud",
         "key": "microorganismosParasitosTable",
         "templateOptions": {

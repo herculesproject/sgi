@@ -9,13 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>A continuación especificar en qué local de la Universidad se realizarán las tareas con agentes, material biológico, organismos modificados genéticamente, sustancias químicas peligrosas , sustancias radiactivas y/o nanopartículas</p>"
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "No necesita rellenar el código patrimonial en caso de haber indicado un laboratorio de los servicios y secciones del Área Científica y Técnica de Investigación (ACTI).</p>"
+        "template": "<p>A continuación especificar en qué local de la Universidad se realizarán las tareas con agentes, material biológico y/u organismos modificados genéticamente</p>"
       },
       {
         "type": "table-crud",
@@ -33,7 +27,7 @@
               "key": "codPatrimonial",
               "type": "i18n-input",
               "templateOptions": {
-                "label": "Código Patrimonial",
+                "label": "Código del local",
                 "order": 10
               }
             },

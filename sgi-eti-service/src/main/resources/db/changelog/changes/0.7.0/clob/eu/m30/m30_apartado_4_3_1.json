@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Zer txerto eskaintzen zaizkie agente biologikoekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin lan egingo duten langileei?</p>"
+        "template": "<p>Zer txerto eskaintzen zaizkie agente biologikoekin edo/eta genetikoki eraldatutako organismoekin lan egingo duten langileei?</p>"
       },
       {
         "key": "vacunacionCheck",

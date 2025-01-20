@@ -35,16 +35,16 @@
           "type": "array",
           "options": [
             {
-              "value": "animalarioCampusEspinardo",
-              "label": "Animalario Campus Espinardo"
+              "value": "animalarioCampusAlava",
+              "label": "Animalario Campus de Álava"
             },
             {
-              "value": "animalarioCampusCienciasSalud",
-              "label": "Animalario Campus Ciencias de la Salud (CEIB)"
+              "value": "animalarioCampusBizkaia",
+              "label": "Animalario Campus de Bizkaia"
             },
             {
-              "value": "otros",
-              "label": "Otros (especificar)"
+              "value": "animalarioCampusGipuzkoa",
+              "label": "Animalario Campus de Gipuzkoa"
             }
           ]
         }

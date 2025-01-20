@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Agente biologikoekin, genetikoki eraldatutako organismoekin, substantzia kimiko arriskutsuekin, substantzia erradioaktiboekin edo/eta nanopartikulekin lotutako zereginak egiten dituztenez gain, beste norbaitek ere badu esposizio arriskua?</p>"
+        "template": "<p>Agente biologikoekin edo/eta genetikoki eraldatutako organismoekin lotutako zereginak egiten dituztenez gain, beste norbaitek ere badu esposizio arriskua?</p>"
       },
       {
         "key": "riesgoExposicion",

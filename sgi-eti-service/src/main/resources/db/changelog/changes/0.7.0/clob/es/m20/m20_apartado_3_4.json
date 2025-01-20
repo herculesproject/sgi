@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Indique el tipo de proyecto (según el <a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2013-1337' target='_blank'>artículo 31 del RD 53/2013</a>).</p>"
+        "template": "<p>Tipos de proyectos.</p><p>1.- Proyectos de tipo I: Aquellos proyectos en los que se den simultáneamente las tres circunstancias siguientes:<ul><li>a) Implican exclusivamente procedimientos clasificados como &lt;&lt;sin recuperación&gt;&gt;, &lt;&lt;leves&gt;&gt; o &lt;&lt;moderados&gt;&gt;.</li><li>b) No utilizan primates.</li><li>c) Se realizan para cumplir requisitos legales o reglamentarios, o con fines de producción o diagnóstico por métodos establecidos.</li></ul></p><p>Los proyectos tipo I podrán ser tramitados por un procedimiento simplificado y no ser sometidos a evaluación retrospectiva.</p></br><p>2.- Proyectos de tipo II: Aquellos proyectos en los que se den simultáneamente las circunstancias siguientes:<ul><li>a) Implican exclusivamente procedimientos clasificados como &lt;&lt;sin recuperación&gt;&gt;, &lt;&lt;leves&gt;&gt; o &lt;&lt;moderados&gt;&gt;.</li><li>b) No utilizan primates.</li></ul></p><p>Los proyectos tipo II quedarán sujetos al procedimiento de autorización y podrán no ser sometidos a evaluación retrospectiva.</p></br><p>3.- Proyectos de tipo III: Los proyectos diferentes de los tipos I o II. Sin perjuicio de las autorizaciones adicionales a las que puedan estar condicionados determinados proyectos, todos los proyectos tipo III quedarán sujetos al procedimiento de autorización y serán sometidos posteriormente a una evaluación retrospectiva.</p>"
       },
       {
         "key": "tipoProyecto",

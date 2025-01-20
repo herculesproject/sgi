@@ -91,19 +91,19 @@
                 "options": [
                   {
                     "value": "A",
-                    "label": "A"
+                    "label": "A: Possible allergic effects"
                   },
                   {
                     "value": "D",
-                    "label": "D"
+                    "label": "D: The list of workers exposed to the agent should be kept for more than ten years after the last exposure"
                   },
                   {
                     "value": "T",
-                    "label": "T"
+                    "label": "T: Toxin production"
                   },
                   {
                     "value": "V",
-                    "label": "V"
+                    "label": "V: Effective vaccine available"
                   }
                 ]
               }

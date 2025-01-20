@@ -9,7 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>In addition to people who perform tasks with biological agents, genetically modified organisms, hazardous chemicals, radioactive substances and/or nanoparticles, is there a risk of exposure for other people?</p>"
+        "template": "<p>In addition to people who perform tasks with biological agents and/or genetically modified organisms, is there a risk of exposure for other people?</p>"
       },
       {
         "key": "riesgoExposicion",

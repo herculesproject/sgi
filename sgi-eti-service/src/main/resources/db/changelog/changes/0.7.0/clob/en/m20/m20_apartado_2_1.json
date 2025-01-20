@@ -27,7 +27,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Note:  In each request there should only be one person with Function D, who will also be the person requesting the evaluation.</p><p>The rest of the team members will have function B or C depending on whether they perform euthanasia (B) or procedures/interventions (C), and there will be as many as there are accredited personnel. Those who have not yet completed the TBS work under supervision (required for accreditation) cannot be included as team members on that application until they have completed their TBS and obtained training.</p><p>Those who hold the old category B and C accreditations should request accreditation for the new functions from the same accreditation agency.</p>"
+        "template": "<p>Note:  In each request there should only be one person with Function 'd', who will also be the person requesting the evaluation.</p><p>The rest of the team members will have function 'b' or 'c' depending on whether they perform euthanasia ('b') or procedures/interventions ('c'), and there will be as many as there are accredited personnel. Those who have not yet completed the TBS work under supervision (required for accreditation) cannot be included as team members on that application until they have completed their TBS and obtained training.</p><p>Those who hold the old category B and C accreditations should request accreditation for the new functions from the same accreditation agency.</p>"
       },
       {
         "wrappers": [
