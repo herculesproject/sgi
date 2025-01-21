@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -430,14 +431,15 @@ public class ConvocatoriaClonerService {
         .convocatoriaConceptoGastoId(clonedConvocatoriaConceptoGasto.getId())
         .codigoEconomicoRef(convConceptoGastoCodEc.getCodigoEconomicoRef())
         .fechaInicio(convConceptoGastoCodEc.getFechaInicio()).fechaFin(convConceptoGastoCodEc.getFechaFin())
-        .observaciones(convConceptoGastoCodEc.getObservaciones()).build();
+        .observaciones(new HashSet<>(convConceptoGastoCodEc.getObservaciones())).build();
   }
 
   private ConvocatoriaConceptoGasto createConvocatoriaConceptoGasto(Long convocatoriaClonedId,
       ConvocatoriaConceptoGasto convConceptoGasto) {
     return ConvocatoriaConceptoGasto.builder().convocatoriaId(convocatoriaClonedId)
         .mesInicial(convConceptoGasto.getMesInicial()).mesFinal(convConceptoGasto.getMesFinal())
-        .importeMaximo(convConceptoGasto.getImporteMaximo()).observaciones(convConceptoGasto.getObservaciones())
+        .importeMaximo(convConceptoGasto.getImporteMaximo())
+        .observaciones(new HashSet<>(convConceptoGasto.getObservaciones()))
         .permitido(convConceptoGasto.getPermitido()).conceptoGasto(convConceptoGasto.getConceptoGasto()).build();
   }
 

@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoC
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -380,9 +381,10 @@ public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoSe
               conceptoGastoConvocatoriaEncontrado.getFechaInicio())
           || !Objects.equals(conceptoGastoProyecto.getFechaFin(), conceptoGastoConvocatoriaEncontrado.getFechaFin())
           || (StringUtils.isNotBlank(conceptoGastoProyecto.getObservaciones()) != StringUtils
-              .isNotBlank(conceptoGastoConvocatoriaEncontrado.getObservaciones())
+              .isNotBlank(I18nHelper.getValueForCurrentLanguage(conceptoGastoConvocatoriaEncontrado.getObservaciones()))
               && !conceptoGastoProyecto.getObservaciones()
-                  .equals(conceptoGastoConvocatoriaEncontrado.getObservaciones()));
+                  .equals(
+                      I18nHelper.getValueForCurrentLanguage(conceptoGastoConvocatoriaEncontrado.getObservaciones())));
     } else {
       return true;
     }

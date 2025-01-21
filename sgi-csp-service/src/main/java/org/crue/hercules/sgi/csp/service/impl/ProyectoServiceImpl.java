@@ -140,6 +140,7 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.PeriodDateUtil;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -1700,7 +1701,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       conceptoGastoProyecto.setConceptoGasto(conceptoGastoConvocatoria.getConceptoGasto());
       conceptoGastoProyecto.setImporteMaximo(conceptoGastoConvocatoria.getImporteMaximo());
       conceptoGastoProyecto.setPermitido(conceptoGastoConvocatoria.getPermitido());
-      conceptoGastoProyecto.setObservaciones(conceptoGastoConvocatoria.getObservaciones());
+      conceptoGastoProyecto
+          .setObservaciones(I18nHelper.getValueForCurrentLanguage(conceptoGastoConvocatoria.getObservaciones()));
       conceptoGastoProyecto.setConvocatoriaConceptoGastoId(conceptoGastoConvocatoria.getId());
 
       proyectoConceptoGastos.stream()
@@ -1788,7 +1790,8 @@ public class ProyectoServiceImpl implements ProyectoService {
           ProyectoConceptoGastoCodigoEc codigoEconomicoProyecto = new ProyectoConceptoGastoCodigoEc();
           codigoEconomicoProyecto.setProyectoConceptoGastoId(proyectoConceptoGasto.getId());
           codigoEconomicoProyecto.setCodigoEconomicoRef(codigoEconomicoConvocatoria.getCodigoEconomicoRef());
-          codigoEconomicoProyecto.setObservaciones(codigoEconomicoConvocatoria.getObservaciones());
+          codigoEconomicoProyecto
+              .setObservaciones(I18nHelper.getValueForCurrentLanguage(codigoEconomicoConvocatoria.getObservaciones()));
           codigoEconomicoProyecto.setConvocatoriaConceptoGastoCodigoEcId(codigoEconomicoConvocatoria.getId());
 
           proyectoCodigosEconomicos.stream()

@@ -60,21 +60,6 @@ public class ConvocatoriaConceptoGastoCodigoEcServiceImpl implements Convocatori
   }
 
   /**
-   * Obtiene {@link ConvocatoriaConceptoGastoCodigoEc} por su id.
-   *
-   * @param id el id de la entidad {@link ConvocatoriaConceptoGastoCodigoEc}.
-   * @return la entidad {@link ConvocatoriaConceptoGastoCodigoEc}.
-   */
-  @Override
-  public ConvocatoriaConceptoGastoCodigoEc findById(Long id) {
-    log.debug("findById(Long id)  - start");
-    final ConvocatoriaConceptoGastoCodigoEc returnValue = repository.findById(id)
-        .orElseThrow(() -> new ConvocatoriaConceptoGastoCodigoEcNotFoundException(id));
-    log.debug("findById(Long id)  - end");
-    return returnValue;
-  }
-
-  /**
    * Obtiene las {@link ConvocatoriaConceptoGastoCodigoEc} permitidos para una
    * {@link Convocatoria}.
    *

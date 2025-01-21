@@ -1100,4 +1100,69 @@
 
     <dropColumn columnName="observaciones" tableName="convocatoria_fase" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-44">
+    <createTable tableName="convocatoria_concepto_gasto_observaciones">
+      <column name="convocatoria_concepto_gasto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_concepto_gasto_observaciones"
+      columnNames="convocatoria_concepto_gasto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_concepto_gasto_id"
+      baseTableName="convocatoria_concepto_gasto_observaciones"
+      constraintName="FK_CONVOCATORIACONCEPTOGASTOOBSERVACIONES_CONVOCATORIACONCEPTOGASTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_concepto_gasto" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}convocatoria_concepto_gasto_observaciones(convocatoria_concepto_gasto_id,
+      value_, lang) SELECT id, observaciones, '${defaultLang}' FROM
+      ${schemaPrefix}convocatoria_concepto_gasto WHERE observaciones IS NOT NULL AND
+      NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="convocatoria_concepto_gasto" />
+  </changeSet>
+
+  <changeSet author="master" id="0.10.0-45">
+    <createTable tableName="convocatoria_concepto_gasto_codigo_ec_observaciones">
+      <column name="convocatoria_concepto_gasto_codigo_ec_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_concepto_gasto_codigo_ec_observaciones"
+      columnNames="convocatoria_concepto_gasto_codigo_ec_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_concepto_gasto_codigo_ec_id"
+      baseTableName="convocatoria_concepto_gasto_codigo_ec_observaciones"
+      constraintName="FK_CONVOCATORIACONCEPTOGASTOCODGIOECOBSERVACIONES_CONVOCATORIACONCEPTOGASTOCODIGOEC"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_concepto_gasto_codigo_ec"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}convocatoria_concepto_gasto_codigo_ec_observaciones(convocatoria_concepto_gasto_codigo_ec_id,
+      value_, lang) SELECT id, observaciones, '${defaultLang}' FROM
+      ${schemaPrefix}convocatoria_concepto_gasto_codigo_ec WHERE observaciones IS NOT NULL AND
+      NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="convocatoria_concepto_gasto_codigo_ec" />
+  </changeSet>
 </databaseChangeLog>

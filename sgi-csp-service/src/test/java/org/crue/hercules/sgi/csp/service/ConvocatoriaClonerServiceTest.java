@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEcObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
@@ -447,12 +448,16 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
   private ConvocatoriaConceptoGastoCodigoEc buildMockConvocatoriaConceptoGastoCodigoEc(
       ConvocatoriaConceptoGasto clonedConvocatoriaConceptoGasto) {
+    Set<ConvocatoriaConceptoGastoCodigoEcObservaciones> observacionesConvocatoriaConceptoGastoCodigoEc = new HashSet<>();
+    observacionesConvocatoriaConceptoGastoCodigoEc
+        .add(new ConvocatoriaConceptoGastoCodigoEcObservaciones(Language.ES, "Testing"));
+
     return ConvocatoriaConceptoGastoCodigoEc.builder()
         .convocatoriaConceptoGastoId(clonedConvocatoriaConceptoGasto.getId())
         .codigoEconomicoRef("AA.AAAA.BBBB.AAAA")
         .fechaInicio(Instant.now())
         .fechaFin(Instant.now().plusSeconds(3600000))
-        .observaciones("Testing")
+        .observaciones(observacionesConvocatoriaConceptoGastoCodigoEc)
         .id(0L)
         .build();
   }
