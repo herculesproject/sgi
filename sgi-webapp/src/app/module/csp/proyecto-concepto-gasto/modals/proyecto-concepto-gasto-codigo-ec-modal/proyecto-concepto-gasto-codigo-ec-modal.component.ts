@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { SelectValue } from '@core/component/select-common/select-common.component';
@@ -9,6 +9,7 @@ import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatori
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { IProyectoConceptoGastoCodigoEc } from '@core/models/csp/proyecto-concepto-gasto-codigo-ec';
 import { ICodigoEconomicoGasto } from '@core/models/sge/codigo-economico-gasto';
+import { LanguageService } from '@core/services/language.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { SelectValidator } from '@core/validators/select-validator';
@@ -59,7 +60,8 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
     matDialogRef: MatDialogRef<ProyectoConceptoGastoCodigoEcModalComponent>,
     private codigoEconomicoGastoService: CodigoEconomicoGastoService,
     @Inject(MAT_DIALOG_DATA) public data: ProyectoConceptoGastoCodigoEcDataModal,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(matDialogRef, !!data.proyectoConceptoGastoCodigoEc?.codigoEconomico);
   }
@@ -165,7 +167,7 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
   }
 
   displayerCodigoEconomico(codigoEconomico: ICodigoEconomicoGasto) {
-    return `${codigoEconomico?.id} - ${codigoEconomico?.nombre}` ?? '';
+    return `${codigoEconomico?.id} - ${codigoEconomico?.nombre}`;
   }
 
   sorterCodigoEconomico(o1: SelectValue<ICodigoEconomicoGasto>, o2: SelectValue<ICodigoEconomicoGasto>): number {
@@ -241,7 +243,7 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
     this.formGroup.controls.codigoEconomico.setValue(this.formGroup.controls.codigoEconomicoConvocatoria.value);
     this.formGroup.controls.fechaInicio.setValue(this.formGroup.controls.fechaInicioConvocatoria.value);
     this.formGroup.controls.fechaFin.setValue(this.formGroup.controls.fechaFinConvocatoria.value);
-    this.formGroup.controls.observaciones.setValue(this.formGroup.controls.observacionesConvocatoria.value);
+    this.formGroup.controls.observaciones.setValue(this.languageService.getFieldValue(this.formGroup.controls.observacionesConvocatoria.value));
   }
 
   private notOverlapsSameConceptoGastoAndCodigoEconomico(data: ProyectoConceptoGastoCodigoEcDataModal): ValidatorFn {

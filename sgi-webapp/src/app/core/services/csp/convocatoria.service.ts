@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
-import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/convocatoria-concepto-gasto-codigo-ec.converter';
+import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec-response.converter';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
 import { CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-gestora.converter';
 import { CONVOCATORIA_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/convocatoria-periodo-justificacion.converter';
@@ -10,7 +10,7 @@ import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.conver
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
-import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/convocatoria-concepto-gasto-codigo-ec-backend';
+import { IConvocatoriaConceptoGastoCodigoEcResponse } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec-response';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IConvocatoriaEntidadGestoraBackend } from '@core/models/csp/backend/convocatoria-entidad-gestora-backend';
 import { IConvocatoriaPeriodoJustificacionBackend } from '@core/models/csp/backend/convocatoria-periodo-justificacion-backend';
@@ -315,10 +315,10 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    * @param options opciones de búsqueda.
    */
   findAllConvocatoriaConceptoGastoCodigoEcsPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
-    return this.find<IConvocatoriaConceptoGastoCodigoEcBackend, IConvocatoriaConceptoGastoCodigoEc>(
+    return this.find<IConvocatoriaConceptoGastoCodigoEcResponse, IConvocatoriaConceptoGastoCodigoEc>(
       `${this.endpointUrl}/${id}/convocatoriagastocodigoec/permitidos`,
       undefined,
-      CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER
+      CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_RESPONSE_CONVERTER
     );
   }
 
@@ -328,10 +328,10 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    * @param options opciones de búsqueda.
    */
   findAllConvocatoriaConceptoGastoCodigoEcsNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
-    return this.find<IConvocatoriaConceptoGastoCodigoEcBackend, IConvocatoriaConceptoGastoCodigoEc>(
+    return this.find<IConvocatoriaConceptoGastoCodigoEcResponse, IConvocatoriaConceptoGastoCodigoEc>(
       `${this.endpointUrl}/${id}/convocatoriagastocodigoec/nopermitidos`,
       undefined,
-      CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_CONVERTER);
+      CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_RESPONSE_CONVERTER);
   }
 
   /**

@@ -8,6 +8,7 @@ import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
+import { LanguageService } from '@core/services/language.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
@@ -50,6 +51,7 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
     private codigoEconomicoGastoService: CodigoEconomicoGastoService,
+    private languageService: LanguageService,
     public readonly: boolean
   ) {
     super(key);
@@ -291,7 +293,7 @@ export class ProyectoConceptoGastoCodigoEcFragment extends Fragment {
       codigoEconomico.codigoEconomico = codigoEconomico.codigoEconomico ?? codigoEconomico.convocatoriaCodigoEconomico.codigoEconomico;
       codigoEconomico.fechaInicio = codigoEconomico.convocatoriaCodigoEconomico.fechaInicio;
       codigoEconomico.fechaFin = codigoEconomico.convocatoriaCodigoEconomico.fechaFin;
-      codigoEconomico.observaciones = codigoEconomico.convocatoriaCodigoEconomico.observaciones;
+      codigoEconomico.observaciones = this.languageService.getFieldValue(codigoEconomico.convocatoriaCodigoEconomico?.observaciones);
       codigoEconomico.help = {
         class: HelpIconClass.DANGER,
         tooltip: PROYECTO_CONCEPTO_GASTO_CODIGO_EC_NO_PROYECTO_KEY

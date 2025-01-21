@@ -7,8 +7,9 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
           <mat-label>{{'csp.convocatoria-elegibilidad.concepto-gasto.concepto-gasto' | translate}}</mat-label>
-          <input matInput formControlName="conceptoGasto"
+          <sgi-i18n-input formControlName="conceptoGasto"
             placeholder="{{'csp.convocatoria-elegibilidad.concepto-gasto.concepto-gasto' | translate}}">
+          </sgi-i18n-input>
         </mat-form-field>
       </div>
 
@@ -75,7 +76,7 @@
             placeholder="{{'error.csp.convocatoria-elegibilidad-concepto-gasto.observaciones' | translate}}"
             maxlength="250">
           </sgi-i18n-textarea>
-          <mat-hint>{{obs.value.length}} / 250</mat-hint>
+          <mat-hint>{{obs.editingValue.length}} / 250</mat-hint>
         </mat-form-field>
       </div>
     </div>

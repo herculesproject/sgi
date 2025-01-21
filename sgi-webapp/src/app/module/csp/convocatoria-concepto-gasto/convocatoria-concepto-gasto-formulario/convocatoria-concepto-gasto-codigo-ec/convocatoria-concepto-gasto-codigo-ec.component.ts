@@ -12,6 +12,7 @@ import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatori
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -57,7 +58,8 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     public readonly actionService: ConvocatoriaConceptoGastoActionService,
     private matDialog: MatDialog,
     private readonly dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.CODIGOS_ECONOMICOS, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaConceptoGastoCodigoEcFragment;
@@ -88,6 +90,8 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>, property: string) => {
         switch (property) {
+          case 'observaciones':
+            return this.languageService.getFieldValue(wrapper.value.observaciones);
           default:
             return wrapper.value[property];
         }

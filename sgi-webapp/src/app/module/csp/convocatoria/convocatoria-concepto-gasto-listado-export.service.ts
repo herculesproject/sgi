@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
-import { IConceptoGastoCodigoEc } from '@core/models/csp/concepto-gasto-codigo-ec';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
@@ -42,7 +41,7 @@ const CONCEPTO_GASTO_NO_PERMITIDO_FECHA_FIN_FIELD = 'fechaFinConceptoGastoNoPerm
 
 
 export interface IConvocatoriaConceptoGastoListadoExport extends IConvocatoriaConceptoGasto {
-  codigosEconomicos?: IConceptoGastoCodigoEc[];
+  codigosEconomicos?: IConvocatoriaConceptoGastoCodigoEc[];
 }
 
 @Injectable()

@@ -27,13 +27,13 @@ export class ProyectoConceptoGastoCodigoEcService extends
   /**
    * Actualiza el listado de IProyectoConceptoGastoCodigoEc asociados a un IProyectoConceptoGasto
    *
-   * @param convocatoriaConceptoGastoId Id del IConvocatoriaConceptoGasto
+   * @param proyectoConceptoGastoId Id del IProyectoConceptoGasto
    * @param entities Listado de IConvocatoriaConceptoGastoCodigoEc
    */
-  updateList(convocatoriaConceptoGastoId: number, entities: IProyectoConceptoGastoCodigoEc[]):
+  updateList(proyectoConceptoGastoId: number, entities: IProyectoConceptoGastoCodigoEc[]):
     Observable<IProyectoConceptoGastoCodigoEc[]> {
     return this.http.patch<IProyectoConceptoGastoCodigoEcBackend[]>(
-      `${this.endpointUrl}/${convocatoriaConceptoGastoId}`,
+      `${this.endpointUrl}/${proyectoConceptoGastoId}`,
       this.converter.fromTargetArray(entities)
     ).pipe(
       map((response => this.converter.toTargetArray(response)))

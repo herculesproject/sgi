@@ -1,4 +1,6 @@
-export interface IConvocatoriaConceptoGastoCodigoEcBackend {
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
+
+export interface IConvocatoriaConceptoGastoCodigoEcResponse {
   /** id */
   id: number;
   /** Id de ConvocatoriaConceptoGasto */
@@ -10,5 +12,5 @@ export interface IConvocatoriaConceptoGastoCodigoEcBackend {
   /** Fecha fin */
   fechaFin: string;
   /** Observaciones */
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
 }

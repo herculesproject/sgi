@@ -69,7 +69,9 @@ export class ConvocatoriaConceptoGastoCodigoEcPublicComponent extends FragmentCo
       (wrapper: StatusWrapper<ConvocatoriaConceptoGastoCodigoEc>, property: string) => {
         switch (property) {
           case 'conceptoGasto.nombre':
-            return wrapper.value.convocatoriaConceptoGasto?.conceptoGasto?.nombre ? this.languageService.getFieldValue(wrapper.value.convocatoriaConceptoGasto.conceptoGasto.nombre) : '';
+            return this.languageService.getFieldValue(wrapper.value.convocatoriaConceptoGasto.conceptoGasto?.nombre);
+          case 'observaciones':
+            return this.languageService.getFieldValue(wrapper.value.observaciones);
           default:
             return wrapper.value[property];
         }
