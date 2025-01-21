@@ -194,9 +194,9 @@
             <mat-label>
               {{'csp.proyecto-concepto-gasto.observaciones' | translate}}
             </mat-label>
-            <textarea #obs matInput formControlName="observacionesConvocatoria" type="text"
+            <sgi-i18n-textarea #obs formControlName="observacionesConvocatoria"
               placeholder="{{'csp.proyecto-concepto-gasto.observaciones' | translate}}" maxlength="250">
-            </textarea>
+            </sgi-i18n-textarea>
             <mat-hint>{{obs.value.length}} / 250</mat-hint>
           </mat-form-field>
         </div>

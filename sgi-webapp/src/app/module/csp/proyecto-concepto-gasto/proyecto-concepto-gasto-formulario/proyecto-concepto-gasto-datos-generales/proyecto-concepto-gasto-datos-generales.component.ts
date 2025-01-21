@@ -5,6 +5,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ProyectoConceptoGastoActionService } from '../../proyecto-concepto-gasto.action.service';
@@ -40,7 +41,8 @@ export class ProyectoConceptoGastoDatosGeneralesComponent
 
   constructor(
     public readonly actionService: ProyectoConceptoGastoActionService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);
     this.formPart = this.fragment as ProyectoConceptoGastoDatosGeneralesFragment;
@@ -70,7 +72,7 @@ export class ProyectoConceptoGastoDatosGeneralesComponent
 
     this.formPart.getFormGroup().controls.fechaInicio.setValue(this.formPart.getFormGroup().controls.fechaInicioConvocatoria.value);
     this.formPart.getFormGroup().controls.fechaFin.setValue(this.formPart.getFormGroup().controls.fechaFinConvocatoria.value);
-    this.formPart.getFormGroup().controls.observaciones.setValue(this.formPart.getFormGroup().controls.observacionesConvocatoria.value);
+    this.formPart.getFormGroup().controls.observaciones.setValue(this.languageService.getFieldValue(this.formPart.getFormGroup().controls.observacionesConvocatoria.value));
 
     this.formPart.getFormGroup().controls.costesIndirectos.setValue(
       this.formPart.getFormGroup().controls.costesIndirectosConvocatoria.value);

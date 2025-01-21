@@ -1,5 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
@@ -7,13 +8,13 @@ import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, Observable, Subject, from, merge, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { compareConceptoGasto, getFechaFinConceptoGasto, getFechaInicioConceptoGasto } from '../../../proyecto-concepto-gasto/proyecto-concepto-gasto.utils';
-import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 const PROYECTO_CONCEPTO_GASTO_NO_COINCIDE_KEY = marker('info.csp.proyecto-concepto-gasto.no-coincide-convocatoria');
 const PROYECTO_CONCEPTO_GASTO_CODIGOS_ECONONOMICOS_NO_COINCIDE_KEY = marker('info.csp.proyecto-concepto-gasto.codigo-economicos-no-coinciden-convocatoria');
@@ -56,8 +57,9 @@ export class ProyectoConceptosGastoFragment extends Fragment {
     private proyectoService: ProyectoService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private convocatoriaService: ConvocatoriaService,
+    private languageService: LanguageService,
     public readonly: boolean,
-    public isVisor: boolean,
+    public isVisor: boolean
   ) {
     super(key);
     this.setComplete(true);
@@ -359,7 +361,7 @@ export class ProyectoConceptosGastoFragment extends Fragment {
       conceptoGasto.conceptoGasto = conceptoGasto.convocatoriaConceptoGasto.conceptoGasto?.nombre;
       conceptoGasto.descripcion = conceptoGasto.convocatoriaConceptoGasto.conceptoGasto?.descripcion;
       conceptoGasto.importeMaximo = conceptoGasto.convocatoriaConceptoGasto.importeMaximo;
-      conceptoGasto.observaciones = conceptoGasto.convocatoriaConceptoGasto.observaciones;
+      conceptoGasto.observaciones = this.languageService.getFieldValue(conceptoGasto.convocatoriaConceptoGasto.observaciones);
 
       if (conceptoGasto.convocatoriaConceptoGasto.mesInicial) {
         conceptoGasto.fechaInicio = getFechaInicioConceptoGasto(this.proyecto.fechaInicio,

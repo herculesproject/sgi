@@ -5,25 +5,43 @@ import { IConvocatoriaConceptoGastoCodigoEcBackend } from '@core/models/csp/back
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
-import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto.converter';
+import { CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response.converter';
 
+// tslint:disable-next-line: variable-name
+const _ConvocatoriaConceptoGastoServiceMixinBase:
+  CreateCtor<IConvocatoriaConceptoGasto, IConvocatoriaConceptoGasto, IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGastoResponse> &
+  UpdateCtor<number, IConvocatoriaConceptoGasto, IConvocatoriaConceptoGasto, IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGastoResponse> &
+  FindAllCtor<IConvocatoriaConceptoGasto, IConvocatoriaConceptoGastoResponse> &
+  FindByIdCtor<number, IConvocatoriaConceptoGasto, IConvocatoriaConceptoGastoResponse> &
+  typeof SgiRestBaseService = mixinFindAll(
+    mixinFindById(
+      mixinUpdate(
+        mixinCreate(
+          SgiRestBaseService,
+          CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER,
+          CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
+        ),
+        CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER,
+        CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
+      ),
+      CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER),
+    CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
+  );
+  
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaConceptoGastoService
-  extends SgiMutableRestService<number, IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto> {
+export class ConvocatoriaConceptoGastoService extends _ConvocatoriaConceptoGastoServiceMixinBase {
   private static readonly MAPPING = '/convocatoriaconceptogastos';
 
   constructor(protected http: HttpClient) {
     super(
-      ConvocatoriaConceptoGastoService.name,
       `${environment.serviceServers.csp}${ConvocatoriaConceptoGastoService.MAPPING}`,
-      http,
-      CONVOCATORIA_CONCEPTO_GASTO_CONVERTER
+      http
     );
   }
 
@@ -62,4 +80,9 @@ export class ConvocatoriaConceptoGastoService
       map(response => response.status === 200)
     );
   }
+
+  deleteById(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.endpointUrl}/${id}`);
+  }
+
 }

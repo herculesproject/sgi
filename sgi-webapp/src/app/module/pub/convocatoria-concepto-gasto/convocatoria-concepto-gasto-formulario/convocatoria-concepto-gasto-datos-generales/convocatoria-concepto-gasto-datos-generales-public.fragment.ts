@@ -50,7 +50,7 @@ export class ConvocatoriaConceptoGastoDatosGeneralesPublicFragment extends FormF
           ])
         ]
       ),
-      observaciones: new FormControl('')
+      observaciones: new FormControl([])
     });
 
     form.disable();

@@ -41,7 +41,7 @@ import { FindByIdCtor, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
-import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto.converter';
+import { CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response.converter';
 import { IConvocatoriaFaseResponse } from './convocatoria-fase/convocatoria-fase-response';
 import { CONVOCATORIA_FASE_RESPONSE_CONVERTER } from './convocatoria-fase/convocatoria-fase-response.converter';
 import { IConvocatoriaHitoResponse } from './convocatoria-hito/convocatoria-hito-response';
@@ -188,7 +188,7 @@ export class ConvocatoriaPublicService extends _ConvocatoriaMixinBase {
     return this.find<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto>(
       `${this.endpointUrl}/${id}/convocatoriagastos/nopermitidos`,
       undefined,
-      CONVOCATORIA_CONCEPTO_GASTO_CONVERTER
+      CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
     );
   }
 
@@ -196,7 +196,7 @@ export class ConvocatoriaPublicService extends _ConvocatoriaMixinBase {
     return this.find<IConvocatoriaConceptoGastoResponse, IConvocatoriaConceptoGasto>(
       `${this.endpointUrl}/${id}/convocatoriagastos/permitidos`,
       undefined,
-      CONVOCATORIA_CONCEPTO_GASTO_CONVERTER
+      CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
     );
   }
 

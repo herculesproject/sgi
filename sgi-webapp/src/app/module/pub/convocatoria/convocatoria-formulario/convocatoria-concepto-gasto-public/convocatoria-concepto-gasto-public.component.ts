@@ -108,9 +108,11 @@ export class ConvocatoriaConceptoGastoPublicComponent extends FragmentComponent 
       (wrapper: StatusWrapper<IConvocatoriaConceptoGasto>, property: string) => {
         switch (property) {
           case 'conceptoGasto.nombre':
-            return wrapper.value.conceptoGasto?.nombre ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.nombre) : '';
+            return this.languageService.getFieldValue(wrapper.value.conceptoGasto?.nombre);
           case 'conceptoGasto.descripcion':
-            return wrapper.value.conceptoGasto?.descripcion ? this.languageService.getFieldValue(wrapper.value.conceptoGasto.descripcion) : '';
+            return this.languageService.getFieldValue(wrapper.value.conceptoGasto?.descripcion);
+          case 'observaciones':
+            return this.languageService.getFieldValue(wrapper.value.observaciones);
           default:
             return wrapper.value[property];
         }

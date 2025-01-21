@@ -8,14 +8,14 @@ import { environment } from '@env';
 import { FindByIdCtor, mixinFindById, SgiRestBaseService, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
-import { CONVOCATORIA_CONCEPTO_GASTO_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto.converter';
+import { CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _ConvocatoriaConceptoGastoMixinBase:
   FindByIdCtor<number, IConvocatoriaConceptoGasto, IConvocatoriaConceptoGastoResponse> &
   typeof SgiRestBaseService = mixinFindById(
     SgiRestBaseService,
-    CONVOCATORIA_CONCEPTO_GASTO_CONVERTER
+    CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER
   );
 
 @Injectable({
