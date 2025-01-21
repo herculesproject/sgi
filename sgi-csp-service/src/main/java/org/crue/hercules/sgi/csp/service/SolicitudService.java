@@ -727,6 +727,8 @@ public class SolicitudService {
             // afirmativa a una sola de las preguntas del formulario
             if (checklistOutput != null && checklistOutput.getRespuesta() != null
                 && checklistOutput.getRespuesta().contains("true")) {
+              boolean existeFinanciacion = isEntidadFinanciadora(solicitud);
+
               // Se creará un registro en la tabla "PeticionEvaluacion" del módulo de ética
               PeticionEvaluacion peticionEvaluacionRequest = PeticionEvaluacion.builder()
                   .solicitudConvocatoriaRef(solicitud.getId().toString()).checklistId(checklistOutput.getId())
@@ -734,19 +736,20 @@ public class SolicitudService {
                   // Si hay entidades financiadoras (registros en la tabla "Convocatoria
                   // Entidad Financiadora" de la convocatoria asociada a la solicitud) valor "Sí",
                   // en otro caso valor "No"
-                  .existeFinanciacion(isEntidadFinanciadora(solicitud))
+                  .existeFinanciacion(existeFinanciacion)
                   // Se concatenará el campo "nombre" de la entidad de los registros que
                   // existan en la tabla "Convocatoria Entidad Financiadora" de la convocatoria
                   // asociada a la solicitud (en caso de que la solicitud tenga asociada una
                   // convocatoria, sino se quedará vacío el campo). Los nombre de las entidades
                   // financiadoras se separarán por ","
-                  .fuenteFinanciacion(getFuentesFinanciacion(solicitud))
-                  .estadoFinanciacion(EstadoFinanciacion.SOLICITADO)
+                  .fuenteFinanciacion(existeFinanciacion ? getFuentesFinanciacion(solicitud) : null)
+                  .estadoFinanciacion(existeFinanciacion ? EstadoFinanciacion.SOLICITADO : null)
                   // La suma de los importes de los conceptos de gastos de todas las
-                  // entidades financiadoras de la convocatoria (suma del campo "importeConcedido"
+                  // entidades financiadoras de la convocatoria (suma del campo
+                  // "importeSolicitado"
                   // de los registros de la tabla "SolicitudProyectoPresupuesto" cuyo campo
                   // finanicacionAjena = false)
-                  .importeFinanciacion(getImporteAutoFinanciacion(solicitud))
+                  .importeFinanciacion(existeFinanciacion ? getImporteAutoFinanciacion(solicitud) : null)
                   .resumen(getResumen(solicitudProyecto)).objetivos(getObjetivos(solicitudProyecto))
                   .build();
 
@@ -1464,10 +1467,14 @@ public class SolicitudService {
     List<ConvocatoriaEntidadFinanciadora> entidadesFinanciadoras = convocatoriaEntidadFinanciadoraRepository
         .findByConvocatoriaId(convocatoriaId);
     List<I18nFieldValueDto> value = new ArrayList<>();
-    if (!entidadesFinanciadoras.isEmpty()){
-      value.add(new I18nFieldValueDto(Language.ES,  entidadesFinanciadoras.stream()
-        .map(entidadFinanciadora -> entidadFinanciadora.getFuenteFinanciacion().getNombre())
-        .collect(Collectors.joining(", "))));
+    if (!entidadesFinanciadoras.isEmpty()) {
+      String nombresFuentesFinanciacion = entidadesFinanciadoras.stream()
+          .filter(entidadFinanciadora -> entidadFinanciadora.getFuenteFinanciacion() != null)
+          .map(entidadFinanciadora -> entidadFinanciadora.getFuenteFinanciacion().getNombre())
+          .collect(Collectors.joining(", "));
+      if (StringUtils.isNotBlank(nombresFuentesFinanciacion)) {
+        value.add(new I18nFieldValueDto(Language.ES, nombresFuentesFinanciacion));
+      }
     }
     return value;
   }
@@ -1493,8 +1500,10 @@ public class SolicitudService {
     // entidades financiadoras de la convocatoria (suma del campo "importeConcedido"
     // de los registros de la tabla "SolicitudProyectoPresupuesto" cuyo campo
     // finanicacionAjena = false)
-    return solicitudProyectoPresupuestoRepository
+    BigDecimal importe = solicitudProyectoPresupuestoRepository
         .sumImporteSolicitadoBySolicitudIdAndFinanciacionAjenaIsFalse(solicitud.getId());
+
+    return importe.compareTo(BigDecimal.ZERO) > 0 ? importe : null;
   }
 
   private void enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) {
