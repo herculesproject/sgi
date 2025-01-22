@@ -29,6 +29,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
@@ -356,6 +357,10 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
   private ConvocatoriaPeriodoJustificacion buildMockConvocatoriaPeriodoJustificacion(Long convocatoriaClonedId) {
     //@formatter:off
+    Set<ConvocatoriaPeriodoJustificacionObservaciones> obsConvocatoriaPeriodoJustificacion = new HashSet<>();
+    obsConvocatoriaPeriodoJustificacion
+        .add(new ConvocatoriaPeriodoJustificacionObservaciones(Language.ES, "testing"));
+
     return ConvocatoriaPeriodoJustificacion.builder()
         .convocatoriaId(convocatoriaClonedId)
         .fechaFinPresentacion(Instant.now().plusSeconds(35000000))
@@ -363,7 +368,7 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
         .fechaInicioPresentacion(Instant.now())
         .mesFinal(3)
         .mesInicial(1)
-        .observaciones("testing")
+        .observaciones(obsConvocatoriaPeriodoJustificacion)
         .tipo(TipoJustificacion.PERIODICO).build();
     //@formatter:off
   }

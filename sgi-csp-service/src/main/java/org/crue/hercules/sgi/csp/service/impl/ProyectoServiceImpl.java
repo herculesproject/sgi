@@ -2411,7 +2411,7 @@ public class ProyectoServiceImpl implements ProyectoService {
           .fechaInicioPresentacion(periodo.getFechaInicioPresentacion())
           .fechaFinPresentacion(periodo.getFechaFinPresentacion())
           .tipoJustificacion(periodo.getTipo())
-          .observaciones(periodo.getObservaciones())
+          .observaciones(I18nHelper.getValueForCurrentLanguage(periodo.getObservaciones()))
           .convocatoriaPeriodoJustificacionId(periodo.getId())
           .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
               periodo.getMesInicial(), sgiConfigProperties.getTimeZone()))

@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHitoAviso;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -1538,7 +1539,9 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = convocatoriasPeriodoJustificacionesResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(convocatoriaPeriodoJustificacion.getObservaciones()).isEqualTo("observaciones-" + i);
+      Assertions
+          .assertThat(I18nHelper.getValueForLanguage(convocatoriaPeriodoJustificacion.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + i);
     }
   }
 
@@ -2269,6 +2272,10 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
    * @return el objeto ConvocatoriaPeriodoJustificacion
    */
   private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id) {
+    Set<ConvocatoriaPeriodoJustificacionObservaciones> obsConvocatoriaPeriodoJustificacion = new HashSet<>();
+    obsConvocatoriaPeriodoJustificacion
+        .add(new ConvocatoriaPeriodoJustificacionObservaciones(Language.ES, "observaciones-" + id));
+
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = new ConvocatoriaPeriodoJustificacion();
     convocatoriaPeriodoJustificacion.setId(id);
     convocatoriaPeriodoJustificacion.setConvocatoriaId(id == null ? 1 : id);
@@ -2277,7 +2284,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaPeriodoJustificacion.setMesFinal(2);
     convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
     convocatoriaPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
-    convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
+    convocatoriaPeriodoJustificacion.setObservaciones(obsConvocatoriaPeriodoJustificacion);
     convocatoriaPeriodoJustificacion.setTipo(TipoJustificacion.PERIODICO);
 
     return convocatoriaPeriodoJustificacion;

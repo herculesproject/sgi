@@ -55,22 +55,39 @@ VALUES(2, 'unidad-002', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:
 
 
 -- CONVOCATORIA PERIODO JUSTIFICACION
-INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
-  VALUES (1, 1, 1, 1, 2, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-001', 'PERIODICO');
-INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
-  VALUES (2, 1, 2, 10, 21, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-002', 'PERIODICO');
-INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
-  VALUES (3, 1, 3, 23, 24, null, null, 'observaciones-003', 'PERIODICO');
-INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
-  VALUES (4, 1, 4, 25, 28, null, null, 'observaciones-4', 'FINAL');
-INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
-  VALUES (5, 2, 1, 3, 10, null, null,'observaciones-5', 'PERIODICO');
-INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
-  VALUES (6, 2, 2, 15, 18, '2020-09-10T00:00:00Z', '2020-10-01T23:59:59Z', 'observaciones-6', 'PERIODICO');
-INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
-  VALUES (7, 2, 3, 20, 24, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-7', 'PERIODICO');
-INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones, tipo) 
-  VALUES (8, 2, 4, 25, 28, null, null, 'observaciones-8', 'FINAL');
+INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo) 
+  VALUES (1, 1, 1, 1, 2, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'PERIODICO');
+INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo) 
+  VALUES (2, 1, 2, 10, 21, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'PERIODICO');
+INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo) 
+  VALUES (3, 1, 3, 23, 24, null, null, 'PERIODICO');
+INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo) 
+  VALUES (4, 1, 4, 25, 28, null, null, 'FINAL');
+INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo) 
+  VALUES (5, 2, 1, 3, 10, null, null, 'PERIODICO');
+INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo) 
+  VALUES (6, 2, 2, 15, 18, '2020-09-10T00:00:00Z', '2020-10-01T23:59:59Z', 'PERIODICO');
+INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo) 
+  VALUES (7, 2, 3, 20, 24, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'PERIODICO');
+INSERT INTO test.convocatoria_periodo_justificacion (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo) 
+  VALUES (8, 2, 4, 25, 28, null, null, 'FINAL');
+
+INSERT INTO test.convocatoria_periodo_justificacion_observaciones (convocatoria_periodo_justificacion_id, lang, value_) 
+  VALUES (1, 'es', 'observaciones-001');
+INSERT INTO test.convocatoria_periodo_justificacion_observaciones (convocatoria_periodo_justificacion_id, lang, value_) 
+  VALUES (2, 'es', 'observaciones-002');
+INSERT INTO test.convocatoria_periodo_justificacion_observaciones (convocatoria_periodo_justificacion_id, lang, value_) 
+  VALUES (3, 'es', 'observaciones-003');
+INSERT INTO test.convocatoria_periodo_justificacion_observaciones (convocatoria_periodo_justificacion_id, lang, value_) 
+  VALUES (4, 'es', 'observaciones-4');
+INSERT INTO test.convocatoria_periodo_justificacion_observaciones (convocatoria_periodo_justificacion_id, lang, value_) 
+  VALUES (5, 'es', 'observaciones-5');
+INSERT INTO test.convocatoria_periodo_justificacion_observaciones (convocatoria_periodo_justificacion_id, lang, value_) 
+  VALUES (6, 'es', 'observaciones-6');
+INSERT INTO test.convocatoria_periodo_justificacion_observaciones (convocatoria_periodo_justificacion_id, lang, value_) 
+  VALUES (7, 'es', 'observaciones-7');
+INSERT INTO test.convocatoria_periodo_justificacion_observaciones (convocatoria_periodo_justificacion_id, lang, value_) 
+  VALUES (8, 'es', 'observaciones-8');
 
 -- TIPO FASE
 INSERT INTO test.tipo_fase (id, activo) VALUES (1, true);
