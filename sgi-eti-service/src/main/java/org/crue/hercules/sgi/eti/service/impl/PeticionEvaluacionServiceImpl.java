@@ -94,8 +94,6 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     peticionEvaluacion.setCodigo(codigoPeticionEvaluacion.toString());
 
     if (peticionEvaluacion.getExisteFinanciacion().booleanValue()) {
-      AssertHelper.i18nFieldNotNull(peticionEvaluacion.getFuenteFinanciacion(), PeticionEvaluacion.class,
-          MSG_FIELD_FUENTE_FINANCIACION);
       AssertHelper.entityNotNull(peticionEvaluacion.getEstadoFinanciacion(), PeticionEvaluacion.class,
           EstadoFinanciacion.class);
     }
