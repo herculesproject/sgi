@@ -73,7 +73,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
           case 'tipoHito':
             return this.languageService.getFieldValue(wrapper.value.tipoHito.nombre);
           case 'comentario':
-            return wrapper.value.comentario;
+            return this.languageService.getFieldValue(wrapper.value.comentario);
           default:
             return wrapper[property];
         }
