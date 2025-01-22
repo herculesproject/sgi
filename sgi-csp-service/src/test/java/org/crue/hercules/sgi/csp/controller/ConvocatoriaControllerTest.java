@@ -35,6 +35,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHitoAviso;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaHitoComentario;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
@@ -1962,7 +1963,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ConvocatoriaHito convocatoriaHito = convocatoriaHitoResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(convocatoriaHito.getComentario()).isEqualTo("comentario-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaHito.getComentario(), Language.ES))
+          .isEqualTo("comentario-" + i);
     }
   }
 
@@ -2176,11 +2178,14 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     tipoHito.setId(id == null ? 1 : id);
     tipoHito.setActivo(true);
 
+    Set<ConvocatoriaHitoComentario> comentarioConvocatoriaHito = new HashSet<>();
+    comentarioConvocatoriaHito.add(new ConvocatoriaHitoComentario(Language.ES, "comentario-" + id));
+
     ConvocatoriaHito convocatoriaHito = new ConvocatoriaHito();
     convocatoriaHito.setId(id);
     convocatoriaHito.setConvocatoriaId(id == null ? 1 : id);
     convocatoriaHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
-    convocatoriaHito.setComentario("comentario-" + id);
+    convocatoriaHito.setComentario(comentarioConvocatoriaHito);
     convocatoriaHito.setConvocatoriaHitoAviso(new ConvocatoriaHitoAviso(
         id == null ? 1 : id, id == null ? "1" : id.toString(), id == null ? "1" : id.toString(), false, false));
     convocatoriaHito.setTipoHito(tipoHito);

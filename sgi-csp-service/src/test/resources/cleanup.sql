@@ -110,6 +110,7 @@ DELETE FROM test.convocatoria_enlace_descripcion;
 DELETE FROM test.convocatoria_enlace;
 DELETE FROM test.convocatoria_fase_observaciones;
 DELETE FROM test.convocatoria_fase;
+DELETE FROM test.convocatoria_hito_comentario;
 DELETE FROM test.convocatoria_hito;
 DELETE FROM test.convocatoria_periodo_seguimiento_cientifico_observaciones;
 DELETE FROM test.convocatoria_periodo_seguimiento_cientifico;

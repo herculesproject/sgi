@@ -63,12 +63,20 @@ INSERT INTO test.tipo_hito_nombre (tipo_hito_id, lang, value_) VALUES (1, 'es', 
 INSERT INTO test.tipo_hito_descripcion (tipo_hito_id, lang, value_) VALUES (1, 'es', 'descripcion-1');
 
 --CONVOCATORIA HITO
-INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario ) values(1, 1, 1,'2021-10-22T00:00:00Z', 'comentario-001');
-INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario ) values(2, 1, 1,'2021-10-23T00:00:00Z', 'comentario-002');
-INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario ) values(3, 1, 1,'2021-10-24T00:00:00Z', 'comentario-003');
-INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario ) values(4, 1, 1,'2021-10-25T00:00:00Z', 'comentario-4');
-INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario ) values(5, 2, 1,'2021-10-26T00:00:00Z', 'comentario-005');
-INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario ) values(6, 1, 1,'2021-10-27T00:00:00Z', 'comentario-06');
+INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha) values(1, 1, 1,'2021-10-22T00:00:00Z');
+INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha) values(2, 1, 1,'2021-10-23T00:00:00Z');
+INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha) values(3, 1, 1,'2021-10-24T00:00:00Z');
+INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha) values(4, 1, 1,'2021-10-25T00:00:00Z');
+INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha) values(5, 2, 1,'2021-10-26T00:00:00Z');
+INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha) values(6, 1, 1,'2021-10-27T00:00:00Z');
+
+--CONVOCATORIA HITO COMENTARIO
+INSERT INTO test.convocatoria_hito_comentario (convocatoria_hito_id, lang, value_) values(1, 'es', 'comentario-001');
+INSERT INTO test.convocatoria_hito_comentario (convocatoria_hito_id, lang, value_) values(2, 'es', 'comentario-002');
+INSERT INTO test.convocatoria_hito_comentario (convocatoria_hito_id, lang, value_) values(3, 'es', 'comentario-003');
+INSERT INTO test.convocatoria_hito_comentario (convocatoria_hito_id, lang, value_) values(4, 'es', 'comentario-4');
+INSERT INTO test.convocatoria_hito_comentario (convocatoria_hito_id, lang, value_) values(5, 'es', 'comentario-005');
+INSERT INTO test.convocatoria_hito_comentario (convocatoria_hito_id, lang, value_) values(6, 'es', 'comentario-06');
 
 -- TIPO FASE
 INSERT INTO test.tipo_fase (id, activo) VALUES (1, true);

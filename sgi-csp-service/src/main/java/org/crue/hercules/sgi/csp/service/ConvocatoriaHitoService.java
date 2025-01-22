@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.converter.ComConverter;
+import org.crue.hercules.sgi.csp.converter.ConvocatoriaHitoComentarioConverter;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaHitoAvisoInput;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaHitoInput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
@@ -79,6 +80,7 @@ public class ConvocatoriaHitoService {
   private final SgiApiTpService sgiApiTaskService;
   private final SgiApiSgpService personaService;
   private final ConvocatoriaAuthorityHelper authorityHelper;
+  private final ConvocatoriaHitoComentarioConverter convocatoriaHitoComentarioConverter;
 
   public ConvocatoriaHitoService(ConvocatoriaHitoRepository convocatoriaHitoRepository,
       ConvocatoriaRepository convocatoriaRepository, ModeloTipoHitoRepository modeloTipoHitoRepository,
@@ -88,7 +90,8 @@ public class ConvocatoriaHitoService {
       SgiApiComService emailService,
       SgiApiTpService sgiApiTaskService,
       SgiApiSgpService personaService,
-      ConvocatoriaAuthorityHelper authorityHelper) {
+      ConvocatoriaAuthorityHelper authorityHelper,
+      ConvocatoriaHitoComentarioConverter convocatoriaHitoComentarioConverter) {
     this.repository = convocatoriaHitoRepository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.modeloTipoHitoRepository = modeloTipoHitoRepository;
@@ -99,6 +102,7 @@ public class ConvocatoriaHitoService {
     this.sgiApiTaskService = sgiApiTaskService;
     this.personaService = personaService;
     this.authorityHelper = authorityHelper;
+    this.convocatoriaHitoComentarioConverter = convocatoriaHitoComentarioConverter;
   }
 
   /**
@@ -163,7 +167,8 @@ public class ConvocatoriaHitoService {
     convocatoriaHito.setConvocatoriaId(convocatoriaHitoInput.getConvocatoriaId());
     convocatoriaHito.setTipoHito(modeloTipoHito.get().getTipoHito());
     convocatoriaHito.setFecha(convocatoriaHitoInput.getFecha());
-    convocatoriaHito.setComentario(convocatoriaHitoInput.getComentario());
+    convocatoriaHito
+        .setComentario(this.convocatoriaHitoComentarioConverter.convertAll(convocatoriaHitoInput.getComentario()));
 
     convocatoriaHito = repository.save(convocatoriaHito);
 
@@ -241,7 +246,8 @@ public class ConvocatoriaHitoService {
                   .build()));
 
       convocatoriaHito.setFecha(convocatoriaHitoActualizar.getFecha());
-      convocatoriaHito.setComentario(convocatoriaHitoActualizar.getComentario());
+      convocatoriaHito.setComentario(
+          this.convocatoriaHitoComentarioConverter.convertAll(convocatoriaHitoActualizar.getComentario()));
       convocatoriaHito.setTipoHito(modeloTipoHito.get().getTipoHito());
 
       // Creamos un nuevo aviso

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.converter.ConvocatoriaHitoComentarioConverter;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaHitoInput;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
@@ -15,6 +16,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaHitoComentario;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -39,6 +41,8 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,6 +93,9 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   @Mock
   SgiApiSgpService personaService;
 
+  @Mock
+  private ConvocatoriaHitoComentarioConverter convocatoriaHitoComentarioConverter;
+
   private ConvocatoriaAuthorityHelper authorityHelper;
   private ConvocatoriaHitoService service;
 
@@ -96,8 +103,8 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   void setUp() throws Exception {
     this.authorityHelper = new ConvocatoriaAuthorityHelper(convocatoriaRepository, configuracionSolicitudRepository);
     service = new ConvocatoriaHitoService(repository, convocatoriaRepository, modeloTipoHitoRepository,
-        convocatoriaHitoAvisoRepository, solicitudRepository,
-        proyectoEquipoRepository, emailService, sgiApiTaskService, personaService, authorityHelper);
+        convocatoriaHitoAvisoRepository, solicitudRepository, proyectoEquipoRepository, emailService, sgiApiTaskService,
+        personaService, authorityHelper, convocatoriaHitoComentarioConverter);
   }
 
   @Test
@@ -109,6 +116,11 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
     ConvocatoriaHitoInput convocatoriaHitoInput = generarMockConvocatoriaHitoInput(convocatoriaId);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+
+    BDDMockito
+        .given(convocatoriaHitoComentarioConverter.convertAll(ArgumentMatchers.<I18nFieldValueDto>anyList()))
+        .willReturn(Set.of(new ConvocatoriaHitoComentario(Language.ES, "comentario")));
+
     BDDMockito
         .given(modeloTipoHitoRepository.findByModeloEjecucionIdAndTipoHitoId(ArgumentMatchers.anyLong(),
             ArgumentMatchers.anyLong()))
@@ -130,8 +142,9 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
         .isEqualTo(convocatoriaHito.getConvocatoriaId());
     Assertions.assertThat(convocatoriaHitoCreado.getFecha()).as("getFechaInicio()")
         .isEqualTo(convocatoriaHito.getFecha());
-    Assertions.assertThat(convocatoriaHitoCreado.getComentario()).as("getComentario()")
-        .isEqualTo(convocatoriaHito.getComentario());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaHitoCreado.getComentario(), Language.ES))
+        .as("getComentario()")
+        .isEqualTo(I18nHelper.getValueForLanguage(convocatoriaHito.getComentario(), Language.ES));
     Assertions.assertThat(convocatoriaHitoCreado.getTipoHito().getId()).as("getTipoHito().getId()")
         .isEqualTo(convocatoriaHito.getTipoHito().getId());
     Assertions.assertThat(convocatoriaHitoCreado.getConvocatoriaHitoAviso()).as("getConvocatoriaHitoAviso()")
@@ -288,7 +301,9 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
             Optional.of(generarMockModeloTipoHito(1L, convocatoria, convocatoriaHitoActualizado, Boolean.TRUE)));
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaHito>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
-
+    BDDMockito
+        .given(convocatoriaHitoComentarioConverter.convertAll(ArgumentMatchers.<I18nFieldValueDto>anyList()))
+        .willReturn(Set.of(new ConvocatoriaHitoComentario(Language.ES, "comentario")));
     // when: Actualizamos el ConvocatoriaHito
     ConvocatoriaHito updated = service.update(1L, convocatoriaHitoActualizadoInput);
 
@@ -297,8 +312,8 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(convocatoriaHito.getId());
     Assertions.assertThat(updated.getConvocatoriaId()).as("getConvocatoriaId()")
         .isEqualTo(convocatoriaHito.getConvocatoriaId());
-    Assertions.assertThat(updated.getComentario()).as("getComentario()")
-        .isEqualTo(convocatoriaHitoActualizado.getComentario());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getComentario(), Language.ES)).as("getComentario()")
+        .isEqualTo(I18nHelper.getValueForLanguage(convocatoriaHitoActualizado.getComentario(), Language.ES));
     Assertions.assertThat(updated.getTipoHito().getId()).as("getTipoHito().getId()")
         .isEqualTo(convocatoriaHitoActualizado.getTipoHito().getId());
     Assertions.assertThat(updated.getFecha()).as("getFecha()").isEqualTo(convocatoriaHitoActualizado.getFecha());
@@ -691,11 +706,14 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   private ConvocatoriaHito generarMockConvocatoriaHito(Long id, Long convocatoriaId) {
 
     // @formatter:off
+    Set<ConvocatoriaHitoComentario> comentarioConvocatoriaHito = new HashSet<>();
+    comentarioConvocatoriaHito.add(new ConvocatoriaHitoComentario(Language.ES, "comentario"));
+
     return ConvocatoriaHito.builder()
         .id(id)
         .convocatoriaId(convocatoriaId)
         .fecha(Instant.parse("2020-10-19T00:00:00Z"))
-        .comentario("comentario")
+        .comentario(comentarioConvocatoriaHito)
         .tipoHito(generarMockTipoHito(1L, Boolean.TRUE))
         .convocatoriaHitoAviso(null)
         .build();
@@ -705,10 +723,13 @@ class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   private ConvocatoriaHitoInput generarMockConvocatoriaHitoInput(Long convocatoriaId) {
 
     // @formatter:off
+    List<I18nFieldValueDto> comentarioConvocatoriaHito = new ArrayList();
+    comentarioConvocatoriaHito.add(new I18nFieldValueDto(Language.ES, "comentario"));
+
     return ConvocatoriaHitoInput.builder()
         .convocatoriaId(convocatoriaId)
         .fecha(Instant.parse("2020-10-19T00:00:00Z"))
-        .comentario("comentario")
+        .comentario(comentarioConvocatoriaHito)
         .tipoHitoId(1L)
         .aviso(null)
         .build();

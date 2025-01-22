@@ -1231,4 +1231,33 @@
 
     <dropColumn columnName="observaciones" tableName="convocatoria_periodo_seguimiento_cientifico" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-48">
+    <createTable tableName="convocatoria_hito_comentario">
+      <column name="convocatoria_hito_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_hito_comentario"
+      columnNames="convocatoria_hito_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_hito_id"
+      baseTableName="convocatoria_hito_comentario"
+      constraintName="FK_CONVOCATORIAHITOCOMENTARIO_CONVOCATORIAHITO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_hito" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}convocatoria_hito_comentario(convocatoria_hito_id, value_, lang)
+      SELECT id, comentario, '${defaultLang}' FROM ${schemaPrefix}convocatoria_hito WHERE comentario
+      IS NOT NULL AND NULLIF(TRIM(comentario), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="comentario" tableName="convocatoria_hito" />
+  </changeSet>
 </databaseChangeLog>

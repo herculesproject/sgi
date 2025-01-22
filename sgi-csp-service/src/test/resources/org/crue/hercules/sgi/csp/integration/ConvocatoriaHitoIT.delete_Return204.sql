@@ -66,4 +66,7 @@ INSERT INTO test.tipo_hito_descripcion (tipo_hito_id, lang, value_) VALUES (1, '
 INSERT INTO test.modelo_tipo_hito (id, modelo_ejecucion_id, tipo_hito_id, solicitud, proyecto, convocatoria, activo) VALUES (1, 1, 1, true, true, true, true);
 
 --CONVOCATORIA HITO
-INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario) values(1, 1, 1,'2021-10-22T00:00:00Z', 'comentario-1');
+INSERT INTO test.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha) values(1, 1, 1,'2021-10-22T00:00:00Z');
+
+--CONVOCATORIA HITO COMENTARIO
+INSERT INTO test.convocatoria_hito_comentario (convocatoria_hito_id, lang, value_) values(1, 'es', 'comentario-1');
