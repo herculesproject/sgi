@@ -1037,7 +1037,7 @@ class ConvocatoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "numPeriodo,desc";
-    String filter = "observaciones=ke=-00";
+    String filter = "observaciones.value=ke=-00";
 
     Long convocatoriaId = 1L;
 
@@ -1051,27 +1051,33 @@ class ConvocatoriaIT extends BaseIT {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoes = response
+    final List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos = response
         .getBody();
-    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes).hasSize(3);
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificos).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(0).getObservaciones())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(
+            convocatoriaPeriodoSeguimientoCientificos.get(0).getObservaciones(), Language.ES))
         .as("get(0).getObservaciones()").isEqualTo("observaciones-" + String.format("%03d", 3));
-    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(0).getTipoSeguimiento())
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificos.get(0).getTipoSeguimiento())
         .as("get(0).getTipoSeguimiento")
         .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
-    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(1).getObservaciones())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(convocatoriaPeriodoSeguimientoCientificos.get(1).getObservaciones(),
+            Language.ES))
         .as("get(1).getObservaciones())").isEqualTo("observaciones-" + String.format("%03d", 2));
-    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(1).getTipoSeguimiento())
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificos.get(1).getTipoSeguimiento())
         .as("get(1).getTipoSeguimiento()")
         .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
-    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(2).getObservaciones())
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(convocatoriaPeriodoSeguimientoCientificos.get(2).getObservaciones(),
+            Language.ES))
         .as("get(2).getObservaciones()").isEqualTo("observaciones-" + String.format("%03d", 1));
-    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(2).getTipoSeguimiento())
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificos.get(2).getTipoSeguimiento())
         .as("get(2).getTipoSeguimiento")
         .isIn(TipoSeguimiento.FINAL, TipoSeguimiento.INTERMEDIO, TipoSeguimiento.PERIODICO);
   }

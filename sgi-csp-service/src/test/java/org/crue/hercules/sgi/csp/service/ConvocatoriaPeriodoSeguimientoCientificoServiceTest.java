@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientificoObservaciones;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
@@ -363,6 +364,9 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
         .willReturn(Optional.of(configuracionSolicitud));
     for (int i = 1, j = 2; i <= 100; i++, j += 2) {
       // @formatter:off
+    Set<ConvocatoriaPeriodoSeguimientoCientificoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ConvocatoriaPeriodoSeguimientoCientificoObservaciones(Language.ES, "observaciones-" + i));
+
       listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico
           .builder()
           .id(Long.valueOf(i))
@@ -370,7 +374,7 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
           .numPeriodo(i - 1)
           .mesInicial((i * 2) - 1)
           .mesFinal(j * 1)
-          .observaciones("observaciones-" + i)
+          .observaciones(observaciones)
           .build());
       // @formatter:on
     }
@@ -433,6 +437,9 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
    */
   private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id,
       Integer mesInicial, Integer mesFinal, Long convocatoriaId, TipoSeguimiento tipoSeguimiento) {
+    Set<ConvocatoriaPeriodoSeguimientoCientificoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ConvocatoriaPeriodoSeguimientoCientificoObservaciones(Language.ES, "observaciones-" + id));
+
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = new ConvocatoriaPeriodoSeguimientoCientifico();
     convocatoriaPeriodoSeguimientoCientifico.setId(id);
     convocatoriaPeriodoSeguimientoCientifico.setConvocatoriaId(convocatoriaId == null ? 1 : convocatoriaId);
@@ -441,7 +448,7 @@ class ConvocatoriaPeriodoSeguimientoCientificoServiceTest extends BaseServiceTes
     convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);
     convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
     convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
-    convocatoriaPeriodoSeguimientoCientifico.setObservaciones("observaciones-" + id);
+    convocatoriaPeriodoSeguimientoCientifico.setObservaciones(observaciones);
     convocatoriaPeriodoSeguimientoCientifico.setTipoSeguimiento(tipoSeguimiento);
 
     return convocatoriaPeriodoSeguimientoCientifico;

@@ -930,7 +930,8 @@ public class ProyectoServiceImpl implements ProyectoService {
           if (convocatoriaSeguimiento.getFechaFinPresentacion() != null) {
             projectBuilder.fechaFinPresentacion(convocatoriaSeguimiento.getFechaFinPresentacion());
           }
-          projectBuilder.observaciones(convocatoriaSeguimiento.getObservaciones());
+          projectBuilder
+              .observaciones(I18nHelper.getValueForCurrentLanguage(convocatoriaSeguimiento.getObservaciones()));
 
           projectBuilder.convocatoriaPeriodoSeguimientoId(convocatoriaSeguimiento.getId());
           ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = projectBuilder.build();

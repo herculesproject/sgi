@@ -1198,4 +1198,37 @@
 
     <dropColumn columnName="observaciones" tableName="convocatoria_periodo_justificacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-47">
+    <createTable tableName="convocatoria_periodo_seguimiento_cientifico_observaciones">
+      <column name="convocatoria_periodo_seguimiento_cientifico_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_periodo_seguimiento_cientifico_observaciones"
+      columnNames="convocatoria_periodo_seguimiento_cientifico_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_periodo_seguimiento_cientifico_id"
+      baseTableName="convocatoria_periodo_seguimiento_cientifico_observaciones"
+      constraintName="FK_CONVOCATORIASEGUIMIENTOCIENTIFICOOBSERVACIONES_CONVOCATORIASEGUIMIENTOCIENTIFICO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_periodo_seguimiento_cientifico"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}convocatoria_periodo_seguimiento_cientifico_observaciones(convocatoria_periodo_seguimiento_cientifico_id,
+      value_, lang) SELECT id, observaciones, '${defaultLang}' FROM
+      ${schemaPrefix}convocatoria_periodo_seguimiento_cientifico WHERE observaciones IS NOT NULL AND
+      NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="convocatoria_periodo_seguimiento_cientifico" />
+  </changeSet>
 </databaseChangeLog>

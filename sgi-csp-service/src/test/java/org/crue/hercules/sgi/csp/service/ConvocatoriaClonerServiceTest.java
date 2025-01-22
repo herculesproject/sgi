@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientificoObservaciones;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
@@ -375,6 +376,9 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
 
   private ConvocatoriaPeriodoSeguimientoCientifico buildMockConvocatoriaPeriodoSeguimientoCientifico(Long convocatoriaClonedId) {
     //@formatter:off
+    Set<ConvocatoriaPeriodoSeguimientoCientificoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ConvocatoriaPeriodoSeguimientoCientificoObservaciones(Language.ES, "testing"));
+
     return ConvocatoriaPeriodoSeguimientoCientifico.builder()
     .convocatoriaId(convocatoriaClonedId)
     .fechaInicioPresentacion(Instant.now())
@@ -383,7 +387,7 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
     .mesFinal(11)
     .numPeriodo(1)
     .tipoSeguimiento(TipoSeguimiento.PERIODICO)
-    .observaciones("testing")
+    .observaciones(observaciones)
     .build();
     //@formatter:on
   }

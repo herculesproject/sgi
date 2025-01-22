@@ -111,6 +111,7 @@ DELETE FROM test.convocatoria_enlace;
 DELETE FROM test.convocatoria_fase_observaciones;
 DELETE FROM test.convocatoria_fase;
 DELETE FROM test.convocatoria_hito;
+DELETE FROM test.convocatoria_periodo_seguimiento_cientifico_observaciones;
 DELETE FROM test.convocatoria_periodo_seguimiento_cientifico;
 DELETE FROM test.requisitoequipo_categoriaprofesional;
 DELETE FROM test.requisitoequipo_nivelacademico;

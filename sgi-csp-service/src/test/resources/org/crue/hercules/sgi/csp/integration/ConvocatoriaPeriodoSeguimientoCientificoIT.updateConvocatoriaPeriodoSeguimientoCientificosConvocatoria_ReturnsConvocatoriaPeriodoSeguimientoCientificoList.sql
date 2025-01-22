@@ -54,14 +54,31 @@ INSERT INTO test.convocatoria
 VALUES(2, 'unidad-002', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'titulo-002', 'objeto-002', 'observaciones-002', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', 'PROYECTO', true);
  
 -- CONVOCATORIA PERIODO SEGUIMIENTO CIENTIFICO
-INSERT INTO test.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones,tipo_seguimiento) 
-  VALUES (1, 1, 1, 1, 2, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-001','PERIODICO');
-INSERT INTO test.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones,tipo_seguimiento) 
-  VALUES (2, 1, 2, 10, 21, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-002','INTERMEDIO');
-INSERT INTO test.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones,tipo_seguimiento) 
-  VALUES (3, 1, 3, 22, 23, null, null, 'observaciones-003','PERIODICO');
-INSERT INTO test.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, observaciones,tipo_seguimiento) 
-  VALUES (4, 1, 4, 26, 28, null, null, 'observaciones-4','FINAL');
+INSERT INTO test.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo_seguimiento) 
+  VALUES (1, 1, 1, 1, 2, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'PERIODICO');
+INSERT INTO test.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo_seguimiento) 
+  VALUES (2, 1, 2, 10, 21, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'INTERMEDIO');
+INSERT INTO test.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo_seguimiento) 
+  VALUES (3, 1, 3, 22, 23, null, null, 'PERIODICO');
+INSERT INTO test.convocatoria_periodo_seguimiento_cientifico (id, convocatoria_id, num_periodo, mes_inicial, mes_final, fecha_inicio_presentacion, fecha_fin_presentacion, tipo_seguimiento) 
+  VALUES (4, 1, 4, 26, 28, null, null, 'FINAL');
+
+  -- CONVOCATORIA PERIODO SEGUIMIENTO CIENTIFICO OBSERVACIONES
+insert into test.convocatoria_periodo_seguimiento_cientifico_observaciones
+(convocatoria_periodo_seguimiento_cientifico_id, lang, value_)
+values(1, 'es', 'observaciones-001');
+
+insert into test.convocatoria_periodo_seguimiento_cientifico_observaciones
+(convocatoria_periodo_seguimiento_cientifico_id, lang, value_)
+values(2, 'es', 'observaciones-002');
+
+insert into test.convocatoria_periodo_seguimiento_cientifico_observaciones
+(convocatoria_periodo_seguimiento_cientifico_id, lang, value_)
+values(3, 'es', 'observaciones-003');
+
+insert into test.convocatoria_periodo_seguimiento_cientifico_observaciones
+(convocatoria_periodo_seguimiento_cientifico_id, lang, value_)
+values(4, 'es', 'observaciones-4');
 
 -- TIPO FASE
 INSERT INTO test.tipo_fase (id, activo) VALUES (1, true);

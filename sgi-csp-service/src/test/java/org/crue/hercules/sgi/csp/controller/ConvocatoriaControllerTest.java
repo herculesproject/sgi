@@ -38,6 +38,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaHitoAviso;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientificoObservaciones;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
@@ -1593,6 +1594,9 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
     for (int i = 1, j = 2; i <= 100; i++, j += 2) {
       // @formatter:off
+    Set<ConvocatoriaPeriodoSeguimientoCientificoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ConvocatoriaPeriodoSeguimientoCientificoObservaciones(Language.ES, "observaciones-" + i));
+
       listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico
           .builder()
           .id(Long.valueOf(i))
@@ -1600,7 +1604,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
           .numPeriodo(i - 1)
           .mesInicial((i * 2) - 1)
           .mesFinal(j * 1)
-          .observaciones("observaciones-" + i)
+          .observaciones(observaciones)
           .build());
       // @formatter:on
     }
