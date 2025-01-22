@@ -17,7 +17,7 @@ import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocator
 import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase/convocatoria-fase.service';
 import { ConvocatoriaHitoService } from '@core/services/csp/convocatoria-hito/convocatoria-hito.service';
 import { ConvocatoriaPartidaPresupuestariaService } from '@core/services/csp/convocatoria-partida-presupuestaria/convocatoria-partida-presupuestaria.service';
-import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion.service';
+import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion/convocatoria-periodo-justificacion.service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';

@@ -1,26 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/convocatoria-periodo-justificacion.converter';
-import { IConvocatoriaPeriodoJustificacionBackend } from '@core/models/csp/backend/convocatoria-periodo-justificacion-backend';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
+import { IConvocatoriaPeriodoJustificacionResponse } from '@core/services/csp/convocatoria-periodo-justificacion/convocatoria-periodo-justificacion-response';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiRestBaseService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CONVOCATORIA_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './convocatoria-periodo-justificacion-response.converter';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaPeriodoJustificacionService
-  extends SgiMutableRestService<number, IConvocatoriaPeriodoJustificacionBackend, IConvocatoriaPeriodoJustificacion> {
+export class ConvocatoriaPeriodoJustificacionService extends SgiRestBaseService {
   private static readonly MAPPING = '/convocatoriaperiodojustificaciones';
 
   constructor(protected http: HttpClient) {
     super(
-      ConvocatoriaPeriodoJustificacionService.name,
       `${environment.serviceServers.csp}${ConvocatoriaPeriodoJustificacionService.MAPPING}`,
-      http,
-      CONVOCATORIA_PERIODO_JUSTIFICACION_CONVERTER
+      http
     );
   }
 
@@ -34,11 +31,11 @@ export class ConvocatoriaPeriodoJustificacionService
    */
   updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId: number, periodosJustificacion: IConvocatoriaPeriodoJustificacion[]):
     Observable<IConvocatoriaPeriodoJustificacion[]> {
-    return this.http.patch<IConvocatoriaPeriodoJustificacionBackend[]>(
+    return this.http.patch<IConvocatoriaPeriodoJustificacionResponse[]>(
       `${this.endpointUrl}/${convocatoriaId}`,
-      this.converter.fromTargetArray(periodosJustificacion)
+      CONVOCATORIA_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER.fromTargetArray(periodosJustificacion)
     ).pipe(
-      map(response => this.converter.toTargetArray(response))
+      map(response => CONVOCATORIA_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER.toTargetArray(response))
     );
   }
 

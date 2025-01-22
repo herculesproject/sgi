@@ -13,6 +13,7 @@ import { DateTime } from 'luxon';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { concatMap, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { comparePeriodoJustificacion, getFechaFinPeriodoSeguimiento, getFechaInicioPeriodoSeguimiento } from '../../../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento.utils';
+import { LanguageService } from '@core/services/language.service';
 
 const PROYECTO_PERIODO_JUSTIFICACION_NO_COINCIDE_KEY = marker('info.csp.proyecto-periodo-justificacion.no-coincide-convocatoria');
 const PROYECTO_PERIODO_JUSTIFICACION_NO_CONVOCATORIA_KEY = marker('info.csp.proyecto-periodo-justificacion.no-existe-en-convocatoria');
@@ -52,6 +53,7 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
     private proyectoService: ProyectoService,
     private proyectoPeriodoJustifiacionService: ProyectoPeriodoJustificacionService,
     private convocatoriaService: ConvocatoriaService,
+    private readonly languageService: LanguageService
   ) {
     super(key);
     this.setComplete(true);
@@ -278,7 +280,7 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
       periodoJustificacionListado.fechaInicioPresentacion =
         periodoJustificacionListado.convocatoriaPeriodoJustificacion?.fechaInicioPresentacion;
       periodoJustificacionListado.fechaFinPresentacion = periodoJustificacionListado.convocatoriaPeriodoJustificacion?.fechaFinPresentacion;
-      periodoJustificacionListado.observaciones = periodoJustificacionListado.convocatoriaPeriodoJustificacion?.observaciones;
+      periodoJustificacionListado.observaciones = this.languageService.getFieldValue(periodoJustificacionListado.convocatoriaPeriodoJustificacion?.observaciones);
       if (periodoJustificacionListado.convocatoriaPeriodoJustificacion?.mesInicial) {
         periodoJustificacionListado.fechaInicio = getFechaInicioPeriodoSeguimiento(this.proyecto.fechaInicio,
           periodoJustificacionListado.convocatoriaPeriodoJustificacion.mesInicial);

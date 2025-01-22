@@ -1,7 +1,8 @@
 import { TipoJustificacion } from '@core/enums/tipo-justificacion';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 
 
-export interface IConvocatoriaPeriodoJustificacionBackend {
+export interface IConvocatoriaPeriodoJustificacionResponse {
   /** Id */
   id: number;
   /** Id de Convocatoria */
@@ -17,7 +18,7 @@ export interface IConvocatoriaPeriodoJustificacionBackend {
   /** Fecha fin */
   fechaFinPresentacion: string;
   /** Observaciones */
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
   /** Tipo */
   tipo: TipoJustificacion;
 }
