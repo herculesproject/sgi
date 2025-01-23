@@ -1260,4 +1260,33 @@
 
     <dropColumn columnName="comentario" tableName="convocatoria_hito" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-49">
+    <createTable tableName="convocatoria_documento_nombre">
+      <column name="convocatoria_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_documento_nombre"
+      columnNames="convocatoria_documento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_documento_id"
+      baseTableName="convocatoria_documento_nombre"
+      constraintName="FK_CONVOCATORIADOCUMENTONOMBRE_CONVOCATORIADOCUMENTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_documento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}convocatoria_documento_nombre(convocatoria_documento_id, value_,
+      lang) SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}convocatoria_documento WHERE
+      nombre IS NOT NULL AND NULLIF(TRIM(nombre), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="convocatoria_documento" />
+  </changeSet>
 </databaseChangeLog>

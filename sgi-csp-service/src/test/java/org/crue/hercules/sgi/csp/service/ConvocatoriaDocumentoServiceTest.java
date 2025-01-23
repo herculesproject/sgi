@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaDocumentoNotFoundExcepti
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
@@ -38,6 +39,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaDocumentoServiceImpl;
 import org.crue.hercules.sgi.csp.util.ConvocatoriaAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -416,7 +418,9 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
-    updatedConvocatoriaDocumento.setNombre("nombre-modificado");
+    Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
+    convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre-modificado"));
+    updatedConvocatoriaDocumento.setNombre(convocatoriaDocumentonombre);
     updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
@@ -1010,7 +1014,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(convocatoriaDocumento.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaDocumento.getTipoFase().getId()).as("getTipoFase().getId()").isEqualTo(1L);
     Assertions.assertThat(convocatoriaDocumento.getTipoDocumento().getId()).as("getTipoDocumento()").isEqualTo(1L);
-    Assertions.assertThat(convocatoriaDocumento.getNombre()).as("getNombre()").isEqualTo("nombre doc-" + idBuscado);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaDocumento.getNombre(), Language.ES))
+        .as("getNombre()").isEqualTo("nombre doc-" + idBuscado);
     Assertions.assertThat(convocatoriaDocumento.getPublico()).as("getPublico()").isEqualTo(Boolean.TRUE);
     Assertions.assertThat(convocatoriaDocumento.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-" + idBuscado);
@@ -1270,13 +1275,16 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     TipoFase tipoFase = generarMockTipoFase(tipoFaseId);
     TipoDocumento tipoDocumento = generarMockTipoDocumento(tipoDocumentoId);
 
+    Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
+    convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre doc-" + id));
+
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
         .convocatoriaId(convocatoriaId)
         .tipoFase(tipoFase)
         .tipoDocumento(tipoDocumento)
-        .nombre("nombre doc-" + id)
+        .nombre(convocatoriaDocumentonombre)
         .publico(Boolean.TRUE)
         .observaciones("observaciones-" + id)
         .documentoRef("documentoRef-" + id)

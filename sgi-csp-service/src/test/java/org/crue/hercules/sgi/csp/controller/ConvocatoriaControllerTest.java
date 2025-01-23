@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
@@ -2204,13 +2205,16 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     TipoFase tipoFase = TipoFase.builder().id(id).build();
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(id).build();
 
+    Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
+    convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre doc-" + id));
+
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
         .convocatoriaId(1L)
         .tipoFase(tipoFase)
         .tipoDocumento(tipoDocumento)
-        .nombre("nombre doc-" + id)
+        .nombre(convocatoriaDocumentonombre)
         .publico(Boolean.TRUE)
         .observaciones("observaciones-" + id)
         .documentoRef("documentoRef" + id)

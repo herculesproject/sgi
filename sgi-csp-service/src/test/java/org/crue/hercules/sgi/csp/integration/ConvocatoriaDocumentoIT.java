@@ -1,11 +1,16 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -71,11 +76,12 @@ class ConvocatoriaDocumentoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void update_ReturnsConvocatoriaDocumento() throws Exception {
-
+    Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
+    convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre-modificado"));
     // given: existing ConvocatoriaDocumento to be updated
     ConvocatoriaDocumento convocatoriaDocumento = generarMockConvocatoriaDocumento(1L, 1L, 1L);
     convocatoriaDocumento.getTipoDocumento().setId(2L);
-    convocatoriaDocumento.setNombre("nombre-modificado");
+    convocatoriaDocumento.setNombre(convocatoriaDocumentonombre);
     convocatoriaDocumento.setObservaciones("observaciones-modificadas");
 
     // when: update ConvocatoriaDocumento
@@ -92,7 +98,8 @@ class ConvocatoriaDocumentoIT extends BaseIT {
     Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getTipoFase().getId()).as("getTipoFase().getId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()").isEqualTo(2L);
-    Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo("nombre-modificado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre-modificado");
     Assertions.assertThat(responseData.getPublico()).as("getPublico()").isEqualTo(Boolean.TRUE);
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-modificadas");
@@ -134,7 +141,8 @@ class ConvocatoriaDocumentoIT extends BaseIT {
     Assertions.assertThat(responseData.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getTipoFase().getId()).as("getTipoFase().getId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()").isEqualTo(2L);
-    Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo("nombre doc-2");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("nombre doc-2");
     Assertions.assertThat(responseData.getPublico()).as("getPublico()").isEqualTo(Boolean.TRUE);
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observacionesConvocatoriaDocumento-2");
@@ -154,13 +162,16 @@ class ConvocatoriaDocumentoIT extends BaseIT {
     TipoFase tipoFase = TipoFase.builder().id(1L).build();
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(tipoDocumentoId).build();
 
+    Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
+    convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre doc-" + id));
+
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
         .convocatoriaId(1L)
         .tipoFase(tipoFase)
         .tipoDocumento(tipoDocumento)
-        .nombre("nombre doc-" + id)
+        .nombre(convocatoriaDocumentonombre)
         .publico(Boolean.TRUE)
         .observaciones("observacionesConvocatoriaDocumento-" + id)
         .documentoRef("documentoRef-" + id)
