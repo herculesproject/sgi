@@ -477,6 +477,7 @@ export class ProyectoActionService extends ActionService {
           partidaPresupuestariaIngresoSgeService,
           proyectoPartidaPresupuestariaService,
           proyectoService,
+          languageService,
           this.readonly
         );
         this.elegibilidad = new ProyectoConceptosGastoFragment(

@@ -7,10 +7,13 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { TIPO_PARTIDA_MAP } from '@core/enums/tipo-partida';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
+import { IPartidaPresupuestaria } from '@core/models/csp/partida-presupuestaria';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -56,7 +59,8 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
     private actionService: ProyectoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, actionService, translate);
     this.formPart = this.fragment as ProyectoPartidasPresupuestariasFragment;
@@ -128,6 +132,16 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
       proyectoPartidaPresupuestariaTabla.splice(row, 1);
     }
 
+    // TODO: Eliminar al pasar a i18n ProyectoPartida
+    if (proyectoPartida?.value?.descripcion) {
+      (proyectoPartida.value as IPartidaPresupuestaria).descripcion = [
+        {
+          lang: this.languageService.getLanguage(),
+          value: proyectoPartida?.value?.descripcion
+        }
+      ];
+    }
+
     const data: PartidaPresupuestariaModalComponentData = {
       partidaPresupuestaria: proyectoPartida?.value,
       partidasPresupuestarias: proyectoPartidaPresupuestariaTabla,
@@ -142,6 +156,15 @@ export class ProyectoPartidasPresupuestariasComponent extends FragmentComponent 
     };
     const dialogRef = this.matDialog.open(PartidaPresupuestariaModalComponent, config);
     dialogRef.afterClosed().subscribe((partidaPresupuestaria) => {
+      // TODO: Eliminar al pasar a i18n ProyectoPartida
+      if (partidaPresupuestaria || proyectoPartida) {
+        if (partidaPresupuestaria) {
+          partidaPresupuestaria.descripcion = this.languageService.getFieldValue(partidaPresupuestaria.descripcion);
+        } else {
+          proyectoPartida.value.descripcion = this.languageService.getFieldValue((proyectoPartida.value as IPartidaPresupuestaria).descripcion as I18nFieldValue[]);
+        }
+      }
+
       if (partidaPresupuestaria) {
         if (!proyectoPartida) {
           this.formPart.addPartidaPresupuestaria(partidaPresupuestaria, convocatoriaPartida);

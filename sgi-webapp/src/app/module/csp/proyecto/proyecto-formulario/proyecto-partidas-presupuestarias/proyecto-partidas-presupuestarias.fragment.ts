@@ -9,6 +9,7 @@ import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoPartidaPresupuestariaService } from '@core/services/csp/proyecto-partida-presupuestaria/proyecto-partida-presupuestaria.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { PartidaPresupuestariaGastoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-gasto-sge.service';
 import { PartidaPresupuestariaIngresoSgeService } from '@core/services/sge/partida-presupuestaria-sge/partida-presupuestaria-ingreso-sge.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -61,6 +62,7 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
     private readonly partidaPresupuestariaIngresoSgeService: PartidaPresupuestariaIngresoSgeService,
     private readonly proyectoPartidaPresupuestariaService: ProyectoPartidaPresupuestariaService,
     private readonly proyectoService: ProyectoService,
+    private readonly languageService: LanguageService,
     public readonly: boolean
   ) {
     super(key);
@@ -395,7 +397,7 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
     } else {
       partidasPresupuestaria.codigo = partidasPresupuestaria.convocatoriaPartidaPresupuestaria.codigo;
       partidasPresupuestaria.partidaSge = partidasPresupuestaria.convocatoriaPartidaPresupuestaria.partidaSge;
-      partidasPresupuestaria.descripcion = partidasPresupuestaria.convocatoriaPartidaPresupuestaria.descripcion;
+      partidasPresupuestaria.descripcion = this.languageService.getFieldValue(partidasPresupuestaria.convocatoriaPartidaPresupuestaria.descripcion);
       partidasPresupuestaria.tipoPartida = partidasPresupuestaria.convocatoriaPartidaPresupuestaria.tipoPartida;
 
       partidasPresupuestaria.help = {

@@ -9,6 +9,7 @@ import { TIPO_PARTIDA_MAP } from '@core/enums/tipo-partida';
 import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -52,6 +53,7 @@ export class ConvocatoriaPartidaPresupuestariaComponent extends FragmentComponen
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.PARTIDAS_PRESUPUESTARIAS, actionService, translate);
     this.formPart = this.fragment as ConvocatoriaPartidaPresupuestariaFragment;
@@ -67,7 +69,7 @@ export class ConvocatoriaPartidaPresupuestariaComponent extends FragmentComponen
           case 'codigo':
             return wrapper.value.codigo;
           case 'descripcion':
-            return wrapper.value.descripcion;
+            return this.languageService.getFieldValue(wrapper.value.descripcion);
           case 'tipoPartida':
             return wrapper.value.tipoPartida;
           default:
