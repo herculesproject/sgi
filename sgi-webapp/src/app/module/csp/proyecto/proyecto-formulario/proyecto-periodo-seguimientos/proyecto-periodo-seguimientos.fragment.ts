@@ -14,6 +14,7 @@ import { DateTime } from 'luxon';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { comparePeriodoSeguimiento, getFechaFinPeriodoSeguimiento, getFechaInicioPeriodoSeguimiento } from '../../../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento.utils';
+import { LanguageService } from '@core/services/language.service';
 
 const PROYECTO_PERIODO_SEGUIMIENTO_NO_COINCIDE_KEY = marker('info.csp.proyecto-periodo-seguimiento.no-coincide-convocatoria');
 const PROYECTO_PERIODO_SEGUIMIENTO_NO_CONVOCATORIA_KEY = marker('info.csp.proyecto-periodo-seguimiento.no-existe-en-convocatoria');
@@ -52,7 +53,8 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
     private proyectoService: ProyectoService,
     private proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     private convocatoriaService: ConvocatoriaService,
-    private documentoService: DocumentoService
+    private documentoService: DocumentoService,
+    private readonly languageService: LanguageService
   ) {
     super(key);
     this.setComplete(true);
@@ -236,7 +238,7 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
       periodoSeguimientoListado.fechaInicioPresentacion =
         periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.fechaInicioPresentacion;
       periodoSeguimientoListado.fechaFinPresentacion = periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.fechaFinPresentacion;
-      periodoSeguimientoListado.observaciones = periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.observaciones;
+      periodoSeguimientoListado.observaciones = this.languageService.getFieldValue(periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.observaciones);
 
       if (periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.mesInicial) {
         periodoSeguimientoListado.fechaInicio = getFechaInicioPeriodoSeguimiento(this.proyecto.fechaInicio,

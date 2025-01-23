@@ -1,6 +1,7 @@
 import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 
-export interface IConvocatoriaPeriodoSeguimientoCientificoBackend {
+export interface IConvocatoriaPeriodoSeguimientoCientificoResponse {
   id: number;
   numPeriodo: number;
   mesInicial: number;
@@ -8,6 +9,6 @@ export interface IConvocatoriaPeriodoSeguimientoCientificoBackend {
   fechaInicioPresentacion: string;
   fechaFinPresentacion: string;
   tipoSeguimiento: TipoSeguimiento;
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
   convocatoriaId: number;
 }

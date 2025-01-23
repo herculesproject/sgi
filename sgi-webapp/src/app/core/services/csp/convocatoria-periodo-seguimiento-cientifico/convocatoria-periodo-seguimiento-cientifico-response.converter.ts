@@ -1,12 +1,13 @@
-import { IConvocatoriaPeriodoSeguimientoCientificoBackend } from '@core/models/csp/backend/convocatoria-periodo-seguimiento-cientifico-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
+import { IConvocatoriaPeriodoSeguimientoCientificoResponse } from '@core/services/csp/convocatoria-periodo-seguimiento-cientifico/convocatoria-periodo-seguimiento-cientifico-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
-class ConvocatoriaSeguimientoCientificoConverter extends
-  SgiBaseConverter<IConvocatoriaPeriodoSeguimientoCientificoBackend, IConvocatoriaPeriodoSeguimientoCientifico> {
+class ConvocatoriaSeguimientoCientificoResponseConverter extends
+  SgiBaseConverter<IConvocatoriaPeriodoSeguimientoCientificoResponse, IConvocatoriaPeriodoSeguimientoCientifico> {
 
-  toTarget(value: IConvocatoriaPeriodoSeguimientoCientificoBackend): IConvocatoriaPeriodoSeguimientoCientifico {
+  toTarget(value: IConvocatoriaPeriodoSeguimientoCientificoResponse): IConvocatoriaPeriodoSeguimientoCientifico {
     if (!value) {
       return value as unknown as IConvocatoriaPeriodoSeguimientoCientifico;
     }
@@ -18,14 +19,14 @@ class ConvocatoriaSeguimientoCientificoConverter extends
       fechaInicioPresentacion: LuxonUtils.fromBackend(value.fechaInicioPresentacion),
       fechaFinPresentacion: LuxonUtils.fromBackend(value.fechaFinPresentacion),
       tipoSeguimiento: value.tipoSeguimiento,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : [],
       convocatoriaId: value.convocatoriaId
     };
   }
 
-  fromTarget(value: IConvocatoriaPeriodoSeguimientoCientifico): IConvocatoriaPeriodoSeguimientoCientificoBackend {
+  fromTarget(value: IConvocatoriaPeriodoSeguimientoCientifico): IConvocatoriaPeriodoSeguimientoCientificoResponse {
     if (!value) {
-      return value as unknown as IConvocatoriaPeriodoSeguimientoCientificoBackend;
+      return value as unknown as IConvocatoriaPeriodoSeguimientoCientificoResponse;
     }
     return {
       id: value.id,
@@ -35,10 +36,10 @@ class ConvocatoriaSeguimientoCientificoConverter extends
       fechaInicioPresentacion: LuxonUtils.toBackend(value.fechaInicioPresentacion),
       fechaFinPresentacion: LuxonUtils.toBackend(value.fechaFinPresentacion),
       tipoSeguimiento: value.tipoSeguimiento,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : [],
       convocatoriaId: value.convocatoriaId
     };
   }
 }
 
-export const CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_CONVERTER = new ConvocatoriaSeguimientoCientificoConverter();
+export const CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_RESPONSE_CONVERTER = new ConvocatoriaSeguimientoCientificoResponseConverter();

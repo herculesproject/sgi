@@ -1,26 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_CONVERTER } from '@core/converters/csp/convocatoria-periodo-seguimiento-cientifico.converter';
-import { IConvocatoriaPeriodoSeguimientoCientificoBackend } from '@core/models/csp/backend/convocatoria-periodo-seguimiento-cientifico-backend';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
+import { IConvocatoriaPeriodoSeguimientoCientificoResponse } from '@core/services/csp/convocatoria-periodo-seguimiento-cientifico/convocatoria-periodo-seguimiento-cientifico-response';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_RESPONSE_CONVERTER } from './convocatoria-periodo-seguimiento-cientifico-response.converter';
+
+const _ConvocatoriaSeguimientoCientificoServiceMixinBase:
+  FindByIdCtor<number, IConvocatoriaPeriodoSeguimientoCientifico, IConvocatoriaPeriodoSeguimientoCientificoResponse> &
+  typeof SgiRestBaseService = mixinFindById(
+    SgiRestBaseService,
+    CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_RESPONSE_CONVERTER
+  );
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaSeguimientoCientificoService
-  extends SgiMutableRestService<number, IConvocatoriaPeriodoSeguimientoCientificoBackend, IConvocatoriaPeriodoSeguimientoCientifico> {
+export class ConvocatoriaSeguimientoCientificoService extends _ConvocatoriaSeguimientoCientificoServiceMixinBase {
   private static readonly MAPPING = '/convocatoriaperiodoseguimientocientificos';
 
   constructor(protected http: HttpClient) {
     super(
-      ConvocatoriaSeguimientoCientificoService.name,
       `${environment.serviceServers.csp}${ConvocatoriaSeguimientoCientificoService.MAPPING}`,
-      http,
-      CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_CONVERTER
+      http
     );
   }
 
@@ -36,11 +40,11 @@ export class ConvocatoriaSeguimientoCientificoService
     convocatoriaId: number,
     periodosJustificacion: IConvocatoriaPeriodoSeguimientoCientifico[]
   ): Observable<IConvocatoriaPeriodoSeguimientoCientifico[]> {
-    return this.http.patch<IConvocatoriaPeriodoSeguimientoCientificoBackend[]>(
+    return this.http.patch<IConvocatoriaPeriodoSeguimientoCientificoResponse[]>(
       `${this.endpointUrl}/${convocatoriaId}`,
-      this.converter.fromTargetArray(periodosJustificacion)
+      CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_RESPONSE_CONVERTER.fromTargetArray(periodosJustificacion)
     ).pipe(
-      map(response => this.converter.toTargetArray(response))
+      map(response => CONVOCATORIA_PERIODO_SEGUIMIENTO_CIENTIFICO_RESPONSE_CONVERTER.toTargetArray(response))
     );
   }
 
