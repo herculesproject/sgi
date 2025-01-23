@@ -38,6 +38,7 @@ import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
 import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
+import org.crue.hercules.sgi.csp.model.RequisitoIPOtrosRequisitos;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
@@ -393,6 +394,8 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
   }
 
   private RequisitoIP buildMockRequisitoIP(Long convocatoriaClonedId) {
+    Set<RequisitoIPOtrosRequisitos> otrosRequisitos = new HashSet<>();
+    otrosRequisitos.add(new RequisitoIPOtrosRequisitos(Language.ES, "TESTING"));
     //@formatter:off
     return RequisitoIP.builder()
         .id(convocatoriaClonedId)
@@ -404,7 +407,7 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
         .numMinimoNoCompetitivos(2)
         .numMaximoCompetitivosActivos(9)
         .numMaximoNoCompetitivosActivos(8)
-        .otrosRequisitos("TESTING").build();
+        .otrosRequisitos(otrosRequisitos).build();
     //@formatter:on    
   }
 

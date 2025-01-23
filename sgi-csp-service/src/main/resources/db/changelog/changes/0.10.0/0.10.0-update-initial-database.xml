@@ -1320,4 +1320,34 @@
 
     <dropColumn columnName="observaciones" tableName="convocatoria_documento" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-51">
+    <createTable tableName="requisito_ip_otros_requisitos">
+      <column name="requisitoip_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="requisito_ip_otros_requisitos"
+      columnNames="requisitoip_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="requisitoip_id"
+      baseTableName="requisito_ip_otros_requisitos"
+      constraintName="FK_REQUISITOIPOTROSREQUISITOS_REQUISITOIP"
+      deferrable="false" initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="requisito_ip"
+      validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}requisito_ip_otros_requisitos(requisitoip_id, value_, lang)
+      SELECT id, otros_requisitos, '${defaultLang}' FROM ${schemaPrefix}requisito_ip WHERE
+      otros_requisitos IS NOT NULL AND NULLIF(TRIM(otros_requisitos), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="otros_requisitos" tableName="requisito_ip" />
+  </changeSet>
 </databaseChangeLog>

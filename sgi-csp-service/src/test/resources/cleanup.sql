@@ -121,6 +121,7 @@ DELETE FROM test.requisitoequipo_nivelacademico;
 DELETE FROM test.requisito_equipo;
 DELETE FROM test.requisitoip_categoriaprofesional;
 DELETE FROM test.requisitoip_nivelacademico;
+DELETE FROM test.requisito_ip_otros_requisitos;
 DELETE FROM test.requisito_ip;
 DELETE FROM test.convocatoria_concepto_gasto_codigo_ec_observaciones;
 DELETE FROM test.convocatoria_concepto_gasto_codigo_ec;
