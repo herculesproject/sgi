@@ -107,7 +107,10 @@ INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VA
 INSERT INTO test.modelo_tipo_documento (id, tipo_documento_id, modelo_ejecucion_id, modelo_tipo_fase_id, activo) VALUES (1, 1, 1, 1, true);
 
 -- CONVOCATORIA DOCUMENTO
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(1, 1, 1, 1, true, 'observacionesConvocatoriaDocumento-1', 'documentoRef-1');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(1, 1, 1, 1, true, 'documentoRef-1');
 
 -- CONVOCATORIA DOCUMENTO NOMBRE
 INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang, value_) VALUES(1, 'es', 'nombre doc-1');
+
+-- CONVOCATORIA DOCUMENTO OBSERVACIONES
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(1, 'es', 'observacionesConvocatoriaDocumento-1');

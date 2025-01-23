@@ -71,11 +71,16 @@ INSERT INTO test.modelo_tipo_documento (id, tipo_documento_id, modelo_ejecucion_
 INSERT INTO test.modelo_tipo_documento (id, tipo_documento_id, modelo_ejecucion_id, modelo_tipo_fase_id, activo) VALUES (2, 2, 1, 1, true);
 
 -- CONVOCATORIA DOCUMENTO
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(1, 1, 1, 1, true, 'observacionesConvocatoriaDocumento-1', 'documentoRef-1');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(2, 1, 2, 2, true, 'observacionesConvocatoriaDocumento-2', 'documentoRef-2');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(3, 1, null, 1, true, 'observacionesConvocatoriaDocumento-3', 'documentoRef-3');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(1, 1, 1, 1, true, 'documentoRef-1');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(2, 1, 2, 2, true, 'documentoRef-2');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(3, 1, null, 1, true, 'documentoRef-3');
 
 -- CONVOCATORIA DOCUMENTO NOMBRE
 INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang, value_) VALUES(1, 'es', 'nombre doc-1');
 INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang, value_) VALUES(2, 'es', 'nombre doc-2');
 INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang, value_) VALUES(3, 'es', 'nombre doc-3');
+
+-- CONVOCATORIA DOCUMENTO OBSERVACIONES
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(1, 'es', 'observacionesConvocatoriaDocumento-1');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(2, 'es', 'observacionesConvocatoriaDocumento-2');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(3, 'es', 'observacionesConvocatoriaDocumento-3');

@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoNombre;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
@@ -2208,6 +2209,9 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
     convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre doc-" + id));
 
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones.add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-" + id));
+
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
@@ -2216,7 +2220,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
         .tipoDocumento(tipoDocumento)
         .nombre(convocatoriaDocumentonombre)
         .publico(Boolean.TRUE)
-        .observaciones("observaciones-" + id)
+        .observaciones(convocatoriaDocumentoObservaciones)
         .documentoRef("documentoRef" + id)
         .build();
     // @formatter:on

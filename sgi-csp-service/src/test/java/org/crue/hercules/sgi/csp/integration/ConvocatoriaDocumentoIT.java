@@ -7,6 +7,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoNombre;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoObservaciones;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -78,11 +79,14 @@ class ConvocatoriaDocumentoIT extends BaseIT {
   void update_ReturnsConvocatoriaDocumento() throws Exception {
     Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
     convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre-modificado"));
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
     // given: existing ConvocatoriaDocumento to be updated
     ConvocatoriaDocumento convocatoriaDocumento = generarMockConvocatoriaDocumento(1L, 1L, 1L);
     convocatoriaDocumento.getTipoDocumento().setId(2L);
     convocatoriaDocumento.setNombre(convocatoriaDocumentonombre);
-    convocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    convocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
 
     // when: update ConvocatoriaDocumento
     final ResponseEntity<ConvocatoriaDocumento> response = restTemplate.exchange(
@@ -101,8 +105,8 @@ class ConvocatoriaDocumentoIT extends BaseIT {
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre-modificado");
     Assertions.assertThat(responseData.getPublico()).as("getPublico()").isEqualTo(Boolean.TRUE);
-    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
-        .isEqualTo("observaciones-modificadas");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("observaciones-modificadas");
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()").isEqualTo("documentoRef-1");
   }
 
@@ -144,8 +148,8 @@ class ConvocatoriaDocumentoIT extends BaseIT {
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("nombre doc-2");
     Assertions.assertThat(responseData.getPublico()).as("getPublico()").isEqualTo(Boolean.TRUE);
-    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
-        .isEqualTo("observacionesConvocatoriaDocumento-2");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("observacionesConvocatoriaDocumento-2");
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()").isEqualTo("documentoRef-2");
   }
 
@@ -165,6 +169,10 @@ class ConvocatoriaDocumentoIT extends BaseIT {
     Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
     convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre doc-" + id));
 
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observacionesConvocatoriaDocumento-" + id));
+
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
@@ -173,7 +181,7 @@ class ConvocatoriaDocumentoIT extends BaseIT {
         .tipoDocumento(tipoDocumento)
         .nombre(convocatoriaDocumentonombre)
         .publico(Boolean.TRUE)
-        .observaciones("observacionesConvocatoriaDocumento-" + id)
+        .observaciones(convocatoriaDocumentoObservaciones)
         .documentoRef("documentoRef-" + id)
         .build();
     // @formatter:on

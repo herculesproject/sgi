@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoNombre;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoObservaciones;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
@@ -421,7 +422,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
     convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre-modificado"));
     updatedConvocatoriaDocumento.setNombre(convocatoriaDocumentonombre);
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedConvocatoriaDocumento,
@@ -569,7 +573,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     updatedConvocatoriaDocumento.setTipoFase(null);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedConvocatoriaDocumento,
@@ -604,7 +611,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -633,7 +643,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     modeloTipoFase.setActivo(Boolean.FALSE);
@@ -672,7 +685,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     modeloTipoFase.getTipoFase().setActivo(Boolean.FALSE);
@@ -712,7 +728,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     updatedConvocatoriaDocumento.setTipoFase(generarMockTipoFase(2L));
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     modeloTipoFase.setActivo(Boolean.FALSE);
@@ -744,7 +763,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     updatedConvocatoriaDocumento.setTipoFase(generarMockTipoFase(2L));
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     modeloTipoFase.getTipoFase().setActivo(Boolean.FALSE);
@@ -774,7 +796,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
 
@@ -810,7 +835,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedConvocatoriaDocumento,
@@ -849,7 +877,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedConvocatoriaDocumento,
@@ -889,7 +920,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     updatedConvocatoriaDocumento.setTipoDocumento(generarMockTipoDocumento(2L));
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedConvocatoriaDocumento,
@@ -928,7 +962,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     ConvocatoriaDocumento originalConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     ConvocatoriaDocumento updatedConvocatoriaDocumento = generarMockConvocatoriaDocumento(1L, convocatoriaId, 1L, 1L);
     updatedConvocatoriaDocumento.setTipoDocumento(generarMockTipoDocumento(2L));
-    updatedConvocatoriaDocumento.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones
+        .add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedConvocatoriaDocumento.setObservaciones(convocatoriaDocumentoObservaciones);
     updatedConvocatoriaDocumento.setDocumentoRef("documentoRef-modificado");
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(updatedConvocatoriaDocumento, convocatoria);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedConvocatoriaDocumento,
@@ -1017,8 +1054,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaDocumento.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre doc-" + idBuscado);
     Assertions.assertThat(convocatoriaDocumento.getPublico()).as("getPublico()").isEqualTo(Boolean.TRUE);
-    Assertions.assertThat(convocatoriaDocumento.getObservaciones()).as("getObservaciones()")
-        .isEqualTo("observaciones-" + idBuscado);
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaDocumento.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("observaciones-" + idBuscado);
     Assertions.assertThat(convocatoriaDocumento.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo("documentoRef-" + idBuscado);
   }
@@ -1278,6 +1315,9 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Set<ConvocatoriaDocumentoNombre> convocatoriaDocumentonombre = new HashSet<>();
     convocatoriaDocumentonombre.add(new ConvocatoriaDocumentoNombre(Language.ES, "nombre doc-" + id));
 
+    Set<ConvocatoriaDocumentoObservaciones> convocatoriaDocumentoObservaciones = new HashSet<>();
+    convocatoriaDocumentoObservaciones.add(new ConvocatoriaDocumentoObservaciones(Language.ES, "observaciones-" + id));
+
     // @formatter:off
     return ConvocatoriaDocumento.builder()
         .id(id)
@@ -1286,7 +1326,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         .tipoDocumento(tipoDocumento)
         .nombre(convocatoriaDocumentonombre)
         .publico(Boolean.TRUE)
-        .observaciones("observaciones-" + id)
+        .observaciones(convocatoriaDocumentoObservaciones)
         .documentoRef("documentoRef-" + id)
         .build();
     // @formatter:on

@@ -88,14 +88,14 @@ INSERT INTO test.modelo_tipo_documento (id, tipo_documento_id, modelo_ejecucion_
 INSERT INTO test.modelo_tipo_documento (id, tipo_documento_id, modelo_ejecucion_id, modelo_tipo_fase_id, activo) VALUES (8, 1, 2, null, true);
 
 -- CONVOCATORIA DOCUMENTO
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(1, 1, 1, 1, true, 'observaciones-001', 'documentoRef-2');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(2, 1, 1, 2, true, 'observaciones-002', 'documentoRef-2');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(3, 1, 1, 3, true, 'observaciones-003', 'documentoRef-3');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(4, 1, null, 1, true, 'observaciones-4', 'documentoRef-2');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(5, 2, 1, 1, true, 'observaciones-5', 'documentoRef-2');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(6, 2, 1, 2, true, 'observaciones-6', 'documentoRef-3');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(7, 2, 1, 3, true, 'observaciones-7', 'documentoRef-2');
-INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, OBSERVACIONES, DOCUMENTO_REF) VALUES(8, 2, null, 1, true, 'observaciones-8', 'documentoRef-2');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(1, 1, 1, 1, true, 'documentoRef-2');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(2, 1, 1, 2, true, 'documentoRef-2');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(3, 1, 1, 3, true, 'documentoRef-3');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(4, 1, null, 1, true, 'documentoRef-2');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(5, 2, 1, 1, true, 'documentoRef-2');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(6, 2, 1, 2, true, 'documentoRef-3');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(7, 2, 1, 3, true, 'documentoRef-2');
+INSERT INTO test.CONVOCATORIA_DOCUMENTO (ID, CONVOCATORIA_ID, TIPO_FASE_ID, TIPO_DOCUMENTO_ID, PUBLICO, DOCUMENTO_REF) VALUES(8, 2, null, 1, true, 'documentoRef-2');
 
 -- CONVOCATORIA DOCUMENTO NOMBRE
 INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang, value_) VALUES(1, 'es', 'nombre doc-1');
@@ -106,6 +106,16 @@ INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang,
 INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang, value_) VALUES(6, 'es', 'nombre doc-6');
 INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang, value_) VALUES(7, 'es', 'nombre doc-7');
 INSERT INTO test.convocatoria_documento_nombre (convocatoria_documento_id, lang, value_) VALUES(8, 'es', 'nombre doc-8');
+
+-- CONVOCATORIA DOCUMENTO OBSERVACIONES
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(1, 'es', 'observaciones-001');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(2, 'es', 'observaciones-002');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(3, 'es', 'observaciones-003');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(4, 'es', 'observaciones-4');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(5, 'es', 'observaciones-5');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(6, 'es', 'observaciones-6');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(7, 'es', 'observaciones-7');
+INSERT INTO test.convocatoria_documento_observaciones (convocatoria_documento_id, lang, value_) VALUES(8, 'es', 'observaciones-8');
 
 --CONVOCATORIA FASE
 INSERT INTO test.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin) VALUES (1, 1, 1, '2020-10-01T00:00:00Z', '2020-10-15T23:59:59Z');

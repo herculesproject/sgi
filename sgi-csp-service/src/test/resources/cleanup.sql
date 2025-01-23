@@ -97,6 +97,7 @@ DELETE FROM test.rol_socio_descripcion;
 DELETE FROM test.rol_socio_abreviatura;
 DELETE FROM test.rol_socio;
 DELETE FROM test.convocatoria_documento_nombre;
+DELETE FROM test.convocatoria_documento_observaciones;
 DELETE FROM test.convocatoria_documento;
 DELETE FROM test.documento_requerido_solicitud;
 DELETE FROM test.configuracion_solicitud;

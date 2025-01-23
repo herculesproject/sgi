@@ -80,9 +80,11 @@ public class ConvocatoriaDocumento extends BaseEntity {
   private Boolean publico;
 
   /** Observaciones */
-  @Column(name = "observaciones", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String observaciones;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "convocatoria_documento_observaciones", joinColumns = @JoinColumn(name = "convocatoria_documento_id"))
+  @Valid
+  @Builder.Default
+  private Set<ConvocatoriaDocumentoObservaciones> observaciones = new HashSet<>();
 
   /** Referencia documento */
   @Column(name = "documento_ref", length = 250, nullable = false)
