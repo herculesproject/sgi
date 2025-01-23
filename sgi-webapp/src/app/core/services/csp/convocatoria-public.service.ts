@@ -27,7 +27,6 @@ import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equip
 import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-categoria-profesional';
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
 import { IConvocatoriaDocumentoResponse } from '@core/services/csp/convocatoria-documento/convocatoria-documento-response';
-import { CONVOCATORIA_DOCUMENTO_CONVERTER } from '@core/services/csp/convocatoria-documento/convocatoria-documento.converter';
 import { IConvocatoriaEnlaceResponse } from '@core/services/csp/convocatoria-enlace/convocatoria-enlace-response';
 import { CONVOCATORIA_ENLACE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-enlace/convocatoria-enlace-response.converter';
 import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response';
@@ -40,6 +39,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
 import { CONVOCATORIA_CONCEPTO_GASTO_RESPONSE_CONVERTER } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response.converter';
+import { CONVOCATORIA_DOCUMENTO_RESPONSE_CONVERTER } from './convocatoria-documento/convocatoria-documento-response.converter';
 import { IConvocatoriaFaseResponse } from './convocatoria-fase/convocatoria-fase-response';
 import { CONVOCATORIA_FASE_RESPONSE_CONVERTER } from './convocatoria-fase/convocatoria-fase-response.converter';
 import { IConvocatoriaHitoResponse } from './convocatoria-hito/convocatoria-hito-response';
@@ -154,7 +154,7 @@ export class ConvocatoriaPublicService extends _ConvocatoriaMixinBase {
     return this.find<IConvocatoriaDocumentoResponse, IConvocatoriaDocumento>(
       `${this.endpointUrl}/${id}/convocatoriadocumentos`,
       options,
-      CONVOCATORIA_DOCUMENTO_CONVERTER
+      CONVOCATORIA_DOCUMENTO_RESPONSE_CONVERTER
     );
   }
 

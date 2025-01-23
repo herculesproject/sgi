@@ -1,9 +1,11 @@
-import { IConvocatoriaDocumentoResponse } from '@core/services/csp/convocatoria-documento/convocatoria-documento-response';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
+import { IConvocatoriaDocumentoResponse } from '@core/services/csp/convocatoria-documento/convocatoria-documento-response';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from '../tipo-documento/tipo-documento-response.converter';
 import { TIPO_FASE_RESPONSE_CONVERTER } from '../tipo-fase/tipo-fase-response.converter';
 
-class ConvocatoriaDocumentoConverter extends SgiBaseConverter<IConvocatoriaDocumentoResponse, IConvocatoriaDocumento> {
+class ConvocatoriaDocumentoResponseConverter extends SgiBaseConverter<IConvocatoriaDocumentoResponse, IConvocatoriaDocumento> {
 
   toTarget(value: IConvocatoriaDocumentoResponse): IConvocatoriaDocumento {
     if (!value) {
@@ -12,10 +14,10 @@ class ConvocatoriaDocumentoConverter extends SgiBaseConverter<IConvocatoriaDocum
     return {
       id: value.id,
       convocatoriaId: value.convocatoriaId,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       documentoRef: value.documentoRef,
       tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.toTarget(value.tipoFase) : null,
-      tipoDocumento: value.tipoDocumento,
+      tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento) : null,
       publico: value.publico,
       observaciones: value.observaciones
     };
@@ -28,14 +30,14 @@ class ConvocatoriaDocumentoConverter extends SgiBaseConverter<IConvocatoriaDocum
     return {
       id: value.id,
       convocatoriaId: value.convocatoriaId,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       documentoRef: value.documentoRef,
       tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.fromTarget(value.tipoFase) : null,
-      tipoDocumento: value.tipoDocumento,
+      tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento) : null,
       publico: value.publico,
       observaciones: value.observaciones
     };
   }
 }
 
-export const CONVOCATORIA_DOCUMENTO_CONVERTER = new ConvocatoriaDocumentoConverter();
+export const CONVOCATORIA_DOCUMENTO_RESPONSE_CONVERTER = new ConvocatoriaDocumentoResponseConverter();

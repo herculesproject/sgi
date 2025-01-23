@@ -1,5 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -11,8 +11,8 @@ import { Group } from '@core/services/action-service';
 import { DocumentoPublicService } from '@core/services/sgdoc/documento-public.service';
 import { triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiFileUploadComponent } from '@shared/file-upload/file-upload.component';
 import { Subscription } from 'rxjs';
 import { ConvocatoriaPublicActionService } from '../../convocatoria-public.action.service';
 import { ConvocatoriaDocumentosPublicFragment, NodeDocumento } from './convocatoria-documentos-public.fragment';
@@ -93,15 +93,15 @@ export class ConvocatoriaDocumentosPublicComponent extends FragmentComponent imp
       this.dataSource.data = documentos;
     }));
     this.group.load(new FormGroup({
-      nombre: new FormControl('', [
+      nombre: new FormControl([], [
         Validators.required,
-        Validators.maxLength(50)
+        I18nValidators.maxLength(50)
       ]),
       fichero: new FormControl(null, Validators.required),
       fase: new FormControl(null),
       tipoDocumento: new FormControl(null),
       publico: new FormControl(true, Validators.required),
-      observaciones: new FormControl('')
+      observaciones: new FormControl([], I18nValidators.maxLength(2000))
     }));
     this.group.initialize();
 

@@ -1,13 +1,14 @@
-import { ITipoDocumento } from '../../../models/csp/tipos-configuracion';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
+import { ITipoDocumentoResponse } from '../tipo-documento/tipo-documento-response';
 import { ITipoFaseResponse } from '../tipo-fase/tipo-fase-response';
 
 export interface IConvocatoriaDocumentoResponse {
   id: number;
   convocatoriaId: number;
-  nombre: string;
+  nombre: I18nFieldValueResponse[];
   documentoRef: string;
   tipoFase: ITipoFaseResponse;
-  tipoDocumento: ITipoDocumento;
+  tipoDocumento: ITipoDocumentoResponse;
   publico: boolean;
   observaciones: string;
 }

@@ -3,7 +3,7 @@ import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { Fragment } from '@core/services/action-service';
-import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
+import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento/convocatoria-documento.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
