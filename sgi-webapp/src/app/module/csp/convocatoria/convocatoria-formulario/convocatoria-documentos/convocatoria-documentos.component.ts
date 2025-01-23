@@ -123,7 +123,7 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
       fase: new FormControl(null),
       tipoDocumento: new FormControl(null),
       publico: new FormControl(true, Validators.required),
-      observaciones: new FormControl('')
+      observaciones: new FormControl([], I18nValidators.maxLength(2000))
     }));
     this.group.initialize();
 

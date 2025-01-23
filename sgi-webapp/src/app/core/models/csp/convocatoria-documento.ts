@@ -9,5 +9,5 @@ export interface IConvocatoriaDocumento {
   tipoFase: ITipoFase;
   tipoDocumento: ITipoDocumento;
   publico: boolean;
-  observaciones: string;
+  observaciones: I18nFieldValue[];
 }

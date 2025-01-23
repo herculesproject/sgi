@@ -82,8 +82,8 @@
         </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.convocatoria-documento.observaciones' | translate}}</mat-label>
-          <textarea matInput type="text" placeholder="{{'csp.convocatoria-documento.observaciones' | translate}}"
-            formControlName="observaciones"></textarea>
+          <sgi-i18n-textarea placeholder="{{'csp.convocatoria-documento.observaciones' | translate}}"
+            formControlName="observaciones"></sgi-i18n-textarea>
         </mat-form-field>
       </div>
       <div class="separation-button" *ngIf="group.status$ | async as status">

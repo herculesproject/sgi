@@ -10,5 +10,5 @@ export interface IConvocatoriaDocumentoResponse {
   tipoFase: ITipoFaseResponse;
   tipoDocumento: ITipoDocumentoResponse;
   publico: boolean;
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
 }

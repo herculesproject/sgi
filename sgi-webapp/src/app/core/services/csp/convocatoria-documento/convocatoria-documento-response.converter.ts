@@ -19,7 +19,7 @@ class ConvocatoriaDocumentoResponseConverter extends SgiBaseConverter<IConvocato
       tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.toTarget(value.tipoFase) : null,
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento) : null,
       publico: value.publico,
-      observaciones: value.observaciones
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : []
     };
   }
 
@@ -35,7 +35,7 @@ class ConvocatoriaDocumentoResponseConverter extends SgiBaseConverter<IConvocato
       tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.fromTarget(value.tipoFase) : null,
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento) : null,
       publico: value.publico,
-      observaciones: value.observaciones
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : []
     };
   }
 }
