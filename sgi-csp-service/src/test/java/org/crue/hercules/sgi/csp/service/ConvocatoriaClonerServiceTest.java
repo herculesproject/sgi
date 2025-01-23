@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPartidaDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
@@ -478,10 +479,13 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
   }
 
   private ConvocatoriaPartida buildMockConvocatoriaPartida(Long convocatoriaClonedId) {
+    Set<ConvocatoriaPartidaDescripcion> descripcionConvocatoriaPartida = new HashSet<>();
+    descripcionConvocatoriaPartida.add(new ConvocatoriaPartidaDescripcion(Language.ES, "TESTING"));
+
     return ConvocatoriaPartida.builder()
         .convocatoriaId(convocatoriaClonedId)
         .codigo("COD-001")
-        .descripcion("TESTING")
+        .descripcion(descripcionConvocatoriaPartida)
         .tipoPartida(TipoPartida.GASTO)
         .id(1L)
         .build();

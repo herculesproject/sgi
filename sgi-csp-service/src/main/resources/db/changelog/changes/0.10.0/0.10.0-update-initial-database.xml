@@ -1380,4 +1380,34 @@
 
     <dropColumn columnName="otros_requisitos" tableName="requisito_equipo" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-53">
+    <createTable tableName="convocatoria_partida_descripcion">
+      <column name="convocatoria_partida_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_partida_descripcion"
+      columnNames="convocatoria_partida_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_partida_id"
+      baseTableName="convocatoria_partida_descripcion"
+      constraintName="FK_CONVOCATORIAPARTIDADESCRIPCION_CONVOCATORIAPARTIDA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria_partida" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}convocatoria_partida_descripcion(convocatoria_partida_id,
+      value_, lang) SELECT id, descripcion, '${defaultLang}' FROM
+      ${schemaPrefix}convocatoria_partida WHERE descripcion IS NOT NULL AND
+      NULLIF(TRIM(descripcion), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="convocatoria_partida" />
+  </changeSet>
 </databaseChangeLog>

@@ -458,7 +458,11 @@ public class ConvocatoriaClonerService {
 
     this.convocatoriaPartidaRepository.findByConvocatoriaId(convocatoriaToCloneId).stream()
         .forEach(partida -> this.convocatoriaPartidaRepository
-            .save(ConvocatoriaPartida.builder().convocatoriaId(convocatoriaClonedId).codigo(partida.getCodigo())
-                .descripcion(partida.getDescripcion()).tipoPartida(partida.getTipoPartida()).build()));
+            .save(ConvocatoriaPartida.builder()
+                .convocatoriaId(convocatoriaClonedId)
+                .codigo(partida.getCodigo())
+                .descripcion(new HashSet<>(partida.getDescripcion()))
+                .tipoPartida(partida.getTipoPartida())
+                .build()));
   }
 }

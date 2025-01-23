@@ -1870,7 +1870,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         partidaProyecto.setCodigo(partidaConvocatoria.getCodigo());
         partidaProyecto.setPartidaRef(partidaConvocatoria.getPartidaRef());
         partidaProyecto.setConvocatoriaPartidaId(partidaConvocatoria.getId());
-        partidaProyecto.setDescripcion(partidaConvocatoria.getDescripcion());
+        partidaProyecto.setDescripcion(I18nHelper.getFieldValue(partidaConvocatoria.getDescripcion()));
         partidaProyecto.setTipoPartida(partidaConvocatoria.getTipoPartida());
 
         this.proyectoPartidaService.create(partidaProyecto);
