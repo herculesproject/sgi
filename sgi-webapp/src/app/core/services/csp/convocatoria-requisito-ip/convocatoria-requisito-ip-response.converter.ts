@@ -1,13 +1,14 @@
-import { IConvocatoriaRequisitoIPBackend } from '@core/models/csp/backend/convocatoria-requisito-ip-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
 import { ISexo } from '@core/models/sgp/sexo';
+import { IConvocatoriaRequisitoIPResponse } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
-class ConvocatoriaRequisitoIPConverter
-  extends SgiBaseConverter<IConvocatoriaRequisitoIPBackend, IConvocatoriaRequisitoIP> {
+class ConvocatoriaRequisitoIPResponseConverter
+  extends SgiBaseConverter<IConvocatoriaRequisitoIPResponse, IConvocatoriaRequisitoIP> {
 
-  toTarget(value: IConvocatoriaRequisitoIPBackend): IConvocatoriaRequisitoIP {
+  toTarget(value: IConvocatoriaRequisitoIPResponse): IConvocatoriaRequisitoIP {
     if (!value) {
       return value as unknown as IConvocatoriaRequisitoIP;
     }
@@ -28,13 +29,13 @@ class ConvocatoriaRequisitoIPConverter
       numMinimoNoCompetitivos: value.numMinimoNoCompetitivos,
       numMaximoCompetitivosActivos: value.numMaximoCompetitivosActivos,
       numMaximoNoCompetitivosActivos: value.numMaximoNoCompetitivosActivos,
-      otrosRequisitos: value.otrosRequisitos
+      otrosRequisitos: value.otrosRequisitos ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.otrosRequisitos) : []
     };
   }
 
-  fromTarget(value: IConvocatoriaRequisitoIP): IConvocatoriaRequisitoIPBackend {
+  fromTarget(value: IConvocatoriaRequisitoIP): IConvocatoriaRequisitoIPResponse {
     if (!value) {
-      return value as unknown as IConvocatoriaRequisitoIPBackend;
+      return value as unknown as IConvocatoriaRequisitoIPResponse;
     }
     return {
       id: value.id,
@@ -51,9 +52,9 @@ class ConvocatoriaRequisitoIPConverter
       numMinimoNoCompetitivos: value.numMinimoNoCompetitivos,
       numMaximoCompetitivosActivos: value.numMaximoCompetitivosActivos,
       numMaximoNoCompetitivosActivos: value.numMaximoNoCompetitivosActivos,
-      otrosRequisitos: value.otrosRequisitos
+      otrosRequisitos: value.otrosRequisitos ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.otrosRequisitos) : []
     };
   }
 }
 
-export const CONVOCATORIA_REQUISITO_IP_CONVERTER = new ConvocatoriaRequisitoIPConverter();
+export const CONVOCATORIA_REQUISITO_IP_RESPONSE_CONVERTER = new ConvocatoriaRequisitoIPResponseConverter();

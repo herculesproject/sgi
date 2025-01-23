@@ -13,7 +13,7 @@ import { INivelAcademico } from '@core/models/sgp/nivel-academico';
 import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
-import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
+import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudRrhhRequisitoCategoriaService } from '@core/services/csp/solicitud-rrhh-requisito-categoria/solicitud-rrhh-requisito-categoria.service';
 import { SolicitudRrhhRequisitoNivelAcademicoService } from '@core/services/csp/solicitud-rrhh-requisito-nivel-academico/solicitud-rrhh-requisito-nivel-academico.service';

@@ -20,7 +20,7 @@ import { ConvocatoriaPartidaPresupuestariaService } from '@core/services/csp/con
 import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion/convocatoria-periodo-justificacion.service';
 import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-periodo-seguimiento-cientifico/convocatoria-seguimiento-cientifico.service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
-import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
+import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DocumentoRequeridoSolicitudService } from '@core/services/csp/documento-requerido-solicitud.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';

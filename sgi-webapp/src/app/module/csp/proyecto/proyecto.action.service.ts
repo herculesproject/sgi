@@ -14,7 +14,7 @@ import { ActionService } from '@core/services/action-service';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ContextoProyectoService } from '@core/services/csp/contexto-proyecto.service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
-import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
+import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';

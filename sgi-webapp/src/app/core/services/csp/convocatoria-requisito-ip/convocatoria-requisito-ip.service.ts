@@ -1,34 +1,34 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_REQUISITO_IP_CONVERTER } from '@core/converters/csp/convocatoria-requisito-ip.converter';
-import { IConvocatoriaRequisitoIPBackend } from '@core/models/csp/backend/convocatoria-requisito-ip-backend';
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
 import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-categoria-profesional';
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
+import { IConvocatoriaRequisitoIPResponse } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip-response';
+import { CONVOCATORIA_REQUISITO_IP_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip-response.converter';
 import { environment } from '@env';
 import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { REQUISITOIP_CATEGORIA_PROFESIONAL_REQUEST_CONVERTER } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-request.converter';
-import { IRequisitoIPCategoriaProfesionalResponse } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response';
-import { REQUISITOIP_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from './requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response.converter';
-import { REQUISITOIP_NIVELACADEMICO_REQUEST_CONVERTER } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-request.converter';
-import { IRequisitoIPNivelAcademicoResponse } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response';
-import { REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response.converter';
+import { REQUISITOIP_CATEGORIA_PROFESIONAL_REQUEST_CONVERTER } from '../requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-request.converter';
+import { IRequisitoIPCategoriaProfesionalResponse } from '../requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response';
+import { REQUISITOIP_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from '../requisito-ip-categoria-profesional/requisito-ip-categoria-profesional-response.converter';
+import { REQUISITOIP_NIVELACADEMICO_REQUEST_CONVERTER } from '../requisito-ip-nivel-academico/requisito-ip-nivel-academico-request.converter';
+import { IRequisitoIPNivelAcademicoResponse } from '../requisito-ip-nivel-academico/requisito-ip-nivel-academico-response';
+import { REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER } from '../requisito-ip-nivel-academico/requisito-ip-nivel-academico-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _ConvocatoriaRequisitoIPServiceMixinBase:
-  CreateCtor<IConvocatoriaRequisitoIP, IConvocatoriaRequisitoIP, IConvocatoriaRequisitoIPBackend, IConvocatoriaRequisitoIPBackend> &
-  UpdateCtor<number, IConvocatoriaRequisitoIP, IConvocatoriaRequisitoIP, IConvocatoriaRequisitoIPBackend, IConvocatoriaRequisitoIPBackend> &
+  CreateCtor<IConvocatoriaRequisitoIP, IConvocatoriaRequisitoIP, IConvocatoriaRequisitoIPResponse, IConvocatoriaRequisitoIPResponse> &
+  UpdateCtor<number, IConvocatoriaRequisitoIP, IConvocatoriaRequisitoIP, IConvocatoriaRequisitoIPResponse, IConvocatoriaRequisitoIPResponse> &
   typeof SgiRestBaseService =
   mixinUpdate(
     mixinCreate(
       SgiRestBaseService,
-      CONVOCATORIA_REQUISITO_IP_CONVERTER,
-      CONVOCATORIA_REQUISITO_IP_CONVERTER
+      CONVOCATORIA_REQUISITO_IP_RESPONSE_CONVERTER,
+      CONVOCATORIA_REQUISITO_IP_RESPONSE_CONVERTER
     ),
-    CONVOCATORIA_REQUISITO_IP_CONVERTER,
-    CONVOCATORIA_REQUISITO_IP_CONVERTER
+    CONVOCATORIA_REQUISITO_IP_RESPONSE_CONVERTER,
+    CONVOCATORIA_REQUISITO_IP_RESPONSE_CONVERTER
   );
 
 @Injectable({
@@ -50,8 +50,8 @@ export class ConvocatoriaRequisitoIPService extends _ConvocatoriaRequisitoIPServ
    */
   getRequisitoIPConvocatoria(id: number): Observable<IConvocatoriaRequisitoIP> {
     const endpointUrl = `${this.endpointUrl}/${id}`;
-    return this.http.get<IConvocatoriaRequisitoIPBackend>(endpointUrl).pipe(
-      map(response => CONVOCATORIA_REQUISITO_IP_CONVERTER.toTarget(response)),
+    return this.http.get<IConvocatoriaRequisitoIPResponse>(endpointUrl).pipe(
+      map(response => CONVOCATORIA_REQUISITO_IP_RESPONSE_CONVERTER.toTarget(response)),
       catchError((err) => {
         return of({} as IConvocatoriaRequisitoIP);
       })
