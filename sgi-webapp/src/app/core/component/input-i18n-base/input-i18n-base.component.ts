@@ -107,6 +107,15 @@ export abstract class InputI18nBaseComponent
   // tslint:disable-next-line: variable-name
   private _disabled = false;
 
+  @Input()
+  get maxlength() {
+    return this._maxlength;
+  }
+  set maxlength(value) {
+    this._maxlength = value;
+  }
+  private _maxlength: string;
+
   // tslint:disable-next-line: variable-name
   /** Object used to control when error messages are shown. */
   @Input()
