@@ -1,11 +1,16 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
+import org.crue.hercules.sgi.csp.model.RequisitoEquipoOtrosRequisitos;
+import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -33,6 +38,9 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
         .build());
     // @formatter:on
 
+    Set<RequisitoEquipoOtrosRequisitos> otrosRequisitos = new HashSet<>();
+    otrosRequisitos.add(new RequisitoEquipoOtrosRequisitos(Language.ES, "otros"));
+
     // @formatter:off
     RequisitoEquipo requisitoEquipo1 = entityManager.persistAndFlush(RequisitoEquipo.builder()
         .id(convocatoria1.getId())
@@ -48,7 +56,7 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
         .numMinimoNoCompetitivos(10)
         .numMaximoCompetitivosActivos(15)
         .numMaximoNoCompetitivosActivos(15)
-        .otrosRequisitos("otros")
+        .otrosRequisitos(otrosRequisitos)
         .build());
     // @formatter:on
 
@@ -73,7 +81,7 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
         .numMinimoNoCompetitivos(10)
         .numMaximoCompetitivosActivos(15)
         .numMaximoNoCompetitivosActivos(15)
-        .otrosRequisitos("otros")
+        .otrosRequisitos(otrosRequisitos)
         .build());
     // @formatter:on
 
@@ -105,6 +113,9 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
         .build());
     // @formatter:on
 
+    Set<RequisitoEquipoOtrosRequisitos> otrosRequisitos = new HashSet<>();
+    otrosRequisitos.add(new RequisitoEquipoOtrosRequisitos(Language.ES, "otros"));
+
     // @formatter:off
     entityManager.persistAndFlush(RequisitoEquipo.builder()
         .id(convocatoria1.getId())
@@ -120,7 +131,7 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
         .numMinimoNoCompetitivos(10)
         .numMaximoCompetitivosActivos(15)
         .numMaximoNoCompetitivosActivos(15)
-        .otrosRequisitos("otros")
+        .otrosRequisitos(otrosRequisitos)
         .build());
     // @formatter:on
 
@@ -149,7 +160,7 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
         .numMinimoNoCompetitivos(10)
         .numMaximoCompetitivosActivos(15)
         .numMaximoNoCompetitivosActivos(15)
-        .otrosRequisitos("otros")
+        .otrosRequisitos(otrosRequisitos)
         .build());
     // @formatter:on
 

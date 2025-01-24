@@ -35,6 +35,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientificoO
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
+import org.crue.hercules.sgi.csp.model.RequisitoEquipoOtrosRequisitos;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.crue.hercules.sgi.csp.model.RequisitoIPCategoriaProfesional;
 import org.crue.hercules.sgi.csp.model.RequisitoIPNivelAcademico;
@@ -426,6 +427,8 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
   }
 
   private RequisitoEquipo buildMockRequisitoEquipo(Long convocatoriaClonedId) {
+    Set<RequisitoEquipoOtrosRequisitos> otrosRequisitos = new HashSet<>();
+    otrosRequisitos.add(new RequisitoEquipoOtrosRequisitos(Language.ES, "NO DEFINIDOS"));
 
     return RequisitoEquipo.builder()
         .edadMaxima(55)
@@ -436,7 +439,7 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
         .numMinimoNoCompetitivos(2)
         .numMaximoCompetitivosActivos(10)
         .numMaximoNoCompetitivosActivos(3)
-        .otrosRequisitos("NO DEFINIDOS")
+        .otrosRequisitos(otrosRequisitos)
         .id(convocatoriaClonedId)
         .build();
   }
