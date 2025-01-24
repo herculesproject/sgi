@@ -1,34 +1,49 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_REQUISITO_EQUIPO_CONVERTER } from '@core/converters/csp/convocatoria-requisito-equipo.converter';
-import { IConvocatoriaRequisitoEquipoBackend } from '@core/models/csp/backend/convocatoria-requisito-equipo-backend';
 import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requisito-equipo';
 import { IRequisitoEquipoCategoriaProfesional } from '@core/models/csp/requisito-equipo-categoria-profesional';
 import { IRequisitoEquipoNivelAcademico } from '@core/models/csp/requisito-equipo-nivel-academico';
+import { IConvocatoriaRequisitoEquipoResponse } from '@core/services/csp/convocatoria-requisito-equipo/convocatoria-requisito-equipo-response';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_REQUEST_CONVERTER } from './requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-request.converter';
-import { IRequisitoEquipoCategoriaProfesionalResponse } from './requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-response';
-import { REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from './requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-response.converter';
-import { REQUISITO_EQUIPO_NIVELACADEMICO_REQUEST_CONVERTER } from './requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-request.converter';
-import { IRequisitoEquipoNivelAcademicoResponse } from './requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-response';
-import { REQUISITO_EQUIPO_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-response.converter';
+import { REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_REQUEST_CONVERTER } from '../requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-request.converter';
+import { IRequisitoEquipoCategoriaProfesionalResponse } from '../requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-response';
+import { REQUISITO_EQUIPO_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from '../requisito-equipo-categoria-profesional/requisito-equipo-categoria-profesional-response.converter';
+import { REQUISITO_EQUIPO_NIVELACADEMICO_REQUEST_CONVERTER } from '../requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-request.converter';
+import { IRequisitoEquipoNivelAcademicoResponse } from '../requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-response';
+import { REQUISITO_EQUIPO_NIVELACADEMICO_RESPONSE_CONVERTER } from '../requisito-equipo-nivel-academico/requisito-equipo-nivel-academico-response.converter';
+import { CONVOCATORIA_REQUISITO_EQUIPO_RESPONSE_CONVERTER } from './convocatoria-requisito-equipo-response.converter';
+
+const _ConvocatoriaRequisitoEquipoServiceMixinBase:
+  CreateCtor<IConvocatoriaRequisitoEquipo, IConvocatoriaRequisitoEquipo, IConvocatoriaRequisitoEquipoResponse, IConvocatoriaRequisitoEquipoResponse> &
+  UpdateCtor<number, IConvocatoriaRequisitoEquipo, IConvocatoriaRequisitoEquipo, IConvocatoriaRequisitoEquipoResponse, IConvocatoriaRequisitoEquipoResponse> &
+  FindByIdCtor<number, IConvocatoriaRequisitoEquipo, IConvocatoriaRequisitoEquipoResponse> &
+  typeof SgiRestBaseService =
+  mixinFindById(
+    mixinUpdate(
+      mixinCreate(
+        SgiRestBaseService,
+        CONVOCATORIA_REQUISITO_EQUIPO_RESPONSE_CONVERTER,
+        CONVOCATORIA_REQUISITO_EQUIPO_RESPONSE_CONVERTER
+      ),
+      CONVOCATORIA_REQUISITO_EQUIPO_RESPONSE_CONVERTER,
+      CONVOCATORIA_REQUISITO_EQUIPO_RESPONSE_CONVERTER
+    ),
+    CONVOCATORIA_REQUISITO_EQUIPO_RESPONSE_CONVERTER,
+  );
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaRequisitoEquipoService
-  extends SgiMutableRestService<number, IConvocatoriaRequisitoEquipoBackend, IConvocatoriaRequisitoEquipo> {
+export class ConvocatoriaRequisitoEquipoService extends _ConvocatoriaRequisitoEquipoServiceMixinBase {
   private static readonly MAPPING = '/convocatoria-requisitoequipos';
 
   constructor(protected http: HttpClient) {
     super(
-      ConvocatoriaRequisitoEquipoService.name,
       `${environment.serviceServers.csp}${ConvocatoriaRequisitoEquipoService.MAPPING}`,
-      http,
-      CONVOCATORIA_REQUISITO_EQUIPO_CONVERTER
+      http
     );
   }
 
@@ -95,8 +110,8 @@ export class ConvocatoriaRequisitoEquipoService
    * @param id Id de la convocatoria
    */
   findByConvocatoriaId(id: number): Observable<IConvocatoriaRequisitoEquipo> {
-    return this.http.get<IConvocatoriaRequisitoEquipoBackend>(`${this.endpointUrl}/${id}`).pipe(
-      map(response => CONVOCATORIA_REQUISITO_EQUIPO_CONVERTER.toTarget(response))
+    return this.http.get<IConvocatoriaRequisitoEquipoResponse>(`${this.endpointUrl}/${id}`).pipe(
+      map(response => CONVOCATORIA_REQUISITO_EQUIPO_RESPONSE_CONVERTER.toTarget(response))
     );
 
   }

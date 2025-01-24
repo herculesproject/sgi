@@ -1,6 +1,6 @@
-import { IConvocatoriaRequisitoI18n } from './convocatoria-requisito-i18n';
+import { IConvocatoriaRequisito } from './convocatoria-requisito';
 
-export interface IConvocatoriaRequisitoIP extends IConvocatoriaRequisitoI18n {
+export interface IConvocatoriaRequisitoIP extends IConvocatoriaRequisito {
   /** Número máximo ip */
   numMaximoIP: number;
 }

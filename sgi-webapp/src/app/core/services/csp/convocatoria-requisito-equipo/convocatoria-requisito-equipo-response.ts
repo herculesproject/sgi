@@ -1,26 +1,26 @@
-import { I18nFieldValue } from '@core/i18n/i18n-field';
-import { DateTime } from 'luxon';
-import { ISexo } from '../sgp/sexo';
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
 
-export interface IConvocatoriaRequisitoI18n {
+export interface IConvocatoriaRequisitoEquipoResponse {
   /** Id */
   id: number;
   /** Id de Convocatoria */
   convocatoriaId: number;
   /** Fecha máxima nivel académico */
-  fechaMaximaNivelAcademico: DateTime;
-  /** Fecha mínima nivel académico */
-  fechaMinimaNivelAcademico: DateTime;
-  /** Edad máxima */
+  fechaMaximaNivelAcademico: string;
+  /** Fecha máxima nivel académico */
+  fechaMinimaNivelAcademico: string;
+  /** Ratio máxima */
   edadMaxima: number;
-  /** Sexo */
-  sexo: ISexo;
   /** Vinculación universidad */
   vinculacionUniversidad: boolean;
+  /** Sexo */
+  sexoRef: string;
+  /** Ratio Sexo */
+  ratioSexo: number;
   /** Fecha máxima categoria profesional */
-  fechaMaximaCategoriaProfesional: DateTime;
+  fechaMaximaCategoriaProfesional: string;
   /** Fecha mínima categoria profesional */
-  fechaMinimaCategoriaProfesional: DateTime;
+  fechaMinimaCategoriaProfesional: string;
   /** Número mínimo proyectos competitivos */
   numMinimoCompetitivos: number;
   /** Número mínimo proyectos NO competitivos */
@@ -30,5 +30,5 @@ export interface IConvocatoriaRequisitoI18n {
   /** Número máximo proyectos NO competitivos activos */
   numMaximoNoCompetitivosActivos: number;
   /** Otros requisitos */
-  otrosRequisitos: I18nFieldValue[];
+  otrosRequisitos: I18nFieldValueResponse[];
 }

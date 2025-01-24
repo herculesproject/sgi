@@ -9,7 +9,7 @@ import { ISolicitudProyectoEquipo } from '@core/models/csp/solicitud-proyecto-eq
 import { ICategoriaProfesional } from '@core/models/sgp/categoria-profesional';
 import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
-import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
+import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo/convocatoria-requisito-equipo.service';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
@@ -721,7 +721,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
 
   private validateRequisitosIpProyectosCompetitivos(
     solicitudProyectoEquipo: ISolicitudProyectoEquipo,
-    requisitos: IConvocatoriaRequisitoIP
+    requisitos: IConvocatoriaRequisito
   ): Observable<ValidacionRequisitosEquipoIp> {
 
     if (!requisitos?.numMaximoCompetitivosActivos
