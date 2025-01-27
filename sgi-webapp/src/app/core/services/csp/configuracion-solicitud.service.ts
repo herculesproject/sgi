@@ -6,16 +6,16 @@ import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitu
 import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { IDocumentoRequeridoSolicitudResponse } from '@core/services/csp/documento-requerido-solicitud/documento-requerido-solicitud-response';
-import { DOCUMENTO_REQUERIDO_SOLICITUD_CONVERTER } from '@core/services/csp/documento-requerido-solicitud/documento-requerido-solicitud.converter';
 import { environment } from '@env';
 import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DOCUMENTO_REQUERIDO_SOLICITUD_RESPONSE_CONVERTER } from './documento-requerido-solicitud/documento-requerido-solicitud-response.converter';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConfiguracionSolicitudService extends SgiMutableRestService<number, IConfiguracionSolicitudBackend, IConfiguracionSolicitud>{
+export class ConfiguracionSolicitudService extends SgiMutableRestService<number, IConfiguracionSolicitudBackend, IConfiguracionSolicitud> {
   private static readonly MAPPING = '/convocatoria-configuracionsolicitudes';
 
   constructor(protected http: HttpClient) {
@@ -35,7 +35,7 @@ export class ConfiguracionSolicitudService extends SgiMutableRestService<number,
     return this.find<IDocumentoRequeridoSolicitudResponse, IDocumentoRequeridoSolicitud>(
       `${this.endpointUrl}/${id}/documentorequiridosolicitudes`,
       undefined,
-      DOCUMENTO_REQUERIDO_SOLICITUD_CONVERTER
+      DOCUMENTO_REQUERIDO_SOLICITUD_RESPONSE_CONVERTER
     );
   }
 

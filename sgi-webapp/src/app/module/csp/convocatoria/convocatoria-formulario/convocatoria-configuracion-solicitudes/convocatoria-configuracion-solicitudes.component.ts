@@ -102,7 +102,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent
           case 'descripcion':
             return wrapper.value.tipoDocumento.descripcion ? this.languageService.getFieldValue(wrapper.value.tipoDocumento?.descripcion) : '';
           case 'observaciones':
-            return wrapper.value.observaciones;
+            return wrapper.value.observaciones ? this.languageService.getFieldValue(wrapper.value.observaciones) : '';
           default:
             return wrapper[property];
         }

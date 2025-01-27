@@ -29,7 +29,7 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
   const documentoRequerido: IDocumentoRequeridoSolicitud = {
     configuracionSolicitudId: 1,
     id: 1,
-    observaciones: '',
+    observaciones: [{ lang: 'es', value: '' }] as unknown as I18nFieldValue[],
     tipoDocumento
   };
 

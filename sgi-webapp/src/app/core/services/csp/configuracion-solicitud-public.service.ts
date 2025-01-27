@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { IDocumentoRequeridoSolicitudResponse } from '@core/services/csp/documento-requerido-solicitud/documento-requerido-solicitud-response';
-import { DOCUMENTO_REQUERIDO_SOLICITUD_CONVERTER } from '@core/services/csp/documento-requerido-solicitud/documento-requerido-solicitud.converter';
 import { environment } from '@env';
 import { SgiRestBaseService, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
+import { DOCUMENTO_REQUERIDO_SOLICITUD_RESPONSE_CONVERTER } from './documento-requerido-solicitud/documento-requerido-solicitud-response.converter';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class ConfiguracionSolicitudPublicService extends SgiRestBaseService {
     return this.find<IDocumentoRequeridoSolicitudResponse, IDocumentoRequeridoSolicitud>(
       `${this.endpointUrl}/${id}/documentorequiridosolicitudes`,
       undefined,
-      DOCUMENTO_REQUERIDO_SOLICITUD_CONVERTER
+      DOCUMENTO_REQUERIDO_SOLICITUD_RESPONSE_CONVERTER
     );
   }
 
