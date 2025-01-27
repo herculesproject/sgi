@@ -236,7 +236,7 @@ export class ConvocatoriaEntidadFinanciadoraListadoExportService
     if (entidadFinanciadora) {
       elementsRow.push(entidadFinanciadora.empresa?.nombre ?? '');
       elementsRow.push(entidadFinanciadora.empresa?.numeroIdentificacion ?? '');
-      elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.nombre ?? '');
+      elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.nombre) : '');
       elementsRow.push(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.fuenteFinanciacion?.tipoAmbitoGeografico?.nombre) : '');
       elementsRow.push(entidadFinanciadora.tipoFinanciacion?.nombre ? this.languageService.getFieldValue(entidadFinanciadora.tipoFinanciacion?.nombre) : '');
       elementsRow.push(entidadFinanciadora.importeFinanciacion ?? '');
