@@ -1410,4 +1410,36 @@
 
     <dropColumn columnName="descripcion" tableName="convocatoria_partida" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-54">
+    <createTable tableName="documento_requerido_solicitud_observaciones">
+      <column name="documento_requerido_solicitud_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="documento_requerido_solicitud_observaciones"
+      columnNames="documento_requerido_solicitud_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="documento_requerido_solicitud_id"
+      baseTableName="documento_requerido_solicitud_observaciones"
+      constraintName="FK_DOCUMENTOREQUERIDOSOLICITUDOBSERVACIONES_DOCUMENTOREQUERIDOSOLICITUD"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="documento_requerido_solicitud" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}documento_requerido_solicitud_observaciones(documento_requerido_solicitud_id,
+      value_, lang) SELECT id, observaciones, '${defaultLang}' FROM
+      ${schemaPrefix}documento_requerido_solicitud WHERE observaciones IS NOT NULL AND
+      NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="documento_requerido_solicitud" />
+  </changeSet>
 </databaseChangeLog>

@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria.Estado;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
+import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -704,12 +705,16 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
    */
   private DocumentoRequeridoSolicitud generarMockDocumentoRequeridoSolicitud(
       ConfiguracionSolicitud configuracionSolicitud) {
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(
+        new DocumentoRequeridoSolicitudObservaciones(Language.ES,
+            "observacionesDocumentoRequeridoSolicitud-" + configuracionSolicitud.getId()));
 
     // @formatter:on
     return DocumentoRequeridoSolicitud.builder().id(configuracionSolicitud.getId())
         .configuracionSolicitudId(configuracionSolicitud.getId())
         .tipoDocumento(generarMockTipoDocumento(configuracionSolicitud.getId()))
-        .observaciones("observacionesDocumentoRequeridoSolicitud-" + configuracionSolicitud.getId()).build();
+        .observaciones(obsDocumentoRequerido).build();
     // @formatter:on
   }
 

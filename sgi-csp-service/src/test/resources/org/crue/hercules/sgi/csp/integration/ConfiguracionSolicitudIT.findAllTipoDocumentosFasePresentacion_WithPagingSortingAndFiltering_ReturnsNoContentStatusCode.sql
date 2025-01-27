@@ -116,10 +116,10 @@ INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VA
 
 -- DOCUMENTO REQUERIDO SOLICITUD
 INSERT INTO test.documento_requerido_solicitud
-(id, configuracion_solicitud_id, observaciones, tipo_documento_id)
+(id, configuracion_solicitud_id, tipo_documento_id)
 VALUES
-(1, 1, NULL, 2),
-(2, 1, NULL, 13);
+(1, 1, 2),
+(2, 1, 13);
 
 -- MODELO TIPO DOCUMENTO
 INSERT INTO test.modelo_tipo_documento

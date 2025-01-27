@@ -12,10 +12,10 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
+import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionDescripcion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.csp.service.ConfiguracionSolicitudService;
 import org.crue.hercules.sgi.csp.service.DocumentoRequeridoSolicitudService;
 import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -287,7 +288,8 @@ class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       DocumentoRequeridoSolicitud DocumentoRequeridoSolicitud = doDocumentoRequeridoSolicitudResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(DocumentoRequeridoSolicitud.getObservaciones()).isEqualTo("observaciones-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(DocumentoRequeridoSolicitud.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + i);
     }
   }
 
@@ -402,6 +404,10 @@ class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombre-1"));
 
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES,
+        "observaciones-" + documentoRequeridoSolicitudId));
+
     // @formatter:off
     TipoFase tipoFase = TipoFase.builder()
         .id(1L)
@@ -429,7 +435,7 @@ class ConfiguracionSolicitudControllerTest extends BaseControllerTest {
         .id(documentoRequeridoSolicitudId)
         .configuracionSolicitudId(1L)
         .tipoDocumento(tipoDocumento)
-        .observaciones("observaciones-" + documentoRequeridoSolicitudId)
+        .observaciones(obsDocumentoRequerido)
         .build();
     // @formatter:on
 

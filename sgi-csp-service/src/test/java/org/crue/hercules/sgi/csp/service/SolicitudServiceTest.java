@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToChangeEstadoSolic
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
+import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
 import org.crue.hercules.sgi.csp.model.Programa;
@@ -1310,10 +1311,12 @@ class SolicitudServiceTest extends BaseServiceTest {
   }
 
   private DocumentoRequeridoSolicitud buildMockDocumentoRequeridoSolicitud(Long id, TipoDocumento tipoDocumento) {
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "Testing"));
     return DocumentoRequeridoSolicitud.builder()
         .id(id)
         .configuracionSolicitudId(1L)
-        .observaciones("Testing")
+        .observaciones(obsDocumentoRequerido)
         .tipoDocumento(tipoDocumento)
         .build();
   }

@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
+import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
@@ -40,6 +41,7 @@ import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepositor
 import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.service.impl.DocumentoRequeridoSolicitudServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -426,7 +428,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
     updatedDocumentoRequeridoSolicitud.setTipoDocumento(generarMockTipoDocumento(2L));
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
@@ -531,7 +535,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     // given: a DocumentoRequeridoSolicitud with No existing ConfiguracionSolicitud
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
 
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(originalDocumentoRequeridoSolicitud));
@@ -551,7 +557,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     configuracionSolicitud.setFasePresentacionSolicitudes(null);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
@@ -577,7 +585,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(documentoRequeridoSolicitudRepository.findById(ArgumentMatchers.anyLong()))
@@ -606,7 +616,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
         configuracionSolicitud.getFasePresentacionSolicitudes());
     modeloTipoFase.setActivo(Boolean.FALSE);
@@ -638,7 +650,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
         configuracionSolicitud.getFasePresentacionSolicitudes());
     modeloTipoFase.getTipoFase().setActivo(Boolean.FALSE);
@@ -669,7 +683,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
         configuracionSolicitud.getFasePresentacionSolicitudes());
 
@@ -705,7 +721,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setTipoDocumento(generarMockTipoDocumento(2L));
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
         configuracionSolicitud.getFasePresentacionSolicitudes());
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud,
@@ -743,7 +761,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
         configuracionSolicitud.getFasePresentacionSolicitudes());
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud,
@@ -782,7 +802,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     updatedDocumentoRequeridoSolicitud.setTipoDocumento(generarMockTipoDocumento(2L));
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
         configuracionSolicitud.getFasePresentacionSolicitudes());
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud,
@@ -819,7 +841,9 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoria, 1L);
     DocumentoRequeridoSolicitud originalDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
     DocumentoRequeridoSolicitud updatedDocumentoRequeridoSolicitud = generarMockDocumentoRequeridoSolicitud(1L, 1L);
-    updatedDocumentoRequeridoSolicitud.setObservaciones("observaciones-modificadas");
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observaciones-modificadas"));
+    updatedDocumentoRequeridoSolicitud.setObservaciones(obsDocumentoRequerido);
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(convocatoria,
         configuracionSolicitud.getFasePresentacionSolicitudes());
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(updatedDocumentoRequeridoSolicitud,
@@ -1000,7 +1024,7 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
       DocumentoRequeridoSolicitud DocumentoRequeridoSolicitud = page.getContent()
           .get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(DocumentoRequeridoSolicitud.getId()).isEqualTo(Long.valueOf(i));
-      Assertions.assertThat(DocumentoRequeridoSolicitud.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(DocumentoRequeridoSolicitud.getObservaciones(), Language.ES))
           .isEqualTo("observacionesDocumentoRequeridoSolicitud-" + i);
     }
   }
@@ -1012,13 +1036,15 @@ class DocumentoRequeridoSolicitudServiceTest extends BaseServiceTest {
    * @return el objeto DocumentoRequeridoSolicitud
    */
   private DocumentoRequeridoSolicitud generarMockDocumentoRequeridoSolicitud(Long id, Long configuracionSolicitudId) {
-
+    Set<DocumentoRequeridoSolicitudObservaciones> obsDocumentoRequerido = new HashSet<>();
+    obsDocumentoRequerido.add(
+        new DocumentoRequeridoSolicitudObservaciones(Language.ES, "observacionesDocumentoRequeridoSolicitud-" + id));
     // @formatter:off
     return DocumentoRequeridoSolicitud.builder()
         .id(id)
         .configuracionSolicitudId(configuracionSolicitudId)
         .tipoDocumento(generarMockTipoDocumento(id))
-        .observaciones("observacionesDocumentoRequeridoSolicitud-" + id)
+        .observaciones(obsDocumentoRequerido)
         .build();
     // @formatter:on
   }
