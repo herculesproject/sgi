@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoEquipoServiceImpl;
@@ -51,12 +52,15 @@ class SolicitudProyectoEquipoServiceTest extends BaseServiceTest {
   private Validator validator;
 
   @Mock
+  private SolicitudExternaRepository solicitudExternaRepository;
+
   private SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   private SolicitudProyectoEquipoService service;
 
   @BeforeEach
   void setUp() {
+    solicitudAuthorityHelper = new SolicitudAuthorityHelper(solicitudRepository, solicitudExternaRepository);
     service = new SolicitudProyectoEquipoServiceImpl(validator, repository, rolProyectoRepository, solicitudRepository,
         solicitudAuthorityHelper);
   }

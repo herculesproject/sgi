@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
@@ -122,7 +123,10 @@ class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
     Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
-    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo" + suffix));
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + suffix));
+
+    Set<ConvocatoriaObjeto> convocatoriaObjeto = new HashSet<>();
+    convocatoriaObjeto.add(new ConvocatoriaObjeto(Language.ES, "objeto-" + suffix));
 
     Convocatoria convocatoria = Convocatoria.builder()
         .unidadGestionRef("unidad" + suffix)
@@ -132,7 +136,7 @@ class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest {
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo(convocatoriaTitulo)
-        .objeto("objeto" + suffix)
+        .objeto(convocatoriaObjeto)
         .observaciones("observaciones" + suffix)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)

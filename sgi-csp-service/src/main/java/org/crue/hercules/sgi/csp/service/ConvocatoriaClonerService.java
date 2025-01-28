@@ -81,15 +81,25 @@ public class ConvocatoriaClonerService {
    */
   public Convocatoria cloneBasicConvocatoriaData(Convocatoria toClone) {
 
-    return Convocatoria.builder().activo(Boolean.TRUE).titulo(new HashSet<>(toClone.getTitulo()))
-        .unidadGestionRef(toClone.getUnidadGestionRef()).modeloEjecucion(toClone.getModeloEjecucion())
-        .finalidad(toClone.getFinalidad()).codigo(toClone.getCodigo()).fechaConcesion(toClone.getFechaConcesion())
-        .fechaProvisional(toClone.getFechaProvisional()).fechaPublicacion(toClone.getFechaPublicacion())
-        .duracion(toClone.getDuracion()).excelencia(toClone.getExcelencia())
+    return Convocatoria.builder()
+        .activo(Boolean.TRUE)
+        .titulo(new HashSet<>(toClone.getTitulo()))
+        .unidadGestionRef(toClone.getUnidadGestionRef())
+        .modeloEjecucion(toClone.getModeloEjecucion())
+        .finalidad(toClone.getFinalidad())
+        .codigo(toClone.getCodigo())
+        .fechaConcesion(toClone.getFechaConcesion())
+        .fechaProvisional(toClone.getFechaProvisional())
+        .fechaPublicacion(toClone.getFechaPublicacion())
+        .duracion(toClone.getDuracion())
+        .excelencia(toClone.getExcelencia())
         .ambitoGeografico(toClone.getAmbitoGeografico())
-        .formularioSolicitud(toClone.getFormularioSolicitud()).regimenConcurrencia(toClone.getRegimenConcurrencia())
-        .clasificacionCVN(toClone.getClasificacionCVN()).objeto(toClone.getObjeto())
-        .observaciones(toClone.getObservaciones()).estado(Convocatoria.Estado.BORRADOR).build();
+        .formularioSolicitud(toClone.getFormularioSolicitud())
+        .regimenConcurrencia(toClone.getRegimenConcurrencia())
+        .clasificacionCVN(toClone.getClasificacionCVN())
+        .objeto(new HashSet<>(toClone.getObjeto()))
+        .observaciones(toClone.getObservaciones())
+        .estado(Convocatoria.Estado.BORRADOR).build();
   }
 
   /**

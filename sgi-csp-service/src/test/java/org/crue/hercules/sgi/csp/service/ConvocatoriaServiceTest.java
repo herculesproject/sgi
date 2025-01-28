@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
@@ -212,7 +213,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(created.getFechaProvisional()).isEqualTo(convocatoria.getFechaProvisional());
     Assertions.assertThat(created.getFechaConcesion()).isEqualTo(convocatoria.getFechaConcesion());
     Assertions.assertThat(created.getTitulo()).isEqualTo(convocatoria.getTitulo());
-    Assertions.assertThat(created.getObjeto()).isNull();
+    Assertions.assertThat(created.getObjeto()).isEmpty();
     Assertions.assertThat(created.getObservaciones()).isNull();
     Assertions.assertThat(created.getFinalidad()).isNull();
     Assertions.assertThat(created.getRegimenConcurrencia()).isNull();
@@ -664,7 +665,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getCodigo()).isEqualTo(convocatoriaBorrador.getCodigo());
     Assertions.assertThat(updated.getFechaPublicacion()).isEqualTo(convocatoriaBorrador.getFechaPublicacion());
     Assertions.assertThat(updated.getTitulo()).isEqualTo(convocatoriaBorrador.getTitulo());
-    Assertions.assertThat(updated.getObjeto()).isNull();
+    Assertions.assertThat(updated.getObjeto()).isEmpty();
     Assertions.assertThat(updated.getObservaciones()).isNull();
     Assertions.assertThat(updated.getFinalidad()).isNull();
     Assertions.assertThat(updated.getRegimenConcurrencia()).isNull();
@@ -2683,13 +2684,16 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
     convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoriaId)));
 
+    Set<ConvocatoriaObjeto> convocatoriaObjeto = new HashSet<>();
+    convocatoriaObjeto.add(new ConvocatoriaObjeto(Language.ES, "objeto-" + String.format("%03d", convocatoriaId)));
+
     return Convocatoria.builder().id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "2").modeloEjecucion(modeloEjecucion)
         .codigo("codigo-" + String.format("%03d", convocatoriaId))
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z")).fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo(convocatoriaTitulo)
-        .objeto("objeto-" + String.format("%03d", convocatoriaId))
+        .objeto(convocatoriaObjeto)
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
         .formularioSolicitud(FormularioSolicitud.PROYECTO).regimenConcurrencia(tipoRegimenConcurrencia)

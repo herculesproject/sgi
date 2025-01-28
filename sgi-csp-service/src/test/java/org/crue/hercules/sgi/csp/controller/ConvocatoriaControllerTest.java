@@ -38,6 +38,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHitoAviso;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHitoComentario;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
@@ -243,7 +244,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
             .value(convocatoriaExistente.getFechaConcesion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value")
             .value(I18nHelper.getValueForLanguage(convocatoria.getTitulo(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("objeto").value(convocatoriaExistente.getObjeto()))
+        .andExpect(MockMvcResultMatchers.jsonPath("objeto[0].value")
+            .value(I18nHelper.getValueForLanguage(convocatoria.getObjeto(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(convocatoria.getObservaciones()))
         .andExpect(MockMvcResultMatchers.jsonPath("finalidad.id").value(convocatoriaExistente.getFinalidad().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("regimenConcurrencia.id")
@@ -312,7 +314,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
             .value(convocatoriaBorradorExistente.getFechaConcesion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value")
             .value(I18nHelper.getValueForLanguage(convocatoriaBorradorExistente.getTitulo(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("objeto").value(convocatoriaBorradorExistente.getObjeto()))
+        .andExpect(MockMvcResultMatchers.jsonPath("objeto[0].value")
+            .value(I18nHelper.getValueForLanguage(convocatoriaBorradorExistente.getObjeto(), Language.ES)))
         .andExpect(
             MockMvcResultMatchers.jsonPath("observaciones").value(convocatoriaBorradorExistente.getObservaciones()))
         .andExpect(
@@ -1476,7 +1479,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
             MockMvcResultMatchers.jsonPath("fechaConcesion").value(newConvocatoria.getFechaConcesion().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value")
             .value(I18nHelper.getValueForLanguage(newConvocatoria.getTitulo(), Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("objeto").value(newConvocatoria.getObjeto()))
+        .andExpect(MockMvcResultMatchers.jsonPath("objeto[0].value")
+            .value(I18nHelper.getValueForLanguage(newConvocatoria.getObjeto(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(newConvocatoria.getObservaciones()))
         .andExpect(MockMvcResultMatchers.jsonPath("finalidad.id").value(newConvocatoria.getFinalidad().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("regimenConcurrencia.id")
@@ -1777,6 +1781,9 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
     convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoriaId)));
 
+    Set<ConvocatoriaObjeto> convocatoriaObjeto = new HashSet<>();
+    convocatoriaObjeto.add(new ConvocatoriaObjeto(Language.ES, "objeto-" + String.format("%03d", convocatoriaId)));
+
     Convocatoria convocatoria = Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
@@ -1786,7 +1793,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo(convocatoriaTitulo)
-        .objeto("objeto-" + String.format("%03d", convocatoriaId))
+        .objeto(convocatoriaObjeto)
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)

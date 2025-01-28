@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
@@ -633,6 +634,9 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
     convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoriaId)));
 
+    Set<ConvocatoriaObjeto> convocatoriaObjeto = new HashSet<>();
+    convocatoriaObjeto.add(new ConvocatoriaObjeto(Language.ES, "objeto-" + String.format("%03d", convocatoriaId)));
+
     return Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
@@ -642,7 +646,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo(convocatoriaTitulo)
-        .objeto("objeto-" + String.format("%03d", convocatoriaId))
+        .objeto(convocatoriaObjeto)
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)
