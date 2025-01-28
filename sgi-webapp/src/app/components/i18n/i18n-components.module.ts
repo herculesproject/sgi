@@ -10,6 +10,7 @@ import { I18nFieldTooltipPipe } from './i18n-field-tooltip.pipe';
 import { I18nFieldValuePipe } from './i18n-field-value.pipe';
 import { I18nFieldsValuesPipe } from './i18n-fields-values.pipe';
 import { I18nInputComponent } from './i18n-input/i18n-input.component';
+import { I18nLinkComponent } from './i18n-link/i18n-link.component';
 import { I18nTableFieldComponent } from './i18n-table-field/i18n-table-field.component';
 import { I18nTableListFieldsComponent } from './i18n-table-list-fields/i18n-table-list-fields.component';
 import { I18nTextareaComponent } from './i18n-textarea/i18n-textarea.component';
@@ -19,10 +20,11 @@ import { I18nTreeFieldComponent } from './i18n-tree-field/i18n-tree-field.compon
   declarations: [
     I18nCkeditorComponent,
     I18nDisplayFieldComponent,
-    I18nFieldTooltipPipe,
     I18nFieldsValuesPipe,
+    I18nFieldTooltipPipe,
     I18nFieldValuePipe,
     I18nInputComponent,
+    I18nLinkComponent,
     I18nTableFieldComponent,
     I18nTableListFieldsComponent,
     I18nTextareaComponent,
@@ -39,11 +41,11 @@ import { I18nTreeFieldComponent } from './i18n-tree-field/i18n-tree-field.compon
   exports: [
     I18nCkeditorComponent,
     I18nDisplayFieldComponent,
+    I18nFieldsValuesPipe,
     I18nFieldTooltipPipe,
     I18nFieldValuePipe,
-    I18nFieldsValuesPipe,
-    I18nFieldValuePipe,
     I18nInputComponent,
+    I18nLinkComponent,
     I18nTableFieldComponent,
     I18nTableListFieldsComponent,
     I18nTextareaComponent,
