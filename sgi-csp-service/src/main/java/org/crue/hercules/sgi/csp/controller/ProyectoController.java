@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -10,7 +9,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.crue.hercules.sgi.csp.converter.ProyectoFaseConverter;
 import org.crue.hercules.sgi.csp.converter.RequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.dto.AnualidadGastoOutput;
-import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaOnlyTituloOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAgrupacionGastoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoAnualidadOutput;
@@ -1129,7 +1128,7 @@ public class ProyectoController {
 
   private Page<ProyectoResponsableEconomicoOutput> convert(Page<ProyectoResponsableEconomico> page) {
     List<ProyectoResponsableEconomicoOutput> content = page.getContent().stream()
-        .map(this::convert).collect(Collectors.toList());
+        .map(this::convert).toList();
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
 
@@ -1143,7 +1142,7 @@ public class ProyectoController {
   private Page<ProyectoAgrupacionGastoOutput> convertProyectoAgrupacionGastoOutput(Page<ProyectoAgrupacionGasto> page) {
     List<ProyectoAgrupacionGastoOutput> content = page.getContent().stream()
         .map(this::convertProyectoAgrupacionGastoOutput)
-        .collect(Collectors.toList());
+        .toList();
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
 
@@ -1271,7 +1270,7 @@ public class ProyectoController {
 
   private List<AnualidadGastoOutput> convertListAnualidadGastoOutput(List<AnualidadGasto> anualidadesGasto) {
     return anualidadesGasto.stream().map(anualidadGasto -> modelMapper.map(anualidadGasto, AnualidadGastoOutput.class))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /*
@@ -1298,7 +1297,7 @@ public class ProyectoController {
 
   private Page<ProyectoFacturacionOutput> convertToProyectoFacturacionOutputPage(Page<ProyectoFacturacion> page) {
 
-    return new PageImpl<>(page.getContent().stream().map(this::convert).collect(Collectors.toList()),
+    return new PageImpl<>(page.getContent().stream().map(this::convert).toList(),
         page.getPageable(), page.getTotalElements());
 
   }
@@ -1408,11 +1407,11 @@ public class ProyectoController {
    */
   @GetMapping("/{id}/convocatoria")
   @PreAuthorize("hasAuthorityForAnyUO('CSP-PRO-INV-VR')")
-  public ResponseEntity<ConvocatoriaTituloOutput> findConvocatoriaByProyectoIdAndUserIsInvestigador(
+  public ResponseEntity<ConvocatoriaOnlyTituloOutput> findConvocatoriaByProyectoIdAndUserIsInvestigador(
       @PathVariable Long id) {
     log.debug("findConvocatoriaByProyectoIdAndUserIsInvestigador(Long id) - start");
 
-    ConvocatoriaTituloOutput returnValue = convert(
+    ConvocatoriaOnlyTituloOutput returnValue = convert(
         convocatoriaService.findConvocatoriaByProyectoIdAndUserIsInvestigador(id));
 
     if (returnValue == null) {
@@ -1617,7 +1616,7 @@ public class ProyectoController {
   private Page<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(Page<ProyectoPalabraClave> page) {
     List<ProyectoPalabraClaveOutput> content = page.getContent().stream()
         .map(this::convert)
-        .collect(Collectors.toList());
+        .toList();
 
     return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
   }
@@ -1625,7 +1624,7 @@ public class ProyectoController {
   private List<ProyectoPalabraClaveOutput> convertProyectoPalabraClave(List<ProyectoPalabraClave> list) {
     return list.stream()
         .map(this::convert)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private ProyectoPalabraClaveOutput convert(ProyectoPalabraClave proyectoPalabraClave) {
@@ -1634,7 +1633,7 @@ public class ProyectoController {
 
   private List<ProyectoPalabraClave> convertProyectoPalabraClaveInputs(Long proyectoId,
       List<ProyectoPalabraClaveInput> inputs) {
-    return inputs.stream().map(input -> convert(proyectoId, input)).collect(Collectors.toList());
+    return inputs.stream().map(input -> convert(proyectoId, input)).toList();
   }
 
   private ProyectoPalabraClave convert(Long proyectoId, ProyectoPalabraClaveInput input) {
@@ -1651,17 +1650,17 @@ public class ProyectoController {
   private List<NotificacionProyectoExternoCVNOutput> convert(List<NotificacionProyectoExternoCVN> list) {
     return list.stream()
         .map(this::convert)
-        .collect(Collectors.toList());
+        .toList();
   }
 
-  private ConvocatoriaTituloOutput convert(Convocatoria convocatoria) {
-    return modelMapper.map(convocatoria, ConvocatoriaTituloOutput.class);
+  private ConvocatoriaOnlyTituloOutput convert(Convocatoria convocatoria) {
+    return modelMapper.map(convocatoria, ConvocatoriaOnlyTituloOutput.class);
   }
 
   private List<ProyectoEquipoDto> convertProyectoEquipoToProyectoEquipoDto(List<ProyectoEquipo> list) {
     return list.stream()
         .map(this::convert)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private ProyectoEquipoDto convert(ProyectoEquipo proyectoEquipo) {

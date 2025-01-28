@@ -81,7 +81,7 @@ public class ConvocatoriaClonerService {
    */
   public Convocatoria cloneBasicConvocatoriaData(Convocatoria toClone) {
 
-    return Convocatoria.builder().activo(Boolean.TRUE).titulo(toClone.getTitulo())
+    return Convocatoria.builder().activo(Boolean.TRUE).titulo(new HashSet<>(toClone.getTitulo()))
         .unidadGestionRef(toClone.getUnidadGestionRef()).modeloEjecucion(toClone.getModeloEjecucion())
         .finalidad(toClone.getFinalidad()).codigo(toClone.getCodigo()).fechaConcesion(toClone.getFechaConcesion())
         .fechaProvisional(toClone.getFechaProvisional()).fechaPublicacion(toClone.getFechaPublicacion())

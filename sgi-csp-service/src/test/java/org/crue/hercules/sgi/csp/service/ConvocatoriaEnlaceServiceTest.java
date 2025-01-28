@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
@@ -58,7 +59,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   private ConvocatoriaEnlaceService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ConvocatoriaEnlaceServiceImpl(repository, convocatoriaRepository, modeloTipoEnlaceRepository,
         authorityHelper);
   }
@@ -443,7 +444,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithoutId_ThrowsIllegalArgumentException() throws Exception {
+  void delete_WithoutId_ThrowsIllegalArgumentException() {
     // given: no id
     Long id = null;
 
@@ -455,7 +456,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
 
@@ -489,7 +490,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsConvocatoriaEnlaceNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsConvocatoriaEnlaceNotFoundException() {
     // given: Ningun ConvocatoriaEnlace con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -580,7 +581,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(
         new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)));
-    // @formatter:off
+
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
         : ModeloEjecucion.builder()
             .id(modeloEjecucionId)
@@ -589,7 +590,8 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
             .build();
 
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
-    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
+    nombreTipoFinalidad.add(
+        new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
 
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : TipoFinalidad.builder()
@@ -607,8 +609,8 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
             .build();
 
     Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombre = new HashSet<>();
-    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
-
+    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES,
+        "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
 
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
         : TipoRegimenConcurrencia.builder()
@@ -618,7 +620,8 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
             .build();
 
     Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
-    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId)));
+    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES,
+        "nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId)));
 
     TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
         : TipoAmbitoGeografico.builder()
@@ -627,7 +630,10 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
             .activo(Boolean.TRUE)
             .build();
 
-    Convocatoria convocatoria = Convocatoria.builder()
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoriaId)));
+
+    return Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
         .modeloEjecucion(modeloEjecucion)
@@ -635,7 +641,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))
+        .titulo(convocatoriaTitulo)
         .objeto("objeto-" + String.format("%03d", convocatoriaId))
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
@@ -646,9 +652,6 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         .clasificacionCVN(ClasificacionCVN.AYUDAS)
         .activo(activo)
         .build();
-    // @formatter:on
-
-    return convocatoria;
   }
 
   /**

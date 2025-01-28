@@ -34,6 +34,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -180,7 +181,9 @@ class ConvocatoriaIT extends BaseIT {
     // given: existing Convocatoria to be updated
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setCodigo("codigo-modificado");
-    convocatoria.setTitulo("titulo-modificado");
+    Set<ConvocatoriaTitulo> tituloConvocatoria = new HashSet<>();
+    tituloConvocatoria.add(new ConvocatoriaTitulo(Language.ES, "titulo-modificado"));
+    convocatoria.setTitulo(tituloConvocatoria);
     convocatoria.setObservaciones("observaciones-modificadas");
 
     // when: update Convocatoria
@@ -202,7 +205,8 @@ class ConvocatoriaIT extends BaseIT {
         .isEqualTo(convocatoria.getFechaProvisional());
     Assertions.assertThat(responseData.getFechaConcesion()).as("getFechaConcesion()")
         .isEqualTo(convocatoria.getFechaConcesion());
-    Assertions.assertThat(responseData.getTitulo()).as("getTitulo()").isEqualTo(convocatoria.getTitulo());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getTitulo(), Language.ES)).as("getTitulo()")
+        .isEqualTo("titulo-modificado");
     Assertions.assertThat(responseData.getObjeto()).as("getObjeto()").isEqualTo(convocatoria.getObjeto());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo(convocatoria.getObservaciones());
@@ -401,7 +405,8 @@ class ConvocatoriaIT extends BaseIT {
         .isEqualTo(Instant.parse("2021-09-01T00:00:00Z"));
     Assertions.assertThat(responseData.getFechaConcesion()).as("getFechaConcesion()")
         .isEqualTo(Instant.parse("2021-10-01T00:00:00Z"));
-    Assertions.assertThat(responseData.getTitulo()).as("getTitulo()").isEqualTo("titulo-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getTitulo(), Language.ES)).as("getTitulo()")
+        .isEqualTo("titulo-001");
     Assertions.assertThat(responseData.getObjeto()).as("getObjeto()").isEqualTo("objeto-001");
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
     Assertions.assertThat(responseData.getFinalidad().getId()).as("getFinalidad().getId()").isEqualTo(1L);
@@ -429,7 +434,7 @@ class ConvocatoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "codigo,desc";
-    String filter = "titulo=ke=00";
+    String filter = "titulo.value=ke=00";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_RESTRINGIDOS)
@@ -472,7 +477,7 @@ class ConvocatoriaIT extends BaseIT {
 
     HttpEntity<Convocatoria> request = new HttpEntity<>(null, headers);
     String sort = "codigo,desc";
-    String filter = "titulo=ke=00";
+    String filter = "titulo.value=ke=00";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder
@@ -510,7 +515,7 @@ class ConvocatoriaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "codigo,desc";
-    String filter = "titulo=ke=00";
+    String filter = "titulo.value=ke=00";
 
     URI uri = UriComponentsBuilder
         .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS + PATH_PARAMETER_RESTRINGIDOS).queryParam("s", sort)
@@ -1907,6 +1912,9 @@ class ConvocatoriaIT extends BaseIT {
             .activo(Boolean.TRUE)
             .build();
 
+            Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+            convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoriaId)));
+
     Convocatoria convocatoria = Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "2")
@@ -1915,7 +1923,7 @@ class ConvocatoriaIT extends BaseIT {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))
+        .titulo(convocatoriaTitulo)
         .objeto("objeto-" + String.format("%03d", convocatoriaId))
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())

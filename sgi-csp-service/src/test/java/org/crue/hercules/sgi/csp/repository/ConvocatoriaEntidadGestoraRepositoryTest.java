@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -77,7 +78,6 @@ class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -103,14 +103,15 @@ class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(modeloTipoFinalidad);
 
     Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombre = new HashSet<>();
-    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia" + suffix));
+    tipoRegimenConcurrenciaNombre
+        .add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia" + suffix));
 
     TipoRegimenConcurrencia tipoRegimenConcurrencia = TipoRegimenConcurrencia.builder()
         .nombre(tipoRegimenConcurrenciaNombre)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoRegimenConcurrencia);
-    
+
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
 
@@ -120,6 +121,9 @@ class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo" + suffix));
+
     Convocatoria convocatoria = Convocatoria.builder()
         .unidadGestionRef("unidad" + suffix)
         .modeloEjecucion(modeloEjecucion)
@@ -127,7 +131,7 @@ class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo" + suffix)
+        .titulo(convocatoriaTitulo)
         .objeto("objeto" + suffix)
         .observaciones("observaciones" + suffix)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())
@@ -144,7 +148,6 @@ class ConvocatoriaEntidadGestoraRepositoryTest extends BaseRepositoryTest {
         .convocatoriaId(convocatoria.getId())
         .entidadRef("entidad" + suffix)
         .build();
-    // @formatter:on
     return entityManager.persistAndFlush(convocatoriaEntidadGestora);
   }
 }

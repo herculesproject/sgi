@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -214,7 +215,6 @@ class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -250,12 +250,15 @@ class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
 
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
-    
+
     TipoAmbitoGeografico tipoAmbitoGeografico = TipoAmbitoGeografico.builder()
         .nombre(tipoAmbitoGeograficoNombre)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
+
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo" + suffix));
 
     Convocatoria convocatoria = Convocatoria.builder()
         .unidadGestionRef("unidad" + suffix)
@@ -264,7 +267,7 @@ class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo" + suffix)
+        .titulo(convocatoriaTitulo)
         .objeto("objeto" + suffix)
         .observaciones("observaciones" + suffix)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())
@@ -296,7 +299,6 @@ class ConvocatoriaFaseRepositoryTest extends BaseRepositoryTest {
         .fechaFin(Instant.parse("2020-10-31T00:00:00Z"))
         .observaciones(obsConvocatoriaFase)
         .build();
-    // @formatter:on
     return entityManager.persistAndFlush(convocatoriaFase);
   }
 

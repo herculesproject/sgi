@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ConvocatoriaTituloOutput implements Serializable {
+public class ConvocatoriaOnlyTituloOutput implements Serializable {
   private Long id;
-  private String titulo;
+  private Collection<ConvocatoriaTitulo> titulo;
 }

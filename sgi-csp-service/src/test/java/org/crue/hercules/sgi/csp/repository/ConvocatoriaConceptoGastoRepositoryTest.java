@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -133,6 +134,9 @@ class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo" + suffix));
+
     Convocatoria convocatoria = Convocatoria.builder()
         .unidadGestionRef("unidad" + suffix)
         .modeloEjecucion(modeloEjecucion)
@@ -140,7 +144,7 @@ class ConvocatoriaConceptoGastoRepositoryTest extends BaseRepositoryTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo" + suffix)
+        .titulo(convocatoriaTitulo)
         .objeto("objeto" + suffix)
         .observaciones("observaciones" + suffix)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())

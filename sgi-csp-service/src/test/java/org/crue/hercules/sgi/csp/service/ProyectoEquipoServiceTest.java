@@ -1,14 +1,25 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
-import org.crue.hercules.sgi.csp.model.*;
+import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
+import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
+import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
@@ -49,7 +60,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
   private ProyectoEquipoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoEquipoServiceImpl(repository, proyectoRepository, solicitudRepository,
         proyectoHelper, sgiConfigProperties);
   }
@@ -232,7 +243,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithExistingId_ReturnsProyectoEquipo() throws Exception {
+  void findById_WithExistingId_ReturnsProyectoEquipo() {
     // given: existing ProyectoEquipo
     ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(1L, Instant.parse("2020-05-15T00:00:00Z"),
         Instant.parse("2021-03-15T23:59:59Z"), 1L);
@@ -255,7 +266,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void findById_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 

@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.AreaTematicaDescripcion;
 import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -128,6 +129,9 @@ class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo" + suffix));
+
     Convocatoria convocatoria = Convocatoria.builder()
         .unidadGestionRef("unidad" + suffix)
         .modeloEjecucion(modeloEjecucion)
@@ -135,7 +139,7 @@ class ConvocatoriaAreaTematicaRepositoryTest extends BaseRepositoryTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo" + suffix)
+        .titulo(convocatoriaTitulo)
         .objeto("objeto" + suffix)
         .observaciones("observaciones" + suffix)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())

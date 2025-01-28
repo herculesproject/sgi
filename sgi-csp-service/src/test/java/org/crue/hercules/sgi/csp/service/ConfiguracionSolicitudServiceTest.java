@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Convocatoria.Estado;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
@@ -67,7 +68,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
   private ConfiguracionSolicitudService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ConfiguracionSolicitudServiceImpl(repository, convocatoriaRepository, convocatoriaFaseRepository,
         documentoRequeridoSolicitudRepository);
   }
@@ -626,7 +627,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(
         new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)));
-    // @formatter:off
+
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
         : ModeloEjecucion.builder()
             .id(modeloEjecucionId)
@@ -635,7 +636,8 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
             .build();
 
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
-    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
+    nombreTipoFinalidad.add(
+        new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
 
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : TipoFinalidad.builder()
@@ -653,7 +655,8 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
             .build();
 
     Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombre = new HashSet<>();
-    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
+    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES,
+        "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
 
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
         : TipoRegimenConcurrencia.builder()
@@ -661,9 +664,10 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
             .nombre(tipoRegimenConcurrenciaNombre)
             .activo(Boolean.TRUE)
             .build();
-            
+
     Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
-    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId)));
+    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES,
+        "nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId)));
 
     TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
         : TipoAmbitoGeografico.builder()
@@ -672,7 +676,10 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
             .activo(Boolean.TRUE)
             .build();
 
-    Convocatoria convocatoria = Convocatoria.builder()
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoriaId)));
+
+    return Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
         .modeloEjecucion(modeloEjecucion)
@@ -680,7 +687,7 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))
+        .titulo(convocatoriaTitulo)
         .objeto("objeto-" + String.format("%03d", convocatoriaId))
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
@@ -691,9 +698,6 @@ class ConfiguracionSolicitudServiceTest extends BaseServiceTest {
         .clasificacionCVN(ClasificacionCVN.AYUDAS)
         .activo(activo)
         .build();
-    // @formatter:on
-
-    return convocatoria;
   }
 
   /**

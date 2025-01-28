@@ -14,6 +14,7 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo_;
 import org.crue.hercules.sgi.csp.model.Convocatoria_;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
@@ -242,7 +243,7 @@ public class ProyectoProyectoSgePredicateResolver implements SgiRSQLPredicateRes
     Join<ProyectoProyectoSge, Proyecto> joinProyecto = root.join(ProyectoProyectoSge_.proyecto, JoinType.INNER);
     Join<Proyecto, Convocatoria> joinConvocatoria = joinProyecto.join(Proyecto_.convocatoria, JoinType.LEFT);
 
-    return cb.like(cb.lower(joinConvocatoria.get(Convocatoria_.titulo)),
+    return cb.like(cb.lower(joinConvocatoria.join(Convocatoria_.titulo).get(ConvocatoriaTitulo_.value)),
         LIKE_WILDCARD_PERCENT + tituloConvocatoria.toLowerCase() + LIKE_WILDCARD_PERCENT);
   }
 

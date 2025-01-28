@@ -3,7 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComSolicitudCambioEstadoAlegacionesData;
@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Enlace;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -40,7 +41,7 @@ public class SolicitudComService {
   private final SgiConfigProperties sgiConfigProperties;
 
   public void enviarComunicadoSolicitudCambioEstadoSolicitada(Long solicitudId, String solicitanteRef,
-      String unidadGestionRef, String tituloConvocatoria, Instant fechaPublicacionConvocatoria,
+      String unidadGestionRef, Set<ConvocatoriaTitulo> tituloConvocatoria, Instant fechaPublicacionConvocatoria,
       Instant fechaCambioEstadoSolicitud)
       throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoSolicitada() - start");
@@ -48,7 +49,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoSolicitada(
           CspComSolicitudCambioEstadoSolicitadaData.builder()
-              .tituloConvocatoria(tituloConvocatoria)
+              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
               .nombreApellidosSolicitante(
                   this.solicitanteDataService.getSolicitanteNombreApellidos(solicitudId, solicitanteRef))
               .fechaCambioEstadoSolicitud(fechaCambioEstadoSolicitud)
@@ -63,14 +64,15 @@ public class SolicitudComService {
   }
 
   public void enviarComunicadoSolicitudCambioEstadoAlegaciones(Long solicitudId, String solicitanteRef,
-      String unidadGestionRef, String tituloConvocatoria, String codigoInterno, Instant fechaCambioEstadoSolicitud,
+      String unidadGestionRef, Set<ConvocatoriaTitulo> tituloConvocatoria, String codigoInterno,
+      Instant fechaCambioEstadoSolicitud,
       Instant fechaProvisionalConvocatoria) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoAlegaciones() - start");
     List<Recipient> recipients = getRecipients(unidadGestionRef, CONFIG_CSP_COM_SOL_CAMB_EST_ALEGACIONES);
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoAlegaciones(
           CspComSolicitudCambioEstadoAlegacionesData.builder()
-              .tituloConvocatoria(tituloConvocatoria)
+              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
               .nombreApellidosSolicitante(
                   this.solicitanteDataService.getSolicitanteNombreApellidos(solicitudId, solicitanteRef))
               .codigoInternoSolicitud(codigoInterno)
@@ -86,7 +88,7 @@ public class SolicitudComService {
   }
 
   public void enviarComunicadoSolicitudCambioEstadoExclProv(Long solicitudId, String solicitanteRef,
-      String tituloConvocatoria,
+      Set<ConvocatoriaTitulo> tituloConvocatoria,
       Instant fechaProvisionalConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoExclProv() - start");
@@ -95,7 +97,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclProv(
           CspComSolicitudCambioEstadoProvisionalData.builder()
-              .tituloConvocatoria(tituloConvocatoria)
+              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
               .enlaces(enlaces).build(),
@@ -109,7 +111,7 @@ public class SolicitudComService {
   }
 
   public void enviarComunicadoSolicitudCambioEstadoExclDef(Long solicitudId, String solicitanteRef,
-      String tituloConvocatoria,
+      Set<ConvocatoriaTitulo> tituloConvocatoria,
       Instant fechaConcesionConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoExclDef() - start");
@@ -118,7 +120,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclDef(
           CspComSolicitudCambioEstadoDefinitivoData.builder()
-              .tituloConvocatoria(tituloConvocatoria)
+              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
               .fechaConcesionConvocatoria(
                   fechaConcesionConvocatoria)
               .enlaces(enlaces).build(),
@@ -132,7 +134,7 @@ public class SolicitudComService {
   }
 
   public void enviarComunicadoSolicitudCambioEstadoConcProv(Long solicitudId, String solicitanteRef,
-      String tituloConvocatoria,
+      Set<ConvocatoriaTitulo> tituloConvocatoria,
       Instant fechaProvisionalConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoConcProv() - start");
@@ -141,7 +143,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoConcProv(
           CspComSolicitudCambioEstadoProvisionalData.builder()
-              .tituloConvocatoria(tituloConvocatoria)
+              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
               .enlaces(enlaces).build(),
@@ -155,7 +157,7 @@ public class SolicitudComService {
   }
 
   public void enviarComunicadoSolicitudCambioEstadoDenProv(Long solicitudId, String solicitanteRef,
-      String tituloConvocatoria,
+      Set<ConvocatoriaTitulo> tituloConvocatoria,
       Instant fechaProvisionalConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoDenProv() - start");
@@ -164,7 +166,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoDenProv(
           CspComSolicitudCambioEstadoProvisionalData.builder()
-              .tituloConvocatoria(tituloConvocatoria)
+              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
               .enlaces(enlaces).build(),
@@ -178,7 +180,7 @@ public class SolicitudComService {
   }
 
   public void enviarComunicadoSolicitudCambioEstadoConc(Long solicitudId, String solicitanteRef,
-      String tituloConvocatoria,
+      Set<ConvocatoriaTitulo> tituloConvocatoria,
       Instant fechaConcesionConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoConc() - start");
@@ -187,7 +189,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoConc(
           CspComSolicitudCambioEstadoDefinitivoData.builder()
-              .tituloConvocatoria(tituloConvocatoria)
+              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
               .fechaConcesionConvocatoria(
                   fechaConcesionConvocatoria)
               .enlaces(enlaces).build(),
@@ -201,7 +203,7 @@ public class SolicitudComService {
   }
 
   public void enviarComunicadoSolicitudCambioEstadoDen(Long solicitudId, String solicitanteRef,
-      String tituloConvocatoria,
+      Set<ConvocatoriaTitulo> tituloConvocatoria,
       Instant fechaConcesionConvocatoria,
       List<ConvocatoriaEnlace> convocatoriaEnlaces) throws JsonProcessingException {
     log.debug("enviarComunicadoSolicitudCambioEstadoDen() - start");
@@ -211,7 +213,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoDen(
           CspComSolicitudCambioEstadoDefinitivoData.builder()
-              .tituloConvocatoria(tituloConvocatoria)
+              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
               .fechaConcesionConvocatoria(
                   fechaConcesionConvocatoria)
               .enlaces(enlaces).build(),
@@ -288,6 +290,6 @@ public class SolicitudComService {
 
     return destinatarios.stream()
         .map(destinatario -> Recipient.builder().name(destinatario).address(destinatario).build())
-        .collect(Collectors.toList());
+        .toList();
   }
 }

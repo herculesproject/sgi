@@ -1,13 +1,28 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
-import org.crue.hercules.sgi.csp.model.*;
+import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
+import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
+import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
+import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
+import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioEquipoServiceImpl;
@@ -37,7 +52,7 @@ class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
   private ProyectoSocioEquipoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoSocioEquipoServiceImpl(repository, proyectoSocioRepository);
   }
 
@@ -197,7 +212,7 @@ class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsProyectoSocioEquipoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoSocioEquipoNotFoundException() {
     // given: Ningun ProyectoSocioEquipo con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -252,13 +267,13 @@ class ProyectoSocioEquipoServiceTest extends BaseServiceTest {
   private ProyectoSocio generarMockProyectoSocio(Long id) {
     Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
     abreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
-    
+
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
-    
+
     Set<RolSocioDescripcion> descripcion = new HashSet<>();
     descripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
-    
+
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(id).abreviatura(abreviatura)

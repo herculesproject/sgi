@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.repository.RolProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoEquipoServiceImpl;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -49,11 +50,15 @@ class SolicitudProyectoEquipoServiceTest extends BaseServiceTest {
   @Mock
   private Validator validator;
 
+  @Mock
+  private SolicitudAuthorityHelper solicitudAuthorityHelper;
+
   private SolicitudProyectoEquipoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
-    service = new SolicitudProyectoEquipoServiceImpl(validator, repository, rolProyectoRepository, solicitudRepository);
+  void setUp() {
+    service = new SolicitudProyectoEquipoServiceImpl(validator, repository, rolProyectoRepository, solicitudRepository,
+        solicitudAuthorityHelper);
   }
 
   @Test
@@ -72,7 +77,7 @@ class SolicitudProyectoEquipoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsSolicitudProyectoEquipoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsSolicitudProyectoEquipoNotFoundException() {
     // given: Ningun SolicitudProyectoEquipo con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());

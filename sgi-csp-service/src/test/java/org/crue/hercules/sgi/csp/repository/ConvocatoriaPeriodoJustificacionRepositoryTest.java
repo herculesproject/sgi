@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.enums.TipoJustificacion;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,29 +23,33 @@ class ConvocatoriaPeriodoJustificacionRepositoryTest extends BaseRepositoryTest 
   private ConvocatoriaPeriodoJustificacionRepository repository;
 
   @Test
-  void findAllByConvocatoriaId_ReturnsConvocatoriaPeriodoJustificacion() throws Exception {
+  void findAllByConvocatoriaId_ReturnsConvocatoriaPeriodoJustificacion() {
 
     // given: 2 ConvocatoriaPeriodoJustificacion para el ConvocatoriaId buscado
-    // @formatter:off
+    Set<ConvocatoriaTitulo> convocatoriaTitulo1 = new HashSet<>();
+    convocatoriaTitulo1.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
     Convocatoria convocatoria1 = Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo")
+        .titulo(convocatoriaTitulo1)
         .activo(Boolean.TRUE)
         .build();
-    ;
     entityManager.persistAndFlush(convocatoria1);
+
+    Set<ConvocatoriaTitulo> convocatoriaTitulo2 = new HashSet<>();
+    convocatoriaTitulo2.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
     Convocatoria convocatoria2 = Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
         .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo")
+        .titulo(convocatoriaTitulo2)
         .activo(Boolean.TRUE)
         .build();
-    ;
     entityManager.persistAndFlush(convocatoria2);
     // @formatter:on
     Set<ConvocatoriaPeriodoJustificacionObservaciones> obsConvocatoriaPeriodoJustificacion1 = new HashSet<>();
@@ -81,8 +86,7 @@ class ConvocatoriaPeriodoJustificacionRepositoryTest extends BaseRepositoryTest 
   }
 
   @Test
-  void findFirstByConvocatoriaIdOrderByNumPeriodoDesc_ReturnsConvocatoriaPeriodoJustificacion()
-      throws Exception {
+  void findFirstByConvocatoriaIdOrderByNumPeriodoDesc_ReturnsConvocatoriaPeriodoJustificacion() {
 
     // given: 2 ConvocatoriaPeriodoJustificacion de una Convocatoria
     // @formatter:off
@@ -91,9 +95,11 @@ class ConvocatoriaPeriodoJustificacionRepositoryTest extends BaseRepositoryTest 
         .codigo("codigo-1")
         .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo")
         .activo(Boolean.TRUE)
         .build();
+        Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+        convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoria1.getId())));
+        convocatoria1.setTitulo(convocatoriaTitulo);
     entityManager.persistAndFlush(convocatoria1);
     // @formatter:on
 

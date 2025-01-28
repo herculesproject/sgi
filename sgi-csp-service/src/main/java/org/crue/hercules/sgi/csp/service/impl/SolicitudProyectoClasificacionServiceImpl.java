@@ -11,15 +11,15 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudProyectoClasificacionSpecifications;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoClasificacionService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
-import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,18 +29,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class SolicitudProyectoClasificacionServiceImpl implements SolicitudProyectoClasificacionService {
 
   private final SolicitudProyectoClasificacionRepository repository;
   private final SolicitudRepository solicitudRepository;
-
-  public SolicitudProyectoClasificacionServiceImpl(
-      SolicitudProyectoClasificacionRepository solicitudProyectoClasificacionRepository,
-      SolicitudRepository solicitudRepository) {
-    this.repository = solicitudProyectoClasificacionRepository;
-    this.solicitudRepository = solicitudRepository;
-
-  }
+  private final SolicitudAuthorityHelper solicitudAuthorityHelper;
 
   /**
    * Guardar un nuevo {@link SolicitudProyectoClasificacion}.
@@ -99,7 +93,8 @@ public class SolicitudProyectoClasificacionServiceImpl implements SolicitudProye
 
     Solicitud solicitud = solicitudRepository.findById(solicitudId)
         .orElseThrow(() -> new SolicitudNotFoundException(solicitudId));
-    if (!(hasAuthorityViewInvestigador(solicitud) || hasAuthorityViewUnidadGestion(solicitud))) {
+    if (!(solicitudAuthorityHelper.hasAuthorityViewInvestigador(solicitud)
+        || solicitudAuthorityHelper.hasAuthorityViewUnidadGestion(solicitud))) {
       throw new UserNotAuthorizedToAccessSolicitudException();
     }
 
@@ -111,17 +106,4 @@ public class SolicitudProyectoClasificacionServiceImpl implements SolicitudProye
     return returnValue;
   }
 
-  private boolean hasAuthorityViewInvestigador(Solicitud solicitud) {
-    return SgiSecurityContextHolder.hasAuthorityForAnyUO("CSP-SOL-INV-ER")
-        && solicitud.getSolicitanteRef().equals(getAuthenticationPersonaRef());
-  }
-
-  private String getAuthenticationPersonaRef() {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
-  }
-
-  private boolean hasAuthorityViewUnidadGestion(Solicitud solicitud) {
-    return SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-E", solicitud.getUnidadGestionRef())
-        || SgiSecurityContextHolder.hasAuthorityForUO("CSP-SOL-V", solicitud.getUnidadGestionRef());
-  }
 }

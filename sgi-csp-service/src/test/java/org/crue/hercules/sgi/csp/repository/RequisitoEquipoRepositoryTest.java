@@ -7,9 +7,9 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipo;
 import org.crue.hercules.sgi.csp.model.RequisitoEquipoOtrosRequisitos;
-import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +24,21 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
   private RequisitoEquipoRepository repository;
 
   @Test
-  void findByConvocatoriaId_ReturnsRequisitoEquipo() throws Exception {
+  void findByConvocatoriaId_ReturnsRequisitoEquipo() {
 
     // given: 2 RequisitoEquipo de los que 1 coincide con el idConvocatoria buscado
-    // @formatter:off
+
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
     Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo")
+        .titulo(convocatoriaTitulo)
         .activo(Boolean.TRUE)
         .build());
-    // @formatter:on
 
     Set<RequisitoEquipoOtrosRequisitos> otrosRequisitos = new HashSet<>();
     otrosRequisitos.add(new RequisitoEquipoOtrosRequisitos(Language.ES, "otros"));
@@ -60,11 +62,18 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
         .build());
     // @formatter:on
 
-    // @formatter:on
+    Set<ConvocatoriaTitulo> convocatoriaTitulo2 = new HashSet<>();
+    convocatoriaTitulo2.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
     Convocatoria convocatoria2 = entityManager.persistAndFlush(
-        Convocatoria.builder().estado(Convocatoria.Estado.BORRADOR).codigo("codigo-2").unidadGestionRef("2")
-            .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z")).titulo("titulo").activo(Boolean.TRUE).build());
-    // @formatter:on
+        Convocatoria.builder()
+            .estado(Convocatoria.Estado.BORRADOR)
+            .codigo("codigo-2")
+            .unidadGestionRef("2")
+            .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
+            .titulo(convocatoriaTitulo2)
+            .activo(Boolean.TRUE)
+            .build());
 
     // @formatter:off
     entityManager.persistAndFlush(RequisitoEquipo.builder()
@@ -99,19 +108,20 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void findByConvocatoriaNoExiste_ReturnsNull() throws Exception {
+  void findByConvocatoriaNoExiste_ReturnsNull() {
 
     // given: 2 RequisitoEquipo que no coinciden con el idConvocatoria buscado
-    // @formatter:off
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
     Convocatoria convocatoria1 = entityManager.persistAndFlush(Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-1")
         .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo")
+        .titulo(convocatoriaTitulo)
         .activo(Boolean.TRUE)
         .build());
-    // @formatter:on
 
     Set<RequisitoEquipoOtrosRequisitos> otrosRequisitos = new HashSet<>();
     otrosRequisitos.add(new RequisitoEquipoOtrosRequisitos(Language.ES, "otros"));
@@ -135,16 +145,18 @@ class RequisitoEquipoRepositoryTest extends BaseRepositoryTest {
         .build());
     // @formatter:on
 
-    // @formatter:off
+    Set<ConvocatoriaTitulo> convocatoriaTitulo2 = new HashSet<>();
+    convocatoriaTitulo2.add(new ConvocatoriaTitulo(Language.ES, "titulo"));
+
     Convocatoria convocatoria2 = entityManager.persistAndFlush(Convocatoria.builder()
         .estado(Convocatoria.Estado.BORRADOR)
         .codigo("codigo-2")
         .unidadGestionRef("2")
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo")
+        .titulo(convocatoriaTitulo2)
         .activo(Boolean.TRUE)
         .build());
-    // @formatter:on
+
     // @formatter:off
     entityManager.persistAndFlush(RequisitoEquipo.builder()
         .id(convocatoria2.getId())

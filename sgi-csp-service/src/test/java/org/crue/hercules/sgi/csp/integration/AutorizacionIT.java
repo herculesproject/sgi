@@ -11,7 +11,7 @@ import org.crue.hercules.sgi.csp.dto.AutorizacionInput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.AutorizacionWithFirstEstado;
 import org.crue.hercules.sgi.csp.dto.CertificadoAutorizacionOutput;
-import org.crue.hercules.sgi.csp.dto.ConvocatoriaTituloOutput;
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaOnlyTituloOutput;
 import org.crue.hercules.sgi.csp.dto.DocumentoOutput;
 import org.crue.hercules.sgi.csp.dto.EstadoAutorizacionOutput;
 import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
@@ -588,8 +588,8 @@ class AutorizacionIT extends BaseIT {
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONVOCATORIA)
         .buildAndExpand(autorizacionId).toUri();
 
-    final ResponseEntity<ConvocatoriaTituloOutput> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null, "CSP-AUT-INV-ER"), ConvocatoriaTituloOutput.class);
+    final ResponseEntity<ConvocatoriaOnlyTituloOutput> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null, "CSP-AUT-INV-ER"), ConvocatoriaOnlyTituloOutput.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody()).isNotNull();

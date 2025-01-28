@@ -8,6 +8,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVN;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -29,7 +30,7 @@ class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
   private ConvocatoriaRepository repository;
 
   @Test
-  void findByCodigo_ReturnsConvocatoria() throws Exception {
+  void findByCodigo_ReturnsConvocatoria() {
     // given: data Convocatoria with codigo to find
     Convocatoria convocatoria = generarMockConvocatoria("-001");
 
@@ -60,7 +61,7 @@ class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void findByCodigo_ReturnsNull() throws Exception {
+  void findByCodigo_ReturnsNull() {
     // given: codigo to find
     String codigo = "codigo-001";
 
@@ -81,7 +82,6 @@ class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -114,7 +114,7 @@ class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoRegimenConcurrencia);
-    
+
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
 
@@ -124,6 +124,9 @@ class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(tipoAmbitoGeografico);
 
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo" + suffix));
+
     Convocatoria convocatoria = Convocatoria.builder()
         .unidadGestionRef("unidad" + suffix)
         .modeloEjecucion(modeloEjecucion)
@@ -131,7 +134,7 @@ class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo" + suffix)
+        .titulo(convocatoriaTitulo)
         .objeto("objeto" + suffix)
         .observaciones("observaciones" + suffix)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())
@@ -142,7 +145,6 @@ class ConvocatoriaRepositoryTest extends BaseRepositoryTest {
         .clasificacionCVN(ClasificacionCVN.AYUDAS)
         .activo(Boolean.TRUE)
         .build();
-    // @formatter:on
     return entityManager.persistAndFlush(convocatoria);
   }
 }

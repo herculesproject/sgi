@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumentoObservaciones;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
@@ -75,7 +76,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
   private ConvocatoriaDocumentoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     this.authorityHelper = new ConvocatoriaAuthorityHelper(convocatoriaRepository, configuracionSolicitudRepository);
     service = new ConvocatoriaDocumentoServiceImpl(repository, convocatoriaRepository, modeloTipoFaseRepository,
         modeloTipoDocumentoRepository, authorityHelper);
@@ -1010,7 +1011,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithoutId_ThrowsIllegalArgumentException() throws Exception {
+  void delete_WithoutId_ThrowsIllegalArgumentException() {
     // given: no id
     Long id = null;
 
@@ -1022,7 +1023,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
 
@@ -1134,7 +1135,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(
         new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)));
-    // @formatter:off
+
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
         : ModeloEjecucion.builder()
             .id(modeloEjecucionId)
@@ -1143,7 +1144,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
             .build();
 
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
-    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
+    nombreTipoFinalidad.add(
+        new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
 
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : TipoFinalidad.builder()
@@ -1161,7 +1163,8 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
             .build();
 
     Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombre = new HashSet<>();
-    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
+    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES,
+        "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
 
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
         : TipoRegimenConcurrencia.builder()
@@ -1171,8 +1174,9 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
             .build();
 
     Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
-    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId)));
-    
+    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES,
+        "nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId)));
+
     TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
         : TipoAmbitoGeografico.builder()
             .id(tipoAmbitoGeogragicoId)
@@ -1180,7 +1184,10 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
             .activo(Boolean.TRUE)
             .build();
 
-    Convocatoria convocatoria = Convocatoria.builder()
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoriaId)));
+
+    return Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
         .modeloEjecucion(modeloEjecucion)
@@ -1188,7 +1195,7 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))
+        .titulo(convocatoriaTitulo)
         .objeto("objeto-" + String.format("%03d", convocatoriaId))
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
@@ -1200,9 +1207,6 @@ class ConvocatoriaDocumentoServiceTest extends BaseServiceTest {
         .formularioSolicitud(FormularioSolicitud.PROYECTO)
         .activo(activo)
         .build();
-    // @formatter:on
-
-    return convocatoria;
   }
 
   /**

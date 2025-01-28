@@ -42,6 +42,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientificoObservaciones;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
@@ -205,7 +206,10 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
     // given: existing Convocatoria
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setTitulo("titulo-modificado");
+    Set<ConvocatoriaTitulo> tituloConvocatoria = new HashSet<>();
+    tituloConvocatoria.add(new ConvocatoriaTitulo(Language.ES, "titulo-modificado"));
+    convocatoria.setTitulo(tituloConvocatoria);
+
     convocatoria.setObservaciones("observaciones-modificadas");
 
     BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(convocatoriaExistente);
@@ -237,7 +241,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
             .value(convocatoriaExistente.getFechaProvisional().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaConcesion")
             .value(convocatoriaExistente.getFechaConcesion().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value(convocatoria.getTitulo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value")
+            .value(I18nHelper.getValueForLanguage(convocatoria.getTitulo(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("objeto").value(convocatoriaExistente.getObjeto()))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(convocatoria.getObservaciones()))
         .andExpect(MockMvcResultMatchers.jsonPath("finalidad.id").value(convocatoriaExistente.getFinalidad().getId()))
@@ -305,7 +310,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
             .value(convocatoriaBorradorExistente.getFechaProvisional().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaConcesion")
             .value(convocatoriaBorradorExistente.getFechaConcesion().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value(convocatoriaBorradorExistente.getTitulo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value")
+            .value(I18nHelper.getValueForLanguage(convocatoriaBorradorExistente.getTitulo(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("objeto").value(convocatoriaBorradorExistente.getObjeto()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("observaciones").value(convocatoriaBorradorExistente.getObservaciones()))
@@ -1468,7 +1474,8 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
             MockMvcResultMatchers.jsonPath("fechaProvisional").value(newConvocatoria.getFechaProvisional().toString()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("fechaConcesion").value(newConvocatoria.getFechaConcesion().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value(newConvocatoria.getTitulo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value")
+            .value(I18nHelper.getValueForLanguage(newConvocatoria.getTitulo(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("objeto").value(newConvocatoria.getObjeto()))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(newConvocatoria.getObservaciones()))
         .andExpect(MockMvcResultMatchers.jsonPath("finalidad.id").value(newConvocatoria.getFinalidad().getId()))
@@ -1767,6 +1774,9 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
             .activo(Boolean.TRUE)
             .build();
 
+    Set<ConvocatoriaTitulo> convocatoriaTitulo = new HashSet<>();
+    convocatoriaTitulo.add(new ConvocatoriaTitulo(Language.ES, "titulo-" + String.format("%03d", convocatoriaId)));
+
     Convocatoria convocatoria = Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
@@ -1775,7 +1785,7 @@ class ConvocatoriaControllerTest extends BaseControllerTest {
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
-        .titulo("titulo-" + String.format("%03d", convocatoriaId))
+        .titulo(convocatoriaTitulo)
         .objeto("objeto-" + String.format("%03d", convocatoriaId))
         .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())

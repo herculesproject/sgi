@@ -1,9 +1,11 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RolProyectoNotFoundException;
@@ -33,6 +35,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * RolProyectoControllerTest
@@ -132,7 +136,8 @@ class RolProyectoControllerTest extends BaseControllerTest {
     // containing Codigo='codigo-62' to 'codigo-80'
     for (int i = 0, j = 62; i < 10; i++, j += 2) {
       RolProyecto item = actual.get(i);
-      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getAbreviatura(), Language.ES)).isEqualTo(String.format("%03d", j));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getAbreviatura(), Language.ES))
+          .isEqualTo(String.format("%03d", j));
       Assertions.assertThat(item.getActivo()).isEqualTo(Boolean.TRUE);
     }
   }

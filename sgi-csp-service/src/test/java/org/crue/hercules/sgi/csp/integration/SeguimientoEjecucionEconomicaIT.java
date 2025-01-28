@@ -45,8 +45,7 @@ class SeguimientoEjecucionEconomicaIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s",
         tokenBuilder.buildToken("usr-002", roles)));
 
-    HttpEntity<Object> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {

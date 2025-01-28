@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaSpecifications;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -240,10 +241,12 @@ public class SolicitanteExternoService {
     log.debug("enviarComunicadoSolicitudExterna(Solicitud solicitud) - start");
     try {
 
-      String tituloConvocatoria = this.convocatoriaRepository
-          .findOne(ConvocatoriaSpecifications.bySolicitudId(solicitudId)).map(Convocatoria::getTitulo)
-          .orElseGet(() -> this.solicitudRepository.findById(solicitudId).map(Solicitud::getConvocatoriaExterna)
-              .orElse(StringUtils.EMPTY));
+      String tituloConvocatoria = I18nHelper.getFieldValue(this.convocatoriaRepository
+          .findOne(ConvocatoriaSpecifications.bySolicitudId(solicitudId)).map(Convocatoria::getTitulo).get());
+      if (tituloConvocatoria == null) {
+        tituloConvocatoria = this.solicitudRepository.findById(solicitudId).map(Solicitud::getConvocatoriaExterna)
+            .orElse(StringUtils.EMPTY);
+      }
 
       this.solicitudComService.enviarComunicadoSolicitudUsuarioExterno(solicitudId, tituloConvocatoria,
           uuid.toString());

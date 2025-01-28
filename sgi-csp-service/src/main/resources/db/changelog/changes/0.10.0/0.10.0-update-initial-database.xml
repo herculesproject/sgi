@@ -1625,4 +1625,32 @@
     <dropColumn columnName="observaciones"
       tableName="solicitud_proyecto_socio_periodo_justificacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-61">
+    <createTable tableName="convocatoria_titulo">
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(1000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_titulo" columnNames="convocatoria_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id"
+      baseTableName="convocatoria_titulo"
+      constraintName="FK_CONVOCATORIATITULO_CONVOCATORIA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}convocatoria_titulo(convocatoria_id, value_, lang) SELECT id,
+      titulo, '${defaultLang}' FROM ${schemaPrefix}convocatoria WHERE titulo IS NOT NULL AND
+      NULLIF(TRIM(titulo), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="titulo" tableName="convocatoria" />
+  </changeSet>
 </databaseChangeLog>
