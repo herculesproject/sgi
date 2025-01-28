@@ -16,7 +16,7 @@ export interface IConvocatoriaResponse {
   fechaProvisional: string;
   fechaConcesion: string;
   titulo: I18nFieldValueResponse[];
-  objeto: string;
+  objeto: I18nFieldValueResponse[];
   observaciones: string;
   finalidad: ITipoFinalidadResponse;
   regimenConcurrencia: ITipoRegimenConcurrenciaResponse;

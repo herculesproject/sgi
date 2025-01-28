@@ -85,7 +85,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       clasificacionCVN: new FormControl(null),
       regimenConcurrencia: new FormControl(null),
       entidadGestora: new FormControl(null),
-      objeto: new FormControl('', Validators.maxLength(2000)),
+      objeto: new FormControl([], I18nValidators.maxLength(2000)),
       observaciones: new FormControl('', Validators.maxLength(2000)),
       palabrasClave: new FormControl(null),
       codigoInterno: new FormControl(null, Validators.maxLength(50)),

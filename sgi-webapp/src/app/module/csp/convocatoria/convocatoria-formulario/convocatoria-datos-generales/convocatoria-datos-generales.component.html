@@ -237,9 +237,8 @@
       <!-- Objeto -->
       <mat-form-field fxFlex="100%">
         <mat-label>{{'csp.convocatoria.descripcion' | translate}}</mat-label>
-        <textarea matInput formControlName="objeto" type="text" id="objeto"
-          placeholder="{{'csp.convocatoria.descripcion' | translate}}">
-        </textarea>
+        <sgi-i18n-textarea formControlName="objeto" placeholder="{{'csp.convocatoria.descripcion' | translate}}">
+        </sgi-i18n-textarea>
         <mat-error *ngIf="formGroup.controls.objeto.errors?.maxlength">
           {{ 'error.maxlength.entity' | translate:msgParamDescripcionEntity }}
         </mat-error>
