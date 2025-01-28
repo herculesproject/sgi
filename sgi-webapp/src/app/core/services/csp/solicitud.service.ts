@@ -1,12 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
-import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.converter';
 import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
 import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-area-conocimiento.converter';
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
-import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/backend/solicitud-proyecto-area-conocimiento-backend';
@@ -41,6 +39,8 @@ import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-soc
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
 import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response';
 import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
+import { IConvocatoriaResponse } from '@core/services/csp/convocatoria/convocatoria-response';
+import { CONVOCATORIA_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria/convocatoria-response.converter';
 import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
 import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
 import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
@@ -623,10 +623,10 @@ export class SolicitudService extends _SolicitudServiceMixinBase {
    * @param solicitudId Id de la solicitud
    */
   findConvocatoria(solicitudId: number): Observable<IConvocatoria> {
-    return this.http.get<IConvocatoriaBackend>(
+    return this.http.get<IConvocatoriaResponse>(
       `${this.endpointUrl}/${solicitudId}/convocatoria`
     ).pipe(
-      map(response => CONVOCATORIA_CONVERTER.toTarget(response))
+      map(response => CONVOCATORIA_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

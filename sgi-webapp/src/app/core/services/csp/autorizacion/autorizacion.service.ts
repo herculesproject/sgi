@@ -17,8 +17,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ICertificadoAutorizacionResponse } from '../certificado-autorizacion/certificado-autorizacion-response';
 import { CERTIFICADO_AUTORIZACION_RESPONSE_CONVERTER } from '../certificado-autorizacion/certificado-autorizacion-response.converter';
-import { IConvocatoriaTituloResponse } from '../convocatoria/convocatoria-titulo-response';
-import { CONVOCATORIA_TITULO_RESPONSE_CONVERTER } from '../convocatoria/convocatoria-titulo-response.converter';
+import { IConvocatoriaOnlyTituloResponse } from '../convocatoria/convocatoria-only-titulo-response';
+import { CONVOCATORIA_ONLY_TITULO_RESPONSE_CONVERTER } from '../convocatoria/convocatoria-only-titulo-response.converter';
 import { IEstadoAutorizacionResponse } from '../estado-autorizacion/estado-autorizacion-response';
 import { ESTADO_AUTORIZACION_RESPONSE_CONVERTER } from '../estado-autorizacion/estado-autorizacion-response.converter';
 import { INotificacionProyectoExternoCVNResponse } from '../notificacion-proyecto-externo-cvn/notificacion-proyecto-externo-cvn-response';
@@ -180,10 +180,10 @@ export class AutorizacionService extends _AutorizacionMixinBase {
    * @param id Id de la autorizacion
    */
   findConvocatoria(id: number): Observable<IConvocatoria> {
-    return this.http.get<IConvocatoriaTituloResponse>(
+    return this.http.get<IConvocatoriaOnlyTituloResponse>(
       `${this.endpointUrl}/${id}/convocatoria`
     ).pipe(
-      map(response => CONVOCATORIA_TITULO_RESPONSE_CONVERTER.toTarget(response))
+      map(response => CONVOCATORIA_ONLY_TITULO_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

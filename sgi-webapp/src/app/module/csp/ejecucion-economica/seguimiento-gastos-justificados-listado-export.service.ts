@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IAlegacionRequerimiento } from '@core/models/csp/alegacion-requerimiento';
 import { IGastoRequerimientoJustificacion } from '@core/models/csp/gasto-requerimiento-justificacion';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -53,7 +54,7 @@ export interface IGastoJustificadoReportData extends IGastoJustificado {
   proyectoSgi: IProyecto;
   responsablesIds: string;
   responsables: IResponsableReportData[];
-  tituloConvocatoria: string;
+  tituloConvocatoria: I18nFieldValue[];
   entidadesFinanciadoras: IEntidadFinanciadoraReportData[];
   importeConcedido: number;
   importeConcedidoCD: number;

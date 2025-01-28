@@ -246,8 +246,9 @@
       <!-- Titulo convocatoria -->
       <mat-form-field *ngIf="fragment.isEdit()" fxFlex>
         <mat-label>{{'pub.solicitud.datos-generales.titulo' | translate}}</mat-label>
-        <sgi-i18n-input matInput formControlName="tituloSolicitud"
-          placeholder="{{'pub.solicitud.datos-generales.titulo' | translate}}"></sgi-i18n-input>
+        <sgi-i18n-input formControlName="tituloConvocatoria"
+          placeholder="{{'pub.solicitud.datos-generales.titulo' | translate}}">
+        </sgi-i18n-input>
       </mat-form-field>
 
     </div>

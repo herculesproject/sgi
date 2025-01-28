@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { Estado } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
@@ -135,7 +136,7 @@ export class ConvocatoriaActionService extends ActionService implements OnDestro
     return this.datosGenerales.getValue().unidadGestion?.id;
   }
 
-  get titulo(): string {
+  get titulo(): I18nFieldValue[] {
     return this.datosGenerales.getValue().titulo;
   }
 

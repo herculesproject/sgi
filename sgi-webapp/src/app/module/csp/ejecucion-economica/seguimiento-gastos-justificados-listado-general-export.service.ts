@@ -14,6 +14,7 @@ import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto
 import { ProyectoSeguimientoEjecucionEconomicaService } from '@core/services/csp/proyecto-seguimiento-ejecucion-economica/proyecto-seguimiento-ejecucion-economica.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { SeguimientoJustificacionService } from '@core/services/sge/seguimiento-justificacion/seguimiento-justificacion.service';
@@ -62,7 +63,7 @@ const NUM_JUST_REINTEGRADO_KEY = marker('csp.ejecucion-economica.seguimiento-jus
 
 @Injectable()
 export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
-  extends AbstractTableExportFillService<IGastoJustificadoReportData, IGastosJustificadosReportOptions>{
+  extends AbstractTableExportFillService<IGastoJustificadoReportData, IGastosJustificadosReportOptions> {
   private columns: IColumna[] = [];
   private maxResponsables = 0;
   private maxEntidades = 0;
@@ -79,8 +80,8 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     private readonly convocatoriaService: ConvocatoriaService,
     private readonly proyectoSeguimientoEjecucionEconomicaService: ProyectoSeguimientoEjecucionEconomicaService,
     private readonly gastoRequerimientoJustificacionService: GastoRequerimientoJustificacionService,
-    private readonly requerimientoJustificacionService: RequerimientoJustificacionService
-
+    private readonly requerimientoJustificacionService: RequerimientoJustificacionService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -1117,7 +1118,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
       // Responsables, hay que rellenar todas las columnas hayan o no datos.
       this.fillResponsablesRows(gasto?.responsables ?? [], elementsRow);
 
-      elementsRow.push(gasto?.tituloConvocatoria ?? '');
+      elementsRow.push(this.languageService.getFieldValue(gasto?.tituloConvocatoria));
 
       this.fillEntidadesFinanciadorasRows(gasto?.entidadesFinanciadoras ?? [], elementsRow);
 

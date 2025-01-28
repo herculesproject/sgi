@@ -121,7 +121,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
       readonly: wrapper ? !this.modificable(wrapper) : this.formPart.readonly,
       unidadGestionId: this.actionService.solicitud?.unidadGestion?.id,
       tituloSolicitud: this.actionService.solicitud?.titulo,
-      tituloConvocatoria: this.actionService.convocatoriaTitulo
+      tituloConvocatoria: this.languageService.getFieldValue(this.actionService.convocatoriaTitulo)
     };
     const config = {
       data

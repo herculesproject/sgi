@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
 import { CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-gestora.converter';
-import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.converter';
 import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
-import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IConvocatoriaEntidadGestoraBackend } from '@core/models/csp/backend/convocatoria-entidad-gestora-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
@@ -33,6 +31,8 @@ import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convo
 import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
 import { IConvocatoriaPeriodoJustificacionResponse } from '@core/services/csp/convocatoria-periodo-justificacion/convocatoria-periodo-justificacion-response';
 import { IConvocatoriaPeriodoSeguimientoCientificoResponse } from '@core/services/csp/convocatoria-periodo-seguimiento-cientifico/convocatoria-periodo-seguimiento-cientifico-response';
+import { IConvocatoriaResponse } from '@core/services/csp/convocatoria/convocatoria-response';
+import { CONVOCATORIA_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria/convocatoria-response.converter';
 import { environment } from '@env';
 import { FindByIdCtor, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, mixinFindById } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
@@ -61,10 +61,10 @@ import { REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-ip-ni
 
 // tslint:disable-next-line: variable-name
 const _ConvocatoriaMixinBase:
-  FindByIdCtor<number, IConvocatoria, IConvocatoriaBackend> &
+  FindByIdCtor<number, IConvocatoria, IConvocatoriaResponse> &
   typeof SgiRestBaseService = mixinFindById(
     SgiRestBaseService,
-    CONVOCATORIA_CONVERTER
+    CONVOCATORIA_RESPONSE_CONVERTER
   );
 
 @Injectable({
@@ -95,10 +95,10 @@ export class ConvocatoriaPublicService extends _ConvocatoriaMixinBase {
   }
 
   findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    return this.find<IConvocatoriaBackend, IConvocatoria>(
+    return this.find<IConvocatoriaResponse, IConvocatoria>(
       `${this.endpointUrl}/investigador`,
       options,
-      CONVOCATORIA_CONVERTER
+      CONVOCATORIA_RESPONSE_CONVERTER
     );
   }
 

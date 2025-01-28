@@ -1,12 +1,13 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IModeloEjecucionResponse } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response';
 import { ITipoAmbitoGeograficoResponse } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response';
 import { ITipoFinalidadResponse } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response';
 import { ITipoRegimenConcurrenciaResponse } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia-response';
-import { Estado } from '../convocatoria';
+import { Estado } from '../../../models/csp/convocatoria';
 
-export interface IConvocatoriaBackend {
+export interface IConvocatoriaResponse {
   id: number;
   unidadGestionRef: string;
   modeloEjecucion: IModeloEjecucionResponse;
@@ -14,7 +15,7 @@ export interface IConvocatoriaBackend {
   fechaPublicacion: string;
   fechaProvisional: string;
   fechaConcesion: string;
-  titulo: string;
+  titulo: I18nFieldValueResponse[];
   objeto: string;
   observaciones: string;
   finalidad: ITipoFinalidadResponse;

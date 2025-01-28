@@ -413,7 +413,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     const filter = new RSQLSgiRestFilter('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value);
 
     filter
-      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('estado', SgiRestFilterOperator.EQUALS, controls.estado.value)
       .and('activo', SgiRestFilterOperator.EQUALS, controls.activo.value?.toString())
       .and('fechaPublicacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaPublicacionDesde.value))
@@ -431,22 +431,10 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
     const palabrasClave = controls.palabrasClave.value as string[];
     if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {
-      filter.and(this.createPalabrasClaveFilter(palabrasClave));
+      filter.and('palabrasClave', SgiRestFilterOperator.IN, palabrasClave);
     }
 
     return filter;
-  }
-
-  private createPalabrasClaveFilter(palabrasClave: string[]): SgiRestFilter {
-    let palabrasClaveFilter: SgiRestFilter;
-    palabrasClave.forEach(palabraClave => {
-      if (palabrasClaveFilter) {
-        palabrasClaveFilter.or('palabrasClave.palabraClaveRef', SgiRestFilterOperator.LIKE_ICASE, palabraClave);
-      } else {
-        palabrasClaveFilter = new RSQLSgiRestFilter('palabrasClave.palabraClaveRef', SgiRestFilterOperator.LIKE_ICASE, palabraClave);
-      }
-    });
-    return palabrasClaveFilter;
   }
 
   resetFilters() {

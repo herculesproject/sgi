@@ -138,7 +138,7 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
     } else if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.RRHH) {
       const camposTitulo: string[] = [];
       if (!!this.data?.convocatoria?.titulo) {
-        camposTitulo.push(this.data.convocatoria.titulo);
+        camposTitulo.push(this.languageService.getFieldValue(this.data.convocatoria.titulo));
       }
       if (!!this.data?.convocatoria?.anio) {
         camposTitulo.push(this.data.convocatoria.anio.toString());

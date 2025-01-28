@@ -225,7 +225,9 @@
       <!-- Titulo Column -->
       <ng-container matColumnDef="titulo">
         <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.titulo' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.convocatoria.titulo}}</td>
+        <td mat-cell *matCellDef="let element">
+          <sgi-i18n-table-field [field]="element.convocatoria.titulo"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
       <!-- Referencia Column -->

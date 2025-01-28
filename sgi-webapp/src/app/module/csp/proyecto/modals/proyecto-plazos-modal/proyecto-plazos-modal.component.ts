@@ -5,6 +5,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DEFAULT_PREFIX_RECIPIENTS_CSP_PRO_FASES } from '@core/models/cnf/config-keys';
 import { IGenericEmailText } from '@core/models/com/generic-email-text';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
@@ -334,7 +335,7 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
     }
   }
 
-  private fillDefaultAviso(fgAviso: FormGroup, tituloConvocatoria: string): void {
+  private fillDefaultAviso(fgAviso: FormGroup, tituloConvocatoria: I18nFieldValue[]): void {
     fgAviso.get('fechaEnvio').setValue(this.formGroup.get('fechaInicio').value);
     this.configService.getEmailRecipients(DEFAULT_PREFIX_RECIPIENTS_CSP_PRO_FASES + this.data.unidadGestionId).subscribe(
       (destinatarios) => {
@@ -343,7 +344,7 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
     );
     this.emailTplService.processProyectoFaseTemplate(
       this.data.tituloProyecto,
-      tituloConvocatoria,
+      this.languageService.getFieldValue(tituloConvocatoria),
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),
       this.languageService.getFieldValue(this.formGroup.get('tipoFase').value?.nombre) ?? '',
@@ -419,7 +420,7 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
           if (fgAviso.disabled) {
             fgAviso.enable();
           }
-          this.getTituloConvocatoria().subscribe((titulo: string) => this.fillDefaultAviso(fgAviso, titulo));
+          this.getTituloConvocatoria().subscribe((titulo: I18nFieldValue[]) => this.fillDefaultAviso(fgAviso, titulo));
           if (generaAvisoCtrl === this.formGroup.controls?.generaAviso2) {
             this.avisosTabGroup.selectedIndex = 1;
           }
@@ -457,9 +458,9 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
     }
   }
 
-  private getTituloConvocatoria(): Observable<string> {
+  private getTituloConvocatoria(): Observable<I18nFieldValue[]> {
     if (!this.data.convocatoriaId) {
-      return of('');
+      return of([]);
     }
     return this.convocatoriaService.findById(this.data.convocatoriaId).pipe(
       map((convocatoria: IConvocatoria) => convocatoria.titulo)

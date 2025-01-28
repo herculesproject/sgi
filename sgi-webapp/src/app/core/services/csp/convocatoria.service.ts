@@ -3,10 +3,8 @@ import { Injectable } from '@angular/core';
 import { CONVOCATORIA_AREA_TEMATICA_CONVERTER } from '@core/converters/csp/convocatoria-area-tematica.converter';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
 import { CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-gestora.converter';
-import { CONVOCATORIA_CONVERTER } from '@core/converters/csp/convocatoria.converter';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
-import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IConvocatoriaEntidadGestoraBackend } from '@core/models/csp/backend/convocatoria-entidad-gestora-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
@@ -38,8 +36,10 @@ import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convo
 import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
 import { IConvocatoriaPeriodoJustificacionResponse } from '@core/services/csp/convocatoria-periodo-justificacion/convocatoria-periodo-justificacion-response';
 import { IConvocatoriaPeriodoSeguimientoCientificoResponse } from '@core/services/csp/convocatoria-periodo-seguimiento-cientifico/convocatoria-periodo-seguimiento-cientifico-response';
+import { IConvocatoriaResponse } from '@core/services/csp/convocatoria/convocatoria-response';
+import { CONVOCATORIA_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria/convocatoria-response.converter';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http/';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';
@@ -65,19 +65,38 @@ import { REQUISITOIP_CATEGORIA_PROFESIONAL_RESPONSE_CONVERTER } from './requisit
 import { IRequisitoIPNivelAcademicoResponse } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response';
 import { REQUISITOIP_NIVELACADEMICO_RESPONSE_CONVERTER } from './requisito-ip-nivel-academico/requisito-ip-nivel-academico-response.converter';
 
+// tslint:disable-next-line: variable-name
+const _ConvocatoriaServiceMixinBase:
+  CreateCtor<IConvocatoria, IConvocatoria, IConvocatoriaResponse, IConvocatoriaResponse> &
+  UpdateCtor<number, IConvocatoria, IConvocatoria, IConvocatoriaResponse, IConvocatoriaResponse> &
+  FindAllCtor<IConvocatoria, IConvocatoriaResponse> &
+  FindByIdCtor<number, IConvocatoria, IConvocatoriaResponse> &
+  typeof SgiRestBaseService = mixinFindAll(
+    mixinFindById(
+      mixinUpdate(
+        mixinCreate(
+          SgiRestBaseService,
+          CONVOCATORIA_RESPONSE_CONVERTER,
+          CONVOCATORIA_RESPONSE_CONVERTER
+        ),
+        CONVOCATORIA_RESPONSE_CONVERTER,
+        CONVOCATORIA_RESPONSE_CONVERTER
+      ),
+      CONVOCATORIA_RESPONSE_CONVERTER),
+    CONVOCATORIA_RESPONSE_CONVERTER
+  );
+
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaService extends SgiMutableRestService<number, IConvocatoriaBackend, IConvocatoria> {
+export class ConvocatoriaService extends _ConvocatoriaServiceMixinBase {
 
   private static readonly MAPPING = '/convocatorias';
 
   constructor(protected http: HttpClient) {
     super(
-      ConvocatoriaService.name,
       `${environment.serviceServers.csp}${ConvocatoriaService.MAPPING}`,
-      http,
-      CONVOCATORIA_CONVERTER
+      http
     );
   }
 
@@ -87,10 +106,10 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    * @returns listado de convocatorias
    */
   findAllRestringidos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    return this.find<IConvocatoriaBackend, IConvocatoria>(
+    return this.find<IConvocatoriaResponse, IConvocatoria>(
       `${this.endpointUrl}/restringidos`,
       options,
-      this.converter
+      CONVOCATORIA_RESPONSE_CONVERTER
     );
   }
 
@@ -100,10 +119,10 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    * @returns listado de convocatorias
    */
   findAllTodosRestringidos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    return this.find<IConvocatoriaBackend, IConvocatoria>(
+    return this.find<IConvocatoriaResponse, IConvocatoria>(
       `${this.endpointUrl}/todos/restringidos`,
       options,
-      this.converter
+      CONVOCATORIA_RESPONSE_CONVERTER
     );
   }
 
@@ -404,10 +423,10 @@ export class ConvocatoriaService extends SgiMutableRestService<number, IConvocat
    * @param options opciones de búsqueda.
    */
   findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    return this.find<IConvocatoriaBackend, IConvocatoria>(
+    return this.find<IConvocatoriaResponse, IConvocatoria>(
       `${this.endpointUrl}/investigador`,
       options,
-      this.converter
+      CONVOCATORIA_RESPONSE_CONVERTER
     );
   }
 

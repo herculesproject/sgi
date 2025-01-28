@@ -81,8 +81,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IAnualidadGastoResponse } from './anualidad-gasto/anualidad-gasto-response';
 import { ANUALIDAD_GASTO_RESPONSE_CONVERTER } from './anualidad-gasto/anualidad-gasto-response.converter';
-import { IConvocatoriaTituloResponse } from './convocatoria/convocatoria-titulo-response';
-import { CONVOCATORIA_TITULO_RESPONSE_CONVERTER } from './convocatoria/convocatoria-titulo-response.converter';
+import { IConvocatoriaOnlyTituloResponse } from './convocatoria/convocatoria-only-titulo-response';
+import { CONVOCATORIA_ONLY_TITULO_RESPONSE_CONVERTER } from './convocatoria/convocatoria-only-titulo-response.converter';
 import { IProyectoAgrupacionGastoResponse } from './proyecto-agrupacion-gasto/proyecto-agrupacion-gasto-response';
 import { PROYECTO_AGRUPACION_GASTO_RESPONSE_CONVERTER } from './proyecto-agrupacion-gasto/proyecto-agrupacion-gasto-response.converter';
 import { IProyectoAnualidadResponse } from './proyecto-anualidad/proyecto-anualidad-response';
@@ -841,10 +841,10 @@ export class ProyectoService extends SgiMutableRestService<number, IProyectoBack
    * @param id Id del proyecto
    */
   findConvocatoria(id: number): Observable<IConvocatoria> {
-    return this.http.get<IConvocatoriaTituloResponse>(
+    return this.http.get<IConvocatoriaOnlyTituloResponse>(
       `${this.endpointUrl}/${id}/convocatoria`
     ).pipe(
-      map(response => CONVOCATORIA_TITULO_RESPONSE_CONVERTER.toTarget(response))
+      map(response => CONVOCATORIA_ONLY_TITULO_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

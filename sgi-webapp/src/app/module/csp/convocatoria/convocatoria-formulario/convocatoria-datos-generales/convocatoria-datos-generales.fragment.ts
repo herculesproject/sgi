@@ -18,6 +18,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { anioValidator } from '@core/validators/anio-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, from, merge, of } from 'rxjs';
@@ -74,7 +75,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       fechaPublicacion: new FormControl(null),
       fechaProvisional: new FormControl(null),
       fechaConcesion: new FormControl(null),
-      titulo: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
+      titulo: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(1000)]),
       modeloEjecucion: new FormControl(null),
       finalidad: new FormControl(null),
       duracion: new FormControl('', [Validators.min(1), Validators.max(9999)]),

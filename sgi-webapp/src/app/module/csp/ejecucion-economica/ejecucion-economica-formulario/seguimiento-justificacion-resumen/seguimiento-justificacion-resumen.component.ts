@@ -9,6 +9,7 @@ import { TIPO_SEGUIMIENTO_MAP } from '@core/enums/tipo-seguimiento';
 import { ISeguimientoJustificacionAnualidad } from '@core/models/csp/seguimiento-justificacion-anualidad';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { ConfigService as CspConfigService } from '@core/services/csp/configuracion/config.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
@@ -157,7 +158,9 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
     private readonly actionService: EjecucionEconomicaActionService,
     private matDialog: MatDialog,
     private readonly cnfService: ConfigService,
-    private readonly cspConfigService: CspConfigService) {
+    private readonly cspConfigService: CspConfigService,
+    private readonly languageService: LanguageService
+  ) {
     super(actionService.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_RESUMEN, actionService);
     this.formPart = this.fragment as SeguimientoJustificacionResumenFragment;
   }
@@ -184,6 +187,15 @@ export class SeguimientoJustificacionResumenComponent extends FragmentComponent 
 
   private initProyectosSGITable(): void {
     this.proyectosSGIDataSource.paginator = this.proyectosSGIPaginator;
+    this.proyectosSGIDataSource.sortingDataAccessor =
+      (proyectoSeguimiento: IProyectoSeguimientoEjecucionEconomicaData, property: string) => {
+        switch (property) {
+          case 'tituloConvocatoria':
+            return this.languageService.getFieldValue(proyectoSeguimiento.tituloConvocatoria);
+          default:
+            return proyectoSeguimiento[property];
+        }
+      };
     this.proyectosSGIDataSource.sort = this.proyectosSGISort;
     this.subscriptions.push(this.formPart.getProyectosSGI$().subscribe(elements => {
       this.proyectosSGIDataSource.data = elements;

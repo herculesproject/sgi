@@ -1,3 +1,4 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DateTime } from 'luxon';
 
 export interface IProyectoSeguimientoEjecucionEconomica {
@@ -10,7 +11,7 @@ export interface IProyectoSeguimientoEjecucionEconomica {
   fechaInicio: DateTime;
   fechaFin: DateTime;
   fechaFinDefinitiva: DateTime;
-  tituloConvocatoria: string;
+  tituloConvocatoria: I18nFieldValue[];
   importeConcedido: number;
   importeConcedidoCostesIndirectos: number;
 }

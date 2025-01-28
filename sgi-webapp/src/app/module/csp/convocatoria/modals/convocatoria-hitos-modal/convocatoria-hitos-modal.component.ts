@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DEFAULT_PREFIX_RECIPIENTS_CSP_CONV_HITOS } from '@core/models/cnf/config-keys';
 import { IGenericEmailText } from '@core/models/com/generic-email-text';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
@@ -39,7 +40,7 @@ export interface ConvocatoriaHitosModalComponentData {
   readonly: boolean;
   canEdit: boolean;
   unidadGestionId: number;
-  tituloConvocatoria: string;
+  tituloConvocatoria: I18nFieldValue[];
 }
 
 @Component({
@@ -167,7 +168,7 @@ export class ConvocatoriaHitosModalComponent extends DialogFormComponent<Convoca
       }
     );
     this.emailTplService.processConvocatoriaHitoTemplate(
-      this.data.tituloConvocatoria,
+      this.languageService.getFieldValue(this.data.tituloConvocatoria),
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('tipoHito').value?.nombre ? this.languageService.getFieldValue(this.formGroup.get('tipoHito').value?.nombre) : '',
       this.formGroup.get('comentario').value ?? ''

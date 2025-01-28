@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -15,7 +16,7 @@ import { from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 
 interface SolicitudListado extends ISolicitud {
-  tituloConvocatoria: string;
+  tituloConvocatoria: I18nFieldValue[];
   nombreSolicitante: string;
   tituloTrabajo: string;
 }

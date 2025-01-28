@@ -11,6 +11,7 @@ import { UnidadGestionPublicService } from '@core/services/csp/unidad-gestion-pu
 import { LanguageService } from '@core/services/language.service';
 import { EmpresaPublicService } from '@core/services/sgemp/empresa-public.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -53,7 +54,7 @@ export class ConvocatoriaDatosGeneralesPublicFragment extends FormFragment<IConv
       fechaPublicacion: new FormControl(null),
       fechaProvisional: new FormControl(null),
       fechaConcesion: new FormControl(null),
-      titulo: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
+      titulo: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(1000)]),
       modeloEjecucion: new FormControl(null),
       finalidad: new FormControl(null),
       duracion: new FormControl('', [Validators.min(1), Validators.max(9999)]),

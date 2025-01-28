@@ -5,6 +5,7 @@ import { IEmail } from '@core/models/sgp/email';
 import { IPersona } from '@core/models/sgp/persona';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
@@ -15,7 +16,6 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ISolicitudReportData, ISolicitudReportOptions } from './solicitud-listado-export.service';
-import { LanguageService } from '@core/services/language.service';
 
 const CODIGO_INTERNO_KEY = marker('csp.solicitud.codigo-registro');
 const CODIGO_EXTERNO_KEY = marker('csp.solicitud.codigo-externo');
@@ -183,7 +183,7 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
     elementsRow.push(solicitante?.nombre ?? '');
     elementsRow.push(solicitante?.apellidos ?? '');
     elementsRow.push(solicitante?.emails[0] ? solicitante?.emails[0].email : '');
-    elementsRow.push(solicitud.convocatoria?.titulo ?? '');
+    elementsRow.push(this.languageService.getFieldValue(solicitud.convocatoria?.titulo));
     elementsRow.push(solicitud.convocatoriaExterna ?? '');
     elementsRow.push(solicitud.estado?.estado ?? '');
     elementsRow.push(LuxonUtils.toBackend(solicitud.estado?.fechaEstado));

@@ -180,7 +180,7 @@ export class ConvocatoriaGeneralListadoExportService
     const convocatoria = resultados[index];
 
     const elementsRow: any[] = [];
-    elementsRow.push(convocatoria.convocatoria?.titulo ?? '');
+    elementsRow.push(this.languageService.getFieldValue(convocatoria.convocatoria?.titulo));
     elementsRow.push(convocatoria.convocatoria?.estado ? this.translate.instant(ESTADO_MAP.get(convocatoria.convocatoria.estado)) : '');
     elementsRow.push(convocatoria.convocatoria?.formularioSolicitud ?
       this.translate.instant(FORMULARIO_SOLICITUD_MAP.get(convocatoria.convocatoria?.formularioSolicitud)) : '');

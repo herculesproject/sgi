@@ -1,6 +1,7 @@
-import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { IConvocatoriaResponse } from '@core/services/csp/convocatoria/convocatoria-response';
 import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response.converter';
 import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
 import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
@@ -8,9 +9,9 @@ import { TIPO_REGIMEN_CONCURRENCIA_RESPONSE_CONVERTER } from '@core/services/csp
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
-class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConvocatoria> {
+class ConvocatoriaResponseConverter extends SgiBaseConverter<IConvocatoriaResponse, IConvocatoria> {
 
-  toTarget(value: IConvocatoriaBackend): IConvocatoria {
+  toTarget(value: IConvocatoriaResponse): IConvocatoria {
     if (!value) {
       return value as unknown as IConvocatoria;
     }
@@ -22,7 +23,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       fechaPublicacion: LuxonUtils.fromBackend(value.fechaPublicacion),
       fechaProvisional: LuxonUtils.fromBackend(value.fechaProvisional),
       fechaConcesion: LuxonUtils.fromBackend(value.fechaConcesion),
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       objeto: value.objeto,
       observaciones: value.observaciones,
       finalidad: TIPO_FINALIDAD_RESPONSE_CONVERTER.toTarget(value.finalidad),
@@ -40,9 +41,9 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
     };
   }
 
-  fromTarget(value: IConvocatoria): IConvocatoriaBackend {
+  fromTarget(value: IConvocatoria): IConvocatoriaResponse {
     if (!value) {
-      return value as unknown as IConvocatoriaBackend;
+      return value as unknown as IConvocatoriaResponse;
     }
     return {
       id: value.id,
@@ -52,7 +53,7 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
       fechaPublicacion: LuxonUtils.toBackend(value.fechaPublicacion),
       fechaProvisional: LuxonUtils.toBackend(value.fechaProvisional),
       fechaConcesion: LuxonUtils.toBackend(value.fechaConcesion),
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       objeto: value.objeto,
       observaciones: value.observaciones,
       finalidad: TIPO_FINALIDAD_RESPONSE_CONVERTER.fromTarget(value.finalidad),
@@ -71,4 +72,4 @@ class ConvocatoriaConverter extends SgiBaseConverter<IConvocatoriaBackend, IConv
   }
 }
 
-export const CONVOCATORIA_CONVERTER = new ConvocatoriaConverter();
+export const CONVOCATORIA_RESPONSE_CONVERTER = new ConvocatoriaResponseConverter();

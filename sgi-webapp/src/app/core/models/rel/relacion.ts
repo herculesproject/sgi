@@ -1,12 +1,11 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Module } from '@core/module';
 import { CSP_ROUTE_NAMES } from 'src/app/module/csp/csp-route-names';
+import { IGrupoWithTitulo } from 'src/app/module/csp/proyecto/proyecto-formulario/proyecto-relaciones/proyecto-relaciones.fragment';
 import { PII_ROUTE_NAMES } from 'src/app/module/pii/pii-route-names';
 import { IConvocatoria } from '../csp/convocatoria';
 import { IProyecto } from '../csp/proyecto';
 import { IInvencion } from '../pii/invencion';
-import { IGrupo } from '../csp/grupo';
-import { IGrupoWithTitulo } from 'src/app/module/csp/proyecto/proyecto-formulario/proyecto-relaciones/proyecto-relaciones.fragment';
 
 export interface IRelacion {
   id: number;

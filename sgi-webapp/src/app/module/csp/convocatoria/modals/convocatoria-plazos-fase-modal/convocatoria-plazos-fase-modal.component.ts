@@ -5,6 +5,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DEFAULT_PREFIX_RECIPIENTS_CSP_CONV_FASES } from '@core/models/cnf/config-keys';
 import { IGenericEmailText } from '@core/models/com/generic-email-text';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
@@ -42,7 +43,7 @@ export interface ConvocatoriaPlazosFaseModalComponentData {
   readonly: boolean;
   canEdit: boolean;
   unidadGestionId: number;
-  tituloConvocatoria: string;
+  tituloConvocatoria: I18nFieldValue[];
 }
 @Component({
   templateUrl: './convocatoria-plazos-fase-modal.component.html',
@@ -323,7 +324,7 @@ export class ConvocatoriaPlazosFaseModalComponent
       }
     );
     this.emailTplService.processConvocatoriaFaseTemplate(
-      this.data.tituloConvocatoria,
+      this.languageService.getFieldValue(this.data.tituloConvocatoria),
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),
       this.languageService.getFieldValue(this.formGroup.get('tipoFase').value?.nombre) ?? '',

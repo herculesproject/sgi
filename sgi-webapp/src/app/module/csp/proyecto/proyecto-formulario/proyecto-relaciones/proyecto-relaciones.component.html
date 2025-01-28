@@ -22,9 +22,17 @@
         </th>
         <td mat-cell *matCellDef="let wrapper">
           <ng-container *ngIf="wrapper.value?.entidadRelacionadaHref; else titulo">
-            <a [href]="wrapper.value?.entidadRelacionadaHref" target="_blank">
-              {{wrapper.value.entidadRelacionada?.titulo}}
-            </a>
+            <ng-container *ngIf="wrapper.value.tipoEntidadRelacionada === TipoEntidad.PROYECTO 
+              || wrapper.value.tipoEntidadRelacionada === TipoEntidad.GRUPO
+              || wrapper.value.tipoEntidadRelacionada === TipoEntidad.INVENCION; else tituloI18n">
+              <a [href]="wrapper.value?.entidadRelacionadaHref"
+                target="_blank">{{wrapper.value.entidadRelacionada?.titulo}}</a>
+            </ng-container>
+            <ng-template #tituloI18n>
+              <sgi-i18n-link [link]="wrapper.value.entidadRelacionada?.titulo"
+                [href]="wrapper.value?.entidadRelacionadaHref">
+              </sgi-i18n-link>
+            </ng-template>
           </ng-container>
           <ng-template #titulo>
             {{wrapper.value.entidadRelacionada?.titulo}}

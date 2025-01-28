@@ -1,3 +1,5 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
+
 export interface IProyectoSeguimientoEjecucionEconomicaResponse {
   id: number;
   proyectoId: number;
@@ -7,7 +9,7 @@ export interface IProyectoSeguimientoEjecucionEconomicaResponse {
   fechaInicio: string;
   fechaFin: string;
   fechaFinDefinitiva: string;
-  tituloConvocatoria: string;
+  tituloConvocatoria: I18nFieldValueResponse[];
   importeConcedido: number;
   importeConcedidoCostesIndirectos: number;
 }

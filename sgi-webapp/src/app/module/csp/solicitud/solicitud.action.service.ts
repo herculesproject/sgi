@@ -4,6 +4,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { VALIDACION_REQUISITOS_EQUIPO_IP_MAP } from '@core/enums/validaciones-requisitos-equipo-ip';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { Estado, IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitud, OrigenSolicitud } from '@core/models/csp/solicitud';
@@ -40,6 +41,7 @@ import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service'
 import { DialogService } from '@core/services/dialog.service';
 import { ChecklistService } from '@core/services/eti/checklist/checklist.service';
 import { FormlyService } from '@core/services/eti/formly/formly.service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { AreaConocimientoService } from '@core/services/sgo/area-conocimiento.service';
@@ -80,7 +82,6 @@ import { SolicitudRrhhMemoriaFragment } from './solicitud-formulario/solicitud-r
 import { SolicitudRrhhRequisitosConvocatoriaFragment } from './solicitud-formulario/solicitud-rrhh-requisitos-convocatoria/solicitud-rrhh-requisitos-convocatoria.fragment';
 import { SolicitudRrhhSolitanteFragment } from './solicitud-formulario/solicitud-rrhh-solicitante/solicitud-rrhh-solicitante.fragment';
 import { SolicitudRrhhTutorFragment } from './solicitud-formulario/solicitud-rrhh-tutor/solicitud-rrhh-tutor.fragment';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
 const MSG_SAVE_REQUISITOS_INVESTIGADOR = marker('msg.save.solicitud.requisitos-investigador');
@@ -181,7 +182,7 @@ export class SolicitudActionService extends ActionService {
     return this.solicitud?.modeloEjecucion?.id;
   }
 
-  get convocatoriaTitulo(): string {
+  get convocatoriaTitulo(): I18nFieldValue[] {
     return this.convocatoria?.titulo;
   }
 
