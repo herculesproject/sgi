@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
+import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacionNombre;
 import org.crue.hercules.sgi.csp.repository.FuenteFinanciacionRepository;
@@ -522,9 +523,12 @@ class SolicitudProyectoEntidadFinanciadoraAjenaServiceTest extends BaseServiceTe
     Programa programa = new Programa();
     programa.setId(1L);
 
+    Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
+    solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
+
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
-    solicitud.setTitulo("titulo");
+    solicitud.setTitulo(solicitudTitulo);
     solicitud.setCodigoExterno(null);
     solicitud.setConvocatoriaId(convocatoriaId);
     solicitud.setCreadorRef("usr-001");

@@ -1442,4 +1442,32 @@
 
     <dropColumn columnName="observaciones" tableName="documento_requerido_solicitud" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-55">
+    <createTable tableName="solicitud_titulo">
+      <column name="solicitud_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="solicitud_titulo" columnNames="solicitud_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="solicitud_id"
+      baseTableName="solicitud_titulo"
+      constraintName="FK_SOLICITUDTITULO_SOLICITUD" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="solicitud" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}solicitud_titulo(solicitud_id, value_, lang) SELECT id, titulo,
+      '${defaultLang}' FROM ${schemaPrefix}solicitud WHERE titulo IS NOT NULL AND
+      NULLIF(TRIM(titulo), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="titulo" tableName="solicitud" />
+  </changeSet>
 </databaseChangeLog>

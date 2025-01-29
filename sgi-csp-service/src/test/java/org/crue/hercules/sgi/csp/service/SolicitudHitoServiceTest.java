@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
+import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoHitoNombre;
 import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
@@ -464,9 +465,12 @@ class SolicitudHitoServiceTest extends BaseServiceTest {
     Programa programa = new Programa();
     programa.setId(1L);
 
+    Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
+    solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
+
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
-    solicitud.setTitulo("titulo");
+    solicitud.setTitulo(solicitudTitulo);
     solicitud.setCodigoExterno(null);
     solicitud.setConvocatoriaId(convocatoriaId);
     solicitud.setCreadorRef("usr-001");

@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.converter.SolicitudTituloConverter;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput.Formly;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
@@ -42,6 +43,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
@@ -161,6 +163,9 @@ class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository;
 
+  @Mock
+  private SolicitudTituloConverter solicitudTituloConverter;
+
   private SolicitudService service;
 
   @BeforeEach
@@ -188,7 +193,8 @@ class SolicitudServiceTest extends BaseServiceTest {
         solicitudRrhhComService,
         solicitudComService,
         rolSocioRepository,
-        solicitudProyectoEntidadRepository);
+        solicitudProyectoEntidadRepository,
+        solicitudTituloConverter);
   }
 
   @Test
@@ -1219,9 +1225,12 @@ class SolicitudServiceTest extends BaseServiceTest {
     Programa programa = new Programa();
     programa.setId(1L);
 
+    Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
+    solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
+
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
-    solicitud.setTitulo("titulo");
+    solicitud.setTitulo(solicitudTitulo);
     solicitud.setCodigoExterno(null);
     solicitud.setConvocatoriaId(convocatoriaId);
     solicitud.setCreadorRef("usr-001");

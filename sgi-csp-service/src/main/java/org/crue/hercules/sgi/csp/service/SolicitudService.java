@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.converter.SolicitudTituloConverter;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
@@ -138,6 +139,7 @@ public class SolicitudService {
   private final SolicitudComService solicitudComService;
   private final RolSocioRepository rolSocioRepository;
   private final SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository;
+  private final SolicitudTituloConverter solicitudTituloConverter;
 
   /**
    * Guarda la entidad {@link Solicitud}.
@@ -794,7 +796,7 @@ public class SolicitudService {
         .solicitudConvocatoriaRef(solicitud.getId().toString())
         .checklistId(checklistOutput.getId())
         .personaRef(solicitud.getSolicitanteRef())
-        .titulo(getTitulo(solicitud))
+        .titulo(solicitudTituloConverter.convertAll(solicitud.getTitulo()))
         .existeFinanciacion(existeFinanciacion)
         .fuenteFinanciacion(existeFinanciacion ? getNombresEntidadesFinanciadoras(solicitud.getId()) : null)
         .estadoFinanciacion(existeFinanciacion ? EstadoFinanciacion.SOLICITADO : null)
@@ -1433,14 +1435,6 @@ public class SolicitudService {
 
     }
     log.debug("validateCambioNoDesistidaRenunciada(Solicitud solicitud) - end");
-  }
-
-  private List<I18nFieldValueDto> getTitulo(Solicitud solicitud) {
-    List<I18nFieldValueDto> value = new ArrayList<>();
-    if (StringUtils.isNotBlank(solicitud.getTitulo())) {
-      value.add(new I18nFieldValueDto(Language.ES, solicitud.getTitulo()));
-    }
-    return value;
   }
 
   private List<I18nFieldValueDto> getNombresEntidadesFinanciadoras(Long solicitudId) {

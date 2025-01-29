@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.csp.repository.custom;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +18,8 @@ import javax.persistence.criteria.Root;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud_;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
+import org.crue.hercules.sgi.csp.model.SolicitudTitulo_;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.crue.hercules.sgi.csp.util.CriteriaQueryUtils;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,8 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
       + EstadoSolicitud_.ESTADO;
   private static final String SELECTION_NAME_ESTADO_FECHAESTADO = Solicitud_.ESTADO + SELECTION_NAME_SEPARATOR
       + EstadoSolicitud_.FECHA_ESTADO;
+  private static final String SELECTION_NAME_TITULO = Solicitud_.TITULO + SELECTION_NAME_SEPARATOR
+      + SolicitudTitulo_.VALUE;
 
   /**
    * The entity manager.
@@ -88,6 +92,7 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
     // Define FROM clause
     Root<Solicitud> root = cq.from(Solicitud.class);
     Join<Solicitud, EstadoSolicitud> join = root.join(Solicitud_.estado, JoinType.INNER);
+    Join<Solicitud, SolicitudTitulo> tituloJoin = root.join(Solicitud_.titulo, JoinType.LEFT);
 
     // Count query
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
@@ -105,18 +110,23 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
 
     cq.where(listPredicates.toArray(new Predicate[] {}));
 
-    // Execute query
-    cq.distinct(true).multiselect(
+    // Se usa la funcion "max" para quedarse solo con un resultado para aplicar los
+    // filtros cuando existan títulos en varios idiomas
+    cq.multiselect(
         root,
-        join.get(EstadoSolicitud_.estado).alias(SELECTION_NAME_ESTADO_ESTADO),
-        join.get(EstadoSolicitud_.fechaEstado).alias(SELECTION_NAME_ESTADO_FECHAESTADO));
+        cb.function("MAX", String.class, join.get(EstadoSolicitud_.estado)).alias(SELECTION_NAME_ESTADO_ESTADO),
+        cb.function("MAX", Instant.class, join.get(EstadoSolicitud_.fechaEstado))
+            .alias(SELECTION_NAME_ESTADO_FECHAESTADO),
+        cb.function("MAX", String.class, tituloJoin.get(SolicitudTitulo_.value)).alias(SELECTION_NAME_TITULO));
 
     String[] selectionNames = new String[] {
         SELECTION_NAME_ESTADO_ESTADO,
-        SELECTION_NAME_ESTADO_FECHAESTADO
+        SELECTION_NAME_ESTADO_FECHAESTADO,
+        SELECTION_NAME_TITULO
     };
 
-    cq.orderBy(CriteriaQueryUtils.toOrders(pageable.getSort(), root, cb, cq, selectionNames));
+    cq.groupBy(root.get(Solicitud_.id))
+        .orderBy(CriteriaQueryUtils.toOrders(pageable.getSort(), root, cb, cq, selectionNames));
 
     // Número de registros totales para la paginación
     countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
@@ -128,8 +138,7 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
       typedQuery.setMaxResults(pageable.getPageSize());
     }
 
-    List<Solicitud> result = typedQuery.getResultList().stream().map(a -> (Solicitud) a.get(0))
-        .collect(Collectors.toList());
+    List<Solicitud> result = typedQuery.getResultList().stream().map(a -> (Solicitud) a.get(0)).toList();
     Page<Solicitud> returnValue = new PageImpl<>(result, pageable, count);
 
     log.debug("findAllDistinct(String query, Pageable pageable) - end");

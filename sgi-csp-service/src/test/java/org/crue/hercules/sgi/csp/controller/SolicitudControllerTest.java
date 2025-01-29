@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.converter.GrupoConverter;
@@ -27,6 +29,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoHito;
@@ -55,6 +58,8 @@ import org.crue.hercules.sgi.csp.service.SolicitudProyectoService;
 import org.crue.hercules.sgi.csp.service.SolicitudProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.SolicitudRrhhService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -187,10 +192,14 @@ class SolicitudControllerTest extends BaseControllerTest {
     Solicitud solicitud = generarMockSolicitud(1L);
 
     BDDMockito.given(service.create(ArgumentMatchers.<Solicitud>any())).willAnswer((InvocationOnMock invocation) -> {
+
+      Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
+      solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
+
       Solicitud newSolicitud = new Solicitud();
       BeanUtils.copyProperties(invocation.getArgument(0), newSolicitud);
       newSolicitud.setId(1L);
-      newSolicitud.setTitulo("titulo");
+      newSolicitud.setTitulo(solicitudTitulo);
       return newSolicitud;
     });
 
@@ -251,7 +260,8 @@ class SolicitudControllerTest extends BaseControllerTest {
         // then: Solicitud is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(solicitudExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value(solicitudExistente.getTitulo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value")
+            .value(I18nHelper.getValueForLanguage(solicitudExistente.getTitulo(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("codigoRegistroInterno")
             .value(solicitudExistente.getCodigoRegistroInterno()))
         .andExpect(MockMvcResultMatchers.jsonPath("estado.id").value(solicitudExistente.getEstado().getId()))
@@ -1275,9 +1285,12 @@ class SolicitudControllerTest extends BaseControllerTest {
     Programa programa = new Programa();
     programa.setId(1L);
 
+    Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
+    solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
+
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
-    solicitud.setTitulo("titulo");
+    solicitud.setTitulo(solicitudTitulo);
     solicitud.setCodigoExterno(null);
     solicitud.setConvocatoriaId(1L);
     solicitud.setSolicitanteRef("usr-002");

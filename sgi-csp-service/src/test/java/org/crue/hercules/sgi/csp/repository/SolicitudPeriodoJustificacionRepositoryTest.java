@@ -28,9 +28,12 @@ class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryTest {
     // solicitudProyectoSocio
     // buscado
     // @formatter:off
+    Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
+    solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
+
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
-        .titulo("titulo")
+        .titulo(solicitudTitulo)
         .solicitanteRef("user-002")
         .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.GRUPO)
@@ -43,13 +46,13 @@ class SolicitudPeriodoJustificacionRepositoryTest extends BaseRepositoryTest {
 
     Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
     rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
-    
+
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "Lider"));
-    
+
     Set<RolSocioDescripcion> rolSocioDescripcion = new HashSet<>();
     rolSocioDescripcion.add(new RolSocioDescripcion(Language.ES, "Lider"));
-    
+
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .abreviatura(rolSocioAbreviatura)

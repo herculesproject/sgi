@@ -7,8 +7,20 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
-import org.crue.hercules.sgi.csp.model.*;
+import org.crue.hercules.sgi.csp.model.RolProyecto;
+import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
+import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
+import org.crue.hercules.sgi.csp.model.RolProyectoNombre;
+import org.crue.hercules.sgi.csp.model.RolSocio;
+import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
+import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
+import org.crue.hercules.sgi.csp.model.RolSocioNombre;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +38,12 @@ class SolicitudProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
     // given: 2 SolicitudProyectoSocioEquipo para el SolicitudProyectoSocio buscado
 
     // @formatter:off
+    Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
+    solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
+
     Solicitud solicitud1 = entityManager.persistAndFlush(Solicitud.builder()
         .creadorRef("user-001")
-        .titulo("titulo")
+        .titulo(solicitudTitulo)
         .solicitanteRef("user-002")
         .unidadGestionRef("1")
         .formularioSolicitud(FormularioSolicitud.GRUPO)
@@ -41,10 +56,10 @@ class SolicitudProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
 
     Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
     rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
-    
+
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "Lider"));
-    
+
     Set<RolSocioDescripcion> rolSocioDescripcion = new HashSet<>();
     rolSocioDescripcion.add(new RolSocioDescripcion(Language.ES, "Lider"));
 
