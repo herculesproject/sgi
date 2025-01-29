@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "5.2.1 Comunicación de uso de agentes biológicos, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas"
+      "label": "5.2.1 Comunicación de uso de agentes biológicos"
     },
     "fieldGroup": [
       {
-        "template": "¿Se ha comunicado al Servicio de Prevención que se va a trabajar con agentes/material biológico, sustancias químicas peligrosas, sustancias radiactivas y/o nanopartículas?"
+        "template": "¿Se ha comunicado al Servicio de Prevención que se va a trabajar con agentes/material biológico?"
       },
       {
         "wrappers": [

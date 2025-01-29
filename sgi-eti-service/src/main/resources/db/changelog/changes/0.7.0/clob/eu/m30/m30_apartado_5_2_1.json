@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "5.2.1 Agente biologikoen, substantzia kimiko arriskutsuen, substantzia erradioaktiboen edo/eta nanopartikulen erabilera jakinaraztea"
+      "label": "5.2.1 Agente biologikoen erabilera jakinaraztea"
     },
     "fieldGroup": [
       {
-        "template": "Jakinarazi zaio Prebentzio Zerbitzuari agente/material biologikoa, substantzia kimiko arriskutsuak, substantzia erradioaktiboak edo/eta nanopartikulak erabiliko direla?"
+        "template": "Jakinarazi zaio Prebentzio Zerbitzuari agente/material biologikoa erabiliko direla?"
       },
       {
         "wrappers": [

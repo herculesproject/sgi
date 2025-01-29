@@ -10,7 +10,47 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>To properly comply with the protection of personal data, you need to fill out the following form: <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>survey</a> (the questions and answers are stored in the University survey tool, independently of the SGI)</p>"
+        "template": "<p>Are data of a personal nature used in this activity?</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Personal data are any numerical, text, graphic, photographic, audio or any other kind of information about the possible participants.</p>"
+      },
+      {
+        "key": "caracterPersonalRadio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "label": "Choose an option:",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "numeroDatosCaracterPersonal",
+        "type": "i18n-input",
+        "hideExpression": "!model.caracterPersonalRadio || model.caracterPersonalRadio === 'no'",
+        "templateOptions": {
+          "label": "Include the number",
+          "required": true,
+          "placeholder": "Number"
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>HELP: EU Regulation 679/2016 and the personal data protection and guarantee of digital rights act, Organic Law 3/2018, oblige the UPV/EHU to record data processing. Any request for the record of data processing should be addressed to the data protection officer (dpd@ehu.eus). Full details of data protection can be found on the website: <a href='https://www.ehu.eus/es/web/idazkaritza-nagusia/babestu' target='_blank'>Babestu - Data Protection - General Secretariat - UPV/EHU</a>.</p>"
       }
     ]
   }

@@ -11,36 +11,17 @@
     "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
     "fieldGroup": [
       {
-        "template": "<p>Participating in a research activity can involve risks, and that is why the University has Civil Liability Insurance that covers damages derived from such professional activities.</p>"
+        "template": "<p>Taking part in a research activity may involve harm/risks.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>In human beings, civil liability insurance does not cover damages that may occur in research if it is a clinical trial (LIB 14/2007), if the research staff is not part of the University or if the research activity does not have the report. favourable of the CEI.</p>"
-      },
-      {
-        "key": "aseguramientoDanoRadio",
-        "type": "radio",
-        "templateOptions": {
-          "required": true,
-          "label": "Do you have the respective insurance to carry out this activity?",
-          "options": [
-            {
-              "value": "no",
-              "label": "No"
-            },
-            {
-              "value": "si",
-              "label": "Yes (if yes, you need to attach the certificate from the insurance company)"
-            }
-          ]
-        }
+        "template": "<p>For research activities carried out by UPV/EHU staff and on UPV/EHU premises, the university has civil liability insurance to cover these events. This insurance does not cover damages caused in certain situations, among others when the research is a clinical trial, when the person responsible for the project is not a member of the UPV/EHU or when the research activity does not have a favourable report by the CEISH-UPV/EHU.</p>"
       },
       {
         "key": "numPoliza",
         "type": "i18n-textarea",
-        "hideExpression": "!model.aseguramientoDanoRadio || model.aseguramientoDanoRadio === 'no'",
         "templateOptions": {
           "label": "Policy number",
           "required": true,
@@ -53,7 +34,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Note: add the insurance policy in section '5.7 Additional documentation', in the event that the research activity requires specific insurance.</p>"
+        "template": "<p>Note: for research activities carried out by non-UPV/EHU staff, the pertinent civil liability insurance policy must be attached in section 5.7. Additional documentation.</p>"
       }
     ]
   }

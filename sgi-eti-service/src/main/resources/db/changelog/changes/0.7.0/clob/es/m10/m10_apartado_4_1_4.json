@@ -11,36 +11,17 @@
     "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
     "fieldGroup": [
       {
-        "template": "<p>Participar en una actividad de investigación puede suponer riesgos, y por ello la Universidad dispone de un Seguro de Responsabilidad civil que cubre los daños derivados de dichas actividades profesionales.</p>"
+        "template": "<p>Participar en una actividad de investigación puede suponer daños/riesgos.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>En seres humanos, el seguro de responsabilidad civil no cubre los daños que puedan producirse en la investigación si es un ensayo clínico (LIB 14/2007), si el personal investigador no forma parte de la Universidad o si la actividad investigadora no dispone del informe favorable del CEI.</p>"
-      },
-      {
-        "key": "aseguramientoDanoRadio",
-        "type": "radio",
-        "templateOptions": {
-          "required": true,
-          "label": "¿Cuenta con el seguro correspondiente para realizar dicha actividad?",
-          "options": [
-            {
-              "value": "no",
-              "label": "No"
-            },
-            {
-              "value": "si",
-              "label": "Sí (si responde sí, debe adjuntar el certificado de la compañía de seguros)"
-            }
-          ]
-        }
+        "template": "<p>Para las actividades de investigación desarrolladas por personal de la UPV/EHU y en las instalaciones de la UPV/EHU, la universidad dispone de un seguro de responsabilidad civil que cubre estos eventos. Este seguro no cubre los daños producidos en determinadas situaciones, entre otras, cuando la investigación sea un ensayo clínico, cuando la persona responsable del proyecto no forma parte de la UPV/EHU, o cuando la actividad de investigación no dispone del informe favorable del CEISH-UPV/EHU.</p>"
       },
       {
         "key": "numPoliza",
         "type": "i18n-textarea",
-        "hideExpression": "!model.aseguramientoDanoRadio || model.aseguramientoDanoRadio === 'no'",
         "templateOptions": {
           "label": "Nº de póliza",
           "required": true,
@@ -53,7 +34,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: añadir en el apartado '5.7 Documentación adicional' la póliza de seguro, en el caso de que la actividad de investigación necesite un seguro específico.</p>"
+        "template": "<p>Nota: para las actividades de investigación desarrolladas por personal externo a la UPV/EHU, deberá adjuntarse la correspondiente póliza del seguro de responsabilidad civil en el apartado 5.7. Documentación adicional.</p>"
       }
     ]
   }

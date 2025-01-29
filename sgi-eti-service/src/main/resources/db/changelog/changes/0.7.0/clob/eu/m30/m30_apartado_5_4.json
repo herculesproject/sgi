@@ -12,12 +12,6 @@
         "template": "Jarraian, istripu biologiko bat edo substantzia kimiko arriskutsuekin istripu bat gertatuz gero jarduteko protokoloa idatzi behar duzu; memoria honetarako espezifikoa izan behar du, eta 'Dokumentazioa' atalean dagokion eremuan erantsi behar duzu."
       },
       {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "<p>Informazio gehiagorako, kontsultatu <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Unibertsitateko Batzordearen</a> orria.</p>"
-      },
-      {
         "key": "protocoloActuacion",
         "type": "documento",
         "templateOptions": {

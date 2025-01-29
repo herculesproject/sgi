@@ -9,37 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "¿Dispone de Seguro de Responsabilidad Civil?"
-      },
-      {
-        "key": "seguroResponsabilidadCivil",
-        "type": "documento",
-        "templateOptions": {
-          "label": "Indicar",
-          "required": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "No"
-            },
-            {
-              "value": "SEGURO_RESPONSABILIDAD",
-              "label": "Sí"
-            }
-          ]
-        }
-      },
-      {
-        "key": "especificarResposabilidad",
-        "type": "i18n-textarea",
-        "templateOptions": {
-          "label": "Especificar seguro o justificar su ausencia",
-          "placeholder": "Especificar seguro o justificar su ausencia",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
-        }
+        "template": "<p>Participar en una actividad de investigación que implique riesgo biológico puede suponer riesgos para el ser humano y el medio ambiente. Por este motivo la UPV/EHU dispone de un Seguro de Responsabilidad Civil que cubre los daños derivados de dichas actividades profesionales.</p><p>El seguro de responsabilidad civil no cubre los daños que puedan producirse de la investigación si implica uso confinado de Organismos Modificados Genéticamente (OMG), si el personal investigador no forma parte de la UPV/EHU, o si la actividad de investigación no dispone del informe favorable del CEIAB-UPV/EHU.</p>"
       }
     ]
   }

@@ -9,13 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "Jarraian, ‘LET: Laburpen ez-teknikoa’ txantiloia deskargatu behar duzu, <strong>Laburpen ez-teknikoa (LET)</strong> idazteko eta ‘Dokumentazio’ atalean eransteko."
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": " <p>Otsailaren 1eko 53/2013 Errege Dekretua aldatzen duen otsailaren 23ko <strong>118/2021 Errege Dekretuak</strong> agintzen duenez,  proiektuaren arduradunak proiektuaren eta horren balizko eguneraketen laburpen anonimo ez-tekniko bat (LET) idatzi behar du, eta laburpen hori Europako Batzordeari aurkeztuko zaio baimena jasotzen denetik gehienez sei hilabeteko epean. </p><p>Jabetza intelektuala eta informazio konfidentziala babestuta badaude, proiektuaren laburpen ez-teknikoak gutxieneko hauek beteko ditu: </p><ul><li><strong>Anonimoa izango da, eta bertan ez da agertuko erabiltzaile eta norbanakoen izenik</strong>, ezta helbiderik edo bestelako datu pertsonalik ere. </li><li>Proiektuaren <strong>helburuei</strong> buruzko informazioa emango du, horren barruan sartuta aurreikusitako <strong>kalteak</strong> eta <strong>onurak</strong>, baita erabiliko diren animalien <strong>kopurua</strong> eta <strong>mota</strong> ere. <li><strong>Ordezkatze</strong>, <strong>murrizte</strong> eta <strong>fintze</strong> baldintza betetzen dela frogatuko du.</li></ul><p>Proiektuaren laburpen ez-teknikoak proiektuari atzera begirako ebaluazioa egin behar zaion zehaztu dezala eskatu ahal izango dute organo eskudunek, eta, hala eginez gero, epea ezarriko dute. Kasu horretan, proiektuaren laburpen ez-teknikoa atzera begirako ebaluazioaren emaitzen arabera eguneratu beharko da, ebaluazioa amaitu eta sei hilabeteko epean. </p><p>Behin proiektua baimenduta, organo eskudunak laburpen ez-teknikoa argitaratuko du <a target='_blank' href='https://www.magrama.gob.es/es/ganaderia/temas/produccion-y-mercados-ganaderos/bienestanimal/en-la-investigacion/Resumenes_no_tecnicos_de_los_proyectos. aspx'>Ekonomia eta Lehiakortasun Ministerioaren</a> webgunean.</p><p> LETa idazteko, zenbait txantiloi daude <a target='_blank' href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea'>Unibertsitateko Batzordearen</a> webguneko dagokion orrian.</p>"
+        "template": "<p>Otsailaren 23ko 118/2021 Errege Dekretuak, otsailaren 1eko 53/2013 Errege Dekretua aldatzen duenak, xedatzen du animaliekin egindako proiektuaren arduradunak laburpen anonimo ez-tekniko bat (LET) eta horren balizko eguneraketak idatzi behar dituela, eta laburpen hori Europako Batzordeari aurkeztu behar zaiola, baimena ematen denetik gehienez ere sei hilabeteko epean.</p><p>Jabetza intelektuala eta isilpeko informazioa babestuta badaude, proiektuaren LETak ez du datu pertsonalik jasoko, eta gutxienez informazio hau bilduko du: zer helburu dituen proiektuak, zer kalte eta onura aurreikusten diren eta zenbat animalia eta zer motatakoak erabiliko diren. Ere berean, ordezkatze, murrizte eta fintze baldintza betetzen dela frogatuko du.</p><p>Organo eskudunek zera eskatu ahal izango dute, proiektuaren LETak zehaztu dezala proiektuari atzera begirako ebaluazioa egin behar zaion, eta, hala bada, horretarako epea ezarriko dute. Proiektuaren LETa atzera begirako ebaluazioaren emaitzekin eguneratu beharko da, ebaluazioa amaitu eta sei hilabeteko epean.</p><p>Behin proiektua baimenduta, organo eskudunak Nekazaritza, Arrantza eta Elikadura Ministerioaren webgunean argitaratuko du LETa. Halaber, RNT ALURES – Animal use reporting EU System datu basean argitaratuko da.</p><p>Jarraian, '<a href='https://www.ehu.eus/documents/2458096/0/Resumen+No+T%C3%A9cnico+%28RNT%29.xlsx/a00c38b5-5ad3-18eb-3854-7528cc014ba4?t=1684758185133' target='_blank'>LET: laburpen ez-teknikoa</a>' txantiloia deskargatu behar da, eta dagokion 'Dokumentazioa' atalean erantsi.</p>"
       },
       {
         "key": "resumenNoTecnico",
@@ -24,10 +18,6 @@
           "label": "Adierazi",
           "required": true,
           "options": [
-            {
-              "value": 0,
-              "label": "Ez"
-            },
             {
               "value": "RESUMEN_RNT",
               "label": "Bai"

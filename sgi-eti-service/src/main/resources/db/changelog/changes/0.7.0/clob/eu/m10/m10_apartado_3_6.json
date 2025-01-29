@@ -10,7 +10,47 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Datu pertsonalen babesari dagokionez ezarrita dagoena betetzeko, honako <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>galdetegi</a> hau bete beharko duzu (galdera-erantzunak Unibertsitatearen galdetegien tresnan gordeko dira, SGItik bereizita).</p>"
+        "template": "<p>Jarduera honetan datu pertsonalak erabiltzen dira?</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Parte hartzaileei buruzko informazio oro (zenbakizkoa, alfabetikoa, grafikoa, fotografikoa, akustikoa edo beste edozein motatakoa) hartzen da datu pertsonaltzat.</p>"
+      },
+      {
+        "key": "caracterPersonalRadio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "label": "Hautatu aukera bat:",
+          "options": [
+            {
+              "value": "no",
+              "label": "Ez"
+            },
+            {
+              "value": "si",
+              "label": "Bai"
+            }
+          ]
+        }
+      },
+      {
+        "key": "numeroDatosCaracterPersonal",
+        "type": "i18n-input",
+        "hideExpression": "!model.caracterPersonalRadio || model.caracterPersonalRadio === 'no'",
+        "templateOptions": {
+          "label": "Idatzi kopurua/zenbakia",
+          "required": true,
+          "placeholder": "Idatzi kopurua/zenbakia"
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>LAGUNTZA: 2016/679 (EB) Erregelamenduak eta Datu Pertsonalak Babesteko eta Eskubide Digitalak Bermatzeko 3/2018 Lege Organikoak ezarritakoaren arabera, UPV/EHUn Datuen Tratamendua erregistratu beharra dago. Datuen tratamendua erregistratzeko eskaera datuen babeserako ordezkariari egiten zaio (dpd@ehu.eus). Datuen babesari buruzko informazio guztia webgunean ageri da: <a href='https://www.ehu.eus/es/web/idazkaritza-nagusia/babestu' target='_blank'>Babestu - Datuen babesa - Idazkaritza Nagusia - UPV/EHU</a>.</p>"
       }
     ]
   }

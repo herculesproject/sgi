@@ -9,13 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "A continuación debe descargarse la plantilla 'RNT: Resumen no técnico' para redactar el <strong>Resumen no técnico (RNT)</strong> y aportarlo en el apartado correspondiente de 'Documentación'."
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "<p><strong>Real Decreto 118/2021</strong>, de 23 de febrero, por el que se modifica el Real Decreto 53/2013, de 1 de febrero dictamina que el/la responsable del proyecto debe redactar un resumen anónimo no técnico (RNT) del proyecto y sus eventuales actualizaciones, que se presentará a la Comisión Europea en el plazo máximo de seis meses desde su autorización.</p><p>Siempre que la propiedad intelectual y la información confidencial queden protegidas, el resumen no técnico del proyecto incluirá, al menos, lo siguiente:</p><ul><li><strong>Será anónimo y no contendrá nombres</strong> ni direcciones de los usuarios ni de las personas, ni ningún otro dato de carácter personal.</li><li>Información sobre los <strong>objetivos</strong> del proyecto, incluidos los <strong>perjuicios</strong> y los <strong>beneficios</strong> previstos, así como el <strong>número</strong> y <strong>tipo</strong> de animales que van a utilizarse.<li>La demostración del cumplimiento del requisito de <strong>reemplazo</strong>, <strong>reducción</strong> y <strong>refinamiento</strong>.</li></ul><p>Los órganos competentes podrán exigir que el resumen no técnico del proyecto especifique si este debe someterse a una evaluación retrospectiva y, en tal caso, establecer el plazo. En tal caso, el resumen no técnico del proyecto debe actualizarse con los resultados de la evaluación retrospectiva en un plazo de seis meses a partir de la finalización de esta evaluación retrospectiva.</p><p>Una vez autorizado el proyecto, el órgano competente publicará el RNT en la página web del <a target='_blank' href='https://www.magrama.gob.es/es/ganaderia/temas/produccion-y-mercados-ganaderos/bienestanimal/en-la-investigacion/Resumenes_no_tecnicos_de_los_proyectos.aspx'>Ministerio de Economía y Competitividad</a>.</p><p> Para la redacción del RNT se facilitan plantillas en la página correspondiente en la web del <a target='_blank' href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea'>Comité de la Universidad</a>.</p>"
+        "template": "<p>El Real Decreto 118/2021, de 23 de febrero, por el que se modifica el Real Decreto 53/2013, deI 1 de febrero, dictamina que la persona responsable del proyecto con animales debe redactar un resumen anónimo no técnico (RNT) del proyecto y sus eventuales actualizaciones, que se presentará a la Comisión Europea en el plazo máximo de seis meses desde su autorización.</p><p>Siempre que la propiedad intelectual y la información confidencial queden protegidas, el RNT del proyecto no contendrá ningún dato de carácter personal e incluirá, al menos, información sobre los objetivos del proyecto, incluidos los perjuicios y los beneficios previstos, así como el número y tipo de animales que van a utilizarse, demostrando el cumplimiento del requisito de reemplazo, reducción y refinamiento.</p><p>Los órganos competentes podrán exigir que el RNT del proyecto especifique si éste debe someterse a una evaluación retrospectiva y, en tal caso, establecer el plazo. El RNT del proyecto deberá actualizarse con los resultados de la evaluación retrospectiva en un plazo de seis meses a partir de la finalización de la misma.</p><p>Una vez autorizado el proyecto, el órgano competente publicará el RNT en la página web del Ministerio de Agricultura, Pesca y Alimentación. Asimismo, el RNT se publicará en la base de datos ALURES – Animal use reporting EU System.</p><p>A continuación, debe descargarse la plantilla '<a href='https://www.ehu.eus/documents/2458096/0/Resumen+No+T%C3%A9cnico+%28RNT%29.xlsx/a00c38b5-5ad3-18eb-3854-7528cc014ba4?t=1684758185133' target='_blank'>RNT: Resumen no técnico</a>' y aportarlo en el apartado correspondiente de 'Documentación'.</p>"
       },
       {
         "key": "resumenNoTecnico",
@@ -24,10 +18,6 @@
           "label": "Indicar",
           "required": true,
           "options": [
-            {
-              "value": 0,
-              "label": "No"
-            },
             {
               "value": "RESUMEN_RNT",
               "label": "Sí"

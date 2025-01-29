@@ -12,12 +12,6 @@
         "template": "A continuación debe redactar un Protocolo de actuación en caso de accidente biológico o de accidente con sustancias químicas peligrosas, específico para esta memoria y aportarlo en el apartado correspondiente de 'Documentación'"
       },
       {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "<p>Para más información puede consultar la página del <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Comité de la Universidad.</a></p>"
-      },
-      {
         "key": "protocoloActuacion",
         "type": "documento",
         "templateOptions": {

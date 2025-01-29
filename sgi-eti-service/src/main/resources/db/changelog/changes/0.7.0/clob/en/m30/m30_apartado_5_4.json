@@ -12,12 +12,6 @@
         "template": "Please write below a Protocol for action in the event of a biological accident or an accident with hazardous chemicals, specific to this report and provide it in the respective 'Documentation' section."
       },
       {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "<p>For more information you can consult the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>University Committee.</a></p>"
-      },
-      {
         "key": "protocoloActuacion",
         "type": "documento",
         "templateOptions": {

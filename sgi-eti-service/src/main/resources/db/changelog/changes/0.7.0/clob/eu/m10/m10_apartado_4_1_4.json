@@ -11,36 +11,17 @@
     "hideExpression": "formState.mainModel.ap4_1.ap4_1_1 && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck && formState.mainModel.ap4_1.ap4_1_1.tipoRiesgosOMolestiasCheck.find((c) => c === 'sinRiesgoPorTratarseDeDatos')",
     "fieldGroup": [
       {
-        "template": "<p>Ikerketa jarduera batean parte hartzeak arriskuak ekar ditzake, eta, horrexegatik, Unibertsitateak erantzukizun zibileko asegurua du, jarduera profesional horietatik eratorritako kalteak estaltzeko.</p>"
+        "template": "<p>Ikerketa jarduera batean parte hartzeak kalteak/arriskuak ekar ditzake.</p>"
       },
       {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Gizakien kasuan, erantzukizun zibileko aseguruak ez ditu ikerketan sor daitezkeen kalteak estaltzen kasu hauetan: entsegu kliniko bat bada (14/2007 IBL), ikertzaileak ez badira Unibertsitateko kideak edo ikerketa jarduerak ez badu IEBren aldeko txostena.</p>"
-      },
-      {
-        "key": "aseguramientoDanoRadio",
-        "type": "radio",
-        "templateOptions": {
-          "required": true,
-          "label": "Ba al duzu jarduera egiteko beharrezkoa den asegurua?",
-          "options": [
-            {
-              "value": "no",
-              "label": "Ez"
-            },
-            {
-              "value": "si",
-              "label": "Bai (baietz erantzunez gero, aseguru etxearen ziurtagiria erantsi behar duzu)"
-            }
-          ]
-        }
+        "template": "<p>UPV/EHUko langileek garatzen dituzten eta UPV/EHUko instalazioetan egiten diren ikerketa jardueretarako, unibertsitateak jarduerok estaltzen dituen erantzukizun zibileko aseguru bat du. Aseguru horrek ez ditu estaltzen egoera jakin batzuetan sortutako kalteak, egoera hauetan sortutakoak, besteak beste: ikerketa entsegu kliniko bat denean, proiektuaren arduraduna ez denean UPV/EHUko kidea edo ikerketa jarduerak ez duenean GIEB-UPV/EHUren aldeko txostena.</p>"
       },
       {
         "key": "numPoliza",
         "type": "i18n-textarea",
-        "hideExpression": "!model.aseguramientoDanoRadio || model.aseguramientoDanoRadio === 'no'",
         "templateOptions": {
           "label": "Poliza zk.",
           "required": true,
@@ -53,7 +34,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Oharra: ikerketa jarduerak aseguru espezifiko bat behar badu, erantsi aseguru poliza '5.7 Dokumentazio osagarria' atalean. </p>"
+        "template": "<p>Oharra: UPV/EHUtik kanpoko langileek garatutako ikerketa jardueratarako, dagokion erantzukizun zibileko aseguru poliza erantsi beharko da ‘5.7 Dokumentazio osagarria’ atalean. </p>"
       }
     ]
   }

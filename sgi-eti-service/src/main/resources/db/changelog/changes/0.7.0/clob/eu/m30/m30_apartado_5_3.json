@@ -9,37 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "Baduzu erantzukizun zibileko asegururik?"
-      },
-      {
-        "key": "seguroResponsabilidadCivil",
-        "type": "documento",
-        "templateOptions": {
-          "label": "Adierazi",
-          "required": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "Ez"
-            },
-            {
-              "value": "SEGURO_RESPONSABILIDAD",
-              "label": "Bai"
-            }
-          ]
-        }
-      },
-      {
-        "key": "especificarResposabilidad",
-        "type": "i18n-textarea",
-        "templateOptions": {
-          "label": "Zehaztu asegurua, edo justifikatu halakorik ez izatea.",
-          "placeholder": "Zehaztu asegurua, edo justifikatu halakorik ez izatea.",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
-        }
+        "template": "<p>Arrisku biologikoa duen ikerketa jarduera batean parte hartzeak arriskuak ekar diezazkieke gizakiei eta ingurumenari. Hori dela eta, UPV/EHUk jarduera profesional horien ondoriozko kalteak estaltzen dituen erantzukizun zibileko aseguru bat du.</p><p>Erantzukizun zibileko aseguruak ez ditu estaltzen ikerketak eragin ditzakeen kalteak, baldin eta jardueran genetikoki eraldatutako organismoen erabilera konfinatua gauzatzen bada, ikertzaileak ez badira UPV/EHUko kideak edo ikerketa jarduerak ez badu ABIEB-UPVEHUren aldeko txostena.</p>"
       }
     ]
   }

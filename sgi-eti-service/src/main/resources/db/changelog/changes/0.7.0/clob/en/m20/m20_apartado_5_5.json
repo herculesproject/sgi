@@ -9,13 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "Please download the template 'NTS: Non-technical summary' to draft the <strong>Non-technical summary (NTS)</strong> and provide it in the respective 'Documentation' section."
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "<p><strong>Royal Decree 118/2021</strong>, of February 23 2021, which modifies Royal Decree 53/2013, of February 1 2013, dictates that the person responsible for the project should write an anonymous non-technical summary (NTS) of the project and its eventual updates, which will be presented to the European Commission within a maximum period of six months from its authorisation.</p><p>Provided that intellectual property and confidential information are protected, the non-technical project summary will include, at a minimum, the following:</p><ul><li><strong>It will be anonymous and will not contain names</strong> nor addresses of users or people, nor any other personal data.</li><li>Information about the <strong>goals</strong> of the project, including <strong>damages</strong> and the <strong>benefits</strong> planned, as well as the <strong>number</strong> and <strong>guy</strong> of animals to be used.<li>Demonstration of compliance with the requirement of <strong>replacement</strong>, <strong>reduction</strong> and <strong>refinement</strong>.</li></ul><p>The competent bodies may require that the non-technical summary of the project specify whether the project should be subject to a retrospective evaluation and, if so, establish the deadline. In this case, the non-technical summary of the project should be updated with the results of the retrospective evaluation within six months of the completion of this retrospective evaluation.</p><p>Once the project is authorised, the competent agency will publish the NTS on the website of the <a target='_blank' href='https://www.magrama.gob.es/es/ganaderia/temas/produccion-y-mercados-ganaderos/bienestanimal/en-la-investigacion/Resumenes_no_tecnicos_de_los_proyectos.aspx'>Ministry of Economy and Competitiveness</a>.</p><p> For writing the NTS, templates are provided on the respective page on the website of the <a target='_blank' href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea'>University Committee</a>.</p>"
+        "template": "<p>Royal Decree 118/2021 of 23rd February 2021, modifying Royal Decree 53/2013 of 11th February 2013, stipulates that the person responsible for the project involving animals must draw up an anonymous non-technical summary (NTS) of the project and its possible updates, to be submitted to the European Commission within a maximum of six months of its authorisation.</p><p>Wherever intellectual property and confidential information are protected, the project NTS will not contain any personal data, and will include at least information about the project aims, including the harm and benefits expected, as well as the number and type of animals to be used, demonstrating compliance with the requirement for replacement, reduction and refinement.</p><p>The competent bodies may require the NTS to specify whether the project is to be subject to retrospective assessment, and if so to specify the period. The project NTS must be updated with the results of the retrospective assessment within six months of its completion. Once the project has been authorised, the competent body will publish the NTS on the website of the Ministry of Agriculture, Fisheries and Food. The NTS will also be published in the ALURES - Animal use reporting EU System database.</p><p>Next, the '<a href='https://www.ehu.eus/documents/2458096/0/Resumen+No+T%C3%A9cnico+%28RNT%29.xlsx/a00c38b5-5ad3-18eb-3854-7528cc014ba4?t=1684758185133' target='_blank'>NTS: Non-Technical Summary</a>' template must be downloaded and added to the pertinent 'Documentation' section.</p>"
       },
       {
         "key": "resumenNoTecnico",
@@ -24,10 +18,6 @@
           "label": "Please indicate",
           "required": true,
           "options": [
-            {
-              "value": 0,
-              "label": "No"
-            },
             {
               "value": "RESUMEN_RNT",
               "label": "Yes"

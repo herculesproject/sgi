@@ -10,7 +10,47 @@
     },
     "fieldGroup": [
       {
-        "template": "<p>Para dar debido cumplimiento a lo referido a la protección de datos de carácter personal, deberá rellenar la siguiente <a href='https://encuestas.um.es/encuestas/protecciondedatosproyectos.cc' target='_blank'>encuesta</a> (las preguntas y respuestas son almacenadas en la herramienta de encuestas de la Universidad, de forma independiente al SGI)</p>"
+        "template": "<p>¿En esta actividad se utilizan datos de carácter personal?</p>"
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>Dato personal es cualquier información numérica, alfabética, gráfica, fotográfica, acústica o de cualquier otro tipo sobre los posibles participantes.</p>"
+      },
+      {
+        "key": "caracterPersonalRadio",
+        "type": "radio",
+        "templateOptions": {
+          "required": true,
+          "label": "Elige opción:",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "si",
+              "label": "Sí"
+            }
+          ]
+        }
+      },
+      {
+        "key": "numeroDatosCaracterPersonal",
+        "type": "i18n-input",
+        "hideExpression": "!model.caracterPersonalRadio || model.caracterPersonalRadio === 'no'",
+        "templateOptions": {
+          "label": "Indicar el número de datos",
+          "required": true,
+          "placeholder": "Número de datos"
+        }
+      },
+      {
+        "wrappers": [
+          "info-div"
+        ],
+        "template": "<p>AYUDA: El Reglamento UE 2016/679 y la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales, obligan a registrar un Tratamiento de Datos en la UPV/EHU. La solicitud para el registro del tratamiento de datos se solicita al delegado de protección de datos (dpd@ehu.eus). Toda la información sobre Protección de Datos se encuentra en la página web: <a href='https://www.ehu.eus/es/web/idazkaritza-nagusia/babestu' target='_blank'>Babestu - Protección de datos - Secretaría General - UPV/EHU</a>.</p>"
       }
     ]
   }

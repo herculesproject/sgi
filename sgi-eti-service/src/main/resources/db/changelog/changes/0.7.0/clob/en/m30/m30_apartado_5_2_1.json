@@ -5,11 +5,11 @@
       "title-div"
     ],
     "templateOptions": {
-      "label": "5.2.1 Communication of the use of biological agents, hazardous chemicals, radioactive substances and/or nanoparticles"
+      "label": "5.2.1 Communication of the use of biological agents"
     },
     "fieldGroup": [
       {
-        "template": "Has the Prevention Service been informed that you are going to work with biological agents/material, hazardous chemicals, radioactive substances and/or nanoparticles?"
+        "template": "Has the Prevention Service been informed that you are going to work with biological agents/material?"
       },
       {
         "wrappers": [

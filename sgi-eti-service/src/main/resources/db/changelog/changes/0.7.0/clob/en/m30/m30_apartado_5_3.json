@@ -9,37 +9,7 @@
     },
     "fieldGroup": [
       {
-        "template": "Do you have Civil Liability Insurance?"
-      },
-      {
-        "key": "seguroResponsabilidadCivil",
-        "type": "documento",
-        "templateOptions": {
-          "label": "Please indicate",
-          "required": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "No"
-            },
-            {
-              "value": "SEGURO_RESPONSABILIDAD",
-              "label": "Yes"
-            }
-          ]
-        }
-      },
-      {
-        "key": "especificarResposabilidad",
-        "type": "i18n-textarea",
-        "templateOptions": {
-          "label": "Please specify insurance or justify its absence",
-          "placeholder": "Please specify insurance or justify its absence",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
-        }
+        "template": "<p>Taking part in a research activity that involves biological risk may mean risks to the human being and the environment. For this reason the UPV/EHU has civil liability insurance to cover damages arising from the said professional activities.</p><p>The civil liability insurance does not cover any damage that may arise from the research if it involves the confined use of genetically-modified organisms (GMOs), if the research staff are not part of the UPV/EHU, or if the research activity does not have a favourable report by the CEIAB-UPV/EHU.</p>"
       }
     ]
   }

@@ -9,53 +9,10 @@
     },
     "fieldGroup": [
       {
-        "template": "Is the facility authorised for the confined use of genetically modified organisms?"
-      },
-      {
-        "key": "autorizacionOMG",
-        "type": "documento",
-        "templateOptions": {
-          "required": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "No"
-            },
-            {
-              "value": "AUTORIZACION_CONFINADA",
-              "label": "Yes"
-            }
-          ]
-        }
-      },
-      {
-        "key": "fecha",
-        "type": "datepicker",
-        "hideExpression": "!model.autorizacionOMG || model.autorizacionOMG === 0",
-        "templateOptions": {
-          "required": true,
-          "type": "text",
-          "label": "Date"
-        }
-      },
-      {
-        "key": "especificarNegativo",
-        "type": "i18n-textarea",
-        "hideExpression": "model.autorizacionOMG !== 0",
-        "templateOptions": {
-          "label": "Supporting evidence",
-          "placeholder": "Supporting evidence",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
-        }
-      },
-      {
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Both authorisation and communication notifications can be made through the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Biosafety Committee in Experimentation</a> of the University.</p><p>More information about notifications can be found on the website of the <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/cbe' target='_blank'>Biosafety Committee in Experimentation</a> of the University.</p>"
+        "template": "<p>Further information on the <a href='https://www.ehu.eus/es/web/ceid/comite-de-etica-en-la-investigacion-con-agentes-biologicos-y-omg-ceiab/aspectos-practicos-preguntas-frecuentes' target='_blank'>research ethics web page</a>: APractical matters / FAQs - CEID - Ethics in Research - UPV/EHU.</p>"
       }
     ]
   }
