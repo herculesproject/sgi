@@ -142,7 +142,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
-      tituloConvocatoria: new FormControl({ value: '', disabled: true }),
+      tituloSolicitud: new FormControl({ value: [], disabled: true }),
       codigoRegistro: new FormControl({ value: '', disabled: true }),
       codigoExterno: new FormControl('', Validators.maxLength(50)),
       observaciones: new FormControl({ value: '', disabled: this.isEdit() }, Validators.maxLength(2000)),

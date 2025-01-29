@@ -5,6 +5,7 @@ import { IPersona } from '../sgp/persona';
 import { IUnidadGestion } from '../usr/unidad-gestion';
 import { IEstadoSolicitud } from './estado-solicitud';
 import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 export enum TipoSolicitudGrupo {
   CONSTITUCION = 'CONSTITUCION',
@@ -33,7 +34,7 @@ export interface ISolicitud {
   /** Id */
   id: number;
   /** Título */
-  titulo: string;
+  titulo: I18nFieldValue[];
   /** Activo */
   activo: boolean;
   /** Codigo externo */

@@ -1,20 +1,21 @@
-import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { IPersona } from '@core/models/sgp/persona';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { ISolicitudResponse } from '@core/services/csp/solicitud/solicitud-response';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { ESTADO_SOLICITUD_CONVERTER } from './estado-solicitud.converter';
+import { ESTADO_SOLICITUD_CONVERTER } from '../../../converters/csp/estado-solicitud.converter';
 
-class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud> {
+class SolicitudResponseConverter extends SgiBaseConverter<ISolicitudResponse, ISolicitud> {
 
-  toTarget(value: ISolicitudBackend): ISolicitud {
+  toTarget(value: ISolicitudResponse): ISolicitud {
     if (!value) {
       return value as unknown as ISolicitud;
     }
     return {
       id: value.id,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       activo: value.activo,
       codigoExterno: value.codigoExterno,
       codigoRegistroInterno: value.codigoRegistroInterno,
@@ -34,13 +35,13 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
     };
   }
 
-  fromTarget(value: ISolicitud): ISolicitudBackend {
+  fromTarget(value: ISolicitud): ISolicitudResponse {
     if (!value) {
-      return value as unknown as ISolicitudBackend;
+      return value as unknown as ISolicitudResponse;
     }
     return {
       id: value.id,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       activo: value.activo,
       codigoExterno: value.codigoExterno,
       codigoRegistroInterno: value.codigoRegistroInterno,
@@ -61,4 +62,4 @@ class SolicitudConverter extends SgiBaseConverter<ISolicitudBackend, ISolicitud>
   }
 }
 
-export const SOLICITUD_CONVERTER = new SolicitudConverter();
+export const SOLICITUD_RESPONSE_CONVERTER = new SolicitudResponseConverter();

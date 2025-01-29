@@ -139,6 +139,13 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     if (route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY)) {
       this.convocatoriaId = Number(route.snapshot.queryParamMap.get(CONVOCATORIA_ACTION_LINK_KEY));
     }
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'titulo') {
+        return 'titulo.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -455,7 +462,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         .and('convocatoria.entidadesFinanciadoras.entidadRef', SgiRestFilterOperator.EQUALS, controls.entidadFinanciadora.value?.id)
         .and('convocatoria.entidadesFinanciadoras.fuenteFinanciacion.id',
           SgiRestFilterOperator.EQUALS, controls.fuenteFinanciacion.value?.id?.toString())
-        .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value)
+        .and('titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value)
         .and('solicitudProyecto.rolUniversidadId', SgiRestFilterOperator.EQUALS, controls.rolUniversidad.value?.id?.toString())
         .and('unidadGestionRef', SgiRestFilterOperator.EQUALS, controls.unidadGestion.value?.id?.toString())
         .and('tipoFinalidad.id', SgiRestFilterOperator.EQUALS, controls.finalidad.value?.id?.toString());

@@ -1,12 +1,13 @@
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
-import { OrigenSolicitud, TipoSolicitudGrupo } from '../solicitud';
-import { IEstadoSolicitudBackend } from './estado-solicitud-backend';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
+import { IEstadoSolicitudBackend } from '../../../models/csp/backend/estado-solicitud-backend';
+import { OrigenSolicitud, TipoSolicitudGrupo } from '../../../models/csp/solicitud';
 
-export interface ISolicitudBackend {
+export interface ISolicitudResponse {
   /** Id */
   id: number;
   /** Título */
-  titulo: string;
+  titulo: I18nFieldValueResponse[];
   /** Activo */
   activo: boolean;
   /** Codigo externo */

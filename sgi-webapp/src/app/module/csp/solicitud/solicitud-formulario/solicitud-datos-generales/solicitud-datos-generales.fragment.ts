@@ -19,6 +19,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { anioValidator } from '@core/validators/anio-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, from, merge, of } from 'rxjs';
@@ -188,7 +189,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     if (this.isInvestigador) {
       form = new FormGroup({
         estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
-        titulo: new FormControl({ value: '', disabled: this.isEdit() }, [Validators.maxLength(250)]),
+        titulo: new FormControl({ value: [], disabled: this.isEdit() }, [I18nValidators.maxLength(250)]),
         convocatoria: new FormControl({ value: '', disabled: true }),
         codigoRegistro: new FormControl({ value: '', disabled: true }),
         codigoExterno: new FormControl('', Validators.maxLength(50)),
@@ -209,7 +210,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     } else {
       form = new FormGroup({
         estado: new FormControl({ value: Estado.BORRADOR, disabled: true }),
-        titulo: new FormControl('', [Validators.maxLength(250)]),
+        titulo: new FormControl([], [I18nValidators.maxLength(250)]),
         solicitante: new FormControl('', Validators.required),
         convocatoria: new FormControl({ value: '', disabled: this.isEdit() }),
         comentariosEstado: new FormControl({ value: '', disabled: true }),

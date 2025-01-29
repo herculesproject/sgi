@@ -17,6 +17,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
+import { LanguageService } from '@core/services/language.service';
 
 const GRUPO_FECHA_INICIO_KEY = marker('label.fecha-inicio');
 const GRUPO_FECHA_FIN_KEY = marker('label.fecha-fin');
@@ -50,6 +51,7 @@ export class SolicitudGrupoModalComponent extends DialogActionComponent<ISolicit
     private grupoService: GrupoService,
     private solicitudService: SolicitudService,
     private vinculacionService: VinculacionService,
+    private languageService: LanguageService
   ) {
     super(matDialogRef, false);
     this.solicitudGrupo = { ...data };
@@ -64,7 +66,7 @@ export class SolicitudGrupoModalComponent extends DialogActionComponent<ISolicit
   protected buildFormGroup(): FormGroup {
     return new FormGroup(
       {
-        nombre: new FormControl(this.solicitudGrupo.solicitud.titulo, [Validators.required, Validators.maxLength(250)]),
+        nombre: new FormControl(this.solicitudGrupo?.solicitud?.titulo ? this.languageService.getFieldValue(this.solicitudGrupo.solicitud.titulo) : '', [Validators.required, Validators.maxLength(250)]),
         fechaInicio: new FormControl(null, [Validators.required]),
         fechaFin: new FormControl(null),
       },

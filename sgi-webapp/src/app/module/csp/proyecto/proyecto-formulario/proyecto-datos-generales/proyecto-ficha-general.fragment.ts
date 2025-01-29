@@ -35,6 +35,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, merge, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../proyecto-relaciones/proyecto-relaciones.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 interface IProyectoDatosGenerales extends IProyecto {
   convocatoria: IConvocatoria;
@@ -121,7 +122,8 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
     private readonly palabraClaveService: PalabraClaveService,
     private authService: SgiAuthService,
     private configuracionService: ConfigService,
-    private rolSocioService: RolSocioService
+    private rolSocioService: RolSocioService,
+    private languageService: LanguageService
   ) {
     super(key);
     // TODO: Eliminar la declaración de activo, ya que no debería ser necesaria
@@ -159,7 +161,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         if (this.proyecto.solicitudId) {
           this.subscriptions.push(this.solicitudService.findById(this.proyecto.solicitudId).subscribe(solicitud => {
             this.solicitud = solicitud;
-            this.getFormGroup().controls.solicitudProyecto.setValue(solicitud.titulo);
+            this.getFormGroup().controls.solicitudProyecto.setValue(this.languageService.getFieldValue(solicitud.titulo));
           }));
         }
         return proyecto as IProyectoDatosGenerales;
@@ -601,7 +603,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       causaExencion: proyecto.causaExencion,
       observaciones: proyecto.observaciones,
       comentario: proyecto.estado?.comentario,
-      solicitudProyecto: this.solicitud?.titulo ?? null,
+      solicitudProyecto: this.solicitud?.titulo ? this.languageService.getFieldValue(this.solicitud?.titulo) : null,
       anio: proyecto.anio
     };
 

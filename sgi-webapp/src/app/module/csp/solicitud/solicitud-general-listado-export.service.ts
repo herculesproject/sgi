@@ -15,6 +15,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ISolicitudReportData, ISolicitudReportOptions } from './solicitud-listado-export.service';
+import { LanguageService } from '@core/services/language.service';
 
 const CODIGO_INTERNO_KEY = marker('csp.solicitud.codigo-registro');
 const CODIGO_EXTERNO_KEY = marker('csp.solicitud.codigo-externo');
@@ -38,7 +39,8 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
     protected readonly translate: TranslateService,
     private readonly convocatoriaService: ConvocatoriaService,
     private readonly solicitudService: SolicitudService,
-    private readonly personaService: PersonaService
+    private readonly personaService: PersonaService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
   }
@@ -174,7 +176,7 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
     } as IPersona;
 
     const elementsRow: any[] = [];
-    elementsRow.push(solicitud.titulo);
+    elementsRow.push(solicitud.titulo ? this.languageService.getFieldValue(solicitud.titulo) : '');
     elementsRow.push(toString(solicitud.anio));
     elementsRow.push(solicitud.codigoRegistroInterno ?? '');
     elementsRow.push(solicitud.codigoExterno ?? '');

@@ -229,8 +229,7 @@
       *ngIf="!(this.formPart.isInvestigador && this.formPart.tipoFormularioSolicitud === FormularioSolicitud.RRHH)">
       <mat-form-field fxFlex="100%">
         <mat-label>{{'csp.solicitud.titulo' | translate}}</mat-label>
-        <input matInput formControlName="titulo" type="text" id="titulo"
-          placeholder="{{'csp.solicitud.titulo' | translate}}">
+        <sgi-i18n-input formControlName="titulo" placeholder="{{'csp.solicitud.titulo' | translate}}"></sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.titulo.errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamTituloEntity}}
         </mat-error>

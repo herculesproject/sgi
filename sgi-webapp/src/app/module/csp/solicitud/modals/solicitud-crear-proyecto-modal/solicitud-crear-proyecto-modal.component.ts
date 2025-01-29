@@ -13,6 +13,7 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
@@ -69,7 +70,8 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
     @Inject(MAT_DIALOG_DATA)
     public data: ISolicitudCrearProyectoModalData,
     private readonly proyectoService: ProyectoService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(matDialogRef, false);
 
@@ -132,7 +134,7 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
   protected buildFormGroup(): FormGroup {
     let titulo: string;
     if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
-      titulo = this.data.solicitud.titulo;
+      titulo = this.languageService.getFieldValue(this.data.solicitud.titulo);
     } else if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.RRHH) {
       const camposTitulo: string[] = [];
       if (!!this.data?.convocatoria?.titulo) {

@@ -1,9 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
-import { SOLICITUD_CONVERTER } from '@core/converters/csp/solicitud.converter';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
-import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
 import { ISolicitud } from '@core/models/csp/solicitud';
@@ -13,6 +11,7 @@ import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
 import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
 import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
 import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
+import { ISolicitudResponse } from '@core/services/csp/solicitud/solicitud-response';
 import { environment } from '@env';
 import {
   CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
@@ -25,21 +24,22 @@ import { SolicitudModalidadService } from './solicitud-modalidad.service';
 import { ISolicitudModalidadResponse } from './solicitud-modalidad/solicitud-modalidad-response';
 import { ISolicitudRrhhResponse } from './solicitud-rrhh/solicitud-rrhh-response';
 import { SOLICITUD_RRHH_RESPONSE_CONVERTER } from './solicitud-rrhh/solicitud-rrhh-response.converter';
+import { SOLICITUD_RESPONSE_CONVERTER } from './solicitud/solicitud-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _SolicitudMixinBase:
-  FindByIdCtor<string, ISolicitud, ISolicitudBackend> &
-  CreateCtor<ISolicitud, ISolicitud, ISolicitudBackend, ISolicitudBackend> &
-  UpdateCtor<string, ISolicitud, ISolicitud, ISolicitudBackend, ISolicitudBackend> &
+  FindByIdCtor<string, ISolicitud, ISolicitudResponse> &
+  CreateCtor<ISolicitud, ISolicitud, ISolicitudResponse, ISolicitudResponse> &
+  UpdateCtor<string, ISolicitud, ISolicitud, ISolicitudResponse, ISolicitudResponse> &
   typeof SgiRestBaseService = mixinFindById(
     mixinCreate(
       mixinUpdate(
         SgiRestBaseService,
-        SOLICITUD_CONVERTER
+        SOLICITUD_RESPONSE_CONVERTER
       ),
-      SOLICITUD_CONVERTER
+      SOLICITUD_RESPONSE_CONVERTER
     ),
-    SOLICITUD_CONVERTER
+    SOLICITUD_RESPONSE_CONVERTER
   );
 
 @Injectable({

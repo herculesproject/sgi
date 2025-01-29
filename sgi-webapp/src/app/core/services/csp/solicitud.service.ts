@@ -7,11 +7,9 @@ import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
 import { SOLICITUD_PROYECTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto.converter';
-import { SOLICITUD_CONVERTER } from '@core/converters/csp/solicitud.converter';
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
-import { ISolicitudBackend } from '@core/models/csp/backend/solicitud-backend';
 import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/backend/solicitud-proyecto-area-conocimiento-backend';
 import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
 import { ISolicitudProyectoClasificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-clasificacion-backend';
@@ -49,9 +47,9 @@ import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-docume
 import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
 import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, from, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { PersonaService } from '../sgp/persona.service';
 import { GRUPO_REQUEST_CONVERTER } from './grupo/grupo-request.converter';
@@ -86,11 +84,34 @@ import { ISolicitudProyectoSocioResponse } from './solicitud-proyecto-socio/soli
 import { SOLICITUD_PROYECTO_SOCIO_RESPONSE_CONVERTER } from './solicitud-proyecto-socio/solicitud-proyecto-socio.converter';
 import { ISolicitudRrhhResponse } from './solicitud-rrhh/solicitud-rrhh-response';
 import { SOLICITUD_RRHH_RESPONSE_CONVERTER } from './solicitud-rrhh/solicitud-rrhh-response.converter';
+import { ISolicitudResponse } from './solicitud/solicitud-response';
+import { SOLICITUD_RESPONSE_CONVERTER } from './solicitud/solicitud-response.converter';
+
+
+const _SolicitudServiceMixinBase:
+  CreateCtor<ISolicitud, ISolicitud, ISolicitudResponse, ISolicitudResponse> &
+  UpdateCtor<number, ISolicitud, ISolicitud, ISolicitudResponse, ISolicitudResponse> &
+  FindAllCtor<ISolicitud, ISolicitudResponse> &
+  FindByIdCtor<number, ISolicitud, ISolicitudResponse> &
+  typeof SgiRestBaseService = mixinFindAll(
+    mixinFindById(
+      mixinUpdate(
+        mixinCreate(
+          SgiRestBaseService,
+          SOLICITUD_RESPONSE_CONVERTER,
+          SOLICITUD_RESPONSE_CONVERTER
+        ),
+        SOLICITUD_RESPONSE_CONVERTER,
+        SOLICITUD_RESPONSE_CONVERTER
+      ),
+      SOLICITUD_RESPONSE_CONVERTER),
+    SOLICITUD_RESPONSE_CONVERTER
+  );
 
 @Injectable({
   providedIn: 'root'
 })
-export class SolicitudService extends SgiMutableRestService<number, ISolicitudBackend, ISolicitud> {
+export class SolicitudService extends _SolicitudServiceMixinBase {
   private static readonly MAPPING = '/solicitudes';
 
   constructor(
@@ -99,10 +120,8 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     private personaService: PersonaService,
   ) {
     super(
-      SolicitudService.name,
       `${environment.serviceServers.csp}${SolicitudService.MAPPING}`,
-      http,
-      SOLICITUD_CONVERTER
+      http
     );
   }
 
@@ -131,7 +150,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @returns observable con la lista de solicitudes
    */
   findAllTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitud>> {
-    return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/todos`, options, SOLICITUD_CONVERTER);
+    return this.find<ISolicitudResponse, ISolicitud>(`${this.endpointUrl}/todos`, options, SOLICITUD_RESPONSE_CONVERTER);
   }
 
   /**
@@ -451,7 +470,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param options opciones de búsqueda.
    */
   findAllInvestigador(options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitud>> {
-    return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/investigador`, options, SOLICITUD_CONVERTER);
+    return this.find<ISolicitudResponse, ISolicitud>(`${this.endpointUrl}/investigador`, options, SOLICITUD_RESPONSE_CONVERTER);
   }
 
   /**
@@ -460,7 +479,7 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
    * @param options opciones de búsqueda.
    */
   findAllTutor(options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitud>> {
-    return this.find<ISolicitudBackend, ISolicitud>(`${this.endpointUrl}/tutor`, options, SOLICITUD_CONVERTER);
+    return this.find<ISolicitudResponse, ISolicitud>(`${this.endpointUrl}/tutor`, options, SOLICITUD_RESPONSE_CONVERTER);
   }
 
   /**

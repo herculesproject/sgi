@@ -85,6 +85,13 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'titulo') {
+        return 'titulo.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -93,7 +100,7 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
     this.formGroup = new FormGroup({
       convocatoria: new FormControl(undefined),
       estadoSolicitud: new FormControl(''),
-      tituloSolicitud: new FormControl(undefined),
+      tituloSolicitud: new FormControl([]),
     });
 
     this.suscripciones.push(
@@ -177,7 +184,7 @@ export class SolicitudListadoInvComponent extends AbstractTablePaginationCompone
 
     return new RSQLSgiRestFilter('convocatoria.id', SgiRestFilterOperator.EQUALS, controls.convocatoria.value?.id?.toString())
       .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estadoSolicitud.value)
-      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value);
+      .and('titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.tituloSolicitud.value);
   }
 
   /**

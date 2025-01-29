@@ -347,7 +347,8 @@ export class ProyectoActionService extends ActionService {
       palabraClaveService,
       sgiAuthService,
       configService,
-      rolSocioService
+      rolSocioService,
+      this.languageService
     );
     this.addFragment(this.FRAGMENT.FICHA_GENERAL, this.fichaGeneral);
 
