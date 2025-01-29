@@ -878,6 +878,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         break;
       case OrigenSolicitud.CONVOCATORIA_NO_SGI:
         convocatoriaControl.setValidators(null);
+        convocatoriaExternaControl.setValidators([Validators.required]);
         finalidadControl.setValidators(null);
         modeloEjecucionControl.setValidators(null);
         unidadGestionControl.setValidators([Validators.required]);
@@ -1080,6 +1081,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     switch (origenSolicitud) {
       case OrigenSolicitud.CONVOCATORIA_NO_SGI:
         form.controls.convocatoria.setValue('', { emitEvent: false });
+        form.controls.convocatoriaExterna.setValue('', { emitEvent: false });
         this.entidadesConvocantesModalidad$.next([]);
         break;
       case OrigenSolicitud.CONVOCATORIA_SGI:
