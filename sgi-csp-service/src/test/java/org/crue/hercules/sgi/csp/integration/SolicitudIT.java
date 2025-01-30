@@ -29,6 +29,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.model.SolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
@@ -38,6 +39,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -150,7 +152,9 @@ class SolicitudIT extends BaseIT {
   void update_ReturnsSolicitud() throws Exception {
     Long idSolicitud = 1L;
     Solicitud solicitud = generarMockSolicitud(1L);
-    solicitud.setObservaciones("observaciones actualizadas");
+    Set<SolicitudObservaciones> solicitudObservaciones = new HashSet<>();
+    solicitudObservaciones.add(new SolicitudObservaciones(Language.ES, "observaciones actualizadas"));
+    solicitud.setObservaciones(solicitudObservaciones);
 
     final ResponseEntity<Solicitud> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(null, solicitud, DEFAULT_ROLES), Solicitud.class, idSolicitud);
@@ -234,7 +238,8 @@ class SolicitudIT extends BaseIT {
     Assertions.assertThat(solicitud.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1);
     Assertions.assertThat(solicitud.getCreadorRef()).as("getCreadorRef()").isEqualTo("usr-001");
     Assertions.assertThat(solicitud.getSolicitanteRef()).as("getSolicitanteRef()").isEqualTo("usr-002");
-    Assertions.assertThat(solicitud.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones 1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("observaciones 1");
     Assertions.assertThat(solicitud.getConvocatoriaExterna()).as("getConvocatoriaExterna()").isNull();
     Assertions.assertThat(solicitud.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("2");
   }
@@ -250,7 +255,7 @@ class SolicitudIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones,desc";
+    String sort = "id,desc";
     String filter = "unidadGestionRef==2";
 
     // when: find Convocatoria
@@ -269,11 +274,14 @@ class SolicitudIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 3));
-    Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 2));
-    Assertions.assertThat(responseData.get(2).getObservaciones()).as("get(2).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getObservaciones(), Language.ES))
+        .as("get(2).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 1));
   }
 
@@ -288,7 +296,7 @@ class SolicitudIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones,desc";
+    String sort = "id,desc";
     String filter = "unidadGestionRef==2";
 
     // when: find Convocatoria
@@ -307,11 +315,14 @@ class SolicitudIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 3));
-    Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 2));
-    Assertions.assertThat(responseData.get(2).getObservaciones()).as("get(2).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getObservaciones(), Language.ES))
+        .as("get(2).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 1));
   }
 
@@ -1940,13 +1951,16 @@ class SolicitudIT extends BaseIT {
     Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
     solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
 
+    Set<SolicitudObservaciones> solicitudObservaciones = new HashSet<>();
+    solicitudObservaciones.add(new SolicitudObservaciones(Language.ES, "observaciones"));
+
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
     solicitud.setTitulo(solicitudTitulo);
     solicitud.setCodigoExterno(null);
     solicitud.setConvocatoriaId(1L);
     solicitud.setSolicitanteRef("usr-002");
-    solicitud.setObservaciones("observaciones");
+    solicitud.setObservaciones(solicitudObservaciones);
     solicitud.setConvocatoriaExterna(null);
     solicitud.setUnidadGestionRef("2");
     solicitud.setFormularioSolicitud(FormularioSolicitud.PROYECTO);

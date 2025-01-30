@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
@@ -488,6 +489,9 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
     solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
 
+    Set<SolicitudObservaciones> solicitudObservaciones = new HashSet<>();
+    solicitudObservaciones.add(new SolicitudObservaciones(Language.ES, "observaciones-" + String.format("%03d", id)));
+
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
     solicitud.setTitulo(solicitudTitulo);
@@ -495,7 +499,7 @@ class SolicitudProyectoSocioPeriodoPagoServiceTest extends BaseServiceTest {
     solicitud.setConvocatoriaId(convocatoriaId);
     solicitud.setCreadorRef("usr-001");
     solicitud.setSolicitanteRef("usr-002");
-    solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
+    solicitud.setObservaciones(solicitudObservaciones);
     solicitud.setConvocatoriaExterna(convocatoriaExterna);
     solicitud.setUnidadGestionRef("1");
     solicitud.setActivo(true);

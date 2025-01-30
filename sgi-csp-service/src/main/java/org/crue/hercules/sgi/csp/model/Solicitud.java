@@ -110,9 +110,11 @@ public class Solicitud extends BaseEntity {
   private String solicitanteRef;
 
   /** Observaciones */
-  @Column(name = "observaciones", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String observaciones;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "solicitud_observaciones", joinColumns = @JoinColumn(name = "solicitud_id"))
+  @Valid
+  @Builder.Default
+  private Set<SolicitudObservaciones> observaciones = new HashSet<>();
 
   /** Convocatoria externa */
   @Column(name = "convocatoria_externa", length = 50, nullable = true)

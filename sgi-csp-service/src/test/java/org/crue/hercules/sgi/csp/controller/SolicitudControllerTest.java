@@ -24,6 +24,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.model.SolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
@@ -218,7 +219,8 @@ class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(solicitud.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value(solicitud.getSolicitanteRef()))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(solicitud.getObservaciones()))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value")
+            .value(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value(solicitud.getUnidadGestionRef()));
   }
 
@@ -246,7 +248,9 @@ class SolicitudControllerTest extends BaseControllerTest {
     // given: Existing Solicitud to be updated
     Solicitud solicitudExistente = generarMockSolicitud(1L);
     Solicitud solicitud = generarMockSolicitud(1L);
-    solicitud.setObservaciones("observaciones actualizadas");
+    Set<SolicitudObservaciones> solicitudObservaciones = new HashSet<>();
+    solicitudObservaciones.add(new SolicitudObservaciones(Language.ES, "observaciones actualizadas"));
+    solicitud.setObservaciones(solicitudObservaciones);
 
     BDDMockito.given(service.update(ArgumentMatchers.<Solicitud>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -268,7 +272,8 @@ class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(solicitudExistente.getConvocatoriaId()))
         .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").value(solicitudExistente.getCreadorRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value(solicitudExistente.getSolicitanteRef()))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(solicitud.getObservaciones()))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value")
+            .value(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value(solicitudExistente.getUnidadGestionRef()));
   }
 
@@ -397,7 +402,7 @@ class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").value("usr-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value("usr-002"))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value").value("observaciones-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value("2"));
   }
 
@@ -459,7 +464,8 @@ class SolicitudControllerTest extends BaseControllerTest {
         });
     for (int i = 31; i <= 37; i++) {
       Solicitud solicitud = solicitudesResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -527,7 +533,8 @@ class SolicitudControllerTest extends BaseControllerTest {
         });
     for (int i = 31; i <= 37; i++) {
       Solicitud solicitud = solicitudesResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -1288,13 +1295,16 @@ class SolicitudControllerTest extends BaseControllerTest {
     Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
     solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
 
+    Set<SolicitudObservaciones> solicitudObservaciones = new HashSet<>();
+    solicitudObservaciones.add(new SolicitudObservaciones(Language.ES, "observaciones-" + String.format("%03d", id)));
+
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
     solicitud.setTitulo(solicitudTitulo);
     solicitud.setCodigoExterno(null);
     solicitud.setConvocatoriaId(1L);
     solicitud.setSolicitanteRef("usr-002");
-    solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
+    solicitud.setObservaciones(solicitudObservaciones);
     solicitud.setConvocatoriaExterna(null);
     solicitud.setUnidadGestionRef("2");
     solicitud.setFormularioSolicitud(FormularioSolicitud.GRUPO);

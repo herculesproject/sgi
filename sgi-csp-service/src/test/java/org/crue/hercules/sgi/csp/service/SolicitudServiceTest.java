@@ -40,6 +40,7 @@ import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
@@ -67,6 +68,7 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -385,7 +387,9 @@ class SolicitudServiceTest extends BaseServiceTest {
     // given: Un nuevo Solicitud con las observaciones actualizadas
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
     Solicitud solicitudoObservacionesActualizadas = generarMockSolicitud(1L, 1L, null);
-    solicitudoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+    Set<SolicitudObservaciones> solicitudObservaciones = new HashSet<>();
+    solicitudObservaciones.add(new SolicitudObservaciones(Language.ES, "observaciones actualizadas"));
+    solicitudoObservacionesActualizadas.setObservaciones(solicitudObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
 
@@ -423,7 +427,9 @@ class SolicitudServiceTest extends BaseServiceTest {
     // given: Un nuevo Solicitud con las observaciones actualizadas
     Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
     Solicitud solicitudoObservacionesActualizadas = generarMockSolicitud(1L, 1L, null);
-    solicitudoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+    Set<SolicitudObservaciones> solicitudObservaciones = new HashSet<>();
+    solicitudObservaciones.add(new SolicitudObservaciones(Language.ES, "observaciones actualizadas"));
+    solicitudoObservacionesActualizadas.setObservaciones(solicitudObservaciones);
 
     solicitud.setConvocatoriaId(null);
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(solicitud));
@@ -607,7 +613,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(solicitud.getConvocatoriaId()).as("getConvocatoriaId()").isEqualTo(1);
     Assertions.assertThat(solicitud.getCreadorRef()).as("getCreadorRef()").isEqualTo("usr-001");
     Assertions.assertThat(solicitud.getSolicitanteRef()).as("getSolicitanteRef()").isEqualTo("usr-002");
-    Assertions.assertThat(solicitud.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("observaciones-001");
     Assertions.assertThat(solicitud.getConvocatoriaExterna()).as("getConvocatoriaExterna()").isNull();
     Assertions.assertThat(solicitud.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("1");
     Assertions.assertThat(solicitud.getActivo()).as("getActivo()").isTrue();
@@ -663,7 +670,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       Solicitud solicitud = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -705,7 +713,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       Solicitud solicitud = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -747,7 +756,8 @@ class SolicitudServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       Solicitud solicitud = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(solicitud.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -1228,6 +1238,9 @@ class SolicitudServiceTest extends BaseServiceTest {
     Set<SolicitudTitulo> solicitudTitulo = new HashSet<>();
     solicitudTitulo.add(new SolicitudTitulo(Language.ES, "titulo"));
 
+    Set<SolicitudObservaciones> solicitudObservaciones = new HashSet<>();
+    solicitudObservaciones.add(new SolicitudObservaciones(Language.ES, "observaciones-" + String.format("%03d", id)));
+
     Solicitud solicitud = new Solicitud();
     solicitud.setId(id);
     solicitud.setTitulo(solicitudTitulo);
@@ -1235,7 +1248,7 @@ class SolicitudServiceTest extends BaseServiceTest {
     solicitud.setConvocatoriaId(convocatoriaId);
     solicitud.setCreadorRef("usr-001");
     solicitud.setSolicitanteRef("usr-002");
-    solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
+    solicitud.setObservaciones(solicitudObservaciones);
     solicitud.setConvocatoriaExterna(convocatoriaExterna);
     solicitud.setUnidadGestionRef("1");
     solicitud.setActivo(true);

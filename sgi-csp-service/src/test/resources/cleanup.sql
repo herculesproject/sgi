@@ -52,6 +52,7 @@ DELETE FROM test.estado_solicitud;
 UPDATE test.proyecto SET solicitud_id = NULL;
 DELETE FROM test.solicitud_palabra_clave;
 DELETE FROM test.solicitud_titulo;
+DELETE FROM test.solicitud_observaciones;
 DELETE FROM test.solicitud;
 DELETE FROM test.agrupacion_gasto_concepto;
 DELETE FROM test.proyecto_agrupacion_gasto;

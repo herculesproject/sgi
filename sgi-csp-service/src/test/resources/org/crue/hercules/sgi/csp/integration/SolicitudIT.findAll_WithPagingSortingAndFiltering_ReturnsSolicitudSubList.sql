@@ -78,16 +78,16 @@ INSERT INTO test.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_
 INSERT INTO test.convocatoria_entidad_convocante (id,  convocatoria_id, entidad_ref, programa_id) VALUES (2, 1, 'entidad-002', 1);
 
 -- SOLICITUD
-INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (1, null, 'SGI_SLC1202011061027', null, 1, 'usr-001', 'usr-002', 'observaciones-001', null, '2', 'PROYECTO', true);
-INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (2, null, 'SGI_SLC2202011061027', null, 1, 'usr-001', 'usr-002', 'observaciones-002', null, '2', 'PROYECTO', true);
-INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (3, null, 'SGI_SLC3202011061027', null, 1, 'usr-001', 'usr-002', 'observaciones-003', null, '2', 'PROYECTO', true);
-INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (4, null, 'SGI_SLC4202011061027', null, 1, 'usr-001', 'usr-002', 'observaciones-004', null, '2', 'PROYECTO', false);
-INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, observaciones, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
- VALUES (5, null, 'SGI_SLC5202011061027', null, 1, 'usr-001', 'usr-002', 'observaciones-005', null, '1', 'PROYECTO', true);
+INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
+ VALUES (1, null, 'SGI_SLC1202011061027', null, 1, 'usr-001', 'usr-002', null, '2', 'PROYECTO', true);
+INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
+ VALUES (2, null, 'SGI_SLC2202011061027', null, 1, 'usr-001', 'usr-002', null, '2', 'PROYECTO', true);
+INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
+ VALUES (3, null, 'SGI_SLC3202011061027', null, 1, 'usr-001', 'usr-002', null, '2', 'PROYECTO', true);
+INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
+ VALUES (4, null, 'SGI_SLC4202011061027', null, 1, 'usr-001', 'usr-002', null, '2', 'PROYECTO', false);
+INSERT INTO test.solicitud (id, codigo_externo, codigo_registro_interno, estado_solicitud_id, convocatoria_id, creador_ref, solicitante_ref, convocatoria_externa, unidad_gestion_ref, formulario_solicitud, activo)
+ VALUES (5, null, 'SGI_SLC5202011061027', null, 1, 'usr-001', 'usr-002', null, '1', 'PROYECTO', true);
 
 -- SOLICITUD TITULO
 INSERT INTO test.solicitud_titulo(solicitud_id, lang, value_) VALUES(1, 'es', 'titulo');
@@ -95,6 +95,13 @@ INSERT INTO test.solicitud_titulo(solicitud_id, lang, value_) VALUES(2, 'es', 't
 INSERT INTO test.solicitud_titulo(solicitud_id, lang, value_) VALUES(3, 'es', 'titulo');
 INSERT INTO test.solicitud_titulo(solicitud_id, lang, value_) VALUES(4, 'es', 'titulo');
 INSERT INTO test.solicitud_titulo(solicitud_id, lang, value_) VALUES(5, 'es', 'titulo');
+
+-- SOLICITUD OBSERVACIONES
+INSERT INTO test.solicitud_observaciones(solicitud_id, lang, value_) VALUES(1, 'es', 'observaciones-001');
+INSERT INTO test.solicitud_observaciones(solicitud_id, lang, value_) VALUES(2, 'es', 'observaciones-002');
+INSERT INTO test.solicitud_observaciones(solicitud_id, lang, value_) VALUES(3, 'es', 'observaciones-003');
+INSERT INTO test.solicitud_observaciones(solicitud_id, lang, value_) VALUES(4, 'es', 'observaciones-004');
+INSERT INTO test.solicitud_observaciones(solicitud_id, lang, value_) VALUES(5, 'es', 'observaciones-005');
 
 
 -- ESTADO SOLICITUD
