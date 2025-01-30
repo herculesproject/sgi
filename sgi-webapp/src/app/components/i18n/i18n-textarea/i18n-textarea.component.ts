@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   forwardRef,
+  Input,
   Optional,
   Self
 } from '@angular/core';
@@ -33,6 +34,42 @@ export class I18nTextareaComponent extends InputI18nBaseComponent {
 
   /** Unique id for this input. */
   protected readonly uid = this.controlType + `-${nextUniqueId++}`;
+
+  @Input()
+  get cdkAutosizeMinRows() {
+    return this._minRowsAutosize;
+  }
+  set cdkAutosizeMinRows(rows) {
+    this._minRowsAutosize = rows;
+  }
+  private _minRowsAutosize: string;
+
+  @Input()
+  get cdkAutosizeMaxRows() {
+    return this._maxRowsAutosize;
+  }
+  set cdkAutosizeMaxRows(rows) {
+    this._maxRowsAutosize = rows;
+  }
+  private _maxRowsAutosize: string;
+
+  @Input()
+  get useAutosize() {
+    return this._useAutosize;
+  }
+  set useAutosize(useAutosize) {
+    this._useAutosize = useAutosize;
+  }
+  private _useAutosize = false;
+
+  @Input()
+  get rows() {
+    return this._rows;
+  }
+  set rows(rows) {
+    this._rows = rows;
+  }
+  private _rows: number;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,

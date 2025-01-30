@@ -9,7 +9,19 @@
     </mat-option>
   </mat-select>
 
-  <textarea matInput [(ngModel)]="editingValue" [disabled]="disabled" [placeholder]="placeholder"
-    [maxlength]="maxlength" (change)="onEdit()" (focus)="onInputFocus()" (blur)="onInputBlur()"></textarea>
+  <ng-container *ngIf="useAutosize; else fixedTextarea">
+    <textarea matInput [(ngModel)]="editingValue" [disabled]="disabled" [placeholder]="placeholder"
+      [maxlength]="maxlength" (change)="onEdit()" (focus)="onInputFocus()" (blur)="onInputBlur()" cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize" [cdkAutosizeMinRows]="cdkAutosizeMinRows"
+      [cdkAutosizeMaxRows]="cdkAutosizeMaxRows">
+    </textarea>
+  </ng-container>
+
+  <ng-template #fixedTextarea>
+    <textarea matInput [(ngModel)]="editingValue" [disabled]="disabled" [placeholder]="placeholder"
+      [maxlength]="maxlength" (change)="onEdit()" (focus)="onInputFocus()" (blur)="onInputBlur()" [rows]="rows">
+    </textarea>
+  </ng-template>
+
 
 </div>
