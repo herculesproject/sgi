@@ -31,7 +31,7 @@ export interface ISolicitudResponse {
   /** Unidad gestion */
   unidadGestionRef: string;
   /** Observaciones */
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
   /** Año */
   anio: number;
   modeloEjecucionId: number;

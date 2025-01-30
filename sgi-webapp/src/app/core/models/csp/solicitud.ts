@@ -58,7 +58,7 @@ export interface ISolicitud {
   /** Unidad gestion */
   unidadGestion: IUnidadGestion;
   /** Observaciones */
-  observaciones: string;
+  observaciones: I18nFieldValue[];
   /** Año */
   anio: number;
   modeloEjecucion: IModeloEjecucion;

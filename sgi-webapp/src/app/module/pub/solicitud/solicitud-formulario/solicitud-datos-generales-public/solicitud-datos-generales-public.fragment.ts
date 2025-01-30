@@ -21,6 +21,7 @@ import { UnidadGestionPublicService } from '@core/services/csp/unidad-gestion-pu
 import { EmpresaPublicService } from '@core/services/sgemp/empresa-public.service';
 import { ClasificacionPublicService } from '@core/services/sgo/clasificacion-public.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, forkJoin, from, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
@@ -145,7 +146,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
       tituloSolicitud: new FormControl({ value: [], disabled: true }),
       codigoRegistro: new FormControl({ value: '', disabled: true }),
       codigoExterno: new FormControl('', Validators.maxLength(50)),
-      observaciones: new FormControl({ value: '', disabled: this.isEdit() }, Validators.maxLength(2000)),
+      observaciones: new FormControl({ value: [], disabled: this.isEdit() }, I18nValidators.maxLength(2000)),
       comentariosEstado: new FormControl({ value: '', disabled: true }),
       solicitanteExterno: new FormGroup({
         nombre: new FormControl(null, Validators.required),

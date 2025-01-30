@@ -315,10 +315,8 @@
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <mat-form-field fxFlex="100%">
         <mat-label>{{'csp.solicitud.observaciones' | translate}}</mat-label>
-        <textarea matInput formControlName="observaciones" type="text" id="observaciones"
-          placeholder="{{'csp.solicitud.observaciones' | translate}}" cdkTextareaAutosize
-          #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
-        </textarea>
+        <sgi-i18n-textarea formControlName="observaciones" placeholder="{{'csp.solicitud.observaciones' | translate}}">
+        </sgi-i18n-textarea>
         <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamObservacionesEntity}}
         </mat-error>
