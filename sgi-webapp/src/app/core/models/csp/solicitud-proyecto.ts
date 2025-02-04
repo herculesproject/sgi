@@ -13,7 +13,7 @@ export interface ISolicitudProyecto {
   rolUniversidad: IRolSocio;
   objetivos: I18nFieldValue[];
   intereses: I18nFieldValue[];
-  resultadosPrevistos: string;
+  resultadosPrevistos: I18nFieldValue[];
   areaTematica: IAreaTematica;
   checklistRef: string;
   peticionEvaluacionRef: string;

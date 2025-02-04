@@ -80,8 +80,8 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
         { value: [], disabled: !this.userCanEdit },
         [I18nValidators.maxLength(2000)]),
       resultadosPrevistos: new FormControl(
-        { value: null, disabled: !this.userCanEdit },
-        [Validators.maxLength(2000)]),
+        { value: [], disabled: !this.userCanEdit },
+        [I18nValidators.maxLength(2000)]),
       peticionEvaluacionRef: new FormControl(null, []),
       palabrasClave: new FormControl(null),
       colaborativo: new FormControl(null, []),

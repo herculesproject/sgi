@@ -178,8 +178,11 @@
           [fxFlex.gt-md]="fxFlexProperties100.gtMd" [fxFlexOrder]="fxFlexProperties100.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.resultados' | translate}}</mat-label>
-            <textarea matInput formControlName="resultadosPrevistos" id="resultadosPrevistos"
-              placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.resultados' | translate}}"></textarea>
+            <sgi-i18n-textarea matInput formControlName="resultadosPrevistos"
+              placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.resultados' | translate}}"></sgi-i18n-textarea>
+            <mat-error *ngIf="formGroup.controls.resultadosPrevistos.errors?.maxlength">
+              {{'error.maxlength.entity' | translate:msgParamResultadosPrevistosEntity}}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

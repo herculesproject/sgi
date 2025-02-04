@@ -12,7 +12,7 @@ export interface ISolicitudProyectoResponse {
   rolUniversidadId: number;
   objetivos: I18nFieldValueResponse[];
   intereses: I18nFieldValueResponse[];
-  resultadosPrevistos: string;
+  resultadosPrevistos: I18nFieldValueResponse[];
   areaTematica: IAreaTematicaResponse;
   checklistRef: string;
   peticionEvaluacionRef: string;
