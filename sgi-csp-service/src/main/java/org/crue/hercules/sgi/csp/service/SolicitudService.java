@@ -209,7 +209,7 @@ public class SolicitudService {
     repository.save(solicitud);
 
     // Crea el estado inicial de la solicitud
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.BORRADOR, null);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.BORRADOR);
 
     // Actualiza la el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -239,7 +239,7 @@ public class SolicitudService {
     repository.save(solicitud);
 
     // Crea el estado inicial de la solicitud
-    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.BORRADOR, null);
+    EstadoSolicitud estadoSolicitud = addEstadoSolicitud(solicitud, EstadoSolicitud.Estado.BORRADOR);
 
     // Actualiza la el estado actual de la solicitud con el nuevo estado
     solicitud.setEstado(estadoSolicitud);
@@ -992,20 +992,19 @@ public class SolicitudService {
    *                  {@link Solicitud}.
    * @return la {@link Solicitud} con el estado actualizado.
    */
-  private EstadoSolicitud addEstadoSolicitud(Solicitud solicitud, EstadoSolicitud.Estado estado, String comentario) {
+  private EstadoSolicitud addEstadoSolicitud(Solicitud solicitud, EstadoSolicitud.Estado estado) {
     log.debug(
-        "addEstadoSolicitud(Solicitud solicitud, TipoEstadoSolicitudEnum tipoEstadoSolicitud, String comentario) - start");
+        "addEstadoSolicitud(Solicitud solicitud, TipoEstadoSolicitudEnum tipoEstadoSolicitud) - start");
 
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setEstado(estado);
     estadoSolicitud.setSolicitudId(solicitud.getId());
-    estadoSolicitud.setComentario(comentario);
     estadoSolicitud.setFechaEstado(Instant.now());
 
     EstadoSolicitud returnValue = estadoSolicitudRepository.save(estadoSolicitud);
 
     log.debug(
-        "addEstadoSolicitud(Solicitud solicitud, TipoEstadoSolicitudEnum tipoEstadoSolicitud, String comentario) - end");
+        "addEstadoSolicitud(Solicitud solicitud, TipoEstadoSolicitudEnum tipoEstadoSolicitud) - end");
     return returnValue;
   }
 

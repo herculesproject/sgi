@@ -53,6 +53,7 @@ DELETE FROM test.proyecto_socio_periodo_pago;
 DELETE FROM test.proyecto_socio_periodo_justificacion_documento;
 DELETE FROM test.proyecto_socio_periodo_justificacion;
 DELETE FROM test.proyecto_socio;
+DELETE FROM test.estado_solicitud_comentario;
 UPDATE test.solicitud SET estado_solicitud_id = NULL;
 DELETE FROM test.estado_solicitud;
 UPDATE test.proyecto SET solicitud_id = NULL;

@@ -37,8 +37,7 @@ class SolicitudDocumentoIT extends BaseIT {
     headers.set("Authorization",
         String.format("bearer %s", tokenBuilder.buildToken("user", "AUTH", "CSP-SOL-C", "CSP-SOL-E")));
 
-    HttpEntity<SolicitudDocumento> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql
@@ -137,9 +136,13 @@ class SolicitudDocumentoIT extends BaseIT {
     solicitudDocumentoComentarios
         .add(new SolicitudDocumentoComentario(Language.ES, "comentarios-" + solicitudDocumentoId));
 
-    return SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitudId(solicitudId).comentario(solicitudDocumentoComentarios)
-        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre(solicitudDocumentoNombre)
-        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
+    return SolicitudDocumento.builder()
+        .id(solicitudDocumentoId)
+        .solicitudId(solicitudId)
+        .comentario(solicitudDocumentoComentarios)
+        .documentoRef("documentoRef-" + solicitudDocumentoId)
+        .nombre(solicitudDocumentoNombre)
+        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
+        .build();
   }
 }

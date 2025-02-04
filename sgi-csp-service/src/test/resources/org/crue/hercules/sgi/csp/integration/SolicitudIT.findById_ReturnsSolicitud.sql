@@ -96,7 +96,10 @@ INSERT INTO test.solicitud_titulo(solicitud_id, lang, value_) VALUES(1, 'es', 't
 INSERT INTO test.solicitud_observaciones(solicitud_id, lang, value_) VALUES(1, 'es', 'observaciones 1');
 
 -- ESTADO SOLICITUD
-INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
+INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z');
+
+-- ESTADO SOLICITUD COMENTARIO
+INSERT INTO test.estado_solicitud_comentario (estado_solicitud_id, lang, value_) VALUES (1, 'es', 'comentario');
 
 -- UPDATE SOLICITUD
 UPDATE test.solicitud SET estado_solicitud_id = 1 WHERE id = 1;

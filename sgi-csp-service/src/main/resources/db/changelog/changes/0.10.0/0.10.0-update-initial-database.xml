@@ -1851,4 +1851,34 @@
 
     <dropColumn columnName="observaciones" tableName="proyecto" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-69">
+    <createTable tableName="estado_solicitud_comentario">
+      <column name="estado_solicitud_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="estado_solicitud_comentario"
+      columnNames="estado_solicitud_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="estado_solicitud_id"
+      baseTableName="estado_solicitud_comentario"
+      constraintName="FK_ESTADOSOLICITUDCOMENTARIO_ESTADOSOLICITUD"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="estado_solicitud" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}estado_solicitud_comentario(estado_solicitud_id, value_, lang)
+      SELECT id, comentario, '${defaultLang}' FROM ${schemaPrefix}estado_solicitud WHERE comentario
+      IS NOT NULL AND NULLIF(TRIM(comentario), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="comentario" tableName="estado_solicitud" />
+  </changeSet>
 </databaseChangeLog>

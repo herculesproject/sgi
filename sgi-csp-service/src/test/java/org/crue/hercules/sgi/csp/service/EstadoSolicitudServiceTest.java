@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitudComentario;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
@@ -50,7 +51,7 @@ class EstadoSolicitudServiceTest extends BaseServiceTest {
   private EstadoSolicitudService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     authorityHelper = new SolicitudAuthorityHelper(solicitudRepository, solicitudExternaRepository);
     service = new EstadoSolicitudServiceImpl(repository, authorityHelper);
   }
@@ -122,8 +123,7 @@ class EstadoSolicitudServiceTest extends BaseServiceTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > estadosSolicitud.size() ? estadosSolicitud.size() : toIndex;
             List<EstadoSolicitud> content = estadosSolicitud.subList(fromIndex, toIndex);
-            Page<EstadoSolicitud> page = new PageImpl<>(content, pageable, estadosSolicitud.size());
-            return page;
+            return new PageImpl<>(content, pageable, estadosSolicitud.size());
           }
         });
 
@@ -149,10 +149,13 @@ class EstadoSolicitudServiceTest extends BaseServiceTest {
    * @return el objeto EstadoSolicitud
    */
   private EstadoSolicitud generarMockEstadoSolicitud(Long id) {
+    Set<EstadoSolicitudComentario> comentarioEstadoSolicitud = new HashSet<>();
+    comentarioEstadoSolicitud.add(new EstadoSolicitudComentario(Language.ES, "comentario"));
+
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setId(id);
     estadoSolicitud.setSolicitudId(1L);
-    estadoSolicitud.setComentario("Comentario");
+    estadoSolicitud.setComentario(comentarioEstadoSolicitud);
     estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
     estadoSolicitud.setFechaEstado(Instant.now());
 

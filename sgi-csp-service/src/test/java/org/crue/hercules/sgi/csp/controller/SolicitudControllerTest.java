@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitudComentario;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.RolSocio;
@@ -688,8 +689,7 @@ class SolicitudControllerTest extends BaseControllerTest {
           int toIndex = fromIndex + size;
           toIndex = toIndex > estadosSolicitud.size() ? estadosSolicitud.size() : toIndex;
           List<EstadoSolicitud> content = estadosSolicitud.subList(fromIndex, toIndex);
-          Page<EstadoSolicitud> pageResponse = new PageImpl<>(content, pageable, estadosSolicitud.size());
-          return pageResponse;
+          return new PageImpl<>(content, pageable, estadosSolicitud.size());
         });
 
     // when: Get page=3 with pagesize=10
@@ -715,7 +715,8 @@ class SolicitudControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       EstadoSolicitud estadoSolicitud = estadosSolicitudResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(estadoSolicitud.getComentario()).isEqualTo("Estado-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(estadoSolicitud.getComentario(), Language.ES))
+          .isEqualTo("Estado-" + i);
     }
   }
 
@@ -1373,9 +1374,12 @@ class SolicitudControllerTest extends BaseControllerTest {
    * @return el objeto EstadoSolicitud
    */
   private EstadoSolicitud generarMockEstadoSolicitud(Long id) {
+    Set<EstadoSolicitudComentario> comentarioEstadoSolicitud = new HashSet<>();
+    comentarioEstadoSolicitud.add(new EstadoSolicitudComentario(Language.ES, "Estado-" + id));
+
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setId(id);
-    estadoSolicitud.setComentario("Estado-" + id);
+    estadoSolicitud.setComentario(comentarioEstadoSolicitud);
     estadoSolicitud.setEstado(EstadoSolicitud.Estado.BORRADOR);
     estadoSolicitud.setFechaEstado(Instant.now());
     estadoSolicitud.setSolicitudId(1L);

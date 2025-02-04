@@ -102,10 +102,16 @@ INSERT INTO test.solicitud_observaciones(solicitud_id, lang, value_) VALUES(1, '
 INSERT INTO test.solicitud_observaciones(solicitud_id, lang, value_) VALUES(2, 'es', 'observaciones 2');
 
 -- ESTADO SOLICITUD
-INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario borrador');
-INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (2, 1, 'SOLICITADA', '2020-11-17T00:00:00Z', 'comentario solicitada');
-INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (3, 1, 'EXCLUIDA_DEFINITIVA', '2020-11-17T00:00:00Z', 'comentario excluida definnitiva');
-INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado, comentario) VALUES (4, 2, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario borrador');
+INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado) VALUES (1, 1, 'BORRADOR',            '2020-11-17T00:00:00Z');
+INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado) VALUES (2, 1, 'SOLICITADA',          '2020-11-17T00:00:00Z');
+INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado) VALUES (3, 1, 'EXCLUIDA_DEFINITIVA', '2020-11-17T00:00:00Z');
+INSERT INTO test.estado_solicitud (id, solicitud_id, estado, fecha_estado) VALUES (4, 2, 'BORRADOR',            '2020-11-17T00:00:00Z');
+
+-- ESTADO SOLICITUD COMENTARIO
+INSERT INTO test.estado_solicitud_comentario (estado_solicitud_id, lang, value_) VALUES (1, 'es', 'comentario borrador');
+INSERT INTO test.estado_solicitud_comentario (estado_solicitud_id, lang, value_) VALUES (2, 'es', 'comentario solicitada');
+INSERT INTO test.estado_solicitud_comentario (estado_solicitud_id, lang, value_) VALUES (3, 'es', 'comentario excluida definnitiva');
+INSERT INTO test.estado_solicitud_comentario (estado_solicitud_id, lang, value_) VALUES (4, 'es', 'comentario borrador');
 
 -- UPDATE SOLICITUD
 UPDATE test.solicitud SET estado_solicitud_id = 1 WHERE id = 1;
