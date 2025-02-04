@@ -492,7 +492,7 @@ export class SolicitudRrhhListadoExportService extends AbstractTableExportFillSe
       elementsRow.push(solicitud.solicitudRrhhTutor?.tutor?.apellidos ?? '');
       elementsRow.push(solicitud.solicitudRrhhTutor?.tutor?.emails ? solicitud.solicitudRrhhTutor?.tutor?.emails[0].email : '');
       elementsRow.push(this.languageService.getFieldValue(solicitud.solicitudRrhhMemoria?.tituloTrabajo));
-      elementsRow.push(solicitud.solicitudRrhhMemoria?.resumen ?? '');
+      elementsRow.push(this.languageService.getFieldValue(solicitud.solicitudRrhhMemoria?.resumen));
       elementsRow.push(solicitud.solicitudRrhhMemoria?.observaciones ?? '');
 
       if (solicitud.requisitosSolicitanteNivelAcademico) {

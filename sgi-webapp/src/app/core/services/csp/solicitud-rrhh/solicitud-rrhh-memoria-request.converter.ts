@@ -12,7 +12,7 @@ class SolicitudRrhhMemoriaRequestConverter
     return {
       tituloTrabajo: value.tituloTrabajo ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.tituloTrabajo) : [],
       observaciones: value.observaciones,
-      resumen: value.resumen
+      resumen: value.resumen ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.resumen) : []
     };
   }
 
@@ -23,7 +23,7 @@ class SolicitudRrhhMemoriaRequestConverter
     return {
       tituloTrabajo: value.tituloTrabajo ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.tituloTrabajo) : [],
       observaciones: value.observaciones,
-      resumen: value.resumen
+      resumen: value.resumen ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.resumen) : [],
     };
   }
 }

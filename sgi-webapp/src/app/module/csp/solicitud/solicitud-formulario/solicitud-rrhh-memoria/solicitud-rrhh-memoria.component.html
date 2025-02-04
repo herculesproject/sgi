@@ -23,10 +23,11 @@
       <!-- Resumen -->
       <mat-form-field>
         <mat-label>{{'csp.solicitud.solicitud-rrhh.resumen' | translate}}</mat-label>
-        <textarea matInput #resumen formControlName="resumen" type="text" id="comentariosEstado"
-          placeholder="{{'csp.solicitud.solicitud-rrhh.resumen' | translate}}" cdkTextareaAutosize
-          #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" required></textarea>
-        <mat-hint>{{resumen.value.length}} / 4000</mat-hint>
+        <sgi-i18n-textarea #resumen formControlName="resumen"
+          placeholder="{{'csp.solicitud.solicitud-rrhh.resumen' | translate}}" [useAutosize]="true"
+          cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" required>
+        </sgi-i18n-textarea>
+        <mat-hint>{{resumen.editingValue.length}} / 4000</mat-hint>
         <mat-error *ngIf="formGroup.controls.resumen.errors?.required">
           {{'error.required.entity' | translate:msgParamResumenEntity}}
         </mat-error>
