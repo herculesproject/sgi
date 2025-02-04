@@ -1036,7 +1036,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     ContextoProyecto contextoProyectoNew = new ContextoProyecto();
     contextoProyectoNew.setProyectoId(proyectoId);
     contextoProyectoNew.setObjetivos(I18nHelper.getFieldValue(solicitudProyecto.getObjetivos()));
-    contextoProyectoNew.setResultadosPrevistos(solicitudProyecto.getResultadosPrevistos());
+    contextoProyectoNew.setResultadosPrevistos(I18nHelper.getFieldValue(solicitudProyecto.getResultadosPrevistos()));
     contextoProyectoNew.setIntereses(I18nHelper.getFieldValue(solicitudProyecto.getIntereses()));
     contextoProyectoNew.setAreaTematica(solicitudProyecto.getAreaTematica());
 

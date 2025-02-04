@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +13,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.converter.SolicitudProyectoObjetivosConverter;
+import org.crue.hercules.sgi.csp.converter.SolicitudProyectoResultadosPrevistosConverter;
 import org.crue.hercules.sgi.csp.converter.SolicitudTituloConverter;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
@@ -75,7 +75,6 @@ import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.security.core.context.SgiSecurityContextHolder;
@@ -142,6 +141,7 @@ public class SolicitudService {
   private final SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository;
   private final SolicitudTituloConverter solicitudTituloConverter;
   private final SolicitudProyectoObjetivosConverter solicitudProyectoObjetivosConverter;
+  private final SolicitudProyectoResultadosPrevistosConverter solicitudProyectoResultadosPrevistosConverter;
 
   /**
    * Guarda la entidad {@link Solicitud}.
@@ -803,7 +803,9 @@ public class SolicitudService {
         .fuenteFinanciacion(existeFinanciacion ? getNombresEntidadesFinanciadoras(solicitud.getId()) : null)
         .estadoFinanciacion(existeFinanciacion ? EstadoFinanciacion.SOLICITADO : null)
         .importeFinanciacion(existeFinanciacion ? getImporteFinanciacion(solicitud.getId()) : null)
-        .resumen(getResumen(solicitudProyecto))
+        .resumen(solicitudProyectoResultadosPrevistosConverter
+            .convertAll(solicitudProyecto
+                .getResultadosPrevistos()))
         .objetivos(solicitudProyectoObjetivosConverter.convertAll(solicitudProyecto
             .getObjetivos()))
         .build();
@@ -1466,14 +1468,6 @@ public class SolicitudService {
 
     return I18nConfig.get().getEnabledLanguages().stream()
         .map(language -> new I18nFieldValueDto(language, nombresEntidadesFinanciadoras)).toList();
-  }
-
-  private List<I18nFieldValueDto> getResumen(SolicitudProyecto solicitudProyecto) {
-    List<I18nFieldValueDto> value = new ArrayList<>();
-    if (StringUtils.isNotBlank(solicitudProyecto.getResultadosPrevistos())) {
-      value.add(new I18nFieldValueDto(Language.ES, solicitudProyecto.getResultadosPrevistos()));
-    }
-    return value;
   }
 
   private BigDecimal getImporteFinanciacion(Long solicitudId) {

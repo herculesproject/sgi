@@ -106,9 +106,11 @@ public class SolicitudProyecto extends BaseEntity {
   private Set<SolicitudProyectoIntereses> intereses = new HashSet<>();
 
   /** Resultados previstos */
-  @Column(name = "resultados_previstos", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String resultadosPrevistos;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "solicitud_proyecto_resultados_previstos", joinColumns = @JoinColumn(name = "solicitud_proyecto_id"))
+  @Valid
+  @Builder.Default
+  private Set<SolicitudProyectoResultadosPrevistos> resultadosPrevistos = new HashSet<>();
 
   /** Área temática */
   @ManyToOne
