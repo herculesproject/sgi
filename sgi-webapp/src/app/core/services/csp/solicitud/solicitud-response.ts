@@ -1,6 +1,6 @@
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
-import { IEstadoSolicitudBackend } from '../../../models/csp/backend/estado-solicitud-backend';
+import { IEstadoSolicitudResponse } from '@core/services/csp/estado-solicitud/estado-solicitud-response';
 import { OrigenSolicitud, TipoSolicitudGrupo } from '../../../models/csp/solicitud';
 
 export interface ISolicitudResponse {
@@ -15,7 +15,7 @@ export interface ISolicitudResponse {
   /** Codigo registro interno */
   codigoRegistroInterno: string;
   /** Estado solicitud */
-  estado: IEstadoSolicitudBackend;
+  estado: IEstadoSolicitudResponse;
   /** Id de Convocatoria */
   convocatoriaId: number;
   /** Convocatoria externa */

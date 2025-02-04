@@ -1,13 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
-import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { IEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
+import { ESTADO_SOLICITUD_RESPONSE_CONVERTER } from '@core/services/csp/estado-solicitud/estado-solicitud-response.converter';
 import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
 import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
 import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
@@ -18,6 +17,7 @@ import {
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IEstadoSolicitudResponse } from './estado-solicitud/estado-solicitud-response';
 import { ISolicitanteExternoResponse } from './solicitante-externo/solicitante-externo-response';
 import { SOLICITANTE_EXTERNO_RESPONSE_CONVERTER } from './solicitante-externo/solicitante-externo-response.converter';
 import { SolicitudModalidadService } from './solicitud-modalidad.service';
@@ -59,10 +59,10 @@ export class SolicitudPublicService extends _SolicitudMixinBase {
   }
 
   cambiarEstado(solicitudId: string, estadoSolicitud: IEstadoSolicitud): Observable<IEstadoSolicitud> {
-    return this.http.patch<IEstadoSolicitudBackend>(`${this.endpointUrl}/${solicitudId}/cambiar-estado`,
-      ESTADO_SOLICITUD_CONVERTER.fromTarget(estadoSolicitud)
+    return this.http.patch<IEstadoSolicitudResponse>(`${this.endpointUrl}/${solicitudId}/cambiar-estado`,
+      ESTADO_SOLICITUD_RESPONSE_CONVERTER.fromTarget(estadoSolicitud)
     ).pipe(
-      map((response => ESTADO_SOLICITUD_CONVERTER.toTarget(response)))
+      map((response => ESTADO_SOLICITUD_RESPONSE_CONVERTER.toTarget(response)))
     );
   }
 
@@ -75,10 +75,10 @@ export class SolicitudPublicService extends _SolicitudMixinBase {
   }
 
   findEstadoSolicitud(solicitudId: string, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEstadoSolicitud>> {
-    return this.find<IEstadoSolicitudBackend, IEstadoSolicitud>(
+    return this.find<IEstadoSolicitudResponse, IEstadoSolicitud>(
       `${this.endpointUrl}/${solicitudId}/estadosolicitudes`,
       options,
-      ESTADO_SOLICITUD_CONVERTER
+      ESTADO_SOLICITUD_RESPONSE_CONVERTER
     );
   }
 

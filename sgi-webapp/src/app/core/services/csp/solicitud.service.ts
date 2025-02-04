@@ -1,12 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-financiadora.converter';
-import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitud.converter';
 import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-area-conocimiento.converter';
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
-import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/backend/solicitud-proyecto-area-conocimiento-backend';
 import { ISolicitudProyectoClasificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-clasificacion-backend';
 import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/csp/backend/solicitud-proyecto-entidad-financiadora-ajena-backend';
@@ -41,6 +39,7 @@ import { IConvocatoriaEntidadConvocanteResponse } from '@core/services/csp/convo
 import { CONVOCATORIA_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-entidad-convocante/convocatoria-entidad-convocante-response.converter';
 import { IConvocatoriaResponse } from '@core/services/csp/convocatoria/convocatoria-response';
 import { CONVOCATORIA_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria/convocatoria-response.converter';
+import { ESTADO_SOLICITUD_RESPONSE_CONVERTER } from '@core/services/csp/estado-solicitud/estado-solicitud-response.converter';
 import { ISolicitudDocumentoResponse } from '@core/services/csp/solicitud-documento/solicitud-documento-response';
 import { SOLICITUD_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-documento/solicitud-documento-response.converter';
 import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
@@ -50,6 +49,7 @@ import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { PersonaService } from '../sgp/persona.service';
+import { IEstadoSolicitudResponse } from './estado-solicitud/estado-solicitud-response';
 import { GRUPO_REQUEST_CONVERTER } from './grupo/grupo-request.converter';
 import { IGrupoResponse } from './grupo/grupo-response';
 import { GRUPO_RESPONSE_CONVERTER } from './grupo/grupo-response.converter';
@@ -174,10 +174,10 @@ export class SolicitudService extends _SolicitudServiceMixinBase {
    * @param options opciones de búsqueda.
    */
   findEstadosSolicitud(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEstadoSolicitud>> {
-    return this.find<IEstadoSolicitudBackend, IEstadoSolicitud>(
+    return this.find<IEstadoSolicitudResponse, IEstadoSolicitud>(
       `${this.endpointUrl}/${solicitudId}/estadosolicitudes`,
       options,
-      ESTADO_SOLICITUD_CONVERTER
+      ESTADO_SOLICITUD_RESPONSE_CONVERTER
     );
   }
 
@@ -457,10 +457,10 @@ export class SolicitudService extends _SolicitudServiceMixinBase {
    */
 
   cambiarEstado(id: number, estadoSolicitud: IEstadoSolicitud): Observable<IEstadoSolicitud> {
-    return this.http.patch<IEstadoSolicitudBackend>(`${this.endpointUrl}/${id}/cambiar-estado`,
-      ESTADO_SOLICITUD_CONVERTER.fromTarget(estadoSolicitud)
+    return this.http.patch<IEstadoSolicitudResponse>(`${this.endpointUrl}/${id}/cambiar-estado`,
+      ESTADO_SOLICITUD_RESPONSE_CONVERTER.fromTarget(estadoSolicitud)
     ).pipe(
-      map((response => ESTADO_SOLICITUD_CONVERTER.toTarget(response)))
+      map((response => ESTADO_SOLICITUD_RESPONSE_CONVERTER.toTarget(response)))
     );
   }
 

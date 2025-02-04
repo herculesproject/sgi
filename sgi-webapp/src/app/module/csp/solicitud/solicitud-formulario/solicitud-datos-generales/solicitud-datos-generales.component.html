@@ -17,9 +17,10 @@
       <mat-form-field *ngIf="(formPart.showComentariosEstado$ | async)"
         fxFlex="0 1 calc((100% - (10px * 3)) / 4*3 + 20px)">
         <mat-label>{{'csp.solicitud.estado-solicitud.comentario' | translate}}</mat-label>
-        <textarea matInput formControlName="comentariosEstado" type="text" id="comentariosEstado"
-          placeholder="{{'csp.solicitud.estado-solicitud.comentario' | translate}}" cdkTextareaAutosize
-          #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="3"></textarea>
+        <sgi-i18n-textarea formControlName="comentariosEstado"
+          placeholder="{{'csp.solicitud.estado-solicitud.comentario' | translate}}" [useAutosize]="true"
+          cdkAutosizeMinRows="1" cdkAutosizeMaxRows="3">
+        </sgi-i18n-textarea>
       </mat-form-field>
     </div>
 

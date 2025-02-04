@@ -5,7 +5,7 @@ import { IPersona } from '@core/models/sgp/persona';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ISolicitudResponse } from '@core/services/csp/solicitud/solicitud-response';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { ESTADO_SOLICITUD_CONVERTER } from '../../../converters/csp/estado-solicitud.converter';
+import { ESTADO_SOLICITUD_RESPONSE_CONVERTER } from '../estado-solicitud/estado-solicitud-response.converter';
 
 class SolicitudResponseConverter extends SgiBaseConverter<ISolicitudResponse, ISolicitud> {
 
@@ -19,7 +19,7 @@ class SolicitudResponseConverter extends SgiBaseConverter<ISolicitudResponse, IS
       activo: value.activo,
       codigoExterno: value.codigoExterno,
       codigoRegistroInterno: value.codigoRegistroInterno,
-      estado: ESTADO_SOLICITUD_CONVERTER.toTarget(value.estado),
+      estado: ESTADO_SOLICITUD_RESPONSE_CONVERTER.toTarget(value.estado),
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
       creador: { id: value.creadorRef } as IPersona,
@@ -45,7 +45,7 @@ class SolicitudResponseConverter extends SgiBaseConverter<ISolicitudResponse, IS
       activo: value.activo,
       codigoExterno: value.codigoExterno,
       codigoRegistroInterno: value.codigoRegistroInterno,
-      estado: ESTADO_SOLICITUD_CONVERTER.fromTarget(value.estado),
+      estado: ESTADO_SOLICITUD_RESPONSE_CONVERTER.fromTarget(value.estado),
       convocatoriaId: value.convocatoriaId,
       convocatoriaExterna: value.convocatoriaExterna,
       creadorRef: value.creador?.id,
