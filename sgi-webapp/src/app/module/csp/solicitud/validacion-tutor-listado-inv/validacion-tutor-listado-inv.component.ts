@@ -18,7 +18,7 @@ import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operato
 interface SolicitudListado extends ISolicitud {
   tituloConvocatoria: I18nFieldValue[];
   nombreSolicitante: string;
-  tituloTrabajo: string;
+  tituloTrabajo: I18nFieldValue[];
 }
 
 @Component({
@@ -61,6 +61,13 @@ export class ValidacionTutorListadoInvComponent extends AbstractTablePaginationC
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.resolveSortProperty = (column: string) => {
+      if (column == 'solicitudRrhh.tituloTrabajo') {
+        return 'solicitudRrhh.tituloTrabajo.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {

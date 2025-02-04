@@ -6,9 +6,10 @@
       <!-- Titulo trabajo -->
       <mat-form-field>
         <mat-label>{{'csp.solicitud.solicitud-rrhh.titulo-trabajo' | translate}}</mat-label>
-        <input matInput #titulo type="text" placeholder="{{'csp.solicitud.solicitud-rrhh.titulo-trabajo' | translate}}"
+        <sgi-i18n-input #titulo placeholder="{{'csp.solicitud.solicitud-rrhh.titulo-trabajo' | translate}}"
           formControlName="tituloTrabajo" required>
-        <mat-hint>{{titulo.value.length}} / 1000</mat-hint>
+        </sgi-i18n-input>
+        <mat-hint>{{titulo.editingValue.length}} / 1000</mat-hint>
         <mat-error *ngIf="formGroup.controls.tituloTrabajo.errors?.required">
           {{'error.required.entity' | translate:msgParamTituloTrabajoEntity}}
         </mat-error>
