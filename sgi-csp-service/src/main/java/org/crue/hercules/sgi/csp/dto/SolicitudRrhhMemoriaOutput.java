@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.SolicitudRrhhObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudRrhhResumen;
 import org.crue.hercules.sgi.csp.model.SolicitudRrhhTituloTrabajo;
 
@@ -20,5 +21,5 @@ import lombok.NoArgsConstructor;
 public class SolicitudRrhhMemoriaOutput implements Serializable {
   private Collection<SolicitudRrhhTituloTrabajo> tituloTrabajo;
   private Collection<SolicitudRrhhResumen> resumen;
-  private String observaciones;
+  private Collection<SolicitudRrhhObservaciones> observaciones;
 }

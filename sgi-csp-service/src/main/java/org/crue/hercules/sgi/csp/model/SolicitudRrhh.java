@@ -37,7 +37,6 @@ public class SolicitudRrhh extends BaseEntity {
   protected static final String TABLE_NAME = "solicitud_rrhh";
 
   public static final int ENTIDAD_REF_LENGTH = 50;
-  public static final int OBSERVACIONES_LENGTH = 4000;
   public static final int UNIVERSIDAD_LENGTH = 250;
 
   /** Id de la Solicitud */
@@ -80,9 +79,11 @@ public class SolicitudRrhh extends BaseEntity {
   private Set<SolicitudRrhhResumen> resumen = new HashSet<>();
 
   /** Observaciones */
-  @Column(name = "observaciones", length = SolicitudRrhh.OBSERVACIONES_LENGTH, nullable = true, columnDefinition = "clob")
-  @Size(max = SolicitudRrhh.OBSERVACIONES_LENGTH)
-  private String observaciones;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "solicitud_rrhh_observaciones", joinColumns = @JoinColumn(name = "solicitud_rrhh_id"))
+  @Valid
+  @Builder.Default
+  private Set<SolicitudRrhhObservaciones> observaciones = new HashSet<>();
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
