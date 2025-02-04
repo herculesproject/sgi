@@ -38,13 +38,14 @@
     </div>
 
     <div fxFlex fxLayout="row">
-      <!-- Obsrvaciones -->
+      <!-- Observaciones -->
       <mat-form-field>
         <mat-label>{{'csp.solicitud.solicitud-rrhh.observaciones' | translate}}</mat-label>
-        <textarea matInput #observaciones formControlName="observaciones" type="text" id="comentariosEstado"
-          placeholder="{{'csp.solicitud.solicitud-rrhh.observaciones' | translate}}" cdkTextareaAutosize
-          #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
-        <mat-hint>{{observaciones.value.length}} / 4000</mat-hint>
+        <sgi-i18n-textarea #observaciones formControlName="observaciones"
+          placeholder="{{'csp.solicitud.solicitud-rrhh.observaciones' | translate}}" [useAutosize]="true"
+          cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
+        </sgi-i18n-textarea>
+        <mat-hint>{{observaciones.editingValue.length}} / 4000</mat-hint>
         <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
           {{ 'error.maxlength.entity' | translate:msgParamObservacionesEntity }}
         </mat-error>

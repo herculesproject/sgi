@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ISolicitudRrhhMemoria } from '@core/models/csp/solicitud-rrhh-memoria';
 import { FormFragment } from '@core/services/action-service';
 import { SolicitudRrhhPublicService } from '@core/services/csp/solicitud-rrhh/solicitud-rrhh-public.service';
@@ -48,7 +48,7 @@ export class SolicitudRrhhMemoriaPublicFragment extends FormFragment<ISolicitudR
     const formGroup = new FormGroup({
       tituloTrabajo: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(1000)]),
       resumen: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(4000)]),
-      observaciones: new FormControl(null, Validators.maxLength(4000))
+      observaciones: new FormControl([], I18nValidators.maxLength(4000))
     });
 
     if (this.readonly) {
