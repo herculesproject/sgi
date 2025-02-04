@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -26,9 +25,8 @@ public class SolicitudRrhhMemoriaInput implements Serializable {
   @NotEmpty
   private List<I18nFieldValueDto> tituloTrabajo;
 
-  @Size(max = SolicitudRrhh.RESUMEN_LENGTH)
-  @NotBlank
-  private String resumen;
+  @NotEmpty
+  private List<I18nFieldValueDto> resumen;
 
   @Size(max = SolicitudRrhh.OBSERVACIONES_LENGTH)
   private String observaciones;

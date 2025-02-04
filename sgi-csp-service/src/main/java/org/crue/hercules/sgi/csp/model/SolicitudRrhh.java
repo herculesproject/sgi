@@ -38,7 +38,6 @@ public class SolicitudRrhh extends BaseEntity {
 
   public static final int ENTIDAD_REF_LENGTH = 50;
   public static final int OBSERVACIONES_LENGTH = 4000;
-  public static final int RESUMEN_LENGTH = 4000;
   public static final int UNIVERSIDAD_LENGTH = 250;
 
   /** Id de la Solicitud */
@@ -74,9 +73,11 @@ public class SolicitudRrhh extends BaseEntity {
   private Set<SolicitudRrhhTituloTrabajo> tituloTrabajo = new HashSet<>();
 
   /** Resumen */
-  @Column(name = "resumen", length = SolicitudRrhh.RESUMEN_LENGTH, nullable = true, columnDefinition = "clob")
-  @Size(max = SolicitudRrhh.RESUMEN_LENGTH)
-  private String resumen;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "solicitud_rrhh_resumen", joinColumns = @JoinColumn(name = "solicitud_rrhh_id"))
+  @Valid
+  @Builder.Default
+  private Set<SolicitudRrhhResumen> resumen = new HashSet<>();
 
   /** Observaciones */
   @Column(name = "observaciones", length = SolicitudRrhh.OBSERVACIONES_LENGTH, nullable = true, columnDefinition = "clob")

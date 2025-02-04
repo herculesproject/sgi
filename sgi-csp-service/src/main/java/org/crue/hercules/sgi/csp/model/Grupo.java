@@ -106,7 +106,7 @@ public class Grupo extends BaseActivableEntity {
 
   /** Resumen */
   @Column(name = "resumen", length = Grupo.RESUMEN_LENGTH, nullable = true, columnDefinition = "clob")
-  @Size(max = SolicitudRrhh.RESUMEN_LENGTH)
+  @Size(max = Grupo.RESUMEN_LENGTH)
   private String resumen;
 
   // Relation mappings for JPA metamodel generation only

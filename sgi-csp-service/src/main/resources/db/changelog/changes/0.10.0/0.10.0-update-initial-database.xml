@@ -1909,4 +1909,37 @@
 
     <dropColumn columnName="titulo_trabajo" tableName="solicitud_rrhh" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-71">
+    <createTable tableName="solicitud_rrhh_resumen">
+      <column name="solicitud_rrhh_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="CLOB">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="solicitud_rrhh_resumen"
+      columnNames="solicitud_rrhh_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="solicitud_rrhh_id"
+      baseTableName="solicitud_rrhh_resumen"
+      constraintName="FK_SOLICITUDRRHHRESUMEN_SOLICITUDRRHH" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="solicitud_rrhh" validate="true" />
+
+    <sql dbms="!oracle">INSERT INTO ${schemaPrefix}solicitud_rrhh_resumen(solicitud_rrhh_id, value_,
+      lang) SELECT id, resumen, '${defaultLang}' FROM ${schemaPrefix}solicitud_rrhh WHERE resumen IS
+      NOT NULL AND NULLIF(TRIM(resumen), '') IS NOT NULL</sql>
+
+    <sql dbms="oracle">INSERT INTO ${schemaPrefix}solicitud_rrhh_resumen(solicitud_rrhh_id, value_,
+      lang) SELECT id, resumen, '${defaultLang}' FROM ${schemaPrefix}solicitud_rrhh WHERE resumen IS
+      NOT NULL</sql>
+
+    <dropColumn columnName="resumen" tableName="solicitud_rrhh" />
+  </changeSet>
 </databaseChangeLog>
