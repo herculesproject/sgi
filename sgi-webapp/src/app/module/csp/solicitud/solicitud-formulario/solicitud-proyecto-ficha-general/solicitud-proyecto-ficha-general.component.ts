@@ -28,6 +28,7 @@ const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COLABORATIVO_KEY = marker('csp.soli
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_COORDINADO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.proyecto-coordinado');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_ROL_UNIVERSIDAD_KEY = marker('csp.solicitud.rol-participacion-universidad');
 const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_TIPO_DESGLOSE_PRESUPUESTO_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.tipo-desglose-presupuesto');
+const SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_OBJETIVOS_KEY = marker('csp.solicitud-datos-proyecto-ficha-general.objetivos');
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
 const AREA_KEY = marker('csp.area');
 
@@ -56,6 +57,7 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
   msgParamAreaTematicaEntities = {};
   msgParamAreaEntities: {};
   msgParamCodExternoEntity = {};
+  msgParamObjetivosEntity = {};
 
   areasConvocatoria: IAreaTematica[];
 
@@ -184,6 +186,17 @@ export class SolicitudProyectoFichaGeneralComponent extends FormFragmentComponen
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) =>
       this.msgParamAreaTematicaEntities = {
+        entity: value,
+        ...MSG_PARAMS.GENDER.MALE,
+        ...MSG_PARAMS.CARDINALIRY.PLURAL
+      }
+    );
+
+    this.translate.get(
+      SOLICITUD_DATOS_PROYECTO_FICHA_GENERAL_OBJETIVOS_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) =>
+      this.msgParamObjetivosEntity = {
         entity: value,
         ...MSG_PARAMS.GENDER.MALE,
         ...MSG_PARAMS.CARDINALIRY.PLURAL

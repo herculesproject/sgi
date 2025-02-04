@@ -6,12 +6,10 @@ import { ESTADO_SOLICITUD_CONVERTER } from '@core/converters/csp/estado-solicitu
 import { SOLICITUD_PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto-area-conocimiento.converter';
 import { SOLICITUD_PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/solicitud-proyecto-clasificacion.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
-import { SOLICITUD_PROYECTO_CONVERTER } from '@core/converters/csp/solicitud-proyecto.converter';
 import { IConvocatoriaBackend } from '@core/models/csp/backend/convocatoria-backend';
 import { IConvocatoriaEntidadFinanciadoraBackend } from '@core/models/csp/backend/convocatoria-entidad-financiadora-backend';
 import { IEstadoSolicitudBackend } from '@core/models/csp/backend/estado-solicitud-backend';
 import { ISolicitudProyectoAreaConocimientoBackend } from '@core/models/csp/backend/solicitud-proyecto-area-conocimiento-backend';
-import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
 import { ISolicitudProyectoClasificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-clasificacion-backend';
 import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/csp/backend/solicitud-proyecto-entidad-financiadora-ajena-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
@@ -82,6 +80,8 @@ import { ISolicitudProyectoResponsableEconomicoResponse } from './solicitud-proy
 import { SOLICITUD_PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './solicitud-proyecto-responsable-economico/solicitud-proyecto-responsable-economico-response.converter';
 import { ISolicitudProyectoSocioResponse } from './solicitud-proyecto-socio/solicitud-proyecto-socio-response';
 import { SOLICITUD_PROYECTO_SOCIO_RESPONSE_CONVERTER } from './solicitud-proyecto-socio/solicitud-proyecto-socio.converter';
+import { ISolicitudProyectoResponse } from './solicitud-proyecto/solicitud-proyecto-response';
+import { SOLICITUD_PROYECTO_RESPONSE_CONVERTER } from './solicitud-proyecto/solicitud-proyecto-response.converter';
 import { ISolicitudRrhhResponse } from './solicitud-rrhh/solicitud-rrhh-response';
 import { SOLICITUD_RRHH_RESPONSE_CONVERTER } from './solicitud-rrhh/solicitud-rrhh-response.converter';
 import { ISolicitudResponse } from './solicitud/solicitud-response';
@@ -245,10 +245,10 @@ export class SolicitudService extends _SolicitudServiceMixinBase {
    * @param solicitudId Id de la solicitud
    */
   findSolicitudProyecto(solicitudId: number): Observable<ISolicitudProyecto> {
-    return this.http.get<ISolicitudProyectoBackend>(
+    return this.http.get<ISolicitudProyectoResponse>(
       `${this.endpointUrl}/${solicitudId}/solicitudproyecto`
     ).pipe(
-      map(response => SOLICITUD_PROYECTO_CONVERTER.toTarget(response))
+      map(response => SOLICITUD_PROYECTO_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

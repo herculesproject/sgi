@@ -12,6 +12,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
 import { AreaTematicaModalData } from '../../modals/solicitud-area-tematica-modal/solicitud-area-tematica-modal.component';
+import { I18nValidators } from '@core/validators/i18n-validator';
 
 export interface AreaTematicaSolicitudData {
   rootTree: IAreaTematica;
@@ -72,10 +73,9 @@ export class SolicitudProyectoFichaGeneralFragment extends FormFragment<ISolicit
       duracion: new FormControl(
         { value: null, disabled: !this.userCanEdit },
         [Validators.min(1), Validators.max(9999)]),
-
       objetivos: new FormControl(
-        { value: null, disabled: !this.userCanEdit },
-        [Validators.maxLength(2000)]),
+        { value: [], disabled: !this.userCanEdit },
+        [I18nValidators.maxLength(2000)]),
       intereses: new FormControl(
         { value: null, disabled: !this.userCanEdit },
         [Validators.maxLength(2000)]),

@@ -1,12 +1,13 @@
-import { ISolicitudProyectoBackend } from '@core/models/csp/backend/solicitud-proyecto-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { AREA_TEMATICA_RESPONSE_CONVERTER } from '@core/services/csp/area-tematica/area-tematica-response.converter';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { ISolicitudProyectoResponse } from './solicitud-proyecto-response';
 
-class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBackend, ISolicitudProyecto> {
+class SolicitudProyectoResponseConverter extends SgiBaseConverter<ISolicitudProyectoResponse, ISolicitudProyecto> {
 
-  toTarget(value: ISolicitudProyectoBackend): ISolicitudProyecto {
+  toTarget(value: ISolicitudProyectoResponse): ISolicitudProyecto {
     if (!value) {
       return value as unknown as ISolicitudProyecto;
     }
@@ -18,7 +19,7 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
       colaborativo: value.colaborativo,
       coordinado: value.coordinado,
       rolUniversidad: !!value.rolUniversidadId ? { id: value.rolUniversidadId } as IRolSocio : null,
-      objetivos: value.objetivos,
+      objetivos: value.objetivos ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.objetivos) : [],
       intereses: value.intereses,
       resultadosPrevistos: value.resultadosPrevistos,
       areaTematica: AREA_TEMATICA_RESPONSE_CONVERTER.toTarget(value.areaTematica),
@@ -36,9 +37,9 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
     };
   }
 
-  fromTarget(value: ISolicitudProyecto): ISolicitudProyectoBackend {
+  fromTarget(value: ISolicitudProyecto): ISolicitudProyectoResponse {
     if (!value) {
-      return value as unknown as ISolicitudProyectoBackend;
+      return value as unknown as ISolicitudProyectoResponse;
     }
     return {
       id: value.id,
@@ -48,7 +49,7 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
       colaborativo: value.colaborativo,
       coordinado: value.coordinado,
       rolUniversidadId: value.rolUniversidad?.id,
-      objetivos: value.objetivos,
+      objetivos: value.objetivos ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.objetivos) : [],
       intereses: value.intereses,
       resultadosPrevistos: value.resultadosPrevistos,
       areaTematica: AREA_TEMATICA_RESPONSE_CONVERTER.fromTarget(value.areaTematica),
@@ -67,4 +68,4 @@ class SolicitudProyectoConverter extends SgiBaseConverter<ISolicitudProyectoBack
   }
 }
 
-export const SOLICITUD_PROYECTO_CONVERTER = new SolicitudProyectoConverter();
+export const SOLICITUD_PROYECTO_RESPONSE_CONVERTER = new SolicitudProyectoResponseConverter();

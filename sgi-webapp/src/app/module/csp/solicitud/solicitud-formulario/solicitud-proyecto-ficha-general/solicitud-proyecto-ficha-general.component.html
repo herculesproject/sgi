@@ -144,8 +144,11 @@
           [fxFlex.gt-md]="fxFlexProperties100.gtMd" [fxFlexOrder]="fxFlexProperties100.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.objetivos' | translate}}</mat-label>
-            <textarea matInput formControlName="objetivos" id="objetivos"
-              placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.objetivos' | translate}}"></textarea>
+            <sgi-i18n-textarea matInput formControlName="objetivos"
+              placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.objetivos' | translate}}"></sgi-i18n-textarea>
+            <mat-error *ngIf="formGroup.controls.objetivos.errors?.maxlength">
+              {{'error.maxlength.entity' | translate:msgParamObjetivosEntity}}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

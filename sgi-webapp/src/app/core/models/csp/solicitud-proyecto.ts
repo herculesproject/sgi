@@ -1,4 +1,5 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IAreaTematica } from './area-tematica';
 import { IRolSocio } from './rol-socio';
 
@@ -10,7 +11,7 @@ export interface ISolicitudProyecto {
   colaborativo: boolean;
   coordinado: boolean;
   rolUniversidad: IRolSocio;
-  objetivos: string;
+  objetivos: I18nFieldValue[];
   intereses: string;
   resultadosPrevistos: string;
   areaTematica: IAreaTematica;

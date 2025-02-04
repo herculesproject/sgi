@@ -1,7 +1,8 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IAreaTematicaResponse } from '@core/services/csp/area-tematica/area-tematica-response';
-import { TipoPresupuesto } from '../solicitud-proyecto';
+import { TipoPresupuesto } from '../../../models/csp/solicitud-proyecto';
 
-export interface ISolicitudProyectoBackend {
+export interface ISolicitudProyectoResponse {
   id: number;
   acronimo: string;
   codExterno: string;
@@ -9,7 +10,7 @@ export interface ISolicitudProyectoBackend {
   colaborativo: boolean;
   coordinado: boolean;
   rolUniversidadId: number;
-  objetivos: string;
+  objetivos: I18nFieldValueResponse[];
   intereses: string;
   resultadosPrevistos: string;
   areaTematica: IAreaTematicaResponse;
