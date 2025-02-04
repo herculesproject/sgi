@@ -11,7 +11,7 @@ export interface ISolicitudProyectoResponse {
   coordinado: boolean;
   rolUniversidadId: number;
   objetivos: I18nFieldValueResponse[];
-  intereses: string;
+  intereses: I18nFieldValueResponse[];
   resultadosPrevistos: string;
   areaTematica: IAreaTematicaResponse;
   checklistRef: string;

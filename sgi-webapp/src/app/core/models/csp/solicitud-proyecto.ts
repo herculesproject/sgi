@@ -12,7 +12,7 @@ export interface ISolicitudProyecto {
   coordinado: boolean;
   rolUniversidad: IRolSocio;
   objetivos: I18nFieldValue[];
-  intereses: string;
+  intereses: I18nFieldValue[];
   resultadosPrevistos: string;
   areaTematica: IAreaTematica;
   checklistRef: string;

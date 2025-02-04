@@ -161,8 +161,11 @@
           [fxFlex.gt-md]="fxFlexProperties100.gtMd" [fxFlexOrder]="fxFlexProperties100.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.solicitud-datos-proyecto-ficha-general.justificacion-interes' | translate}}</mat-label>
-            <textarea matInput formControlName="intereses" id="intereses"
-              placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.justificacion-interes' | translate}}"></textarea>
+            <sgi-i18n-textarea matInput formControlName="intereses"
+              placeholder="{{'csp.solicitud-datos-proyecto-ficha-general.justificacion-interes' | translate}}"></sgi-i18n-textarea>
+            <mat-error *ngIf="formGroup.controls.intereses.errors?.maxlength">
+              {{'error.maxlength.entity' | translate:msgParamInteresesEntity}}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
