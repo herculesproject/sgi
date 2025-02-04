@@ -581,7 +581,7 @@ public class SolicitudService {
         .and(SgiRSQLJPASupport.toSpecification(query,
             SolicitudPredicateResolver.getInstance(programaRepository, sgiConfigProperties)));
 
-    Page<Solicitud> returnValue = repository.findAllDistinct(specs, paging);
+    Page<Solicitud> returnValue = repository.findAll(specs, paging);
     log.debug("findAllTutor(String query, Pageable paging) - end");
     return returnValue;
   }

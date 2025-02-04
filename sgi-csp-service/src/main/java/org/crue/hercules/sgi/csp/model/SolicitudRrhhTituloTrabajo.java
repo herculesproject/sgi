@@ -19,14 +19,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Solicitud -> Título
+ * Solicitud RRHH -> Título trabajo
  */
 @Data
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class SolicitudTitulo implements Serializable, I18nFieldValue {
+public class SolicitudRrhhTituloTrabajo implements Serializable, I18nFieldValue {
   /**
    * Serial version
    */
@@ -38,9 +38,9 @@ public class SolicitudTitulo implements Serializable, I18nFieldValue {
   @NotNull
   private Language lang;
 
-  /** Título */
-  @Column(name = "value_", length = 250, nullable = false)
+  /** Título trabajo */
+  @Column(name = "value_", length = 1000, nullable = false)
   @NotBlank
-  @Size(max = 250)
+  @Size(max = 1000)
   private String value;
 }

@@ -1881,4 +1881,32 @@
 
     <dropColumn columnName="comentario" tableName="estado_solicitud" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-70">
+    <createTable tableName="solicitud_rrhh_titulo_trabajo">
+      <column name="solicitud_rrhh_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(1000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="solicitud_rrhh_titulo_trabajo" columnNames="solicitud_rrhh_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="solicitud_rrhh_id"
+      baseTableName="solicitud_rrhh_titulo_trabajo"
+      constraintName="FK_SOLICITUDRRHHTITULOTRABAJO_SOLICITUDRRHH" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="solicitud_rrhh" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}solicitud_rrhh_titulo_trabajo(solicitud_rrhh_id, value_, lang)
+      SELECT id, titulo_trabajo, '${defaultLang}' FROM ${schemaPrefix}solicitud_rrhh WHERE
+      titulo_trabajo IS NOT NULL AND NULLIF(TRIM(titulo_trabajo), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="titulo_trabajo" tableName="solicitud_rrhh" />
+  </changeSet>
 </databaseChangeLog>

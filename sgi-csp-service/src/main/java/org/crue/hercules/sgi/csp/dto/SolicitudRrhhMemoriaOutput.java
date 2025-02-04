@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.csp.model.SolicitudRrhhTituloTrabajo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SolicitudRrhhMemoriaOutput implements Serializable {
-  private String tituloTrabajo;
+  private Collection<SolicitudRrhhTituloTrabajo> tituloTrabajo;
   private String resumen;
   private String observaciones;
 }
