@@ -40,7 +40,7 @@ DELETE FROM test.proyecto_anualidad;
 DELETE FROM test.solicitud_proyecto_clasificacion;
 DELETE FROM test.solicitud_proyecto_responsable_economico;
 DELETE FROM test.solicitud_proyecto_area;
-DELETE FROM test.solicitud_proyecto_socio;
+DELETE FROM test.solicitud_proyecto_objetivos;
 DELETE FROM test.solicitud_proyecto;
 DELETE FROM test.proyecto_socio_equipo;
 DELETE FROM test.proyecto_socio_periodo_pago;

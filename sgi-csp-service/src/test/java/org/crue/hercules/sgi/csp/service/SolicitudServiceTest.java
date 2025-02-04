@@ -15,11 +15,12 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.converter.SolicitudProyectoObjetivosConverter;
 import org.crue.hercules.sgi.csp.converter.SolicitudTituloConverter;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput.Formly;
-import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
+import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ColaborativoWithoutCoordinadorExternoException;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -168,6 +169,9 @@ class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private SolicitudTituloConverter solicitudTituloConverter;
 
+  @Mock
+  private SolicitudProyectoObjetivosConverter solicitudProyectoObjetivosConverter;
+
   private SolicitudService service;
 
   @BeforeEach
@@ -196,7 +200,8 @@ class SolicitudServiceTest extends BaseServiceTest {
         solicitudComService,
         rolSocioRepository,
         solicitudProyectoEntidadRepository,
-        solicitudTituloConverter);
+        solicitudTituloConverter,
+        solicitudProyectoObjetivosConverter);
   }
 
   @Test

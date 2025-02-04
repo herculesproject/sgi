@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
+import org.crue.hercules.sgi.csp.converter.SolicitudProyectoObjetivosConverter;
 import org.crue.hercules.sgi.csp.converter.SolicitudTituloConverter;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
@@ -140,6 +141,7 @@ public class SolicitudService {
   private final RolSocioRepository rolSocioRepository;
   private final SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository;
   private final SolicitudTituloConverter solicitudTituloConverter;
+  private final SolicitudProyectoObjetivosConverter solicitudProyectoObjetivosConverter;
 
   /**
    * Guarda la entidad {@link Solicitud}.
@@ -802,7 +804,8 @@ public class SolicitudService {
         .estadoFinanciacion(existeFinanciacion ? EstadoFinanciacion.SOLICITADO : null)
         .importeFinanciacion(existeFinanciacion ? getImporteFinanciacion(solicitud.getId()) : null)
         .resumen(getResumen(solicitudProyecto))
-        .objetivos(getObjetivos(solicitudProyecto))
+        .objetivos(solicitudProyectoObjetivosConverter.convertAll(solicitudProyecto
+            .getObjetivos()))
         .build();
 
     PeticionEvaluacion peticionEvaluacion = sgiApiEtiService.newPeticionEvaluacion(peticionEvaluacionRequest);
@@ -1469,14 +1472,6 @@ public class SolicitudService {
     List<I18nFieldValueDto> value = new ArrayList<>();
     if (StringUtils.isNotBlank(solicitudProyecto.getResultadosPrevistos())) {
       value.add(new I18nFieldValueDto(Language.ES, solicitudProyecto.getResultadosPrevistos()));
-    }
-    return value;
-  }
-
-  private List<I18nFieldValueDto> getObjetivos(SolicitudProyecto solicitudProyecto) {
-    List<I18nFieldValueDto> value = new ArrayList<>();
-    if (StringUtils.isNotBlank(solicitudProyecto.getObjetivos())) {
-      value.add(new I18nFieldValueDto(Language.ES, solicitudProyecto.getObjetivos()));
     }
     return value;
   }

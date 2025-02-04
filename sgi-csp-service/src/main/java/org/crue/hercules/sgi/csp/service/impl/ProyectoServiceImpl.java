@@ -1035,7 +1035,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyContexto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - start");
     ContextoProyecto contextoProyectoNew = new ContextoProyecto();
     contextoProyectoNew.setProyectoId(proyectoId);
-    contextoProyectoNew.setObjetivos(solicitudProyecto.getObjetivos());
+    contextoProyectoNew.setObjetivos(I18nHelper.getFieldValue(solicitudProyecto.getObjetivos()));
     contextoProyectoNew.setResultadosPrevistos(solicitudProyecto.getResultadosPrevistos());
     contextoProyectoNew.setIntereses(solicitudProyecto.getIntereses());
     contextoProyectoNew.setAreaTematica(solicitudProyecto.getAreaTematica());
