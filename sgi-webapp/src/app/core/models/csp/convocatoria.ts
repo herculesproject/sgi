@@ -16,7 +16,7 @@ export interface IConvocatoria {
   fechaConcesion: DateTime;
   titulo: I18nFieldValue[];
   objeto: I18nFieldValue[];
-  observaciones: string;
+  observaciones: I18nFieldValue[];
   finalidad: ITipoFinalidad;
   regimenConcurrencia: ITipoRegimenConcurrencia;
   formularioSolicitud: FormularioSolicitud;
