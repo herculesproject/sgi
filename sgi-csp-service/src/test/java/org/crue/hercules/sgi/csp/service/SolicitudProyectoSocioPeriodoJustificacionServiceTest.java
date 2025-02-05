@@ -3,8 +3,10 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
@@ -18,11 +20,13 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudProyectoSocioPeriodoJustifi
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudProyectoSocioPeriodoJustificacionServiceImpl;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -550,10 +554,13 @@ class SolicitudProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceT
   private SolicitudProyectoSocioPeriodoJustificacion generarSolicitudProyectoSocioPeriodoJustificacion(
       Long solicitudProyectoSocioPeriodoJustificacionId, Long solicitudProyectoSocioId) {
 
+    Set<SolicitudProyectoSocioPeriodoJustificacionObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new SolicitudProyectoSocioPeriodoJustificacionObservaciones(Language.ES, "Periodo 1"));
+
     SolicitudProyectoSocioPeriodoJustificacion solicitudProyectoSocioPeriodoJustificacion = SolicitudProyectoSocioPeriodoJustificacion
         .builder().id(solicitudProyectoSocioPeriodoJustificacionId).solicitudProyectoSocioId(solicitudProyectoSocioId)
         .numPeriodo(2).mesInicial(1).mesFinal(3).fechaInicio(Instant.parse("2020-12-19T00:00:00Z"))
-        .fechaFin(Instant.parse("2021-02-09T00:00:00Z")).observaciones("Periodo 1").build();
+        .fechaFin(Instant.parse("2021-02-09T00:00:00Z")).observaciones(observaciones).build();
 
     return solicitudProyectoSocioPeriodoJustificacion;
   }

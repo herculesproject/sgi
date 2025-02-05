@@ -94,7 +94,7 @@ public class SolicitudProyectoSocioPeriodoJustificacionServiceImpl
 
     if (periodos.isEmpty()) {
       // Fast check
-      repository.deleteInBulkBySolicitudProyectoSocioId(solicitudProyectoSocioId);
+      repository.deleteBySolicitudProyectoSocioId(solicitudProyectoSocioId);
       return new ArrayList<>();
     }
 

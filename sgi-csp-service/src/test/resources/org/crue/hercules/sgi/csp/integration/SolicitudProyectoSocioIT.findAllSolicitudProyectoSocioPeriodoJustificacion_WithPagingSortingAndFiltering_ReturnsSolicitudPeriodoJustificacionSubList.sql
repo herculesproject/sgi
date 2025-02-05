@@ -112,8 +112,12 @@ VALUES (1, 1, 1, 2, 6, 8, 4, '001');
 INSERT INTO test.solicitud_proyecto_socio (id, solicitud_proyecto_id, rol_socio_id, mes_inicio, mes_fin, num_investigadores, importe_solicitado, empresa_ref) 
 VALUES (2, 1, 1, 2, 6, 8, 4, '002');
 
--- CONVOCATORIA PERIODO JUSTIFICACION
-INSERT INTO test.solicitud_proyecto_socio_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin, observaciones) 
-  VALUES (1, 1, 1, 1, 2, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-001');
-INSERT INTO test.solicitud_proyecto_socio_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin, observaciones) 
-  VALUES (2, 2, 2, 10, 21, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z', 'observaciones-002');
+-- SOLICITUD PROYECTO SOCIO PERIODO JUSTIFICACION
+INSERT INTO test.solicitud_proyecto_socio_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin) 
+  VALUES (1, 1, 1, 1, 2, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z');
+INSERT INTO test.solicitud_proyecto_socio_periodo_justificacion (id, solicitud_proyecto_socio_id, num_periodo, mes_inicial, mes_final, fecha_inicio, fecha_fin) 
+  VALUES (2, 2, 2, 10, 21, '2020-10-10T00:00:00Z', '2020-11-20T23:59:59Z');
+
+-- SOLICITUD PROYECTO SOCIO PERIODO JUSTIFICACION OBSERVACIONES
+INSERT INTO test.solicitud_proyecto_socio_periodo_justificacion_observaciones (solicitud_proyecto_socio_periodo_justificacion_id, lang, value_) VALUES (1,  'es', 'observaciones-001');
+INSERT INTO test.solicitud_proyecto_socio_periodo_justificacion_observaciones (solicitud_proyecto_socio_periodo_justificacion_id, lang, value_) VALUES (2,  'es', 'observaciones-002');

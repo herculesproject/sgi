@@ -1481,7 +1481,7 @@ public class ProyectoServiceImpl implements ProyectoService {
                   entidadPeriodoJustificacionSolicitud.getMesFinal(), fechaFinProyecto,
                   sgiConfigProperties.getTimeZone()))
               .numPeriodo(entidadPeriodoJustificacionSolicitud.getNumPeriodo())
-              .observaciones(entidadPeriodoJustificacionSolicitud.getObservaciones())
+              .observaciones(I18nHelper.getFieldValue(entidadPeriodoJustificacionSolicitud.getObservaciones()))
               .fechaInicioPresentacion(entidadPeriodoJustificacionSolicitud.getFechaInicio())
               .fechaFinPresentacion(entidadPeriodoJustificacionSolicitud.getFechaFin()).build();
 
