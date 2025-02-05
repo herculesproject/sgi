@@ -60,7 +60,8 @@
         }
       },
       {
-        "template": "Zer arrisku maila du GEOak?"
+        "template": "Zer arrisku maila du GEOak?",
+        "hideExpression": "!model.pregunta3OMG2Radio || model.pregunta3OMG2Radio === 'no'"
       },
       {
         "key": "nivelRiesgoOMGRadio",

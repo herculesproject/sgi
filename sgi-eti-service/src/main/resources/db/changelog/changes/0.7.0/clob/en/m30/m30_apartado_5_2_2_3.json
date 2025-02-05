@@ -60,7 +60,8 @@
         }
       },
       {
-        "template": "What is the risk level of the GMO?"
+        "template": "What is the risk level of the GMO?",
+        "hideExpression": "!model.pregunta3OMG2Radio || model.pregunta3OMG2Radio === 'no'"
       },
       {
         "key": "nivelRiesgoOMGRadio",

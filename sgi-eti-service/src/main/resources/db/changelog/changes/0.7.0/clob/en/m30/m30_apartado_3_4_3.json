@@ -62,12 +62,6 @@
             }
           ]
         }
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "hideExpression": "!model.tareasUsoConfinadoRadio || model.tareasUsoConfinadoRadio === 'no'"
       }
     ]
   }

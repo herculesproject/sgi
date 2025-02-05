@@ -60,7 +60,8 @@
         }
       },
       {
-        "template": "¿Cuál es el nivel de riesgo del OMG?"
+        "template": "¿Cuál es el nivel de riesgo del OMG?",
+        "hideExpression": "!model.pregunta3OMG2Radio || model.pregunta3OMG2Radio === 'no'"
       },
       {
         "key": "nivelRiesgoOMGRadio",

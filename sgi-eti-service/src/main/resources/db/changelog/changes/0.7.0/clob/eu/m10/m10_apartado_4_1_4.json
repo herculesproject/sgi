@@ -20,17 +20,6 @@
         "template": "<p>UPV/EHUko langileek garatzen dituzten eta UPV/EHUko instalazioetan egiten diren ikerketa jardueretarako, unibertsitateak jarduerok estaltzen dituen erantzukizun zibileko aseguru bat du. Aseguru horrek ez ditu estaltzen egoera jakin batzuetan sortutako kalteak, egoera hauetan sortutakoak, besteak beste: ikerketa entsegu kliniko bat denean, proiektuaren arduraduna ez denean UPV/EHUko kidea edo ikerketa jarduerak ez duenean GIEB-UPV/EHUren aldeko txostena.</p>"
       },
       {
-        "key": "numPoliza",
-        "type": "i18n-textarea",
-        "templateOptions": {
-          "label": "Poliza zk.",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
-        }
-      },
-      {
         "wrappers": [
           "info-div"
         ],

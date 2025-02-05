@@ -20,17 +20,6 @@
         "template": "<p>Para las actividades de investigación desarrolladas por personal de la UPV/EHU y en las instalaciones de la UPV/EHU, la universidad dispone de un seguro de responsabilidad civil que cubre estos eventos. Este seguro no cubre los daños producidos en determinadas situaciones, entre otras, cuando la investigación sea un ensayo clínico, cuando la persona responsable del proyecto no forma parte de la UPV/EHU, o cuando la actividad de investigación no dispone del informe favorable del CEISH-UPV/EHU.</p>"
       },
       {
-        "key": "numPoliza",
-        "type": "i18n-textarea",
-        "templateOptions": {
-          "label": "Nº de póliza",
-          "required": true,
-          "autosize": true,
-          "autosizeMinRows": "1",
-          "autosizeMaxRows": "10"
-        }
-      },
-      {
         "wrappers": [
           "info-div"
         ],
