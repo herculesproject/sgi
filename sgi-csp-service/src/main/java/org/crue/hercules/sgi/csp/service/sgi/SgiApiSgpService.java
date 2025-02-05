@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
-import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.enums.ServiceType;
 import org.crue.hercules.sgi.csp.util.AssertHelper;

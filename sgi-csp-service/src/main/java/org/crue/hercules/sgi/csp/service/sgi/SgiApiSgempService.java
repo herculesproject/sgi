@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.RestApiProperties;
 import org.crue.hercules.sgi.csp.dto.sgemp.EmpresaOutput;
 import org.crue.hercules.sgi.csp.enums.ServiceType;
@@ -83,6 +84,38 @@ public class SgiApiSgempService extends SgiApiBaseService {
 
     log.debug("findAllEmpresaIdsByPaisId({}) - end", paisId);
     return empresaIds;
+  }
+
+  /**
+   * Obtienes los datos de varias entidades, de SGP, a través de sus
+   * identificadoes
+   * 
+   * @param ids Listado de identificadores de entidad
+   * @return Listado de {@link EmpresaOutput}
+   */
+  public List<EmpresaOutput> findAllByIdIn(List<String> ids) {
+    log.debug("findAllByIdIn({}) - start", ids);
+
+    if (ids == null || ids.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    String in = ids.stream()
+        .filter(StringUtils::isNotBlank)
+        .map(id -> StringUtils.wrap(id, "\""))
+        .collect(Collectors.joining(","));
+
+    ServiceType serviceType = ServiceType.SGEMP;
+    String relativeUrl = "/empresas/?q=id=in=({in})";
+    HttpMethod httpMethod = HttpMethod.GET;
+    String mergedURL = buildUri(serviceType, relativeUrl);
+
+    final List<EmpresaOutput> response = super.<List<EmpresaOutput>>callEndpoint(mergedURL, httpMethod,
+        new ParameterizedTypeReference<List<EmpresaOutput>>() {
+        }, in).getBody();
+
+    log.debug("findAllByIdIn({}) - end", ids);
+    return response;
   }
 
 }

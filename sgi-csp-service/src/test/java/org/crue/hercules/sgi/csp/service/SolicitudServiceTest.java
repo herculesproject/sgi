@@ -17,6 +17,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput.Formly;
+import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ColaborativoWithoutCoordinadorExternoException;
@@ -44,7 +45,6 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEnlaceRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
@@ -53,12 +53,14 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.RolSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
@@ -117,9 +119,6 @@ class SolicitudServiceTest extends BaseServiceTest {
   private ConvocatoriaRepository convocatoriaRepository;
 
   @Mock
-  ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
-
-  @Mock
   ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository;
 
   @Mock
@@ -130,6 +129,9 @@ class SolicitudServiceTest extends BaseServiceTest {
 
   @Mock
   private SgiApiSgpService personasService;
+
+  @Mock
+  private SgiApiSgempService sgiApiSgempService;
 
   @Mock
   private ProgramaRepository programaRepository;
@@ -155,31 +157,37 @@ class SolicitudServiceTest extends BaseServiceTest {
   @Mock
   private RolSocioRepository rolSocioRepository;
 
+  @Mock
+  private SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository;
+
   private SolicitudService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     solicitudAuthorityHelper = new SolicitudAuthorityHelper(repository, solicitudExternaRepository);
-    service = new SolicitudService(sgiConfigProperties,
-        sgiApiEtiService, repository,
+    service = new SolicitudService(
+        sgiConfigProperties,
+        sgiApiEtiService,
+        sgiApiSgempService,
+        repository,
         estadoSolicitudRepository,
         configuracionSolicitudRepository,
         proyectoRepository,
-        solicitudProyectoRepository,
         documentoRequeridoSolicitudRepository,
         solicitudDocumentoRepository,
+        solicitudProyectoRepository,
         solicitudProyectoEquipoRepository,
         solicitudProyectoSocioRepository,
         solicitudProyectoPresupuestoRepository,
         convocatoriaRepository,
-        convocatoriaEntidadFinanciadoraRepository,
         convocatoriaEnlaceRepository,
         programaRepository,
         solicitudAuthorityHelper,
         grupoAuthorityHelper,
         solicitudRrhhComService,
         solicitudComService,
-        rolSocioRepository);
+        rolSocioRepository,
+        solicitudProyectoEntidadRepository);
   }
 
   @Test
@@ -1288,6 +1296,7 @@ class SolicitudServiceTest extends BaseServiceTest {
         .id(id)
         .activo(Boolean.TRUE)
         .checklistId(checklistId)
+        .estadoFinanciacion(EstadoFinanciacion.SOLICITADO)
         .build();
   }
 

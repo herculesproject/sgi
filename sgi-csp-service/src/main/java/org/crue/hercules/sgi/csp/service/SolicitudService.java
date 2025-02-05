@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,7 @@ import org.crue.hercules.sgi.csp.dto.eti.ChecklistOutput;
 import org.crue.hercules.sgi.csp.dto.eti.EquipoTrabajo;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion;
 import org.crue.hercules.sgi.csp.dto.eti.PeticionEvaluacion.EstadoFinanciacion;
+import org.crue.hercules.sgi.csp.dto.sgemp.EmpresaOutput;
 import org.crue.hercules.sgi.csp.enums.FormularioSolicitud;
 import org.crue.hercules.sgi.csp.exceptions.ColaborativoWithoutCoordinadorExternoException;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -32,7 +34,6 @@ import org.crue.hercules.sgi.csp.exceptions.eti.GetPeticionEvaluacionException;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.DocumentoRequeridoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud.Estado;
@@ -45,10 +46,10 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEnlaceRepository;
-import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadFinanciadoraRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.DocumentoRequeridoSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.EstadoSolicitudRepository;
@@ -56,6 +57,7 @@ import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.RolSocioRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEntidadRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoRepository;
@@ -65,9 +67,11 @@ import org.crue.hercules.sgi.csp.repository.predicate.SolicitudPredicateResolver
 import org.crue.hercules.sgi.csp.repository.specification.DocumentoRequeridoSolicitudSpecifications;
 import org.crue.hercules.sgi.csp.repository.specification.SolicitudSpecifications;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiEtiService;
+import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.csp.util.GrupoAuthorityHelper;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
@@ -85,6 +89,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -93,6 +98,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 @Validated
 public class SolicitudService {
 
@@ -112,6 +118,7 @@ public class SolicitudService {
 
   private final SgiConfigProperties sgiConfigProperties;
   private final SgiApiEtiService sgiApiEtiService;
+  private final SgiApiSgempService sgiApiSgempService;
   private final SolicitudRepository repository;
   private final EstadoSolicitudRepository estadoSolicitudRepository;
   private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
@@ -123,7 +130,6 @@ public class SolicitudService {
   private final SolicitudProyectoSocioRepository solicitudProyectoSocioRepository;
   private final SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository;
   private final ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository;
   private final ProgramaRepository programaRepository;
   private final SolicitudAuthorityHelper solicitudAuthorityHelper;
@@ -131,48 +137,7 @@ public class SolicitudService {
   private final SolicitudRrhhComService solicitudRrhhComService;
   private final SolicitudComService solicitudComService;
   private final RolSocioRepository rolSocioRepository;
-
-  public SolicitudService(SgiConfigProperties sgiConfigProperties,
-      SgiApiEtiService sgiApiEtiService, SolicitudRepository repository,
-      EstadoSolicitudRepository estadoSolicitudRepository,
-      ConfiguracionSolicitudRepository configuracionSolicitudRepository, ProyectoRepository proyectoRepository,
-      SolicitudProyectoRepository solicitudProyectoRepository,
-      DocumentoRequeridoSolicitudRepository documentoRequeridoSolicitudRepository,
-      SolicitudDocumentoRepository solicitudDocumentoRepository,
-      SolicitudProyectoEquipoRepository solicitudProyectoEquipoRepository,
-      SolicitudProyectoSocioRepository solicitudProyectoSocioRepository,
-      SolicitudProyectoPresupuestoRepository solicitudProyectoPresupuestoRepository,
-      ConvocatoriaRepository convocatoriaRepository,
-      ConvocatoriaEntidadFinanciadoraRepository convocatoriaEntidadFinanciadoraRepository,
-      ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository,
-      ProgramaRepository programaRepository,
-      SolicitudAuthorityHelper solicitudAuthorityHelper,
-      GrupoAuthorityHelper grupoAuthorityHelper,
-      SolicitudRrhhComService solicitudRrhhComService,
-      SolicitudComService solicitudComService,
-      RolSocioRepository rolSocioRepository) {
-    this.sgiConfigProperties = sgiConfigProperties;
-    this.sgiApiEtiService = sgiApiEtiService;
-    this.repository = repository;
-    this.estadoSolicitudRepository = estadoSolicitudRepository;
-    this.configuracionSolicitudRepository = configuracionSolicitudRepository;
-    this.proyectoRepository = proyectoRepository;
-    this.documentoRequeridoSolicitudRepository = documentoRequeridoSolicitudRepository;
-    this.solicitudDocumentoRepository = solicitudDocumentoRepository;
-    this.solicitudProyectoRepository = solicitudProyectoRepository;
-    this.solicitudProyectoEquipoRepository = solicitudProyectoEquipoRepository;
-    this.solicitudProyectoSocioRepository = solicitudProyectoSocioRepository;
-    this.solicitudProyectoPresupuestoRepository = solicitudProyectoPresupuestoRepository;
-    this.convocatoriaRepository = convocatoriaRepository;
-    this.convocatoriaEntidadFinanciadoraRepository = convocatoriaEntidadFinanciadoraRepository;
-    this.convocatoriaEnlaceRepository = convocatoriaEnlaceRepository;
-    this.programaRepository = programaRepository;
-    this.solicitudAuthorityHelper = solicitudAuthorityHelper;
-    this.grupoAuthorityHelper = grupoAuthorityHelper;
-    this.solicitudRrhhComService = solicitudRrhhComService;
-    this.solicitudComService = solicitudComService;
-    this.rolSocioRepository = rolSocioRepository;
-  }
+  private final SolicitudProyectoEntidadRepository solicitudProyectoEntidadRepository;
 
   /**
    * Guarda la entidad {@link Solicitud}.
@@ -713,123 +678,13 @@ public class SolicitudService {
     // Renunciada o Desistida)
     if (!estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.DESISTIDA)
         && !estadoSolicitud.getEstado().equals(EstadoSolicitud.Estado.RENUNCIADA)) {
+
       SolicitudProyecto solicitudProyecto = solicitudProyectoRepository.findById(solicitud.getId()).orElse(null);
-      if (solicitudProyecto != null) {
-        String idChecklist = solicitudProyecto.getChecklistRef();
-        String peticionEvaluacionRef = solicitudProyecto.getPeticionEvaluacionRef();
-        // Si se ha rellenado el checklist de ética
-        if (idChecklist != null) {
-          // Y "peticionEvaluacionRef" tenga valor null (no se ha creado todavía la
-          // petición de evaluación en ética)
-          if (peticionEvaluacionRef == null) {
-            ChecklistOutput checklistOutput = sgiApiEtiService.getCheckList(idChecklist);
-            // En el caso que que en la Pestaña de Autoevaluación ética exista una respuesta
-            // afirmativa a una sola de las preguntas del formulario
-            if (checklistOutput != null && checklistOutput.getRespuesta() != null
-                && checklistOutput.getRespuesta().contains("true")) {
-              boolean existeFinanciacion = isEntidadFinanciadora(solicitud);
 
-              // Se creará un registro en la tabla "PeticionEvaluacion" del módulo de ética
-              PeticionEvaluacion peticionEvaluacionRequest = PeticionEvaluacion.builder()
-                  .solicitudConvocatoriaRef(solicitud.getId().toString()).checklistId(checklistOutput.getId())
-                  .personaRef(solicitud.getSolicitanteRef()).titulo(getTitulo(solicitud))
-                  // Si hay entidades financiadoras (registros en la tabla "Convocatoria
-                  // Entidad Financiadora" de la convocatoria asociada a la solicitud) valor "Sí",
-                  // en otro caso valor "No"
-                  .existeFinanciacion(existeFinanciacion)
-                  // Se concatenará el campo "nombre" de la entidad de los registros que
-                  // existan en la tabla "Convocatoria Entidad Financiadora" de la convocatoria
-                  // asociada a la solicitud (en caso de que la solicitud tenga asociada una
-                  // convocatoria, sino se quedará vacío el campo). Los nombre de las entidades
-                  // financiadoras se separarán por ","
-                  .fuenteFinanciacion(existeFinanciacion ? getFuentesFinanciacion(solicitud) : null)
-                  .estadoFinanciacion(existeFinanciacion ? EstadoFinanciacion.SOLICITADO : null)
-                  // La suma de los importes de los conceptos de gastos de todas las
-                  // entidades financiadoras de la convocatoria (suma del campo
-                  // "importeSolicitado"
-                  // de los registros de la tabla "SolicitudProyectoPresupuesto" cuyo campo
-                  // finanicacionAjena = false)
-                  .importeFinanciacion(existeFinanciacion ? getImporteAutoFinanciacion(solicitud) : null)
-                  .resumen(getResumen(solicitudProyecto)).objetivos(getObjetivos(solicitudProyecto))
-                  .build();
-
-              // Guardar el PeticionEvaluacion.id
-              PeticionEvaluacion peticionEvaluacion = sgiApiEtiService.newPeticionEvaluacion(
-                  peticionEvaluacionRequest);
-              if (peticionEvaluacion != null) {
-                solicitudProyecto.setPeticionEvaluacionRef(String.valueOf(peticionEvaluacion.getId()));
-                solicitudProyecto = solicitudProyectoRepository.save(solicitudProyecto);
-
-                // Copiamos el equipo de trabajo de una solicitud (personaRef
-                // SolicitudProyectoEquipo)
-                // a una petición de evalaución (personaRef EquipoTrabajo)
-                copyMiembrosEquipoSolicitudToPeticionEvaluacion(peticionEvaluacion,
-                    solicitudProyecto.getId());
-
-                try {
-                  // Enviamos el comunicado de alta de solicitud de petición evaluación de ética
-                  this.solicitudComService.enviarComunicadoSolicitudAltaPeticionEvaluacionEti(
-                      solicitud.getId(), peticionEvaluacion.getCodigo(), solicitud.getCodigoRegistroInterno(),
-                      solicitud.getSolicitanteRef());
-                } catch (Exception e) {
-                  log.debug(
-                      "Error enviarComunicadoSolicitudAltaPeticionEvaluacionEti(String codigoPeticionEvaluacion, String codigoSolicitud, String solicitanteRef) -  codigoPeticionEvaluacion: "
-                          + peticionEvaluacion
-                              .getCodigo()
-                          + ", codigoSolicitud: " + solicitud.getCodigoRegistroInterno() + ", solicitanteRef: "
-                          + solicitud.getSolicitanteRef(),
-                      e);
-                }
-              } else {
-                // throw exception
-                throw new GetPeticionEvaluacionException();
-              }
-            } else {
-              // Do nothing
-            }
-          } else {
-            // Si ya se había creado la petición de evaluación en ética
-            switch (estadoSolicitud.getEstado()) {
-              case DENEGADA:
-                // Se debe recuperar la petición de ética y cambiar el valor del
-                // campo "estadoFinanciacion" a "Denegado"
-                PeticionEvaluacion peticionEvaluacionDenegada = sgiApiEtiService
-                    .getPeticionEvaluacion(peticionEvaluacionRef);
-                if (peticionEvaluacionDenegada != null) {
-                  peticionEvaluacionDenegada.setEstadoFinanciacion(EstadoFinanciacion.DENEGADO);
-
-                  sgiApiEtiService
-                      .updatePeticionEvaluacion(peticionEvaluacionRef, peticionEvaluacionDenegada);
-                } else {
-                  // throw exception
-                  throw new GetPeticionEvaluacionException();
-                }
-                break;
-              case CONCEDIDA_PROVISIONAL:
-              case CONCEDIDA_PROVISIONAL_ALEGADA:
-              case CONCEDIDA_PROVISIONAL_NO_ALEGADA:
-              case CONCEDIDA:
-                // Se debe recuperar la petición de ética y cambiar el valor del
-                // campo "estadoFinanciacion" a "Concedido"
-                PeticionEvaluacion peticionEvaluacionConcedida = sgiApiEtiService
-                    .getPeticionEvaluacion(peticionEvaluacionRef);
-                if (peticionEvaluacionConcedida != null) {
-                  peticionEvaluacionConcedida.setEstadoFinanciacion(EstadoFinanciacion.CONCEDIDO);
-
-                  sgiApiEtiService
-                      .updatePeticionEvaluacion(peticionEvaluacionRef, peticionEvaluacionConcedida);
-                } else {
-                  // throw exception
-                  throw new GetPeticionEvaluacionException();
-                }
-                break;
-              default:
-                // Do nothing
-                break;
-            }
-          }
-        }
+      if (solicitudProyecto != null && solicitudProyecto.getChecklistRef() != null) {
+        createOrUpdatePeticionEvaluacionEtica(solicitud, solicitudProyecto, estadoSolicitud);
       }
+
       if (solicitud.getFormularioSolicitud() == FormularioSolicitud.RRHH) {
         try {
           sendComunicadoSolicitudRrhh(estadoSolicitud, solicitud);
@@ -838,6 +693,7 @@ public class SolicitudService {
         }
       }
     }
+
     Solicitud returnValue = repository.save(solicitud);
     enviarComunicadosCambioEstado(solicitud, estadoSolicitud);
     log.debug("cambiarEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) - end");
@@ -879,6 +735,151 @@ public class SolicitudService {
         .orElseThrow(() -> new SolicitudNotFoundException(id));
     log.debug("getCodigoRegistroInterno(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Valida que el checklist exista, tenga respuesta y que en la pestaña de
+   * autoevaluación ética se haya respondido afirmativamente a al menos una
+   * pregunta.
+   * 
+   * @param checklistOutput {@link ChecklistOutput}
+   * 
+   * @return <code>true</code> si contiene alguna respuesta afirmativa,
+   *         <code>false</code> en otro caso
+   */
+  private boolean isChecklistAutoevaluacionAfirmativa(ChecklistOutput checklistOutput) {
+    return checklistOutput != null
+        && checklistOutput.getRespuesta() != null
+        && checklistOutput.getRespuesta().contains("true");
+  }
+
+  /**
+   * Crea o actualiza la peticion de evaluacion si se ha respondido
+   * afirmativamente a alguna pregunta en el checklist.
+   * 
+   * @param solicitud         la {@link Solicitud} para la que se crea o actualiza
+   *                          la peticion evaluacion
+   * @param solicitudProyecto {@link SolicitudProyecto} asociado a la solicitud
+   * @param estadoSolicitud   {@link EstadoSolicitud} actualizado
+   */
+  private void createOrUpdatePeticionEvaluacionEtica(Solicitud solicitud, SolicitudProyecto solicitudProyecto,
+      EstadoSolicitud estadoSolicitud) {
+
+    if (solicitudProyecto.getPeticionEvaluacionRef() == null) {
+      // No se ha creado aún la petición de evaluación: se valida el checklist
+      ChecklistOutput checklistOutput = sgiApiEtiService.getCheckList(solicitudProyecto.getChecklistRef());
+      if (isChecklistAutoevaluacionAfirmativa(checklistOutput)) {
+        createPeticionEvaluacion(solicitud, solicitudProyecto, checklistOutput);
+      }
+    } else {
+      updateEstadoPeticionEvaluacion(estadoSolicitud, solicitudProyecto.getPeticionEvaluacionRef());
+    }
+  }
+
+  /**
+   * Crea una nueva petición de evaluación de ética y actualiza la referencia en
+   * el proyecto de solicitud.
+   * 
+   * @param solicitud         la {@link Solicitud} para la que se crea la peticion
+   *                          evaluacion
+   * @param solicitudProyecto {@link SolicitudProyecto} asociado a la solicitud
+   * @param checklistOutput   {@link ChecklistOutput}
+   */
+  private void createPeticionEvaluacion(Solicitud solicitud, SolicitudProyecto solicitudProyecto,
+      ChecklistOutput checklistOutput) {
+
+    boolean existeFinanciacion = solicitudProyectoPresupuestoRepository
+        .existsBySolicitudProyectoSolicitudId(solicitud.getId());
+    PeticionEvaluacion peticionEvaluacionRequest = PeticionEvaluacion.builder()
+        .solicitudConvocatoriaRef(solicitud.getId().toString())
+        .checklistId(checklistOutput.getId())
+        .personaRef(solicitud.getSolicitanteRef())
+        .titulo(getTitulo(solicitud))
+        .existeFinanciacion(existeFinanciacion)
+        .fuenteFinanciacion(existeFinanciacion ? getNombresEntidadesFinanciadoras(solicitud.getId()) : null)
+        .estadoFinanciacion(existeFinanciacion ? EstadoFinanciacion.SOLICITADO : null)
+        .importeFinanciacion(existeFinanciacion ? getImporteFinanciacion(solicitud.getId()) : null)
+        .resumen(getResumen(solicitudProyecto))
+        .objetivos(getObjetivos(solicitudProyecto))
+        .build();
+
+    PeticionEvaluacion peticionEvaluacion = sgiApiEtiService.newPeticionEvaluacion(peticionEvaluacionRequest);
+    if (peticionEvaluacion == null) {
+      throw new GetPeticionEvaluacionException();
+    }
+
+    // Actualiza la referencia de la petición de evaluación en el proyecto
+    solicitudProyecto.setPeticionEvaluacionRef(String.valueOf(peticionEvaluacion.getId()));
+    solicitudProyectoRepository.save(solicitudProyecto);
+
+    // Copiar el equipo de trabajo de la solicitud a la petición de evaluación
+    copyMiembrosEquipoSolicitudToPeticionEvaluacion(peticionEvaluacion, solicitudProyecto.getId());
+
+    // Enviar comunicado de alta de la petición de evaluación en ética
+    try {
+      solicitudComService.enviarComunicadoSolicitudAltaPeticionEvaluacionEti(
+          solicitud.getId(),
+          peticionEvaluacion.getCodigo(),
+          solicitud.getCodigoRegistroInterno(),
+          solicitud.getSolicitanteRef());
+    } catch (Exception e) {
+      log.error("Error al enviar comunicado de alta de petición de evaluación. "
+          + "Código de petición: " + peticionEvaluacion.getCodigo()
+          + ", código de solicitud: " + solicitud.getCodigoRegistroInterno()
+          + ", solicitanteRef: " + solicitud.getSolicitanteRef(), e);
+    }
+  }
+
+  /**
+   * Actualiza el estado de financiación de una petición de evaluación ya
+   * existente según el nuevo estado de la solicitud.
+   * 
+   * @param estadoSolicitud       {@link EstadoSolicitud} actualizado
+   * @param peticionEvaluacionRef Identificador de la peticion evaluacion
+   */
+  private void updateEstadoPeticionEvaluacion(EstadoSolicitud estadoSolicitud, String peticionEvaluacionRef) {
+    EstadoFinanciacion nuevoEstado = null;
+
+    switch (estadoSolicitud.getEstado()) {
+      case DENEGADA:
+        nuevoEstado = EstadoFinanciacion.DENEGADO;
+        break;
+      case CONCEDIDA_PROVISIONAL,
+          CONCEDIDA_PROVISIONAL_ALEGADA,
+          CONCEDIDA_PROVISIONAL_NO_ALEGADA,
+          CONCEDIDA:
+        nuevoEstado = EstadoFinanciacion.CONCEDIDO;
+        break;
+      default:
+        // Para otros estados, no se realiza ninguna acción
+        break;
+    }
+
+    if (nuevoEstado == null) {
+      log.debug(
+          "actualizarEstadoPeticionEvaluacion(EstadoSolicitud estadoSolicitud, String peticionEvaluacionRef) - No se actualiza el estado de la peticion evaluacion");
+      return;
+    }
+
+    PeticionEvaluacion peticionEvaluacion = sgiApiEtiService.getPeticionEvaluacion(peticionEvaluacionRef);
+    if (peticionEvaluacion == null) {
+      throw new GetPeticionEvaluacionException();
+    }
+
+    if (Boolean.FALSE.equals(peticionEvaluacion.getExisteFinanciacion())) {
+      log.debug(
+          "actualizarEstadoPeticionEvaluacion(EstadoSolicitud estadoSolicitud, String peticionEvaluacionRef) - No se actualiza porque la peticion evaluacion no tiene financiacion");
+      return;
+    }
+
+    if (peticionEvaluacion.getEstadoFinanciacion().equals(nuevoEstado)) {
+      log.debug(
+          "actualizarEstadoPeticionEvaluacion(EstadoSolicitud estadoSolicitud, String peticionEvaluacionRef) - La peticion evaluacion ya esta en ese estado");
+      return;
+    }
+
+    peticionEvaluacion.setEstadoFinanciacion(nuevoEstado);
+    sgiApiEtiService.updatePeticionEvaluacion(peticionEvaluacionRef, peticionEvaluacion);
   }
 
   /**
@@ -931,7 +932,7 @@ public class SolicitudService {
     }
 
     List<Long> tiposDocumentoRequeridosSolicitud = documentosRequeridosSolicitud.stream()
-        .map(documentoRequerido -> documentoRequerido.getTipoDocumento().getId()).collect(Collectors.toList());
+        .map(documentoRequerido -> documentoRequerido.getTipoDocumento().getId()).toList();
 
     List<SolicitudDocumento> solicitudDocumentos = solicitudDocumentoRepository
         .findAllByTipoDocumentoIdInAndSolicitudId(tiposDocumentoRequeridosSolicitud, idSolicitud);
@@ -1441,42 +1442,32 @@ public class SolicitudService {
     return value;
   }
 
-  private boolean isEntidadFinanciadora(Solicitud solicitud) {
-    // Si hay entidades financiadoras (registros en la tabla "Convocatoria
-    // Entidad Financiadora" de la convocatoria asociada a la solicitud) valor "Sí",
-    // en otro caso valor "No"
-    Long convocatoriaId = solicitud.getConvocatoriaId();
-    if (convocatoriaId == null) {
-      // fast-return
-      return false;
-    }
-    return convocatoriaEntidadFinanciadoraRepository.existsByConvocatoriaId(convocatoriaId);
-  }
+  private List<I18nFieldValueDto> getNombresEntidadesFinanciadoras(Long solicitudId) {
+    List<String> entidadRefs = solicitudProyectoEntidadRepository.findAllBySolicitudProyectoId(solicitudId).stream()
+        .map(solicitudProyectoEntidad -> {
+          if (solicitudProyectoEntidad.getConvocatoriaEntidadFinanciadora() != null) {
+            return solicitudProyectoEntidad.getConvocatoriaEntidadFinanciadora().getEntidadRef();
+          }
 
-  private List<I18nFieldValueDto> getFuentesFinanciacion(Solicitud solicitud) {
-    // Se concatenará el campo "nombre" de la entidad de los registros que
-    // existan en la tabla "Convocatoria Entidad Financiadora" de la convocatoria
-    // asociada a la solicitud (en caso de que la solicitud tenga asociada una
-    // convocatoria, sino se quedará vacío el campo). Los nombre de las entidades
-    // financiadoras se separarán por ","
-    Long convocatoriaId = solicitud.getConvocatoriaId();
-    if (convocatoriaId == null) {
-      // fast-return
-      return null;
+          if (solicitudProyectoEntidad.getConvocatoriaEntidadGestora() != null) {
+            return solicitudProyectoEntidad.getConvocatoriaEntidadGestora().getEntidadRef();
+          }
+
+          return solicitudProyectoEntidad.getSolicitudProyectoEntidadFinanciadoraAjena().getEntidadRef();
+        })
+        .distinct()
+        .toList();
+
+    String nombresEntidadesFinanciadoras = sgiApiSgempService.findAllByIdIn(entidadRefs).stream()
+        .map(EmpresaOutput::getNombre)
+        .collect(Collectors.joining(", "));
+
+    if (StringUtils.isBlank(nombresEntidadesFinanciadoras)) {
+      return Collections.emptyList();
     }
-    List<ConvocatoriaEntidadFinanciadora> entidadesFinanciadoras = convocatoriaEntidadFinanciadoraRepository
-        .findByConvocatoriaId(convocatoriaId);
-    List<I18nFieldValueDto> value = new ArrayList<>();
-    if (!entidadesFinanciadoras.isEmpty()) {
-      String nombresFuentesFinanciacion = entidadesFinanciadoras.stream()
-          .filter(entidadFinanciadora -> entidadFinanciadora.getFuenteFinanciacion() != null)
-          .map(entidadFinanciadora -> entidadFinanciadora.getFuenteFinanciacion().getNombre())
-          .collect(Collectors.joining(", "));
-      if (StringUtils.isNotBlank(nombresFuentesFinanciacion)) {
-        value.add(new I18nFieldValueDto(Language.ES, nombresFuentesFinanciacion));
-      }
-    }
-    return value;
+
+    return I18nConfig.get().getEnabledLanguages().stream()
+        .map(language -> new I18nFieldValueDto(language, nombresEntidadesFinanciadoras)).toList();
   }
 
   private List<I18nFieldValueDto> getResumen(SolicitudProyecto solicitudProyecto) {
@@ -1495,15 +1486,9 @@ public class SolicitudService {
     return value;
   }
 
-  private BigDecimal getImporteAutoFinanciacion(Solicitud solicitud) {
-    // La suma de los importes de los conceptos de gastos de todas las
-    // entidades financiadoras de la convocatoria (suma del campo "importeConcedido"
-    // de los registros de la tabla "SolicitudProyectoPresupuesto" cuyo campo
-    // finanicacionAjena = false)
-    BigDecimal importe = solicitudProyectoPresupuestoRepository
-        .sumImporteSolicitadoBySolicitudIdAndFinanciacionAjenaIsFalse(solicitud.getId());
-
-    return importe.compareTo(BigDecimal.ZERO) > 0 ? importe : null;
+  private BigDecimal getImporteFinanciacion(Long solicitudId) {
+    return solicitudProyectoPresupuestoRepository.findBySolicitudProyectoId(solicitudId).stream()
+        .map(SolicitudProyectoPresupuesto::getImporteSolicitado).reduce(BigDecimal::add).orElse(null);
   }
 
   private void enviarComunicadosCambioEstado(Solicitud solicitud, EstadoSolicitud estadoSolicitud) {
