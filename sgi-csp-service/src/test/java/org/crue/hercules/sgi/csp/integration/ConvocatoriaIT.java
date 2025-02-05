@@ -32,6 +32,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
@@ -111,10 +112,9 @@ class ConvocatoriaIT extends BaseIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CON-C", "CSP-CON-B",
-        "CSP-CON-R", "CSP-CON-E", "CSP-CON-INV-V", "CSP-CON-V", "AUTH")));
+        "CSP-CON-R", "CSP-CON-E", "CSP-CON-INV-V", "CSP-CON-V")));
 
-    HttpEntity<Convocatoria> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   private HttpEntity<Object> buildGenericRequest(HttpHeaders headers, Object entity, String... roles) throws Exception {
@@ -123,8 +123,7 @@ class ConvocatoriaIT extends BaseIT {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", roles)));
 
-    HttpEntity<Object> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql
@@ -185,7 +184,10 @@ class ConvocatoriaIT extends BaseIT {
     Set<ConvocatoriaTitulo> tituloConvocatoria = new HashSet<>();
     tituloConvocatoria.add(new ConvocatoriaTitulo(Language.ES, "titulo-modificado"));
     convocatoria.setTitulo(tituloConvocatoria);
-    convocatoria.setObservaciones("observaciones-modificadas");
+
+    Set<ConvocatoriaObservaciones> observacionesConvocatoria = new HashSet<>();
+    observacionesConvocatoria.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(observacionesConvocatoria);
 
     // when: update Convocatoria
     final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -410,7 +412,8 @@ class ConvocatoriaIT extends BaseIT {
         .isEqualTo("titulo-001");
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getObjeto(), Language.ES)).as("getObjeto()")
         .isEqualTo("objeto-001");
-    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("observaciones-001");
     Assertions.assertThat(responseData.getFinalidad().getId()).as("getFinalidad().getId()").isEqualTo(1L);
     Assertions.assertThat(responseData.getRegimenConcurrencia().getId()).as("getRegimenConcurrencia().getId()")
         .isEqualTo(1L);
@@ -1868,7 +1871,6 @@ class ConvocatoriaIT extends BaseIT {
     nombreModeloEjecucion.add(
         new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId)));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
         : ModeloEjecucion.builder()
             .id(modeloEjecucionId)
@@ -1877,7 +1879,8 @@ class ConvocatoriaIT extends BaseIT {
             .build();
 
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
-    nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
+    nombreTipoFinalidad.add(
+        new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId)));
 
     TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
         : TipoFinalidad.builder()
@@ -1895,8 +1898,9 @@ class ConvocatoriaIT extends BaseIT {
             .build();
 
     Set<TipoRegimenConcurrenciaNombre> tipoRegimenConcurrenciaNombre = new HashSet<>();
-    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES, "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
-    
+    tipoRegimenConcurrenciaNombre.add(new TipoRegimenConcurrenciaNombre(Language.ES,
+        "nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId)));
+
     TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
         : TipoRegimenConcurrencia.builder()
             .id(tipoRegimenConcurrenciaId)
@@ -1905,7 +1909,8 @@ class ConvocatoriaIT extends BaseIT {
             .build();
 
     Set<TipoAmbitoGeograficoNombre> nombre = new HashSet<>();
-    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId)));
+    nombre.add(new TipoAmbitoGeograficoNombre(Language.ES,
+        "nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId)));
 
     TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
         : TipoAmbitoGeografico.builder()
@@ -1920,7 +1925,11 @@ class ConvocatoriaIT extends BaseIT {
     Set<ConvocatoriaObjeto> convocatoriaObjeto = new HashSet<>();
     convocatoriaObjeto.add(new ConvocatoriaObjeto(Language.ES, "objeto-" + String.format("%03d", convocatoriaId)));
 
-    Convocatoria convocatoria = Convocatoria.builder()
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones
+        .add(new ConvocatoriaObservaciones(Language.ES, "observaciones-" + String.format("%03d", convocatoriaId)));
+
+    return Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "2")
         .modeloEjecucion(modeloEjecucion)
@@ -1930,7 +1939,7 @@ class ConvocatoriaIT extends BaseIT {
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo(convocatoriaTitulo)
         .objeto(convocatoriaObjeto)
-        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
+        .observaciones(convocatoriaObservaciones)
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
         .formularioSolicitud(FormularioSolicitud.PROYECTO)
         .regimenConcurrencia(tipoRegimenConcurrencia)
@@ -1940,9 +1949,6 @@ class ConvocatoriaIT extends BaseIT {
         .clasificacionCVN(ClasificacionCVN.AYUDAS)
         .activo(activo)
         .build();
-    // @formatter:on
-
-    return convocatoria;
 
   }
 

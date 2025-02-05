@@ -144,6 +144,7 @@ DELETE FROM test.convocatoria_palabra_clave;
 DELETE FROM test.convocatoria_entidad_convocante;
 DELETE FROM test.convocatoria_titulo;
 DELETE FROM test.convocatoria_objeto;
+DELETE FROM test.convocatoria_observaciones;
 DELETE FROM test.convocatoria;
 DELETE FROM test.fuente_financiacion_descripcion;
 DELETE FROM test.fuente_financiacion_nombre;

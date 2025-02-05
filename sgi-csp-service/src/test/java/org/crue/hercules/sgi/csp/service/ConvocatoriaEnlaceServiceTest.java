@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlaceDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
@@ -637,6 +638,10 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
     Set<ConvocatoriaObjeto> convocatoriaObjeto = new HashSet<>();
     convocatoriaObjeto.add(new ConvocatoriaObjeto(Language.ES, "objeto-" + String.format("%03d", convocatoriaId)));
 
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones
+        .add(new ConvocatoriaObservaciones(Language.ES, "observaciones-" + String.format("%03d", convocatoriaId)));
+
     return Convocatoria.builder()
         .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))
@@ -647,7 +652,7 @@ class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo(convocatoriaTitulo)
         .objeto(convocatoriaObjeto)
-        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
+        .observaciones(convocatoriaObservaciones)
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)
         .estado(Convocatoria.Estado.REGISTRADA)

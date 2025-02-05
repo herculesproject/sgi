@@ -46,24 +46,18 @@ INSERT INTO test.tipo_ambito_geografico_nombre (tipo_ambito_geografico_id, lang,
 INSERT INTO test.tipo_ambito_geografico_nombre (tipo_ambito_geografico_id, lang, value_) VALUES(2, 'es', 'nombre-002');
 
 -- CONVOCATORIA
-INSERT INTO test.convocatoria
-(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
-VALUES(1, '2', 1, 'codigo-001', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'observaciones-001', 1, 1, 'REGISTRADA', 12, 1, 'AYUDAS', true);
-INSERT INTO test.convocatoria
-(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
-VALUES(2, '2', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'observaciones-002', 1, 1, 'REGISTRADA', 12, 1, 'COMPETITIVOS', true);
-INSERT INTO test.convocatoria
-(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
-VALUES(3, '2', 1, 'codigo-003', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'observaciones-003', 1, 1, 'REGISTRADA', 12, 1, 'COMPETITIVOS', true);
-INSERT INTO test.convocatoria
-(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
-VALUES(4, '2', 1, 'codigo-004', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'observaciones-004', 1, 1, 'REGISTRADA', 12, 1, 'COMPETITIVOS', true);
-INSERT INTO test.convocatoria
-(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
-VALUES(5, '2', 1, 'codigo-005', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'observaciones-005', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', true);
-INSERT INTO test.convocatoria
-(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
-VALUES(6, '2', 1, 'codigo-006', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 'observaciones-006', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', false);
+INSERT INTO test.convocatoria (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES (1, '2', 1, 'codigo-001', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 1, 1, 'REGISTRADA', 12, 1, 'AYUDAS', true);
+INSERT INTO test.convocatoria (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES (2, '2', 1, 'codigo-002', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 1, 1, 'REGISTRADA', 12, 1, 'COMPETITIVOS', true);
+INSERT INTO test.convocatoria (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES (3, '2', 1, 'codigo-003', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 1, 1, 'REGISTRADA', 12, 1, 'COMPETITIVOS', true);
+INSERT INTO test.convocatoria (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES (4, '2', 1, 'codigo-004', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 1, 1, 'REGISTRADA', 12, 1, 'COMPETITIVOS', true);
+INSERT INTO test.convocatoria (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES (5, '2', 1, 'codigo-005', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', true);
+INSERT INTO test.convocatoria (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, fecha_publicacion, fecha_provisional, fecha_concesion, tipo_finalidad_id, tipo_regimen_concurrencia_id, estado, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES (6, '2', 1, 'codigo-006', '2021-10-15T23:59:59Z', '2021-10-16T23:59:59Z', '2021-10-17T23:59:59Z', 1, 1, 'BORRADOR', 12, 1, 'COMPETITIVOS', false);
 
 -- CONVOCATORIA TITULO
 INSERT INTO test.convocatoria_titulo (convocatoria_id, lang, value_) VALUES (1, 'es', 'titulo-001');
@@ -80,3 +74,11 @@ INSERT INTO test.convocatoria_objeto (convocatoria_id, lang, value_) VALUES (3, 
 INSERT INTO test.convocatoria_objeto (convocatoria_id, lang, value_) VALUES (4, 'es', 'objeto-004');
 INSERT INTO test.convocatoria_objeto (convocatoria_id, lang, value_) VALUES (5, 'es', 'objeto-005');
 INSERT INTO test.convocatoria_objeto (convocatoria_id, lang, value_) VALUES (6, 'es', 'objeto-006');
+
+-- CONVOCATORIA_OBSERVACIONES
+INSERT INTO test.convocatoria_observaciones (convocatoria_id, lang, value_) VALUES (1, 'es', 'observaciones-001');
+INSERT INTO test.convocatoria_observaciones (convocatoria_id, lang, value_) VALUES (2, 'es', 'observaciones-002');
+INSERT INTO test.convocatoria_observaciones (convocatoria_id, lang, value_) VALUES (3, 'es', 'observaciones-003');
+INSERT INTO test.convocatoria_observaciones (convocatoria_id, lang, value_) VALUES (4, 'es', 'observaciones-004');
+INSERT INTO test.convocatoria_observaciones (convocatoria_id, lang, value_) VALUES (5, 'es', 'observaciones-005');
+INSERT INTO test.convocatoria_observaciones (convocatoria_id, lang, value_) VALUES (6, 'es', 'observaciones-006');

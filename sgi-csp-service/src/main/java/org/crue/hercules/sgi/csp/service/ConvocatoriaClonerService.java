@@ -98,7 +98,7 @@ public class ConvocatoriaClonerService {
         .regimenConcurrencia(toClone.getRegimenConcurrencia())
         .clasificacionCVN(toClone.getClasificacionCVN())
         .objeto(new HashSet<>(toClone.getObjeto()))
-        .observaciones(toClone.getObservaciones())
+        .observaciones(new HashSet<>(toClone.getObservaciones()))
         .estado(Convocatoria.Estado.BORRADOR).build();
   }
 
@@ -115,7 +115,7 @@ public class ConvocatoriaClonerService {
         .findByConvocatoriaId(convocatoriaId).stream()
         .forEach(convocatoriaAreaTematica -> this.convocatoriaAreaTematicaRepository
             .save(ConvocatoriaAreaTematica.builder().areaTematica(convocatoriaAreaTematica.getAreaTematica())
-                .convocatoriaId(cloned.getId()).observaciones(cloned.getObservaciones()).build()));
+                .convocatoriaId(cloned.getId()).observaciones(convocatoriaAreaTematica.getObservaciones()).build()));
   }
 
   /**

@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
@@ -214,7 +215,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(created.getFechaConcesion()).isEqualTo(convocatoria.getFechaConcesion());
     Assertions.assertThat(created.getTitulo()).isEqualTo(convocatoria.getTitulo());
     Assertions.assertThat(created.getObjeto()).isEmpty();
-    Assertions.assertThat(created.getObservaciones()).isNull();
+    Assertions.assertThat(created.getObservaciones()).isEmpty();
     Assertions.assertThat(created.getFinalidad()).isNull();
     Assertions.assertThat(created.getRegimenConcurrencia()).isNull();
     Assertions.assertThat(created.getEstado()).isEqualTo(Convocatoria.Estado.BORRADOR);
@@ -666,7 +667,7 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getFechaPublicacion()).isEqualTo(convocatoriaBorrador.getFechaPublicacion());
     Assertions.assertThat(updated.getTitulo()).isEqualTo(convocatoriaBorrador.getTitulo());
     Assertions.assertThat(updated.getObjeto()).isEmpty();
-    Assertions.assertThat(updated.getObservaciones()).isNull();
+    Assertions.assertThat(updated.getObservaciones()).isEmpty();
     Assertions.assertThat(updated.getFinalidad()).isNull();
     Assertions.assertThat(updated.getRegimenConcurrencia()).isNull();
     Assertions.assertThat(updated.getEstado()).isEqualTo(Convocatoria.Estado.BORRADOR);
@@ -709,7 +710,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria Registrada without UnidadRef
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -729,7 +732,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     convocatoriaExistente.setEstado(Convocatoria.Estado.BORRADOR);
     Convocatoria convocatoria = generarMockConvocatoria(1L, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -795,7 +800,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria Registrada without ModeloEjecucion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, null, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -813,7 +820,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria with ModeloEjecucion not asigned to given UnidadGestion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -840,7 +849,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria with the same ModeloUnidad disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -880,7 +891,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria with updated ModeloEjecucion ModeloUnidad disabled
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 2L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -911,7 +924,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.getModeloEjecucion().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -952,7 +967,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 2L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.getModeloEjecucion().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -981,7 +998,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setTitulo(null);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
     Assertions.assertThatThrownBy(
@@ -1000,7 +1019,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
     convocatoria.setTitulo(null);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -1017,7 +1038,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria Registrada without ModeloTipoFinalidad
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, null, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -1036,7 +1059,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     convocatoriaExistente.setEstado(Convocatoria.Estado.BORRADOR);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, null, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstado(Convocatoria.Estado.BORRADOR);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -1054,7 +1079,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria with TipoFinalidad not asigned to given ModeloEjecucion
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1088,7 +1115,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.getFinalidad().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1129,7 +1158,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 2L, 1L, 1L, Boolean.TRUE);
     convocatoria.getFinalidad().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1164,7 +1195,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.getFinalidad().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1205,7 +1238,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 2L, 1L, 1L, Boolean.TRUE);
     convocatoria.getFinalidad().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1238,7 +1273,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria with no existing TipoRegimenConcurrencia
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1276,7 +1313,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.getRegimenConcurrencia().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1322,7 +1361,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 2L, 1L, Boolean.TRUE);
     convocatoria.getRegimenConcurrencia().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1359,7 +1400,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria Registrada without TipoAmbitoGeografico
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, null, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -1377,7 +1420,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria with no existing TipoAmbitoGeografico
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1417,7 +1462,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.getAmbitoGeografico().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1458,7 +1505,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 2L, Boolean.TRUE);
     convocatoria.getAmbitoGeografico().setActivo(Boolean.FALSE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
@@ -1608,7 +1657,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria Registrada without ConfiguracionSolicitud
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
 
@@ -1629,7 +1680,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // ConfiguracionSolicitud
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
     configuracionSolicitud.setTramitacionSGI(null);
 
@@ -1654,7 +1707,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // ConfiguracionSolicitud
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
     configuracionSolicitud.setTramitacionSGI(Boolean.TRUE);
     configuracionSolicitud.setFasePresentacionSolicitudes(null);
@@ -1680,7 +1735,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // ConfiguracionSolicitud
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
     ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(1L, convocatoriaExistente, 1L);
     configuracionSolicitud.setTramitacionSGI(Boolean.FALSE);
     configuracionSolicitud.setFasePresentacionSolicitudes(null);
@@ -1729,7 +1786,9 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria Registrada without FormularioSolicitud
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setFormularioSolicitud(null);
-    convocatoria.setObservaciones("observaciones-modificadas");
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-modificadas"));
+    convocatoria.setObservaciones(convocatoriaObservaciones);
 
     Assertions.assertThatThrownBy(
         // when: update Convocatoria
@@ -2687,14 +2746,19 @@ class ConvocatoriaServiceTest extends BaseServiceTest {
     Set<ConvocatoriaObjeto> convocatoriaObjeto = new HashSet<>();
     convocatoriaObjeto.add(new ConvocatoriaObjeto(Language.ES, "objeto-" + String.format("%03d", convocatoriaId)));
 
-    return Convocatoria.builder().id(convocatoriaId)
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones
+        .add(new ConvocatoriaObservaciones(Language.ES, "observaciones-" + String.format("%03d", convocatoriaId)));
+
+    return Convocatoria.builder()
+        .id(convocatoriaId)
         .unidadGestionRef((unidadGestionId == null) ? null : "2").modeloEjecucion(modeloEjecucion)
         .codigo("codigo-" + String.format("%03d", convocatoriaId))
         .fechaPublicacion(Instant.parse("2021-08-01T00:00:00Z")).fechaProvisional(Instant.parse("2021-08-01T00:00:00Z"))
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo(convocatoriaTitulo)
         .objeto(convocatoriaObjeto)
-        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))
+        .observaciones(convocatoriaObservaciones)
         .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())
         .formularioSolicitud(FormularioSolicitud.PROYECTO).regimenConcurrencia(tipoRegimenConcurrencia)
         .estado(Convocatoria.Estado.REGISTRADA).duracion(12).ambitoGeografico(tipoAmbitoGeografico)

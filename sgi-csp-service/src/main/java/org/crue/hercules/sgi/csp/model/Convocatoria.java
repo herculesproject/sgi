@@ -119,9 +119,11 @@ public class Convocatoria extends BaseEntity {
   private Set<ConvocatoriaObjeto> objeto = new HashSet<>();
 
   /** Observaciones */
-  @Column(name = "observaciones", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String observaciones;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "convocatoria_observaciones", joinColumns = @JoinColumn(name = "convocatoria_id"))
+  @Valid
+  @Builder.Default
+  private Set<ConvocatoriaObservaciones> observaciones = new HashSet<>();
 
   /** Tipo Finalidad */
   @ManyToOne

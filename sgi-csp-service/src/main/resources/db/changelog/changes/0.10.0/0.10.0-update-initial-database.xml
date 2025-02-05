@@ -1681,4 +1681,32 @@
 
     <dropColumn columnName="objeto" tableName="convocatoria" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-63">
+    <createTable tableName="convocatoria_observaciones">
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="convocatoria_observaciones" columnNames="convocatoria_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id"
+      baseTableName="convocatoria_observaciones"
+      constraintName="FK_CONVOCATORIAOBSERVACIONES_CONVOCATORIA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}convocatoria_observaciones(convocatoria_id, value_, lang) SELECT
+      id, observaciones, '${defaultLang}' FROM ${schemaPrefix}convocatoria WHERE observaciones IS
+      NOT NULL AND NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="convocatoria" />
+  </changeSet>
 </databaseChangeLog>

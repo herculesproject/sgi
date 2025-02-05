@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEcObservac
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartidaDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
@@ -134,8 +135,11 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
     BDDMockito.given(convocatoriaAreaTematicaRepository.save(ArgumentMatchers.<ConvocatoriaAreaTematica>any()))
         .willReturn(clonedArea);
 
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "testing clone"));
+
     service.cloneConvocatoriaAreasTematicas(1L,
-        buildMockConvocatoria(convocatoriaId, "testing clone"));
+        buildMockConvocatoria(convocatoriaId, convocatoriaObservaciones));
 
     verify(convocatoriaAreaTematicaRepository, times(1)).save(ArgumentMatchers.<ConvocatoriaAreaTematica>any());
   }
@@ -329,7 +333,7 @@ class ConvocatoriaClonerServiceTest extends BaseServiceTest {
         .build();
   }
 
-  private Convocatoria buildMockConvocatoria(Long id, String observaciones) {
+  private Convocatoria buildMockConvocatoria(Long id, Set<ConvocatoriaObservaciones> observaciones) {
     return Convocatoria.builder()
         .id(id)
         .observaciones(observaciones)

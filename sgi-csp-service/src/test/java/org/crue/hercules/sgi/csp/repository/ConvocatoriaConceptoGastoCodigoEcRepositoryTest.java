@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaObjeto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
@@ -131,6 +132,9 @@ class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest
     Set<ConvocatoriaObjeto> convocatoriaObjeto = new HashSet<>();
     convocatoriaObjeto.add(new ConvocatoriaObjeto(Language.ES, "objeto-" + suffix));
 
+    Set<ConvocatoriaObservaciones> convocatoriaObservaciones = new HashSet<>();
+    convocatoriaObservaciones.add(new ConvocatoriaObservaciones(Language.ES, "observaciones-" + suffix));
+
     Convocatoria convocatoria = Convocatoria.builder()
         .unidadGestionRef("unidad" + suffix)
         .modeloEjecucion(modeloEjecucion)
@@ -140,7 +144,7 @@ class ConvocatoriaConceptoGastoCodigoEcRepositoryTest extends BaseRepositoryTest
         .fechaConcesion(Instant.parse("2021-08-01T00:00:00Z"))
         .titulo(convocatoriaTitulo)
         .objeto(convocatoriaObjeto)
-        .observaciones("observaciones" + suffix)
+        .observaciones(convocatoriaObservaciones)
         .finalidad(modeloTipoFinalidad.getTipoFinalidad())
         .regimenConcurrencia(tipoRegimenConcurrencia)
         .estado(Convocatoria.Estado.REGISTRADA)
