@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.csp.repository.custom;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud_;
@@ -92,7 +92,15 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
     // Define FROM clause
     Root<Solicitud> root = cq.from(Solicitud.class);
     Join<Solicitud, EstadoSolicitud> join = root.join(Solicitud_.estado, JoinType.INNER);
-    Join<Solicitud, SolicitudTitulo> tituloJoin = root.join(Solicitud_.titulo, JoinType.LEFT);
+
+    Subquery<String> subqueryTitulo = cq.subquery(String.class);
+    Root<Solicitud> subRoot = subqueryTitulo.from(Solicitud.class);
+    Join<Solicitud, SolicitudTitulo> subTituloJoin = subRoot.join(Solicitud_.titulo, JoinType.LEFT);
+
+    // Se usa la funcion "max" para quedarse solo con un resultado para aplicar los
+    // filtros cuando existan títulos en varios idiomas
+    subqueryTitulo.select(cb.function("MAX", String.class, subTituloJoin.get(SolicitudTitulo_.value)))
+        .where(cb.equal(subRoot.get(Solicitud_.id), root.get(Solicitud_.id)));
 
     // Count query
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
@@ -110,14 +118,11 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
 
     cq.where(listPredicates.toArray(new Predicate[] {}));
 
-    // Se usa la funcion "max" para quedarse solo con un resultado para aplicar los
-    // filtros cuando existan títulos en varios idiomas
-    cq.multiselect(
+    cq.distinct(true).multiselect(
         root,
-        cb.function("MAX", String.class, join.get(EstadoSolicitud_.estado)).alias(SELECTION_NAME_ESTADO_ESTADO),
-        cb.function("MAX", Instant.class, join.get(EstadoSolicitud_.fechaEstado))
-            .alias(SELECTION_NAME_ESTADO_FECHAESTADO),
-        cb.function("MAX", String.class, tituloJoin.get(SolicitudTitulo_.value)).alias(SELECTION_NAME_TITULO));
+        join.get(EstadoSolicitud_.estado).alias(SELECTION_NAME_ESTADO_ESTADO),
+        join.get(EstadoSolicitud_.fechaEstado).alias(SELECTION_NAME_ESTADO_FECHAESTADO),
+        subqueryTitulo.alias(SELECTION_NAME_TITULO));
 
     String[] selectionNames = new String[] {
         SELECTION_NAME_ESTADO_ESTADO,
@@ -125,8 +130,7 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
         SELECTION_NAME_TITULO
     };
 
-    cq.groupBy(root.get(Solicitud_.id))
-        .orderBy(CriteriaQueryUtils.toOrders(pageable.getSort(), root, cb, cq, selectionNames));
+    cq.orderBy(CriteriaQueryUtils.toOrders(pageable.getSort(), root, cb, cq, selectionNames));
 
     // Número de registros totales para la paginación
     countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
