@@ -21,6 +21,7 @@ DELETE FROM test.proyecto_periodo_seguimiento_documento;
 DELETE FROM test.proyecto_periodo_seguimiento;
 DELETE FROM test.proyecto_palabra_clave;
 DELETE FROM test.proyecto_hito;
+DELETE FROM test.solicitud_hito_comentario;
 DELETE FROM test.solicitud_hito;
 DELETE FROM test.solicitud_modalidad;
 DELETE FROM test.solicitud_documento;

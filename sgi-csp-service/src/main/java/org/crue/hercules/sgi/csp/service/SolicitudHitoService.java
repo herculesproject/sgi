@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.exceptions.UserNotAuthorizedToModifySolicitudEx
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudHitoAviso;
+import org.crue.hercules.sgi.csp.model.SolicitudHitoComentario;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.repository.SolicitudHitoAvisoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudHitoRepository;
@@ -131,7 +132,9 @@ public class SolicitudHitoService {
     solicitudHito.setSolicitudId(solicitudHitoInput.getSolicitudId());
     solicitudHito.setTipoHito(tipoHito);
     solicitudHito.setFecha(solicitudHitoInput.getFecha());
-    solicitudHito.setComentario(solicitudHitoInput.getComentario());
+    solicitudHito.setComentario(solicitudHitoInput.getComentario().stream()
+        .map(comentario -> new SolicitudHitoComentario(comentario.getLang(), comentario.getValue()))
+        .collect(Collectors.toSet()));
 
     solicitudHito = repository.save(solicitudHito);
 
@@ -189,7 +192,10 @@ public class SolicitudHitoService {
 
     return repository.findById(id).map((solicitudHito) -> {
 
-      solicitudHito.setComentario(solicitudHitoInput.getComentario());
+      solicitudHito
+          .setComentario(solicitudHitoInput.getComentario().stream()
+              .map(comentario -> new SolicitudHitoComentario(comentario.getLang(), comentario.getValue()))
+              .collect(Collectors.toSet()));
       solicitudHito.setFecha(solicitudHitoInput.getFecha());
       solicitudHito.setTipoHito(tipoHito);
 

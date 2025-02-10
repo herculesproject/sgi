@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
+import org.crue.hercules.sgi.csp.model.SolicitudHitoComentario;
 import org.crue.hercules.sgi.csp.model.SolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.csp.model.TipoHito;
@@ -31,6 +32,8 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,8 +118,8 @@ class SolicitudHitoServiceTest extends BaseServiceTest {
     // then: El SolicitudHito se crea correctamente
     Assertions.assertThat(solicitudHitoCreado).as("isNotNull()").isNotNull();
     Assertions.assertThat(solicitudHitoCreado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(solicitudHitoCreado.getComentario()).as("getComentario()")
-        .isEqualTo(solicitudHito.getComentario());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(solicitudHitoCreado.getComentario(), Language.ES))
+        .as("getComentario()").isEqualTo("comentario");
     Assertions.assertThat(solicitudHitoCreado.getTipoHito().getId()).as("getTipoHito().getId()")
         .isEqualTo(solicitudHito.getTipoHitoId());
     Assertions.assertThat(solicitudHitoCreado.getSolicitudHitoAviso()).as("getsolicitudHitoAviso()")
@@ -213,7 +216,9 @@ class SolicitudHitoServiceTest extends BaseServiceTest {
 
     SolicitudHitoInput solicitudComentarioActualizado = generarSolicitudHitoInput(1L);
 
-    solicitudComentarioActualizado.setComentario("comentario-actualizado");
+    List<I18nFieldValueDto> hitoComentario = new ArrayList<I18nFieldValueDto>();
+    hitoComentario.add(new I18nFieldValueDto(Language.ES, "comentario-actualizado"));
+    solicitudComentarioActualizado.setComentario(hitoComentario);
 
     BDDMockito.given(tipoHitoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudHito.getTipoHito()));
@@ -429,11 +434,15 @@ class SolicitudHitoServiceTest extends BaseServiceTest {
    * @return el objeto SolicitudHito
    */
   private SolicitudHito generarSolicitudHito(Long id) {
+    Set<SolicitudHitoComentario> comentarioHito = new HashSet<>();
+    comentarioHito
+        .add(new SolicitudHitoComentario(Language.ES, "comentario"));
+
     SolicitudHito solicitudHito = new SolicitudHito();
     solicitudHito.setId(id);
     solicitudHito.setSolicitudId(id == null ? 1 : id);
     solicitudHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
-    solicitudHito.setComentario("comentario");
+    solicitudHito.setComentario(comentarioHito);
     solicitudHito.setTipoHito(generarTipoHito(id == null ? 1 : id));
 
     return solicitudHito;
@@ -441,11 +450,14 @@ class SolicitudHitoServiceTest extends BaseServiceTest {
 
   private SolicitudHitoInput generarSolicitudHitoInput(Long id) {
 
+    List<I18nFieldValueDto> hitoComentario = new ArrayList<I18nFieldValueDto>();
+    hitoComentario.add(new I18nFieldValueDto(Language.ES, "comentario"));
+
     SolicitudHitoInput convocatoriaHito = new SolicitudHitoInput();
     convocatoriaHito.setSolicitudId(id);
     convocatoriaHito.setTipoHitoId(id);
     convocatoriaHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
-    convocatoriaHito.setComentario("comentario");
+    convocatoriaHito.setComentario(hitoComentario);
 
     return convocatoriaHito;
   }

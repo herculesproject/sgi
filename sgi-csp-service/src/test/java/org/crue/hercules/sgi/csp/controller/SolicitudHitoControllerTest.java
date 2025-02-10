@@ -2,6 +2,9 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.crue.hercules.sgi.csp.dto.SolicitudHitoAvisoInput;
 import org.crue.hercules.sgi.csp.dto.SolicitudHitoAvisoInput.Destinatario;
@@ -9,8 +12,12 @@ import org.crue.hercules.sgi.csp.dto.SolicitudHitoInput;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudHitoAviso;
+import org.crue.hercules.sgi.csp.model.SolicitudHitoComentario;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -58,7 +65,8 @@ class SolicitudHitoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("fecha").value("2020-10-19T00:00:00Z"))
-        .andExpect(MockMvcResultMatchers.jsonPath("comentario").value("comentario"))
+        .andExpect(MockMvcResultMatchers.jsonPath("comentario[0].value")
+            .value(I18nHelper.getValueForLanguage(solicitudHitoInput.getComentario(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("aviso.tareaProgramadaRef").value("1"))
         .andExpect(MockMvcResultMatchers.jsonPath("aviso.comunicadoRef").value("1"))
@@ -107,7 +115,8 @@ class SolicitudHitoControllerTest extends BaseControllerTest {
         .andExpect(
             MockMvcResultMatchers.jsonPath("solicitudId").value(solicitudHito.getSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("fecha").value(updatedSolicitudHito.getFecha().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(updatedSolicitudHito.getComentario()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comentario[0].value")
+            .value(I18nHelper.getValueForLanguage(solicitudHito.getComentario(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoHito.id").value(updatedSolicitudHito.getTipoHitoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("aviso.tareaProgramadaRef").value("1"))
         .andExpect(MockMvcResultMatchers.jsonPath("aviso.comunicadoRef").value("1"))
@@ -184,11 +193,14 @@ class SolicitudHitoControllerTest extends BaseControllerTest {
     tipoHito.setId(id == null ? 1 : id);
     tipoHito.setActivo(true);
 
+    Set<SolicitudHitoComentario> comentarioHito = new HashSet<>();
+    comentarioHito
+        .add(new SolicitudHitoComentario(Language.ES, "comentario"));
     SolicitudHito solicitudHito = new SolicitudHito();
     solicitudHito.setId(id);
     solicitudHito.setSolicitudId(id == null ? 1 : id);
     solicitudHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
-    solicitudHito.setComentario("comentario");
+    solicitudHito.setComentario(comentarioHito);
     solicitudHito.setSolicitudHitoAviso(new SolicitudHitoAviso(
         id == null ? 1 : id, id == null ? "1" : id.toString(), id == null ? "1" : id.toString(), false));
     solicitudHito.setTipoHito(tipoHito);
@@ -206,11 +218,14 @@ class SolicitudHitoControllerTest extends BaseControllerTest {
     aviso.getDestinatarios().add(new Destinatario("test", "test@test.com"));
     aviso.setIncluirIpsSolicitud(false);
 
+    List<I18nFieldValueDto> hitoComentario = new ArrayList<I18nFieldValueDto>();
+    hitoComentario.add(new I18nFieldValueDto(Language.ES, "comentario"));
+
     SolicitudHitoInput convocatoriaHito = new SolicitudHitoInput();
     convocatoriaHito.setSolicitudId(1L);
     convocatoriaHito.setTipoHitoId(1L);
     convocatoriaHito.setFecha(Instant.parse("2020-10-19T00:00:00Z"));
-    convocatoriaHito.setComentario("comentario");
+    convocatoriaHito.setComentario(hitoComentario);
     convocatoriaHito.setAviso(aviso);
 
     return convocatoriaHito;

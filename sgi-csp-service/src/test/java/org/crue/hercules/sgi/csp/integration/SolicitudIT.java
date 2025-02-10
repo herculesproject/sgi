@@ -460,7 +460,7 @@ class SolicitudIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "comentario=ke=-00";
+    String filter = "comentario.value=ke=-00";
 
     Long solicitudId = 1L;
 

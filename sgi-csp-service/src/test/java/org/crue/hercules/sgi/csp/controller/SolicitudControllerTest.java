@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
+import org.crue.hercules.sgi.csp.model.SolicitudHitoComentario;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.model.SolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
@@ -896,7 +897,8 @@ class SolicitudControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       SolicitudHito solicitudHito = solicitudHitoResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(solicitudHito.getComentario()).isEqualTo("comentario-" + String.format("%02d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(solicitudHito.getComentario(), Language.ES))
+          .isEqualTo("comentario-" + String.format("%02d", i));
     }
   }
 
@@ -1383,8 +1385,12 @@ class SolicitudControllerTest extends BaseControllerTest {
    */
   private SolicitudHito generarSolicitudHito(Long solicitudHitoId, Long solicitudId, Long tipoDocumentoId) {
 
+    Set<SolicitudHitoComentario> comentarioHito = new HashSet<>();
+    comentarioHito
+        .add(new SolicitudHitoComentario(Language.ES, "comentario-" + solicitudHitoId));
+
     SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId).solicitudId(solicitudId)
-        .comentario("comentario-" + solicitudHitoId).fecha(Instant.now())
+        .comentario(comentarioHito).fecha(Instant.now())
         .tipoHito(TipoHito.builder().id(tipoDocumentoId).build()).build();
 
     return solicitudHito;

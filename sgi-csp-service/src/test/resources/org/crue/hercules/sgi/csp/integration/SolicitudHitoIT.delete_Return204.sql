@@ -111,5 +111,8 @@ INSERT INTO test.tipo_hito_nombre (tipo_hito_id, lang, value_) VALUES (1, 'es', 
 INSERT INTO test.tipo_hito_descripcion (tipo_hito_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
 
 -- SOLICITUD HITO
-INSERT INTO test.solicitud_hito (id, solicitud_id, tipo_hito_id, fecha, comentario ) 
-VALUES (1, 1, 1, '2020-12-02T00:00:00Z', 'comentario-001');
+INSERT INTO test.solicitud_hito (id, solicitud_id, tipo_hito_id, fecha ) 
+VALUES (1, 1, 1, '2020-12-02T00:00:00Z');
+
+-- SOLICITUD_HITO_COMENTARIO
+INSERT INTO test.solicitud_hito_comentario (solicitud_hito_id, lang, value_) VALUES (1, 'es', 'comentario-001');
