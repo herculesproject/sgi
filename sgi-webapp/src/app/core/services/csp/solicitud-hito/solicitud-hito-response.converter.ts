@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IGenericEmailText } from '@core/models/com/generic-email-text';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 import { ISendEmailTask } from '@core/models/tp/send-email-task';
@@ -17,7 +18,7 @@ class SolicitudHitoResponseConverter extends SgiBaseConverter<ISolicitudHitoResp
       id: value.id,
       fecha: LuxonUtils.fromBackend(value.fecha),
       tipoHito: value.tipoHito ? TIPO_HITO_RESPONSE_CONVERTER.toTarget(value.tipoHito) : null,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : [],
       solicitudId: value.solicitudId,
       createdBy: value.createdBy,
       aviso: value.aviso ? {
@@ -42,7 +43,7 @@ class SolicitudHitoResponseConverter extends SgiBaseConverter<ISolicitudHitoResp
       tipoHito: {
         id: value.tipoHito.id
       } as ITipoHitoResponse,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : [],
       solicitudId: value.solicitudId,
       createdBy: value.createdBy,
       aviso: value.aviso ? {

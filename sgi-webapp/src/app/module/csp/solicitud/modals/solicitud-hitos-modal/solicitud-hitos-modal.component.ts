@@ -15,6 +15,7 @@ import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service'
 import { EmailService } from '@core/services/com/email/email.service';
 import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
@@ -343,7 +344,7 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
     const formGroup = new FormGroup({
       tipoHito: new FormControl(this.data?.hito?.tipoHito, Validators.required),
       fechaInicio: new FormControl(this.data?.hito?.fecha, Validators.required),
-      comentario: new FormControl(this.data?.hito?.comentario, Validators.maxLength(250)),
+      comentario: new FormControl(this.data?.hito?.comentario, I18nValidators.maxLength(250)),
       generaAviso: new FormControl(!!this.data?.hito?.aviso),
       aviso: new FormGroup({
         fechaEnvio: new FormControl(this.data?.hito?.aviso?.task?.instant, Validators.required),

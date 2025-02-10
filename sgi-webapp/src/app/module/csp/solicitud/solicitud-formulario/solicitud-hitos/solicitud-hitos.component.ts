@@ -77,7 +77,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
           case 'tipoHito':
             return this.languageService.getFieldValue(wrapper.value.tipoHito.nombre);
           case 'comentario':
-            return wrapper.value.comentario;
+            return this.languageService.getFieldValue(wrapper.value.comentario);
           default:
             return wrapper[property];
         }

@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { ITipoHitoResponse } from '../tipo-hito/tipo-hito-response';
 
 export interface ISolicitudHitoResponse {
@@ -8,7 +9,7 @@ export interface ISolicitudHitoResponse {
   /** Tipo de hito */
   tipoHito: ITipoHitoResponse;
   /** Comentario */
-  comentario: string;
+  comentario: I18nFieldValueResponse[];
   /** Id de Solicitud */
   solicitudId: number;
   createdBy: string;
