@@ -11,10 +11,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.dto.ProyectoHitoInput;
-import org.crue.hercules.sgi.csp.dto.ProyectoHitoInput;
-import org.crue.hercules.sgi.csp.dto.ProyectoHitoInput;
-import org.crue.hercules.sgi.csp.dto.ProyectoHitoInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoHitoAvisoInput;
 import org.crue.hercules.sgi.csp.dto.ProyectoHitoInput;
 import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
@@ -24,13 +20,10 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
-import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
-import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
-import org.crue.hercules.sgi.csp.model.ProyectoHito;
-import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
@@ -87,7 +80,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   private ProyectoHitoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoHitoServiceImpl(repository,
         proyectoRepository,
         modeloTipoHitoRepository,
@@ -188,9 +181,10 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoHito
-        () -> service.create(generarMockProyectoHito()))
+        () -> service.create(proyectoHito))
         // then: throw exception as ProyectoId is null
-        .isInstanceOf(ProyectoNotFoundException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Identificador de Proyecto no puede ser nulo");
   }
 
   @Test
@@ -232,7 +226,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: create ProyectoHito
-        () -> service.create(generarMockProyectoHito()))
+        () -> service.create(proyectoHito))
         // then: throw exception as Proyecto is not found
         .isInstanceOf(ProyectoNotFoundException.class);
   }
@@ -583,9 +577,12 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     // de la proyecto inactiva
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
+    ProyectoHito proyectoHito = generarMockProyectoHito(1L);
     ProyectoHitoInput input = generarMockProyectoHito();
     ModeloTipoHito modeloTipoHito = generarMockModeloTipoHito(1L, generarMockProyectoHito(1L), Boolean.FALSE);
 
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoHito));
+    BDDMockito.given(tipoHitoRepository.findById(anyLong())).willReturn(Optional.of(proyectoHito.getTipoHito()));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyecto.getModeloEjecucion()));
@@ -595,8 +592,8 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(modeloTipoHito));
 
     Assertions.assertThatThrownBy(
-        // when: create ProyectoHito
-        () -> service.create(input))
+        // when: update ProyectoHito
+        () -> service.update(proyectoId, input))
         // then: throw exception as ModeloTipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("%s de Modelo Tipo Hito no está activo para el modelo ejecución %s",
@@ -613,6 +610,8 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     proyectoHito.getTipoHito().setActivo(Boolean.FALSE);
     ProyectoHitoInput input = generarMockProyectoHito();
 
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoHito));
+    BDDMockito.given(tipoHitoRepository.findById(anyLong())).willReturn(Optional.of(proyectoHito.getTipoHito()));
     BDDMockito.given(proyectoRepository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
     BDDMockito.given(proyectoRepository.getModeloEjecucion(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyecto.getModeloEjecucion()));
@@ -622,8 +621,8 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         .willReturn(Optional.of(generarMockModeloTipoHito(1L, proyectoHito, Boolean.TRUE)));
 
     Assertions.assertThatThrownBy(
-        // when: create ProyectoHito
-        () -> service.create(input))
+        // when: update ProyectoHito
+        () -> service.update(proyectoId, input))
         // then: throw exception as TipoHito is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("%s de Tipo Hito no está activo", proyectoHito.getTipoHito().getNombre());
@@ -681,7 +680,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
 
@@ -710,7 +709,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsProyectoHitoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoHitoNotFoundException() {
     // given: Ningun ProyectoHito con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -745,10 +744,7 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
               : toIndex;
           List<ProyectoHito> content = proyectosEntidadesConvocantes.subList(fromIndex,
               toIndex);
-          Page<ProyectoHito> pageResponse = new PageImpl<>(content, pageable,
-              proyectosEntidadesConvocantes.size());
-          return pageResponse;
-
+          return new PageImpl<>(content, pageable, proyectosEntidadesConvocantes.size());
         });
 
     // when: Get page=3 with pagesize=10
@@ -788,9 +784,12 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
     tipoAmbitoGeografico.setId(1L);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);
-    proyecto.setTitulo("PRO" + (id != null ? id : 1));
+    proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-proyecto-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("2");

@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoFaseAviso;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
@@ -72,7 +73,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
   private ProyectoFaseService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoFaseServiceImpl(repository, proyectoRepository, modeloTipoFaseRepository, tipoFaseRepository,
         proyectoFaseAvisoService);
   }
@@ -84,7 +85,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
     Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoFase proyectoFase = this.generarMockProyectoFase(1L);
     proyectoFase.setId(1L);
-    proyectoFase.setProyectoFaseAviso1(this.buildMockProyectoFaseAviso(1L, 1L));
+    proyectoFase.setProyectoFaseAviso1(this.buildMockProyectoFaseAviso(1L));
 
     ModeloTipoFase modeloTipoFase = generarMockModeloTipoFase(1L, proyectoFase, Boolean.TRUE);
     TipoFase tipoFase = modeloTipoFase.getTipoFase();
@@ -104,8 +105,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
             repository.findAll(ArgumentMatchers.<Specification<ProyectoFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ProyectoFase> page = new PageImpl<>(new ArrayList<ProyectoFase>(), pageable, 0);
-          return page;
+          return new PageImpl<>(new ArrayList<ProyectoFase>(), pageable, 0);
         });
 
     BDDMockito.given(this.tipoFaseRepository.findById(1L)).willReturn(Optional.of(tipoFase));
@@ -169,8 +169,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
             repository.findAll(ArgumentMatchers.<Specification<ProyectoFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ProyectoFase> page = new PageImpl<>(new ArrayList<ProyectoFase>(), pageable, 0);
-          return page;
+          return new PageImpl<>(new ArrayList<ProyectoFase>(), pageable, 0);
         });
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoFase>any())).willReturn(proyectoFase);
@@ -376,8 +375,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
             repository.findAll(ArgumentMatchers.<Specification<ProyectoFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ProyectoFase> page = new PageImpl<>(Arrays.asList(proyectoFaseExistente), pageable, 0);
-          return page;
+          return new PageImpl<>(Arrays.asList(proyectoFaseExistente), pageable, 0);
         });
 
     Assertions.assertThatThrownBy(
@@ -420,8 +418,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
             repository.findAll(ArgumentMatchers.<Specification<ProyectoFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ProyectoFase> page = new PageImpl<>(new ArrayList<ProyectoFase>(), pageable, 0);
-          return page;
+          return new PageImpl<>(new ArrayList<ProyectoFase>(), pageable, 0);
         });
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoFase>any()))
@@ -476,8 +473,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
             repository.findAll(ArgumentMatchers.<Specification<ProyectoFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ProyectoFase> page = new PageImpl<>(new ArrayList<ProyectoFase>(), pageable, 0);
-          return page;
+          return new PageImpl<>(new ArrayList<ProyectoFase>(), pageable, 0);
         });
 
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoFase>any()))
@@ -725,8 +721,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
             repository.findAll(ArgumentMatchers.<Specification<ProyectoFase>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ProyectoFase> page = new PageImpl<>(Arrays.asList(proyectoFaseExistente), pageable, 0);
-          return page;
+          return new PageImpl<>(Arrays.asList(proyectoFaseExistente), pageable, 0);
         });
 
     Assertions.assertThatThrownBy(
@@ -755,7 +750,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
 
@@ -784,7 +779,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsProyectoFaseNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoFaseNotFoundException() {
     // given: Ningun ProyectoFase con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -814,9 +809,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
           int toIndex = fromIndex + size;
           toIndex = toIndex > proyectosEntidadesConvocantes.size() ? proyectosEntidadesConvocantes.size() : toIndex;
           List<ProyectoFase> content = proyectosEntidadesConvocantes.subList(fromIndex, toIndex);
-          Page<ProyectoFase> pageResponse = new PageImpl<>(content, pageable, proyectosEntidadesConvocantes.size());
-          return pageResponse;
-
+          return new PageImpl<>(content, pageable, proyectosEntidadesConvocantes.size());
         });
 
     // when: Get page=3 with pagesize=10
@@ -856,9 +849,12 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
     tipoAmbitoGeografico.setId(1L);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);
-    proyecto.setTitulo("PRO" + (id != null ? id : 1));
+    proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-proyecto-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("2");
@@ -952,8 +948,8 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         .fechaInicio(Instant.parse("2020-10-19T00:00:00Z"))
         .fechaFin(Instant.parse("2020-10-20T00:00:00Z"))
         .observaciones("observaciones-proyecto-fase-" + (id == null ? "" : String.format("%03d", id)))
-        .proyectoFaseAviso1(buildMockProyectoFaseAviso(1L, id))
-        .proyectoFaseAviso2(buildMockProyectoFaseAviso(2L, id))
+        .proyectoFaseAviso1(buildMockProyectoFaseAviso(1L))
+        .proyectoFaseAviso2(buildMockProyectoFaseAviso(2L))
         .tipoFase(generarMockTipoFase(1L, Boolean.TRUE))
         .build();
     // @formatter:on
@@ -969,14 +965,14 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
     proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
     proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
-    proyectoFase.setAviso1(buildMockProyectoFaseAvisoInput(id));
-    proyectoFase.setAviso2(buildMockProyectoFaseAvisoInput(id));
+    proyectoFase.setAviso1(buildMockProyectoFaseAvisoInput());
+    proyectoFase.setAviso2(buildMockProyectoFaseAvisoInput());
     proyectoFase.setTipoFaseId(tipoFase.getId());
 
     return proyectoFase;
   }
 
-  private ProyectoFaseAviso buildMockProyectoFaseAviso(Long id, Long proyectoFaseId) {
+  private ProyectoFaseAviso buildMockProyectoFaseAviso(Long id) {
     return ProyectoFaseAviso.builder()
         .comunicadoRef("3333")
         .id(id)
@@ -984,7 +980,7 @@ class ProyectoFaseServiceTest extends BaseServiceTest {
         .build();
   }
 
-  private ProyectoFaseAvisoInput buildMockProyectoFaseAvisoInput(Long proyectoFaseId) {
+  private ProyectoFaseAvisoInput buildMockProyectoFaseAvisoInput() {
     List<ProyectoFaseAvisoInput.Destinatario> destinatarios = new LinkedList<>();
     destinatarios.add(ProyectoFaseAvisoInput.Destinatario.builder()
         .email("testing@um.com")

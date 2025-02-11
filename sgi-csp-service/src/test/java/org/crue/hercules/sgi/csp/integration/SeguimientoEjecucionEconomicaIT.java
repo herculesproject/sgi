@@ -11,6 +11,8 @@ import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.SeguimientoJustificacionAnualidad;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -91,8 +93,8 @@ class SeguimientoEjecucionEconomicaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
 
-    Assertions.assertThat(responseData.get(0).getNombre()).as("get(0).getNombre())")
-        .isEqualTo("PRO1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())").isEqualTo("PRO1");
     Assertions.assertThat(responseData.get(0).getCodigoExterno()).as("get(0).getCodigoExterno())")
         .isEqualTo("cod-externo-001");
   }

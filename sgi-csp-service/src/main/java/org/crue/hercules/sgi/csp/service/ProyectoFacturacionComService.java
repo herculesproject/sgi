@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +58,7 @@ public class ProyectoFacturacionComService {
   private final SgiApiSgpService sgiApiSgpService;
   private final SgiApiSgempService sgiApiSgempService;
 
-  public void enviarComunicado(ProyectoFacturacion proyectoFacturacion) throws Exception {
+  public void enviarComunicado(ProyectoFacturacion proyectoFacturacion) throws JsonProcessingException {
 
     switch (proyectoFacturacion.getEstadoValidacionIP().getEstado()) {
       case VALIDADA:
@@ -76,7 +75,8 @@ public class ProyectoFacturacionComService {
     }
   }
 
-  private void enviarComunicadoValidarIpValidada(ProyectoFacturacion proyectoFacturacion) throws Exception {
+  private void enviarComunicadoValidarIpValidada(ProyectoFacturacion proyectoFacturacion)
+      throws JsonProcessingException {
 
     Proyecto proyecto = proyectoRepository.findById(proyectoFacturacion.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoFacturacion.getProyectoId()));
@@ -89,7 +89,8 @@ public class ProyectoFacturacionComService {
 
   }
 
-  private void enviarComunicadoValidarIpRechazada(ProyectoFacturacion proyectoFacturacion) throws Exception {
+  private void enviarComunicadoValidarIpRechazada(ProyectoFacturacion proyectoFacturacion)
+      throws JsonProcessingException {
 
     Proyecto proyecto = proyectoRepository.findById(proyectoFacturacion.getProyectoId())
         .orElseThrow(() -> new ProyectoNotFoundException(proyectoFacturacion.getProyectoId()));
@@ -223,7 +224,7 @@ public class ProyectoFacturacionComService {
     return CspComCalendarioFacturacionNotificarData
         .builder()
         .codigosSge(this.getCodigosSge(proyectoFacturacion.getProyectoId()))
-        .tituloProyecto(proyecto.getTitulo())
+        .tituloProyecto(I18nHelper.getFieldValue(proyecto.getTitulo()))
         .numPrevision(proyectoFacturacion.getNumeroPrevision())
         .tipoFacturacion(proyectoFacturacion.getTipoFacturacion() == null
             ? ApplicationContextSupport.getMessage(MSG_SIN_ESPEFICAR)
@@ -238,7 +239,7 @@ public class ProyectoFacturacionComService {
     return this.proyectoEntidadFinanciadoraRepository
         .findByProyectoId(proyectoId).stream()
         .map(entidad -> sgiApiSgempService.findById(entidad.getEntidadRef()).getNombre())
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private Recipient getRecipientFromPersona(PersonaOutput persona) {
@@ -259,11 +260,11 @@ public class ProyectoFacturacionComService {
 
     List<String> members = this.proyectoEquipoRepository
         .findByProyectoIdAndRolProyectoRolPrincipalTrue(proyectoId).stream()
-        .map(ProyectoEquipo::getPersonaRef).collect(Collectors.toList());
+        .map(ProyectoEquipo::getPersonaRef).toList();
 
     members.addAll(
         this.proyectoResponsableEconomicoRepository.findByProyectoId(proyectoId).stream()
-            .map(ProyectoResponsableEconomico::getPersonaRef).collect(Collectors.toList()));
+            .map(ProyectoResponsableEconomico::getPersonaRef).toList());
 
     return this.sgiApiSgpService.findAllByIdIn(members);
   }
@@ -278,7 +279,7 @@ public class ProyectoFacturacionComService {
     List<String> codigosSge = getCodigosSge(proyecto.getId());
 
     return CspComCalendarioFacturacionValidarIPData.builder()
-        .tituloProyecto(proyecto.getTitulo())
+        .tituloProyecto(I18nHelper.getFieldValue(proyecto.getTitulo()))
         .numPrevision(proyectoFacturacion.getNumeroPrevision())
         .codigosSge(codigosSge)
         .motivoRechazo(proyectoFacturacion.getEstadoValidacionIP().getEstado() == TipoEstadoValidacion.RECHAZADA
@@ -290,7 +291,7 @@ public class ProyectoFacturacionComService {
 
   private List<String> getCodigosSge(Long proyectoId) {
     return this.proyectoProyectoSgeRepository.findByProyectoId(proyectoId).stream()
-        .map(ProyectoProyectoSge::getProyectoSgeRef).collect(Collectors.toList());
+        .map(ProyectoProyectoSge::getProyectoSgeRef).toList();
   }
 
   private List<Recipient> getRecipientsUG(String unidadGestionRef) throws JsonProcessingException {
@@ -299,7 +300,7 @@ public class ProyectoFacturacionComService {
             CONFIG_CSP_COM_CALENDARIO_FACTURACION_VALIDAR_IP_DESTINATARIOS + unidadGestionRef)
         .stream()
         .map(destinatario -> Recipient.builder().name(destinatario).address(destinatario).build())
-        .collect(Collectors.toList());
+        .toList();
   }
 
 }

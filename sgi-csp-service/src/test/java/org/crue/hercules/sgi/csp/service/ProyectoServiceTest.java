@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -68,6 +69,7 @@ import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -199,7 +201,7 @@ class ProyectoServiceTest extends BaseServiceTest {
   private ProyectoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     proyectoHelper = new ProyectoHelper(repository, proyectoEquipoRepository, proyectoResponsableEconomicoRepository);
     service = new ProyectoServiceImpl(sgiConfigProperties, repository, estadoProyectoRepository, modeloUnidadRepository,
         convocatoriaRepository, convocatoriaEntidadFinanciadoraRepository, proyectoEntidadFinanciadoraService,
@@ -317,53 +319,6 @@ class ProyectoServiceTest extends BaseServiceTest {
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
   void createWithConvocatoria_ReturnsProyecto() {
-    // given: Un nuevo Proyecto
-    Proyecto proyecto = generarMockProyecto(null);
-    proyecto.setConvocatoriaId(1L);
-
-    BDDMockito.given(repository.save(ArgumentMatchers.<Proyecto>any())).will((InvocationOnMock invocation) -> {
-      Proyecto proyectoCreado = invocation.getArgument(0);
-      if (proyectoCreado.getId() == null) {
-        proyectoCreado.setId(1L);
-      }
-
-      return proyectoCreado;
-    });
-
-    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
-
-    BDDMockito.given(estadoProyectoRepository.save(ArgumentMatchers.<EstadoProyecto>any()))
-        .will((InvocationOnMock invocation) -> {
-          EstadoProyecto estadoProyectoCreado = invocation.getArgument(0);
-          estadoProyectoCreado.setId(1L);
-          return estadoProyectoCreado;
-        });
-
-    ModeloUnidad modeloUnidad = new ModeloUnidad();
-    modeloUnidad.setId(1L);
-    modeloUnidad.setModeloEjecucion(proyecto.getModeloEjecucion());
-    modeloUnidad.setUnidadGestionRef(proyecto.getUnidadGestionRef());
-    modeloUnidad.setActivo(true);
-
-    BDDMockito.given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyString())).willReturn(Optional.of(modeloUnidad));
-    // when: Creamos el Proyecto
-    Proyecto proyectoCreado = service.create(proyecto);
-
-    // then: El Proyecto se crea correctamente
-    Assertions.assertThat(proyectoCreado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(proyectoCreado.getId()).as("getId()").isEqualTo(1L);
-    Assertions.assertThat(proyectoCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
-    Assertions.assertThat(proyectoCreado.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(proyecto.getObservaciones());
-    Assertions.assertThat(proyectoCreado.getUnidadGestionRef()).as("getUnidadGestionRef()")
-        .isEqualTo(proyecto.getUnidadGestionRef());
-    Assertions.assertThat(proyectoCreado.getActivo()).as("getActivo").isEqualTo(proyecto.getActivo());
-  }
-
-  @Test
-  @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  void createWithConvocatoriaAndConvocatoriaAreaTematica_ReturnsProyecto() {
     // given: Un nuevo Proyecto
     Proyecto proyecto = generarMockProyecto(null);
     proyecto.setConvocatoriaId(1L);
@@ -801,7 +756,7 @@ class ProyectoServiceTest extends BaseServiceTest {
 
   @Test
   @WithMockUser(authorities = { "CSP-PRO-C_2" })
-  void findById_WithIdNotExist_ThrowsProyectoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoNotFoundException() {
     // given: Ningun Proyecto con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -832,8 +787,7 @@ class ProyectoServiceTest extends BaseServiceTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectos.size() ? proyectos.size() : toIndex;
             List<Proyecto> content = proyectos.subList(fromIndex, toIndex);
-            Page<Proyecto> page = new PageImpl<>(content, pageable, proyectos.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectos.size());
           }
         });
 
@@ -873,8 +827,7 @@ class ProyectoServiceTest extends BaseServiceTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectos.size() ? proyectos.size() : toIndex;
             List<Proyecto> content = proyectos.subList(fromIndex, toIndex);
-            Page<Proyecto> page = new PageImpl<>(content, pageable, proyectos.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectos.size());
           }
         });
 
@@ -935,8 +888,7 @@ class ProyectoServiceTest extends BaseServiceTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectos.size() ? proyectos.size() : toIndex;
             List<ProyectoSeguimientoEjecucionEconomica> content = proyectos.subList(fromIndex, toIndex);
-            Page<ProyectoSeguimientoEjecucionEconomica> page = new PageImpl<>(content, pageable, proyectos.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectos.size());
           }
         });
 
@@ -954,7 +906,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     for (int i = 31; i <= 37; i++) {
       ProyectoSeguimientoEjecucionEconomica proyecto = page.getContent()
           .get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(proyecto.getNombre()).isEqualTo("Proyecto-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyecto.getNombre(), Language.ES))
+          .isEqualTo("Proyecto-" + String.format("%03d", i));
     }
   }
 
@@ -988,9 +941,12 @@ class ProyectoServiceTest extends BaseServiceTest {
     tipoAmbitoGeografico.setId(1L);
     tipoAmbitoGeografico.setNombre(nombre);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);
-    proyecto.setTitulo("PRO" + (id != null ? id : 1));
+    proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("2");
@@ -1044,9 +1000,12 @@ class ProyectoServiceTest extends BaseServiceTest {
 
   private ProyectoSeguimientoEjecucionEconomica generarMockProyectoSeguimientoEjecucionEconomica(Long id,
       String nombre) {
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, nombre));
+
     return ProyectoSeguimientoEjecucionEconomica.builder()
         .id(id)
-        .nombre(nombre)
+        .nombre(tituloProyecto)
         .build();
   }
 }

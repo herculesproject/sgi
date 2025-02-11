@@ -2,10 +2,13 @@ package org.crue.hercules.sgi.csp.repository.custom;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,6 +22,8 @@ import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion;
 import org.crue.hercules.sgi.csp.model.GrupoEspecialInvestigacion_;
 import org.crue.hercules.sgi.csp.model.Grupo_;
 import org.crue.hercules.sgi.framework.data.jpa.domain.Activable_;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -126,7 +131,7 @@ public class CustomGrupoRepositoryImpl implements CustomGrupoRepository {
 
     // Find query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-    CriteriaQuery<RelacionEjecucionEconomica> cq = cb.createQuery(RelacionEjecucionEconomica.class);
+    CriteriaQuery<Tuple> cq = cb.createQuery(Tuple.class);
     Root<Grupo> root = cq.from(Grupo.class);
     List<Predicate> listPredicates = new ArrayList<>();
 
@@ -135,12 +140,11 @@ public class CustomGrupoRepositoryImpl implements CustomGrupoRepository {
     Root<Grupo> rootCount = countQuery.from(Grupo.class);
     List<Predicate> listPredicatesCount = new ArrayList<>();
 
-    cq.multiselect(root.get(Grupo_.id),
-        root.get(Grupo_.nombre),
-        root.get(Grupo_.fechaInicio),
-        root.get(Grupo_.fechaFin),
-        root.get(Grupo_.proyectoSgeRef),
-        cb.literal(RelacionEjecucionEconomica.TipoEntidad.GRUPO.toString()));
+    cq.multiselect(root.get(Grupo_.id).alias(Grupo_.ID),
+        root.get(Grupo_.nombre).alias(Grupo_.NOMBRE),
+        root.get(Grupo_.fechaInicio).alias(Grupo_.FECHA_INICIO),
+        root.get(Grupo_.fechaFin).alias(Grupo_.FECHA_FIN),
+        root.get(Grupo_.proyectoSgeRef).alias(Grupo_.PROYECTO_SGE_REF));
 
     countQuery.select(cb.count(rootCount));
 
@@ -159,8 +163,26 @@ public class CustomGrupoRepositoryImpl implements CustomGrupoRepository {
     // Número de registros totales para la paginación
     Long count = entityManager.createQuery(countQuery).getSingleResult();
 
-    TypedQuery<RelacionEjecucionEconomica> query = entityManager.createQuery(cq);
-    List<RelacionEjecucionEconomica> results = query.getResultList();
+    TypedQuery<Tuple> typedQuery = entityManager.createQuery(cq);
+    List<RelacionEjecucionEconomica> results = typedQuery.getResultList().stream()
+        .map(tuple -> {
+
+          // TODO: eliminar al hacer la i18n del titulo del grupo
+          Set<I18nFieldValueDto> nombreI18n = new HashSet<>();
+          nombreI18n.add(
+              new I18nFieldValueDto(
+                  SgiLocaleContextHolder.getLanguage(),
+                  (String) tuple.get(Grupo_.NOMBRE)));
+
+          return RelacionEjecucionEconomica.builder()
+              .id((Long) tuple.get(Grupo_.ID))
+              .nombre(nombreI18n)
+              .fechaInicio((Instant) tuple.get(Grupo_.FECHA_INICIO))
+              .fechaFin((Instant) tuple.get(Grupo_.FECHA_FIN))
+              .proyectoSgeRef((String) tuple.get(Grupo_.PROYECTO_SGE_REF))
+              .tipoEntidad(RelacionEjecucionEconomica.TipoEntidad.GRUPO)
+              .build();
+        }).toList();
     Page<RelacionEjecucionEconomica> returnValue = new PageImpl<>(results, pageable, count);
 
     log.debug("findRelacionesEjecucionEconomica(Specification<Grupo> specification, Pageable pageable) - end");

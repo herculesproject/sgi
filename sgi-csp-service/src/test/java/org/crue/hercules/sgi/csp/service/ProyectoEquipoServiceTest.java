@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
@@ -16,6 +15,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoEquipoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolProyectoDescripcion;
@@ -104,7 +104,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
             }
             proyectoEquipo.setProyectoId(proyectoId);
             return proyectoEquipo;
-          }).collect(Collectors.toList());
+          }).toList();
         });
 
     // when: updateProyectoEquipos
@@ -147,12 +147,12 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
     Long proyectoId = 1L;
     ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, Instant.parse("2020-02-15T00:00:00Z"),
         Instant.parse("2020-05-15T23:59:59Z"), proyectoId);
+    List<ProyectoEquipo> proyectoEquipoList = Arrays.asList(proyectoEquipo);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
     Assertions.assertThatThrownBy(
         // when: update ProyectoEquipo
-        () -> service.update(proyectoId, Arrays.asList(proyectoEquipo)))
+        () -> service.update(proyectoId, proyectoEquipoList))
         // then: throw exception as Proyecto is not found
         .isInstanceOf(ProyectoNotFoundException.class);
   }
@@ -165,6 +165,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
     Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, Instant.parse("2020-02-15T00:00:00Z"),
         Instant.parse("2020-05-15T23:59:59Z"), proyectoId);
+    List<ProyectoEquipo> proyectoEquipoList = Arrays.asList(proyectoEquipo);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
 
@@ -173,7 +174,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
     // when:updateProyectoEquiposConvocatoria
     // then: Lanza una excepcion porque el ProyectoEquipo
     // no existe
-    Assertions.assertThatThrownBy(() -> service.update(proyectoId, Arrays.asList(proyectoEquipo)))
+    Assertions.assertThatThrownBy(() -> service.update(proyectoId, proyectoEquipoList))
         .isInstanceOf(ProyectoEquipoNotFoundException.class);
   }
 
@@ -184,15 +185,16 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
     Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, Instant.parse("2020-05-15T00:00:00Z"),
         Instant.parse("2020-03-15T23:59:59Z"), proyectoId);
+    List<ProyectoEquipo> proyectoEquipoList = Arrays.asList(proyectoEquipo);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
 
     BDDMockito.given(repository.findAllByProyectoId(ArgumentMatchers.anyLong()))
-        .willReturn(Arrays.asList(proyectoEquipo));
+        .willReturn(proyectoEquipoList);
 
     Assertions.assertThatThrownBy(
         // when: updateProyectoEquipos
-        () -> service.update(proyectoId, Arrays.asList(proyectoEquipo)))
+        () -> service.update(proyectoId, proyectoEquipoList))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage(
@@ -207,6 +209,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
     Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoEquipo proyectoEquipo = generarMockProyectoEquipo(3L, Instant.parse("2020-05-15T00:00:00Z"),
         Instant.parse("2022-03-15T00:00:00Z"), proyectoId);
+    List<ProyectoEquipo> proyectoEquipoList = Arrays.asList(proyectoEquipo);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
 
@@ -215,7 +218,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: updateProyectoEquipos
-        () -> service.update(proyectoId, Arrays.asList(proyectoEquipo)))
+        () -> service.update(proyectoId, proyectoEquipoList))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Las fechas de proyecto equipo deben de estar dentro de la duración del proyecto");
@@ -230,6 +233,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
         Instant.parse("2021-03-15T23:59:59Z"), proyectoId);
     ProyectoEquipo proyectoEquipo2 = generarMockProyectoEquipo(null, Instant.parse("2020-05-15T00:00:00Z"),
         Instant.parse("2021-03-15T23:59:59Z"), proyectoId);
+    List<ProyectoEquipo> proyectoEquipoList = Arrays.asList(proyectoEquipo, proyectoEquipo2);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(proyecto));
 
@@ -237,7 +241,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: updateProyectoEquiposConvocatoria
-        () -> service.update(proyectoId, Arrays.asList(proyectoEquipo, proyectoEquipo2)))
+        () -> service.update(proyectoId, proyectoEquipoList))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class).hasMessage("El proyecto equipo se solapa con otro existente");
   }
@@ -300,8 +304,7 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
             List<ProyectoEquipo> content = listaProyectoEquipo.subList(fromIndex, toIndex);
-            Page<ProyectoEquipo> page = new PageImpl<>(content, pageable, listaProyectoEquipo.size());
-            return page;
+            return new PageImpl<>(content, pageable, listaProyectoEquipo.size());
           }
         });
 
@@ -324,18 +327,18 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
   }
 
   private Proyecto generarMockProyecto(Long proyectoId) {
-    // @formatter:off
-    Proyecto proyecto = Proyecto.builder()
-      .id(proyectoId)
-      .titulo("proyecto 2")
-      .acronimo("PR2")
-      .fechaInicio(Instant.parse("2020-01-20T00:00:00Z"))
-      .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-      .unidadGestionRef("2")
-      .activo(Boolean.TRUE)
-      .build();
-    // @formatter:on
-    return proyecto;
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "proyecto 2"));
+
+    return Proyecto.builder()
+        .id(proyectoId)
+        .titulo(tituloProyecto)
+        .acronimo("PR2")
+        .fechaInicio(Instant.parse("2020-01-20T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("2")
+        .activo(Boolean.TRUE)
+        .build();
   }
 
   /**
@@ -355,7 +358,6 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
     Set<RolProyectoAbreviatura> abreviatura = new HashSet<>();
     abreviatura.add(new RolProyectoAbreviatura(Language.ES, "001"));
 
-    // @formatter:off
     RolProyecto rolProyecto = RolProyecto.builder().id(id)
         .abreviatura(abreviatura)
         .nombre(nombre)
@@ -363,12 +365,15 @@ class ProyectoEquipoServiceTest extends BaseServiceTest {
         .rolPrincipal(Boolean.FALSE)
         .equipo(RolProyecto.Equipo.INVESTIGACION).activo(Boolean.TRUE)
         .build();
-    // @formatter:on
 
-    ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(id).proyectoId(proyectoId).rolProyecto(rolProyecto)
-        .fechaInicio(fechaInicio).fechaFin(fechaFin).personaRef("001").build();
-
-    return proyectoEquipo;
+    return ProyectoEquipo.builder()
+        .id(id)
+        .proyectoId(proyectoId)
+        .rolProyecto(rolProyecto)
+        .fechaInicio(fechaInicio)
+        .fechaFin(fechaFin)
+        .personaRef("001")
+        .build();
   }
 
 }

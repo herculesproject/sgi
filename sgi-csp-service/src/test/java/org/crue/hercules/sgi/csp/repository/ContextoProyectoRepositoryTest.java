@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,15 @@ class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
   private ContextoProyectoRepository repository;
 
   @Test
-  void findByProyectoId_ReturnsContextoProyecto() throws Exception {
+  void findByProyectoId_ReturnsContextoProyecto() {
 
     // given: 2 ContextoProyecto de los que 1 coincide con el idProyecto buscado
-    Proyecto proyecto1 = entityManager.persistAndFlush(generarMockProyecto(1L));
-    ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(1L, proyecto1.getId());
+    Proyecto proyecto1 = entityManager.persistAndFlush(generarMockProyecto());
+    ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(proyecto1.getId());
     entityManager.persistAndFlush(contextoProyecto1);
 
-    Proyecto proyecto2 = entityManager.persistAndFlush(generarMockProyecto(2L));
-    ContextoProyecto contextoProyecto2 = generarMockContextoProyecto(2L, proyecto2.getId());
+    Proyecto proyecto2 = entityManager.persistAndFlush(generarMockProyecto());
+    ContextoProyecto contextoProyecto2 = generarMockContextoProyecto(proyecto2.getId());
     entityManager.persistAndFlush(contextoProyecto2);
 
     Long proyectoIdBuscado = proyecto1.getId();
@@ -50,11 +51,11 @@ class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void findByProyectoNoExiste_ReturnsNull() throws Exception {
+  void findByProyectoNoExiste_ReturnsNull() {
 
     // given: 2 ContextoProyecto que no coinciden con el idProyecto buscado
-    Proyecto proyecto1 = entityManager.persistAndFlush(generarMockProyecto(1L));
-    ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(1L, proyecto1.getId());
+    Proyecto proyecto1 = entityManager.persistAndFlush(generarMockProyecto());
+    ContextoProyecto contextoProyecto1 = generarMockContextoProyecto(proyecto1.getId());
     entityManager.persistAndFlush(contextoProyecto1);
 
     Long proyectoIdBuscado = 2000L;
@@ -66,11 +67,10 @@ class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
     Assertions.assertThat(contextoProyectoEncontrado).isEmpty();
   }
 
-  private Proyecto generarMockProyecto(Long proyectoId) {
+  private Proyecto generarMockProyecto() {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion"));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -79,14 +79,15 @@ class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloEjecucion);
 
-    Proyecto proyecto = Proyecto.builder()
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO"));
+
+    return Proyecto.builder()
         .unidadGestionRef("2").modeloEjecucion(modeloEjecucion)
-        .titulo("PRO")
+        .titulo(tituloProyecto)
         .fechaInicio(Instant.now())
         .fechaFin(Instant.now()).activo(Boolean.TRUE)
         .build();
-    // @formatter:on
-    return proyecto;
   }
 
   /**
@@ -95,7 +96,7 @@ class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
    * @param id identificador
    * @return el objeto ContextoProyecto
    */
-  private ContextoProyecto generarMockContextoProyecto(Long id, Long proyectoId) {
+  private ContextoProyecto generarMockContextoProyecto(Long proyectoId) {
     ContextoProyecto contextoProyecto = new ContextoProyecto();
     contextoProyecto.setProyectoId(proyectoId);
     contextoProyecto.setIntereses("intereses");

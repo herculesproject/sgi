@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
@@ -35,7 +36,7 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
   private ProrrogaDocumentoRepository repository;
 
   @Test
-  void deleteByProyectoProrrogaId_ReturnsListProrrogaDocumento() throws Exception {
+  void deleteByProyectoProrrogaId_ReturnsListProrrogaDocumento() {
 
     // given: registros ProyectoProrroga con documentos asociados
     Proyecto proyecto = generarMockProyecto("-001");
@@ -56,16 +57,17 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
     List<ProrrogaDocumento> result = repository.deleteByProyectoProrrogaId(idProyectoProrroga);
 
     // then: retorna la lista de documentos eliminados
-    Assertions.assertThat(result).hasSize(2);
-    Assertions.assertThat(result.contains(prorrogaDocumento1)).isFalse();
-    Assertions.assertThat(result.contains(prorrogaDocumento2)).isFalse();
-    Assertions.assertThat(result.contains(prorrogaDocumento3)).isTrue();
-    Assertions.assertThat(result.contains(prorrogaDocumento4)).isTrue();
+    Assertions.assertThat(result)
+        .hasSize(2)
+        .doesNotContain(prorrogaDocumento1)
+        .doesNotContain(prorrogaDocumento2)
+        .contains(prorrogaDocumento3)
+        .contains(prorrogaDocumento4);
 
   }
 
   @Test
-  void deleteByProyectoProrrogaId_ReturnsEmptyList() throws Exception {
+  void deleteByProyectoProrrogaId_ReturnsEmptyList() {
 
     Proyecto proyecto = generarMockProyecto("-001");
     TipoDocumento tipoDocumento1 = generarMockTipoDocumento("-001");
@@ -83,7 +85,7 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
     List<ProrrogaDocumento> result = repository.deleteByProyectoProrrogaId(idProyectoProrroga);
 
     // then: retorna la lista de documentos eliminados
-    Assertions.assertThat(result.isEmpty()).isTrue();
+    Assertions.assertThat(result).isEmpty();
   }
 
   /**
@@ -96,7 +98,6 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -113,7 +114,7 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
-    
+
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
 
@@ -130,10 +131,13 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "titulo" + suffix));
+
     Proyecto proyecto = Proyecto.builder()
         .acronimo("PR" + suffix)
         .codigoExterno("COD" + suffix)
-        .titulo("titulo" + suffix)
+        .titulo(tituloProyecto)
         .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .finalidad(tipoFinalidad)
@@ -143,7 +147,6 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .permitePaquetesTrabajo(Boolean.TRUE)
         .activo(Boolean.TRUE)
         .build();
-    // @formatter:on
 
     return entityManager.persistAndFlush(proyecto);
 

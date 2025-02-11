@@ -3,17 +3,21 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPaqueteTrabajoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.repository.ProyectoPaqueteTrabajoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoPaqueteTrabajoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -41,7 +45,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   private ProyectoPaqueteTrabajoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoPaqueteTrabajoServiceImpl(repository, proyectoRepository);
   }
 
@@ -200,7 +204,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void create_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
+  void create_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() {
     // given: Proyecto with field PermitePaquetesTrabajo = FALSE or NULL
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
     proyectoPaqueteTrabajo.setId(null);
@@ -427,7 +431,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void update_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
+  void update_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() {
     // given: Proyecto with field PermitePaquetesTrabajo = FALSE or NULL
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoOriginal = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
@@ -516,7 +520,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
 
@@ -530,7 +534,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() throws Exception {
+  void delete_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() {
     // given: Proyecto with field PermitePaquetesTrabajo = FALSE or NULL
     Long id = 1L;
 
@@ -564,7 +568,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsProyectoPaqueteTrabajoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoPaqueteTrabajoNotFoundException() {
     // given: Ningun ProyectoPaqueteTrabajo con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -593,10 +597,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
           int toIndex = fromIndex + size;
           toIndex = toIndex > proyectosEntidadesConvocantes.size() ? proyectosEntidadesConvocantes.size() : toIndex;
           List<ProyectoPaqueteTrabajo> content = proyectosEntidadesConvocantes.subList(fromIndex, toIndex);
-          Page<ProyectoPaqueteTrabajo> pageResponse = new PageImpl<>(content, pageable,
-              proyectosEntidadesConvocantes.size());
-          return pageResponse;
-
+          return new PageImpl<>(content, pageable, proyectosEntidadesConvocantes.size());
         });
 
     // when: Get page=3 with pagesize=10
@@ -616,19 +617,19 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   }
 
   private Proyecto generarMockProyecto(Long proyectoId) {
-    // @formatter:off
-    Proyecto proyecto = Proyecto.builder()
-      .id(proyectoId)
-      .titulo("proyecto 2")
-      .acronimo("PR2")
-      .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
-      .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
-      .unidadGestionRef("2")
-      .activo(Boolean.TRUE)
-      .permitePaquetesTrabajo(true)
-      .build();
-    // @formatter:on
-    return proyecto;
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "proyecto 2"));
+
+    return Proyecto.builder()
+        .id(proyectoId)
+        .titulo(tituloProyecto)
+        .acronimo("PR2")
+        .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
+        .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
+        .unidadGestionRef("2")
+        .activo(Boolean.TRUE)
+        .permitePaquetesTrabajo(true)
+        .build();
   }
 
   /**

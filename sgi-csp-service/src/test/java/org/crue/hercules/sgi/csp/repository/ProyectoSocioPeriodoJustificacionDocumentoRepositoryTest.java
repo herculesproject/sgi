@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
@@ -31,8 +32,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
   private ProyectoSocioPeriodoJustificacionDocumentoRepository repository;
 
   @Test
-  void findAllByProyectoSocioPeriodoJustificacionId_ReturnsSocioPeriodoJustificacionDocuemnto()
-      throws Exception {
+  void findAllByProyectoSocioPeriodoJustificacionId_ReturnsSocioPeriodoJustificacionDocuemnto() {
 
     // given: 1 ProyectoSocioPeriodoJustificacionDocumento para el
     // ProyectoSocioPeriodoJustificacionId buscado
@@ -56,7 +56,6 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "tipo1"));
 
-    // @formatter:off
     RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()
         .abreviatura(rolSocioAbreviatura)
         .nombre(rolSocioNombre)
@@ -65,8 +64,11 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
         .activo(Boolean.TRUE)
         .build());
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "proyecto"));
+
     Proyecto proyecto = entityManager.persistAndFlush(Proyecto.builder()
-        .titulo("proyecto")
+        .titulo(tituloProyecto)
         .fechaInicio(Instant.parse("2020-09-18T00:00:00Z"))
         .fechaFin(Instant.parse("2022-10-11T23:59:59Z"))
         .unidadGestionRef("2")
@@ -79,7 +81,6 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
         .empresaRef("codigo-1")
         .rolSocio(rolSocio)
         .build());
-    // @formatter:on
 
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion1 = entityManager
         .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1.getId(), 1,

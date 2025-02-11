@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
 import org.crue.hercules.sgi.csp.model.RolSocioDescripcion;
@@ -29,7 +29,7 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
   private ProyectoSocioPeriodoJustificacionRepository repository;
 
   @Test
-  void findAllByProyectoSocioId_ReturnsProyectoSocioPeriodoJustificacion() throws Exception {
+  void findAllByProyectoSocioId_ReturnsProyectoSocioPeriodoJustificacion() {
 
     // given: 1 ProyectoSocioPeriodoJustificacion para el ProyectoSocioId buscado
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
@@ -50,7 +50,6 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
     Set<RolSocioDescripcion> descripcion = new HashSet<>();
     descripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
 
-    // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .abreviatura(abreviatura)
         .nombre(nombre)
@@ -60,8 +59,11 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
         .build();
     entityManager.persistAndFlush(rolSocio);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "proyecto"));
+
     Proyecto proyecto = Proyecto.builder()
-        .titulo("proyecto")
+        .titulo(tituloProyecto)
         .fechaInicio(Instant.parse("2020-09-18T00:00:00Z"))
         .fechaFin(Instant.parse("2022-10-11T23:59:59Z"))
         .unidadGestionRef("2")
@@ -82,7 +84,6 @@ class ProyectoSocioPeriodoJustificacionRepositoryTest extends BaseRepositoryTest
         .empresaRef("codigo-1")
         .rolSocio(rolSocio).build();
     entityManager.persistAndFlush(proyectoSocio2);
-    // @formatter:on
 
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion1 = new ProyectoSocioPeriodoJustificacion(null,
         proyectoSocio1.getId(), 1, Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),

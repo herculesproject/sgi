@@ -1,14 +1,18 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.service.ProyectoService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -58,9 +62,12 @@ class ProyectoResumenControllerTest extends BaseControllerTest {
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
     tipoAmbitoGeografico.setId(1L);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);
-    proyecto.setTitulo("PRO" + (id != null ? id : 1));
+    proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("2");
@@ -114,7 +121,7 @@ class ProyectoResumenControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         // and the requested Proyecto is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("PRO1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("PRO1"))
         .andExpect(MockMvcResultMatchers.jsonPath("codigoExterno").value("cod-externo-001"));
   }
 

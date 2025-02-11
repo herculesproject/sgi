@@ -3,11 +3,15 @@ package org.crue.hercules.sgi.csp.repository.custom;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -15,6 +19,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoDto;
@@ -37,10 +42,12 @@ import org.crue.hercules.sgi.csp.model.ProyectoEquipo_;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio_;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico_;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -242,25 +249,26 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
 
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
-    CriteriaQuery<ProyectoDto> cq = cb.createQuery(ProyectoDto.class);
+    CriteriaQuery<Tuple> cq = cb.createQuery(Tuple.class);
 
     Root<Proyecto> root = cq.from(Proyecto.class);
 
     Join<Proyecto, Convocatoria> joinConvocatoria = root.join(Proyecto_.convocatoria, JoinType.LEFT);
     Join<Proyecto, EstadoProyecto> joinEstado = root.join(Proyecto_.estado);
     Join<Proyecto, ModeloEjecucion> joinModeloEjecucion = root.join(Proyecto_.modeloEjecucion);
+    SetJoin<Proyecto, ProyectoTitulo> joinProyectoTitulo = root.join(Proyecto_.titulo, JoinType.LEFT);
 
     cq.multiselect(
-        root.get(Proyecto_.id),
-        root.get(Proyecto_.titulo),
-        root.get(Proyecto_.fechaInicio),
-        root.get(Proyecto_.fechaFin),
-        root.get(Proyecto_.fechaFinDefinitiva),
-        root.get(Proyecto_.modeloEjecucion).get(ModeloEjecucion_.contrato),
-        root.get(Proyecto_.totalImporteConcedido),
-        root.get(Proyecto_.importeConcedidoCostesIndirectos),
-        root.get(Proyecto_.ambitoGeografico).get(TipoAmbitoGeografico_.id),
-        joinConvocatoria.get(Convocatoria_.excelencia));
+        root.get(Proyecto_.id).alias(Proyecto_.ID),
+        joinProyectoTitulo.alias(Proyecto_.TITULO),
+        root.get(Proyecto_.fechaInicio).alias(Proyecto_.FECHA_INICIO),
+        root.get(Proyecto_.fechaFin).alias(Proyecto_.FECHA_FIN),
+        root.get(Proyecto_.fechaFinDefinitiva).alias(Proyecto_.FECHA_FIN_DEFINITIVA),
+        root.get(Proyecto_.modeloEjecucion).get(ModeloEjecucion_.contrato).alias(ModeloEjecucion_.CONTRATO),
+        root.get(Proyecto_.totalImporteConcedido).alias(Proyecto_.TOTAL_IMPORTE_CONCEDIDO),
+        root.get(Proyecto_.importeConcedidoCostesIndirectos).alias(Proyecto_.IMPORTE_CONCEDIDO_COSTES_INDIRECTOS),
+        root.get(Proyecto_.ambitoGeografico).get(TipoAmbitoGeografico_.id).alias(Proyecto_.AMBITO_GEOGRAFICO),
+        joinConvocatoria.get(Convocatoria_.excelencia).alias(Convocatoria_.EXCELENCIA));
 
     Predicate predicateModeloEjecucionExternoFalse = cb.equal(joinModeloEjecucion.get(ModeloEjecucion_.externo),
         Boolean.FALSE);
@@ -280,8 +288,35 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
         predicateEstadoConcedido,
         predicateFechasBaremacion));
 
-    TypedQuery<ProyectoDto> typedQuery = entityManager.createQuery(cq);
-    List<ProyectoDto> result = typedQuery.getResultList();
+    TypedQuery<Tuple> typedQuery = entityManager.createQuery(cq);
+    List<Tuple> proyectoTuples = typedQuery.getResultList();
+
+    Map<Long, ProyectoDto> proyectoTuplesMap = new HashMap<>();
+    Map<Long, HashSet<ProyectoTitulo>> tituloTuplesMap = new HashMap<>();
+    proyectoTuples.forEach(tuple -> {
+      Long proyectoId = tuple.get(Proyecto_.ID, Long.class);
+
+      ProyectoDto proyecto = proyectoTuplesMap.computeIfAbsent(proyectoId,
+          key -> ProyectoDto.builder()
+              .id(proyectoId)
+              .fechaInicio(tuple.get(Proyecto_.FECHA_INICIO, Instant.class))
+              .fechaFin(tuple.get(Proyecto_.FECHA_FIN, Instant.class))
+              .fechaFinDefinitiva(tuple.get(Proyecto_.FECHA_FIN_DEFINITIVA, Instant.class))
+              .contrato(tuple.get(ModeloEjecucion_.CONTRATO, Boolean.class))
+              .totalImporteConcedido(tuple.get(Proyecto_.TOTAL_IMPORTE_CONCEDIDO, BigDecimal.class))
+              .importeConcedidoCostesIndirectos(
+                  tuple.get(Proyecto_.IMPORTE_CONCEDIDO_COSTES_INDIRECTOS, BigDecimal.class))
+              .ambitoGeograficoId(tuple.get(Proyecto_.AMBITO_GEOGRAFICO, Long.class))
+              .convocatoriaExcelencia(tuple.get(Convocatoria_.EXCELENCIA, Boolean.class))
+              .build());
+
+      tituloTuplesMap.computeIfAbsent(proyectoId, key -> new HashSet<>());
+      tituloTuplesMap.get(proyectoId).add(tuple.get(Proyecto_.TITULO, ProyectoTitulo.class));
+      proyecto.setTitulo(I18nHelper.getFieldValue(tituloTuplesMap.get(proyectoId)));
+
+    });
+
+    List<ProyectoDto> result = proyectoTuplesMap.values().stream().toList();
 
     log.debug("findProyectosProduccionCientifica(fechaInicioBaremacion, fechaFinBaremacion) : {} - end");
 

@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -33,7 +34,7 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
   private ProyectoHitoRepository repository;
 
   @Test
-  void findByProyectoIdAndFechaAndTipoHitoId_ReturnsProyectoHito() throws Exception {
+  void findByProyectoIdAndFechaAndTipoHitoId_ReturnsProyectoHito() {
 
     // given: Proyecto, tipoHito y fecha no encuentra coincidencias
     ProyectoHito proyectoHito1 = generarMockProyectoHito("-001");
@@ -49,7 +50,7 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
         fechaBusqueda, idTipoHitoBusqueda);
 
     // then: Recupera el ProyectoHito buscado
-    Assertions.assertThat(proyectoHitoEncontrado.isPresent()).as("isPresent()").isTrue();
+    Assertions.assertThat(proyectoHitoEncontrado).as("isPresent()").isPresent();
     Assertions.assertThat(proyectoHitoEncontrado.get().getId()).as("getId()").isEqualTo(proyectoHito1.getId());
     Assertions.assertThat(proyectoHitoEncontrado.get().getProyectoId()).as("getProyecto().getId()")
         .isEqualTo(idProyectoBusqueda);
@@ -60,7 +61,7 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void findByProyectoIdAndFechaAndTipoHitoId_ReturnsEmpty() throws Exception {
+  void findByProyectoIdAndFechaAndTipoHitoId_ReturnsEmpty() {
 
     // given: Proyecto, tipoHito y fecha no encuentra coincidencias
     ProyectoHito proyectoHito1 = generarMockProyectoHito("-001");
@@ -76,7 +77,7 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
         fechaBusqueda, idTipoHitoBusqueda);
 
     // then: No se recupera el ProyectoHito buscado
-    Assertions.assertThat(proyectoHitoEncontrado).isEqualTo(Optional.empty());
+    Assertions.assertThat(proyectoHitoEncontrado).isEmpty();
   }
 
   /**
@@ -89,7 +90,6 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -100,13 +100,13 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
 
     Set<TipoFinalidadNombre> nombreTipoFinalidad = new HashSet<>();
     nombreTipoFinalidad.add(new TipoFinalidadNombre(Language.ES, "nombreTipoFinalidad" + suffix));
-    
+
     TipoFinalidad tipoFinalidad = TipoFinalidad.builder()
         .nombre(nombreTipoFinalidad)
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
-    
+
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
 
@@ -123,10 +123,13 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "titulo" + suffix));
+
     Proyecto proyecto = Proyecto.builder()
         .acronimo("PR" + suffix)
         .codigoExterno("COD" + suffix)
-        .titulo("titulo-" + suffix)
+        .titulo(tituloProyecto)
         .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .finalidad(tipoFinalidad)
@@ -162,7 +165,7 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
         .fecha(Instant.parse("2020-10-01T00:00:00Z"))
         .comentario("comentarioProyectoHito-" + suffix)
         .build();
-    // @formatter:on
+
     return entityManager.persistAndFlush(proyectoHito);
   }
 

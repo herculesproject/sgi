@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -29,7 +30,7 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
   private ProyectoPaqueteTrabajoRepository repository;
 
   @Test
-  void existsProyectoPaqueteTrabajoByProyectoIdAndNombre_ReturnsTRUE() throws Exception {
+  void existsProyectoPaqueteTrabajoByProyectoIdAndNombre_ReturnsTRUE() {
 
     // given: dos registros ProyectoPaqueteTrabajo.
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo1 = generarMockProyectoPaqueteTrabajo("-001");
@@ -49,7 +50,7 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void existsProyectoPaqueteTrabajoByProyectoIdAndNombre_ReturnsFALSE() throws Exception {
+  void existsProyectoPaqueteTrabajoByProyectoIdAndNombre_ReturnsFALSE() {
 
     // given: dos registros ProyectoPaqueteTrabajo.
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo1 = generarMockProyectoPaqueteTrabajo("-001");
@@ -68,7 +69,7 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void existsProyectoPaqueteTrabajoByIdNotAndProyectoIdAndNombre_ReturnsTRUE() throws Exception {
+  void existsProyectoPaqueteTrabajoByIdNotAndProyectoIdAndNombre_ReturnsTRUE() {
 
     // given: dos registros ProyectoPaqueteTrabajo.
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo1 = generarMockProyectoPaqueteTrabajo("-001");
@@ -89,7 +90,7 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void existsProyectoPaqueteTrabajoByIdNotAndProyectoIdAndNombre_ReturnsFALSE() throws Exception {
+  void existsProyectoPaqueteTrabajoByIdNotAndProyectoIdAndNombre_ReturnsFALSE() {
 
     // given: dos registros ProyectoPaqueteTrabajo.
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo1 = generarMockProyectoPaqueteTrabajo("-001");
@@ -118,7 +119,6 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -135,7 +135,7 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
-    
+
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
 
@@ -152,10 +152,13 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "titulo" + suffix));
+
     Proyecto proyecto = Proyecto.builder()
         .acronimo("PR" + suffix)
         .codigoExterno("COD" + suffix)
-        .titulo("titulo-" + suffix)
+        .titulo(tituloProyecto)
         .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .finalidad(tipoFinalidad)
@@ -175,7 +178,7 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
         .personaMes(1D)
         .descripcion("descripcionProyectoPaqueteTrabajo-" + suffix)
         .build();
-    // @formatter:on
+
     return entityManager.persistAndFlush(proyectoPaqueteTrabajo);
   }
 

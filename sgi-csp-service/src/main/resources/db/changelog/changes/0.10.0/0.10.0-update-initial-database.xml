@@ -1795,4 +1795,32 @@
 
     <dropColumn columnName="comentario" tableName="solicitud_documento" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-67">
+    <createTable tableName="proyecto_titulo">
+      <column name="proyecto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_titulo" columnNames="proyecto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_id"
+      baseTableName="proyecto_titulo"
+      constraintName="FK_PROYECTOTITULO_PROYECTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="proyecto" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}proyecto_titulo(proyecto_id, value_, lang) SELECT id, titulo,
+      '${defaultLang}' FROM ${schemaPrefix}proyecto WHERE titulo IS NOT NULL AND
+      NULLIF(TRIM(titulo), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="titulo" tableName="proyecto" />
+  </changeSet>
 </databaseChangeLog>

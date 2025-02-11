@@ -5,6 +5,8 @@ import java.util.Collections;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.ProyectoResumenController;
 import org.crue.hercules.sgi.csp.dto.ProyectoResumenOutput;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -29,9 +31,7 @@ class ProyectoResumenIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s",
         tokenBuilder.buildToken(USER_PERSONA_REF, roles)));
 
-    HttpEntity<Object> request = new HttpEntity<>(entity, headers);
-    return request;
-
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -59,7 +59,8 @@ class ProyectoResumenIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     ProyectoResumenOutput proyectoResumen = response.getBody();
     Assertions.assertThat(proyectoResumen.getId()).as("getId()").isEqualTo(idProyecto);
-    Assertions.assertThat(proyectoResumen.getTitulo()).as("getTitulo()").isEqualTo("PRO1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoResumen.getTitulo(), Language.ES))
+        .as("getTitulo()").isEqualTo("PRO1");
     Assertions.assertThat(proyectoResumen.getCodigoExterno()).as("getCodigoExterno()").isEqualTo("cod-externo-001");
   }
 }

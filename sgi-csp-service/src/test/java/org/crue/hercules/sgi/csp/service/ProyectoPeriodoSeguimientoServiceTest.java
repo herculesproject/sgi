@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
@@ -13,12 +15,14 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoPeriodoSeguimientoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -48,7 +52,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   private ProyectoPeriodoSeguimientoService service;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     service = new ProyectoPeriodoSeguimientoServiceImpl(repository, proyectoRepository,
         proyectoPeriodoSeguimientoDocumentoRepository);
   }
@@ -510,11 +514,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(generarMockProyectoPeriodoSeguimiento(proyectoPeriodoSeguimientoId)));
     BDDMockito.given(repository.save(ArgumentMatchers.<ProyectoPeriodoSeguimiento>any()))
-        .will((InvocationOnMock invocation) -> {
-          ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoUpdated = invocation.getArgument(0,
-              ProyectoPeriodoSeguimiento.class);
-          return proyectoPeriodoSeguimientoUpdated;
-        });
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0, ProyectoPeriodoSeguimiento.class));
 
     // when: updateFechaPresentacionDocumentacion ProyectoPeriodoSeguimiento
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoUpdated = service
@@ -546,7 +546,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+  void delete_WithNoExistingId_ThrowsNotFoundException() {
     // given: no existing id
     Long id = 1L;
 
@@ -560,7 +560,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void existsById_WithExistingId_ReturnsTRUE() throws Exception {
+  void existsById_WithExistingId_ReturnsTRUE() {
     // given: existing id
     Long id = 1L;
     BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.TRUE);
@@ -573,7 +573,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void existsById_WithNoExistingId_ReturnsFALSE() throws Exception {
+  void existsById_WithNoExistingId_ReturnsFALSE() {
     // given: no existing id
     Long id = 1L;
     BDDMockito.given(repository.existsById(ArgumentMatchers.<Long>any())).willReturn(Boolean.FALSE);
@@ -601,7 +601,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  void findById_WithIdNotExist_ThrowsProyectoPeriodoSeguimientoNotFoundException() throws Exception {
+  void findById_WithIdNotExist_ThrowsProyectoPeriodoSeguimientoNotFoundException() {
     // given: Ningun ProyectoPeriodoSeguimiento con el id buscado
     Long idBuscado = 1L;
     BDDMockito.given(repository.findById(idBuscado)).willReturn(Optional.empty());
@@ -630,10 +630,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
           int toIndex = fromIndex + size;
           toIndex = toIndex > proyectosEntidadesConvocantes.size() ? proyectosEntidadesConvocantes.size() : toIndex;
           List<ProyectoPeriodoSeguimiento> content = proyectosEntidadesConvocantes.subList(fromIndex, toIndex);
-          Page<ProyectoPeriodoSeguimiento> pageResponse = new PageImpl<>(content, pageable,
-              proyectosEntidadesConvocantes.size());
-          return pageResponse;
-
+          return new PageImpl<>(content, pageable, proyectosEntidadesConvocantes.size());
         });
 
     // when: Get page=3 with pagesize=10
@@ -674,8 +671,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > periodosJustificacion.size() ? periodosJustificacion.size() : toIndex;
             List<ProyectoPeriodoSeguimiento> content = periodosJustificacion.subList(fromIndex, toIndex);
-            Page<ProyectoPeriodoSeguimiento> page = new PageImpl<>(content, pageable, periodosJustificacion.size());
-            return page;
+            return new PageImpl<>(content, pageable, periodosJustificacion.size());
           }
         });
 
@@ -711,9 +707,12 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
     tipoAmbitoGeografico.setId(1L);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id == null ? 1 : id);
-    proyecto.setTitulo("PRO" + (id != null ? id : 1));
+    proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("2");

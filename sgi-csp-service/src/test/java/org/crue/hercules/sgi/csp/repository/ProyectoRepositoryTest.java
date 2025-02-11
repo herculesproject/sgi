@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -29,7 +30,7 @@ class ProyectoRepositoryTest extends BaseRepositoryTest {
   private ProyectoRepository repository;
 
   @Test
-  void existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual_ReturnsTRUE() throws Exception {
+  void existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual_ReturnsTRUE() {
     // given: un proyecto comprencido entre las fechas 2020-01-01 y 2020-12/31
     Proyecto proyecto1 = generarMockProyecto("-001");
 
@@ -47,7 +48,7 @@ class ProyectoRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual_ReturnsFALSE() throws Exception {
+  void existsProyectoByIdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual_ReturnsFALSE() {
     // given: un proyecto comprencido entre las fechas 2020-01-01 y 2020-12/31
     Proyecto proyecto1 = generarMockProyecto("-001");
 
@@ -95,7 +96,7 @@ class ProyectoRepositoryTest extends BaseRepositoryTest {
   private Proyecto generarMockProyecto(String suffix) {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
-    // @formatter:off
+
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -112,7 +113,7 @@ class ProyectoRepositoryTest extends BaseRepositoryTest {
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
-    
+
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
 
@@ -129,10 +130,13 @@ class ProyectoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "titulo" + suffix));
+
     Proyecto proyecto = Proyecto.builder()
         .acronimo("PR" + suffix)
         .codigoExterno("COD" + suffix)
-        .titulo("titulo-" + suffix)
+        .titulo(tituloProyecto)
         .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .finalidad(tipoFinalidad)
@@ -141,7 +145,7 @@ class ProyectoRepositoryTest extends BaseRepositoryTest {
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
         .activo(Boolean.TRUE)
         .build();
-    // @formatter:on
+
     return entityManager.persistAndFlush(proyecto);
   }
 

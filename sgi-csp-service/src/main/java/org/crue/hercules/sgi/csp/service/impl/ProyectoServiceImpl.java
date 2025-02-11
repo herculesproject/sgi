@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -476,7 +475,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       }
 
       return miembroEquipo;
-    }).collect(Collectors.toList());
+    }).toList();
   }
 
   /**
@@ -622,12 +621,12 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    Specification<Proyecto> specs = ProyectoSpecifications.distinct().and(ProyectoSpecifications.activos()
+    Specification<Proyecto> specs = ProyectoSpecifications.activos()
         .and((ProyectoSpecifications.byInvestigadorId(authentication.getName()))
             .or(ProyectoSpecifications.byResponsableEconomicoId(authentication.getName())))
         .and(ProyectoSpecifications.byEstadoNotBorrador())
         .and(SgiRSQLJPASupport.toSpecification(query,
-            ProyectoPredicateResolver.getInstance(programaRepository, sgiApiSgempService, sgiConfigProperties))));
+            ProyectoPredicateResolver.getInstance(programaRepository, sgiApiSgempService, sgiConfigProperties)));
 
     Page<Proyecto> returnValue = repository.findAll(specs, paging);
     log.debug("findAllActivosInvestigador(String query, Pageable paging) - end");
@@ -645,9 +644,8 @@ public class ProyectoServiceImpl implements ProyectoService {
   public Page<Proyecto> findAllTodosRestringidos(String query, Pageable paging) {
     log.debug("findAll(String query, Pageable paging) - start");
 
-    Specification<Proyecto> specs = ProyectoSpecifications.distinct()
-        .and(SgiRSQLJPASupport.toSpecification(query,
-            ProyectoPredicateResolver.getInstance(programaRepository, sgiApiSgempService, sgiConfigProperties)));
+    Specification<Proyecto> specs = SgiRSQLJPASupport.toSpecification(query,
+        ProyectoPredicateResolver.getInstance(programaRepository, sgiApiSgempService, sgiConfigProperties));
 
     List<String> unidadesGestion = SgiSecurityContextHolder
         .getUOsForAnyAuthority(new String[] { "CSP-PRO-V", "CSP-PRO-C", "CSP-PRO-E", "CSP-PRO-B", "CSP-PRO-R" });
@@ -1193,12 +1191,12 @@ public class ProyectoServiceImpl implements ProyectoService {
         .filter(proyectoEquipo -> proyectoEquipo.getFechaInicio() == null || fechaFinProyecto == null
             || (proyectoEquipo.getFechaInicio() != null && fechaFinProyecto != null
                 && !proyectoEquipo.getFechaInicio().isAfter(fechaFinProyecto)))
-        .collect(Collectors.toList());
+        .toList();
 
     miembrosEquipoProyectoUpdated.addAll(
         miembrosEquipoProyecto.stream()
             .filter(p -> !idsUpdated.contains(p.getId()))
-            .collect(Collectors.toList()));
+            .toList());
 
     miembrosEquipoProyectoUpdated.sort(Comparator.comparing(ProyectoEquipo::getPersonaRef)
         .thenComparing(
@@ -1208,14 +1206,14 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     List<ProyectoEquipo> miembrosEquipoNoSolapados = new ArrayList<>();
     List<String> personasRef = miembrosEquipoProyectoUpdated.stream().map(ProyectoEquipo::getPersonaRef).distinct()
-        .collect(Collectors.toList());
+        .toList();
 
     for (String personaRef : personasRef) {
       ProyectoEquipo miembroEquipoAnterior = null;
 
       List<ProyectoEquipo> miembrosPersonaRef = miembrosEquipoProyectoUpdated.stream()
           .filter(miembroEquipo -> miembroEquipo.getPersonaRef().equals(personaRef))
-          .collect(Collectors.toList());
+          .toList();
 
       for (ProyectoEquipo miembroEquipo : miembrosPersonaRef) {
         if (miembroEquipoAnterior == null
@@ -1293,12 +1291,12 @@ public class ProyectoServiceImpl implements ProyectoService {
             || fechaFinProyecto == null
             || (responsableEconomicoProyecto.getFechaInicio() != null && fechaFinProyecto != null
                 && !responsableEconomicoProyecto.getFechaInicio().isAfter(fechaFinProyecto)))
-        .collect(Collectors.toList());
+        .toList();
 
     responsablesEconomicosProyectoUpdated.addAll(
         responsablesEconomicosProyecto.stream()
             .filter(p -> !idsUpdated.contains(p.getId()))
-            .collect(Collectors.toList()));
+            .toList());
 
     responsablesEconomicosProyectoUpdated
         .sort(Comparator.comparing(ProyectoResponsableEconomico::getId, Comparator.nullsLast(Comparator.naturalOrder()))
@@ -1517,7 +1515,7 @@ public class ProyectoServiceImpl implements ProyectoService {
             || proyecto.getFechaFin() == null
             || (proyectoSocioPeriodoPago.getFechaPrevistaPago() != null && proyecto.getFechaFin() != null
                 && !proyectoSocioPeriodoPago.getFechaPrevistaPago().isAfter(proyecto.getFechaFin())))
-        .collect(Collectors.toList());
+        .toList();
     this.proyectoSocioPeriodoPagoService.update(proyectoSocioId, proyectoSocioPeriodoPagos);
 
     log.debug(
@@ -1578,12 +1576,12 @@ public class ProyectoServiceImpl implements ProyectoService {
             proyectoEquipoSocio -> proyectoEquipoSocio.getFechaInicio() == null || fechaFinProyecto == null
                 || (proyectoEquipoSocio.getFechaInicio() != null && fechaFinProyecto != null
                     && !proyectoEquipoSocio.getFechaInicio().isAfter(fechaFinProyecto)))
-        .collect(Collectors.toList());
+        .toList();
 
     miembrosEquipoSocioProyectoUpdated.addAll(
         miembrosEquipoSocioProyecto.stream()
             .filter(p -> !idsUpdated.contains(p.getId()))
-            .collect(Collectors.toList()));
+            .toList());
 
     miembrosEquipoSocioProyectoUpdated.sort(Comparator.comparing(ProyectoSocioEquipo::getPersonaRef)
         .thenComparing(
@@ -1594,14 +1592,14 @@ public class ProyectoServiceImpl implements ProyectoService {
     List<ProyectoSocioEquipo> miembrosEquipoNoSolapados = new ArrayList<>();
     List<String> personasRef = miembrosEquipoSocioProyectoUpdated.stream().map(ProyectoSocioEquipo::getPersonaRef)
         .distinct()
-        .collect(Collectors.toList());
+        .toList();
 
     for (String personaRef : personasRef) {
       ProyectoSocioEquipo miembroEquipoAnterior = null;
 
       List<ProyectoSocioEquipo> miembrosPersonaRef = miembrosEquipoSocioProyectoUpdated.stream()
           .filter(miembroEquipo -> miembroEquipo.getPersonaRef().equals(personaRef))
-          .collect(Collectors.toList());
+          .toList();
 
       for (ProyectoSocioEquipo miembroEquipo : miembrosPersonaRef) {
         if (miembroEquipoAnterior == null
@@ -1836,12 +1834,12 @@ public class ProyectoServiceImpl implements ProyectoService {
                     proyectoConceptoGasto.getFechaInicio(),
                     proyectoConceptoGasto.getFechaFin(),
                     proyectoConceptoGasto.getProyectoId()))
-        .collect(Collectors.toList());
+        .toList();
 
     proyectoConceptoGastoCodigoEcs.addAll(
         proyectoCodigosEconomicos.stream()
             .filter(p -> !idsUpdated.contains(p.getId()))
-            .collect(Collectors.toList()));
+            .toList());
 
     proyectoConceptoGastoCodigoEcs
         .sort(Comparator.comparing(ProyectoConceptoGastoCodigoEc::getId,
@@ -2402,48 +2400,50 @@ public class ProyectoServiceImpl implements ProyectoService {
   }
 
   private void copyPeriodosJustificacionFromConvocatoria(Proyecto proyecto, Long convocatoriaId) {
-    // @formatter:off
-    List<ProyectoPeriodoJustificacion> proyectosPeriodosJustificacionSinEstado = this.proyectoPeriodoJustificacionRepository.saveAll(
-      this.convocatoriaPeriodoJustificacionRepository.findAllByConvocatoriaId(convocatoriaId).stream()
-        .filter(periodo -> checkIfFechaInicioIsInsideProyectoRange(proyecto, periodo))
-        .map(periodo -> ProyectoPeriodoJustificacion.builder()
-          .proyectoId(proyecto.getId())
-          .numPeriodo(periodo.getNumPeriodo())
-          .fechaInicioPresentacion(periodo.getFechaInicioPresentacion())
-          .fechaFinPresentacion(periodo.getFechaFinPresentacion())
-          .tipoJustificacion(periodo.getTipo())
-          .observaciones(I18nHelper.getValueForCurrentLanguage(periodo.getObservaciones()))
-          .convocatoriaPeriodoJustificacionId(periodo.getId())
-          .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-              periodo.getMesInicial(), sgiConfigProperties.getTimeZone()))
-          .fechaFin(resolveFechaFinFromPeriodoJustificacionConvocatoria(proyecto, periodo))
-          .build()
-        ).collect(Collectors.toList())
-    );
+    List<ProyectoPeriodoJustificacion> proyectosPeriodosJustificacionSinEstado = this.proyectoPeriodoJustificacionRepository
+        .saveAll(
+            this.convocatoriaPeriodoJustificacionRepository.findAllByConvocatoriaId(convocatoriaId).stream()
+                .filter(periodo -> checkIfFechaInicioIsInsideProyectoRange(proyecto, periodo))
+                .map(periodo -> ProyectoPeriodoJustificacion.builder()
+                    .proyectoId(proyecto.getId())
+                    .numPeriodo(periodo.getNumPeriodo())
+                    .fechaInicioPresentacion(periodo.getFechaInicioPresentacion())
+                    .fechaFinPresentacion(periodo.getFechaFinPresentacion())
+                    .tipoJustificacion(periodo.getTipo())
+                    .observaciones(I18nHelper.getValueForCurrentLanguage(periodo.getObservaciones()))
+                    .convocatoriaPeriodoJustificacionId(periodo.getId())
+                    .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
+                        periodo.getMesInicial(), sgiConfigProperties.getTimeZone()))
+                    .fechaFin(resolveFechaFinFromPeriodoJustificacionConvocatoria(proyecto, periodo))
+                    .build())
+                .toList());
 
-    if (!proyectosPeriodosJustificacionSinEstado.isEmpty()){
-      proyectosPeriodosJustificacionSinEstado.stream().forEach(periodoJustificacion ->{
-        periodoJustificacion.setEstado(this.createEstadoProyectoPeriodoJustificacionPendiente(periodoJustificacion.getId()));
+    if (!proyectosPeriodosJustificacionSinEstado.isEmpty()) {
+      proyectosPeriodosJustificacionSinEstado.stream().forEach(periodoJustificacion -> {
+        periodoJustificacion
+            .setEstado(this.createEstadoProyectoPeriodoJustificacionPendiente(periodoJustificacion.getId()));
         proyectoPeriodoJustificacionRepository.save(periodoJustificacion);
       });
     }
-    // @formatter: on
   }
 
-  private EstadoProyectoPeriodoJustificacion createEstadoProyectoPeriodoJustificacionPendiente(Long idPeriodoJustificacion) {
+  private EstadoProyectoPeriodoJustificacion createEstadoProyectoPeriodoJustificacionPendiente(
+      Long idPeriodoJustificacion) {
     return this.estadoProyectoPeriodoJustificacionRepository.save(EstadoProyectoPeriodoJustificacion.builder()
-      .estado(EstadoProyectoPeriodoJustificacion.TipoEstadoPeriodoJustificacion.PENDIENTE)
-      .fechaEstado(Instant.now())
-      .proyectoPeriodoJustificacionId(idPeriodoJustificacion)
-      .build());
+        .estado(EstadoProyectoPeriodoJustificacion.TipoEstadoPeriodoJustificacion.PENDIENTE)
+        .fechaEstado(Instant.now())
+        .proyectoPeriodoJustificacionId(idPeriodoJustificacion)
+        .build());
   }
 
-  private Instant resolveFechaFinFromPeriodoJustificacionConvocatoria(Proyecto proyecto, ConvocatoriaPeriodoJustificacion periodo) {
-    Instant fechaFinProyecto = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva() : proyecto.getFechaFin();
+  private Instant resolveFechaFinFromPeriodoJustificacionConvocatoria(Proyecto proyecto,
+      ConvocatoriaPeriodoJustificacion periodo) {
+    Instant fechaFinProyecto = proyecto.getFechaFinDefinitiva() != null ? proyecto.getFechaFinDefinitiva()
+        : proyecto.getFechaFin();
 
     Instant fechaFin = PeriodDateUtil.calculateFechaFinPeriodo(proyecto.getFechaInicio(),
-      periodo.getMesFinal(), fechaFinProyecto, sgiConfigProperties.getTimeZone());
-    if(fechaFin.isAfter(fechaFinProyecto)){
+        periodo.getMesFinal(), fechaFinProyecto, sgiConfigProperties.getTimeZone());
+    if (fechaFin.isAfter(fechaFinProyecto)) {
       fechaFin = fechaFinProyecto;
     }
     return fechaFin;
@@ -2451,26 +2451,30 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   private boolean checkIfFechaInicioIsInsideProyectoRange(Proyecto proyecto, ConvocatoriaPeriodoJustificacion periodo) {
     Instant fechaInicio = PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
-      periodo.getMesInicial(), sgiConfigProperties.getTimeZone());
+        periodo.getMesInicial(), sgiConfigProperties.getTimeZone());
 
     return (fechaInicio.isAfter(proyecto.getFechaInicio()) || fechaInicio.equals(proyecto.getFechaInicio()))
-      && (fechaInicio.isBefore(proyecto.getFechaFin()));
+        && (fechaInicio.isBefore(proyecto.getFechaFin()));
   }
 
   /**
    *
-   * @param proyectoId id del {@link Proyecto} del que cuelgan la lista de objetos {@link ProyectoFacturacion} a buscar
-   * @param query información del filtro.
-   * @param paging información de paginación
-   * @return objeto {@link Page} con el listado de objetos de tipo {@link ProyectoFacturacion}
+   * @param proyectoId id del {@link Proyecto} del que cuelgan la lista de objetos
+   *                   {@link ProyectoFacturacion} a buscar
+   * @param query      información del filtro.
+   * @param paging     información de paginación
+   * @return objeto {@link Page} con el listado de objetos de tipo
+   *         {@link ProyectoFacturacion}
    */
   @Override
-  public Page<ProyectoFacturacion> findAllProyectoFacturacionByProyectoId(Long proyectoId, String query, Pageable paging){
+  public Page<ProyectoFacturacion> findAllProyectoFacturacionByProyectoId(Long proyectoId, String query,
+      Pageable paging) {
     return this.proyectoFacturacionService.findByProyectoId(proyectoId, query, paging);
   }
 
   /**
-   * Devuelve una lista de ids de los objetos de tipo {@link Proyecto} que estñan asociados
+   * Devuelve una lista de ids de los objetos de tipo {@link Proyecto} que estñan
+   * asociados
    * con un objeto de tipo {@link Solicitud}
    * 
    * @param solicitudId id de la {@link Solicitud}
@@ -2491,7 +2495,7 @@ public class ProyectoServiceImpl implements ProyectoService {
    * @return Lista de {@link ProyectoDto}
    */
   @Override
-  public List<ProyectoDto> findProyectosProduccionCientifica(Integer anioInicio, Integer anioFin){
+  public List<ProyectoDto> findProyectosProduccionCientifica(Integer anioInicio, Integer anioFin) {
 
     Instant fechaInicioBaremacion = PeriodDateUtil.calculateFechaInicioBaremacionByAnio(
         anioInicio, sgiConfigProperties.getTimeZone());
@@ -2501,14 +2505,16 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     return repository.findProyectosProduccionCientifica(fechaInicioBaremacion, fechaFinBaremacion);
   }
-    
-  /**  
-   * Devuelve una lista paginada y filtrada {@link RelacionEjecucionEconomica} que se
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link RelacionEjecucionEconomica} que
+   * se
    * encuentren dentro de la unidad de gestión del usuario logueado
    * 
    * @param query    filtro de búsqueda.
    * @param pageable {@link Pageable}.
-   * @return el listado de entidades {@link RelacionEjecucionEconomica} activas paginadas
+   * @return el listado de entidades {@link RelacionEjecucionEconomica} activas
+   *         paginadas
    *         y filtradas.
    */
   @Override
@@ -2517,7 +2523,8 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     Specification<ProyectoProyectoSge> specs = ProyectoProyectoSgeSpecifications.activos();
     if (query != null) {
-      specs = specs.and(SgiRSQLJPASupport.toSpecification(query,  ProyectoProyectoSgePredicateResolver.getInstance(sgiConfigProperties)));
+      specs = specs.and(SgiRSQLJPASupport.toSpecification(query,
+          ProyectoProyectoSgePredicateResolver.getInstance(sgiConfigProperties)));
     }
 
     // No tiene acceso a todos los UO
@@ -2530,7 +2537,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       specs = specs.and(specByUnidadGestionRefIn);
     }
 
-    Page<RelacionEjecucionEconomica> returnValue = proyectoProyectoSGERepository.findRelacionesEjecucionEconomica(specs, pageable);
+    Page<RelacionEjecucionEconomica> returnValue = proyectoProyectoSGERepository.findRelacionesEjecucionEconomica(specs,
+        pageable);
     log.debug("findRelacionesEjecucionEconomicaProyectos(String query, Pageable pageable) - end");
     return returnValue;
   }
@@ -2538,40 +2546,50 @@ public class ProyectoServiceImpl implements ProyectoService {
   /**
    * Obtiene los datos de proyectos competitivos de las personas.
    *
-   * @param personasRef Lista de id de las personas.
-   * @param onlyAsRolPrincipal Indica si solo se comprueba la participacion con un rol principal
-   * @param exludedProyectoId Excluye el {@link Proyecto} de la consulta
+   * @param personasRef        Lista de id de las personas.
+   * @param onlyAsRolPrincipal Indica si solo se comprueba la participacion con un
+   *                           rol principal
+   * @param exludedProyectoId  Excluye el {@link Proyecto} de la consulta
    * @return el {@link ProyectosCompetitivosPersonas}.
    */
   @Override
-  public ProyectosCompetitivosPersonas getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) {
-    log.debug("getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - start");
+  public ProyectosCompetitivosPersonas getProyectosCompetitivosPersonas(List<String> personasRef,
+      Boolean onlyAsRolPrincipal, Long exludedProyectoId) {
+    log.debug(
+        "getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - start");
 
     Instant fechaActual = Instant.now().atZone(sgiConfigProperties.getTimeZone().toZoneId()).toInstant();
 
     ProyectosCompetitivosPersonas proyectosCompetitivosPersona = ProyectosCompetitivosPersonas.builder()
         .numProyectosCompetitivos(
-            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.COMPETITIVOS, onlyAsRolPrincipal, exludedProyectoId))
+            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.COMPETITIVOS,
+                onlyAsRolPrincipal, exludedProyectoId))
         .numProyectosCompetitivosActuales(
-            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.COMPETITIVOS, onlyAsRolPrincipal, exludedProyectoId, fechaActual))
+            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.COMPETITIVOS,
+                onlyAsRolPrincipal, exludedProyectoId, fechaActual))
         .numProyectosNoCompetitivos(
-            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.NO_COMPETITIVOS, onlyAsRolPrincipal, exludedProyectoId))
+            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.NO_COMPETITIVOS,
+                onlyAsRolPrincipal, exludedProyectoId))
         .numProyectosNoCompetitivosActuales(
-            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.NO_COMPETITIVOS, onlyAsRolPrincipal, exludedProyectoId, fechaActual))
+            repository.countProyectosClasificacionCvnPersonas(personasRef, ClasificacionCVN.NO_COMPETITIVOS,
+                onlyAsRolPrincipal, exludedProyectoId, fechaActual))
         .build();
 
-    log.debug("getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - end");
+    log.debug(
+        "getProyectosCompetitivosPersonas(List<String> personasRef, Boolean onlyAsRolPrincipal, Long exludedProyectoId) - end");
     return proyectosCompetitivosPersona;
   }
 
   @Override
-  public Page<ProyectoSeguimientoEjecucionEconomica> findProyectosSeguimientoEjecucionEconomica(String proyectoSgeRef, String query, Pageable pageable) {
+  public Page<ProyectoSeguimientoEjecucionEconomica> findProyectosSeguimientoEjecucionEconomica(String proyectoSgeRef,
+      String query, Pageable pageable) {
     log.debug("findProyectosSeguimientoEjecucionEconomica(String query, Pageable pageable) - start");
 
     Specification<ProyectoProyectoSge> specs = ProyectoProyectoSgeSpecifications.activos()
-    .and(ProyectoProyectoSgeSpecifications.byProyectoSgeRef(proyectoSgeRef));
+        .and(ProyectoProyectoSgeSpecifications.byProyectoSgeRef(proyectoSgeRef));
     if (query != null) {
-      specs = specs.and(SgiRSQLJPASupport.toSpecification(query, ProyectoProyectoSgePredicateResolver.getInstance(sgiConfigProperties)));
+      specs = specs.and(SgiRSQLJPASupport.toSpecification(query,
+          ProyectoProyectoSgePredicateResolver.getInstance(sgiConfigProperties)));
     }
 
     // No tiene acceso a todos los UO
@@ -2584,13 +2602,15 @@ public class ProyectoServiceImpl implements ProyectoService {
       specs = specs.and(specByUnidadGestionRefIn);
     }
 
-    Page<ProyectoSeguimientoEjecucionEconomica> returnValue = proyectoProyectoSGERepository.findProyectosSeguimientoEjecucionEconomica(specs, pageable);
+    Page<ProyectoSeguimientoEjecucionEconomica> returnValue = proyectoProyectoSGERepository
+        .findProyectosSeguimientoEjecucionEconomica(specs, pageable);
     log.debug("findProyectosSeguimientoEjecucionEconomica(String query, Pageable pageable) - end");
     return returnValue;
   }
 
-    /**
-   * Devuelve el {@link ProyectoApartadosWithDates} con la informacion de cuales de
+  /**
+   * Devuelve el {@link ProyectoApartadosWithDates} con la informacion de cuales
+   * de
    * los apartados tienen elementos con fechas.
    * 
    * @param id Identificador de {@link Proyecto}.
@@ -2601,12 +2621,12 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("getProyectoApartadosWithDates({}) - start", id);
 
     ProyectoApartadosWithDates proyectoApartadosWithDates = ProyectoApartadosWithDates.builder()
-    .elegibilidad(proyectoConceptoGastoService.proyectoHasConceptosGastoWithDates(id))
-    .equiposSocios(proyectoEquipoSocioService.proyectoHasProyectoSocioEquipoWithDates(id))
-    .equipo(proyectoEquipoService.proyectoHasProyectoEquipoWithDates(id))
-    .responsableEconomico(proyectoResponsableEconomicoService.proyectoHasProyectoResponsableEconomicoWithDates(id))
-    .socios(proyectoSocioService.proyectoHasSociosWithDates(id))
-    .build();
+        .elegibilidad(proyectoConceptoGastoService.proyectoHasConceptosGastoWithDates(id))
+        .equiposSocios(proyectoEquipoSocioService.proyectoHasProyectoSocioEquipoWithDates(id))
+        .equipo(proyectoEquipoService.proyectoHasProyectoEquipoWithDates(id))
+        .responsableEconomico(proyectoResponsableEconomicoService.proyectoHasProyectoResponsableEconomicoWithDates(id))
+        .socios(proyectoSocioService.proyectoHasSociosWithDates(id))
+        .build();
 
     log.debug("getProyectoApartadosWithDates({}) - end", id);
     return proyectoApartadosWithDates;
@@ -2620,19 +2640,24 @@ public class ProyectoServiceImpl implements ProyectoService {
    * @return {@link ProyectoApartadosToBeCopied}
    *         correspondiente al id
    */
-   @Override
+  @Override
   public ProyectoApartadosToBeCopied getProyectoApartadosToBeCopied(Long id) {
     log.debug("getProyectoApartadosToBeCopied({}) - start", id);
 
     Proyecto proyecto = findById(id);
 
     ProyectoApartadosToBeCopied proyectoApartadosToBeCopied = ProyectoApartadosToBeCopied.builder()
-    .elegibilidad(proyecto.getConvocatoriaId() != null && convocatoriaConceptoGastoRepository.existsByConvocatoriaId(proyecto.getConvocatoriaId()))
-    .equiposSocios(proyecto.getSolicitudId() != null && solicitudEquipoSocioRepository.existsBySolicitudProyectoSocioSolicitudProyectoId(proyecto.getSolicitudId()))
-    .equipo(proyecto.getSolicitudId() != null && solicitudEquipoRepository.existsBySolicitudProyectoId(proyecto.getSolicitudId()))
-    .responsableEconomico(proyecto.getSolicitudId() != null && solicitudProyectoResponsableEconomicoRepository.existsBySolicitudProyectoId(proyecto.getSolicitudId()))
-    .socios(proyecto.getSolicitudId() != null && solicitudSocioRepository.existsBySolicitudProyectoId(proyecto.getSolicitudId()))
-    .build();
+        .elegibilidad(proyecto.getConvocatoriaId() != null
+            && convocatoriaConceptoGastoRepository.existsByConvocatoriaId(proyecto.getConvocatoriaId()))
+        .equiposSocios(proyecto.getSolicitudId() != null && solicitudEquipoSocioRepository
+            .existsBySolicitudProyectoSocioSolicitudProyectoId(proyecto.getSolicitudId()))
+        .equipo(proyecto.getSolicitudId() != null
+            && solicitudEquipoRepository.existsBySolicitudProyectoId(proyecto.getSolicitudId()))
+        .responsableEconomico(proyecto.getSolicitudId() != null
+            && solicitudProyectoResponsableEconomicoRepository.existsBySolicitudProyectoId(proyecto.getSolicitudId()))
+        .socios(proyecto.getSolicitudId() != null
+            && solicitudSocioRepository.existsBySolicitudProyectoId(proyecto.getSolicitudId()))
+        .build();
 
     log.debug("getProyectoApartadosToBeCopied({}) - end", id);
     return proyectoApartadosToBeCopied;

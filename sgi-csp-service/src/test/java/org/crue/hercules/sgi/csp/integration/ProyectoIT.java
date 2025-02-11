@@ -8,8 +8,9 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.ProyectoController;
@@ -45,8 +46,10 @@ import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -121,9 +124,7 @@ class ProyectoIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s",
         tokenBuilder.buildToken("user", roles)));
 
-    HttpEntity<Object> request = new HttpEntity<>(entity, headers);
-    return request;
-
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -137,35 +138,6 @@ class ProyectoIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void create_ReturnsProyecto() throws Exception {
-    String roles = "CSP-PRO-C";
-    Proyecto proyecto = generarMockProyecto(null);
-
-    final ResponseEntity<Proyecto> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
-        buildRequest(null, proyecto, roles), Proyecto.class);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-    Proyecto proyectoCreado = response.getBody();
-    Assertions.assertThat(proyectoCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(proyectoCreado.getEstado().getId()).as("getEstado().getId()").isNotNull();
-    Assertions.assertThat(proyectoCreado.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(proyecto.getObservaciones());
-    Assertions.assertThat(proyectoCreado.getUnidadGestionRef()).as("getUnidadGestionRef()")
-        .isEqualTo(proyecto.getUnidadGestionRef());
-
-  }
-
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
-    // @formatter:off 
-      "classpath:scripts/modelo_ejecucion.sql",
-      "classpath:scripts/modelo_unidad.sql", 
-      "classpath:scripts/tipo_finalidad.sql",
-      "classpath:scripts/tipo_ambito_geografico.sql"
-      // @formatter:on 
-  })
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  void create_ReturnsProyectoBySolicitud() throws Exception {
     String roles = "CSP-PRO-C";
     Proyecto proyecto = generarMockProyecto(null);
 
@@ -2715,7 +2687,7 @@ class ProyectoIT extends BaseIT {
         return o1.getId().compareTo(o2.getId());
       }
 
-    }).collect(Collectors.toList());
+    }).toList();
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2766,7 +2738,7 @@ class ProyectoIT extends BaseIT {
         return o1.getId().compareTo(o2.getId());
       }
 
-    }).collect(Collectors.toList());
+    }).toList();
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2831,7 +2803,7 @@ class ProyectoIT extends BaseIT {
             return o1.getId().compareTo(o2.getId());
           }
         })
-        .collect(Collectors.toList());
+        .toList();
     Assertions.assertThat(responseData).hasSize(Integer.valueOf(expectedSize));
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
@@ -2894,7 +2866,7 @@ class ProyectoIT extends BaseIT {
             return o1.getId().compareTo(o2.getId());
           }
         })
-        .collect(Collectors.toList());
+        .toList();
     Assertions.assertThat(responseData).hasSize(Integer.valueOf(expectedSize));
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
@@ -2925,8 +2897,8 @@ class ProyectoIT extends BaseIT {
 
     Long proyectoId = 1L;
     List<ProyectoPalabraClaveInput> toUpdate = Arrays.asList(
-        buildMockProyectoPalabraClaveInput(1L, "updated-01", proyectoId),
-        buildMockProyectoPalabraClaveInput(2L, "updated-02", proyectoId));
+        buildMockProyectoPalabraClaveInput("updated-01", proyectoId),
+        buildMockProyectoPalabraClaveInput("updated-02", proyectoId));
 
     URI uri = UriComponentsBuilder
         .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_PROYECTO_ID + PATH_PALABRAS_CLAVE)
@@ -2947,8 +2919,8 @@ class ProyectoIT extends BaseIT {
             return o1.getId().compareTo(o2.getId());
           }
         })
-        .collect(Collectors.toList());
-    Assertions.assertThat(responseData).hasSize(Integer.valueOf(2));
+        .toList();
+    Assertions.assertThat(responseData).hasSize(2);
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -2998,7 +2970,7 @@ class ProyectoIT extends BaseIT {
           public int compare(NotificacionProyectoExternoCVNOutput o1, NotificacionProyectoExternoCVNOutput o2) {
             return o1.getId().compareTo(o2.getId());
           }
-        }).collect(Collectors.toList());
+        }).toList();
 
     Assertions.assertThat(responseData.get(0)).isNotNull();
     Assertions.assertThat(responseData.get(1)).isNotNull();
@@ -3111,9 +3083,12 @@ class ProyectoIT extends BaseIT {
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
     tipoAmbitoGeografico.setId(1L);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);
-    proyecto.setTitulo("PRO" + (id != null ? id : 1));
+    proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("2");
@@ -3149,8 +3124,7 @@ class ProyectoIT extends BaseIT {
     return estadoProyecto;
   }
 
-  private ProyectoPalabraClaveInput buildMockProyectoPalabraClaveInput(Long id, String palabraClaveRef,
-      Long proyectoId) {
+  private ProyectoPalabraClaveInput buildMockProyectoPalabraClaveInput(String palabraClaveRef, Long proyectoId) {
     return ProyectoPalabraClaveInput.builder()
         .palabraClaveRef(palabraClaveRef)
         .proyectoId(proyectoId)

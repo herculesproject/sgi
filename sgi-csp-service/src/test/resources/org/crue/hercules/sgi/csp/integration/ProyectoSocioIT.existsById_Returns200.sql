@@ -25,8 +25,11 @@ INSERT INTO test.tipo_ambito_geografico_nombre (tipo_ambito_geografico_id, lang,
 INSERT INTO test.estado_proyecto (id, proyecto_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
 
 -- PROYECTO
-INSERT INTO test.proyecto (id, titulo, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, activo)
- VALUES (1, 'PRO1', 'cod-externo-001', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', '2', 1, 1, 1, false, 'observaciones 1', 1, true);
+INSERT INTO test.proyecto (id, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, observaciones, estado_proyecto_id, activo)
+VALUES (1, 'cod-externo-001', '2020-12-12T00:00:00Z', '2020-12-31T23:59:59Z', '2', 1, 1, 1, false, 'observaciones 1', 1, true);
+
+-- PROYECTO_TITULO
+INSERT INTO test.proyecto_titulo (proyecto_id, lang, value_) VALUES (1, 'es', 'PRO1');
 
 -- ROL SOCIO
 INSERT INTO test.rol_socio (id, coordinador, activo) VALUES (1, false, true);

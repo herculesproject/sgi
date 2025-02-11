@@ -5,9 +5,10 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.converter.ProyectoFaseConverter;
@@ -29,6 +30,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
@@ -69,6 +71,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -437,8 +440,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           int toIndex = fromIndex + size;
           toIndex = toIndex > proyectos.size() ? proyectos.size() : toIndex;
           List<Proyecto> content = proyectos.subList(fromIndex, toIndex);
-          Page<Proyecto> pageResponse = new PageImpl<>(content, pageable, proyectos.size());
-          return pageResponse;
+          return new PageImpl<>(content, pageable, proyectos.size());
         });
 
     // when: Get page=3 with pagesize=10
@@ -471,8 +473,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         .willAnswer(new Answer<Page<Proyecto>>() {
           @Override
           public Page<Proyecto> answer(InvocationOnMock invocation) throws Throwable {
-            Page<Proyecto> page = new PageImpl<>(Collections.emptyList());
-            return page;
+            return new PageImpl<>(Collections.emptyList());
           }
         });
 
@@ -504,8 +505,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           int toIndex = fromIndex + size;
           toIndex = toIndex > proyectos.size() ? proyectos.size() : toIndex;
           List<Proyecto> content = proyectos.subList(fromIndex, toIndex);
-          Page<Proyecto> pageResponse = new PageImpl<>(content, pageable, proyectos.size());
-          return pageResponse;
+          return new PageImpl<>(content, pageable, proyectos.size());
         });
 
     // when: Get page=3 with pagesize=10
@@ -539,8 +539,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         .willAnswer(new Answer<Page<Proyecto>>() {
           @Override
           public Page<Proyecto> answer(InvocationOnMock invocation) throws Throwable {
-            Page<Proyecto> page = new PageImpl<>(Collections.emptyList());
-            return page;
+            return new PageImpl<>(Collections.emptyList());
           }
         });
 
@@ -585,8 +584,7 @@ class ProyectoControllerTest extends BaseControllerTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectoHitos.size() ? proyectoHitos.size() : toIndex;
             List<ProyectoHito> content = proyectoHitos.subList(fromIndex, toIndex);
-            Page<ProyectoHito> page = new PageImpl<>(content, pageable, proyectoHitos.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectoHitos.size());
           }
         });
 
@@ -631,8 +629,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           @Override
           public Page<ProyectoHito> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ProyectoHito> page = new PageImpl<>(proyectoHitos, pageable, 0);
-            return page;
+            return new PageImpl<>(proyectoHitos, pageable, 0);
           }
         });
 
@@ -681,8 +678,7 @@ class ProyectoControllerTest extends BaseControllerTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectoFases.size() ? proyectoFases.size() : toIndex;
             List<ProyectoFase> content = proyectoFases.subList(fromIndex, toIndex);
-            Page<ProyectoFase> page = new PageImpl<>(content, pageable, proyectoFases.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectoFases.size());
           }
         });
 
@@ -731,8 +727,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           @Override
           public Page<ProyectoFase> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ProyectoFase> page = new PageImpl<>(proyectoFases, pageable, 0);
-            return page;
+            return new PageImpl<>(proyectoFases, pageable, 0);
           }
         });
 
@@ -779,8 +774,7 @@ class ProyectoControllerTest extends BaseControllerTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectoPaqueteTrabajos.size() ? proyectoPaqueteTrabajos.size() : toIndex;
             List<ProyectoPaqueteTrabajo> content = proyectoPaqueteTrabajos.subList(fromIndex, toIndex);
-            Page<ProyectoPaqueteTrabajo> page = new PageImpl<>(content, pageable, proyectoPaqueteTrabajos.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectoPaqueteTrabajos.size());
           }
         });
 
@@ -827,8 +821,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           @Override
           public Page<ProyectoPaqueteTrabajo> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ProyectoPaqueteTrabajo> page = new PageImpl<>(proyectoPaqueteTrabajos, pageable, 0);
-            return page;
+            return new PageImpl<>(proyectoPaqueteTrabajos, pageable, 0);
           }
         });
 
@@ -870,8 +863,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           int toIndex = fromIndex + size;
           toIndex = toIndex > proyectoSocios.size() ? proyectoSocios.size() : toIndex;
           List<ProyectoSocio> content = proyectoSocios.subList(fromIndex, toIndex);
-          Page<ProyectoSocio> pageResponse = new PageImpl<>(content, pageable, proyectoSocios.size());
-          return pageResponse;
+          return new PageImpl<>(content, pageable, proyectoSocios.size());
         });
 
     // when: get page=3 with pagesize=10
@@ -914,8 +906,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         .willAnswer(new Answer<Page<ProyectoSocio>>() {
           @Override
           public Page<ProyectoSocio> answer(InvocationOnMock invocation) throws Throwable {
-            Page<ProyectoSocio> page = new PageImpl<>(Collections.emptyList());
-            return page;
+            return new PageImpl<>(Collections.emptyList());
           }
         });
 
@@ -957,8 +948,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           int toIndex = fromIndex + size;
           toIndex = toIndex > proyectoEquipos.size() ? proyectoEquipos.size() : toIndex;
           List<ProyectoEquipo> content = proyectoEquipos.subList(fromIndex, toIndex);
-          Page<ProyectoEquipo> pageResponse = new PageImpl<>(content, pageable, proyectoEquipos.size());
-          return pageResponse;
+          return new PageImpl<>(content, pageable, proyectoEquipos.size());
         });
 
     // when: get page=3 with pagesize=10
@@ -1002,8 +992,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         .willAnswer(new Answer<Page<ProyectoEquipo>>() {
           @Override
           public Page<ProyectoEquipo> answer(InvocationOnMock invocation) throws Throwable {
-            Page<ProyectoEquipo> page = new PageImpl<>(Collections.emptyList());
-            return page;
+            return new PageImpl<>(Collections.emptyList());
           }
         });
 
@@ -1050,9 +1039,7 @@ class ProyectoControllerTest extends BaseControllerTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectoPeriodoSeguimientos.size() ? proyectoPeriodoSeguimientos.size() : toIndex;
             List<ProyectoPeriodoSeguimiento> content = proyectoPeriodoSeguimientos.subList(fromIndex, toIndex);
-            Page<ProyectoPeriodoSeguimiento> page = new PageImpl<>(content, pageable,
-                proyectoPeriodoSeguimientos.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectoPeriodoSeguimientos.size());
           }
         });
 
@@ -1099,8 +1086,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           @Override
           public Page<ProyectoPeriodoSeguimiento> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ProyectoPeriodoSeguimiento> page = new PageImpl<>(proyectoPeriodoSeguimientos, pageable, 0);
-            return page;
+            return new PageImpl<>(proyectoPeriodoSeguimientos, pageable, 0);
           }
         });
 
@@ -1147,8 +1133,7 @@ class ProyectoControllerTest extends BaseControllerTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectoEntidadGestoras.size() ? proyectoEntidadGestoras.size() : toIndex;
             List<ProyectoEntidadGestora> content = proyectoEntidadGestoras.subList(fromIndex, toIndex);
-            Page<ProyectoEntidadGestora> page = new PageImpl<>(content, pageable, proyectoEntidadGestoras.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectoEntidadGestoras.size());
           }
         });
 
@@ -1194,8 +1179,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           @Override
           public Page<ProyectoEntidadGestora> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ProyectoEntidadGestora> page = new PageImpl<>(proyectoEntidadGestoras, pageable, 0);
-            return page;
+            return new PageImpl<>(proyectoEntidadGestoras, pageable, 0);
           }
         });
 
@@ -1241,8 +1225,7 @@ class ProyectoControllerTest extends BaseControllerTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > proyectoProrrogas.size() ? proyectoProrrogas.size() : toIndex;
             List<ProyectoProrroga> content = proyectoProrrogas.subList(fromIndex, toIndex);
-            Page<ProyectoProrroga> page = new PageImpl<>(content, pageable, proyectoProrrogas.size());
-            return page;
+            return new PageImpl<>(content, pageable, proyectoProrrogas.size());
           }
         });
 
@@ -1288,8 +1271,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           @Override
           public Page<ProyectoProrroga> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ProyectoProrroga> page = new PageImpl<>(proyectoProrrogas, pageable, 0);
-            return page;
+            return new PageImpl<>(proyectoProrrogas, pageable, 0);
           }
         });
 
@@ -1335,8 +1317,7 @@ class ProyectoControllerTest extends BaseControllerTest {
             int toIndex = fromIndex + size;
             toIndex = toIndex > requerimientos.size() ? requerimientos.size() : toIndex;
             List<RequerimientoJustificacion> content = requerimientos.subList(fromIndex, toIndex);
-            Page<RequerimientoJustificacion> page = new PageImpl<>(content, pageable, requerimientos.size());
-            return page;
+            return new PageImpl<>(content, pageable, requerimientos.size());
           }
         });
     BDDMockito
@@ -1345,12 +1326,10 @@ class ProyectoControllerTest extends BaseControllerTest {
           @Override
           public Page<RequerimientoJustificacionOutput> answer(InvocationOnMock invocation) throws Throwable {
             Page<RequerimientoJustificacion> pageInput = invocation.getArgument(0);
-            List<RequerimientoJustificacionOutput> content = pageInput.getContent().stream().map(input -> {
-              return generarMockRequerimientoJustificacionOutput(input);
-            }).collect(Collectors.toList());
-            Page<RequerimientoJustificacionOutput> pageOutput = new PageImpl<>(content, pageInput.getPageable(),
-                pageInput.getTotalElements());
-            return pageOutput;
+            List<RequerimientoJustificacionOutput> content = pageInput.getContent().stream()
+                .map(ProyectoControllerTest.this::generarMockRequerimientoJustificacionOutput)
+                .toList();
+            return new PageImpl<>(content, pageInput.getPageable(), pageInput.getTotalElements());
           }
         });
 
@@ -1399,8 +1378,7 @@ class ProyectoControllerTest extends BaseControllerTest {
           @Override
           public Page<RequerimientoJustificacion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<RequerimientoJustificacion> page = new PageImpl<>(requerimientos, pageable, 0);
-            return page;
+            return new PageImpl<>(requerimientos, pageable, 0);
           }
         });
     BDDMockito
@@ -1408,8 +1386,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         .willAnswer(new Answer<Page<RequerimientoJustificacionOutput>>() {
           @Override
           public Page<RequerimientoJustificacionOutput> answer(InvocationOnMock invocation) throws Throwable {
-            Page<RequerimientoJustificacionOutput> page = new PageImpl<>(Collections.emptyList());
-            return page;
+            return new PageImpl<>(Collections.emptyList());
           }
         });
 
@@ -1447,9 +1424,12 @@ class ProyectoControllerTest extends BaseControllerTest {
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
     tipoAmbitoGeografico.setId(1L);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);
-    proyecto.setTitulo("PRO" + (id != null ? id : 1));
+    proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
     proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
     proyecto.setUnidadGestionRef("2");
@@ -1524,8 +1504,8 @@ class ProyectoControllerTest extends BaseControllerTest {
     proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
     proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
-    proyectoFase.setProyectoFaseAviso1(buildMockProyectoFaseAviso(1L, id));
-    proyectoFase.setProyectoFaseAviso2(buildMockProyectoFaseAviso(2L, id));
+    proyectoFase.setProyectoFaseAviso1(buildMockProyectoFaseAviso(1L));
+    proyectoFase.setProyectoFaseAviso2(buildMockProyectoFaseAviso(2L));
     proyectoFase.setTipoFase(tipoFase);
 
     return proyectoFase;
@@ -1542,8 +1522,8 @@ class ProyectoControllerTest extends BaseControllerTest {
     proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
     proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
-    proyectoFase.setAviso1(buildMockProyectoFaseAvisoOutput(1L, id));
-    proyectoFase.setAviso2(buildMockProyectoFaseAvisoOutput(2L, id));
+    proyectoFase.setAviso1(buildMockProyectoFaseAvisoOutput(1L));
+    proyectoFase.setAviso2(buildMockProyectoFaseAvisoOutput(2L));
     proyectoFase.setTipoFase(tipoFase);
 
     return proyectoFase;
@@ -1581,8 +1561,7 @@ class ProyectoControllerTest extends BaseControllerTest {
 
     String suffix = String.format("%03d", proyectoSocioId);
 
-    // @formatter:off
-    ProyectoSocio proyectoSocio = ProyectoSocio.builder()
+    return ProyectoSocio.builder()
         .id(proyectoSocioId)
         .proyectoId(1L)
         .empresaRef("empresa-" + suffix)
@@ -1592,9 +1571,6 @@ class ProyectoControllerTest extends BaseControllerTest {
         .numInvestigadores(5)
         .importeConcedido(BigDecimal.valueOf(1000))
         .build();
-    // @formatter:on
-
-    return proyectoSocio;
   }
 
   /**
@@ -1605,12 +1581,14 @@ class ProyectoControllerTest extends BaseControllerTest {
    */
   private ProyectoEquipo generarMockProyectoEquipo(Long proyectoEquipoId) {
 
-    ProyectoEquipo proyectoEquipo = ProyectoEquipo.builder().id(proyectoEquipoId).proyectoId(1L)
-        .rolProyecto(RolProyecto.builder().id(1L).build()).fechaInicio(Instant.now()).fechaFin(Instant.now())
-        .personaRef("001").build();
-
-    return proyectoEquipo;
-
+    return ProyectoEquipo.builder()
+        .id(proyectoEquipoId)
+        .proyectoId(1L)
+        .rolProyecto(RolProyecto.builder().id(1L).build())
+        .fechaInicio(Instant.now())
+        .fechaFin(Instant.now())
+        .personaRef("001")
+        .build();
   }
 
   /*
@@ -1671,7 +1649,7 @@ class ProyectoControllerTest extends BaseControllerTest {
     // @formatter:on
   }
 
-  private ProyectoFaseAviso buildMockProyectoFaseAviso(Long id, Long proyectoFaseId) {
+  private ProyectoFaseAviso buildMockProyectoFaseAviso(Long id) {
     return ProyectoFaseAviso.builder()
         .comunicadoRef("3333")
         .id(id)
@@ -1679,7 +1657,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         .build();
   }
 
-  private ProyectoFaseAvisoOutput buildMockProyectoFaseAvisoOutput(Long id, Long proyectoFaseId) {
+  private ProyectoFaseAvisoOutput buildMockProyectoFaseAvisoOutput(Long id) {
     return ProyectoFaseAvisoOutput.builder()
         .comunicadoRef("3333")
         .id(id)

@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -29,7 +30,7 @@ class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
   private ProyectoEntidadGestoraRepository repository;
 
   @Test
-  void existsProyectoEntidadGestoraByProyectoIdAndEntidadRef_ReturnsTRUE() throws Exception {
+  void existsProyectoEntidadGestoraByProyectoIdAndEntidadRef_ReturnsTRUE() {
 
     // given: dos registros ProyectoEntidadGestora.
     ProyectoEntidadGestora proyectoEntidadGestora1 = generarMockProyectoEntidadGestora("-001");
@@ -49,7 +50,7 @@ class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void existsProyectoEntidadGestoraByProyectoIdAndEntidadRef_ReturnsFALSE() throws Exception {
+  void existsProyectoEntidadGestoraByProyectoIdAndEntidadRef_ReturnsFALSE() {
 
     // given: dos registros ProyectoEntidadGestora.
     ProyectoEntidadGestora proyectoEntidadGestora1 = generarMockProyectoEntidadGestora("-001");
@@ -68,7 +69,7 @@ class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void existsProyectoEntidadGestoraByIdNotAndProyectoIdAndEntidadRef_ReturnsTRUE() throws Exception {
+  void existsProyectoEntidadGestoraByIdNotAndProyectoIdAndEntidadRef_ReturnsTRUE() {
 
     // given: dos registros ProyectoEntidadGestora.
     ProyectoEntidadGestora proyectoEntidadGestora1 = generarMockProyectoEntidadGestora("-001");
@@ -89,7 +90,7 @@ class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
   }
 
   @Test
-  void existsProyectoEntidadGestoraByIdNotAndProyectoIdAndEntidadRef_ReturnsFALSE() throws Exception {
+  void existsProyectoEntidadGestoraByIdNotAndProyectoIdAndEntidadRef_ReturnsFALSE() {
 
     // given: dos registros ProyectoEntidadGestora.
     ProyectoEntidadGestora proyectoEntidadGestora1 = generarMockProyectoEntidadGestora("-001");
@@ -118,7 +119,6 @@ class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
     Set<ModeloEjecucionNombre> nombreModeloEjecucion = new HashSet<>();
     nombreModeloEjecucion.add(new ModeloEjecucionNombre(Language.ES, "nombreModeloEjecucion" + suffix));
 
-    // @formatter:off
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()
         .nombre(nombreModeloEjecucion)
         .activo(Boolean.TRUE)
@@ -135,7 +135,7 @@ class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
         .activo(Boolean.TRUE)
         .build();
     entityManager.persistAndFlush(tipoFinalidad);
-    
+
     Set<TipoAmbitoGeograficoNombre> tipoAmbitoGeograficoNombre = new HashSet<>();
     tipoAmbitoGeograficoNombre.add(new TipoAmbitoGeograficoNombre(Language.ES, "nombreTipoAmbitoGeografico" + suffix));
 
@@ -152,10 +152,13 @@ class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloUnidad);
 
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "titulo" + suffix));
+
     Proyecto proyecto = Proyecto.builder()
         .acronimo("PR" + suffix)
         .codigoExterno("COD" + suffix)
-        .titulo("titulo-" + suffix)
+        .titulo(tituloProyecto)
         .unidadGestionRef("2")
         .modeloEjecucion(modeloEjecucion)
         .finalidad(tipoFinalidad)
@@ -171,7 +174,7 @@ class ProyectoEntidadGestoraRepositoryTest extends BaseRepositoryTest {
         .proyectoId(proyecto.getId())
         .entidadRef("entidadRef-" + suffix)
         .build();
-    // @formatter:on
+
     return entityManager.persistAndFlush(proyectoEntidadGestora);
   }
 

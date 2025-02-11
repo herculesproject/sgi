@@ -19,7 +19,7 @@ class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
   private ProyectoSocioEquipoRepository repository;
 
   @Test
-  void findAllByProyectoSocioId_ReturnsProyectoSocioEquipo() throws Exception {
+  void findAllByProyectoSocioId_ReturnsProyectoSocioEquipo() {
 
     // given: 2 ProyectoSocioEquipo de los que 1 coincide con el
     // idProyectoSocio
@@ -32,9 +32,11 @@ class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
         .persistAndFlush(
             new ModeloEjecucion(null, nombreModeloEjecucion1, descripcionModeloEjecucion1, true, false, false, false));
 
-    // @formatter:off
+    Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
+    tituloProyecto.add(new ProyectoTitulo(Language.ES, "proyecto 1"));
+
     Proyecto proyecto1 = entityManager.persistAndFlush(Proyecto.builder()
-        .titulo("proyecto 1")
+        .titulo(tituloProyecto)
         .acronimo("PR1")
         .fechaInicio(Instant.parse("2020-11-20T00:00:00Z"))
         .fechaFin(Instant.parse("2021-11-20T23:59:59Z"))
@@ -44,13 +46,13 @@ class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
 
     Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
     rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
-    
+
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
-    
+
     Set<RolSocioDescripcion> rolSocioDescripcion = new HashSet<>();
     rolSocioDescripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
-    
+
     RolSocio rolSocio = entityManager.persistAndFlush(RolSocio.builder()
         .abreviatura(rolSocioAbreviatura)
         .nombre(rolSocioNombre)
@@ -87,7 +89,6 @@ class ProyectoSocioEquipoRepositoryTest extends BaseRepositoryTest {
         .empresaRef("empresa-0025")
         .rolSocio(rolSocio)
         .build());
-    // @formatter:on
 
     ProyectoSocioEquipo proyectoSocioEquipo1 = entityManager.persistAndFlush(new ProyectoSocioEquipo(null,
         proyectoSocio1.getId(), rolProyecto, "001", Instant.parse("2021-04-10T00:00:00Z"), null));
