@@ -1,9 +1,15 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -64,7 +70,8 @@ class SolicitudDocumentoControllerTest extends BaseControllerTest {
             MockMvcResultMatchers.jsonPath("tipoDocumento.id").value(solicitudDocumento.getTipoDocumento().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(solicitudDocumento.getComentario()))
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value(solicitudDocumento.getDocumentoRef()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(solicitudDocumento.getNombre()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(solicitudDocumento.getNombre(), Language.ES)));
   }
 
   @Test
@@ -116,7 +123,8 @@ class SolicitudDocumentoControllerTest extends BaseControllerTest {
             .value(updatedSolicitudDocumento.getTipoDocumento().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(updatedSolicitudDocumento.getComentario()))
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value(updatedSolicitudDocumento.getDocumentoRef()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(updatedSolicitudDocumento.getNombre()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(updatedSolicitudDocumento.getNombre(), Language.ES)));
   }
 
   @Test
@@ -185,12 +193,13 @@ class SolicitudDocumentoControllerTest extends BaseControllerTest {
   private SolicitudDocumento generarSolicitudDocumento(Long solicitudDocumentoId, Long solicitudId,
       Long tipoDocumentoId) {
 
-    SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
-        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombre-" + solicitudDocumentoId)
-        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
+    Set<SolicitudDocumentoNombre> solicitudDocumentoNombre = new HashSet<>();
+    solicitudDocumentoNombre.add(new SolicitudDocumentoNombre(Language.ES, "nombre-" + solicitudDocumentoId));
 
-    return solicitudDocumento;
+    return SolicitudDocumento.builder().id(solicitudDocumentoId)
+        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
+        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre(solicitudDocumentoNombre)
+        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
   }
 
 }

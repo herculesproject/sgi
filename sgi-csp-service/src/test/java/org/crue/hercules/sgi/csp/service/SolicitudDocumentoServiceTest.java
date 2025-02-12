@@ -1,19 +1,23 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.repository.SolicitudDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRepository;
 import org.crue.hercules.sgi.csp.service.impl.SolicitudDocumentoServiceImpl;
 import org.crue.hercules.sgi.csp.util.SolicitudAuthorityHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -378,11 +382,12 @@ class SolicitudDocumentoServiceTest extends BaseServiceTest {
   private SolicitudDocumento generarSolicitudDocumento(Long solicitudDocumentoId, Long solicitudId,
       Long tipoDocumentoId) {
 
-    SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
-        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombreDocumento-" + solicitudDocumentoId)
-        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
+    Set<SolicitudDocumentoNombre> solicitudDocumentoNombre = new HashSet<>();
+    solicitudDocumentoNombre.add(new SolicitudDocumentoNombre(Language.ES, "nombreDocumento-" + solicitudDocumentoId));
 
-    return solicitudDocumento;
+    return SolicitudDocumento.builder().id(solicitudDocumentoId)
+        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
+        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre(solicitudDocumentoNombre)
+        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
   }
 }

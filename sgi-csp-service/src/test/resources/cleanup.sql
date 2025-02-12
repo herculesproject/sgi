@@ -24,6 +24,7 @@ DELETE FROM test.proyecto_hito;
 DELETE FROM test.solicitud_hito_comentario;
 DELETE FROM test.solicitud_hito;
 DELETE FROM test.solicitud_modalidad;
+DELETE FROM test.solicitud_documento_nombre;
 DELETE FROM test.solicitud_documento;
 DELETE FROM test.solicitud_proyecto_presupuesto;
 DELETE FROM test.solicitud_proyecto_socio_periodo_pago;

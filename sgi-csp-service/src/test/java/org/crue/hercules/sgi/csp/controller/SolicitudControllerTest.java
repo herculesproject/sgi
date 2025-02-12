@@ -22,6 +22,7 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudHitoComentario;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
@@ -1351,9 +1352,12 @@ class SolicitudControllerTest extends BaseControllerTest {
   private SolicitudDocumento generarSolicitudDocumento(Long solicitudDocumentoId, Long solicitudId,
       Long tipoDocumentoId) {
 
+    Set<SolicitudDocumentoNombre> solicitudDocumentoNombre = new HashSet<>();
+    solicitudDocumentoNombre.add(new SolicitudDocumentoNombre(Language.ES, "nombreDocumento-" + solicitudDocumentoId));
+
     SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
         .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
-        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombreDocumento-" + solicitudDocumentoId)
+        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre(solicitudDocumentoNombre)
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
     return solicitudDocumento;
   }

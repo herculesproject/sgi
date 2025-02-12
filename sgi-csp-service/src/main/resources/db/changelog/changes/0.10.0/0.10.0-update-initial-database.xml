@@ -1737,4 +1737,33 @@
 
     <dropColumn columnName="comentario" tableName="solicitud_hito" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-65">
+    <createTable tableName="solicitud_documento_nombre">
+      <column name="solicitud_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="solicitud_documento_nombre"
+      columnNames="solicitud_documento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="solicitud_documento_id"
+      baseTableName="solicitud_documento_nombre"
+      constraintName="FK_SOLICITUDDOCUMENTONOMBRE_SOLICITUDDOCUMENTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="solicitud_documento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}solicitud_documento_nombre(solicitud_documento_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}solicitud_documento WHERE nombre IS
+      NOT NULL AND NULLIF(TRIM(nombre), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="solicitud_documento" />
+  </changeSet>
 </databaseChangeLog>

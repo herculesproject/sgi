@@ -119,11 +119,21 @@ INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES 
 INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
 
 -- SOLICITUD DOCUMENTO
- INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, nombre, tipo_documento_id)
- VALUES (1, 1, 'comentarios-001', 'documentoRef-001', 'nombreDocumento-001', 1);
-  INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, nombre, tipo_documento_id)
- VALUES (2, 2, 'comentarios-002', 'documentoRef-002', 'nombreDocumento-002', 1);
-  INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, nombre, tipo_documento_id)
- VALUES (3, 1, 'comentarios-003', 'documentoRef-003', 'nombreDocumento-003', 1);
-   INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, nombre, tipo_documento_id)
- VALUES (4, 1, 'comentarios-004', 'documentoRef-004', 'nombreDocumento-004', 1);
+ INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, tipo_documento_id)
+ VALUES (1, 1, 'comentarios-001', 'documentoRef-001', 1);
+  INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, tipo_documento_id)
+ VALUES (2, 2, 'comentarios-002', 'documentoRef-002', 1);
+  INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, tipo_documento_id)
+ VALUES (3, 1, 'comentarios-003', 'documentoRef-003', 1);
+   INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, tipo_documento_id)
+ VALUES (4, 1, 'comentarios-004', 'documentoRef-004', 1);
+
+-- SOLICITUD DOCUMENTO NOMBRE
+INSERT INTO test.solicitud_documento_nombre (solicitud_documento_id, lang, value_)
+VALUES (1, 'es', 'nombreDocumento-001');
+INSERT INTO test.solicitud_documento_nombre (solicitud_documento_id, lang, value_)
+VALUES (2, 'es', 'nombreDocumento-002');
+INSERT INTO test.solicitud_documento_nombre (solicitud_documento_id, lang, value_)
+VALUES (3, 'es', 'nombreDocumento-003');
+INSERT INTO test.solicitud_documento_nombre (solicitud_documento_id, lang, value_)
+VALUES (4, 'es', 'nombreDocumento-004');
