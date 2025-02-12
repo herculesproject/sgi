@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
-import { FieldOrientation } from '@core/models/rep/field-orientation.enum';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
-import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { LanguageService } from '@core/services/language.service';
@@ -60,43 +58,11 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
     );
   }
 
-
   public fillColumns(
     solicitudes: ISolicitudReportData[],
     reportConfig: IReportConfig<ISolicitudReportOptions>
   ): ISgiColumnReport[] {
-
-    if (!this.isExcelOrCsv(reportConfig.outputType)) {
-      return this.getColumnsProyectoNotExcel();
-    } else {
-      return this.getColumnsProyectoExcel();
-    }
-  }
-
-  private getColumnsProyectoNotExcel(): ISgiColumnReport[] {
-    const columns: ISgiColumnReport[] = [];
-    columns.push({
-      name: PROYECTO_FIELD,
-      title: this.translate.instant(PROYECTO_KEY),
-      type: ColumnType.STRING
-    });
-    const titleI18n = this.translate.instant(PROYECTO_KEY) +
-      ' (' + this.translate.instant(REFERENCIA_KEY) +
-      ' - ' + this.translate.instant(ACRONIMO_KEY) +
-      ' - ' + this.translate.instant(DURACION_KEY) +
-      ' - ' + this.translate.instant(COORDINADO_KEY) +
-      ' - ' + this.translate.instant(ROL_UNIVERSIDAD_KEY) +
-      ' - ' + this.translate.instant(COLABORATIVO_KEY) +
-      ' - ' + this.translate.instant(AREA_TEMATICA_KEY) +
-      ')';
-    const columnProyecto: ISgiColumnReport = {
-      name: PROYECTO_FIELD,
-      title: titleI18n,
-      type: ColumnType.SUBREPORT,
-      fieldOrientation: FieldOrientation.VERTICAL,
-      columns
-    };
-    return [columnProyecto];
+    return this.getColumnsProyectoExcel();
   }
 
   public getColumnsProyectoExcel(): ISgiColumnReport[] {
@@ -148,51 +114,10 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
   }
 
   public fillRows(solicitudes: ISolicitudReportData[], index: number, reportConfig: IReportConfig<ISolicitudReportOptions>): any[] {
-
     const solicitud = solicitudes[index];
     const elementsRow: any[] = [];
-    if (!this.isExcelOrCsv(reportConfig.outputType)) {
-      this.fillRowsProyectoNotExcel(solicitud, elementsRow);
-    } else {
-      this.fillRowsProyectoExcel(elementsRow, solicitud.proyecto);
-    }
+    this.fillRowsProyectoExcel(elementsRow, solicitud.proyecto);
     return elementsRow;
-  }
-
-
-  private fillRowsProyectoNotExcel(solicitud: ISolicitudReportData, elementsRow: any[]) {
-    const rowsReport: ISgiRowReport[] = [];
-    if (solicitud.proyecto) {
-      const proyecto = solicitud.proyecto;
-      const proyectoElementsRow: any[] = [];
-
-      let proyectoTable = proyecto?.codExterno ?? '';
-      proyectoTable += '\n';
-      proyectoTable += proyecto?.acronimo ?? '';
-      proyectoTable += '\n';
-      proyectoTable += proyecto?.duracion ? proyecto?.duracion.toString() : '';
-      proyectoTable += '\n';
-      proyectoTable += this.notIsNullAndNotUndefined(proyecto?.coordinado) ?
-        this.getI18nBooleanYesNo(proyecto?.coordinado) : '';
-      proyectoTable += '\n';
-      proyectoTable += proyecto?.rolUniversidad?.nombre ?? '';
-      proyectoTable += '\n';
-      proyectoTable += this.notIsNullAndNotUndefined(proyecto?.colaborativo) ?
-        this.getI18nBooleanYesNo(proyecto?.colaborativo) : '';
-      proyectoTable += '\n';
-      proyectoTable += this.languageService.getFieldValue(proyecto?.areaTematica?.nombre);
-
-      proyectoElementsRow.push(proyectoTable);
-
-      const rowReport: ISgiRowReport = {
-        elements: proyectoElementsRow
-      };
-      rowsReport.push(rowReport);
-    }
-
-    elementsRow.push({
-      rows: rowsReport
-    });
   }
 
   private fillRowsProyectoExcel(elementsRow: any[], proyecto: ISolicitudProyecto) {
@@ -202,7 +127,7 @@ export class SolicitudProyectoFichaGeneralListadoExportService extends
       elementsRow.push(proyecto?.duracion ? proyecto?.duracion.toString() : '');
       elementsRow.push(this.notIsNullAndNotUndefined(proyecto?.coordinado) ?
         this.getI18nBooleanYesNo(proyecto?.coordinado) : '');
-      elementsRow.push(proyecto?.rolUniversidad?.nombre ?? '');
+      elementsRow.push(this.languageService.getFieldValue(proyecto?.rolUniversidad?.nombre));
       elementsRow.push(this.notIsNullAndNotUndefined(proyecto?.colaborativo) ?
         this.getI18nBooleanYesNo(proyecto?.colaborativo) : '');
       elementsRow.push(this.languageService.getFieldValue(proyecto?.areaTematica?.nombre));
