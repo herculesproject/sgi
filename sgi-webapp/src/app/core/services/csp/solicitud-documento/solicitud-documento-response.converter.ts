@@ -14,7 +14,7 @@ class SolicitudDocumentoResponseConverter extends SgiBaseConverter<ISolicitudDoc
     return {
       id: value.id,
       solicitudId: value.solicitudId,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : [],
       documentoRef: value.documentoRef,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento) : null,
@@ -29,7 +29,7 @@ class SolicitudDocumentoResponseConverter extends SgiBaseConverter<ISolicitudDoc
     return {
       id: value.id,
       solicitudId: value.solicitudId,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : [],
       documentoRef: value.documentoRef,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento) : null,

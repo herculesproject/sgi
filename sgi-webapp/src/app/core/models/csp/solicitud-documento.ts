@@ -4,7 +4,7 @@ import { ITipoDocumento, ITipoFase } from './tipos-configuracion';
 export interface ISolicitudDocumento {
   id: number;
   solicitudId: number;
-  comentario: string;
+  comentario: I18nFieldValue[];
   documentoRef: string;
   nombre: I18nFieldValue[];
   tipoDocumento: ITipoDocumento;

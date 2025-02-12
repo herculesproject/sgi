@@ -88,8 +88,11 @@
         </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.documento.comentarios' | translate}}</mat-label>
-          <textarea matInput type="text" placeholder="{{'csp.documento.comentarios' | translate}}"
-            formControlName="comentarios"></textarea>
+          <sgi-i18n-textarea placeholder="{{'csp.documento.comentarios' | translate}}"
+            formControlName="comentarios"></sgi-i18n-textarea>
+          <mat-error *ngIf="formGroup.get('comentarios').errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamComentariosEntity}}
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="separation-button" *ngIf="group.status$ | async as status">

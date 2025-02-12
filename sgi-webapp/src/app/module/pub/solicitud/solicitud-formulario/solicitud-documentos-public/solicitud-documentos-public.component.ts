@@ -36,6 +36,7 @@ const MSG_DELETE = marker('msg.delete.entity');
 const SOLICITUD_DOCUMENTOS_KEY = marker('csp.documento');
 const SOLICITUD_DOCUMENTO_FICHERO_KEY = marker('csp.documento.fichero');
 const SOLICITUD_DOCUMENTO_NOMBRE_KEY = marker('csp.documento.nombre');
+const SOLICITUD_DOCUMENTO_COMENTARIOS_KEY = marker('csp.documento.comentarios');
 
 enum VIEW_MODE {
   NONE = '',
@@ -80,6 +81,7 @@ export class SolicitudDocumentosPublicComponent extends FragmentComponent implem
   msgParamEntity = {};
   msgParamNombreEntity = {};
   msgParamFicheroEntity = {};
+  msgParamComentariosEntity = {};
   textoDelete: string;
 
   private getLevel = (node: NodeDocumentoSolicitud) => node.level;
@@ -142,7 +144,7 @@ export class SolicitudDocumentosPublicComponent extends FragmentComponent implem
       ]),
       fichero: new FormControl(null, Validators.required),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
-      comentarios: new FormControl('')
+      comentarios: new FormControl([], I18nValidators.maxLength(2000))
     }));
 
     if (this.formPart.readonly) {
@@ -194,6 +196,11 @@ export class SolicitudDocumentosPublicComponent extends FragmentComponent implem
         );
       })
     ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      SOLICITUD_DOCUMENTO_COMENTARIOS_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamComentariosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
 
   }
 
