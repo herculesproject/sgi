@@ -8,6 +8,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Group } from '@core/services/action-service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoPublicService } from '@core/services/sgdoc/documento-public.service';
 import { triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -16,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ConvocatoriaPublicActionService } from '../../convocatoria-public.action.service';
 import { ConvocatoriaDocumentosPublicFragment, NodeDocumento } from './convocatoria-documentos-public.fragment';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 const MSG_FILE_NOT_FOUND_ERROR = marker('error.file.info');
@@ -65,7 +67,8 @@ export class ConvocatoriaDocumentosPublicComponent extends FragmentComponent imp
     public actionService: ConvocatoriaPublicActionService,
     private documentoService: DocumentoPublicService,
     private snackBar: SnackBarService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DOCUMENTOS, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -94,7 +97,7 @@ export class ConvocatoriaDocumentosPublicComponent extends FragmentComponent imp
     }));
     this.group.load(new FormGroup({
       nombre: new FormControl([], [
-        Validators.required,
+        I18nValidators.required,
         I18nValidators.maxLength(50)
       ]),
       fichero: new FormControl(null, Validators.required),
@@ -190,5 +193,9 @@ export class ConvocatoriaDocumentosPublicComponent extends FragmentComponent imp
         this.snackBar.showError(MSG_DOWNLOAD_ERROR);
       }
     ));
+  }
+
+  getI18nValue(i18nFieldValue: I18nFieldValue[]): string {
+    return this.languageService.getFieldValue(i18nFieldValue);
   }
 }
