@@ -33,6 +33,7 @@ const CONVOCATORIA_DOCUMENTO_KEY = marker('csp.convocatoria-documento');
 const CONVOCATORIA_DOCUMENTO_FICHERO_KEY = marker('csp.convocatoria-documento.fichero');
 const CONVOCATORIA_DOCUMENTO_NOMBRE_KEY = marker('csp.documento.nombre');
 const CONVOCATORIA_DOCUMENTO_PUBLICO_KEY = marker('csp.convocatoria-documento.publico');
+const CONVOCATORIA_DOCUMENTO_OBSERVACIONES_KEY = marker('csp.convocatoria-documento.observaciones');
 
 enum VIEW_MODE {
   NONE = '',
@@ -72,6 +73,7 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   msgParamNombreEntity = {};
   msgParamFicheroEntity = {};
   msgParamPublicoEntity = {};
+  msgParamObservacionesEntity = {};
   textoDelete: string;
 
   private getLevel = (node: NodeDocumento) => node.level;
@@ -167,6 +169,11 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
         );
       })
     ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      CONVOCATORIA_DOCUMENTO_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
   ngOnDestroy() {

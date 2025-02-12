@@ -5,6 +5,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Group } from '@core/services/action-service';
@@ -17,11 +18,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ConvocatoriaPublicActionService } from '../../convocatoria-public.action.service';
 import { ConvocatoriaDocumentosPublicFragment, NodeDocumento } from './convocatoria-documentos-public.fragment';
-import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 const MSG_DOWNLOAD_ERROR = marker('error.file.download');
 const MSG_FILE_NOT_FOUND_ERROR = marker('error.file.info');
 const CONVOCATORIA_DOCUMENTO_KEY = marker('csp.convocatoria-documento');
+const CONVOCATORIA_DOCUMENTO_OBSERVACIONES_KEY = marker('csp.convocatoria-documento.observaciones');
 
 enum VIEW_MODE {
   NONE = '',
@@ -55,6 +56,7 @@ export class ConvocatoriaDocumentosPublicComponent extends FragmentComponent imp
   }
 
   msgParamEntity = {};
+  msgParamObservacionesEntity = {};
 
   private getLevel = (node: NodeDocumento) => node.level;
   private isExpandable = (node: NodeDocumento) => node.childs.length > 0;
@@ -116,6 +118,11 @@ export class ConvocatoriaDocumentosPublicComponent extends FragmentComponent imp
       CONVOCATORIA_DOCUMENTO_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamEntity = { entity: value });
+
+    this.translate.get(
+      CONVOCATORIA_DOCUMENTO_OBSERVACIONES_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamObservacionesEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
   ngOnDestroy() {

@@ -84,6 +84,9 @@
           <mat-label>{{'csp.convocatoria-documento.observaciones' | translate}}</mat-label>
           <sgi-i18n-textarea placeholder="{{'csp.convocatoria-documento.observaciones' | translate}}"
             formControlName="observaciones"></sgi-i18n-textarea>
+          <mat-error *ngIf="formGroup.get('observaciones').errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamObservacionesEntity}}
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="separation-button" *ngIf="group.status$ | async as status">
