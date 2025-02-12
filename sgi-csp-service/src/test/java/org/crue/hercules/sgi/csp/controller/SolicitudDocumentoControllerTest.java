@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.crue.hercules.sgi.csp.exceptions.SolicitudDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
@@ -68,7 +69,8 @@ class SolicitudDocumentoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(solicitudDocumento.getSolicitudId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("tipoDocumento.id").value(solicitudDocumento.getTipoDocumento().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(solicitudDocumento.getComentario()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comentario[0].value")
+            .value(I18nHelper.getValueForLanguage(solicitudDocumento.getComentario(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value(solicitudDocumento.getDocumentoRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(solicitudDocumento.getNombre(), Language.ES)));
@@ -121,7 +123,8 @@ class SolicitudDocumentoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("solicitudId").value(updatedSolicitudDocumento.getSolicitudId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(updatedSolicitudDocumento.getTipoDocumento().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comentario").value(updatedSolicitudDocumento.getComentario()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comentario[0].value")
+            .value(I18nHelper.getValueForLanguage(updatedSolicitudDocumento.getComentario(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef").value(updatedSolicitudDocumento.getDocumentoRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
             .value(I18nHelper.getValueForLanguage(updatedSolicitudDocumento.getNombre(), Language.ES)));
@@ -196,8 +199,12 @@ class SolicitudDocumentoControllerTest extends BaseControllerTest {
     Set<SolicitudDocumentoNombre> solicitudDocumentoNombre = new HashSet<>();
     solicitudDocumentoNombre.add(new SolicitudDocumentoNombre(Language.ES, "nombre-" + solicitudDocumentoId));
 
+    Set<SolicitudDocumentoComentario> solicitudDocumentoComentarios = new HashSet<>();
+    solicitudDocumentoComentarios
+        .add(new SolicitudDocumentoComentario(Language.ES, "comentarios-" + solicitudDocumentoId));
+
     return SolicitudDocumento.builder().id(solicitudDocumentoId)
-        .solicitudId(solicitudId).comentario("comentarios-" + solicitudDocumentoId)
+        .solicitudId(solicitudId).comentario(solicitudDocumentoComentarios)
         .documentoRef("documentoRef-" + solicitudDocumentoId).nombre(solicitudDocumentoNombre)
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
   }

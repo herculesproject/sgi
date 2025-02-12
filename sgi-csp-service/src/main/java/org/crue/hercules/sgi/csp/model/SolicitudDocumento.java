@@ -57,9 +57,11 @@ public class SolicitudDocumento extends BaseEntity {
   private Long solicitudId;
 
   /** Comentarios */
-  @Column(name = "comentario", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String comentario;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "solicitud_documento_comentario", joinColumns = @JoinColumn(name = "solicitud_documento_id"))
+  @Valid
+  @Builder.Default
+  private Set<SolicitudDocumentoComentario> comentario = new HashSet<>();
 
   /** DocumentoRef */
   @Column(name = "documento_ref", length = 50, nullable = false)

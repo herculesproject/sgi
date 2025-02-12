@@ -111,9 +111,13 @@ INSERT INTO test.tipo_documento_nombre (tipo_documento_id, lang, value_) VALUES 
 INSERT INTO test.tipo_documento_descripcion (tipo_documento_id, lang, value_) VALUES (1, 'es', 'descripcion-001');
 
 -- SOLICITUD DOCUMENTO
- INSERT INTO test.solicitud_documento(id, solicitud_id, comentario, documento_ref, tipo_documento_id)
- VALUES (1, 1, 'comentarios-001', 'documentoRef-001', 1);
+ INSERT INTO test.solicitud_documento(id, solicitud_id, documento_ref, tipo_documento_id)
+ VALUES (1, 1, 'documentoRef-001', 1);
 
  -- SOLICITUD DOCUMENTO NOMBRE
  INSERT INTO test.solicitud_documento_nombre (solicitud_documento_id, lang, value_)
  VALUES (1, 'es', 'nombreDocumento-001');
+
+  -- SOLICITUD DOCUMENTO COMENTARIO
+ INSERT INTO test.solicitud_documento_comentario (solicitud_documento_id, lang, value_)
+ VALUES (1, 'es', 'comentarios-001');
