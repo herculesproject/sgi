@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto.TipoPresupuesto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuestoObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
@@ -1232,7 +1233,9 @@ class SolicitudControllerTest extends BaseControllerTest {
       SolicitudProyectoPresupuesto solicitudProyectoEntidadFinanciadoraAjena = solicitudProyectoEntidadFinanciadoraAjenasResponse
           .get(i - (page * pageSize) - 1);
       Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjena.getId()).isEqualTo(Long.valueOf(i));
-      Assertions.assertThat(solicitudProyectoEntidadFinanciadoraAjena.getObservaciones())
+      Assertions
+          .assertThat(I18nHelper.getValueForLanguage(solicitudProyectoEntidadFinanciadoraAjena.getObservaciones(),
+              Language.ES))
           .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
@@ -1491,6 +1494,10 @@ class SolicitudControllerTest extends BaseControllerTest {
 
     String suffix = String.format("%03d", id);
 
+    Set<SolicitudProyectoPresupuestoObservaciones> solicitudProyectoPresupuestoObservaciones = new HashSet<>();
+    solicitudProyectoPresupuestoObservaciones.add(
+        new SolicitudProyectoPresupuestoObservaciones(Language.ES, "observaciones-" + suffix));
+
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
         .builder()// @formatter:off
         .id(id)
@@ -1498,7 +1505,7 @@ class SolicitudControllerTest extends BaseControllerTest {
         .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
         .anualidad(1000)
         .importeSolicitado(new BigDecimal("335"))
-        .observaciones("observaciones-" + suffix)
+        .observaciones(solicitudProyectoPresupuestoObservaciones)
         .solicitudProyectoEntidadId(null)
         .build();// @formatter:on
 

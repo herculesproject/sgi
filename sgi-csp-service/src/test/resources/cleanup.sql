@@ -32,6 +32,7 @@ DELETE FROM test.solicitud_modalidad;
 DELETE FROM test.solicitud_documento_nombre;
 DELETE FROM test.solicitud_documento_comentario;
 DELETE FROM test.solicitud_documento;
+DELETE FROM test.solicitud_proyecto_presupuesto_observaciones;
 DELETE FROM test.solicitud_proyecto_presupuesto;
 DELETE FROM test.solicitud_proyecto_socio_periodo_pago;
 DELETE FROM test.solicitud_proyecto_socio_periodo_justificacion_observaciones;

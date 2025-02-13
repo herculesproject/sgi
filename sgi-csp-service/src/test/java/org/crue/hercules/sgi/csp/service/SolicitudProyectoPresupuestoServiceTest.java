@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud.OrigenSolicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyecto;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuesto;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoPresupuestoObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.csp.repository.SolicitudExternaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudProyectoPresupuestoRepository;
@@ -133,7 +134,10 @@ class SolicitudProyectoPresupuestoServiceTest extends BaseServiceTest {
 
     SolicitudProyectoPresupuesto solicitudProyectoPresupuestoActualizar = generarSolicitudProyectoPresupuesto(3L, 1L,
         1L);
-    solicitudProyectoPresupuestoActualizar.setObservaciones("actualizado");
+    Set<SolicitudProyectoPresupuestoObservaciones> solicitudProyectoPresupuestoObservaciones = new HashSet<>();
+    solicitudProyectoPresupuestoObservaciones.add(
+        new SolicitudProyectoPresupuestoObservaciones(Language.ES, "actualizado"));
+    solicitudProyectoPresupuestoActualizar.setObservaciones(solicitudProyectoPresupuestoObservaciones);
 
     BDDMockito.given(solicitudProyectoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudProyecto));
@@ -311,6 +315,10 @@ class SolicitudProyectoPresupuestoServiceTest extends BaseServiceTest {
 
     String suffix = String.format("%03d", id);
 
+    Set<SolicitudProyectoPresupuestoObservaciones> solicitudProyectoPresupuestoObservaciones = new HashSet<>();
+    solicitudProyectoPresupuestoObservaciones.add(
+        new SolicitudProyectoPresupuestoObservaciones(Language.ES, "observaciones-" + suffix));
+
     SolicitudProyectoPresupuesto solicitudProyectoPresupuesto = SolicitudProyectoPresupuesto
         .builder()// @formatter:off
         .id(id)
@@ -318,7 +326,7 @@ class SolicitudProyectoPresupuestoServiceTest extends BaseServiceTest {
         .conceptoGasto(ConceptoGasto.builder().id(conceptoGastoId).build())
         .anualidad(1000)
         .importeSolicitado(new BigDecimal("335"))
-        .observaciones("observaciones-" + suffix)
+        .observaciones(solicitudProyectoPresupuestoObservaciones)
         .solicitudProyectoEntidadId(null)
         .build();// @formatter:on
 

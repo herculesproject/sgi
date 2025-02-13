@@ -2150,4 +2150,37 @@
 
     <dropColumn columnName="observaciones" tableName="proyecto_fase" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-79">
+    <createTable tableName="solicitud_proyecto_presupuesto_observaciones">
+      <column name="solicitud_proyecto_presupuesto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="solicitud_proyecto_presupuesto_observaciones"
+      columnNames="solicitud_proyecto_presupuesto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="solicitud_proyecto_presupuesto_id"
+      baseTableName="solicitud_proyecto_presupuesto_observaciones"
+      constraintName="FK_SOLICITUDPROYECTOPRESUPUESTOOBSERVACIONES_SOLICITUDPROYECTOPRESUPUESTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="solicitud_proyecto_presupuesto"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}solicitud_proyecto_presupuesto_observaciones(solicitud_proyecto_presupuesto_id,
+      value_, lang) SELECT id, observaciones, '${defaultLang}' FROM
+      ${schemaPrefix}solicitud_proyecto_presupuesto WHERE observaciones IS NOT NULL AND
+      NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="solicitud_proyecto_presupuesto" />
+  </changeSet>
 </databaseChangeLog>
