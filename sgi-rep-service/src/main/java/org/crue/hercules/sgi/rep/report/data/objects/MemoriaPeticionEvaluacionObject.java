@@ -3,9 +3,8 @@ package org.crue.hercules.sgi.rep.report.data.objects;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
-import org.crue.hercules.sgi.framework.i18n.Language;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaPeticionEvaluacionDto;
+import org.crue.hercules.sgi.rep.util.SgiReportContextHolder;
 
 import lombok.Getter;
 
@@ -24,23 +23,19 @@ public class MemoriaPeticionEvaluacionObject {
   private boolean activo;
 
   public MemoriaPeticionEvaluacionObject(MemoriaPeticionEvaluacionDto dto) {
-    this(dto, SgiLocaleContextHolder.getLanguage());
-  }
-
-  public MemoriaPeticionEvaluacionObject(MemoriaPeticionEvaluacionDto dto, Language lang) {
     if (dto != null) {
       this.id = dto.getId();
       this.numReferencia = dto.getNumReferencia();
-      this.titulo = I18nHelper.getFieldValue(dto.getTitulo(), lang);
+      this.titulo = I18nHelper.getFieldValue(dto.getTitulo(), SgiReportContextHolder.getLanguage());
       if (dto.getComite() != null) {
-        this.comite = new ComiteObject(dto.getComite(), lang);
+        this.comite = new ComiteObject(dto.getComite());
       }
       if (dto.getEstadoActual() != null) {
-        this.estadoActual = new TipoEstadoMemoriaObject(dto.getEstadoActual(), lang);
+        this.estadoActual = new TipoEstadoMemoriaObject(dto.getEstadoActual());
       }
       this.requiereRetrospectiva = dto.isRequiereRetrospectiva();
       if (dto.getRetrospectiva() != null) {
-        this.retrospectiva = new RetrospectivaObject(dto.getRetrospectiva(), lang);
+        this.retrospectiva = new RetrospectivaObject(dto.getRetrospectiva());
       }
       this.fechaEvaluacion = dto.getFechaEvaluacion();
       this.fechaLimite = dto.getFechaLimite();

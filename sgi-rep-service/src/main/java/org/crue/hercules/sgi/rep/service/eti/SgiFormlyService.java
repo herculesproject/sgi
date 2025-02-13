@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ElementOutput;
+import org.crue.hercules.sgi.rep.util.SgiReportContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -80,7 +80,7 @@ public class SgiFormlyService {
     this.sgiConfigProperties = sgiConfigProperties;
   }
 
-  public void parseApartadoAndRespuestaAndComentarios(ApartadoOutput apartadoOutput, Language lang) {
+  public void parseApartadoAndRespuestaAndComentarios(ApartadoOutput apartadoOutput) {
     try {
       String apartadoJson = apartadoOutput.getEsquema();
       String respuestaJson = null != apartadoOutput.getRespuesta() ? apartadoOutput.getRespuesta().getValor() : "";
@@ -99,7 +99,7 @@ public class SgiFormlyService {
 
         apartadoOutput.setElementos(new ArrayList<>());
 
-        parseComentarios(apartadoOutput, lang);
+        parseComentarios(apartadoOutput);
 
         if (null != apartadoOutput.getMostrarContenidoApartado() && apartadoOutput.getMostrarContenidoApartado()) {
           evaluateFieldGroup(apartadoOutput.getElementos(), respuestaJson, fieldGroup);
@@ -116,10 +116,11 @@ public class SgiFormlyService {
     }
   }
 
-  private void parseComentarios(ApartadoOutput apartadoOutput, Language lang) {
+  private void parseComentarios(ApartadoOutput apartadoOutput) {
     if (null != apartadoOutput.getComentarios() && !apartadoOutput.getComentarios().isEmpty()) {
       apartadoOutput.getComentarios().stream().forEach(c -> apartadoOutput.getElementos()
-          .add(ElementOutput.builder().content(I18nHelper.getFieldValue(c.getTexto(), lang)).tipo(COMMENT_TYPE)
+          .add(ElementOutput.builder()
+              .content(I18nHelper.getFieldValue(c.getTexto(), SgiReportContextHolder.getLanguage())).tipo(COMMENT_TYPE)
               .nombre("").build()));
     }
   }

@@ -4,8 +4,9 @@ import java.nio.charset.Charset;
 
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
-import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleGrupo;
-import org.crue.hercules.sgi.rep.service.prc.InformeDetalleGrupoReportService;
+import org.crue.hercules.sgi.rep.service.InformeDetalleGrupoReportService;
+import org.crue.hercules.sgi.rep.service.InformeDetalleProduccionInvestigadorReportService;
+import org.crue.hercules.sgi.rep.service.InformeResumenPuntuacionGruposReportService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -29,11 +30,17 @@ class PrcReportControllerTest extends BaseControllerTest {
   @MockBean
   private InformeDetalleGrupoReportService informeDetalleGrupoReportService;
 
+  @MockBean
+  private InformeDetalleProduccionInvestigadorReportService informeDetalleProduccionInvestigadorReportService;
+
+  @MockBean
+  private InformeResumenPuntuacionGruposReportService informeResumenPuntuacionGruposReportService;
+
   private final static String CONTENT_REPORT_TEST = "TEST";
 
   @Test
   @WithMockUser(username = "user", authorities = { "PRC-INF-G" })
-  void getReportDetalleGrupo_ReturnsResource() throws Exception {
+  void getReportInformeDetalleGrupo_ReturnsResource() throws Exception {
 
     Long grupoId = 1L;
     Integer anio = 2021;
@@ -42,10 +49,71 @@ class PrcReportControllerTest extends BaseControllerTest {
         .append("/informedetallegrupo/{anio}/{grupoRef}")
         .toString();
 
-    BDDMockito.given(informeDetalleGrupoReportService.getReportDetalleGrupo(
-        ArgumentMatchers.<ReportInformeDetalleGrupo>any(),
+    BDDMockito.given(informeDetalleGrupoReportService.getReport(
         ArgumentMatchers.<Integer>any(),
-        ArgumentMatchers.<Long>any(), ArgumentMatchers.<Language>any()))
+        ArgumentMatchers.<Long>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          return CONTENT_REPORT_TEST.getBytes();
+        });
+
+    // when: Se genera el informe
+    MvcResult requestResult = mockMvc.perform(MockMvcRequestBuilders.get(url,
+        anio, grupoId).header(HttpHeaders.ACCEPT_LANGUAGE, Language.ES.getCode())
+        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Se recupera el informe
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
+
+    Assertions.assertEquals(CONTENT_REPORT_TEST,
+        requestResult.getResponse().getContentAsString(Charset.forName("UTF-8")));
+
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-INF-G" })
+  void getReportInformeDetalleProduccionInvestigador_ReturnsResource() throws Exception {
+
+    Long grupoId = 1L;
+    Integer anio = 2021;
+
+    final String url = new StringBuffer(PrcReportController.MAPPING)
+        .append("/informedetalleproduccioninvestigador/{anio}/{personaRef}")
+        .toString();
+
+    BDDMockito.given(informeDetalleProduccionInvestigadorReportService.getReport(
+        ArgumentMatchers.<Integer>any(),
+        ArgumentMatchers.<String>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          return CONTENT_REPORT_TEST.getBytes();
+        });
+
+    // when: Se genera el informe
+    MvcResult requestResult = mockMvc.perform(MockMvcRequestBuilders.get(url,
+        anio, grupoId).header(HttpHeaders.ACCEPT_LANGUAGE, Language.ES.getCode())
+        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(SgiMockMvcResultHandlers.printOnError())
+        // then: Se recupera el informe
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
+
+    Assertions.assertEquals(CONTENT_REPORT_TEST,
+        requestResult.getResponse().getContentAsString(Charset.forName("UTF-8")));
+
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "PRC-INF-G" })
+  void getReportInformeResumenPuntuacionGrupos_ReturnsResource() throws Exception {
+
+    Long grupoId = 1L;
+    Integer anio = 2021;
+
+    final String url = new StringBuffer(PrcReportController.MAPPING)
+        .append("/informeresumenpuntuaciongrupos/{anio}")
+        .toString();
+
+    BDDMockito.given(informeResumenPuntuacionGruposReportService.getReport(ArgumentMatchers.<Integer>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           return CONTENT_REPORT_TEST.getBytes();
         });

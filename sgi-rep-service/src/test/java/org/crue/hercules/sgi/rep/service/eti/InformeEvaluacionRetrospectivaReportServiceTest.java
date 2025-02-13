@@ -2,13 +2,8 @@ package org.crue.hercules.sgi.rep.service.eti;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.time.Instant;
-
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
-import org.crue.hercules.sgi.rep.dto.OutputType;
-import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacionRetrospectiva;
+import org.crue.hercules.sgi.rep.service.InformeEvaluacionRetrospectivaReportService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,15 +38,12 @@ class InformeEvaluacionRetrospectivaReportServiceTest extends BaseReportEtiServi
   @BeforeEach
   public void setUp() throws Exception {
     informeEvaluacionRetrospectivaReportService = new InformeEvaluacionRetrospectivaReportService(
-        sgiConfigProperties, sgiApiConfService, personaService, evaluacionService,
-        baseApartadosRespuestasReportService);
+        sgiApiConfService, personaService, evaluacionService);
   }
 
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-INV-EVALR" })
   void getInformeEvaluacionRetrospectiva_ReturnsResource() throws Exception {
     Long idEvaluacion = 1L;
-    InformeEvaluacionReportInput input = InformeEvaluacionReportInput.builder().idEvaluacion(idEvaluacion)
-        .fecha(Instant.now()).build();
 
     BDDMockito.given(evaluacionService.findById(idEvaluacion)).willReturn((generarMockEvaluacion(idEvaluacion)));
     BDDMockito.given(personaService.findById(null)).willReturn((generarMockPersona("123456F")));
@@ -59,12 +51,8 @@ class InformeEvaluacionRetrospectivaReportServiceTest extends BaseReportEtiServi
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
         .willReturn(getResource("eti/docx/rep-eti-evaluacion-retrospectiva.docx"));
 
-    ReportInformeEvaluacionRetrospectiva report = new ReportInformeEvaluacionRetrospectiva(
-        SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OutputType.PDF);
-
-    byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(report,
-        input);
+    byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReport(
+        idEvaluacion);
     assertNotNull(reportContent);
 
   }

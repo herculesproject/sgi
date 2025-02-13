@@ -3,15 +3,14 @@ package org.crue.hercules.sgi.rep.report.data.objects;
 import java.time.Instant;
 
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
-import org.crue.hercules.sgi.framework.i18n.Language;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.eti.MemoriaDto;
-import org.crue.hercules.sgi.rep.dto.eti.RetrospectivaDto;
+import org.crue.hercules.sgi.rep.util.SgiReportContextHolder;
 
 import lombok.Getter;
 
 @Getter
 public class MemoriaObject {
+
   private Long id;
   private String numReferencia;
   private PeticionEvaluacionObject peticionEvaluacion;
@@ -22,37 +21,36 @@ public class MemoriaObject {
   private TipoEstadoMemoriaObject estadoActual;
   private Instant fechaEnvioSecretaria;
   private Boolean requiereRetrospectiva;
-  private RetrospectivaDto retrospectiva;
+  private RetrospectivaObject retrospectiva;
   private Integer version;
   private Boolean activo;
   private MemoriaObject memoriaOriginal;
 
   public MemoriaObject(MemoriaDto dto) {
-    this(dto, SgiLocaleContextHolder.getLanguage());
-  }
-
-  public MemoriaObject(MemoriaDto dto, Language lang) {
     if (dto != null) {
       this.id = dto.getId();
       this.numReferencia = dto.getNumReferencia();
       if (dto.getPeticionEvaluacion() != null) {
-        this.peticionEvaluacion = new PeticionEvaluacionObject(dto.getPeticionEvaluacion(), lang);
+        this.peticionEvaluacion = new PeticionEvaluacionObject(dto.getPeticionEvaluacion());
       }
       if (dto.getComite() != null) {
-        this.comite = new ComiteObject(dto.getComite(), lang);
+        this.comite = new ComiteObject(dto.getComite());
       }
-      this.titulo = I18nHelper.getFieldValue(dto.getTitulo(), lang);
+      this.titulo = I18nHelper.getFieldValue(dto.getTitulo(), SgiReportContextHolder.getLanguage());
       this.personaRef = dto.getPersonaRef();
       this.tipo = dto.getTipo();
       if (dto.getEstadoActual() != null) {
-        this.estadoActual = new TipoEstadoMemoriaObject(dto.getEstadoActual(), lang);
+        this.estadoActual = new TipoEstadoMemoriaObject(dto.getEstadoActual());
       }
       this.fechaEnvioSecretaria = dto.getFechaEnvioSecretaria();
       this.requiereRetrospectiva = dto.getRequiereRetrospectiva();
+      if (dto.getRetrospectiva() != null) {
+        this.retrospectiva = new RetrospectivaObject(dto.getRetrospectiva());
+      }
       this.version = dto.getVersion();
       this.activo = dto.getActivo();
       if (dto.getMemoriaOriginal() != null) {
-        this.memoriaOriginal = new MemoriaObject(dto.getMemoriaOriginal(), lang);
+        this.memoriaOriginal = new MemoriaObject(dto.getMemoriaOriginal());
       }
     }
   }

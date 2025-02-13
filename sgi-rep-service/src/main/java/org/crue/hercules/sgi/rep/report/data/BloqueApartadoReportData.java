@@ -4,41 +4,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
+import org.crue.hercules.sgi.rep.enums.Informe;
 import org.crue.hercules.sgi.rep.report.data.objects.BloqueApartadoObject;
 
-public class BloqueApartadoReportData {
-  private static final String ID_DICTAMEN_KEY = "idDictamen";
-  private static final String ID_DICTAMEN_NO_PROCEDE_EVALUEAR = "idDictamenNoProcedeEvaluar";
-  private static final String NUM_COMENTARIOS_KEY = "numComentarios";
-  private static final String BLOQUES_KEY = "bloques";
+public class BloqueApartadoReportData implements ReportData {
 
-  private Map<String, Object> dataReport = new HashMap<>();
-  private Language lang;
+  private static final Informe INFORME = Informe.ETI_BLOQUE_APARTADO;
 
-  public BloqueApartadoReportData(Language lang) {
-    this.lang = lang;
-
-  }
+  private final Map<String, Object> dataReport = new HashMap<>();
 
   public void setIdDictamen(Long value) {
-    this.dataReport.put(ID_DICTAMEN_KEY, value);
+    this.dataReport.put("idDictamen", value);
   }
 
   public void setIdDictamenNoProcedeEvaluar(Long value) {
-    this.dataReport.put(ID_DICTAMEN_NO_PROCEDE_EVALUEAR, value);
+    this.dataReport.put("idDictamenNoProcedeEvaluar", value);
   }
 
   public void setNumComentarios(Integer value) {
-    this.dataReport.put(NUM_COMENTARIOS_KEY, value);
+    this.dataReport.put("numComentarios", value);
   }
 
   public void setBloques(List<BloqueOutput> value) {
-    this.dataReport.put(BLOQUES_KEY, value.stream().map(c -> new BloqueApartadoObject(c, lang)).toList());
+    this.dataReport.put("bloques", value.stream().map(BloqueApartadoObject::new).toList());
   }
 
-  public Map<String, Object> getDataReport() {
+  public Map<String, Object> getData() {
     return this.dataReport;
+  }
+
+  public Informe getInforme() {
+    return INFORME;
   }
 }

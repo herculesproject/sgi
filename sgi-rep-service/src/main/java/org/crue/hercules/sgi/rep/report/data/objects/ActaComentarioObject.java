@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.dto.eti.ActaComentariosMemoriaReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
 import org.crue.hercules.sgi.rep.dto.eti.BloqueOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
+import org.crue.hercules.sgi.rep.util.SgiReportContextHolder;
 
 import lombok.Getter;
 
@@ -21,14 +21,14 @@ public class ActaComentarioObject {
   private Integer numComentarios;
   private List<Bloque> bloques = new ArrayList<>();
 
-  public ActaComentarioObject(ActaComentariosMemoriaReportOutput dto, Language lang) {
+  public ActaComentarioObject(ActaComentariosMemoriaReportOutput dto) {
     this.numReferenciaMemoria = dto.getNumReferenciaMemoria();
     this.tituloProyecto = dto.getTituloProyecto();
     this.responsable = dto.getResponsable();
     this.dictamen = dto.getDictamen();
     this.numComentarios = dto.getNumComentarios();
     if (dto.getBloques() != null) {
-      this.bloques = dto.getBloques().stream().map(b -> new Bloque(b, lang)).toList();
+      this.bloques = dto.getBloques().stream().map(Bloque::new).toList();
     }
   }
 
@@ -37,10 +37,10 @@ public class ActaComentarioObject {
     private String nombre;
     private List<Apartado> apartados = new ArrayList<>();
 
-    private Bloque(BloqueOutput dto, Language lang) {
+    private Bloque(BloqueOutput dto) {
       this.nombre = dto.getNombre();
-      if (dto != null) {
-        this.apartados = dto.getApartados().stream().map(a -> new Apartado(a, lang)).toList();
+      if (dto.getApartados() != null) {
+        this.apartados = dto.getApartados().stream().map(Apartado::new).toList();
       }
     }
 
@@ -50,13 +50,13 @@ public class ActaComentarioObject {
       private List<Comentario> comentarios = new ArrayList<>();
       private List<Apartado> apartadosHijos = new ArrayList<>();
 
-      private Apartado(ApartadoOutput dto, Language lang) {
+      private Apartado(ApartadoOutput dto) {
         this.titulo = dto.getTitulo();
         if (dto.getComentarios() != null) {
-          this.comentarios = dto.getComentarios().stream().map(c -> new Comentario(c, lang)).toList();
+          this.comentarios = dto.getComentarios().stream().map(Comentario::new).toList();
         }
         if (dto.getApartadosHijos() != null) {
-          this.apartadosHijos = dto.getApartadosHijos().stream().map(a -> new Apartado(a, lang)).toList();
+          this.apartadosHijos = dto.getApartadosHijos().stream().map(Apartado::new).toList();
         }
       }
 
@@ -64,8 +64,8 @@ public class ActaComentarioObject {
       private class Comentario {
         private String texto;
 
-        private Comentario(ComentarioDto dto, Language lang) {
-          this.texto = I18nHelper.getFieldValue(dto.getTexto(), lang);
+        private Comentario(ComentarioDto dto) {
+          this.texto = I18nHelper.getFieldValue(dto.getTexto(), SgiReportContextHolder.getLanguage());
         }
       }
     }

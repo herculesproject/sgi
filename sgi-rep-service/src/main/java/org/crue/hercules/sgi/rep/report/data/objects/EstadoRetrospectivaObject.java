@@ -1,8 +1,7 @@
 package org.crue.hercules.sgi.rep.report.data.objects;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.eti.EstadoRetrospectivaDto;
+import org.crue.hercules.sgi.rep.enums.EstadoRetrospectiva;
 
 import lombok.Getter;
 
@@ -11,16 +10,19 @@ public class EstadoRetrospectivaObject {
   private Long id;
   private String nombre;
   private Boolean activo;
+  private EstadoRetrospectiva estado;
 
   public EstadoRetrospectivaObject(EstadoRetrospectivaDto dto) {
-    this(dto, SgiLocaleContextHolder.getLanguage());
-  }
-
-  public EstadoRetrospectivaObject(EstadoRetrospectivaDto dto, Language lang) {
     if (dto != null) {
       this.id = dto.getId();
-      this.nombre = dto.getNombre();
+      this.estado = EstadoRetrospectiva.fromCode(id);
+      this.nombre = estado.toString();
       this.activo = dto.getActivo();
     }
+  }
+
+  @Override
+  public String toString() {
+    return estado != null ? estado.toString() : null;
   }
 }

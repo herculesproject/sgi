@@ -1,11 +1,9 @@
 package org.crue.hercules.sgi.rep.controller;
 
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.OutputType;
-import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleGrupo;
-import org.crue.hercules.sgi.rep.dto.prc.ReportInformeDetalleProduccionInvestigador;
-import org.crue.hercules.sgi.rep.dto.prc.ReportInformeResumenPuntuacionGrupos;
-import org.crue.hercules.sgi.rep.service.prc.InformeDetalleGrupoReportService;
+import org.crue.hercules.sgi.rep.service.InformeDetalleGrupoReportService;
+import org.crue.hercules.sgi.rep.service.InformeDetalleProduccionInvestigadorReportService;
+import org.crue.hercules.sgi.rep.service.InformeResumenPuntuacionGruposReportService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +30,8 @@ public class PrcReportController {
   private static final OutputType OUTPUT_TYPE_PDF = OutputType.PDF;
 
   private final InformeDetalleGrupoReportService informeDetalleGrupoReportService;
+  private final InformeDetalleProduccionInvestigadorReportService informeDetalleProduccionInvestigadorReportService;
+  private final InformeResumenPuntuacionGruposReportService informeResumenPuntuacionGruposReportService;
 
   /**
    * Devuelve un informe de detalle de grupo de investigación
@@ -46,11 +46,7 @@ public class PrcReportController {
 
     log.debug("getInformeDetalleGrupo({}, {}) - start", anio, grupoRef);
 
-    ReportInformeDetalleGrupo report = new ReportInformeDetalleGrupo();
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = informeDetalleGrupoReportService.getReportDetalleGrupo(report, anio, grupoRef,
-        SgiLocaleContextHolder.getLanguage());
+    byte[] reportContent = informeDetalleGrupoReportService.getReport(anio, grupoRef);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -71,11 +67,8 @@ public class PrcReportController {
   public ResponseEntity<Resource> getInformeResumenPuntuacionGrupos(@PathVariable Integer anio) {
 
     log.debug("getInformeResumenPuntuacionGrupos({}) - start", anio);
-    ReportInformeResumenPuntuacionGrupos report = new ReportInformeResumenPuntuacionGrupos();
-    report.setOutputType(OUTPUT_TYPE_PDF);
 
-    byte[] reportContent = informeDetalleGrupoReportService.getReportResumenPuntuacionGrupos(report, anio,
-        SgiLocaleContextHolder.getLanguage());
+    byte[] reportContent = informeResumenPuntuacionGruposReportService.getReport(anio);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -99,11 +92,7 @@ public class PrcReportController {
 
     log.debug("getInformeDetalleProduccionInvestigador({},{}) - start", anio, personaRef);
 
-    ReportInformeDetalleProduccionInvestigador report = new ReportInformeDetalleProduccionInvestigador();
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = informeDetalleGrupoReportService.getReportDetalleProduccionInvestigador(report, anio,
-        personaRef, SgiLocaleContextHolder.getLanguage());
+    byte[] reportContent = informeDetalleProduccionInvestigadorReportService.getReport(anio, personaRef);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();

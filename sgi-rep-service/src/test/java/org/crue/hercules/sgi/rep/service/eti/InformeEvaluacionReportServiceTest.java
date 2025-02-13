@@ -3,11 +3,9 @@ package org.crue.hercules.sgi.rep.service.eti;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.config.SgiConfigProperties;
-import org.crue.hercules.sgi.rep.dto.OutputType;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.service.InformeEvaluacionReportService;
 import org.crue.hercules.sgi.rep.service.sgi.SgiApiConfService;
 import org.crue.hercules.sgi.rep.service.sgp.PersonaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +44,7 @@ class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    informeEvaluacionReportService = new InformeEvaluacionReportService(sgiConfigProperties,
+    informeEvaluacionReportService = new InformeEvaluacionReportService(
         sgiApiConfService, personaService, evaluacionService, configuracionService,
         baseApartadosrespuestasService);
   }
@@ -54,14 +52,11 @@ class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
   @Test
   void getInformeEvaluacion_ReturnsEvaluacionMemoriaValidationException() throws Exception {
 
-    ReportInformeEvaluacion report = new ReportInformeEvaluacion(SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OutputType.PDF);
-
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
         .willReturn(getResource("eti/docx/rep-eti-evaluacion.docx"));
 
     Assertions
-        .assertThatThrownBy(() -> informeEvaluacionReportService.getReportInformeEvaluacion(report, null))
+        .assertThatThrownBy(() -> informeEvaluacionReportService.getReport(null))
         .isInstanceOf(GetDataReportException.class);
   }
 
@@ -76,10 +71,7 @@ class InformeEvaluacionReportServiceTest extends BaseReportEtiServiceTest {
     BDDMockito.given(sgiApiConfService.getResource(ArgumentMatchers.<String>any()))
         .willReturn(getResource("eti/docx/rep-eti-evaluacion.docx"));
 
-    ReportInformeEvaluacion report = new ReportInformeEvaluacion(SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OutputType.PDF);
-
-    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion);
+    byte[] reportContent = informeEvaluacionReportService.getReport(idEvaluacion);
 
     assertNotNull(reportContent);
   }

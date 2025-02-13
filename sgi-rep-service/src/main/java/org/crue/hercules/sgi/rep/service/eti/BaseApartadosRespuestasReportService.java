@@ -9,7 +9,6 @@ import javax.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDefinicionDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoDto;
 import org.crue.hercules.sgi.rep.dto.eti.ApartadoOutput;
@@ -21,6 +20,7 @@ import org.crue.hercules.sgi.rep.dto.eti.BloquesReportOutput;
 import org.crue.hercules.sgi.rep.dto.eti.ComentarioDto;
 import org.crue.hercules.sgi.rep.dto.eti.RespuestaDto;
 import org.crue.hercules.sgi.rep.exceptions.GetDataReportException;
+import org.crue.hercules.sgi.rep.util.SgiReportContextHolder;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class BaseApartadosRespuestasReportService {
    * @param input BloquesReportInput
    * @return BloquesReportOutput
    */
-  public BloquesReportOutput getDataFromApartadosAndRespuestas(@Valid BloquesReportInput input, Language lang) {
+  public BloquesReportOutput getDataFromApartadosAndRespuestas(@Valid BloquesReportInput input) {
     log.debug("getDataFromApartadosAndRespuestas(EtiBloquesReportInput) - start");
 
     BloquesReportOutput bloquesReportOutput = new BloquesReportOutput();
@@ -83,7 +83,7 @@ public class BaseApartadosRespuestasReportService {
         }
 
         if (parseBloque) {
-          parseBloque(input, bloquesReportOutput, bloque, tamBloques, lang);
+          parseBloque(input, bloquesReportOutput, bloque, tamBloques);
         }
       }
     } catch (Exception e) {
@@ -94,10 +94,10 @@ public class BaseApartadosRespuestasReportService {
   }
 
   private void parseBloque(BloquesReportInput input, BloquesReportOutput bloquesReportOutput, BloqueDto bloque,
-      int tamBloques, Language lang) {
+      int tamBloques) {
 
     Optional<BloqueNombreDto> bloqueNombre = bloque.getNombre().stream()
-        .filter(n -> n.getLang().equalsIgnoreCase(lang.getCode())).findFirst();
+        .filter(n -> n.getLang().equalsIgnoreCase(SgiReportContextHolder.getLanguage().getCode())).findFirst();
     String nombre = bloqueNombre.get().getValue();
     if (bloque.getFormulario() != null) {
       nombre = bloque.getOrden() + ". " + nombre;
@@ -120,7 +120,7 @@ public class BaseApartadosRespuestasReportService {
       }
 
       if (parseApartado) {
-        ApartadoOutput apartadoOutput = parseApartadoAndHijos(input, apartado, lang);
+        ApartadoOutput apartadoOutput = parseApartadoAndHijos(input, apartado);
         bloqueOutput.getApartados().add(apartadoOutput);
       }
     }
@@ -130,13 +130,13 @@ public class BaseApartadosRespuestasReportService {
     }
   }
 
-  private ApartadoOutput parseApartadoAndHijos(BloquesReportInput input, ApartadoDto apartado, Language lang) {
-    ApartadoOutput apartadoOutput = parseApartadoOutput(input, apartado, lang);
-    apartadoOutput.setApartadosHijos(findApartadosHijosAndRespuestas(input, apartado.getId(), lang));
+  private ApartadoOutput parseApartadoAndHijos(BloquesReportInput input, ApartadoDto apartado) {
+    ApartadoOutput apartadoOutput = parseApartadoOutput(input, apartado);
+    apartadoOutput.setApartadosHijos(findApartadosHijosAndRespuestas(input, apartado.getId()));
     return apartadoOutput;
   }
 
-  private List<ApartadoOutput> findApartadosHijosAndRespuestas(BloquesReportInput input, Long idPadre, Language lang) {
+  private List<ApartadoOutput> findApartadosHijosAndRespuestas(BloquesReportInput input, Long idPadre) {
     List<ApartadoOutput> apartadosHijosResult = new ArrayList<>();
 
     List<ApartadoDto> apartados = apartadoService.findByPadreId(idPadre);
@@ -149,7 +149,7 @@ public class BaseApartadosRespuestasReportService {
         }
 
         if (parseApartado) {
-          ApartadoOutput apartadoOutput = parseApartadoAndHijos(input, apartado, lang);
+          ApartadoOutput apartadoOutput = parseApartadoAndHijos(input, apartado);
           apartadosHijosResult.add(apartadoOutput);
         }
       }
@@ -157,7 +157,7 @@ public class BaseApartadosRespuestasReportService {
     return apartadosHijosResult;
   }
 
-  private ApartadoOutput parseApartadoOutput(BloquesReportInput input, ApartadoDto apartado, Language lang) {
+  private ApartadoOutput parseApartadoOutput(BloquesReportInput input, ApartadoDto apartado) {
     ApartadoOutput apartadoOutput = null;
 
     List<ComentarioDto> comentarios = new ArrayList<>();
@@ -178,7 +178,7 @@ public class BaseApartadosRespuestasReportService {
     }
 
     Optional<ApartadoDefinicionDto> apartadoDefinicion = apartado.getDefinicion().stream()
-        .filter(d -> d.getLang().equalsIgnoreCase(lang.getCode())).findFirst();
+        .filter(d -> d.getLang().equalsIgnoreCase(SgiReportContextHolder.getLanguage().getCode())).findFirst();
 
     // @formatter:off
     apartadoOutput = ApartadoOutput.builder()
@@ -194,7 +194,7 @@ public class BaseApartadosRespuestasReportService {
       .build();
     // @formatter:on
 
-    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput, lang);
+    sgiFormlyService.parseApartadoAndRespuestaAndComentarios(apartadoOutput);
 
     return apartadoOutput;
   }

@@ -6,8 +6,6 @@ import javax.swing.table.TableModel;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 
-import org.crue.hercules.sgi.framework.i18n.Language;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -30,9 +28,6 @@ public class SgiReportDto {
 
   @NotNull(groups = { Create.class })
   private String path;
-
-  @NotNull(groups = { Create.class })
-  private Language lang;
 
   // Tamaño máximo de ancho (solo aplica a pdf), Máximos PORTRAIT=470,
   // LANDSCAPE=630

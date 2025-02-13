@@ -1,10 +1,7 @@
 package org.crue.hercules.sgi.rep.controller;
 
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.OutputType;
-import org.crue.hercules.sgi.rep.dto.csp.AutorizacionReport;
-import org.crue.hercules.sgi.rep.service.csp.AutorizacionProyectoExternoReportService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.crue.hercules.sgi.rep.service.InformeAutorizacionProyectoExternoReportService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,17 +21,13 @@ import lombok.extern.slf4j.Slf4j;
  */
 @RestController
 @RequestMapping(CspReportController.MAPPING)
+@RequiredArgsConstructor
 @Slf4j
 public class CspReportController {
   public static final String MAPPING = "/report/csp";
   private static final OutputType OUTPUT_TYPE_PDF = OutputType.PDF;
 
-  private final AutorizacionProyectoExternoReportService autorizacionProyectoExternoReportService;
-
-  @Autowired
-  public CspReportController(AutorizacionProyectoExternoReportService autorizacionProyectoExternoReportService) {
-    this.autorizacionProyectoExternoReportService = autorizacionProyectoExternoReportService;
-  }
+  private final InformeAutorizacionProyectoExternoReportService autorizacionProyectoExternoReportService;
 
   /**
    * Devuelve un informe de autorización para participar en proyectos de
@@ -48,11 +42,7 @@ public class CspReportController {
 
     log.debug("getAutorizacionProyectoExterno(idAutorizacion) - start");
 
-    AutorizacionReport report = new AutorizacionReport(SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = autorizacionProyectoExternoReportService.getReportAutorizacionProyectoExterno(report,
-        idAutorizacion);
+    byte[] reportContent = autorizacionProyectoExternoReportService.getReport(idAutorizacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();

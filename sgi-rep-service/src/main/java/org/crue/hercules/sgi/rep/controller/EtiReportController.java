@@ -3,25 +3,17 @@ package org.crue.hercules.sgi.rep.controller;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.i18n.Language;
-import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.crue.hercules.sgi.rep.dto.OutputType;
 import org.crue.hercules.sgi.rep.dto.eti.InformeEvaluacionReportInput;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeActa;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacion;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluacionRetrospectiva;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeEvaluador;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableMemoria;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableModificacion;
-import org.crue.hercules.sgi.rep.dto.eti.ReportInformeFavorableRatificacion;
-import org.crue.hercules.sgi.rep.dto.eti.ReportMXX;
-import org.crue.hercules.sgi.rep.service.eti.InformeActaReportService;
-import org.crue.hercules.sgi.rep.service.eti.InformeEvaluacionReportService;
-import org.crue.hercules.sgi.rep.service.eti.InformeEvaluacionRetrospectivaReportService;
-import org.crue.hercules.sgi.rep.service.eti.InformeEvaluadorReportService;
-import org.crue.hercules.sgi.rep.service.eti.InformeFavorableMemoriaReportService;
-import org.crue.hercules.sgi.rep.service.eti.InformeFavorableModificacionReportService;
-import org.crue.hercules.sgi.rep.service.eti.InformeFavorableRatificacionReportService;
-import org.crue.hercules.sgi.rep.service.eti.MXXReportService;
+import org.crue.hercules.sgi.rep.service.InformeActaReportService;
+import org.crue.hercules.sgi.rep.service.InformeEvaluacionFavorableModificacionReportService;
+import org.crue.hercules.sgi.rep.service.InformeEvaluacionFavorableNuevaReportService;
+import org.crue.hercules.sgi.rep.service.InformeEvaluacionFavorableRatificacionReportService;
+import org.crue.hercules.sgi.rep.service.InformeEvaluacionReportService;
+import org.crue.hercules.sgi.rep.service.InformeEvaluacionRetrospectivaReportService;
+import org.crue.hercules.sgi.rep.service.InformeEvaluadorReportService;
+import org.crue.hercules.sgi.rep.service.InformeMemoriaReportService;
+import org.crue.hercules.sgi.rep.util.SgiReportContextHolder;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -50,14 +42,14 @@ public class EtiReportController {
   public static final String MAPPING = "/report/eti";
   private static final OutputType OUTPUT_TYPE_PDF = OutputType.PDF;
 
-  private final MXXReportService mxxReportService;
+  private final InformeMemoriaReportService mxxReportService;
   private final InformeEvaluacionReportService informeEvaluacionReportService;
   private final InformeEvaluadorReportService informeEvaluadorReportService;
-  private final InformeFavorableMemoriaReportService informeFavorableMemoriaReportService;
+  private final InformeEvaluacionFavorableNuevaReportService informeFavorableMemoriaReportService;
   private final InformeActaReportService informeActaReportService;
   private final InformeEvaluacionRetrospectivaReportService informeEvaluacionRetrospectivaReportService;
-  private final InformeFavorableModificacionReportService informeFavorableModificacionReportService;
-  private final InformeFavorableRatificacionReportService informeFavorableRatificacionReportService;
+  private final InformeEvaluacionFavorableModificacionReportService informeFavorableModificacionReportService;
+  private final InformeEvaluacionFavorableRatificacionReportService informeFavorableRatificacionReportService;
 
   /**
    * Devuelve un informe M10, M20 o M30, Seguimiento anual, final y retrospectiva
@@ -74,19 +66,14 @@ public class EtiReportController {
 
     log.debug("getInformeMXX({}, {}) - start", idMemoria, idFormulario);
 
-    Language language = Language.fromCode(lang);
-    if (language == null) {
-      language = SgiLocaleContextHolder.getLanguage();
-    }
+    SgiReportContextHolder.setLanguage(Language.fromCode(lang));
 
-    ReportMXX report = new ReportMXX(language);
-
-    byte[] reportContent = mxxReportService.getReport(report, idMemoria, idFormulario);
+    byte[] reportContent = mxxReportService.getReport(idMemoria, idFormulario);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
     headers.add(HttpHeaders.CONTENT_TYPE, OUTPUT_TYPE_PDF.getType());
-    headers.add(HttpHeaders.CONTENT_LANGUAGE, language.getCode());
+    headers.add(HttpHeaders.CONTENT_LANGUAGE, SgiReportContextHolder.getLanguage().getCode());
 
     log.debug("getInformeMXX({}, {}) - end", idMemoria, idFormulario);
     return new ResponseEntity<>(archivo, headers, HttpStatus.OK);
@@ -104,10 +91,7 @@ public class EtiReportController {
 
     log.debug("getInformeEvaluacion(idEvaluacion) - start");
 
-    ReportInformeEvaluacion report = new ReportInformeEvaluacion(SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = informeEvaluacionReportService.getReportInformeEvaluacion(report, idEvaluacion);
+    byte[] reportContent = informeEvaluacionReportService.getReport(idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -129,10 +113,7 @@ public class EtiReportController {
 
     log.debug("getInformeEvaluador(idEvaluacion) - start");
 
-    ReportInformeEvaluador report = new ReportInformeEvaluador(SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = informeEvaluadorReportService.getReportInformeEvaluadorEvaluacion(report, idEvaluacion);
+    byte[] reportContent = informeEvaluadorReportService.getReport(idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -155,10 +136,7 @@ public class EtiReportController {
 
     log.debug("getInformeFavorableMemoria(idEvaluacion) - start");
 
-    ReportInformeFavorableMemoria report = new ReportInformeFavorableMemoria(SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = informeFavorableMemoriaReportService.getReportInformeFavorableMemoria(report, idEvaluacion);
+    byte[] reportContent = informeFavorableMemoriaReportService.getReport(idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -182,14 +160,9 @@ public class EtiReportController {
 
     log.debug("getInformeActa(idActa) - start");
 
-    Language language = Language.fromCode(lang);
-    if (language == null) {
-      language = SgiLocaleContextHolder.getLanguage();
-    }
-    ReportInformeActa report = new ReportInformeActa(language);
-    report.setOutputType(OUTPUT_TYPE_PDF);
+    SgiReportContextHolder.setLanguage(Language.fromCode(lang));
 
-    byte[] reportContent = informeActaReportService.getReportInformeActa(report, idActa);
+    byte[] reportContent = informeActaReportService.getReport(idActa);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -213,12 +186,8 @@ public class EtiReportController {
 
     log.debug("getInformeEvaluacionRetrospectiva(input) - start");
 
-    ReportInformeEvaluacionRetrospectiva report = new ReportInformeEvaluacionRetrospectiva(
-        SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReportInformeEvaluacionRetrospectiva(report,
-        input);
+    byte[] reportContent = informeEvaluacionRetrospectivaReportService.getReport(
+        input.getIdEvaluacion());
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
     HttpHeaders headers = new HttpHeaders();
@@ -241,11 +210,7 @@ public class EtiReportController {
 
     log.debug("getInformeFavorableModificacion(idEvaluacion) - start");
 
-    ReportInformeFavorableModificacion report = new ReportInformeFavorableModificacion(
-        SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = informeFavorableModificacionReportService.getReportInformeFavorableModificacion(report,
+    byte[] reportContent = informeFavorableModificacionReportService.getReport(
         idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
@@ -269,11 +234,7 @@ public class EtiReportController {
 
     log.debug("getInformeFavorableRatificacion(idEvaluacion) - start");
 
-    ReportInformeFavorableRatificacion report = new ReportInformeFavorableRatificacion(
-        SgiLocaleContextHolder.getLanguage());
-    report.setOutputType(OUTPUT_TYPE_PDF);
-
-    byte[] reportContent = informeFavorableRatificacionReportService.getReportInformeFavorableRatificacion(report,
+    byte[] reportContent = informeFavorableRatificacionReportService.getReport(
         idEvaluacion);
     ByteArrayResource archivo = new ByteArrayResource(reportContent);
 
