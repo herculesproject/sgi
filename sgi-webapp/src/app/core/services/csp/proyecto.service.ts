@@ -4,7 +4,7 @@ import { PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/proye
 import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-clasificacion.converter';
 import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto-codigo-ec.converter';
 import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
-import { PROYECTO_CONTEXTO_CONVERTER } from '@core/converters/csp/proyecto-contexto.converter';
+import { PROYECTO_CONTEXTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-contexto/proyecto-contexto-response.converter';
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
 import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
@@ -17,7 +17,7 @@ import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { IProyectoAreaConocimientoBackend } from '@core/models/csp/backend/proyecto-area-conocimiento-backend';
 import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto-clasificacion-backend';
 import { IProyectoConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-codigo-ec-backend';
-import { IProyectoContextoBackend } from '@core/models/csp/backend/proyecto-contexto-backend';
+import { IProyectoContextoResponse } from '@core/services/csp/proyecto-contexto/proyecto-contexto-response';
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
@@ -208,10 +208,10 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
    * @param proyectoID Id del proyecto
    */
   findProyectoContexto(proyectoID: number): Observable<IProyectoContexto> {
-    return this.http.get<IProyectoContextoBackend>(
+    return this.http.get<IProyectoContextoResponse>(
       `${this.endpointUrl}/${proyectoID}/proyecto-contextoproyectos`
     ).pipe(
-      map(response => PROYECTO_CONTEXTO_CONVERTER.toTarget(response))
+      map(response => PROYECTO_CONTEXTO_RESPONSE_CONVERTER.toTarget(response))
     );
   }
 

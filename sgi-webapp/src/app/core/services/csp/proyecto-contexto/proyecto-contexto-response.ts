@@ -1,10 +1,11 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IAreaTematicaResponse } from '@core/services/csp/area-tematica/area-tematica-response';
-import { PropiedadResultados } from '../proyecto-contexto';
+import { PropiedadResultados } from '../../../models/csp/proyecto-contexto';
 
-export interface IProyectoContextoBackend {
+export interface IProyectoContextoResponse {
   id: number;
   proyectoId: number;
-  objetivos: string;
+  objetivos: I18nFieldValueResponse[];
   intereses: string;
   resultadosPrevistos: string;
   propiedadResultados: PropiedadResultados;

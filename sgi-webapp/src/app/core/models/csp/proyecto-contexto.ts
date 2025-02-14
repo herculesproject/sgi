@@ -1,10 +1,11 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IAreaTematica } from './area-tematica';
 
 export interface IProyectoContexto {
   id: number;
   proyectoId: number;
-  objetivos: string;
+  objetivos: I18nFieldValue[];
   intereses: string;
   resultadosPrevistos: string;
   propiedadResultados: PropiedadResultados;
