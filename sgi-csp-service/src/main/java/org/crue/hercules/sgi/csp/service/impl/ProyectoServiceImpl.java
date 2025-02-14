@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
+import org.crue.hercules.sgi.csp.model.ContextoProyectoObjetivos;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -75,6 +76,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoObjetivos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
@@ -1033,7 +1035,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     log.debug("copyContexto(Proyecto proyecto, SolicitudProyecto solicitudProyecto) - start");
     ContextoProyecto contextoProyectoNew = new ContextoProyecto();
     contextoProyectoNew.setProyectoId(proyectoId);
-    contextoProyectoNew.setObjetivos(I18nHelper.getFieldValue(solicitudProyecto.getObjetivos()));
+    contextoProyectoNew.setObjetivos(convertObjetivosFromSolicitudToProyecto(solicitudProyecto.getObjetivos()));
     contextoProyectoNew.setResultadosPrevistos(I18nHelper.getFieldValue(solicitudProyecto.getResultadosPrevistos()));
     contextoProyectoNew.setIntereses(I18nHelper.getFieldValue(solicitudProyecto.getIntereses()));
     contextoProyectoNew.setAreaTematica(solicitudProyecto.getAreaTematica());
@@ -2661,6 +2663,10 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     log.debug("getProyectoApartadosToBeCopied({}) - end", id);
     return proyectoApartadosToBeCopied;
+  }
+
+  private Set<ContextoProyectoObjetivos> convertObjetivosFromSolicitudToProyecto(Set<SolicitudProyectoObjetivos> solicitudProyectoObjetivos) {
+    return solicitudProyectoObjetivos.stream().map(spo -> new ContextoProyectoObjetivos(spo.getLang(), spo.getValue())).collect(Collectors.toSet());
   }
 
 }

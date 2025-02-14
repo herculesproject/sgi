@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
+import org.crue.hercules.sgi.csp.model.ContextoProyectoObjetivos;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
@@ -96,11 +97,14 @@ class ContextoProyectoRepositoryTest extends BaseRepositoryTest {
    * @param id identificador
    * @return el objeto ContextoProyecto
    */
-  private ContextoProyecto generarMockContextoProyecto(Long proyectoId) {
+  private ContextoProyecto generarMockContextoProyecto(Long id) {
+    Set<ContextoProyectoObjetivos> objetivosContextoProyecto = new HashSet<>();
+    objetivosContextoProyecto.add(new ContextoProyectoObjetivos(Language.ES, "objetivos"));
+
     ContextoProyecto contextoProyecto = new ContextoProyecto();
-    contextoProyecto.setProyectoId(proyectoId);
+    contextoProyecto.setProyectoId(id);
     contextoProyecto.setIntereses("intereses");
-    contextoProyecto.setObjetivos("objetivos");
+    contextoProyecto.setObjetivos(objetivosContextoProyecto);
     contextoProyecto.setPropiedadResultados(ContextoProyecto.PropiedadResultados.COMPARTIDA);
     return contextoProyecto;
   }
