@@ -48,13 +48,13 @@ export class SelectProyectoProyectoSgeComponent extends SelectServiceComponent<I
   ) {
     super(defaultErrorStateMatcher, ngControl, languageService);
     // Override default displayWith
-    this.displayWith = (option) => option?.proyecto?.titulo ?? '';
+    this.displayWith = (option) => this.languageService.getFieldValue(option?.proyecto?.titulo);
   }
 
   protected loadServiceOptions(): Observable<IProyectoProyectoSge[]> {
     const findOptions: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('proyectoSgeRef', SgiRestFilterOperator.EQUALS, this.proyectoSgeRef),
-      sort: new RSQLSgiRestSort('proyecto.titulo', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('proyecto.titulo.value', SgiRestSortDirection.ASC)
     };
     return this.service.findAll(findOptions)
       .pipe(

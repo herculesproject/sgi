@@ -218,7 +218,8 @@ export class EjecucionEconomicaActionService extends ActionService {
       proyectoConceptoGastoCodigoEcService,
       proyectoConceptoGastoService,
       this.data.configuracion,
-      this.translateService
+      this.translateService,
+      languageService
     );
 
     this.validacionGastos = new ValidacionGastosFragment(

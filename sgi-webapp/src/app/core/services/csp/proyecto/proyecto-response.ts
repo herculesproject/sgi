@@ -1,19 +1,20 @@
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IModeloEjecucionResponse } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response';
 import { ITipoAmbitoGeograficoResponse } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response';
 import { ITipoFinalidadResponse } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response';
-import { IEstadoProyectoResponse } from '../../../services/csp/estado-proyecto/estado-proyecto-response';
-import { CausaExencion } from '../proyecto';
-import { IProyectoIVABackend } from './proyecto-iva-backend';
+import { IProyectoIVABackend } from '../../../models/csp/backend/proyecto-iva-backend';
+import { CausaExencion } from '../../../models/csp/proyecto';
+import { IEstadoProyectoResponse } from '../estado-proyecto/estado-proyecto-response';
 
-export interface IProyectoBackend {
+export interface IProyectoResponse {
   /** Id */
   id: number;
   /** EstadoProyecto */
   estado: IEstadoProyectoResponse;
   /** Titulo */
-  titulo: string;
+  titulo: I18nFieldValueResponse[];
   /** Acronimo */
   acronimo: string;
   /** codigoInterno */

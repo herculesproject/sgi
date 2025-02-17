@@ -57,11 +57,11 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
         case 'anualidad':
           return gasto.anualidad;
         case 'proyecto':
-          return gasto.proyecto?.titulo;
+          return this.languageService.getFieldValue(gasto.proyecto?.titulo);
         case 'clasificacionSGE':
           return gasto.clasificacionSGE?.nombre;
         case 'conceptoGasto':
-          return gasto.conceptoGasto?.nombre ? this.languageService.getFieldValue(gasto.conceptoGasto.nombre) : '';
+          return this.languageService.getFieldValue(gasto.conceptoGasto?.nombre);
         case 'aplicacionPresupuestaria':
           return gasto.partidaPresupuestaria;
         case 'codigoEconomico':
@@ -75,10 +75,12 @@ export class ValidacionGastosComponent extends FragmentComponent implements OnIn
     this.subscriptions.push(this.formPart.gastos$.subscribe(
       (data) => {
         data.sort((a, b) => {
-          const conceptoGastoA = a.conceptoGasto?.nombre ? this.languageService.getFieldValue(a.conceptoGasto.nombre) : '';
-          const conceptoGastoB = b.conceptoGasto?.nombre ? this.languageService.getFieldValue(b.conceptoGasto.nombre) : '';
+          const conceptoGastoA = this.languageService.getFieldValue(a.conceptoGasto?.nombre);
+          const conceptoGastoB = this.languageService.getFieldValue(b.conceptoGasto?.nombre);
+          const proyectoTituloA = this.languageService.getFieldValue(a.proyecto?.titulo);
+          const proyectoTituloB = this.languageService.getFieldValue(b.proyecto?.titulo);
           return b.anualidad.localeCompare(a.anualidad)
-            || a.proyecto?.titulo.localeCompare(b.proyecto?.titulo)
+            || proyectoTituloA.localeCompare(proyectoTituloB)
             || conceptoGastoA.localeCompare(conceptoGastoB)
             || a.clasificacionSGE?.nombre.localeCompare(b.clasificacionSGE?.nombre)
             || a.partidaPresupuestaria.localeCompare(b.partidaPresupuestaria)

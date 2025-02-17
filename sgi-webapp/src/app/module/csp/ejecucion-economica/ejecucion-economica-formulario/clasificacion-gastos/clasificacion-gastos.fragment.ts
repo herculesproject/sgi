@@ -1,5 +1,5 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
-import { Language } from '@core/i18n/language';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { CardinalidadRelacionSgiSge, IConfiguracion } from '@core/models/csp/configuracion';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
@@ -13,15 +13,19 @@ import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-pr
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { EjecucionEconomicaService, TipoOperacion } from '@core/services/sge/ejecucion-economica.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { BehaviorSubject, Observable, from, merge, of } from 'rxjs';
 import { concatAll, concatMap, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IColumnDefinition } from '../desglose-economico.fragment';
 import { GastosClasficadosSgiEnum } from '../facturas-justificantes.fragment';
-import { TranslateService } from '@ngx-translate/core';
+
+const CONCEPTO_GASTO_SIN_CLASIFICAR = marker('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar');
+const PROYECTO_SIN_CLASIFICAR = marker('csp.proyecto.titulo.sin-clasificar');
 
 export interface ClasificacionGasto extends IDatoEconomico {
   proyecto: IProyecto;
@@ -61,7 +65,8 @@ export class ClasificacionGastosFragment extends Fragment {
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private readonly config: IConfiguracion,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(key);
     this.setComplete(true);
@@ -236,8 +241,12 @@ export class ClasificacionGastosFragment extends Fragment {
           datoEconomico.conceptoGasto = proyectoConceptoGasto.conceptoGasto;
           return of(datoEconomico);
         } else {
-          datoEconomico.proyecto = { titulo: 'Sin clasificar' } as IProyecto;
-          datoEconomico.conceptoGasto = { nombre: [{ lang: Language.ES, value: this.translate.instant('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar') } as I18nFieldValue] } as IConceptoGasto;
+          datoEconomico.proyecto = {
+            titulo: this.getTituloProyectoSinClasificar()
+          } as IProyecto;
+          datoEconomico.conceptoGasto = {
+            nombre: this.getNombreConceptoGastoSinClasificar()
+          } as IConceptoGasto;
           return of(datoEconomico);
         }
       })
@@ -368,6 +377,34 @@ export class ClasificacionGastosFragment extends Fragment {
 
   private isSaveOrUpdateComplete(): boolean {
     return this.updatedGastosProyectos.size === 0;
+  }
+
+  /**
+   * Genera el titulo sin clasificar para el proyecto en el idioma actual
+   * 
+   * @returns el titulo sin clasificar en el idioma actual
+   */
+  private getTituloProyectoSinClasificar(): I18nFieldValue[] {
+    return [
+      {
+        lang: this.languageService.getLanguage(),
+        value: this.translate.instant(PROYECTO_SIN_CLASIFICAR)
+      }
+    ];
+  }
+
+  /**
+   * Genera el nombre sin clasificar para el concepto gasto en el idioma actual
+   * 
+   * @returns el nombre sin clasificar en el idioma actual
+   */
+  private getNombreConceptoGastoSinClasificar(): I18nFieldValue[] {
+    return [
+      {
+        lang: this.languageService.getLanguage(),
+        value: this.translate.instant(CONCEPTO_GASTO_SIN_CLASIFICAR)
+      }
+    ];
   }
 
 }

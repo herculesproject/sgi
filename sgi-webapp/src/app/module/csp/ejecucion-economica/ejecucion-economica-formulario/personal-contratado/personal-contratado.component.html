@@ -71,12 +71,14 @@
                 (click)="element.expanded ? element.collapse() : element.expand()">
                 {{element.expanded ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
-              {{element.level === 0 ? element.item.proyecto?.titulo : '' }}
+              <sgi-i18n-table-field [field]="element.level === 0 ? element.item.proyecto?.titulo : ''">
+              </sgi-i18n-table-field>
             </mat-cell>
           </ng-container>
           <ng-template #notExpand>
             <mat-cell *matCellDef="let element">
-              {{element.level === 0 ? element.item.proyecto?.titulo : '' }}
+              <sgi-i18n-table-field [field]="element.level === 0 ? element.item.proyecto?.titulo : ''">
+              </sgi-i18n-table-field>
             </mat-cell>
           </ng-template>
         </ng-container>

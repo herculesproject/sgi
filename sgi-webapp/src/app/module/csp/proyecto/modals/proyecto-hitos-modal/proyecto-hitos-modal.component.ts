@@ -42,7 +42,7 @@ export interface ProyectoHitosModalComponentData {
   idModeloEjecucion: number;
   readonly: boolean;
   unidadGestionId: number;
-  tituloProyecto: string;
+  tituloProyecto: I18nFieldValue[];
   convocatoriaId: number;
 }
 @Component({
@@ -345,7 +345,7 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
     );
 
     this.emailTplService.processProyectoHitoTemplate(
-      this.data.tituloProyecto,
+      this.languageService.getFieldValue(this.data.tituloProyecto),
       this.languageService.getFieldValue(tituloConvocatoria),
       this.formGroup.get('fecha').value ?? DateTime.now(),
       this.formGroup.get('tipoHito').value?.nombre ? this.languageService.getFieldValue(this.formGroup.get('tipoHito').value?.nombre) : '',

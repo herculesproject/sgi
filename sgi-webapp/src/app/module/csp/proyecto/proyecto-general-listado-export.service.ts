@@ -266,7 +266,7 @@ export class ProyectoGeneralListadoExportService extends AbstractTableExportFill
     const elementsRow: any[] = [];
     elementsRow.push(proyecto.id);
     elementsRow.push(proyecto.proyectosSGE);
-    elementsRow.push(proyecto.titulo);
+    elementsRow.push(this.languageService.getFieldValue(proyecto.titulo));
     elementsRow.push(proyecto.acronimo);
     elementsRow.push(proyecto.codigoExterno);
     elementsRow.push(proyecto.codigoInterno);

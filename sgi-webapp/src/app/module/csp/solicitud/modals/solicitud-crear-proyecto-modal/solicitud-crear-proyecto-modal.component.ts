@@ -7,6 +7,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ESTADO_MAP } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -15,6 +16,7 @@ import { ISolicitudProyecto } from '@core/models/csp/solicitud-proyecto';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
@@ -132,28 +134,46 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
   }
 
   protected buildFormGroup(): FormGroup {
-    let titulo: string;
+    let titulo: I18nFieldValue[];
     if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.PROYECTO) {
-      titulo = this.languageService.getFieldValue(this.data.solicitud.titulo);
+      titulo = this.data.solicitud.titulo;
     } else if (this.data.solicitud.formularioSolicitud === FormularioSolicitud.RRHH) {
-      const camposTitulo: string[] = [];
+
       if (!!this.data?.convocatoria?.titulo) {
-        camposTitulo.push(this.languageService.getFieldValue(this.data.convocatoria.titulo));
+        titulo = this.data.convocatoria.titulo;
+      } else if (!!this.data?.convocatoria?.anio || !!this.data?.convocatoria?.fechaPublicacion || !!this.data?.nombreSolicitante) {
+        titulo = [
+          {
+            lang: this.languageService.getLanguage(),
+            value: ''
+          }
+        ];
       }
-      if (!!this.data?.convocatoria?.anio) {
-        camposTitulo.push(this.data.convocatoria.anio.toString());
-      } else if (!!this.data?.convocatoria?.fechaPublicacion) {
-        camposTitulo.push(this.data.convocatoria.fechaPublicacion.year.toString());
+
+      if (!!titulo) {
+        titulo.forEach(t => {
+          const camposTitulo: string[] = [];
+
+          camposTitulo.push(t.value);
+
+          if (!!this.data?.convocatoria?.anio) {
+            camposTitulo.push(this.data.convocatoria.anio.toString());
+          } else if (!!this.data?.convocatoria?.fechaPublicacion) {
+            camposTitulo.push(this.data.convocatoria.fechaPublicacion.year.toString());
+          }
+
+          if (!!this.data?.nombreSolicitante) {
+            camposTitulo.push(this.data.nombreSolicitante);
+          }
+
+          t.value = camposTitulo.join(' - ');
+        })
       }
-      if (!!this.data?.nombreSolicitante) {
-        camposTitulo.push(this.data.nombreSolicitante);
-      }
-      titulo = camposTitulo.join(' - ');
     }
 
     const formGroup = new FormGroup(
       {
-        titulo: new FormControl(titulo || null, [Validators.required, Validators.maxLength(250)]),
+        titulo: new FormControl(titulo || [], [I18nValidators.required, I18nValidators.maxLength(250)]),
         fechaInicio: new FormControl(null),
         fechaFin: new FormControl(null),
         modeloEjecucion: new FormControl(this.data.solicitud.modeloEjecucion, [Validators.required])

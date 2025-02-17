@@ -308,7 +308,9 @@ export class ValidacionGastosEditarModalComponent extends DialogFormComponent<Ga
   }
 
   displayerIdentificadorSgi(proyectoProyectoSGE: IProyectoProyectoSge): string {
-    return proyectoProyectoSGE.proyecto?.titulo?.toString() + ' (' + proyectoProyectoSGE.proyecto?.fechaInicio?.toLocaleString(DateTime.DATE_SHORT) + '-' + proyectoProyectoSGE.proyecto?.fechaFin?.toLocaleString(DateTime.DATE_SHORT) + ')';
+    return this.languageService.getFieldValue(proyectoProyectoSGE.proyecto?.titulo)
+      + ' (' + proyectoProyectoSGE.proyecto?.fechaInicio?.toLocaleString(DateTime.DATE_SHORT)
+      + '-' + proyectoProyectoSGE.proyecto?.fechaFin?.toLocaleString(DateTime.DATE_SHORT) + ')';
   }
 
   sorterIdentificadorSgi(o1: SelectValue<IProyectoProyectoSge>, o2: SelectValue<IProyectoProyectoSge>): number {

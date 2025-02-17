@@ -1110,7 +1110,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
       elementsRow.push(gasto?.proyectoId ?? '');
       elementsRow.push(gasto?.proyectoSgi?.id ?? '');
       elementsRow.push(gasto?.proyectoSgi?.codigoExterno ?? '');
-      elementsRow.push(gasto?.proyectoSgi?.titulo ?? '');
+      elementsRow.push(this.languageService.getFieldValue(gasto?.proyectoSgi?.titulo));
       elementsRow.push(LuxonUtils.toBackend(gasto?.proyectoSgi?.fechaInicio));
       elementsRow.push(LuxonUtils.toBackend(gasto?.proyectoSgi?.fechaFin));
       elementsRow.push(LuxonUtils.toBackend(gasto?.proyectoSgi?.fechaFinDefinitiva));

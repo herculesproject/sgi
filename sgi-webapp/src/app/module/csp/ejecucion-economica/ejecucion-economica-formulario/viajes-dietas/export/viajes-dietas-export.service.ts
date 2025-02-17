@@ -53,10 +53,10 @@ export class ViajesDietasExportService
       }
 
       if (reportConfig.reportOptions.rowConfig.proyectoShow) {
-        row.elements.push(item.proyecto?.titulo ?? 'Sin clasificar');
+        row.elements.push(this.languageService.getFieldValue(item.proyecto?.titulo));
       }
 
-      row.elements.push(item.conceptoGasto?.nombre ? this.languageService.getFieldValue(item.conceptoGasto.nombre) : this.translate.instant('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar'));
+      row.elements.push(this.languageService.getFieldValue(item.conceptoGasto?.nombre));
 
       if (reportConfig.reportOptions.rowConfig.clasificadoAutomaticamenteShow) {
         row.elements.push(this.getI18nBooleanYesNo(item.clasificadoAutomaticamente));

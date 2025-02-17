@@ -1,18 +1,19 @@
-import { IProyectoBackend } from '@core/models/csp/backend/proyecto-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response.converter';
+import { IProyectoResponse } from '@core/services/csp/proyecto/proyecto-response';
 import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
 import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '../../services/csp/estado-proyecto/estado-proyecto-response.converter';
-import { PROYECTO_IVA_CONVERTER } from './proyecto-iva.converter';
+import { PROYECTO_IVA_CONVERTER } from '../../../converters/csp/proyecto-iva.converter';
+import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '../estado-proyecto/estado-proyecto-response.converter';
 
-class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
+class ProyectoResponseConverter extends SgiBaseConverter<IProyectoResponse, IProyecto> {
 
-  toTarget(value: IProyectoBackend): IProyecto {
+  toTarget(value: IProyectoResponse): IProyecto {
     if (!value) {
       return value as unknown as IProyecto;
     }
@@ -20,7 +21,7 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
       id: value.id,
       estado: ESTADO_PROYECTO_RESPONSE_CONVERTER.toTarget(value.estado),
       activo: value.activo,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       acronimo: value.acronimo,
       codigoInterno: value.codigoInterno,
       codigoExterno: value.codigoExterno,
@@ -61,14 +62,14 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
     };
   }
 
-  fromTarget(value: IProyecto): IProyectoBackend {
+  fromTarget(value: IProyecto): IProyectoResponse {
     if (!value) {
-      return value as unknown as IProyectoBackend;
+      return value as unknown as IProyectoResponse;
     }
     return {
       id: value.id,
       estado: ESTADO_PROYECTO_RESPONSE_CONVERTER.fromTarget(value.estado),
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       acronimo: value.acronimo,
       codigoInterno: value.codigoInterno,
       codigoExterno: value.codigoExterno,
@@ -110,4 +111,4 @@ class ProyectoConverter extends SgiBaseConverter<IProyectoBackend, IProyecto> {
   }
 }
 
-export const PROYECTO_CONVERTER = new ProyectoConverter();
+export const PROYECTO_RESPONSE_CONVERTER = new ProyectoResponseConverter();

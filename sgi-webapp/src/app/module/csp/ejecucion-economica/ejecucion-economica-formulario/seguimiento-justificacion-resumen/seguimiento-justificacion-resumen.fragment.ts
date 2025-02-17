@@ -1,3 +1,4 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConfiguracion } from '@core/models/csp/configuracion';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
@@ -34,16 +35,16 @@ export interface IProyectoSeguimientoJustificacionWithFechaJustificacion extends
 }
 
 export interface IProyectoPeriodoJustificacionWithTituloProyecto extends IProyectoPeriodoJustificacion {
-  tituloProyecto: string;
+  tituloProyecto: I18nFieldValue[];
 }
 
 export interface IProyectoPeriodoSeguimientoWithTituloProyecto extends IProyectoPeriodoSeguimiento {
-  tituloProyecto: string;
+  tituloProyecto: I18nFieldValue[];
 }
 
 export class SeguimientoJustificacionResumenFragment extends Fragment {
   private responsablesMap: Map<number, IPersona[]>;
-  private proyectoTituloMap: Map<number, string>;
+  private proyectoTituloMap: Map<number, I18nFieldValue[]>;
   private proyectosSGI$ = new BehaviorSubject<IProyectoSeguimientoEjecucionEconomicaData[]>([]);
   private seguimientosJustificacion$ = new BehaviorSubject<StatusWrapper<IProyectoSeguimientoJustificacionWithFechaJustificacion>[]>([]);
   private seguimientosJustificacionAnualidad$ = new BehaviorSubject<StatusWrapper<ISeguimientoJustificacionAnualidad>[]>([]);

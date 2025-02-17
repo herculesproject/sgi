@@ -42,7 +42,7 @@
             {{'csp.ejecucion-economica.seguimiento-justificacion.resumen.titulo-proyecto' | translate}}
           </th>
           <td mat-cell *matCellDef="let element">
-            {{element.nombre}}
+            <sgi-i18n-table-field [field]="element.nombre"></sgi-i18n-table-field>
           </td>
         </ng-container>
 
@@ -471,7 +471,7 @@
             {{'csp.ejecucion-economica.seguimiento-justificacion.resumen.titulo-proyecto' | translate}}
           </th>
           <td mat-cell *matCellDef="let element">
-            {{element.value.tituloProyecto}}
+            <sgi-i18n-table-field [field]="element.value.tituloProyecto"></sgi-i18n-table-field>
           </td>
         </ng-container>
 
@@ -600,7 +600,7 @@
             {{'csp.ejecucion-economica.seguimiento-justificacion.resumen.titulo-proyecto' | translate}}
           </th>
           <td mat-cell *matCellDef="let element">
-            {{element.value.tituloProyecto}}
+            <sgi-i18n-table-field [field]="element.value.tituloProyecto"></sgi-i18n-table-field>
           </td>
         </ng-container>
 

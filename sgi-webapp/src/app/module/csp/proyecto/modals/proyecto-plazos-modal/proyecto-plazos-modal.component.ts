@@ -46,7 +46,7 @@ export interface ProyectoPlazosModalComponentData {
   idModeloEjecucion: number;
   readonly: boolean;
   unidadGestionId: number;
-  tituloProyecto: string;
+  tituloProyecto: I18nFieldValue[];
   convocatoriaId: number;
 }
 
@@ -343,7 +343,7 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
       }
     );
     this.emailTplService.processProyectoFaseTemplate(
-      this.data.tituloProyecto,
+      this.languageService.getFieldValue(this.data.tituloProyecto),
       this.languageService.getFieldValue(tituloConvocatoria),
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),

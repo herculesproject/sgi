@@ -22,11 +22,13 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { LanguageService } from '@core/services/language.service';
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { anioValidator } from '@core/validators/anio-validator';
 import { DateValidator } from '@core/validators/date-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
@@ -35,7 +37,6 @@ import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, forkJoin, merge, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { IProyectoRelacionTableData } from '../proyecto-relaciones/proyecto-relaciones.fragment';
-import { LanguageService } from '@core/services/language.service';
 
 interface IProyectoDatosGenerales extends IProyecto {
   convocatoria: IConvocatoria;
@@ -217,8 +218,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         value: '',
         disabled: true
       }),
-      titulo: new FormControl('', [
-        Validators.required, Validators.maxLength(250)]),
+      titulo: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
       acronimo: new FormControl('', [Validators.maxLength(50)]),
       codigoInterno: new FormControl(null, [Validators.maxLength(50)]),
       codigoExterno: new FormControl(null, [Validators.maxLength(50)]),

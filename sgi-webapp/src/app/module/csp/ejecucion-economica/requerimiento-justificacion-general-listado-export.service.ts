@@ -698,7 +698,7 @@ export class RequerimientoJustificacionGeneralListadoExportService extends Abstr
     rows.push(requerimiento?.proyectoSge?.id ?? '');
     rows.push(requerimiento?.proyecto?.id ?? '');
     rows.push(requerimiento?.proyecto?.codigoExterno ?? '');
-    rows.push(requerimiento?.nombre ?? '');
+    rows.push(this.languageService.getFieldValue(requerimiento?.nombre));
     rows.push(LuxonUtils.toBackend(requerimiento?.fechaInicio) ?? '');
     rows.push(LuxonUtils.toBackend(requerimiento?.fechaFin) ?? '');
     rows.push(LuxonUtils.toBackend(requerimiento?.proyecto?.fechaFinDefinitiva) ?? '');

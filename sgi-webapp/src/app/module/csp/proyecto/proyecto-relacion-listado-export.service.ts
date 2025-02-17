@@ -27,7 +27,6 @@ const RELACION_KEY = marker('csp.proyecto-relacion');
 const RELACION_TIPO_KEY = marker('label.csp.proyecto-relacion.tipo-relacion');
 const RELACION_TITULO_KEY = marker('label.csp.proyecto-relacion.titulo');
 
-const RELACION_FIELD = 'relacion';
 const RELACION_TIPO_FIELD = 'relacionTipo';
 const RELACION_TITULO_FIELD = 'relacionTitulo';
 
@@ -174,7 +173,7 @@ export class ProyectoRelacionListadoExportService extends AbstractTableExportFil
   private fillRowsEntidadExcel(elementsRow: any[], proyectoRelacion: ProyectoRelacionListadoExport) {
     if (proyectoRelacion) {
       elementsRow.push(proyectoRelacion.tipoEntidadRelacionada ?? '');
-      if (proyectoRelacion.tipoEntidadRelacionada === TipoEntidad.CONVOCATORIA) {
+      if ([TipoEntidad.CONVOCATORIA, TipoEntidad.PROYECTO].includes(proyectoRelacion.tipoEntidadRelacionada)) { // TODO: eliminar el if/else y el as I18nFieldValue[] cuando se terminen los 4 tipos
         elementsRow.push(this.languageService.getFieldValue(proyectoRelacion.entidadRelacionada?.titulo as I18nFieldValue[]));
       } else {
         elementsRow.push(proyectoRelacion.entidadRelacionada?.titulo ?? '');

@@ -6,6 +6,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { VALIDACION_REQUISITOS_EQUIPO_IP_MAP } from '@core/enums/validaciones-requisitos-equipo-ip';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
@@ -242,7 +243,7 @@ export class ProyectoActionService extends ActionService {
     return this.fichaGeneral.getValue().unidadGestion?.id;
   }
 
-  get titulo(): string {
+  get titulo(): I18nFieldValue[] {
     return this.fichaGeneral.getValue().titulo;
   }
 
@@ -502,7 +503,12 @@ export class ProyectoActionService extends ActionService {
         this.amortizacionFondos = new ProyectoAmortizacionFondosFragment(this.data?.proyecto?.id, this.data?.proyecto?.anualidades,
           this.data.proyecto?.solicitudId, proyectoPeriodoAmortizacionService, proyectoEntidadFinanciadoraService, empresaService,
           proyectoAnualidadService, periodoAmortizacionService, configService);
-        this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(this.data?.proyecto?.id, this.proyectoService, languageService);
+        this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(
+          this.data?.proyecto?.id,
+          this.proyectoService,
+          translate,
+          languageService
+        );
         this.relaciones = new ProyectoRelacionFragment(
           id, this.data.proyecto, this.readonly, relacionService, convocatoriaService, invencionService, proyectoService, grupoService, sgiAuthService);
         this.proyectoCalendarioFacturacion = new ProyectoCalendarioFacturacionFragment(

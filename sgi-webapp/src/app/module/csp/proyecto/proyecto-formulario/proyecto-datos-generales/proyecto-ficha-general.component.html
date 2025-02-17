@@ -58,8 +58,8 @@
       <!-- Titulo -->
       <mat-form-field fxFlex="33%">
         <mat-label>{{'csp.proyecto.titulo' | translate}}</mat-label>
-        <input type="text" placeholder="{{'csp.proyecto.titulo' | translate}}" matInput formControlName="titulo"
-          required>
+        <sgi-i18n-input placeholder="{{'csp.proyecto.titulo' | translate}}" formControlName="titulo" required>
+        </sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
           {{'error.required.entity' | translate:msgParamTituloEntity}}
         </mat-error>

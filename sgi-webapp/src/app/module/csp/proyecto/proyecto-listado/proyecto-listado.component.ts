@@ -125,6 +125,13 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     if (route.snapshot.queryParamMap.get(SOLICITUD_ACTION_LINK_KEY)) {
       this.solicitudId = Number(route.snapshot.queryParamMap.get(SOLICITUD_ACTION_LINK_KEY));
     }
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'titulo') {
+        return 'titulo.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -398,22 +405,10 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
 
     const palabrasClave = controls.palabrasClave.value as string[];
     if (Array.isArray(palabrasClave) && palabrasClave.length > 0) {
-      filter.and(this.createPalabrasClaveFilter(palabrasClave));
+      filter.and('palabrasClave', SgiRestFilterOperator.IN, palabrasClave);
     }
 
     return filter;
-  }
-
-  private createPalabrasClaveFilter(palabrasClave: string[]): SgiRestFilter {
-    let palabrasClaveFilter: SgiRestFilter;
-    palabrasClave.forEach(palabraClave => {
-      if (palabrasClaveFilter) {
-        palabrasClaveFilter.or('palabrasClave.palabraClaveRef', SgiRestFilterOperator.LIKE_ICASE, palabraClave);
-      } else {
-        palabrasClaveFilter = new RSQLSgiRestFilter('palabrasClave.palabraClaveRef', SgiRestFilterOperator.LIKE_ICASE, palabraClave);
-      }
-    });
-    return palabrasClaveFilter;
   }
 
   /**

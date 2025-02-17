@@ -58,7 +58,7 @@ export class ProyectoConsultaPresupuestoExportService
         elements: []
       };
       row.elements.push(item.proyectoAnualidad?.anio ?? '');
-      row.elements.push(item.conceptoGasto?.nombre ? this.languageService.getFieldValue(item.conceptoGasto.nombre) : this.translate.instant('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar'));
+      row.elements.push(this.languageService.getFieldValue(item.conceptoGasto.nombre));
       row.elements.push(item.proyectoPartida?.codigo ?? 'Sin clasificar');
       row.elements.push(item.codigoEconomico?.id ?? '');
       row.elements.push(item.codigoEconomico?.nombre ?? '');

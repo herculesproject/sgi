@@ -79,7 +79,7 @@
             {{'sge.dato-economico.proyecto' | translate}}
           </mat-header-cell>
           <mat-cell mat-cell *matCellDef="let element">
-            {{element.proyecto?.titulo }}
+            <sgi-i18n-table-field [field]="element.proyecto?.titulo"></sgi-i18n-table-field>
           </mat-cell>
         </ng-container>
 

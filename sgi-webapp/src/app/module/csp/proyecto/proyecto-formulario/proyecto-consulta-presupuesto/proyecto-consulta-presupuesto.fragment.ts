@@ -1,11 +1,16 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
+import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { concatAll, concatMap, map } from 'rxjs/operators';
+
+const CONCEPTO_GASTO_SIN_CLASIFICAR = marker('csp.proyecto-consulta-presupuesto.concepto-gasto.sin-clasificar');
 
 export class ProyectoConsultaPresupuestoFragment extends Fragment {
 
@@ -20,6 +25,7 @@ export class ProyectoConsultaPresupuestoFragment extends Fragment {
   constructor(
     key: number,
     private proyectoService: ProyectoService,
+    private readonly translate: TranslateService,
     private readonly languageService: LanguageService
   ) {
     super(key);
@@ -53,6 +59,10 @@ export class ProyectoConsultaPresupuestoFragment extends Fragment {
           totalAnualidades = response.items.length;
           return from(response.items).pipe(
             concatMap((anualidadGasto: IAnualidadGasto) => {
+              if (!anualidadGasto.conceptoGasto) {
+                anualidadGasto.conceptoGasto = this.getConceptoGastoSinClasificar();
+              }
+
               const anualidad = {
                 ...anualidadGasto,
                 proyectoAnualidad: anualidades.find(pAnualidad => pAnualidad.id === anualidadGasto.proyectoAnualidad.id),
@@ -101,5 +111,17 @@ export class ProyectoConsultaPresupuestoFragment extends Fragment {
       founded.push(partida.codigo);
       return true;
     });
+  }
+
+  private getConceptoGastoSinClasificar(): IConceptoGasto {
+    return {
+      id: 0,
+      nombre: [
+        {
+          lang: this.languageService.getLanguage(),
+          value: this.translate.instant(CONCEPTO_GASTO_SIN_CLASIFICAR)
+        }
+      ]
+    } as IConceptoGasto;
   }
 }
