@@ -15,6 +15,7 @@ import { catchError, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rx
 import { IProyectoListadoData } from '../../proyecto-listado/proyecto-listado.component';
 import { IGrupo } from '@core/models/csp/grupo';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 // Define the extended IGrupoWithTitulo interface
 export interface IGrupoWithTitulo extends IGrupo {
@@ -25,7 +26,7 @@ export interface IProyectoRelacionTableData {
   id: number;
   entidadRelacionada: IConvocatoria | IInvencion | IProyecto | IGrupoWithTitulo;
   entidadRelacionadaHref?: string;
-  observaciones: string;
+  observaciones: I18nFieldValue[];
   tipoEntidadRelacionada: TipoEntidad;
   entidadConvocanteRef: string;
   codigosSge: string;

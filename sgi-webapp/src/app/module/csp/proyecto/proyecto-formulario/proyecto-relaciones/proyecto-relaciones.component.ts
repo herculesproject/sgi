@@ -6,8 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { TipoEntidad, TIPO_ENTIDAD_MAP } from '@core/models/rel/relacion';
+import { TIPO_ENTIDAD_MAP, TipoEntidad } from '@core/models/rel/relacion';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -55,6 +56,7 @@ export class ProyectoRelacionesComponent extends FragmentComponent implements On
     private readonly translate: TranslateService,
     private readonly dialogService: DialogService,
     private readonly matDialog: MatDialog,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.RELACIONES, actionService, translate);
     this.formPart = this.fragment as ProyectoRelacionFragment;
@@ -84,7 +86,7 @@ export class ProyectoRelacionesComponent extends FragmentComponent implements On
           case 'codigoSGE':
             return wrapper.value.codigosSge;
           case 'observaciones':
-            return wrapper.value.observaciones;
+            return this.languageService.getFieldValue(wrapper.value.observaciones);
           default:
             return wrapper[property];
         }

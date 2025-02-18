@@ -63,7 +63,7 @@ export class ProyectoRelacionListadoExportService extends AbstractTableExportFil
           id: proyectoRelacion.id,
           entidadRelacionada: isEntidadOrigenProyecto ? proyectoRelacion.entidadOrigen : proyectoRelacion.entidadDestino,
           tipoEntidadRelacionada: isEntidadOrigenProyecto ? proyectoRelacion.tipoEntidadOrigen : proyectoRelacion.tipoEntidadDestino,
-          observaciones: proyectoRelacion.observaciones
+          observaciones: this.languageService.getFieldValue(proyectoRelacion.observaciones)
         };
         return relacionListado;
       })),

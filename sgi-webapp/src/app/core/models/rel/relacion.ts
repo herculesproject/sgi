@@ -1,4 +1,5 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { Module } from '@core/module';
 import { CSP_ROUTE_NAMES } from 'src/app/module/csp/csp-route-names';
 import { IGrupoWithTitulo } from 'src/app/module/csp/proyecto/proyecto-formulario/proyecto-relaciones/proyecto-relaciones.fragment';
@@ -13,7 +14,7 @@ export interface IRelacion {
   tipoEntidadDestino: TipoEntidad;
   entidadOrigen: IConvocatoria | IInvencion | IProyecto | IGrupoWithTitulo;
   entidadDestino: IConvocatoria | IInvencion | IProyecto | IGrupoWithTitulo;
-  observaciones: string;
+  observaciones: I18nFieldValue[];
 }
 
 export enum TipoEntidad {
