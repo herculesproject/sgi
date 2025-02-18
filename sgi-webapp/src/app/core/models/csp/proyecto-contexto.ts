@@ -7,7 +7,7 @@ export interface IProyectoContexto {
   proyectoId: number;
   objetivos: I18nFieldValue[];
   intereses: I18nFieldValue[];
-  resultadosPrevistos: string;
+  resultadosPrevistos: I18nFieldValue[];
   propiedadResultados: PropiedadResultados;
   areaTematica: IAreaTematica;
 }

@@ -15,7 +15,7 @@ class ProyectoContextoResponseConverter extends SgiBaseConverter<IProyectoContex
       proyectoId: value.proyectoId,
       objetivos: value.objetivos ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.objetivos) : [],
       intereses: value.intereses ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.intereses) : [],
-      resultadosPrevistos: value.resultadosPrevistos,
+      resultadosPrevistos: value.resultadosPrevistos ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.resultadosPrevistos) : [],
       propiedadResultados: value.propiedadResultados,
       areaTematica: AREA_TEMATICA_RESPONSE_CONVERTER.toTarget(value.areaTematica),
     };
@@ -30,7 +30,7 @@ class ProyectoContextoResponseConverter extends SgiBaseConverter<IProyectoContex
       proyectoId: value.proyectoId,
       objetivos: value.objetivos ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.objetivos) : [],
       intereses: value.intereses ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.intereses) : [],
-      resultadosPrevistos: value.resultadosPrevistos,
+      resultadosPrevistos: value.resultadosPrevistos ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.resultadosPrevistos) : [],
       propiedadResultados: value.propiedadResultados,
       areaTematica: AREA_TEMATICA_RESPONSE_CONVERTER.fromTarget(value.areaTematica),
     };

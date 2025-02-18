@@ -36,8 +36,8 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto.contexto.resultados' | translate}}</mat-label>
-          <textarea matInput formControlName="resultados_previstos" id="resultados_previstos"
-            placeholder="{{'csp.proyecto.contexto.resultados' | translate}}"></textarea>
+          <sgi-i18n-textarea formControlName="resultados_previstos"
+            placeholder="{{'csp.proyecto.contexto.resultados' | translate}}"></sgi-i18n-textarea>
           <mat-error *ngIf="formGroup.controls.resultados_previstos.errors?.maxlength">
             {{'error.maxlength.entity' | translate:msgParamResultadosEntity}}
           </mat-error>
