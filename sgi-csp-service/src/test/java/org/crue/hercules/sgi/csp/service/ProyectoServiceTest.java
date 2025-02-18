@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoIVA;
+import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -425,7 +426,10 @@ class ProyectoServiceTest extends BaseServiceTest {
     // given: Un nuevo Proyecto con las observaciones actualizadas
     Proyecto proyecto = generarMockProyecto(1L);
     Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
-    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    Set<ProyectoObservaciones> observacionesProyecto = new HashSet<>();
+    observacionesProyecto.add(new ProyectoObservaciones(Language.ES, "observaciones actualizadas"));
+    proyectoObservacionesActualizadas.setObservaciones(observacionesProyecto);
 
     ModeloUnidad modeloUnidad = new ModeloUnidad();
     modeloUnidad.setId(1L);
@@ -459,7 +463,10 @@ class ProyectoServiceTest extends BaseServiceTest {
     // given: Un nuevo Proyecto con las observaciones actualizadas
     Proyecto proyecto = generarMockProyecto(1L);
     Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
-    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    Set<ProyectoObservaciones> observacionesProyecto = new HashSet<>();
+    observacionesProyecto.add(new ProyectoObservaciones(Language.ES, "observaciones actualizadas"));
+    proyectoObservacionesActualizadas.setObservaciones(observacionesProyecto);
     proyecto.setFechaFinDefinitiva(null);
     proyectoObservacionesActualizadas.setFechaFinDefinitiva(Instant.now().plusSeconds(3600000));
 
@@ -499,7 +506,10 @@ class ProyectoServiceTest extends BaseServiceTest {
     Proyecto proyecto = generarMockProyecto(1L);
     Proyecto proyectoObservacionesActualizadas = generarMockProyecto(2L);
     proyecto.getEstado().setId(2L);
-    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    Set<ProyectoObservaciones> observacionesProyecto = new HashSet<>();
+    observacionesProyecto.add(new ProyectoObservaciones(Language.ES, "observaciones actualizadas"));
+    proyectoObservacionesActualizadas.setObservaciones(observacionesProyecto);
 
     ModeloUnidad modeloUnidad = new ModeloUnidad();
     modeloUnidad.setId(1L);
@@ -522,7 +532,10 @@ class ProyectoServiceTest extends BaseServiceTest {
     Proyecto proyecto = generarMockProyecto(1L);
     proyecto.setIva(buildMockProyectoIVA(1L, 11));
     Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
-    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    Set<ProyectoObservaciones> observacionesProyecto = new HashSet<>();
+    observacionesProyecto.add(new ProyectoObservaciones(Language.ES, "observaciones actualizadas"));
+    proyectoObservacionesActualizadas.setObservaciones(observacionesProyecto);
     proyectoObservacionesActualizadas.setIva(this.buildMockProyectoIVA(2L, 0));
     proyectoObservacionesActualizadas.setCausaExencion(CausaExencion.NO_SUJETO);
 
@@ -571,7 +584,10 @@ class ProyectoServiceTest extends BaseServiceTest {
     proyecto.setConvocatoriaId(convocatoriaId);
     Proyecto proyectoObservacionesActualizadas = generarMockProyecto(1L);
     proyectoObservacionesActualizadas.setConvocatoriaId(convocatoriaId);
-    proyectoObservacionesActualizadas.setObservaciones("observaciones actualizadas");
+
+    Set<ProyectoObservaciones> observacionesProyecto = new HashSet<>();
+    observacionesProyecto.add(new ProyectoObservaciones(Language.ES, "observaciones actualizadas"));
+    proyectoObservacionesActualizadas.setObservaciones(observacionesProyecto);
 
     ModeloUnidad modeloUnidad = new ModeloUnidad();
     modeloUnidad.setId(1L);
@@ -749,7 +765,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(proyecto).as("isNotNull()").isNotNull();
     Assertions.assertThat(proyecto.getId()).as("getId()").isEqualTo(idBuscado);
     Assertions.assertThat(proyecto.getEstado().getId()).as("getEstado().getId()").isEqualTo(1);
-    Assertions.assertThat(proyecto.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyecto.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("observaciones-001");
     Assertions.assertThat(proyecto.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("2");
     Assertions.assertThat(proyecto.getActivo()).as("getActivo()").isTrue();
   }
@@ -802,7 +819,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       Proyecto proyecto = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(proyecto.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyecto.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -842,7 +860,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       Proyecto proyecto = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(proyecto.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyecto.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -944,11 +963,14 @@ class ProyectoServiceTest extends BaseServiceTest {
     Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
     tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
 
+    Set<ProyectoObservaciones> observacionesProyecto = new HashSet<>();
+    observacionesProyecto.add(new ProyectoObservaciones(Language.ES, "observaciones-" + String.format("%03d", id)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);
     proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
-    proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
+    proyecto.setObservaciones(observacionesProyecto);
     proyecto.setUnidadGestionRef("2");
     proyecto.setFechaInicio(Instant.now());
     proyecto.setFechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(1))));

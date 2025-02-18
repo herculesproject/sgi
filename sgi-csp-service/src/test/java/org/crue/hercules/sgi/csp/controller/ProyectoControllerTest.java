@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoFaseAviso;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
+import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
@@ -71,6 +72,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
 import org.crue.hercules.sgi.csp.service.RequerimientoJustificacionService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -232,7 +234,8 @@ class ProyectoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("estado.id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(proyecto.getObservaciones()))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value")
+            .value(I18nHelper.getValueForLanguage(proyecto.getObservaciones(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value(proyecto.getUnidadGestionRef()));
   }
 
@@ -260,7 +263,10 @@ class ProyectoControllerTest extends BaseControllerTest {
     // given: Existing Proyecto to be updated
     Proyecto proyectoExistente = generarMockProyecto(1L);
     Proyecto proyecto = generarMockProyecto(1L);
-    proyecto.setObservaciones("observaciones actualizadas");
+
+    Set<ProyectoObservaciones> observacionesProyecto = new HashSet<>();
+    observacionesProyecto.add(new ProyectoObservaciones(Language.ES, "observaciones actualizadas"));
+    proyecto.setObservaciones(observacionesProyecto);
 
     BDDMockito.given(service.update(ArgumentMatchers.<Proyecto>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -275,7 +281,8 @@ class ProyectoControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(proyectoExistente.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("estado.id").value(proyectoExistente.getEstado().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(proyecto.getObservaciones()))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value")
+            .value(I18nHelper.getValueForLanguage(proyecto.getObservaciones(), Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value(proyectoExistente.getUnidadGestionRef()));
   }
 
@@ -400,7 +407,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         // and the requested Proyecto is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("estado.id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value").value("observaciones-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value("2"));
   }
 
@@ -461,7 +468,8 @@ class ProyectoControllerTest extends BaseControllerTest {
         });
     for (int i = 31; i <= 37; i++) {
       Proyecto proyecto = proyectosResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyecto.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyecto.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -527,7 +535,8 @@ class ProyectoControllerTest extends BaseControllerTest {
         });
     for (int i = 31; i <= 37; i++) {
       Proyecto proyecto = proyectosResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyecto.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyecto.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
 
@@ -1427,11 +1436,14 @@ class ProyectoControllerTest extends BaseControllerTest {
     Set<ProyectoTitulo> tituloProyecto = new HashSet<>();
     tituloProyecto.add(new ProyectoTitulo(Language.ES, "PRO" + (id != null ? id : 1)));
 
+    Set<ProyectoObservaciones> observacionesProyecto = new HashSet<>();
+    observacionesProyecto.add(new ProyectoObservaciones(Language.ES, "observaciones-" + String.format("%03d", id)));
+
     Proyecto proyecto = new Proyecto();
     proyecto.setId(id);
     proyecto.setTitulo(tituloProyecto);
     proyecto.setCodigoExterno("cod-externo-" + (id != null ? String.format("%03d", id) : "001"));
-    proyecto.setObservaciones("observaciones-" + String.format("%03d", id));
+    proyecto.setObservaciones(observacionesProyecto);
     proyecto.setUnidadGestionRef("2");
     proyecto.setFechaInicio(Instant.now());
     proyecto.setFechaFin(Instant.now());

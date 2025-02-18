@@ -191,9 +191,11 @@ public class Proyecto extends BaseEntity {
   private CausaExencion causaExencion;
 
   /** Observaciones */
-  @Column(name = "observaciones", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String observaciones;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "proyecto_observaciones", joinColumns = @JoinColumn(name = "proyecto_id"))
+  @Valid
+  @Builder.Default
+  private Set<ProyectoObservaciones> observaciones = new HashSet<>();
 
   /** Anualidades */
   @Column(name = "anualidades", nullable = true)

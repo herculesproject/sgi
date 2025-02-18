@@ -1823,4 +1823,32 @@
 
     <dropColumn columnName="titulo" tableName="proyecto" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-68">
+    <createTable tableName="proyecto_observaciones">
+      <column name="proyecto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_observaciones" columnNames="proyecto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_id"
+      baseTableName="proyecto_observaciones"
+      constraintName="FK_PROYECTOOBSERVACIONES_PROYECTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="proyecto" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}proyecto_observaciones(proyecto_id, value_, lang) SELECT id,
+      observaciones, '${defaultLang}' FROM ${schemaPrefix}proyecto WHERE observaciones IS NOT NULL
+      AND NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="proyecto" />
+  </changeSet>
 </databaseChangeLog>
