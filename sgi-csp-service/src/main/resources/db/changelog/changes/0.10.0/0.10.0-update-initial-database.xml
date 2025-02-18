@@ -2061,4 +2061,34 @@
 
     <dropColumn columnName="intereses" tableName="contexto_proyecto" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-76">
+    <createTable tableName="contexto_proyecto_resultados_previstos">
+      <column name="contexto_proyecto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="contexto_proyecto_resultados_previstos"
+      columnNames="contexto_proyecto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="contexto_proyecto_id"
+      baseTableName="contexto_proyecto_resultados_previstos"
+      constraintName="FK_CONTEXTOPROYECTORESULTADOSPREVISTOS_CONTEXTOPROYECTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="contexto_proyecto" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}contexto_proyecto_resultados_previstos(contexto_proyecto_id,
+      value_, lang) SELECT id, resultados_previstos, '${defaultLang}' FROM
+      ${schemaPrefix}contexto_proyecto WHERE resultados_previstos IS NOT NULL AND
+      NULLIF(TRIM(resultados_previstos), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="resultados_previstos" tableName="contexto_proyecto" />
+  </changeSet>
 </databaseChangeLog>

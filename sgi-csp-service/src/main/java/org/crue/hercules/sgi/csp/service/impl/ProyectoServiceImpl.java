@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -30,6 +31,7 @@ import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoIntereses;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoObjetivos;
+import org.crue.hercules.sgi.csp.model.ContextoProyectoResultadosPrevistos;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
@@ -80,6 +82,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoIntereses;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoObjetivos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoResultadosPrevistos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
@@ -1038,7 +1041,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     ContextoProyecto contextoProyectoNew = new ContextoProyecto();
     contextoProyectoNew.setProyectoId(proyectoId);
     contextoProyectoNew.setObjetivos(convertObjetivosFromSolicitudToProyecto(solicitudProyecto.getObjetivos()));
-    contextoProyectoNew.setResultadosPrevistos(I18nHelper.getFieldValue(solicitudProyecto.getResultadosPrevistos()));
+    contextoProyectoNew.setResultadosPrevistos(
+        convertResultadosPrevistosFromSolicitudToProyecto(solicitudProyecto.getResultadosPrevistos()));
     contextoProyectoNew.setIntereses(convertInteresesFromSolicitudToProyecto(solicitudProyecto.getIntereses()));
     contextoProyectoNew.setAreaTematica(solicitudProyecto.getAreaTematica());
 
@@ -2667,12 +2671,23 @@ public class ProyectoServiceImpl implements ProyectoService {
     return proyectoApartadosToBeCopied;
   }
 
-  private Set<ContextoProyectoObjetivos> convertObjetivosFromSolicitudToProyecto(Set<SolicitudProyectoObjetivos> solicitudProyectoObjetivos) {
-    return solicitudProyectoObjetivos.stream().map(spo -> new ContextoProyectoObjetivos(spo.getLang(), spo.getValue())).collect(Collectors.toSet());
+  private Set<ContextoProyectoObjetivos> convertObjetivosFromSolicitudToProyecto(
+      Set<SolicitudProyectoObjetivos> solicitudProyectoObjetivos) {
+    return solicitudProyectoObjetivos.stream().map(spo -> new ContextoProyectoObjetivos(spo.getLang(), spo.getValue()))
+        .collect(Collectors.toSet());
   }
-  
-  private Set<ContextoProyectoIntereses> convertInteresesFromSolicitudToProyecto(Set<SolicitudProyectoIntereses> solicitudProyectoIntereses){
-    return solicitudProyectoIntereses.stream().map(spi -> new ContextoProyectoIntereses(spi.getLang(), spi.getValue())).collect(Collectors.toSet());
+
+  private Set<ContextoProyectoIntereses> convertInteresesFromSolicitudToProyecto(
+      Set<SolicitudProyectoIntereses> solicitudProyectoIntereses) {
+    return solicitudProyectoIntereses.stream().map(spi -> new ContextoProyectoIntereses(spi.getLang(), spi.getValue()))
+        .collect(Collectors.toSet());
+  }
+
+  private Set<ContextoProyectoResultadosPrevistos> convertResultadosPrevistosFromSolicitudToProyecto(
+      Set<SolicitudProyectoResultadosPrevistos> solicitudProyectoResultadosPrevistos) {
+    return solicitudProyectoResultadosPrevistos.stream()
+        .map(sprp -> new ContextoProyectoResultadosPrevistos(sprp.getLang(), sprp.getValue()))
+        .collect(Collectors.toSet());
   }
 
 }

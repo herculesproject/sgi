@@ -86,8 +86,11 @@ public class ContextoProyecto extends BaseEntity {
   private Set<ContextoProyectoIntereses> intereses = new HashSet<>();
 
   /** Resultados previstos */
-  @Column(name = "resultados_previstos", length = 2000, nullable = true)
-  private String resultadosPrevistos;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "contexto_proyecto_resultados_previstos", joinColumns = @JoinColumn(name = "contexto_proyecto_id"))
+  @Valid
+  @Builder.Default
+  private Set<ContextoProyectoResultadosPrevistos> resultadosPrevistos = new HashSet<>();
 
   /** Propiedad resultados */
   @Column(name = "propiedad_resultados", length = 25, nullable = true)

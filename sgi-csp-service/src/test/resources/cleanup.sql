@@ -18,6 +18,7 @@ DELETE FROM test.proyecto_fase;
 DELETE FROM test.proyecto_fase_aviso;
 DELETE FROM test.contexto_proyecto_objetivos;
 DELETE FROM test.contexto_proyecto_intereses;
+DELETE FROM test.contexto_proyecto_resultados_previstos;
 DELETE FROM test.contexto_proyecto;
 DELETE FROM test.proyecto_periodo_seguimiento_documento;
 DELETE FROM test.proyecto_periodo_seguimiento;
