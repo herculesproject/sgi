@@ -30,8 +30,6 @@ export interface IProyecto {
   fechaFin: DateTime;
   /** Fecha Fin Definitiva */
   fechaFinDefinitiva: DateTime;
-  /** Comentario */
-  comentario: string;
   /** Unidad gestion */
   unidadGestion: IUnidadGestion;
   /** modelo ejecucion */
@@ -67,7 +65,7 @@ export interface IProyecto {
   /** causaExencion */
   causaExencion: CausaExencion;
   /** observaciones */
-  observaciones: string;
+  observaciones: I18nFieldValue[];
   /** anualidades */
   anualidades: boolean;
   /** activo  */

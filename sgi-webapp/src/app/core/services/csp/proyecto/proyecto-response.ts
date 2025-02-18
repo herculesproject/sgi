@@ -62,7 +62,7 @@ export interface IProyectoResponse {
   /** causaExencion */
   causaExencion: CausaExencion;
   /** observaciones */
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
   /** unidadGestionRef */
   unidadGestionRef: string;
   /** anualidades */

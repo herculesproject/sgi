@@ -249,7 +249,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
         this.buildValidatorIva()
       ]),
       causaExencion: new FormControl(null),
-      observaciones: new FormControl(''),
+      observaciones: new FormControl([], I18nValidators.maxLength(2000)),
       comentario: new FormControl({
         value: '',
         disabled: true
@@ -675,7 +675,6 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       this.proyecto.causaExencion = undefined;
     }
 
-    this.proyecto.comentario = form.comentario.value;
     this.proyecto.observaciones = form.observaciones.value;
 
     this.proyecto.rolUniversidad = form.rolUniversidad.value;

@@ -428,8 +428,11 @@
       <!-- Observaciones -->
       <mat-form-field fxFill fxFlex="100%">
         <mat-label>{{'csp.proyecto.observaciones' | translate}}</mat-label>
-        <textarea matInput formControlName="observaciones" id="observaciones"
-          placeholder="{{'csp.proyecto.observaciones' | translate}}"></textarea>
+        <sgi-i18n-textarea formControlName="observaciones" placeholder="{{'csp.proyecto.observaciones' | translate}}">
+        </sgi-i18n-textarea>
+        <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamObservacionesEntity}}
+        </mat-error>
       </mat-form-field>
     </div>
 
