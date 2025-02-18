@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoIVAException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.ContextoProyecto;
+import org.crue.hercules.sgi.csp.model.ContextoProyectoIntereses;
 import org.crue.hercules.sgi.csp.model.ContextoProyectoObjetivos;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
@@ -76,6 +77,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEntidadFinanciadoraAjena;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoEquipo;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoIntereses;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoObjetivos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
@@ -1037,7 +1039,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     contextoProyectoNew.setProyectoId(proyectoId);
     contextoProyectoNew.setObjetivos(convertObjetivosFromSolicitudToProyecto(solicitudProyecto.getObjetivos()));
     contextoProyectoNew.setResultadosPrevistos(I18nHelper.getFieldValue(solicitudProyecto.getResultadosPrevistos()));
-    contextoProyectoNew.setIntereses(I18nHelper.getFieldValue(solicitudProyecto.getIntereses()));
+    contextoProyectoNew.setIntereses(convertInteresesFromSolicitudToProyecto(solicitudProyecto.getIntereses()));
     contextoProyectoNew.setAreaTematica(solicitudProyecto.getAreaTematica());
 
     contextoProyectoService.create(contextoProyectoNew);
@@ -2667,6 +2669,10 @@ public class ProyectoServiceImpl implements ProyectoService {
 
   private Set<ContextoProyectoObjetivos> convertObjetivosFromSolicitudToProyecto(Set<SolicitudProyectoObjetivos> solicitudProyectoObjetivos) {
     return solicitudProyectoObjetivos.stream().map(spo -> new ContextoProyectoObjetivos(spo.getLang(), spo.getValue())).collect(Collectors.toSet());
+  }
+  
+  private Set<ContextoProyectoIntereses> convertInteresesFromSolicitudToProyecto(Set<SolicitudProyectoIntereses> solicitudProyectoIntereses){
+    return solicitudProyectoIntereses.stream().map(spi -> new ContextoProyectoIntereses(spi.getLang(), spi.getValue())).collect(Collectors.toSet());
   }
 
 }

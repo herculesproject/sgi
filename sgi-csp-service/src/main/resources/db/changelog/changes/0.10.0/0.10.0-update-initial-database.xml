@@ -2032,4 +2032,33 @@
 
     <dropColumn columnName="objetivos" tableName="contexto_proyecto" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-75">
+    <createTable tableName="contexto_proyecto_intereses">
+      <column name="contexto_proyecto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="contexto_proyecto_intereses"
+      columnNames="contexto_proyecto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="contexto_proyecto_id"
+      baseTableName="contexto_proyecto_intereses"
+      constraintName="FK_CONTEXTOPROYECTOINTERESES_CONTEXTOPROYECTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="contexto_proyecto" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}contexto_proyecto_intereses(contexto_proyecto_id, value_, lang)
+      SELECT id, intereses, '${defaultLang}' FROM ${schemaPrefix}contexto_proyecto WHERE intereses
+      IS NOT NULL AND NULLIF(TRIM(intereses), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="intereses" tableName="contexto_proyecto" />
+  </changeSet>
 </databaseChangeLog>
