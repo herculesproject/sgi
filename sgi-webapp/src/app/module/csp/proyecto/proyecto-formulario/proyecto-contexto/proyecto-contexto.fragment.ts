@@ -39,7 +39,7 @@ export class ProyectoContextoFragment extends FormFragment<IProyectoContexto> {
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       objetivos: new FormControl([], [I18nValidators.maxLength(2000)]),
-      intereses: new FormControl('', [Validators.maxLength(2000)]),
+      intereses: new FormControl([], [I18nValidators.maxLength(2000)]),
       resultados_previstos: new FormControl('', [Validators.maxLength(2000)]),
       propiedadResultados: new FormControl(''),
     });

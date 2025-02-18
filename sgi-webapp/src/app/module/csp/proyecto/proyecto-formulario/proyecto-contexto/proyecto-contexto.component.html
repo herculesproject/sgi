@@ -23,8 +23,8 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
           <mat-label>{{'csp.proyecto.contexto.intereses' | translate}}</mat-label>
-          <textarea matInput formControlName="intereses" id="intereses"
-            placeholder="{{'csp.proyecto.contexto.intereses' | translate}}"></textarea>
+          <sgi-i18n-textarea formControlName="intereses"
+            placeholder="{{'csp.proyecto.contexto.intereses' | translate}}"></sgi-i18n-textarea>
           <mat-error *ngIf="formGroup.controls.intereses.errors?.maxlength">
             {{'error.maxlength.entity' | translate:msgParamInteresesEntity}}
           </mat-error>
