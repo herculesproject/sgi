@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoResponsableEconomicoOutput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.AnualidadGasto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.EstadoProyectoComentario;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoAnualidad;
@@ -1354,7 +1355,8 @@ class ProyectoIT extends BaseIT {
         .isEqualTo(1L);
     Assertions.assertThat(estadoProyecto.get(0).getProyectoId()).as("get(0).getProyectoId()")
         .isEqualTo(1L);
-    Assertions.assertThat(estadoProyecto.get(0).getComentario()).as("get(0).getComentario()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(estadoProyecto.get(0).getComentario(), Language.ES))
+        .as("get(0).getComentario()")
         .isEqualTo("comentario-estado-proyecto-" + String.format("%03d", 1));
 
   }
@@ -3126,9 +3128,12 @@ class ProyectoIT extends BaseIT {
    * @return el objeto EstadoProyecto
    */
   private EstadoProyecto generarMockEstadoProyecto(Long id) {
+    Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
+    estadoProyectoComentario.add(new EstadoProyectoComentario(Language.ES, "Estado-" + id));
+
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id);
-    estadoProyecto.setComentario("Estado-" + id);
+    estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);

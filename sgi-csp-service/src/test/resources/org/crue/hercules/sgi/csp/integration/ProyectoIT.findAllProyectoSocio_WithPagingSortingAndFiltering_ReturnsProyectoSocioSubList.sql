@@ -36,8 +36,12 @@ INSERT INTO test.proyecto_observaciones (proyecto_id, lang, value_) VALUES (1, '
 INSERT INTO test.proyecto_observaciones (proyecto_id, lang, value_) VALUES (2, 'es', 'observaciones 2');
 
 -- ESTADO PROYECTO
-INSERT INTO test.estado_proyecto (id, proyecto_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
-INSERT INTO test.estado_proyecto (id, proyecto_id, estado, fecha_estado, comentario) VALUES (2, 2, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
+INSERT INTO test.estado_proyecto (id, proyecto_id, estado, fecha_estado) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z');
+INSERT INTO test.estado_proyecto (id, proyecto_id, estado, fecha_estado) VALUES (2, 2, 'BORRADOR', '2020-11-17T00:00:00Z');
+
+-- ESTADO PROYECTO COMENTARIO
+INSERT INTO test.estado_proyecto_comentario (estado_proyecto_id, lang, value_) VALUES (1, 'es', 'comentario');
+INSERT INTO test.estado_proyecto_comentario (estado_proyecto_id, lang, value_) VALUES (2, 'es', 'comentario');
 
 -- UPDATE PROYECTO
 UPDATE test.proyecto SET estado_proyecto_id = 1 WHERE id = 1;

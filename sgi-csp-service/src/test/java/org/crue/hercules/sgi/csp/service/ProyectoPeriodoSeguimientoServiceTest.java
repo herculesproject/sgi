@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.EstadoProyectoComentario;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
@@ -146,6 +147,10 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   @Test
   void create_WithoutFechaInicioPresentacion_ThrowsIllegalArgumentException() {
     // given: a ProyectoPeriodoSeguimiento without FechaInicioPresentacion
+    Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
+    estadoProyectoComentario
+        .add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", 1)));
+
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setId(null);
     proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.now());
@@ -154,7 +159,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
-    estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
+    estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.CONCEDIDO);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
@@ -174,6 +179,10 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   @Test
   void create_WithoutFechaFinPresentacion_ThrowsIllegalArgumentException() {
     // given: a ProyectoPeriodoSeguimiento without FechaFinPresentacion
+    Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
+    estadoProyectoComentario
+        .add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", 1)));
+
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setId(null);
     proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.now());
@@ -182,7 +191,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
-    estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
+    estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.CONCEDIDO);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
@@ -354,6 +363,10 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutFechaInicioPresentacion_ThrowsIllegalArgumentException() {
     // given: a ProyectoPeriodoSeguimiento without FechaInicioPresentacion
+    Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
+    estadoProyectoComentario
+        .add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", 1)));
+
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
@@ -363,7 +376,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
-    estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
+    estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.CONCEDIDO);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
@@ -386,6 +399,10 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutFechaFinPresentacion_ThrowsIllegalArgumentException() {
     // given: a ProyectoPeriodoSeguimiento without FechaFinPresentacion
+    Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
+    estadoProyectoComentario
+        .add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", 1)));
+
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
@@ -395,7 +412,7 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(1L);
-    estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", 1));
+    estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.CONCEDIDO);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
@@ -692,9 +709,13 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
   }
 
   private Proyecto generarMockProyecto(Long id) {
+    Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
+    estadoProyectoComentario.add(
+        new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", id == null ? 1 : id)));
+
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id == null ? 1 : id);
-    estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id == null ? 1 : id));
+    estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);

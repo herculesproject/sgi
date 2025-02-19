@@ -69,6 +69,7 @@ DELETE FROM test.agrupacion_gasto_concepto;
 DELETE FROM test.proyecto_agrupacion_gasto;
 DELETE FROM test.proyecto_entidad_financiadora;
 DELETE FROM test.proyecto_equipo;
+DELETE FROM test.estado_proyecto_comentario;
 UPDATE test.proyecto SET estado_proyecto_id = NULL;
 DELETE FROM test.estado_proyecto;
 DELETE FROM test.incidencia_documentacion_requerimiento;

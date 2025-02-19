@@ -22,7 +22,10 @@ INSERT INTO test.tipo_ambito_geografico (id, activo) VALUES (1, true);
 INSERT INTO test.tipo_ambito_geografico_nombre (tipo_ambito_geografico_id, lang, value_) VALUES(1, 'es', 'nombre-001');
 
 -- ESTADO PROYECTO
-INSERT INTO test.estado_proyecto (id, proyecto_id, estado, fecha_estado, comentario) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z', 'comentario');
+INSERT INTO test.estado_proyecto (id, proyecto_id, estado, fecha_estado) VALUES (1, 1, 'BORRADOR', '2020-11-17T00:00:00Z');
+
+-- ESTADO PROYECTO COMENTARIO
+INSERT INTO test.estado_proyecto_comentario (estado_proyecto_id, lang, value_) VALUES (1, 'es', 'comentario');
 
 -- PROYECTO
 INSERT INTO test.proyecto (id, codigo_externo, fecha_inicio, fecha_fin, unidad_gestion_ref, modelo_ejecucion_id, tipo_finalidad_id, tipo_ambito_geografico_id, confidencial, estado_proyecto_id, activo)

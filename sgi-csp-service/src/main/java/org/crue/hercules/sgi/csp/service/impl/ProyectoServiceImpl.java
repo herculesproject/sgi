@@ -277,7 +277,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     repository.save(proyecto);
 
     // Crea el estado inicial del proyecto
-    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR, null);
+    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR);
 
     proyecto.setEstado(estadoProyecto);
 
@@ -677,21 +677,17 @@ public class ProyectoServiceImpl implements ProyectoService {
    *                           {@link Proyecto}.
    * @return la {@link Proyecto} con el estado actualizado.
    */
-  private EstadoProyecto addEstadoProyecto(Proyecto proyecto, EstadoProyecto.Estado tipoEstadoProyecto,
-      String comentario) {
-    log.debug(
-        "addEstadoProyecto(Proyecto proyecto, TipoEstadoProyectoEnum tipoEstadoProyecto, String comentario) - start");
+  private EstadoProyecto addEstadoProyecto(Proyecto proyecto, EstadoProyecto.Estado tipoEstadoProyecto) {
+    log.debug("addEstadoProyecto(Proyecto proyecto, TipoEstadoProyectoEnum tipoEstadoProyecto) - start");
 
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setEstado(tipoEstadoProyecto);
     estadoProyecto.setProyectoId(proyecto.getId());
-    estadoProyecto.setComentario(comentario);
     estadoProyecto.setFechaEstado(Instant.now());
 
     EstadoProyecto returnValue = estadoProyectoRepository.save(estadoProyecto);
 
-    log.debug(
-        "addEstadoProyecto(Proyecto proyecto, TipoEstadoProyectoEnum tipoEstadoProyecto, String comentario) - end");
+    log.debug("addEstadoProyecto(Proyecto proyecto, TipoEstadoProyectoEnum tipoEstadoProyecto) - end");
     return returnValue;
   }
 
@@ -1963,7 +1959,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     repository.save(proyecto);
 
     // Crea el estado inicial del proyecto
-    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR, null);
+    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR);
 
     proyecto.setEstado(estadoProyecto);
     // Actualiza el estado actual del proyecto con el nuevo estado
@@ -2166,7 +2162,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     repository.save(proyecto);
 
     // Crea el estado inicial del proyecto
-    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR, null);
+    EstadoProyecto estadoProyecto = addEstadoProyecto(proyecto, EstadoProyecto.Estado.BORRADOR);
 
     proyecto.setEstado(estadoProyecto);
     // Actualiza el estado actual del proyecto con el nuevo estado

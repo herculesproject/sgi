@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoFaseOutput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.EstadoProyectoComentario;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
@@ -1468,9 +1469,12 @@ class ProyectoControllerTest extends BaseControllerTest {
    * @return el objeto EstadoProyecto
    */
   private EstadoProyecto generarMockEstadoProyecto(Long id) {
+    Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
+    estadoProyectoComentario.add(new EstadoProyectoComentario(Language.ES, "Estado-" + id));
+
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id);
-    estadoProyecto.setComentario("Estado-" + id);
+    estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);

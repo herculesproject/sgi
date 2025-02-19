@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.dto.tp.SgiApiInstantTaskOutput;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
+import org.crue.hercules.sgi.csp.model.EstadoProyectoComentario;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
@@ -859,9 +860,12 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
    * @return el objeto EstadoProyecto
    */
   private EstadoProyecto generarMockEstadoProyecto(Long id) {
+    Set<EstadoProyectoComentario> estadoProyectoComentario = new HashSet<>();
+    estadoProyectoComentario.add(new EstadoProyectoComentario(Language.ES, "estado-proyecto-" + String.format("%03d", id)));
+
     EstadoProyecto estadoProyecto = new EstadoProyecto();
     estadoProyecto.setId(id);
-    estadoProyecto.setComentario("estado-proyecto-" + String.format("%03d", id));
+    estadoProyecto.setComentario(estadoProyectoComentario);
     estadoProyecto.setEstado(EstadoProyecto.Estado.BORRADOR);
     estadoProyecto.setFechaEstado(Instant.now());
     estadoProyecto.setProyectoId(1L);
