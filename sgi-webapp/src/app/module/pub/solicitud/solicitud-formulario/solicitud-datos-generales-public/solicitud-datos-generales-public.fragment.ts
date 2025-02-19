@@ -147,7 +147,7 @@ export class SolicitudDatosGeneralesPublicFragment extends FormFragment<Solicitu
       codigoRegistro: new FormControl({ value: '', disabled: true }),
       codigoExterno: new FormControl('', Validators.maxLength(50)),
       observaciones: new FormControl({ value: [], disabled: this.isEdit() }, I18nValidators.maxLength(2000)),
-      comentariosEstado: new FormControl({ value: '', disabled: true }),
+      comentariosEstado: new FormControl({ value: [], disabled: true }),
       solicitanteExterno: new FormGroup({
         nombre: new FormControl(null, Validators.required),
         apellidos: new FormControl(null, Validators.required),

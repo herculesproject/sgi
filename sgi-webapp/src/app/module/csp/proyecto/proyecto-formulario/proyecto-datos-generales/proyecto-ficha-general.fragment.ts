@@ -251,7 +251,7 @@ export class ProyectoFichaGeneralFragment extends FormFragment<IProyecto> {
       causaExencion: new FormControl(null),
       observaciones: new FormControl([], I18nValidators.maxLength(2000)),
       comentario: new FormControl({
-        value: '',
+        value: [],
         disabled: true
       }),
       solicitudProyecto: new FormControl({ value: null, disabled: true }),
