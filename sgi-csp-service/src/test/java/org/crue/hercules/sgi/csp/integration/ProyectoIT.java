@@ -553,7 +553,7 @@ class ProyectoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "observaciones=ke=-00";
+    String filter = "observaciones.value=ke=-00";
 
     Long proyectoId = 1L;
 
@@ -572,13 +572,15 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-    Assertions.assertThat(proyectosFases.get(0).getObservaciones()).as("get(0).getObservaciones()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectosFases.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones()")
         .isEqualTo("observaciones-proyecto-fase-" + String.format("%03d", 3));
-    Assertions.assertThat(proyectosFases.get(1).getObservaciones()).as("get(1).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectosFases.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())")
         .isEqualTo("observaciones-proyecto-fase-" + String.format("%03d", 2));
-    Assertions.assertThat(proyectosFases.get(2).getObservaciones()).as("get(2).getObservaciones()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectosFases.get(2).getObservaciones(), Language.ES))
+        .as("get(2).getObservaciones()")
         .isEqualTo("observaciones-proyecto-fase-" + String.format("%03d", 1));
-
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {

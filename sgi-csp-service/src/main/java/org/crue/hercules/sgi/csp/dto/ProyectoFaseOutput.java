@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.ProyectoFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.TipoFaseDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoFaseNombre;
 
@@ -24,7 +25,7 @@ public class ProyectoFaseOutput implements Serializable {
   private TipoFase tipoFase;
   private Instant fechaInicio;
   private Instant fechaFin;
-  private String observaciones;
+  private Collection<ProyectoFaseObservaciones> observaciones;
   private ProyectoFaseAvisoOutput aviso1;
   private ProyectoFaseAvisoOutput aviso2;
 

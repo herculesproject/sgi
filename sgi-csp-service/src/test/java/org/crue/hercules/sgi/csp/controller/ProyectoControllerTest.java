@@ -25,6 +25,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoFaseAviso;
+import org.crue.hercules.sgi.csp.model.ProyectoFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoComentario;
@@ -718,7 +719,7 @@ class ProyectoControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ProyectoFase proyectoFase = proyectoFaseResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyectoFase.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoFase.getObservaciones(), Language.ES))
           .isEqualTo("observaciones-proyecto-fase-" + String.format("%03d", i));
     }
   }
@@ -1519,12 +1520,16 @@ class ProyectoControllerTest extends BaseControllerTest {
     tipoFase.setId(id == null ? 1 : id);
     tipoFase.setActivo(true);
 
+    Set<ProyectoFaseObservaciones> proyectoFaseObservaciones = new HashSet<>();
+    proyectoFaseObservaciones
+        .add(new ProyectoFaseObservaciones(Language.ES, "observaciones-proyecto-fase-" + String.format("%03d", id)));
+
     ProyectoFase proyectoFase = new ProyectoFase();
     proyectoFase.setId(id);
     proyectoFase.setProyectoId(id == null ? 1 : id);
     proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
-    proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
+    proyectoFase.setObservaciones(proyectoFaseObservaciones);
     proyectoFase.setProyectoFaseAviso1(buildMockProyectoFaseAviso(1L));
     proyectoFase.setProyectoFaseAviso2(buildMockProyectoFaseAviso(2L));
     proyectoFase.setTipoFase(tipoFase);
@@ -1537,12 +1542,16 @@ class ProyectoControllerTest extends BaseControllerTest {
     tipoFase.setId(id == null ? 1 : id);
     tipoFase.setActivo(true);
 
+    Set<ProyectoFaseObservaciones> proyectoFaseObservaciones = new HashSet<>();
+    proyectoFaseObservaciones
+        .add(new ProyectoFaseObservaciones(Language.ES, "observaciones-proyecto-fase-" + String.format("%03d", id)));
+
     ProyectoFaseOutput proyectoFase = new ProyectoFaseOutput();
     proyectoFase.setId(id);
     proyectoFase.setProyectoId(id == null ? 1 : id);
     proyectoFase.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoFase.setFechaFin(Instant.parse("2020-10-20T23:59:59Z"));
-    proyectoFase.setObservaciones("observaciones-proyecto-fase-" + String.format("%03d", id));
+    proyectoFase.setObservaciones(proyectoFaseObservaciones);
     proyectoFase.setAviso1(buildMockProyectoFaseAvisoOutput(1L));
     proyectoFase.setAviso2(buildMockProyectoFaseAvisoOutput(2L));
     proyectoFase.setTipoFase(tipoFase);

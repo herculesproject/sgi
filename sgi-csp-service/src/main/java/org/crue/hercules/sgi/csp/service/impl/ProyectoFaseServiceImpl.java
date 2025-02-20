@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.dto.ProyectoFaseInput;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoFaseNotFoundException;
@@ -11,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoFaseAviso;
+import org.crue.hercules.sgi.csp.model.ProyectoFaseObservaciones;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoFaseRepository;
@@ -20,6 +24,8 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoFaseSpecificat
 import org.crue.hercules.sgi.csp.service.ProyectoFaseAvisoService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -91,7 +97,10 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
     ProyectoFase toCreate = ProyectoFase.builder()
         .fechaFin(proyectoFaseInput.getFechaFin())
         .fechaInicio(proyectoFaseInput.getFechaInicio())
-        .observaciones(proyectoFaseInput.getObservaciones())
+        .observaciones(
+            (proyectoFaseInput.getObservaciones().stream()
+                .map(observaciones -> new ProyectoFaseObservaciones(observaciones.getLang(), observaciones.getValue()))
+                .collect(Collectors.toSet())))
         .proyectoId(proyectoFaseInput.getProyectoId())
         .tipoFase(tipoFaseRepository.findById(proyectoFaseInput.getTipoFaseId())
             .orElseThrow(() -> new TipoFaseNotFoundException(proyectoFaseInput.getTipoFaseId())))
@@ -131,9 +140,18 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
 
       validarProyectoFase(proyectoFaseActualizar, id);
 
+      List<I18nFieldValueDto> listaObservaciones = proyectoFaseActualizar.getObservaciones();
+
+      Set<ProyectoFaseObservaciones> setObservaciones = listaObservaciones.stream()
+          .map(dto -> {
+            ProyectoFaseObservaciones comentario = new ProyectoFaseObservaciones(dto.getLang(), dto.getValue());
+            return comentario;
+          })
+          .collect(Collectors.toSet());
+
       proyectoFase.setFechaInicio(proyectoFaseActualizar.getFechaInicio());
       proyectoFase.setFechaFin(proyectoFaseActualizar.getFechaFin());
-      proyectoFase.setObservaciones(proyectoFaseActualizar.getObservaciones());
+      proyectoFase.setObservaciones(setObservaciones);
       proyectoFase.setTipoFase(this.tipoFaseRepository.findById(proyectoFaseActualizar.getTipoFaseId())
           .orElseThrow(() -> new TipoFaseNotFoundException(proyectoFaseActualizar.getTipoFaseId())));
 
