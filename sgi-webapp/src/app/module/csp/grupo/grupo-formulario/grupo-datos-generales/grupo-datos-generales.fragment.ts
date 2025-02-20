@@ -92,7 +92,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       fechaFin: grupo.fechaFin,
       tipo: grupo.tipo,
       especialInvestigacion: grupo.especialInvestigacion ?? false,
-      resumen: grupo.resumen ?? ''
+      resumen: grupo.resumen ?? []
     };
 
     if (grupo.solicitud) {
@@ -148,7 +148,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       palabrasClave: new FormControl(null),
       tipo: new FormControl(null),
       especialInvestigacion: new FormControl(false, Validators.required),
-      resumen: new FormControl('', Validators.maxLength(4000))
+      resumen: new FormControl([], I18nValidators.maxLength(4000))
     }, {
       validators: [
         DateValidator.isAfter('fechaInicio', 'fechaFin', false)
@@ -174,7 +174,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
       tipo: new FormControl(null),
       especialInvestigacion: new FormControl({ value: null, disabled: true }),
       solicitud: new FormControl(null),
-      resumen: new FormControl('', Validators.maxLength(4000))
+      resumen: new FormControl([], I18nValidators.maxLength(4000))
     }, {
       validators: [
         DateValidator.isAfter('fechaInicio', 'fechaFin', false)

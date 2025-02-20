@@ -23,7 +23,7 @@ class GrupoResponseConverter
       tipo: value.tipo,
       especialInvestigacion: value.especialInvestigacion,
       departamentoOrigenRef: null,
-      resumen: value.resumen,
+      resumen: value.resumen ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.resumen) : [],
       activo: value.activo
     };
   }
@@ -42,7 +42,7 @@ class GrupoResponseConverter
       codigo: value.codigo,
       tipo: value.tipo,
       especialInvestigacion: value.especialInvestigacion,
-      resumen: value.resumen,
+      resumen: value.resumen ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.resumen) : [],
       activo: value.activo
     };
   }

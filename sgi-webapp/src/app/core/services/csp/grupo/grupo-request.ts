@@ -10,6 +10,6 @@ export interface IGrupoRequest {
   codigo: string;
   tipo: Tipo;
   especialInvestigacion: boolean;
-  resumen: string;
+  resumen: I18nFieldValueRequest[];
   departamentoOrigenRef: string;
 }

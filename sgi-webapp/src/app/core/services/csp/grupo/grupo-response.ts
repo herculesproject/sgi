@@ -11,6 +11,6 @@ export interface IGrupoResponse {
   codigo: string;
   tipo: Tipo;
   especialInvestigacion: boolean;
-  resumen: string;
+  resumen: I18nFieldValueResponse[];
   activo: boolean;
 }

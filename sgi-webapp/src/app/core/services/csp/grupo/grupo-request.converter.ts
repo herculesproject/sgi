@@ -23,7 +23,7 @@ class GrupoRequestConverter
       tipo: value.tipo,
       especialInvestigacion: value.especialInvestigacion,
       departamentoOrigenRef: value.departamentoOrigenRef,
-      resumen: value.resumen,
+      resumen: value.resumen ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.resumen) : [],
       activo: undefined
     };
   }
@@ -41,7 +41,7 @@ class GrupoRequestConverter
       codigo: value.codigo,
       tipo: value.tipo,
       especialInvestigacion: value.especialInvestigacion,
-      resumen: value.resumen,
+      resumen: value.resumen ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.resumen) : [],
       departamentoOrigenRef: value.departamentoOrigenRef
     };
   }

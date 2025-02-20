@@ -15,6 +15,6 @@ export interface IGrupo {
   tipo: Tipo;
   especialInvestigacion: boolean;
   departamentoOrigenRef: string;
-  resumen: string;
+  resumen: I18nFieldValue[];
   activo: boolean;
 }

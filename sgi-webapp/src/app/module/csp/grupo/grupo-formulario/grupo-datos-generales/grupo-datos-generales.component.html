@@ -81,12 +81,10 @@
       <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
         <!-- Resumen-->
         <span class="ckeditor-label">{{'csp.grupo.resumen' | translate}}</span>
-        <ckeditor
-          [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''"
-          [editor]="CkEditor" [config]="configCkEditor" formControlName="resumen">
-        </ckeditor>
-        <span *ngIf="!formGroup.controls.resumen.errors"
-          class="ckeditor-hint">{{formGroup.controls.resumen?.value?.length}} /
+        <sgi-i18n-ckeditor #resumen formControlName="resumen"
+          [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''">
+        </sgi-i18n-ckeditor>
+        <span *ngIf="!formGroup.controls.resumen.errors" class="ckeditor-hint">{{resumen.editingValue?.length}} /
           4000</span>
         <span class="ckeditor-error"
           *ngIf="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.maxlength">
@@ -273,12 +271,10 @@
       <div fxLayout="column" fxFlex="100" fxLayoutGap="10px">
         <!-- Resumen-->
         <span class="ckeditor-label">{{'csp.grupo.resumen' | translate}}</span>
-        <ckeditor
-          [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''"
-          [editor]="CkEditor" [config]="configCkEditor" formControlName="resumen">
-        </ckeditor>
-        <span *ngIf="!formGroup.controls.resumen.errors"
-          class="ckeditor-hint">{{formGroup.controls.resumen?.value?.length}} /
+        <sgi-i18n-ckeditor #resumen formControlName="resumen"
+          [class]="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors ? 'ck-editor-border-warn' : ''">
+        </sgi-i18n-ckeditor>
+        <span *ngIf="!formGroup.controls.resumen.errors" class="ckeditor-hint">{{resumen.editingValue?.length}} /
           4000</span>
         <span class="ckeditor-error"
           *ngIf="formGroup.controls.resumen.touched && formGroup.controls.resumen.errors?.maxlength">
