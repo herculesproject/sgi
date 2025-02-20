@@ -6,6 +6,7 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { ITipoHitoResponse } from '../tipo-hito/tipo-hito-response';
 import { TIPO_HITO_RESPONSE_CONVERTER } from '../tipo-hito/tipo-hito-response.converter';
 import { IProyectoHitoResponse } from './proyecto-hito-response';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class ProyectoHitoResponseConverter extends SgiBaseConverter<IProyectoHitoResponse, IProyectoHito> {
 
@@ -17,7 +18,8 @@ class ProyectoHitoResponseConverter extends SgiBaseConverter<IProyectoHitoRespon
       id: value.id,
       fecha: LuxonUtils.fromBackend(value.fecha),
       tipoHito: value.tipoHito ? TIPO_HITO_RESPONSE_CONVERTER.toTarget(value.tipoHito) : null,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : [],
+
       proyectoId: value.proyectoId,
       aviso: value.proyectoHitoAviso ? {
         email: {
@@ -41,7 +43,7 @@ class ProyectoHitoResponseConverter extends SgiBaseConverter<IProyectoHitoRespon
       tipoHito: {
         id: value.tipoHito.id
       } as ITipoHitoResponse,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : [],
       proyectoId: value.proyectoId,
       proyectoHitoAviso: value.aviso ? {
         comunicadoRef: value.aviso.email.id.toString(),

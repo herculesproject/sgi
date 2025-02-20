@@ -18,6 +18,7 @@ import { EmailService } from '@core/services/com/email/email.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
 import { TranslateService } from '@ngx-translate/core';
@@ -275,7 +276,7 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
     const formGroup = new FormGroup({
       tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
       fecha: new FormControl(this.data?.hito?.fecha, [Validators.required]),
-      comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
+      comentario: new FormControl(this.data?.hito?.comentario, I18nValidators.maxLength(250)),
       generaAviso: new FormControl(this.data?.hito?.aviso ? true : false),
       aviso: new FormGroup({
         fechaEnvio: new FormControl(this.data?.hito?.aviso?.task?.instant, Validators.required),
@@ -349,7 +350,7 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
       this.languageService.getFieldValue(tituloConvocatoria),
       this.formGroup.get('fecha').value ?? DateTime.now(),
       this.formGroup.get('tipoHito').value?.nombre ? this.languageService.getFieldValue(this.formGroup.get('tipoHito').value?.nombre) : '',
-      this.formGroup.get('comentario').value ?? ''
+      this.languageService.getFieldValue(this.formGroup.get('comentario').value),
     ).subscribe(
       (template) => {
         this.formGroup.get('aviso.asunto').setValue(template.subject);
