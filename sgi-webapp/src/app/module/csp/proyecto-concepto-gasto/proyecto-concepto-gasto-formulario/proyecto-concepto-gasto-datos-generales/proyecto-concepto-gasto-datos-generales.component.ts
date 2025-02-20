@@ -72,7 +72,7 @@ export class ProyectoConceptoGastoDatosGeneralesComponent
 
     this.formPart.getFormGroup().controls.fechaInicio.setValue(this.formPart.getFormGroup().controls.fechaInicioConvocatoria.value);
     this.formPart.getFormGroup().controls.fechaFin.setValue(this.formPart.getFormGroup().controls.fechaFinConvocatoria.value);
-    this.formPart.getFormGroup().controls.observaciones.setValue(this.languageService.getFieldValue(this.formPart.getFormGroup().controls.observacionesConvocatoria.value));
+    this.formPart.getFormGroup().controls.observaciones.setValue(this.formPart.getFormGroup().controls.observacionesConvocatoria.value);
 
     this.formPart.getFormGroup().controls.costesIndirectos.setValue(
       this.formPart.getFormGroup().controls.costesIndirectosConvocatoria.value);

@@ -1,10 +1,11 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '@core/services/csp/concepto-gasto/concepto-gasto-response.converter';
 import { IProyectoConceptoGastoResponse } from '@core/services/csp/proyecto-concepto-gasto/proyecto-concepto-gasto-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 
-class ProyectoConceptoGastoConverter extends SgiBaseConverter<IProyectoConceptoGastoResponse, IProyectoConceptoGasto> {
+class ProyectoConceptoGastoResponseConverter extends SgiBaseConverter<IProyectoConceptoGastoResponse, IProyectoConceptoGasto> {
 
   toTarget(value: IProyectoConceptoGastoResponse): IProyectoConceptoGasto {
     if (!value) {
@@ -14,7 +15,7 @@ class ProyectoConceptoGastoConverter extends SgiBaseConverter<IProyectoConceptoG
       id: value.id,
       conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.toTarget(value.conceptoGasto) : null,
       proyectoId: value.proyectoId,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : [],
       importeMaximo: value.importeMaximo,
       permitido: value.permitido,
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
@@ -31,7 +32,7 @@ class ProyectoConceptoGastoConverter extends SgiBaseConverter<IProyectoConceptoG
       id: value.id,
       conceptoGasto: value.conceptoGasto ? CONCEPTO_GASTO_RESPONSE_CONVERTER.fromTarget(value.conceptoGasto) : null,
       proyectoId: value.proyectoId,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : [],
       importeMaximo: value.importeMaximo,
       permitido: value.permitido,
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
@@ -41,4 +42,4 @@ class ProyectoConceptoGastoConverter extends SgiBaseConverter<IProyectoConceptoG
   }
 }
 
-export const PROYECTO_CONCEPTO_GASTO_CONVERTER = new ProyectoConceptoGastoConverter();
+export const PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER = new ProyectoConceptoGastoResponseConverter();

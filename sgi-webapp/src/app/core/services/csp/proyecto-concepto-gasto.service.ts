@@ -1,31 +1,58 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto-codigo-ec.converter';
-import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
 import { IProyectoConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-codigo-ec-backend';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { IProyectoConceptoGastoCodigoEc } from '@core/models/csp/proyecto-concepto-gasto-codigo-ec';
 import { environment } from '@env';
 import {
-  RSQLSgiRestFilter, SgiMutableRestService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult
+  CreateCtor,
+  FindAllCtor,
+  FindByIdCtor,
+  mixinCreate,
+  mixinFindAll,
+  mixinFindById,
+  mixinUpdate,
+  RSQLSgiRestFilter,
+  SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult,
+  UpdateCtor
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProyectoConceptoGastoResponse } from './proyecto-concepto-gasto/proyecto-concepto-gasto-response';
+import { PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER } from './proyecto-concepto-gasto/proyecto-concepto-gasto-response.converter';
+
+// tslint:disable-next-line: variable-name
+const _ProyectoConceptoGastoServiceMixinBase:
+  CreateCtor<IProyectoConceptoGasto, IProyectoConceptoGasto, IProyectoConceptoGastoResponse, IProyectoConceptoGastoResponse> &
+  UpdateCtor<number, IProyectoConceptoGasto, IProyectoConceptoGasto, IProyectoConceptoGastoResponse, IProyectoConceptoGastoResponse> &
+  FindAllCtor<IProyectoConceptoGasto, IProyectoConceptoGastoResponse> &
+  FindByIdCtor<number, IProyectoConceptoGasto, IProyectoConceptoGastoResponse> &
+  typeof SgiRestBaseService = mixinFindAll(
+    mixinFindById(
+      mixinUpdate(
+        mixinCreate(
+          SgiRestBaseService,
+          PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER,
+          PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER
+        ),
+        PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER,
+        PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER
+      ),
+      PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER),
+    PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER
+  );
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProyectoConceptoGastoService
-  extends SgiMutableRestService<number, IProyectoConceptoGastoResponse, IProyectoConceptoGasto> {
+export class ProyectoConceptoGastoService extends _ProyectoConceptoGastoServiceMixinBase {
   private static readonly MAPPING = '/proyectoconceptosgasto';
 
   constructor(protected http: HttpClient) {
     super(
-      ProyectoConceptoGastoService.name,
       `${environment.serviceServers.csp}${ProyectoConceptoGastoService.MAPPING}`,
-      http,
-      PROYECTO_CONCEPTO_GASTO_CONVERTER
+      http
     );
   }
 
@@ -39,7 +66,7 @@ export class ProyectoConceptoGastoService
     return this.find<IProyectoConceptoGastoResponse, IProyectoConceptoGasto>(
       this.endpointUrl,
       options,
-      PROYECTO_CONCEPTO_GASTO_CONVERTER
+      PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER
     );
   }
 
@@ -91,4 +118,9 @@ export class ProyectoConceptoGastoService
       map(response => response.status === 200)
     );
   }
+
+  deleteById(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.endpointUrl}/${id}`);
+  }
+
 }

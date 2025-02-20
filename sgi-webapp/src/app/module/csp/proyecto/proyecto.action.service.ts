@@ -488,7 +488,6 @@ export class ProyectoActionService extends ActionService {
           proyectoService,
           proyectoConceptoGastoService,
           convocatoriaService,
-          languageService,
           this.readonly,
           this.data?.isVisor
         );

@@ -8,7 +8,6 @@ import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
-import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { DateTime } from 'luxon';
@@ -41,7 +40,7 @@ export interface ConceptoGastoListado {
   importeMaximo: number;
   fechaInicio: DateTime;
   fechaFin: DateTime;
-  observaciones: string;
+  observaciones: I18nFieldValue[];
 }
 
 export class ProyectoConceptosGastoFragment extends Fragment {
@@ -57,7 +56,6 @@ export class ProyectoConceptosGastoFragment extends Fragment {
     private proyectoService: ProyectoService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private convocatoriaService: ConvocatoriaService,
-    private languageService: LanguageService,
     public readonly: boolean,
     public isVisor: boolean
   ) {
@@ -361,7 +359,7 @@ export class ProyectoConceptosGastoFragment extends Fragment {
       conceptoGasto.conceptoGasto = conceptoGasto.convocatoriaConceptoGasto.conceptoGasto?.nombre;
       conceptoGasto.descripcion = conceptoGasto.convocatoriaConceptoGasto.conceptoGasto?.descripcion;
       conceptoGasto.importeMaximo = conceptoGasto.convocatoriaConceptoGasto.importeMaximo;
-      conceptoGasto.observaciones = this.languageService.getFieldValue(conceptoGasto.convocatoriaConceptoGasto.observaciones);
+      conceptoGasto.observaciones = conceptoGasto.convocatoriaConceptoGasto.observaciones;
 
       if (conceptoGasto.convocatoriaConceptoGasto.mesInicial) {
         conceptoGasto.fechaInicio = getFechaInicioConceptoGasto(this.proyecto.fechaInicio,

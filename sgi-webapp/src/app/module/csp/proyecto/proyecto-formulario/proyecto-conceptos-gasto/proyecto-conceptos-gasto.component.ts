@@ -11,6 +11,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ROUTE_NAMES } from '@core/route.names';
 import { ProyectoConceptoGastoService } from '@core/services/csp/proyecto-concepto-gasto.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, Subscription } from 'rxjs';
@@ -19,7 +20,6 @@ import { CONVOCATORIA_CONCEPTO_GASTO_ID_KEY } from '../../../proyecto-concepto-g
 import { PROYECTO_ROUTE_NAMES } from '../../proyecto-route-names';
 import { ProyectoActionService } from '../../proyecto.action.service';
 import { ConceptoGastoListado, ProyectoConceptosGastoFragment } from './proyecto-conceptos-gasto.fragment';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const MSG_DELETE_CODIGO_ECONOMICO = marker('msg.csp.proyecto-concepto-gasto.listado.codigo-economico.delete');
@@ -113,9 +113,11 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
       (listadocg: ConceptoGastoListado, property: string) => {
         switch (property) {
           case 'conceptoGasto.nombre':
-            return listadocg?.conceptoGasto ? this.languageService.getFieldValue(listadocg.conceptoGasto) : '';
+            return this.languageService.getFieldValue(listadocg.conceptoGasto);
           case 'conceptoGasto.descripcion':
-            return listadocg?.descripcion ? this.languageService.getFieldValue(listadocg.descripcion) : '';
+            return this.languageService.getFieldValue(listadocg.descripcion);
+          case 'conceptoGasto.observaciones':
+            return this.languageService.getFieldValue(listadocg.observaciones);
           default:
             return listadocg[property];
         }
@@ -125,9 +127,11 @@ export class ProyectoConceptosGastoComponent extends FragmentComponent implement
       (listadocg: ConceptoGastoListado, property: string) => {
         switch (property) {
           case 'conceptoGasto.nombre':
-            return listadocg?.conceptoGasto ? this.languageService.getFieldValue(listadocg.conceptoGasto) : '';
+            return this.languageService.getFieldValue(listadocg.conceptoGasto);
           case 'conceptoGasto.descripcion':
-            return listadocg?.descripcion ? this.languageService.getFieldValue(listadocg.descripcion) : '';
+            return this.languageService.getFieldValue(listadocg.descripcion);
+          case 'conceptoGasto.observaciones':
+            return this.languageService.getFieldValue(listadocg.observaciones);
           default:
             return listadocg[property];
         }

@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 import { PROYECTO_AREA_CONOCIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-area-conocimiento.converter';
 import { PROYECTO_CLASIFICACION_CONVERTER } from '@core/converters/csp/proyecto-clasificacion.converter';
 import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto-codigo-ec.converter';
-import { PROYECTO_CONCEPTO_GASTO_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto.converter';
-import { PROYECTO_CONTEXTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-contexto/proyecto-contexto-response.converter';
 import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-financiadora.converter';
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
 import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
@@ -17,7 +15,6 @@ import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
 import { IProyectoAreaConocimientoBackend } from '@core/models/csp/backend/proyecto-area-conocimiento-backend';
 import { IProyectoClasificacionBackend } from '@core/models/csp/backend/proyecto-clasificacion-backend';
 import { IProyectoConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-codigo-ec-backend';
-import { IProyectoContextoResponse } from '@core/services/csp/proyecto-contexto/proyecto-contexto-response';
 import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/proyecto-entidad-financiadora-backend';
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
@@ -61,6 +58,9 @@ import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-just
 import { ESTADO_PROYECTO_REQUEST_CONVERTER } from '@core/services/csp/estado-proyecto/estado-proyecto-request.converter';
 import { IEstadoProyectoResponse } from '@core/services/csp/estado-proyecto/estado-proyecto-response';
 import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/estado-proyecto/estado-proyecto-response.converter';
+import { PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-concepto-gasto/proyecto-concepto-gasto-response.converter';
+import { IProyectoContextoResponse } from '@core/services/csp/proyecto-contexto/proyecto-contexto-response';
+import { PROYECTO_CONTEXTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-contexto/proyecto-contexto-response.converter';
 import { IProyectoDocumentoResponse } from '@core/services/csp/proyecto-documento/proyecto-documento-response';
 import { PROYECTO_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-documento/proyecto-documento-response.converter';
 import { IProyectoEntidadConvocanteResponse } from '@core/services/csp/proyecto-entidad-convocante/proyecto-entidad-convocante-response';
@@ -601,7 +601,7 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
     return this.find<IProyectoConceptoGastoResponse, IProyectoConceptoGasto>(
       `${this.endpointUrl}/${id}/proyectoconceptosgasto/permitidos`,
       undefined,
-      PROYECTO_CONCEPTO_GASTO_CONVERTER
+      PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER
     );
   }
 
@@ -614,7 +614,7 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
     return this.find<IProyectoConceptoGastoResponse, IProyectoConceptoGasto>(
       `${this.endpointUrl}/${id}/proyectoconceptosgasto/nopermitidos`,
       undefined,
-      PROYECTO_CONCEPTO_GASTO_CONVERTER
+      PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER
     );
   }
 
