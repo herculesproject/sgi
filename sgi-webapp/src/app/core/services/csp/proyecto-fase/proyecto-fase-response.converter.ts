@@ -7,6 +7,7 @@ import { TIPO_FASE_RESPONSE_CONVERTER } from "../tipo-fase/tipo-fase-response.co
 import { IProyectoFaseAviso } from "./proyecto-fase-aviso";
 import { IProyectoFaseAvisoResponse } from "./proyecto-fase-aviso-response";
 import { IProyectoFaseResponse } from "./proyecto-fase-response";
+import { I18N_FIELD_RESPONSE_CONVERTER } from "@core/i18n/i18n-field.converter";
 
 class ProyectoFaseResponseConverter extends SgiBaseConverter<IProyectoFaseResponse, IProyectoFase> {
 
@@ -17,7 +18,7 @@ class ProyectoFaseResponseConverter extends SgiBaseConverter<IProyectoFaseRespon
         fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
         fechaFin: LuxonUtils.fromBackend(value.fechaFin),
         tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.toTarget(value.tipoFase) : null,
-        observaciones: value.observaciones,
+        observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : [],
         proyectoId: value.proyectoId,
         aviso1: this.getConvocatoriaFaseAviso(value.aviso1),
         aviso2: this.getConvocatoriaFaseAviso(value.aviso2)
@@ -30,7 +31,7 @@ class ProyectoFaseResponseConverter extends SgiBaseConverter<IProyectoFaseRespon
         fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
         fechaFin: LuxonUtils.toBackend(value.fechaFin),
         tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.fromTarget(value.tipoFase) : null,
-        observaciones: value.observaciones,
+        observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : [],
         proyectoId: value.proyectoId,
         aviso1: this.getConvocatoriaFaseAvisoResponse(value.aviso1),
         aviso2: this.getConvocatoriaFaseAvisoResponse(value.aviso2)

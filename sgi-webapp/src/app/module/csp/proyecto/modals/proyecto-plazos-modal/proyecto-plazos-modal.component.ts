@@ -20,6 +20,7 @@ import { IProyectoFaseAviso } from '@core/services/csp/proyecto-fase/proyecto-fa
 import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IRange, RangeValidator } from '@core/validators/range-validator';
 import { TranslateService } from '@ngx-translate/core';
@@ -242,7 +243,7 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
       fechaInicio: new FormControl(this.data?.plazo?.fechaInicio, [Validators.required]),
       fechaFin: new FormControl(this.data?.plazo?.fechaFin, Validators.required),
       tipoFase: new FormControl(this.data?.plazo?.tipoFase, [Validators.required, new NullIdValidador().isValid()]),
-      observaciones: new FormControl(this.data?.plazo?.observaciones, [Validators.maxLength(250)]),
+      observaciones: new FormControl(this.data?.plazo?.observaciones, I18nValidators.maxLength(250)),
       generaAviso1: new FormControl(!!this.data?.plazo?.aviso1),
       generaAviso2: new FormControl(!!this.data?.plazo?.aviso2),
       aviso1: new FormGroup({
@@ -348,7 +349,8 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),
       this.languageService.getFieldValue(this.formGroup.get('tipoFase').value?.nombre) ?? '',
-      this.formGroup.get('observaciones').value ?? ''
+      this.languageService.getFieldValue(this.formGroup.get('observaciones').value),
+
     ).subscribe(
       (template) => {
         fgAviso.get('asunto').setValue(template.subject);
