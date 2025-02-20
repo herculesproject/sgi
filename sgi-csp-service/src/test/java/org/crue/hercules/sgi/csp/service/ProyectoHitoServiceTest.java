@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
+import org.crue.hercules.sgi.csp.model.ProyectoHitoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -40,6 +41,8 @@ import org.crue.hercules.sgi.csp.service.impl.ProyectoHitoServiceImpl;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -125,8 +128,9 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
         .isEqualTo(proyectoHito.getProyectoId());
     Assertions.assertThat(proyectoHitoCreado.getFecha()).as("getFecha()")
         .isEqualTo(proyectoHito.getFecha());
-    Assertions.assertThat(proyectoHitoCreado.getComentario()).as("getComentario()")
-        .isEqualTo(proyectoHito.getComentario());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoHitoCreado.getComentario(), Language.ES))
+        .as("getComentario()")
+        .isEqualTo(I18nHelper.getValueForLanguage(proyectoHito.getComentario(), Language.ES));
     Assertions.assertThat(proyectoHitoCreado.getTipoHito().getId()).as("getTipoHito().getId()")
         .isEqualTo(proyectoHito.getTipoHitoId());
   }
@@ -396,8 +400,8 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(proyectoHito.getId());
     Assertions.assertThat(updated.getProyectoId()).as("getProyectoId()")
         .isEqualTo(proyectoHito.getProyectoId());
-    Assertions.assertThat(updated.getComentario()).as("getComentario()")
-        .isEqualTo(proyectoHitoActualizado.getComentario());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getComentario(), Language.ES)).as("getComentario()")
+        .isEqualTo(I18nHelper.getValueForLanguage(proyectoHitoActualizado.getComentario(), Language.ES));
     Assertions.assertThat(updated.getTipoHito().getId()).as("getTipoHito().getId()")
         .isEqualTo(proyectoHitoActualizado.getTipoHitoId());
     Assertions.assertThat(updated.getFecha()).as("getFecha()")
@@ -462,8 +466,13 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutProyectoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without ProyectoId
+
+    List<I18nFieldValueDto> proyectoHitoComentario = new ArrayList<I18nFieldValueDto>();
+    proyectoHitoComentario
+        .add(new I18nFieldValueDto(Language.ES, "comentario modificado"));
+
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
-    proyectoHito.setComentario("comentario modificado");
+    proyectoHito.setComentario(proyectoHitoComentario);
     proyectoHito.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
@@ -477,8 +486,13 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutTipoHitoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without TipoHitoId
+
+    List<I18nFieldValueDto> proyectoHitoComentario = new ArrayList<I18nFieldValueDto>();
+    proyectoHitoComentario
+        .add(new I18nFieldValueDto(Language.ES, "comentario modificado"));
+
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
-    proyectoHito.setComentario("comentario modificado");
+    proyectoHito.setComentario(proyectoHitoComentario);
     proyectoHito.setTipoHitoId(null);
 
     Assertions.assertThatThrownBy(
@@ -492,8 +506,13 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutFecha_ThrowsIllegalArgumentException() {
     // given: a ProyectoHito without Fecha
+
+    List<I18nFieldValueDto> proyectoHitoComentario = new ArrayList<I18nFieldValueDto>();
+    proyectoHitoComentario
+        .add(new I18nFieldValueDto(Language.ES, "comentario modificado"));
+
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
-    proyectoHito.setComentario("comentario modificado");
+    proyectoHito.setComentario(proyectoHitoComentario);
     proyectoHito.setFecha(null);
 
     Assertions.assertThatThrownBy(
@@ -508,8 +527,13 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
   void update_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
     // given: a ProyectoHito with non existing Proyecto
     ProyectoHito proyectoHitoOriginal = generarMockProyectoHito(1L);
+
+    List<I18nFieldValueDto> proyectoHitoComentario = new ArrayList<I18nFieldValueDto>();
+    proyectoHitoComentario
+        .add(new I18nFieldValueDto(Language.ES, "comentario modificado"));
+
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
-    proyectoHito.setComentario("comentario modificado");
+    proyectoHito.setComentario(proyectoHitoComentario);
     TipoHito tipoHito = generarMockTipoHito(1L, Boolean.TRUE);
 
     BDDMockito.given(tipoHitoRepository.findById(anyLong())).willReturn(Optional.of(tipoHito));
@@ -530,8 +554,13 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     Long proyectoId = 1L;
     Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoHito proyectoHitoOriginal = generarMockProyectoHito(1L);
+
+    List<I18nFieldValueDto> proyectoHitoComentario = new ArrayList<I18nFieldValueDto>();
+    proyectoHitoComentario
+        .add(new I18nFieldValueDto(Language.ES, "comentario modificado"));
+
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
-    proyectoHito.setComentario("comentario modificado");
+    proyectoHito.setComentario(proyectoHitoComentario);
     proyecto.setModeloEjecucion(null);
     TipoHito tipoHito = generarMockTipoHito(1L, Boolean.TRUE);
 
@@ -553,8 +582,13 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     // given: ProyectoHito con TipoHito no asignado al Modelo de Ejecucion de la
     // proyecto
     ProyectoHito proyectoHitoOriginal = generarMockProyectoHito(1L);
+
+    List<I18nFieldValueDto> proyectoHitoComentario = new ArrayList<I18nFieldValueDto>();
+    proyectoHitoComentario
+        .add(new I18nFieldValueDto(Language.ES, "comentario modificado"));
+
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
-    proyectoHito.setComentario("comentario modificado");
+    proyectoHito.setComentario(proyectoHitoComentario);
     TipoHito tipoHito = generarMockTipoHito(1L, Boolean.TRUE);
 
     BDDMockito.given(tipoHitoRepository.findById(anyLong())).willReturn(Optional.of(tipoHito));
@@ -636,8 +670,13 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
     Proyecto proyecto = generarMockProyecto(proyectoId);
     ProyectoHito proyectoHitoExistente = generarMockProyectoHito(2L);
     ProyectoHito proyectoHitoOriginal = generarMockProyectoHito(1L);
+
+    List<I18nFieldValueDto> proyectoHitoComentario = new ArrayList<I18nFieldValueDto>();
+    proyectoHitoComentario
+        .add(new I18nFieldValueDto(Language.ES, "comentario modificado"));
+
     ProyectoHitoInput proyectoHito = generarMockProyectoHito();
-    proyectoHito.setComentario("comentario modificado");
+    proyectoHito.setComentario(proyectoHitoComentario);
     TipoHito tipoHito = generarMockTipoHito(1L, Boolean.TRUE);
     ModeloTipoHito modeloTipoHito = generarMockModeloTipoHito(1L, proyectoHito, Boolean.TRUE);
     modeloTipoHito.setTipoHito(tipoHito);
@@ -898,12 +937,16 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
    */
   private ProyectoHito generarMockProyectoHito(Long id) {
 
+    Set<ProyectoHitoComentario> proyectoHitoComentario = new HashSet<>();
+    proyectoHitoComentario
+        .add(new ProyectoHitoComentario(Language.ES, "comentario-proyecto-hito" + String.format("%03d", id)));
+
     // @formatter:off
         return ProyectoHito.builder()
                 .id(id)
                 .proyectoId(1L)
                 .fecha(Instant.parse("2020-10-19T00:00:00Z"))
-                .comentario("comentario-proyecto-hito" + String.format("%03d", id))
+                .comentario(proyectoHitoComentario)
                 .proyectoHitoAviso(ProyectoHitoAviso.builder().build())
                 .tipoHito(generarMockTipoHito(1L, Boolean.TRUE))
                 .build();
@@ -912,11 +955,15 @@ class ProyectoHitoServiceTest extends BaseServiceTest {
 
   private ProyectoHitoInput generarMockProyectoHito() {
 
+    List<I18nFieldValueDto> proyectoHitoComentario = new ArrayList<I18nFieldValueDto>();
+    proyectoHitoComentario
+        .add(new I18nFieldValueDto(Language.ES, "comentario-proyecto-hito" + String.format("%03d", 1)));
+
     // @formatter:off
         return ProyectoHitoInput.builder()
                 .proyectoId(1L)
                 .fecha(Instant.parse("2020-10-19T00:00:00Z"))
-                .comentario("comentario-proyecto-hito" + String.format("%03d", 1))
+                .comentario(proyectoHitoComentario)
                 .aviso(ProyectoHitoAvisoInput.builder().build())
                 .tipoHitoId(1L)
                 .build();

@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
+import org.crue.hercules.sgi.csp.model.ProyectoHitoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
@@ -159,11 +160,15 @@ class ProyectoHitoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(modeloTipoHito);
 
+    Set<ProyectoHitoComentario> proyectoHitoComentario = new HashSet<>();
+    proyectoHitoComentario
+        .add(new ProyectoHitoComentario(Language.ES, "comentarioProyectoHito-" + suffix));
+
     ProyectoHito proyectoHito = ProyectoHito.builder()
         .tipoHito(tipoHito)
         .proyectoId(proyecto.getId())
         .fecha(Instant.parse("2020-10-01T00:00:00Z"))
-        .comentario("comentarioProyectoHito-" + suffix)
+        .comentario(proyectoHitoComentario)
         .build();
 
     return entityManager.persistAndFlush(proyectoHito);

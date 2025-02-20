@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -21,6 +22,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
+import org.crue.hercules.sgi.csp.model.ProyectoHitoComentario;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
@@ -34,6 +36,8 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiTpService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -98,7 +102,9 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
         .orElseThrow(() -> new TipoHitoNotFoundException(proyectoHitoInput.getTipoHitoId()));
 
     ProyectoHito proyectoHito = repository.save(ProyectoHito.builder()
-        .comentario(proyectoHitoInput.getComentario())
+        .comentario((proyectoHitoInput.getComentario().stream()
+            .map(comentario -> new ProyectoHitoComentario(comentario.getLang(), comentario.getValue()))
+            .collect(Collectors.toSet())))
         .fecha(proyectoHitoInput.getFecha())
         .proyectoId(proyectoHitoInput.getProyectoId())
         .tipoHito(tipoHito)
@@ -136,8 +142,17 @@ public class ProyectoHitoServiceImpl implements ProyectoHitoService {
 
       validarProyectoHito(proyectoHitoActualizar, proyectoHito);
 
+      List<I18nFieldValueDto> listaComentario = proyectoHitoActualizar.getComentario();
+
+      Set<ProyectoHitoComentario> setComentario = listaComentario.stream()
+          .map(dto -> {
+            ProyectoHitoComentario comentario = new ProyectoHitoComentario(dto.getLang(), dto.getValue());
+            return comentario;
+          })
+          .collect(Collectors.toSet());
+
       proyectoHito.setFecha(proyectoHitoActualizar.getFecha());
-      proyectoHito.setComentario(proyectoHitoActualizar.getComentario());
+      proyectoHito.setComentario(setComentario);
       proyectoHito.setTipoHito(tipoHito);
 
       this.resolveProyectoHitoAviso(proyectoHitoActualizar, proyectoHito);

@@ -434,7 +434,7 @@ class ProyectoIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "comentario=ke=-00";
+    String filter = "comentario.value=ke=-00";
 
     Long proyectoId = 1L;
 
@@ -453,11 +453,11 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-    Assertions.assertThat(proyectosHitos.get(0).getComentario()).as("get(0).getComentario()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectosHitos.get(0).getComentario(), Language.ES))
         .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", 3));
-    Assertions.assertThat(proyectosHitos.get(1).getComentario()).as("get(1).getComentario())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectosHitos.get(1).getComentario(), Language.ES))
         .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", 2));
-    Assertions.assertThat(proyectosHitos.get(2).getComentario()).as("get(2).getComentario()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectosHitos.get(2).getComentario(), Language.ES))
         .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", 1));
 
   }

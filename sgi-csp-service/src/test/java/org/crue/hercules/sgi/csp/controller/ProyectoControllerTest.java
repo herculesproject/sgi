@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoFase;
 import org.crue.hercules.sgi.csp.model.ProyectoFaseAviso;
 import org.crue.hercules.sgi.csp.model.ProyectoHito;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
+import org.crue.hercules.sgi.csp.model.ProyectoHitoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
@@ -618,7 +619,7 @@ class ProyectoControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ProyectoHito proyectoHito = proyectoHitoResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyectoHito.getComentario())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoHito.getComentario(), Language.ES))
           .isEqualTo("comentario-proyecto-hito-" + String.format("%03d", i));
     }
   }
@@ -1488,11 +1489,15 @@ class ProyectoControllerTest extends BaseControllerTest {
     tipoHito.setId(id == null ? 1 : id);
     tipoHito.setActivo(true);
 
+    Set<ProyectoHitoComentario> proyectoHitoComentario = new HashSet<>();
+    proyectoHitoComentario
+        .add(new ProyectoHitoComentario(Language.ES, "comentario-proyecto-hito-" + String.format("%03d", id)));
+
     ProyectoHito proyectoHito = new ProyectoHito();
     proyectoHito.setId(id);
     proyectoHito.setProyectoId(id == null ? 1 : id);
     proyectoHito.setFecha(Instant.parse("2020-10-19T23:59:59Z"));
-    proyectoHito.setComentario("comentario-proyecto-hito-" + String.format("%03d", id));
+    proyectoHito.setComentario(proyectoHitoComentario);
     proyectoHito.setProyectoHitoAviso(ProyectoHitoAviso.builder().build());
     proyectoHito.setTipoHito(tipoHito);
 
