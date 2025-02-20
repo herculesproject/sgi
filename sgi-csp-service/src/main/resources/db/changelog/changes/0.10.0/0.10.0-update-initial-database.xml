@@ -2183,4 +2183,32 @@
 
     <dropColumn columnName="observaciones" tableName="solicitud_proyecto_presupuesto" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-80">
+    <createTable tableName="grupo_nombre">
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="grupo_nombre" columnNames="grupo_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="grupo_id"
+      baseTableName="grupo_nombre"
+      constraintName="FK_GRUPONOMBRE_GRUPO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}grupo_nombre(grupo_id, value_, lang) SELECT id, nombre,
+      '${defaultLang}' FROM ${schemaPrefix}grupo WHERE nombre IS NOT NULL AND NULLIF(TRIM(nombre),
+      '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="grupo" />
+  </changeSet>
 </databaseChangeLog>

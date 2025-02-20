@@ -7,6 +7,7 @@ DELETE FROM test.grupo_tipo;
 DELETE FROM test.grupo_palabra_clave;
 DELETE FROM test.grupo_linea_clasificacion;
 DELETE FROM test.grupo_linea_investigacion;
+DELETE FROM test.grupo_nombre;
 DELETE FROM test.grupo;
 
 DELETE FROM test.proyecto_entidad_convocante;
