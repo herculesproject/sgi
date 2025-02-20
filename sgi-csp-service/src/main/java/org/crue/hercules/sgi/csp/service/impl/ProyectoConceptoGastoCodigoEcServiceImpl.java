@@ -59,21 +59,6 @@ public class ProyectoConceptoGastoCodigoEcServiceImpl implements ProyectoConcept
   }
 
   /**
-   * Obtiene {@link ProyectoConceptoGastoCodigoEc} por su id.
-   *
-   * @param id el id de la entidad {@link ProyectoConceptoGastoCodigoEc}.
-   * @return la entidad {@link ProyectoConceptoGastoCodigoEc}.
-   */
-  @Override
-  public ProyectoConceptoGastoCodigoEc findById(Long id) {
-    log.debug("findById(Long id)  - start");
-    final ProyectoConceptoGastoCodigoEc returnValue = repository.findById(id)
-        .orElseThrow(() -> new ProyectoConceptoGastoCodigoEcNotFoundException(id));
-    log.debug("findById(Long id)  - end");
-    return returnValue;
-  }
-
-  /**
    * Obtener todas las entidades {@link ProyectoConceptoGastoCodigoEc} activos
    * paginadas y/o filtradas.
    *

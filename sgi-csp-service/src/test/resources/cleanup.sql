@@ -95,6 +95,7 @@ DELETE FROM test.estado_gasto_proyecto;
 DELETE FROM test.gasto_proyecto;
 DELETE FROM test.proyecto_area;
 DELETE FROM test.proyecto_clasificacion;
+DELETE FROM test.proyecto_concepto_gasto_codigo_ec_observaciones;
 DELETE FROM test.proyecto_concepto_gasto_codigo_ec;
 DELETE FROM test.proyecto_concepto_gasto_observaciones;
 DELETE FROM test.proyecto_concepto_gasto;

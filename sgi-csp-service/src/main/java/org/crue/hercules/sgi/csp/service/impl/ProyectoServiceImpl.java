@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEcObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
@@ -55,6 +56,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEcObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
@@ -1795,8 +1797,8 @@ public class ProyectoServiceImpl implements ProyectoService {
           ProyectoConceptoGastoCodigoEc codigoEconomicoProyecto = new ProyectoConceptoGastoCodigoEc();
           codigoEconomicoProyecto.setProyectoConceptoGastoId(proyectoConceptoGasto.getId());
           codigoEconomicoProyecto.setCodigoEconomicoRef(codigoEconomicoConvocatoria.getCodigoEconomicoRef());
-          codigoEconomicoProyecto
-              .setObservaciones(I18nHelper.getValueForCurrentLanguage(codigoEconomicoConvocatoria.getObservaciones()));
+          codigoEconomicoProyecto.setObservaciones(convertConceptoGastoCodigoEcObservacionesFromConvocatoriaToProyecto(
+              codigoEconomicoConvocatoria.getObservaciones()));
           codigoEconomicoProyecto.setConvocatoriaConceptoGastoCodigoEcId(codigoEconomicoConvocatoria.getId());
 
           proyectoCodigosEconomicos.stream()
@@ -2692,6 +2694,13 @@ public class ProyectoServiceImpl implements ProyectoService {
       Set<ConvocatoriaConceptoGastoObservaciones> convocatoriaConceptoGastoObservaciones) {
     return convocatoriaConceptoGastoObservaciones.stream()
         .map(ccgobs -> new ProyectoConceptoGastoObservaciones(ccgobs.getLang(), ccgobs.getValue()))
+        .collect(Collectors.toSet());
+  }
+
+  private Set<ProyectoConceptoGastoCodigoEcObservaciones> convertConceptoGastoCodigoEcObservacionesFromConvocatoriaToProyecto(
+      Set<ConvocatoriaConceptoGastoCodigoEcObservaciones> convocatoriaConceptoGastoCodigoEcObservaciones) {
+    return convocatoriaConceptoGastoCodigoEcObservaciones.stream()
+        .map(ccgceobs -> new ProyectoConceptoGastoCodigoEcObservaciones(ccgceobs.getLang(), ccgceobs.getValue()))
         .collect(Collectors.toSet());
   }
 }

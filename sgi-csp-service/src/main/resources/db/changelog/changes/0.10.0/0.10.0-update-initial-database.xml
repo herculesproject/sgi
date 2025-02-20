@@ -2273,4 +2273,37 @@
 
     <dropColumn columnName="observaciones" tableName="proyecto_concepto_gasto" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-83">
+    <createTable tableName="proyecto_concepto_gasto_codigo_ec_observaciones">
+      <column name="proyecto_concepto_gasto_codigo_ec_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_concepto_gasto_codigo_ec_observaciones"
+      columnNames="proyecto_concepto_gasto_codigo_ec_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_concepto_gasto_codigo_ec_id"
+      baseTableName="proyecto_concepto_gasto_codigo_ec_observaciones"
+      constraintName="FK_PROYECTOCONCEPTOGASTOCODIGOECOBSERVACIONES_PROYECTOCONCEPTOGASTOCODIGOEC"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="proyecto_concepto_gasto_codigo_ec"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}proyecto_concepto_gasto_codigo_ec_observaciones(proyecto_concepto_gasto_codigo_ec_id,
+      value_, lang) SELECT id, observaciones, '${defaultLang}' FROM
+      ${schemaPrefix}proyecto_concepto_gasto_codigo_ec WHERE observaciones IS NOT NULL AND
+      NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="proyecto_concepto_gasto_codigo_ec" />
+  </changeSet>
 </databaseChangeLog>

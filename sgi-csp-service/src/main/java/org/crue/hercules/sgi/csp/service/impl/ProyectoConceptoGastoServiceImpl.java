@@ -2,18 +2,21 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.exceptions.ConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEcObservaciones;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEcObservaciones;
 import org.crue.hercules.sgi.csp.repository.ConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoConceptoGastoCodigoEcRepository;
@@ -24,7 +27,7 @@ import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoC
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoConceptoGastoSpecifications;
 import org.crue.hercules.sgi.csp.service.ProyectoConceptoGastoService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -380,11 +383,8 @@ public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoSe
           || !Objects.equals(conceptoGastoProyecto.getFechaInicio(),
               conceptoGastoConvocatoriaEncontrado.getFechaInicio())
           || !Objects.equals(conceptoGastoProyecto.getFechaFin(), conceptoGastoConvocatoriaEncontrado.getFechaFin())
-          || (StringUtils.isNotBlank(conceptoGastoProyecto.getObservaciones()) != StringUtils
-              .isNotBlank(I18nHelper.getValueForCurrentLanguage(conceptoGastoConvocatoriaEncontrado.getObservaciones()))
-              && !conceptoGastoProyecto.getObservaciones()
-                  .equals(
-                      I18nHelper.getValueForCurrentLanguage(conceptoGastoConvocatoriaEncontrado.getObservaciones())));
+          || !isObservacionesEqualsInProyectoThanConvocatoria(conceptoGastoProyecto.getObservaciones(),
+              conceptoGastoConvocatoriaEncontrado.getObservaciones());
     } else {
       return true;
     }
@@ -513,6 +513,28 @@ public class ProyectoConceptoGastoServiceImpl implements ProyectoConceptoGastoSe
 
     return !fechaInicioProyectoConceptoGastoA.isAfter(fechaFinProyectoConceptoGastoA)
         && !fechaInicioProyectoConceptoGastoB.isAfter(fechaFinProyectoConceptoGastoB);
+  }
+
+  private boolean isObservacionesEqualsInProyectoThanConvocatoria(
+      Set<ProyectoConceptoGastoCodigoEcObservaciones> observacionesProyectoConceptoGasto,
+      Set<ConvocatoriaConceptoGastoCodigoEcObservaciones> observacionesConvocatoriaConceptoGasto) {
+    if (observacionesProyectoConceptoGasto == null && observacionesConvocatoriaConceptoGasto == null) {
+      return true;
+    }
+    if (observacionesProyectoConceptoGasto == null || observacionesConvocatoriaConceptoGasto == null) {
+      return false;
+    }
+
+    // Creamos mapas para comparar por lenguaje
+    Map<Language, String> mapaProyecto = observacionesProyectoConceptoGasto.stream()
+        .collect(Collectors.toMap(ProyectoConceptoGastoCodigoEcObservaciones::getLang,
+            ProyectoConceptoGastoCodigoEcObservaciones::getValue));
+
+    Map<Language, String> mapaConvocatoria = observacionesConvocatoriaConceptoGasto.stream()
+        .collect(Collectors.toMap(ConvocatoriaConceptoGastoCodigoEcObservaciones::getLang,
+            ConvocatoriaConceptoGastoCodigoEcObservaciones::getValue));
+
+    return mapaProyecto.equals(mapaConvocatoria);
   }
 
 }
