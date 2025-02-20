@@ -36,6 +36,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
@@ -54,6 +55,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoAreaConocimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoClasificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ProyectoConceptoGastoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ProyectoEntidadGestora;
@@ -1704,8 +1706,8 @@ public class ProyectoServiceImpl implements ProyectoService {
       conceptoGastoProyecto.setConceptoGasto(conceptoGastoConvocatoria.getConceptoGasto());
       conceptoGastoProyecto.setImporteMaximo(conceptoGastoConvocatoria.getImporteMaximo());
       conceptoGastoProyecto.setPermitido(conceptoGastoConvocatoria.getPermitido());
-      conceptoGastoProyecto
-          .setObservaciones(I18nHelper.getValueForCurrentLanguage(conceptoGastoConvocatoria.getObservaciones()));
+      conceptoGastoProyecto.setObservaciones(
+          convertConceptoGastoObservacionesFromConvocatoriaToProyecto(conceptoGastoConvocatoria.getObservaciones()));
       conceptoGastoProyecto.setConvocatoriaConceptoGastoId(conceptoGastoConvocatoria.getId());
 
       proyectoConceptoGastos.stream()
@@ -2686,4 +2688,10 @@ public class ProyectoServiceImpl implements ProyectoService {
         .collect(Collectors.toSet());
   }
 
+  private Set<ProyectoConceptoGastoObservaciones> convertConceptoGastoObservacionesFromConvocatoriaToProyecto(
+      Set<ConvocatoriaConceptoGastoObservaciones> convocatoriaConceptoGastoObservaciones) {
+    return convocatoriaConceptoGastoObservaciones.stream()
+        .map(ccgobs -> new ProyectoConceptoGastoObservaciones(ccgobs.getLang(), ccgobs.getValue()))
+        .collect(Collectors.toSet());
+  }
 }

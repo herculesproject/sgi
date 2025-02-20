@@ -2242,4 +2242,35 @@
 
     <dropColumn columnName="resumen" tableName="grupo" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-82">
+    <createTable tableName="proyecto_concepto_gasto_observaciones">
+      <column name="proyecto_concepto_gasto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_concepto_gasto_observaciones"
+      columnNames="proyecto_concepto_gasto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_concepto_gasto_id"
+      baseTableName="proyecto_concepto_gasto_observaciones"
+      constraintName="FK_PROYECTOCONCEPTOGASTOOBSERVACIONES_PROYECTOCONCEPTOGASTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="proyecto_concepto_gasto" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}proyecto_concepto_gasto_observaciones(proyecto_concepto_gasto_id, value_, lang)
+      SELECT id, observaciones, '${defaultLang}' FROM ${schemaPrefix}proyecto_concepto_gasto WHERE
+      observaciones IS NOT NULL AND NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="proyecto_concepto_gasto" />
+  </changeSet>
 </databaseChangeLog>
