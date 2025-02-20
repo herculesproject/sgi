@@ -98,7 +98,8 @@ export class SolicitudProyectoPresupuestoPartidasGastoComponent extends Fragment
           case 'importeTotalSolicitado':
             return element.importeTotalSolicitadoConceptoGasto;
           case 'observaciones':
-            return element.partidaGasto.value.observaciones;
+            return this.languageService.getFieldValue(element.partidaGasto.value.observaciones);
+
           default:
             return element[property];
         }

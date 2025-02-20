@@ -1,3 +1,4 @@
+import { I18N_FIELD_REQUEST_CONVERTER, I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ISolicitudProyectoEntidad } from '@core/models/csp/solicitud-proyecto-entidad';
 import { ISolicitudProyectoPresupuesto } from '@core/models/csp/solicitud-proyecto-presupuesto';
 import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '@core/services/csp/concepto-gasto/concepto-gasto-response.converter';
@@ -18,7 +19,7 @@ class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudP
       anualidad: value.anualidad,
       importeSolicitado: value.importeSolicitado,
       importePresupuestado: value.importePresupuestado,
-      observaciones: value.observaciones
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : [],
     };
   }
 
@@ -34,7 +35,7 @@ class SolicitudProyectoPresupuestoConverter extends SgiBaseConverter<ISolicitudP
       anualidad: value.anualidad,
       importeSolicitado: value.importeSolicitado,
       importePresupuestado: value.importePresupuestado,
-      observaciones: value.observaciones
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : [],
     };
   }
 }

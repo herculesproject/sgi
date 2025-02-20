@@ -111,7 +111,8 @@ export class SolicitudProyectoPresupuestoGlobalComponent extends FormFragmentCom
           case 'importe':
             return partidaGasto.value.importeSolicitado;
           case 'observaciones':
-            return partidaGasto.value.observaciones;
+            return this.languageService.getFieldValue(partidaGasto.value.observaciones);
+
           default:
             return partidaGasto[property];
         }

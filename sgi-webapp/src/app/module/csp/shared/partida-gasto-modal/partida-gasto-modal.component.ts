@@ -14,6 +14,7 @@ import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatori
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { LanguageService } from '@core/services/language.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { merge, Observable, of } from 'rxjs';
@@ -214,7 +215,7 @@ export class PartidaGastoModalComponent extends DialogFormComponent<IPartidaGast
           ]),
         observaciones: new FormControl(this.data.partidaGasto.observaciones,
           [
-            Validators.maxLength(2000)
+            I18nValidators.maxLength(2000)
           ])
       }
     );
