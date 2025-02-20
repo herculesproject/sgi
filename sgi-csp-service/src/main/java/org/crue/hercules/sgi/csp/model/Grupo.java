@@ -53,11 +53,9 @@ public class Grupo extends BaseActivableEntity {
   protected static final String TABLE_NAME = "grupo";
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
 
-  public static final int DESCRIPCION_LENGTH = 250;
   public static final int PROYECTO_SGE_REF_LENGTH = 50;
   public static final int DEPARTAMENTO_ORIGEN_REF_LENGTH = 50;
   public static final int CODIGO_LENGTH = 50;
-  public static final int RESUMEN_LENGTH = 4000;
 
   /** Id */
   @Id
@@ -113,9 +111,11 @@ public class Grupo extends BaseActivableEntity {
   private GrupoEspecialInvestigacion especialInvestigacion;
 
   /** Resumen */
-  @Column(name = "resumen", length = Grupo.RESUMEN_LENGTH, nullable = true, columnDefinition = "clob")
-  @Size(max = Grupo.RESUMEN_LENGTH)
-  private String resumen;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "grupo_resumen", joinColumns = @JoinColumn(name = "grupo_id"))
+  @Valid
+  @Builder.Default
+  private Set<GrupoResumen> resumen = new HashSet<>();
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne

@@ -2211,4 +2211,35 @@
 
     <dropColumn columnName="nombre" tableName="grupo" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-81">
+    <createTable tableName="grupo_resumen">
+      <column name="grupo_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="CLOB">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="grupo_resumen" columnNames="grupo_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="grupo_id"
+      baseTableName="grupo_resumen"
+      constraintName="FK_GRUPORESUMEN_GRUPO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="grupo" validate="true" />
+
+    <sql dbms="!oracle">INSERT INTO ${schemaPrefix}grupo_resumen(grupo_id, value_, lang) SELECT id,
+      resumen, '${defaultLang}' FROM ${schemaPrefix}grupo WHERE resumen IS NOT NULL AND
+      NULLIF(TRIM(resumen), '') IS NOT NULL</sql>
+
+    <sql dbms="oracle">INSERT INTO ${schemaPrefix}grupo_resumen(grupo_id, value_, lang) SELECT id,
+      resumen, '${defaultLang}' FROM ${schemaPrefix}grupo WHERE resumen IS NOT NULL</sql>
+
+    <dropColumn columnName="resumen" tableName="grupo" />
+  </changeSet>
 </databaseChangeLog>

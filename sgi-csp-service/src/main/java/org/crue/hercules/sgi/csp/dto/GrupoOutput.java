@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.csp.model.GrupoNombre;
+import org.crue.hercules.sgi.csp.model.GrupoResumen;
 import org.crue.hercules.sgi.csp.model.GrupoTipo.Tipo;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class GrupoOutput implements Serializable {
   private String codigo;
   private Tipo tipo;
   private Boolean especialInvestigacion;
-  private String resumen;
+  private Collection<GrupoResumen> resumen;
   private boolean activo;
 
 }
