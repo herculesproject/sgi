@@ -114,7 +114,6 @@ export class ProyectoConceptoGastoActionService extends ActionService {
       proyectoConceptoGastoCodigoEcService,
       convocatoriaConceptoGastoService,
       codigoEconomicoGastoService,
-      languageService,
       this.data.readonly
     );
 

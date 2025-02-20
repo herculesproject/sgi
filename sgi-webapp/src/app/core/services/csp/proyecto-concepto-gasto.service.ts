@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER } from '@core/converters/csp/proyecto-concepto-gasto-codigo-ec.converter';
-import { IProyectoConceptoGastoCodigoEcBackend } from '@core/models/csp/backend/proyecto-concepto-gasto-codigo-ec-backend';
 import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto';
 import { IProyectoConceptoGastoCodigoEc } from '@core/models/csp/proyecto-concepto-gasto-codigo-ec';
 import { environment } from '@env';
@@ -19,6 +17,8 @@ import {
 } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IProyectoConceptoGastoCodigoEcResponse } from './proyecto-concepto-gasto-codigo-ec/proyecto-concepto-gasto-codigo-ec-response';
+import { PROYECTO_CONCEPTO_GASTO_CODIGO_EC_RESPONSE_CONVERTER } from './proyecto-concepto-gasto-codigo-ec/proyecto-concepto-gasto-codigo-ec-response.converter';
 import { IProyectoConceptoGastoResponse } from './proyecto-concepto-gasto/proyecto-concepto-gasto-response';
 import { PROYECTO_CONCEPTO_GASTO_RESPONSE_CONVERTER } from './proyecto-concepto-gasto/proyecto-concepto-gasto-response.converter';
 
@@ -78,8 +78,8 @@ export class ProyectoConceptoGastoService extends _ProyectoConceptoGastoServiceM
    */
   findAllProyectoConceptoGastoCodigosEc(id: number): Observable<SgiRestListResult<IProyectoConceptoGastoCodigoEc>> {
     const endpointUrl = `${this.endpointUrl}/${id}/proyectoconceptogastocodigosec`;
-    return this.find<IProyectoConceptoGastoCodigoEcBackend, IProyectoConceptoGastoCodigoEc>(
-      endpointUrl, undefined, PROYECTO_CONCEPTO_GASTO_CODIGO_EC_CONVERTER);
+    return this.find<IProyectoConceptoGastoCodigoEcResponse, IProyectoConceptoGastoCodigoEc>(
+      endpointUrl, undefined, PROYECTO_CONCEPTO_GASTO_CODIGO_EC_RESPONSE_CONVERTER);
   }
 
   /**

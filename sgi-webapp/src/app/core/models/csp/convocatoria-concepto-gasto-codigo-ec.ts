@@ -1,12 +1,5 @@
-import { I18nFieldValue } from '@core/i18n/i18n-field';
-import { DateTime } from 'luxon';
-import { ICodigoEconomicoGasto } from '../sge/codigo-economico-gasto';
+import { IConceptoGastoCodigoEc } from './concepto-gasto-codigo-ec';
 
-export interface IConvocatoriaConceptoGastoCodigoEc {
-  id: number;
+export interface IConvocatoriaConceptoGastoCodigoEc extends IConceptoGastoCodigoEc {
   convocatoriaConceptoGastoId: number;
-  codigoEconomico: ICodigoEconomicoGasto;
-  fechaInicio: DateTime;
-  fechaFin: DateTime;
-  observaciones: I18nFieldValue[];
 }

@@ -243,7 +243,7 @@ export class ProyectoConceptoGastoCodigoEcModalComponent
     this.formGroup.controls.codigoEconomico.setValue(this.formGroup.controls.codigoEconomicoConvocatoria.value);
     this.formGroup.controls.fechaInicio.setValue(this.formGroup.controls.fechaInicioConvocatoria.value);
     this.formGroup.controls.fechaFin.setValue(this.formGroup.controls.fechaFinConvocatoria.value);
-    this.formGroup.controls.observaciones.setValue(this.languageService.getFieldValue(this.formGroup.controls.observacionesConvocatoria.value));
+    this.formGroup.controls.observaciones.setValue(this.formGroup.controls.observacionesConvocatoria.value);
   }
 
   private notOverlapsSameConceptoGastoAndCodigoEconomico(data: ProyectoConceptoGastoCodigoEcDataModal): ValidatorFn {
