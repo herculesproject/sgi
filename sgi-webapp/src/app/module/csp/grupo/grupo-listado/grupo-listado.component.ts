@@ -95,6 +95,13 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
     private readonly configCspService: ConfigCspService
   ) {
     super(translate);
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'nombre') {
+        return 'nombre.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -159,7 +166,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const rsqlFilter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
+    const rsqlFilter = new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
       .and('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
       .and('miembrosEquipo.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.id)
       .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.proyectoSgeRef.value)

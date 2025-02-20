@@ -76,7 +76,7 @@ export class SelectGrupoComponent extends SelectServiceComponent<IGrupo> {
     }
 
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC),
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC),
       filter: new RSQLSgiRestFilter('responsable', SgiRestFilterOperator.EQUALS, this.personaRef)
         .or(new RSQLSgiRestFilter('personaAutorizada', SgiRestFilterOperator.EQUALS, this.personaRef))
     };

@@ -173,7 +173,7 @@ export class ProyectoRelacionListadoExportService extends AbstractTableExportFil
   private fillRowsEntidadExcel(elementsRow: any[], proyectoRelacion: ProyectoRelacionListadoExport) {
     if (proyectoRelacion) {
       elementsRow.push(proyectoRelacion.tipoEntidadRelacionada ?? '');
-      if ([TipoEntidad.CONVOCATORIA, TipoEntidad.PROYECTO].includes(proyectoRelacion.tipoEntidadRelacionada)) { // TODO: eliminar el if/else y el as I18nFieldValue[] cuando se terminen los 4 tipos
+      if ([TipoEntidad.CONVOCATORIA, TipoEntidad.PROYECTO, TipoEntidad.GRUPO].includes(proyectoRelacion.tipoEntidadRelacionada)) { // TODO: eliminar el if/else y el as I18nFieldValue[] cuando se terminen los 4 tipos
         elementsRow.push(this.languageService.getFieldValue(proyectoRelacion.entidadRelacionada?.titulo as I18nFieldValue[]));
       } else {
         elementsRow.push(proyectoRelacion.entidadRelacionada?.titulo ?? '');

@@ -13,6 +13,7 @@ import { RolProyectoService } from '@core/services/csp/rol-proyecto/rol-proyecto
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
@@ -134,7 +135,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
 
   private buildFormGroupCreate(): FormGroup {
     const formGroup = new FormGroup({
-      nombre: new FormControl(null, Validators.required),
+      nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
       investigadorPrincipal: new FormControl(null, Validators.required),
       departamento: new FormControl({ value: null, disabled: true }),
       codigo: new FormControl(null, {
@@ -161,7 +162,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
 
   private buildFormGroupEdit(): FormGroup {
     const form = new FormGroup({
-      nombre: new FormControl(null, Validators.required),
+      nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
       codigo: new FormControl(null, {
         validators: Validators.required,
         asyncValidators: GrupoValidator.duplicatedCodigo(this.grupoService, this.grupo.id),

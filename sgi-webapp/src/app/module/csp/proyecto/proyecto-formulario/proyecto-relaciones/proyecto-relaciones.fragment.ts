@@ -1,10 +1,13 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IGrupo } from '@core/models/csp/grupo';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IInvencion } from '@core/models/pii/invencion';
 import { IRelacion, TIPO_ENTIDAD_HREF_MAP, TipoEntidad } from '@core/models/rel/relacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { RelacionService } from '@core/services/rel/relaciones/relacion.service';
@@ -13,13 +16,10 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IProyectoListadoData } from '../../proyecto-listado/proyecto-listado.component';
-import { IGrupo } from '@core/models/csp/grupo';
-import { GrupoService } from '@core/services/csp/grupo/grupo.service';
-import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 // Define the extended IGrupoWithTitulo interface
 export interface IGrupoWithTitulo extends IGrupo {
-  titulo: string;
+  titulo: I18nFieldValue[];
 }
 
 export interface IProyectoRelacionTableData {

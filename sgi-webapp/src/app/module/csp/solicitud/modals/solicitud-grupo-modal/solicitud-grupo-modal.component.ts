@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogActionComponent } from '@core/component/dialog-action.component';
@@ -10,14 +10,15 @@ import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
 import { Module } from '@core/module';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { LanguageService } from '@core/services/language.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { DateValidator } from '@core/validators/date-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../../csp-route-names';
-import { LanguageService } from '@core/services/language.service';
 
 const GRUPO_FECHA_INICIO_KEY = marker('label.fecha-inicio');
 const GRUPO_FECHA_FIN_KEY = marker('label.fecha-fin');
@@ -66,7 +67,7 @@ export class SolicitudGrupoModalComponent extends DialogActionComponent<ISolicit
   protected buildFormGroup(): FormGroup {
     return new FormGroup(
       {
-        nombre: new FormControl(this.solicitudGrupo?.solicitud?.titulo ? this.languageService.getFieldValue(this.solicitudGrupo.solicitud.titulo) : '', [Validators.required, Validators.maxLength(250)]),
+        nombre: new FormControl(this.solicitudGrupo?.solicitud?.titulo ?? [], [I18nValidators.required, I18nValidators.maxLength(250)]),
         fechaInicio: new FormControl(null, [Validators.required]),
         fechaFin: new FormControl(null),
       },

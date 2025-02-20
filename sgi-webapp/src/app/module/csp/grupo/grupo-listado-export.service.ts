@@ -23,9 +23,7 @@ import { GrupoLineaClasificacionListado } from '../grupo-linea-investigacion/gru
 import { GrupoEnlaceListadoExportService } from './grupo-enlace-listado-export.service';
 import { GrupoEquipoInstrumentalListadoExportService } from './grupo-equipo-instrumental-listado-export.service';
 import { GrupoEquipoListadoExportService } from './grupo-equipo-listado-export.service';
-import { GrupoFooterListadoExportService } from './grupo-footer-listado-export.service';
 import { GrupoGeneralListadoExportService } from './grupo-general-listado-export.service';
-import { GrupoHeaderListadoExportService } from './grupo-header-listado-export.service';
 import { GrupoLineaInvestigacionListadoExportService } from './grupo-linea-investigacion-listado-export.service';
 import { GrupoPersonaAutorizadaListadoExportService } from './grupo-persona-autorizada-listado-export.service';
 import { GrupoResponsableEconomicoListadoExportService } from './grupo-responsable-economico-listado-export.service';
@@ -65,9 +63,7 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     private readonly grupoEnlaceListadoExportService: GrupoEnlaceListadoExportService,
     private readonly grupoPersonaAutorizadaListadoExportService: GrupoPersonaAutorizadaListadoExportService,
     private readonly grupoEquipoInstrumentalListadoExportService: GrupoEquipoInstrumentalListadoExportService,
-    protected reportService: ReportService,
-    private readonly grupoHeaderListadoExportService: GrupoHeaderListadoExportService,
-    private readonly grupoFooterListadoExportService: GrupoFooterListadoExportService
+    protected reportService: ReportService
   ) {
     super(reportService);
   }
@@ -94,9 +90,6 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
       map((row) => {
         row.elements.push(...this.grupoGeneralListadoExportService.fillRows(grupos, index, reportConfig));
 
-        if (reportConfig.outputType === OutputReport.PDF || reportConfig.outputType === OutputReport.RTF) {
-          row.elements.push(...this.grupoHeaderListadoExportService.fillRows(grupos, index, reportConfig));
-        }
         if (reportConfig.reportOptions?.showEquiposInvestigacion) {
           row.elements.push(...this.grupoEquipoInvestigacionListadoExportService.fillRows(grupos, index, reportConfig));
         }
@@ -115,9 +108,7 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
         if (reportConfig.reportOptions?.showPersonasAutorizadas) {
           row.elements.push(...this.grupoPersonaAutorizadaListadoExportService.fillRows(grupos, index, reportConfig));
         }
-        if (reportConfig.outputType === OutputReport.PDF || reportConfig.outputType === OutputReport.RTF) {
-          row.elements.push(...this.grupoFooterListadoExportService.fillRows(grupos, index, reportConfig));
-        }
+
         return row;
       })
     );
@@ -150,14 +141,12 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
   private getDataReportInner(grupoData: IGrupoReportData, reportOptions: IGrupoReportOptions, output: OutputReport): Observable<IGrupoReportData> {
     return concat(
       this.getDataReportListadoGeneral(grupoData),
-      this.getDataReportHeader(grupoData, output),
       this.getDataReportEquipoInvestigacion(grupoData, reportOptions),
       this.getDataReportResponsableEconomico(grupoData, reportOptions),
       this.getDataReportLineaInvestigacion(grupoData, reportOptions),
       this.getDataReportEquipoInstrumental(grupoData, reportOptions),
       this.getDataReportEnlace(grupoData, reportOptions),
-      this.getDataReportPersonaAutorizada(grupoData, reportOptions),
-      this.getDataReportFooter(grupoData, output)
+      this.getDataReportPersonaAutorizada(grupoData, reportOptions)
     ).pipe(
       takeLast(1),
       catchError((err) => {
@@ -245,37 +234,12 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     }
   }
 
-  private getDataReportHeader(grupoData: IGrupoReportData,
-    output: OutputReport
-  ): Observable<IGrupoReportData> {
-    if (output === OutputReport.PDF || output === OutputReport.RTF) {
-      return this.grupoHeaderListadoExportService.getData(grupoData)
-        .pipe(tap({ error: (err) => this.logger.error(err) }));
-    } else {
-      return of(grupoData);
-    }
-  }
-
-  private getDataReportFooter(grupoData: IGrupoReportData,
-    output: OutputReport
-  ): Observable<IGrupoReportData> {
-    if (output === OutputReport.PDF || output === OutputReport.RTF) {
-      return this.grupoFooterListadoExportService.getData(grupoData)
-        .pipe(tap({ error: (err) => this.logger.error(err) }));
-    } else {
-      return of(grupoData);
-    }
-  }
-
   protected getColumns(resultados: IGrupoReportData[], reportConfig: IReportConfig<IGrupoReportOptions>):
     Observable<ISgiColumnReport[]> {
     const columns: ISgiColumnReport[] = [];
 
     columns.push(... this.grupoGeneralListadoExportService.fillColumns(resultados, reportConfig));
 
-    if (reportConfig.outputType === OutputReport.PDF || reportConfig.outputType === OutputReport.RTF) {
-      columns.push(... this.grupoHeaderListadoExportService.fillColumns(resultados, reportConfig));
-    }
     if (reportConfig.reportOptions?.showEquiposInvestigacion) {
       columns.push(... this.grupoEquipoInvestigacionListadoExportService.fillColumns(resultados, reportConfig));
     }
@@ -294,9 +258,7 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
     if (reportConfig.reportOptions?.showPersonasAutorizadas) {
       columns.push(... this.grupoPersonaAutorizadaListadoExportService.fillColumns(resultados, reportConfig));
     }
-    if (reportConfig.outputType === OutputReport.PDF || reportConfig.outputType === OutputReport.RTF) {
-      columns.push(... this.grupoFooterListadoExportService.fillColumns(resultados, reportConfig));
-    }
+
     return of(columns);
   }
 

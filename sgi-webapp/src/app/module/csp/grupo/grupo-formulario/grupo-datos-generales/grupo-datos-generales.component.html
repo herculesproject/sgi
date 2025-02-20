@@ -8,10 +8,13 @@
         <!-- Nombre -->
         <mat-form-field>
           <mat-label>{{'csp.grupo.nombre' | translate}}</mat-label>
-          <input matInput type="text" placeholder="{{'csp.grupo.nombre' | translate}}" formControlName="nombre"
-            required>
+          <sgi-i18n-input placeholder="{{'csp.grupo.nombre' | translate}}" formControlName="nombre" required>
+          </sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
             {{ 'error.required.entity' | translate:msgParamNombreEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
           </mat-error>
         </mat-form-field>
       </div>
@@ -193,10 +196,13 @@
         <!-- Nombre -->
         <mat-form-field>
           <mat-label>{{'csp.grupo.nombre' | translate}}</mat-label>
-          <input matInput type="text" placeholder="{{'csp.grupo.nombre' | translate}}" formControlName="nombre"
-            required>
+          <sgi-i18n-input placeholder="{{'csp.grupo.nombre' | translate}}" formControlName="nombre" required>
+          </sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
             {{ 'error.required.entity' | translate:msgParamNombreEntity }}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.nombre.errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
           </mat-error>
         </mat-form-field>
       </div>

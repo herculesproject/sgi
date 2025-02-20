@@ -72,6 +72,13 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     private readonly configCspService: ConfigCspService
   ) {
     super();
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'nombre' && this.tipoEntidadSelected === TipoEntidad.GRUPO) {
+        return 'nombre.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -224,7 +231,7 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     this.tipoEntidadSelected = this.formGroup.controls.tipoEntidad?.value;
     this.columnas = this.tipoEntidadSelected === TipoEntidad.PROYECTO ? this.columnasTipoEntidadProyecto : this.columnasTipoEntidadGrupo;
 
-    const restFilter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
+    const restFilter = new RSQLSgiRestFilter(this.tipoEntidadSelected === TipoEntidad.GRUPO ? 'nombre.value' : 'nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
       .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.identificadorSge.value)
       .and('fechaInicio',
         SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioDesde.value))

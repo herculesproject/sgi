@@ -7,6 +7,7 @@ import { SearchResult, SelectDialogComponent } from '@core/component/select-dial
 import { IGrupo } from '@core/models/csp/grupo';
 import { Module } from '@core/module';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
+import { LanguageService } from '@core/services/language.service';
 import { LayoutService } from '@core/services/layout.service';
 import { toString } from '@core/utils/string-utils';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
@@ -57,10 +58,11 @@ export class SelectDialogGrupoComponent extends SelectDialogComponent<SearchGrup
     dialog: MatDialog,
     focusMonitor: FocusMonitor,
     private readonly grupoService: GrupoService,
-    private readonly layoutService: LayoutService
+    private readonly layoutService: LayoutService,
+    private readonly languageService: LanguageService
   ) {
     super(changeDetectorRef, elementRef, parentFormField, ngControl, dialog, SearchGrupoModalComponent, focusMonitor);
-    this.displayWith = (option) => option.nombre;
+    this.displayWith = (option) => this.languageService.getFieldValue(option.nombre);
   }
 
   protected search(term: string): Observable<SearchResult<IGrupo>> {
@@ -69,7 +71,7 @@ export class SelectDialogGrupoComponent extends SelectDialogComponent<SearchGrup
         index: 0,
         size: 10
       },
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC),
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC),
       filter: this.buildFilter(term)
     };
     return this.grupoService.findAll(options).pipe(
@@ -83,7 +85,7 @@ export class SelectDialogGrupoComponent extends SelectDialogComponent<SearchGrup
   }
 
   private buildFilter(term: string): SgiRestFilter {
-    return new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, term)
+    return new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, term)
       .and('isModuloInvestigador', SgiRestFilterOperator.EQUALS, toString(this.isModuleINV));
   }
 

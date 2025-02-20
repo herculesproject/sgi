@@ -5,7 +5,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormularioSolicitud } from '@core/enums/formulario-solicitud';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupo } from '@core/models/csp/grupo';
-import { CAUSA_EXENCION_MAP } from '@core/models/csp/proyecto';
 import { Orden } from '@core/models/csp/rol-proyecto';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IPersona } from '@core/models/sgp/persona';
@@ -13,6 +12,7 @@ import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { LanguageService } from '@core/services/language.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { FormlyUtils } from '@core/utils/formly-utils';
@@ -75,8 +75,8 @@ export class ProyectoEconomicoFormlyModalComponent
     private readonly solicitudProyectoService: SolicitudProyectoService,
     private readonly solicitudService: SolicitudService,
     private readonly grupoService: GrupoService,
-    private readonly personaService: PersonaService
-
+    private readonly personaService: PersonaService,
+    private readonly languageService: LanguageService
   ) {
     super(matDialogRef, proyectoData?.action === ACTION_MODAL_MODE.EDIT, translate);
   }
@@ -194,17 +194,23 @@ export class ProyectoEconomicoFormlyModalComponent
       switchMap((formlyData) => {
         return this.proyectoService.findById(proyectoSgiId).pipe(
           map((proyecto) => {
-            formlyData.data.proyecto = proyecto;
-
-            if (this.formlyContainsField(FormlyFields.CAUSA_EXENCION)) {
-              formlyData.data.causaExencion = proyecto.causaExencion;
-
-              if (formlyData.data.causaExencion) {
-                formlyData.data.causaExencionDesc = this.translate.instant(
-                  CAUSA_EXENCION_MAP.get(formlyData.data.causaExencion)
-                );
-              }
-            }
+            formlyData.data.proyecto = {
+              id: proyecto.id,
+              fechaInicio: proyecto.fechaInicio,
+              fechaFin: proyecto.fechaFin,
+              finalidad: {
+                id: proyecto.finalidad.id,
+                nombre: this.languageService.getFieldValue(proyecto.finalidad.nombre)
+              },
+              finalidadI18n: proyecto.finalidad,
+              modeloEjecucion: {
+                id: proyecto.modeloEjecucion.id,
+                nombre: this.languageService.getFieldValue(proyecto.modeloEjecucion.nombre)
+              },
+              modeloEjecucionI18n: proyecto.modeloEjecucion,
+              titulo: this.languageService.getFieldValue(proyecto.titulo),
+              tituloI18n: proyecto.titulo
+            };
 
             if (this.formlyContainsField(FormlyFields.CODIGO_INTERNO)) {
               formlyData.data.codigoInterno = proyecto.codigoInterno;
@@ -342,7 +348,8 @@ export class ProyectoEconomicoFormlyModalComponent
             fechaFin: grupo?.fechaFin,
             proyecto: {
               id: grupo?.id,
-              titulo: grupo?.nombre,
+              titulo: this.languageService.getFieldValue(grupo?.nombre),
+              tituloI18n: grupo?.nombre,
               finalidad: {},
               fechaInicio: grupo?.fechaInicio,
               fechaFin: grupo?.fechaFin,

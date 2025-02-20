@@ -16,7 +16,6 @@ import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';
 import { GrupoEnlaceListadoExportService } from './grupo-enlace-listado-export.service';
 import { GrupoEquipoInstrumentalListadoExportService } from './grupo-equipo-instrumental-listado-export.service';
 import { GrupoEquipoListadoExportService } from './grupo-equipo-listado-export.service';
-import { GrupoFooterListadoExportService } from './grupo-footer-listado-export.service';
 import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.component';
 import { GrupoEnlaceComponent } from './grupo-formulario/grupo-enlace/grupo-enlace.component';
 import { GrupoEquipoInstrumentalComponent } from './grupo-formulario/grupo-equipo-instrumental/grupo-equipo-instrumental.component';
@@ -26,7 +25,6 @@ import { GrupoLineaInvestigacionComponent } from './grupo-formulario/grupo-linea
 import { GrupoPersonaAutorizadaComponent } from './grupo-formulario/grupo-persona-autorizada/grupo-persona-autorizada.component';
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoGeneralListadoExportService } from './grupo-general-listado-export.service';
-import { GrupoHeaderListadoExportService } from './grupo-header-listado-export.service';
 import { GrupoLineaInvestigacionListadoExportService } from './grupo-linea-investigacion-listado-export.service';
 import { GrupoListadoExportService } from './grupo-listado-export.service';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
@@ -79,9 +77,7 @@ import { GrupoResponsableEconomicoModalComponent } from './modals/grupo-responsa
     GrupoEquipoInstrumentalListadoExportService,
     GrupoEquipoInvestigacionExportService,
     GrupoEquipoListadoExportService,
-    GrupoFooterListadoExportService,
     GrupoGeneralListadoExportService,
-    GrupoHeaderListadoExportService,
     GrupoLineaInvestigacionListadoExportService,
     GrupoListadoExportService,
     GrupoPersonaAutorizadaListadoExportService,

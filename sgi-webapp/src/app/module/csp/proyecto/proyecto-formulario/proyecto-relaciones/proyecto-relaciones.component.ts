@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { TIPO_ENTIDAD_MAP, TipoEntidad } from '@core/models/rel/relacion';
 import { DialogService } from '@core/services/dialog.service';
 import { LanguageService } from '@core/services/language.service';
@@ -80,7 +81,11 @@ export class ProyectoRelacionesComponent extends FragmentComponent implements On
           case 'tipoEntidadRelacionada':
             return wrapper.value.tipoEntidadRelacionada;
           case 'entidadRelacionada':
-            return wrapper.value.entidadRelacionada.titulo;
+            if ([TipoEntidad.CONVOCATORIA, TipoEntidad.PROYECTO, TipoEntidad.GRUPO].includes(wrapper.value.tipoEntidadRelacionada)) { // TODO: eliminar el if/else y el as I18nFieldValue[] cuando se terminen los 4 tipos
+              return this.languageService.getFieldValue(wrapper.value.entidadRelacionada.titulo as I18nFieldValue[]);
+            } else {
+              return wrapper.value.entidadRelacionada.titulo;
+            }
           case 'refEntidadConvocante':
             return wrapper.value.entidadConvocanteRef;
           case 'codigoSGE':

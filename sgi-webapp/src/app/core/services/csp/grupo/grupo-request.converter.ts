@@ -1,3 +1,4 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IGrupo } from '@core/models/csp/grupo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
@@ -13,7 +14,7 @@ class GrupoRequestConverter
     }
     return {
       id: undefined,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombre) : [],
       fechaInicio: LuxonUtils.fromBackend(value.fechaInicio),
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       proyectoSge: value.proyectoSgeRef ? { id: value.proyectoSgeRef } as IProyectoSge : undefined,
@@ -32,7 +33,7 @@ class GrupoRequestConverter
       return value as unknown as IGrupoRequest;
     }
     return {
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
       fechaInicio: LuxonUtils.toBackend(value.fechaInicio),
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       proyectoSgeRef: value.proyectoSge?.id,

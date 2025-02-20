@@ -48,6 +48,13 @@ export class GrupoListadoInvComponent extends AbstractTablePaginationComponent<I
     private readonly configService: ConfigService
   ) {
     super();
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'nombre') {
+        return 'nombre.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -103,7 +110,7 @@ export class GrupoListadoInvComponent extends AbstractTablePaginationComponent<I
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
 
-    return new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
+    return new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
       .and('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
       .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.proyectoSgeRef.value);
   }

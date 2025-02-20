@@ -112,7 +112,7 @@ export class SearchGrupoModalComponent extends DialogCommonComponent implements 
         index: reset ? 0 : this.paginator.pageIndex,
         size: this.paginator.pageSize
       },
-      sort: new RSQLSgiRestSort(this.sort?.active, SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
+      sort: new RSQLSgiRestSort(this.resolveSortProperty(this.sort?.active), SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
       filter: this.buildFilter()
     };
 
@@ -162,7 +162,7 @@ export class SearchGrupoModalComponent extends DialogCommonComponent implements 
 
   private buildFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const restFilter = new RSQLSgiRestFilter('nombre', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
+    const restFilter = new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
       .and('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
       .and('miembrosEquipo.personaRef', SgiRestFilterOperator.EQUALS, controls.miembroEquipo.value?.id)
       .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.proyectoSgeRef.value);
@@ -203,6 +203,13 @@ export class SearchGrupoModalComponent extends DialogCommonComponent implements 
         this.colectivosBusqueda = colectivos
       })
     );
+  }
+
+  private resolveSortProperty(column: string): string {
+    if (column == 'nombre') {
+      return 'nombre.value';
+    }
+    return column;
   }
 
 }

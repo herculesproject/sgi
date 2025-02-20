@@ -165,7 +165,7 @@ export class MiembrosGruposInvestigacionListadoExportService extends AbstractTab
       }
 
       rowReport.elements.push(...[
-        miembroGrupoInvestigacion.grupo.nombre ?? '',
+        this.languageService.getFieldValue(miembroGrupoInvestigacion.grupo.nombre),
         miembroGrupoInvestigacion.grupo.codigo ?? '',
         miembroGrupoInvestigacion.grupo.proyectoSge?.id ?? '',
         miembroGrupoInvestigacion.grupo.tipo ? this.translate.instant(TIPO_MAP.get(miembroGrupoInvestigacion.grupo.tipo)) : '',
