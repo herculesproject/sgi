@@ -365,7 +365,7 @@ export class ProyectoListadoComponent extends AbstractTablePaginationComponent<I
     const controls = this.formGroup.controls;
 
     const filter = new RSQLSgiRestFilter('id', SgiRestFilterOperator.EQUALS, controls.id.value)
-      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value)
       .and('codigoExterno', SgiRestFilterOperator.LIKE_ICASE, controls.codigoExterno.value)
       .and('codigoInterno', SgiRestFilterOperator.LIKE_ICASE, controls.codigoInterno.value);
