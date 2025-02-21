@@ -1,6 +1,7 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { Language } from '@core/i18n/language';
 import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { ITipoDocumento, ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { IDocumento } from '@core/models/sgdoc/documento';
@@ -44,7 +45,7 @@ enum TIPO_DOCUMENTO {
 
 interface IDocumentoData {
   id: number;
-  nombre: string;
+  nombre: I18nFieldValue[];
   tipoFase?: ITipoFase;
   tipoDocumento: ITipoDocumento;
   comentario?: string;
@@ -357,9 +358,17 @@ export class ProyectoDocumentosFragment extends Fragment {
                     this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
                     periodoNode.addChild(tipoDocumentoNode);
                   }
-
+                  //TODO: quitar cuando se haga la internacionalización del nombre de ProyectoPeriodoSeguimientoDocumento
+                  const documentoI18n = {
+                    id: documento.id,
+                    nombre: [{ lang: Language.ES, value: documento.nombre }],
+                    tipoDocumento: documento.tipoDocumento,
+                    comentario: documento.comentario,
+                    documentoRef: documento.documentoRef,
+                    visible: documento.visible
+                  } as IDocumentoData;
                   const documentoNode = new NodeDocumento(
-                    null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documento as IDocumentoData), true
+                    null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documentoI18n), true
                   );
                   tipoDocumentoNode.addChild(documentoNode);
                 });
@@ -429,9 +438,17 @@ export class ProyectoDocumentosFragment extends Fragment {
                             this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
                             periodoNode.addChild(tipoDocumentoNode);
                           }
-
+                          //TODO: quitar cuando se haga la internacionalización del nombre de ProyectoSocioPeriodoJustificacionDocumento
+                          const documentoI18n = {
+                            id: documento.id,
+                            nombre: [{ lang: Language.ES, value: documento.nombre }],
+                            tipoDocumento: documento.tipoDocumento,
+                            comentario: documento.comentario,
+                            documentoRef: documento.documentoRef,
+                            visible: documento.visible
+                          } as IDocumentoData;
                           const documentoNode = new NodeDocumento(
-                            null, documento.nombre, 4, new StatusWrapper<IDocumentoData>(documento as IDocumentoData), true
+                            null, documento.nombre, 4, new StatusWrapper<IDocumentoData>(documentoI18n), true
                           );
                           tipoDocumentoNode.addChild(documentoNode);
                         });
@@ -481,9 +498,17 @@ export class ProyectoDocumentosFragment extends Fragment {
                     this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
                     prorrogaNode.addChild(tipoDocumentoNode);
                   }
-
+                  //TODO: quitar cuando se haga la internacionalización del nombre de ProyectoProrrogaDocumento
+                  const documentoI18n = {
+                    id: documento.id,
+                    nombre: [{ lang: Language.ES, value: documento.nombre }],
+                    tipoDocumento: documento.tipoDocumento,
+                    comentario: documento.comentario,
+                    documentoRef: documento.documentoRef,
+                    visible: documento.visible
+                  } as IDocumentoData;
                   const documentoNode = new NodeDocumento(
-                    null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documento as IDocumentoData), true
+                    null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documentoI18n), true
                   );
                   tipoDocumentoNode.addChild(documentoNode);
                 });
