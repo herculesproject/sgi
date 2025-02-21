@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
@@ -106,7 +107,9 @@ class ProyectoDocumentoIT extends BaseIT {
     String roles = "CSP-PRO-E";
     Long idProyectoDocumento = 1L;
     ProyectoDocumento proyectoDocumento = generarMockProyectoDocumento(1L);
-    proyectoDocumento.setComentario("COMENTARIO-MODIFICADO");
+    Set<ProyectoDocumentoComentario> comentarioProyectoDocumento = new HashSet<>();
+    comentarioProyectoDocumento.add(new ProyectoDocumentoComentario(Language.ES, "COMENTARIO-MODIFICADO"));
+    proyectoDocumento.setComentario(comentarioProyectoDocumento);
 
     final ResponseEntity<ProyectoDocumento> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(null, proyectoDocumento, roles), ProyectoDocumento.class, idProyectoDocumento);
@@ -174,9 +177,12 @@ class ProyectoDocumentoIT extends BaseIT {
     Set<ProyectoDocumentoNombre> nombreProyectoDocumento = new HashSet<>();
     nombreProyectoDocumento.add(new ProyectoDocumentoNombre(Language.ES, "nombre-proyectoDocumento-001"));
 
+    Set<ProyectoDocumentoComentario> comentarioProyectoDocumento = new HashSet<>();
+    comentarioProyectoDocumento.add(new ProyectoDocumentoComentario(Language.ES, "comentario-001"));
+
     ProyectoDocumento proyectoDocumento = new ProyectoDocumento();
     proyectoDocumento.setId(id);
-    proyectoDocumento.setComentario("comentario-001");
+    proyectoDocumento.setComentario(comentarioProyectoDocumento);
     proyectoDocumento.setNombre(nombreProyectoDocumento);
     proyectoDocumento.setProyectoId(1L);
     proyectoDocumento.setTipoDocumento(tipoDocumento);

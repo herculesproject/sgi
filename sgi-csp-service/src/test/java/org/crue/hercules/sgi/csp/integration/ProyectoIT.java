@@ -1539,9 +1539,11 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
-    Assertions.assertThat(proyectoDocumento.get(0).getComentario()).as("get(0).getComentario()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoDocumento.get(0).getComentario(), Language.ES))
+        .as("get(0).getComentario()")
         .isEqualTo("comentario-" + String.format("%03d", 2));
-    Assertions.assertThat(proyectoDocumento.get(1).getComentario()).as("get(0).getComentario()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoDocumento.get(1).getComentario(), Language.ES))
+        .as("get(0).getComentario()")
         .isEqualTo("comentario-" + String.format("%03d", 1));
 
   }

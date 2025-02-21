@@ -90,6 +90,7 @@ DELETE FROM test.estado_validacion_ip;
 DELETE FROM test.proyecto_facturacion;
 DELETE FROM test.proyecto_iva;
 DELETE FROM test.proyecto_documento_nombre;
+DELETE FROM test.proyecto_documento_comentario;
 DELETE FROM test.proyecto_documento;
 UPDATE test.gasto_proyecto SET concepto_gasto_id = NULL;
 UPDATE test.gasto_proyecto SET estado_gasto_proyecto_id = NULL;

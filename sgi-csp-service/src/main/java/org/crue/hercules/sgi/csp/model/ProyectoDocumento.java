@@ -81,9 +81,11 @@ public class ProyectoDocumento extends BaseEntity {
   private TipoDocumento tipoDocumento;
 
   /** Comentario. */
-  @Column(name = "comentario", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String comentario;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "proyecto_documento_comentario", joinColumns = @JoinColumn(name = "proyecto_documento_id"))
+  @Valid
+  @Builder.Default
+  private Set<ProyectoDocumentoComentario> comentario = new HashSet<>();
 
   /** Visible */
   @Column(name = "visible", nullable = false)
