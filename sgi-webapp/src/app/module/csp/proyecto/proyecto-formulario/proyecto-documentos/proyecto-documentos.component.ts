@@ -35,6 +35,7 @@ const DOCUMENTO_KEY = marker('csp.documento');
 const PROYECTO_DOCUMENTO_FICHERO_KEY = marker('csp.proyecto-documento.fichero');
 const PROYECTO_DOCUMENTO_NOMBRE_KEY = marker('csp.documento.nombre');
 const PROYECTO_VISIBLE_KEY = marker('csp.proyecto-documento.visible');
+const PROYECTO_DOCUMENTO_COMENTARIOS_KEY = marker('csp.documento.comentarios');
 
 enum VIEW_MODE {
   NONE = '',
@@ -72,6 +73,8 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
   msgParamFicheroEntity = {};
   msgParamNombreEntity = {};
   msgParamVisibleEntity = {};
+  msgParamComentariosEntity = {};
+
   textoDelete: string;
 
   fxFlexProperties: FxFlexProperties;
@@ -135,7 +138,7 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
       fichero: new FormControl(null, Validators.required),
       tipoFase: new FormControl(null, IsEntityValidator.isValid),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
-      comentarios: new FormControl(''),
+      comentarios: new FormControl([], I18nValidators.maxLength(2000)),
       visible: new FormControl('')
     }));
 
@@ -185,6 +188,12 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
       PROYECTO_VISIBLE_KEY,
       MSG_PARAMS.CARDINALIRY.SINGULAR
     ).subscribe((value) => this.msgParamVisibleEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+
+    this.translate.get(
+      PROYECTO_DOCUMENTO_COMENTARIOS_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamComentariosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
+
   }
 
   ngOnDestroy(): void {

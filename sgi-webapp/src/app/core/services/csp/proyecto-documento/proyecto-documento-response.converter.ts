@@ -18,7 +18,7 @@ class ProyectoDocumentoResponseConverter extends SgiBaseConverter<IProyectoDocum
       documentoRef: value.documentoRef,
       tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.toTarget(value.tipoFase) : null,
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento) : null,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : [],
       visible: value.visible
     };
   }
@@ -34,7 +34,7 @@ class ProyectoDocumentoResponseConverter extends SgiBaseConverter<IProyectoDocum
       documentoRef: value.documentoRef,
       tipoFase: value.tipoFase ? TIPO_FASE_RESPONSE_CONVERTER.fromTarget(value.tipoFase) : null,
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento) : null,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : [],
       visible: value.visible
     };
   }

@@ -8,6 +8,6 @@ export interface IProyectoDocumento {
   documentoRef: string;
   tipoFase: ITipoFase;
   tipoDocumento: ITipoDocumento;
-  comentario: string;
+  comentario: I18nFieldValue[];
   visible: boolean;
 }

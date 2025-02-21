@@ -48,7 +48,7 @@ interface IDocumentoData {
   nombre: I18nFieldValue[];
   tipoFase?: ITipoFase;
   tipoDocumento: ITipoDocumento;
-  comentario?: string;
+  comentario?: I18nFieldValue[];
   documentoRef: string;
   visible?: boolean;
   proyectoId?: number;
@@ -358,12 +358,12 @@ export class ProyectoDocumentosFragment extends Fragment {
                     this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
                     periodoNode.addChild(tipoDocumentoNode);
                   }
-                  //TODO: quitar cuando se haga la internacionalización del nombre de ProyectoPeriodoSeguimientoDocumento
+                  //TODO: quitar cuando se haga la internacionalización del nombre y comentario de ProyectoPeriodoSeguimientoDocumento
                   const documentoI18n = {
                     id: documento.id,
                     nombre: [{ lang: Language.ES, value: documento.nombre }],
                     tipoDocumento: documento.tipoDocumento,
-                    comentario: documento.comentario,
+                    comentario: [{ lang: Language.ES, value: documento.comentario }],
                     documentoRef: documento.documentoRef,
                     visible: documento.visible
                   } as IDocumentoData;
@@ -438,12 +438,12 @@ export class ProyectoDocumentosFragment extends Fragment {
                             this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
                             periodoNode.addChild(tipoDocumentoNode);
                           }
-                          //TODO: quitar cuando se haga la internacionalización del nombre de ProyectoSocioPeriodoJustificacionDocumento
+                          //TODO: quitar cuando se haga la internacionalización del nombre y comentario de ProyectoSocioPeriodoJustificacionDocumento
                           const documentoI18n = {
                             id: documento.id,
                             nombre: [{ lang: Language.ES, value: documento.nombre }],
                             tipoDocumento: documento.tipoDocumento,
-                            comentario: documento.comentario,
+                            comentario: [{ lang: Language.ES, value: documento.comentario }],
                             documentoRef: documento.documentoRef,
                             visible: documento.visible
                           } as IDocumentoData;
@@ -498,12 +498,12 @@ export class ProyectoDocumentosFragment extends Fragment {
                     this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
                     prorrogaNode.addChild(tipoDocumentoNode);
                   }
-                  //TODO: quitar cuando se haga la internacionalización del nombre de ProyectoProrrogaDocumento
+                  //TODO: quitar cuando se haga la internacionalización del nombre y comentario de ProyectoProrrogaDocumento
                   const documentoI18n = {
                     id: documento.id,
                     nombre: [{ lang: Language.ES, value: documento.nombre }],
                     tipoDocumento: documento.tipoDocumento,
-                    comentario: documento.comentario,
+                    comentario: [{ lang: Language.ES, value: documento.comentario }],
                     documentoRef: documento.documentoRef,
                     visible: documento.visible
                   } as IDocumentoData;

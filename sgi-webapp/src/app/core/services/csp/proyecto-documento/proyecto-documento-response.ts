@@ -1,6 +1,6 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { ITipoFaseResponse } from '@core/services/csp/tipo-fase/tipo-fase-response';
 import { ITipoDocumentoResponse } from '../tipo-documento/tipo-documento-response';
-import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 
 export interface IProyectoDocumentoResponse {
   id: number;
@@ -9,6 +9,6 @@ export interface IProyectoDocumentoResponse {
   documentoRef: string;
   tipoFase: ITipoFaseResponse;
   tipoDocumento: ITipoDocumentoResponse;
-  comentario: string;
+  comentario: I18nFieldValueResponse[];
   visible: boolean;
 }
