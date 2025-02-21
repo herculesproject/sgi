@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -170,10 +171,13 @@ class ProyectoDocumentoIT extends BaseIT {
     tipoDocumento.setActivo(true);
     tipoDocumento.setNombre(nombreTipoDocumento);
 
+    Set<ProyectoDocumentoNombre> nombreProyectoDocumento = new HashSet<>();
+    nombreProyectoDocumento.add(new ProyectoDocumentoNombre(Language.ES, "nombre-proyectoDocumento-001"));
+
     ProyectoDocumento proyectoDocumento = new ProyectoDocumento();
     proyectoDocumento.setId(id);
     proyectoDocumento.setComentario("comentario-001");
-    proyectoDocumento.setNombre("nombre-proyectoDocumento-001");
+    proyectoDocumento.setNombre(nombreProyectoDocumento);
     proyectoDocumento.setProyectoId(1L);
     proyectoDocumento.setTipoDocumento(tipoDocumento);
     proyectoDocumento.setTipoFase(null);

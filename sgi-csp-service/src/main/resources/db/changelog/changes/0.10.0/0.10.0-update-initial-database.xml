@@ -2447,4 +2447,33 @@
 
     <dropColumn columnName="comentario" tableName="estado_autorizacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-89">
+    <createTable tableName="proyecto_documento_nombre">
+      <column name="proyecto_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_documento_nombre"
+      columnNames="proyecto_documento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_documento_id"
+      baseTableName="proyecto_documento_nombre"
+      constraintName="FK_PROYECTODOCUMENTONOMBRE_PROYECTODOCUMENTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="proyecto_documento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}proyecto_documento_nombre(proyecto_documento_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}proyecto_documento WHERE nombre IS NOT
+      NULL AND NULLIF(TRIM(nombre), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="proyecto_documento" />
+  </changeSet>
 </databaseChangeLog>
