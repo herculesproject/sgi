@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository.custom;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,8 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -22,6 +23,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudTitulo;
 import org.crue.hercules.sgi.csp.model.SolicitudTitulo_;
 import org.crue.hercules.sgi.csp.model.Solicitud_;
 import org.crue.hercules.sgi.csp.util.CriteriaQueryUtils;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -75,7 +77,7 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
 
   /**
    * Devuelve una lista paginada y filtrada {@link Solicitud} sin duplicados y
-   * ordenable por el estaod y la fecha del estado.
+   * ordenable por el titulo, el estado y la fecha del estado.
    * 
    * @param specs    condiciones que deben cumplir.
    * @param pageable la información de la paginación.
@@ -91,16 +93,43 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
 
     // Define FROM clause
     Root<Solicitud> root = cq.from(Solicitud.class);
-    Join<Solicitud, EstadoSolicitud> join = root.join(Solicitud_.estado, JoinType.INNER);
 
-    Subquery<String> subqueryTitulo = cq.subquery(String.class);
-    Root<Solicitud> subRoot = subqueryTitulo.from(Solicitud.class);
-    Join<Solicitud, SolicitudTitulo> subTituloJoin = subRoot.join(Solicitud_.titulo, JoinType.LEFT);
+    // Si se ordena por el titulo de la solicitud se hace un subquery para obtener
+    // el titulo en el idioma actual para poder hacer la ordenacion, si no se ordena
+    // por el titulo no es necesaria la subquery
+    boolean sortingByTituloSolicitud = pageable.getSort().get()
+        .anyMatch(sort -> sort.getProperty().equals(SELECTION_NAME_TITULO));
 
-    // Se usa la funcion "max" para quedarse solo con un resultado para aplicar los
-    // filtros cuando existan títulos en varios idiomas
-    subqueryTitulo.select(cb.function("MAX", String.class, subTituloJoin.get(SolicitudTitulo_.value)))
-        .where(cb.equal(subRoot.get(Solicitud_.id), root.get(Solicitud_.id)));
+    Expression<String> solicitudTituloExpression;
+    if (sortingByTituloSolicitud) {
+      Subquery<String> subqueryTitulo = cq.subquery(String.class);
+      Root<Solicitud> subRoot = subqueryTitulo.correlate(root);
+      Join<Solicitud, SolicitudTitulo> joinSolicitudTitulo = subRoot.join(Solicitud_.titulo);
+
+      subqueryTitulo.select(joinSolicitudTitulo.get(SolicitudTitulo_.value))
+          .where(cb.equal(joinSolicitudTitulo.get(SolicitudTitulo_.lang), SgiLocaleContextHolder.getLanguage()));
+
+      solicitudTituloExpression = subqueryTitulo;
+    } else {
+      solicitudTituloExpression = cb.literal("");
+    }
+
+    // Si se ordena por el nombre o la fecha del estado se hace el join para poder
+    // hacer la ordenacion, si no no es necesario
+    boolean sortingByEstadoOrFechaEstado = pageable.getSort().get()
+        .anyMatch(sort -> sort.getProperty().equals(SELECTION_NAME_ESTADO_ESTADO)
+            || sort.getProperty().equals(SELECTION_NAME_ESTADO_FECHAESTADO));
+
+    Expression<String> nombreEstadoExpression;
+    Expression<Instant> fechaEstadoExpression;
+    if (sortingByEstadoOrFechaEstado) {
+      Join<Solicitud, EstadoSolicitud> joinEstado = root.join(Solicitud_.estado);
+      nombreEstadoExpression = joinEstado.get(EstadoSolicitud_.estado).as(String.class);
+      fechaEstadoExpression = joinEstado.get(EstadoSolicitud_.fechaEstado).as(Instant.class);
+    } else {
+      nombreEstadoExpression = cb.literal("");
+      fechaEstadoExpression = cb.nullLiteral(Instant.class);
+    }
 
     // Count query
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
@@ -120,9 +149,9 @@ public class CustomSolicitudRepositoryImpl implements CustomSolicitudRepository 
 
     cq.distinct(true).multiselect(
         root,
-        join.get(EstadoSolicitud_.estado).alias(SELECTION_NAME_ESTADO_ESTADO),
-        join.get(EstadoSolicitud_.fechaEstado).alias(SELECTION_NAME_ESTADO_FECHAESTADO),
-        subqueryTitulo.alias(SELECTION_NAME_TITULO));
+        nombreEstadoExpression.alias(SELECTION_NAME_ESTADO_ESTADO),
+        fechaEstadoExpression.alias(SELECTION_NAME_ESTADO_FECHAESTADO),
+        solicitudTituloExpression.alias(SELECTION_NAME_TITULO));
 
     String[] selectionNames = new String[] {
         SELECTION_NAME_ESTADO_ESTADO,
