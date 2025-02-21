@@ -6,6 +6,6 @@ export interface IPartidaPresupuestaria {
   id: number;
   codigo: string;
   partidaSge: IPartidaPresupuestariaSge;
-  descripcion: string | I18nFieldValue[];
+  descripcion: I18nFieldValue[];
   tipoPartida: TipoPartida;
 }

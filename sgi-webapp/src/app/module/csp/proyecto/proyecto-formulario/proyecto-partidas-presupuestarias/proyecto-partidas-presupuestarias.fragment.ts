@@ -1,5 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TipoPartida } from '@core/enums/tipo-partida';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
@@ -37,7 +38,7 @@ export interface IPartidaPresupuestariaListado {
   help: HelpIcon;
   codigo: string;
   partidaSge: IPartidaPresupuestariaSge;
-  descripcion: string;
+  descripcion: I18nFieldValue[];
   tipoPartida: TipoPartida;
   canEdit: boolean;
 }
@@ -397,7 +398,7 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
     } else {
       partidasPresupuestaria.codigo = partidasPresupuestaria.convocatoriaPartidaPresupuestaria.codigo;
       partidasPresupuestaria.partidaSge = partidasPresupuestaria.convocatoriaPartidaPresupuestaria.partidaSge;
-      partidasPresupuestaria.descripcion = this.languageService.getFieldValue(partidasPresupuestaria.convocatoriaPartidaPresupuestaria.descripcion);
+      partidasPresupuestaria.descripcion = partidasPresupuestaria.convocatoriaPartidaPresupuestaria.descripcion;
       partidasPresupuestaria.tipoPartida = partidasPresupuestaria.convocatoriaPartidaPresupuestaria.tipoPartida;
 
       partidasPresupuestaria.help = {
