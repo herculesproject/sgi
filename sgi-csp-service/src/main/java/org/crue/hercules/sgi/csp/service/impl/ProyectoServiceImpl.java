@@ -42,6 +42,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPartidaDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
@@ -65,6 +66,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
 import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
+import org.crue.hercules.sgi.csp.model.ProyectoPartidaDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
@@ -1876,7 +1878,8 @@ public class ProyectoServiceImpl implements ProyectoService {
         partidaProyecto.setCodigo(partidaConvocatoria.getCodigo());
         partidaProyecto.setPartidaRef(partidaConvocatoria.getPartidaRef());
         partidaProyecto.setConvocatoriaPartidaId(partidaConvocatoria.getId());
-        partidaProyecto.setDescripcion(I18nHelper.getFieldValue(partidaConvocatoria.getDescripcion()));
+        partidaProyecto.setDescripcion(
+            convertDescripcionFromConvocatoriaPartidaToProyectoPartida(partidaConvocatoria.getDescripcion()));
         partidaProyecto.setTipoPartida(partidaConvocatoria.getTipoPartida());
 
         this.proyectoPartidaService.create(partidaProyecto);
@@ -2703,4 +2706,11 @@ public class ProyectoServiceImpl implements ProyectoService {
         .map(ccgceobs -> new ProyectoConceptoGastoCodigoEcObservaciones(ccgceobs.getLang(), ccgceobs.getValue()))
         .collect(Collectors.toSet());
   }
+
+  private Set<ProyectoPartidaDescripcion> convertDescripcionFromConvocatoriaPartidaToProyectoPartida(
+      Set<ConvocatoriaPartidaDescripcion> convocatoriaPartidaDescripcion) {
+    return convocatoriaPartidaDescripcion.stream()
+        .map(cpd -> new ProyectoPartidaDescripcion(cpd.getLang(), cpd.getValue())).collect(Collectors.toSet());
+  }
+
 }

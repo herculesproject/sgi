@@ -2306,4 +2306,32 @@
 
     <dropColumn columnName="observaciones" tableName="proyecto_concepto_gasto_codigo_ec" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-84">
+    <createTable tableName="proyecto_partida_descripcion">
+      <column name="proyecto_partida_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_partida_descripcion" columnNames="proyecto_partida_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_partida_id"
+      baseTableName="proyecto_partida_descripcion"
+      constraintName="FK_PROYECTOPARTIDADESCRIPCION_PROYECTOPARTIDA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="proyecto_partida" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}proyecto_partida_descripcion(proyecto_partida_id, value_, lang)
+      SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}proyecto_partida WHERE
+      descripcion IS NOT NULL AND NULLIF(TRIM(descripcion), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="proyecto_partida" />
+  </changeSet>
 </databaseChangeLog>

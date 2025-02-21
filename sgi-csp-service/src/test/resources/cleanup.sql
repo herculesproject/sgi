@@ -82,6 +82,7 @@ DELETE FROM test.alegacion_requerimiento;
 DELETE FROM test.requerimiento_justificacion;
 DELETE FROM test.proyecto_seguimiento_justificacion;
 DELETE FROM test.proyecto_proyecto_sge;
+DELETE FROM test.proyecto_partida_descripcion;
 DELETE FROM test.proyecto_partida;
 DELETE FROM test.proyecto_responsable_economico;
 UPDATE test.proyecto_facturacion SET estado_validacion_ip_id = NULL;
