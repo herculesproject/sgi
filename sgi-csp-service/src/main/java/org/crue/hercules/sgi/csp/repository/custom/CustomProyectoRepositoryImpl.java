@@ -15,6 +15,7 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -43,11 +44,17 @@ import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio_;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
+import org.crue.hercules.sgi.csp.model.ProyectoTitulo_;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolProyecto_;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico_;
+import org.crue.hercules.sgi.csp.util.CriteriaQueryUtils;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.spring.context.i18n.SgiLocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -59,6 +66,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
+
+  private static final String SELECTION_NAME_SEPARATOR = ".";
+  private static final String SELECTION_NAME_TITULO = Proyecto_.TITULO + SELECTION_NAME_SEPARATOR
+      + ProyectoTitulo_.VALUE;
 
   /**
    * The entity manager.
@@ -419,6 +430,89 @@ public class CustomProyectoRepositoryImpl implements CustomProyectoRepository {
 
     log.debug(
         "countProyectosClasificacionCvnPersona(List<String> personaRef, ClasificacionCVN clasificacionCvn, boolean rolPrincipal, Long exludedProyectoId, Instant fecha) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Proyecto} sin duplicados y
+   * ordenable por el titulo.
+   * 
+   * @param specs    condiciones que deben cumplir.
+   * @param pageable la información de la paginación.
+   * @return la lista de {@link Proyecto} paginadas y/o filtradas.
+   */
+  @Override
+  public Page<Proyecto> findAllDistinct(Specification<Proyecto> specs, Pageable pageable) {
+    log.debug("findAll(String query, Pageable pageable) - start");
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+
+    // Define FROM clause
+    Root<Proyecto> root = cq.from(Proyecto.class);
+
+    // Si se ordena por el titulo del proyecto se hace un subquery para obtener el
+    // titulo en el idioma actual para poder hacer la ordenacion, si no se ordena
+    // por el titulo no es necesaria la subquery
+    boolean sortingByTituloProyecto = pageable.getSort().get()
+        .anyMatch(sort -> sort.getProperty().equals(SELECTION_NAME_TITULO));
+
+    Expression<String> proyectoTituloExpression;
+    if (sortingByTituloProyecto) {
+      Subquery<String> subqueryTitulo = cq.subquery(String.class);
+      Root<Proyecto> subRoot = subqueryTitulo.correlate(root);
+      Join<Proyecto, ProyectoTitulo> joinProyectoTitulo = subRoot.join(Proyecto_.titulo);
+
+      subqueryTitulo.select(joinProyectoTitulo.get(ProyectoTitulo_.value))
+          .where(cb.equal(joinProyectoTitulo.get(ProyectoTitulo_.lang), SgiLocaleContextHolder.getLanguage()));
+
+      proyectoTituloExpression = subqueryTitulo;
+    } else {
+      proyectoTituloExpression = cb.literal("");
+    }
+
+    // Count query
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Proyecto> rootCount = countQuery.from(Proyecto.class);
+    countQuery.select(cb.countDistinct(rootCount));
+
+    List<Predicate> listPredicates = new ArrayList<>();
+    List<Predicate> listPredicatesCount = new ArrayList<>();
+
+    // Where
+    if (specs != null) {
+      listPredicates.add(specs.toPredicate(root, cq, cb));
+      listPredicatesCount.add(specs.toPredicate(rootCount, cq, cb));
+    }
+
+    cq.where(listPredicates.toArray(new Predicate[] {}));
+
+    cq.distinct(true).multiselect(
+        root,
+        proyectoTituloExpression.alias(SELECTION_NAME_TITULO));
+
+    String[] selectionNames = new String[] {
+        SELECTION_NAME_TITULO
+    };
+
+    cq.orderBy(CriteriaQueryUtils.toOrders(pageable.getSort(), root, cb, cq, selectionNames));
+
+    // Número de registros totales para la paginación
+    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
+
+    TypedQuery<Tuple> typedQuery = entityManager.createQuery(cq);
+    if (pageable.isPaged()) {
+      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+      typedQuery.setMaxResults(pageable.getPageSize());
+    }
+
+    List<Proyecto> result = typedQuery.getResultList().stream().map(a -> (Proyecto) a.get(0)).toList();
+    Page<Proyecto> returnValue = new PageImpl<>(result, pageable, count);
+
+    log.debug("findAll(String query, Pageable pageable) - end");
+
     return returnValue;
   }
 

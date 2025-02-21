@@ -331,7 +331,7 @@ class ProyectoIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones.value,desc";
+    String sort = "titulo.value,desc";
     String filter = "unidadGestionRef==2";
 
     // when: find Convocatoria
@@ -378,7 +378,7 @@ class ProyectoIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones.value,desc";
+    String sort = "titulo.value,desc";
     String filter = "unidadGestionRef==2";
 
     // when: find Convocatoria
@@ -399,13 +399,13 @@ class ProyectoIT extends BaseIT {
 
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getObservaciones(), Language.ES))
         .as("get(0).getObservaciones())")
-        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 5));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 3));
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getObservaciones(), Language.ES))
         .as("get(1).getObservaciones())")
-        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 3));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 2));
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getObservaciones(), Language.ES))
         .as("get(2).getObservaciones())")
-        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 2));
+        .isEqualTo("observaciones-proyecto-" + String.format("%03d", 1));
   }
 
   /*

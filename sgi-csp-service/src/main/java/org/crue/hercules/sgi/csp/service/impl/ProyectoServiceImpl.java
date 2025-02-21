@@ -610,7 +610,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       specs = specs.and(specByUnidadGestionRefIn);
     }
 
-    Page<Proyecto> returnValue = repository.findAll(specs, paging);
+    Page<Proyecto> returnValue = repository.findAllDistinct(specs, paging);
     log.debug("findAllRestringidos(String query, Pageable paging) - end");
     return returnValue;
   }
@@ -639,7 +639,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         .and(SgiRSQLJPASupport.toSpecification(query,
             ProyectoPredicateResolver.getInstance(programaRepository, sgiApiSgempService, sgiConfigProperties)));
 
-    Page<Proyecto> returnValue = repository.findAll(specs, paging);
+    Page<Proyecto> returnValue = repository.findAllDistinct(specs, paging);
     log.debug("findAllActivosInvestigador(String query, Pageable paging) - end");
     return returnValue;
   }
@@ -666,7 +666,7 @@ public class ProyectoServiceImpl implements ProyectoService {
       specs = specs.and(specByUnidadGestionRefIn);
     }
 
-    Page<Proyecto> returnValue = repository.findAll(specs, paging);
+    Page<Proyecto> returnValue = repository.findAllDistinct(specs, paging);
     log.debug("findAll(String query, Pageable paging) - end");
     return returnValue;
   }

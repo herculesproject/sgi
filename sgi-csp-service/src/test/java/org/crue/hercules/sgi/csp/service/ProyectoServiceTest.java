@@ -794,7 +794,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     }
 
     BDDMockito
-        .given(repository.findAll(ArgumentMatchers.<Specification<Proyecto>>any(), ArgumentMatchers.<Pageable>any()))
+        .given(repository.findAllDistinct(ArgumentMatchers.<Specification<Proyecto>>any(),
+            ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Proyecto>>() {
           @Override
           public Page<Proyecto> answer(InvocationOnMock invocation) throws Throwable {
@@ -835,7 +836,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     }
 
     BDDMockito
-        .given(repository.findAll(ArgumentMatchers.<Specification<Proyecto>>any(), ArgumentMatchers.<Pageable>any()))
+        .given(repository.findAllDistinct(ArgumentMatchers.<Specification<Proyecto>>any(),
+            ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<Proyecto>>() {
           @Override
           public Page<Proyecto> answer(InvocationOnMock invocation) throws Throwable {
@@ -876,7 +878,8 @@ class ProyectoServiceTest extends BaseServiceTest {
     Pageable paging = PageRequest.of(0, 10);
 
     BDDMockito
-        .given(repository.findAll(ArgumentMatchers.<Specification<Proyecto>>any(), ArgumentMatchers.<Pageable>any()))
+        .given(repository.findAllDistinct(ArgumentMatchers.<Specification<Proyecto>>any(),
+            ArgumentMatchers.<Pageable>any()))
         .willReturn(proyectosPage);
 
     Page<Proyecto> pageResult = this.service.findAllActivosInvestigador(query, paging);

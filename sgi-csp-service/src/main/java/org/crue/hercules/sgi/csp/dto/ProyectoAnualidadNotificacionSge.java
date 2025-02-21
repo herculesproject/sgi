@@ -32,20 +32,4 @@ public class ProyectoAnualidadNotificacionSge implements Serializable {
   private EstadoProyecto proyectoEstado;
   private String proyectoSgeRef;
   private Boolean enviadoSge;
-
-  public ProyectoAnualidadNotificacionSge(Long id, Integer anio, Instant proyectoFechaInicio, Instant proyectoFechaFin,
-      BigDecimal totalGastos, Long proyectoId, Collection<ProyectoTitulo> proyectoTitulo, String proyectoAcronimo,
-      EstadoProyecto proyectoEstado, String proyectoSgeRef, Boolean enviadoSge) {
-    this.id = id;
-    this.anio = anio;
-    this.proyectoFechaInicio = proyectoFechaInicio;
-    this.proyectoFechaFin = proyectoFechaFin;
-    this.totalGastos = totalGastos;
-    this.proyectoId = proyectoId;
-    this.proyectoTitulo = proyectoTitulo;
-    this.proyectoAcronimo = proyectoAcronimo;
-    this.proyectoEstado = proyectoEstado;
-    this.proyectoSgeRef = proyectoSgeRef;
-    this.enviadoSge = enviadoSge;
-  }
 }

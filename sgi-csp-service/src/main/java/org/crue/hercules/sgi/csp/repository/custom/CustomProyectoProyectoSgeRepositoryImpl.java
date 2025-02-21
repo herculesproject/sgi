@@ -108,6 +108,7 @@ public class CustomProyectoProyectoSgeRepositoryImpl implements CustomProyectoPr
 
     // Select
     String[] selectionNames = new String[] {
+        Proyecto_.ID,
         ProyectoProyectoSgePredicateResolver.Property.NOMBRE_PROYECTO.getCode(),
         ProyectoProyectoSgePredicateResolver.Property.FECHA_INICIO_PROYECTO.getCode(),
         ProyectoProyectoSgePredicateResolver.Property.FECHA_FIN_PROYECTO.getCode(),
@@ -115,7 +116,7 @@ public class CustomProyectoProyectoSgeRepositoryImpl implements CustomProyectoPr
         ProyectoProyectoSgePredicateResolver.Property.CODIGO_INTERNO.getCode()
     };
 
-    cq.multiselect(
+    cq.distinct(true).multiselect(
         root.get(ProyectoProyectoSge_.proyecto),
         root.get(ProyectoProyectoSge_.proyecto).get(Proyecto_.id).alias(Proyecto_.ID),
         root.get(ProyectoProyectoSge_.proyecto).get(Proyecto_.codigoExterno).alias(
