@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROYECTO_PRORROGA_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-prorroga-documento.converter';
-import { IProyectoProrrogaDocumentoBackend } from '@core/models/csp/backend/proyecto-prorroga-documento-backend';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { IProyectoProrrogaDocumento } from '@core/models/csp/proyecto-prorroga-documento';
 import { environment } from '@env';
 import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IProyectoProrrogaDocumentoResponse } from './proyecto-prorroga-documento/proyecto-prorroga-documento-response';
+import { PROYECTO_PRORROGA_DOCUMENTO_RESPONSE_CONVERTER } from './proyecto-prorroga-documento/proyecto-prorroga-documento-response.converter';
 import { IProyectoProrrogaResponse } from './proyecto-prorroga/proyecto-prorroga-response';
 import { PROYECTO_PRORROGA_RESPONSE_CONVERTER } from './proyecto-prorroga/proyecto-prorroga-response.converter';
 
@@ -62,10 +62,10 @@ export class ProyectoProrrogaService extends _ProyectoProrrogaServiceMixinBase {
    * @return la lista de ProyectoPeridoSeguimientoDocumento
    */
   findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoProrrogaDocumento>> {
-    return this.find<IProyectoProrrogaDocumentoBackend, IProyectoProrrogaDocumento>(
+    return this.find<IProyectoProrrogaDocumentoResponse, IProyectoProrrogaDocumento>(
       `${this.endpointUrl}/${id}/prorrogadocumentos`,
       options,
-      PROYECTO_PRORROGA_DOCUMENTO_CONVERTER
+      PROYECTO_PRORROGA_DOCUMENTO_RESPONSE_CONVERTER
     );
   }
 
