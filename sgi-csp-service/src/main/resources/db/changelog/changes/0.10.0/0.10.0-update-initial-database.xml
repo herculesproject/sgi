@@ -2334,4 +2334,32 @@
 
     <dropColumn columnName="descripcion" tableName="proyecto_partida" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-85">
+    <createTable tableName="autorizacion_titulo_proyecto">
+      <column name="autorizacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="autorizacion_titulo_proyecto" columnNames="autorizacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="autorizacion_id"
+      baseTableName="autorizacion_titulo_proyecto"
+      constraintName="FK_AUTORIZACIONTITULOPROYECTO_AUTORIZACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="autorizacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}autorizacion_titulo_proyecto(autorizacion_id, value_, lang)
+      SELECT id, titulo_proyecto, '${defaultLang}' FROM ${schemaPrefix}autorizacion WHERE
+      titulo_proyecto IS NOT NULL AND NULLIF(TRIM(titulo_proyecto), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="titulo_proyecto" tableName="autorizacion" />
+  </changeSet>
 </databaseChangeLog>

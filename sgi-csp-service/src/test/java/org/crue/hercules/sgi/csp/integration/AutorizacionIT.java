@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +21,9 @@ import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.service.AutorizacionComService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -86,9 +90,7 @@ class AutorizacionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s",
         tokenBuilder.buildToken(USER_PERSONA_REF, roles)));
 
-    HttpEntity<Object> request = new HttpEntity<>(entity, headers);
-    return request;
-
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -103,7 +105,7 @@ class AutorizacionIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   void create_ReturnsAutorizacion() throws Exception {
-    AutorizacionInput toCreate = buildMockAutorizacion(null);
+    AutorizacionInput toCreate = buildMockAutorizacion();
     String roles = "CSP-AUT-INV-C";
 
     final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
@@ -131,8 +133,9 @@ class AutorizacionIT extends BaseIT {
         .isEqualTo(toCreate.getResponsableRef());
     Assertions.assertThat(created.getSolicitanteRef()).as("getSolicitanteRef()")
         .isEqualTo(USER_PERSONA_REF);
-    Assertions.assertThat(created.getTituloProyecto()).as("getTituloProyecto()")
-        .isEqualTo(toCreate.getTituloProyecto());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(created.getTituloProyecto(), Language.ES))
+        .as("getTituloProyecto()")
+        .isEqualTo(I18nHelper.getValueForLanguage(toCreate.getTituloProyecto(), Language.ES));
   }
 
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -150,7 +153,7 @@ class AutorizacionIT extends BaseIT {
   void update_ReturnsAutorizacion() throws Exception {
     String roles = "CSP-AUT-INV-ER";
     Long idAutorizacion = 1L;
-    AutorizacionInput toUpdate = buildMockAutorizacion(1L);
+    AutorizacionInput toUpdate = buildMockAutorizacion();
     toUpdate.setObservaciones("observaciones actualizadas");
 
     final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -179,8 +182,9 @@ class AutorizacionIT extends BaseIT {
         .isEqualTo(toUpdate.getResponsableRef());
     Assertions.assertThat(updated.getSolicitanteRef()).as("getSolicitanteRef()")
         .isEqualTo(DEFAULT_SOLICITANTE_REF);
-    Assertions.assertThat(updated.getTituloProyecto()).as("getTituloProyecto()")
-        .isEqualTo(toUpdate.getTituloProyecto());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getTituloProyecto(), Language.ES))
+        .as("getTituloProyecto()")
+        .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getTituloProyecto(), Language.ES));
 
   }
 
@@ -278,7 +282,8 @@ class AutorizacionIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/autorizacion.sql"
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
     // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -319,7 +324,8 @@ class AutorizacionIT extends BaseIT {
     "classpath:scripts/tipo_regimen_concurrencia.sql",
     "classpath:scripts/tipo_ambito_geografico.sql",
     "classpath:scripts/convocatoria.sql",
-    "classpath:scripts/autorizacion.sql"
+    "classpath:scripts/autorizacion.sql",
+    "classpath:scripts/estado_autorizacion.sql"
     // @formatter:on
   })
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -779,7 +785,10 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
-  private AutorizacionInput buildMockAutorizacion(Long id) {
+  private AutorizacionInput buildMockAutorizacion() {
+    List<I18nFieldValueDto> tituloProyectoAutorizacion = new ArrayList<>();
+    tituloProyectoAutorizacion.add(new I18nFieldValueDto(Language.ES, DEFAULT_TITULO_PROYECTO));
+
     return AutorizacionInput.builder()
         .convocatoriaId(DEFAULT_CONVOCATORIA_ID)
         .datosConvocatoria(DEFAULT_DATOS_CONVOCATORIA)
@@ -789,7 +798,7 @@ class AutorizacionIT extends BaseIT {
         .horasDedicacion(DEFAULT_HORAS_DEDICADAS)
         .observaciones(DEFAULT_OBSERVACIONES)
         .responsableRef(DEFAULT_RESPONSABLE_REF)
-        .tituloProyecto(DEFAULT_TITULO_PROYECTO)
+        .tituloProyecto(tituloProyectoAutorizacion)
         .build();
   }
 

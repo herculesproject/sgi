@@ -179,7 +179,7 @@ public class AutorizacionService {
     log.debug("findAll(String query, Pageable paging) - start");
     Specification<Autorizacion> specs = null;
     if (query != null) {
-      specs = SgiRSQLJPASupport.toSpecification(query);
+      specs = SgiRSQLJPASupport.toSpecification(query, AutorizacionPredicateResolver.getInstance());
     }
     Page<AutorizacionWithFirstEstado> returnValue = repository.findAllAutorizacionWithFirstEstado(specs, paging);
     log.debug("findAll(String query, Pageable paging) - end");

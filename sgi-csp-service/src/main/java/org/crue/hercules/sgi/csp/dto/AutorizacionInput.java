@@ -1,10 +1,12 @@
 package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.Autorizacion;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +25,7 @@ public class AutorizacionInput implements Serializable {
   private String observaciones;
 
   private String responsableRef;
-  private String tituloProyecto;
+  private List<I18nFieldValueDto> tituloProyecto;
   private String entidadRef;
   private Integer horasDedicacion;
 

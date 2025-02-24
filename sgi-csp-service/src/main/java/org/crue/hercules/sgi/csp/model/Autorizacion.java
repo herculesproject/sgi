@@ -1,7 +1,13 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import lombok.AccessLevel;
@@ -64,9 +71,10 @@ public class Autorizacion extends BaseEntity {
   private String solicitanteRef;
 
   /** Titulo Proyecto */
-  @Column(name = "titulo_proyecto", length = Autorizacion.MAX_LENGTH, nullable = true)
-  @Size(max = Autorizacion.MAX_LENGTH)
-  private String tituloProyecto;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "autorizacion_titulo_proyecto", joinColumns = @JoinColumn(name = "autorizacion_id"))
+  @Valid
+  private Set<AutorizacionTituloProyecto> tituloProyecto = new HashSet<>();
 
   /** Entidad Ref */
   @Column(name = "entidad_ref", nullable = true)

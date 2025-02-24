@@ -1,17 +1,18 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.dto.com.CspComCambioEstadoParticipacionAutorizacionProyectoExternoData;
 import org.crue.hercules.sgi.csp.dto.com.CspComModificacionEstadoParticipacionProyectoExternoData;
 import org.crue.hercules.sgi.csp.dto.com.EmailOutput;
 import org.crue.hercules.sgi.csp.dto.com.Recipient;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
+import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput.Email;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,7 +38,7 @@ public class AutorizacionComService {
     CspComModificacionEstadoParticipacionProyectoExternoData data = CspComModificacionEstadoParticipacionProyectoExternoData
         .builder()
         .fecha(autorizacion.getEstado().getFecha())
-        .tituloProyecto(autorizacion.getTituloProyecto())
+        .tituloProyecto(I18nHelper.getFieldValue(autorizacion.getTituloProyecto()))
         .nombreSolicitante(
             String.format("%s %s", datosSolicitante.getNombre(),
                 datosSolicitante.getApellidos()))
@@ -60,13 +61,13 @@ public class AutorizacionComService {
         .builder()
         .estadoSolicitudPext(autorizacion.getEstado().getEstado().name())
         .fechaEstadoSolicitudPext(autorizacion.getEstado().getFecha())
-        .tituloPext(autorizacion.getTituloProyecto())
+        .tituloPext(I18nHelper.getFieldValue(autorizacion.getTituloProyecto()))
         .build();
 
     try {
       EmailOutput comunicado = this.emailService
           .createComunicadoCambioEstadoAutorizacionParticipacionProyectoExterno(data,
-          recipients);
+              recipients);
       this.emailService.sendEmail(comunicado.getId());
 
     } catch (JsonProcessingException e) {
@@ -77,11 +78,11 @@ public class AutorizacionComService {
   private List<Recipient> getSolicitanteRecipients(String solicitanteRef) {
     PersonaOutput datosSolicitante = this.sgiApiSgpService.findById(solicitanteRef);
 
-    return datosSolicitante.getEmails().stream().filter(email -> email.getPrincipal())
+    return datosSolicitante.getEmails().stream().filter(Email::getPrincipal)
         .map(email -> Recipient
             .builder().name(email.getEmail()).address(email.getEmail())
             .build())
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private List<Recipient> getRecipientsPreconfigurados() throws JsonProcessingException {
@@ -92,7 +93,7 @@ public class AutorizacionComService {
     return destinatarios.stream()
         .map(destinatario -> Recipient.builder().name(destinatario).address(destinatario)
             .build())
-        .collect(Collectors.toList());
+        .toList();
   }
 
 }
