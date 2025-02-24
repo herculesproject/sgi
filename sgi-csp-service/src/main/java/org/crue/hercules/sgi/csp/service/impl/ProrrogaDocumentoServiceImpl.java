@@ -26,8 +26,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
-import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -250,7 +250,7 @@ public class ProrrogaDocumentoServiceImpl implements ProrrogaDocumentoService {
     log.debug("validarRequeridosProrrogaDocumento(ProrrogaDocumento datosProrrogaDocumento) - start");
 
     AssertHelper.idNotNull(datosProrrogaDocumento.getProyectoProrrogaId(), ProyectoProrroga.class);
-    AssertHelper.fieldNotBlank(StringUtils.isNotBlank(datosProrrogaDocumento.getNombre()), ProrrogaDocumento.class,
+    AssertHelper.fieldNotBlank(!CollectionUtils.isEmpty(datosProrrogaDocumento.getNombre()), ProrrogaDocumento.class,
         AssertHelper.MESSAGE_KEY_NAME);
     AssertHelper.fieldNotNull(datosProrrogaDocumento.getDocumentoRef(), ProrrogaDocumento.class,
         MSG_FIELD_DOCUMENTO_REF);

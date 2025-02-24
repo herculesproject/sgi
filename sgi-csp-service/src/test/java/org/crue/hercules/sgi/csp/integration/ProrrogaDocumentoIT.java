@@ -1,11 +1,16 @@
 package org.crue.hercules.sgi.csp.integration;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
+import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -70,7 +75,8 @@ class ProrrogaDocumentoIT extends BaseIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
     Assertions.assertThat(responseData.getProyectoProrrogaId()).as("getProyectoProrrogaId()")
         .isEqualTo(newProrrogaDocumento.getProyectoProrrogaId());
-    Assertions.assertThat(responseData.getNombre()).as("getNombre()").isEqualTo(newProrrogaDocumento.getNombre());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo(I18nHelper.getValueForLanguage(newProrrogaDocumento.getNombre(), Language.ES));
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(newProrrogaDocumento.getDocumentoRef());
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()()")
@@ -107,7 +113,8 @@ class ProrrogaDocumentoIT extends BaseIT {
     Assertions.assertThat(prorrogaDocumentoActualizado.getId()).as("getId()").isEqualTo(idProrrogaDocumento);
     Assertions.assertThat(prorrogaDocumentoActualizado.getProyectoProrrogaId()).as("getProyectoProrrogaId()")
         .isEqualTo(1L);
-    Assertions.assertThat(prorrogaDocumentoActualizado.getNombre()).as("getNombre()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(prorrogaDocumentoActualizado.getNombre(), Language.ES))
+        .as("getNombre()")
         .isEqualTo("prorroga-documento-001");
     Assertions.assertThat(prorrogaDocumentoActualizado.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo("documentoRef-001");
@@ -186,7 +193,8 @@ class ProrrogaDocumentoIT extends BaseIT {
     Assertions.assertThat(prorrogaDocumento.getId()).as("getId()").isNotNull();
     Assertions.assertThat(prorrogaDocumento.getId()).as("getId()").isEqualTo(idProrrogaDocumento);
     Assertions.assertThat(prorrogaDocumento.getProyectoProrrogaId()).as("getProyectoProrrogaId()").isEqualTo(1L);
-    Assertions.assertThat(prorrogaDocumento.getNombre()).as("getNombre()").isEqualTo("prorroga-documento-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(prorrogaDocumento.getNombre(), Language.ES)).as("getNombre()")
+        .isEqualTo("prorroga-documento-001");
     Assertions.assertThat(prorrogaDocumento.getDocumentoRef()).as("getDocumentoRef()").isEqualTo("documentoRef-001");
     Assertions.assertThat(prorrogaDocumento.getTipoDocumento().getId()).as("getTipoDocumento().getId()()")
         .isEqualTo(1L);
@@ -204,12 +212,15 @@ class ProrrogaDocumentoIT extends BaseIT {
    * @return el objeto ProrrogaDocumento
    */
   private ProrrogaDocumento generarMockProrrogaDocumento(Long id, Long proyectoProrrogaId, Long tipoDocumentoId) {
+    Set<ProrrogaDocumentoNombre> prorrogaDocumentoNombre = new HashSet<>();
+    prorrogaDocumentoNombre.add(new ProrrogaDocumentoNombre(Language.ES,
+        "prorroga-documento-" + (id == null ? "" : String.format("%03d", id))));
 
     // @formatter:off
     return ProrrogaDocumento.builder()
         .id(id)
         .proyectoProrrogaId(proyectoProrrogaId)
-        .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .nombre(prorrogaDocumentoNombre)
         .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
         .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))

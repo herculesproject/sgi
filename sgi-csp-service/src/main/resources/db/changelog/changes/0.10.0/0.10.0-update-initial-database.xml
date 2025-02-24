@@ -2821,4 +2821,32 @@
 
     <dropColumn columnName="observaciones" tableName="proyecto_prorroga" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-101">
+    <createTable tableName="prorroga_documento_nombre">
+      <column name="prorroga_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="prorroga_documento_nombre" columnNames="prorroga_documento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="prorroga_documento_id"
+      baseTableName="prorroga_documento_nombre"
+      constraintName="FK_PRORROGADOCUMENTONOMBRE_PRORROGADOCUMENTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="prorroga_documento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}prorroga_documento_nombre(prorroga_documento_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}prorroga_documento WHERE nombre IS NOT
+      NULL AND NULLIF(TRIM(nombre), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="prorroga_documento" />
+  </changeSet>
 </databaseChangeLog>

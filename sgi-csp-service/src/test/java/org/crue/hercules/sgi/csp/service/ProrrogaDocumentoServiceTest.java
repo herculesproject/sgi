@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
+import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
@@ -18,6 +19,7 @@ import org.crue.hercules.sgi.csp.repository.ModeloTipoDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProrrogaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProrrogaDocumentoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -619,7 +621,7 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
         .isEqualTo(prorrogaDocumento.getProyectoProrrogaId());
     Assertions.assertThat(prorrogaDocumento.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo("documentoRef-" + String.format("%03d", idBuscado));
-    Assertions.assertThat(prorrogaDocumento.getNombre()).as("getNombre()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(prorrogaDocumento.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("prorroga-documento-" + String.format("%03d", idBuscado));
     Assertions.assertThat(prorrogaDocumento.getTipoDocumento().getId()).as("getTipoDocumento().getId()").isEqualTo(1L);
     Assertions.assertThat(prorrogaDocumento.getComentario()).as("getComentario()")
@@ -666,11 +668,15 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "nombreTipoDocumento"));
 
+    Set<ProrrogaDocumentoNombre> prorrogaDocumentoNombre = new HashSet<>();
+    prorrogaDocumentoNombre.add(new ProrrogaDocumentoNombre(Language.ES,
+        "prorroga-documento-" + (id == null ? "" : String.format("%03d", id))));
+
     // @formatter:off
     return ProrrogaDocumento.builder()
         .id(id)
         .proyectoProrrogaId(proyectoProrrogaId)
-        .nombre("prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .nombre(prorrogaDocumentoNombre)
         .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
         .tipoDocumento(TipoDocumento.builder()
             .id(tipoDocumentoId)
