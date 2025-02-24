@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
+import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
@@ -193,13 +194,17 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
     Set<ProrrogaDocumentoNombre> prorrogaDocumentoNombre = new HashSet<>();
     prorrogaDocumentoNombre.add(new ProrrogaDocumentoNombre(Language.ES, "prorroga-documento" + suffix));
 
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario
+        .add(new ProrrogaDocumentoComentario(Language.ES, "comentario-prorroga-documento" + suffix));
+
     // @formatter:off
     ProrrogaDocumento prorrogaDocumento = ProrrogaDocumento.builder()
         .proyectoProrrogaId(proyectoProrroga.getId())
         .nombre(prorrogaDocumentoNombre)
         .documentoRef("documentoRef" + suffix)
         .tipoDocumento(tipoDocumento)
-        .comentario("comentario-prorroga-documento" + suffix)
+        .comentario(prorrogaDocumentoComentario)
         .visible(Boolean.TRUE)
         .build();
     // @formatter:on

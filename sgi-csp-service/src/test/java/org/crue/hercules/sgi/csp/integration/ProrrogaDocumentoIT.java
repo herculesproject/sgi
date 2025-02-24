@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
+import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
@@ -102,7 +103,9 @@ class ProrrogaDocumentoIT extends BaseIT {
   void update_ReturnsProrrogaDocumento() throws Exception {
     Long idProrrogaDocumento = 1L;
     ProrrogaDocumento prorrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    prorrogaDocumento.setComentario("comentario-modificado");
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES, "comentario-modificado"));
+    prorrogaDocumento.setComentario(prorrogaDocumentoComentario);
 
     final ResponseEntity<ProrrogaDocumento> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(null, prorrogaDocumento), ProrrogaDocumento.class, idProrrogaDocumento);
@@ -120,8 +123,8 @@ class ProrrogaDocumentoIT extends BaseIT {
         .isEqualTo("documentoRef-001");
     Assertions.assertThat(prorrogaDocumentoActualizado.getTipoDocumento().getId()).as("getTipoDocumento().getId()()")
         .isEqualTo(1L);
-    Assertions.assertThat(prorrogaDocumentoActualizado.getComentario()).as("getComentario()")
-        .isEqualTo("comentario-modificado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(prorrogaDocumentoActualizado.getComentario(), Language.ES))
+        .as("getComentario()").isEqualTo("comentario-modificado");
     Assertions.assertThat(prorrogaDocumentoActualizado.getVisible()).as("getVisible()").isEqualTo(Boolean.TRUE);
 
   }
@@ -198,8 +201,8 @@ class ProrrogaDocumentoIT extends BaseIT {
     Assertions.assertThat(prorrogaDocumento.getDocumentoRef()).as("getDocumentoRef()").isEqualTo("documentoRef-001");
     Assertions.assertThat(prorrogaDocumento.getTipoDocumento().getId()).as("getTipoDocumento().getId()()")
         .isEqualTo(1L);
-    Assertions.assertThat(prorrogaDocumento.getComentario()).as("getComentario()")
-        .isEqualTo("comentario-prorroga-documento-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(prorrogaDocumento.getComentario(), Language.ES))
+        .as("getComentario()").isEqualTo("comentario-prorroga-documento-001");
     Assertions.assertThat(prorrogaDocumento.getVisible()).as("getVisible()").isEqualTo(Boolean.TRUE);
 
   }
@@ -216,6 +219,10 @@ class ProrrogaDocumentoIT extends BaseIT {
     prorrogaDocumentoNombre.add(new ProrrogaDocumentoNombre(Language.ES,
         "prorroga-documento-" + (id == null ? "" : String.format("%03d", id))));
 
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES,
+        "comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id))));
+
     // @formatter:off
     return ProrrogaDocumento.builder()
         .id(id)
@@ -223,7 +230,7 @@ class ProrrogaDocumentoIT extends BaseIT {
         .nombre(prorrogaDocumentoNombre)
         .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
-        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .comentario(prorrogaDocumentoComentario)
         .visible(Boolean.TRUE)
         .build();
     // @formatter:on

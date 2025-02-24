@@ -10,6 +10,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
+import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProrrogaObservaciones;
@@ -410,6 +411,10 @@ class ProyectoProrrogaControllerTest extends BaseControllerTest {
     prorrogaDocumentoNombre.add(new ProrrogaDocumentoNombre(Language.ES,
         "prorroga-documento-" + (id == null ? "" : String.format("%03d", id))));
 
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES,
+        "comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id))));
+
     // @formatter:off
     return ProrrogaDocumento.builder()
         .id(id)
@@ -417,7 +422,7 @@ class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .nombre(prorrogaDocumentoNombre)
         .documentoRef("documentoRef-" + (id == null ? "" : String.format("%03d", id)))
         .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build())
-        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .comentario(prorrogaDocumentoComentario)
         .visible(Boolean.TRUE)
         .build();
     // @formatter:on

@@ -233,7 +233,7 @@ class ProyectoProrrogaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
     String sort = "id,desc";
-    String filter = "comentario=ke=-00";
+    String filter = "comentario.value=ke=-00";
 
     Long proyectoProrrogaId = 1L;
 
@@ -252,12 +252,12 @@ class ProyectoProrrogaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(convocatoriasDocumentos.get(0).getComentario()).as("get(0).getComentario()")
-        .isEqualTo("comentario-prorroga-documento-" + String.format("%03d", 3));
-    Assertions.assertThat(convocatoriasDocumentos.get(1).getComentario()).as("get(1).getComentario())")
-        .isEqualTo("comentario-prorroga-documento-" + String.format("%03d", 2));
-    Assertions.assertThat(convocatoriasDocumentos.get(2).getComentario()).as("get(2).getComentario()")
-        .isEqualTo("comentario-prorroga-documento-" + String.format("%03d", 1));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasDocumentos.get(0).getComentario(), Language.ES))
+        .as("get(0).getComentario()").isEqualTo("comentario-prorroga-documento-" + String.format("%03d", 3));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasDocumentos.get(1).getComentario(), Language.ES))
+        .as("get(1).getComentario())").isEqualTo("comentario-prorroga-documento-" + String.format("%03d", 2));
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriasDocumentos.get(2).getComentario(), Language.ES))
+        .as("get(2).getComentario()").isEqualTo("comentario-prorroga-documento-" + String.format("%03d", 1));
   }
 
   /**

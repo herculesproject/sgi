@@ -76,9 +76,11 @@ public class ProrrogaDocumento extends BaseEntity {
   private TipoDocumento tipoDocumento;
 
   /** Comentario */
-  @Column(name = "comentario", length = 2000)
-  @Size(max = 2000)
-  private String comentario;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "prorroga_documento_comentario", joinColumns = @JoinColumn(name = "prorroga_documento_id"))
+  @Valid
+  @Builder.Default
+  private Set<ProrrogaDocumentoComentario> comentario = new HashSet<>();
 
   /** Visible */
   @Column(name = "visible", columnDefinition = "boolean default true", nullable = false)

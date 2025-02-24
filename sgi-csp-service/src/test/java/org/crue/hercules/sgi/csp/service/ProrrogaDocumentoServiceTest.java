@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
+import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
@@ -291,7 +292,9 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: updated ProrrogaDocumento
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    updatedProrrogaDocumento.setComentario("comentario-modificado");
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES, "comentario-modificado"));
+    updatedProrrogaDocumento.setComentario(prorrogaDocumentoComentario);
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(originalProrrogaDocumento);
     Proyecto proyecto = generarMockProyecto();
 
@@ -413,7 +416,9 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: a updated ProrrogaDocumento with no existing Prorroga
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    updatedProrrogaDocumento.setComentario("comentario-modificado");
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES, "comentario-modificado"));
+    updatedProrrogaDocumento.setComentario(prorrogaDocumentoComentario);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(originalProrrogaDocumento));
@@ -431,7 +436,9 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: ProrrogaDocumento with no existing ModeloEjecucion
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    updatedProrrogaDocumento.setComentario("comentario-modificado");
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES, "comentario-modificado"));
+    updatedProrrogaDocumento.setComentario(prorrogaDocumentoComentario);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(originalProrrogaDocumento));
@@ -453,7 +460,9 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: ProrrogaDocumento with disabled ModeloEjecucion
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    updatedProrrogaDocumento.setComentario("comentario-modificado");
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES, "comentario-modificado"));
+    updatedProrrogaDocumento.setComentario(prorrogaDocumentoComentario);
     Proyecto proyecto = generarMockProyecto();
 
     proyecto.getModeloEjecucion().setActivo(Boolean.FALSE);
@@ -478,7 +487,9 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: ProrrogaDocumento without ModeloTipoDocumento
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    updatedProrrogaDocumento.setComentario("comentario-modificado");
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES, "comentario-modificado"));
+    updatedProrrogaDocumento.setComentario(prorrogaDocumentoComentario);
     Proyecto proyecto = generarMockProyecto();
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -505,7 +516,9 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: ProrrogaDocumento with TipoDocumento disabled
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    updatedProrrogaDocumento.setComentario("comentario-modificado");
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES, "comentario-modificado"));
+    updatedProrrogaDocumento.setComentario(prorrogaDocumentoComentario);
 
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(originalProrrogaDocumento);
     modeloTipoDocumento.getTipoDocumento().setActivo(Boolean.FALSE);
@@ -536,7 +549,9 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     // given: ProrrogaDocumento with ModeloTipoDocumento disabled
     ProrrogaDocumento originalProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
     ProrrogaDocumento updatedProrrogaDocumento = generarMockProrrogaDocumento(1L, 1L, 1L);
-    updatedProrrogaDocumento.setComentario("comentario-modificado");
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES, "comentario-modificado"));
+    updatedProrrogaDocumento.setComentario(prorrogaDocumentoComentario);
 
     ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(originalProrrogaDocumento);
     modeloTipoDocumento.setActivo(Boolean.FALSE);
@@ -624,7 +639,8 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(I18nHelper.getValueForLanguage(prorrogaDocumento.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo("prorroga-documento-" + String.format("%03d", idBuscado));
     Assertions.assertThat(prorrogaDocumento.getTipoDocumento().getId()).as("getTipoDocumento().getId()").isEqualTo(1L);
-    Assertions.assertThat(prorrogaDocumento.getComentario()).as("getComentario()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(prorrogaDocumento.getComentario(), Language.ES))
+        .as("getComentario()")
         .isEqualTo("comentario-prorroga-documento-" + String.format("%03d", idBuscado));
     Assertions.assertThat(prorrogaDocumento.getVisible()).as("getVisible()").isEqualTo(Boolean.TRUE);
   }
@@ -672,6 +688,10 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
     prorrogaDocumentoNombre.add(new ProrrogaDocumentoNombre(Language.ES,
         "prorroga-documento-" + (id == null ? "" : String.format("%03d", id))));
 
+    Set<ProrrogaDocumentoComentario> prorrogaDocumentoComentario = new HashSet<>();
+    prorrogaDocumentoComentario.add(new ProrrogaDocumentoComentario(Language.ES,
+        "comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id))));
+
     // @formatter:off
     return ProrrogaDocumento.builder()
         .id(id)
@@ -683,7 +703,7 @@ class ProrrogaDocumentoServiceTest extends BaseServiceTest {
             .nombre(nombreTipoDocumento)
             .activo(Boolean.TRUE)
             .build())
-        .comentario("comentario-prorroga-documento-" + (id == null ? "" : String.format("%03d", id)))
+        .comentario(prorrogaDocumentoComentario)
         .visible(Boolean.TRUE)
         .build();
     // @formatter:on
