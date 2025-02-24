@@ -7,6 +7,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, merge, Observable, of } from 'rxjs';
@@ -46,7 +47,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       estado: new FormControl({ value: this.isEdit() ? null : Estado.BORRADOR, disabled: true }, Validators.required),
       fechaSolicitud: new FormControl({ value: null, disabled: true }),
       solicitante: new FormControl({ value: null, disabled: true }),
-      tituloProyecto: new FormControl(null, [Validators.maxLength(250), Validators.required]),
+      tituloProyecto: new FormControl([], [I18nValidators.maxLength(250), I18nValidators.required]),
       convocatoria: new FormControl(null),
       datosConvocatoria: new FormControl(null, Validators.maxLength(250)),
       entidadParticipa: new FormControl(null, Validators.required),

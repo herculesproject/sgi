@@ -32,8 +32,9 @@
     <div fxFlex fxLayout="row" fxLayoutGap="10px">
       <mat-form-field fxFlex="100%">
         <mat-label>{{'csp.autorizacion.titulo-proyecto' | translate}}</mat-label>
-        <input matInput formControlName="tituloProyecto" required type="text" id="tituloProyecto"
+        <sgi-i18n-input formControlName="tituloProyecto" required
           placeholder="{{'csp.autorizacion.titulo-proyecto' | translate}}">
+        </sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.tituloProyecto.errors?.maxlength">
           {{ 'error.maxlength.entity' | translate:msgParamTituloEntity }}
         </mat-error>

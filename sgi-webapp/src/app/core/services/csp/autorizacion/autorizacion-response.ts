@@ -1,9 +1,11 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
+
 export interface IAutorizacionResponse {
   id: number;
   observaciones: string;
   responsableRef: string;
   solicitanteRef: string;
-  tituloProyecto: string;
+  tituloProyecto: I18nFieldValueResponse[];
   entidadRef: string;
   horasDedicacion: number;
   datosResponsable: string;

@@ -82,7 +82,9 @@
       <!-- Titulo Column -->
       <ng-container matColumnDef="tituloProyecto">
         <th mat-header-cell *matHeaderCellDef> {{'csp.autorizacion.titulo-proyecto' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.autorizacion?.tituloProyecto}}</td>
+        <td mat-cell *matCellDef="let element">
+          <sgi-i18n-table-field [field]="element.autorizacion?.tituloProyecto"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
       <!-- Entidad Participacion Column -->

@@ -1,3 +1,4 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEmpresa } from '@core/models/sgemp/empresa';
@@ -16,7 +17,7 @@ class AutorizacionRequestConverter
       observaciones: value.observaciones,
       responsable: { id: value.responsableRef } as IPersona,
       solicitante: undefined,
-      tituloProyecto: value.tituloProyecto,
+      tituloProyecto: value.tituloProyecto ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.tituloProyecto) : [],
       entidad: { id: value.entidadRef } as IEmpresa,
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,
@@ -34,7 +35,7 @@ class AutorizacionRequestConverter
     return {
       observaciones: value.observaciones,
       responsableRef: value.responsable?.id,
-      tituloProyecto: value.tituloProyecto,
+      tituloProyecto: value.tituloProyecto ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.tituloProyecto) : [],
       entidadRef: value.entidad?.id,
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,

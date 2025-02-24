@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IAutorizacionWithFirstEstado } from '@core/models/csp/autorizacion-with-first-estado';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
@@ -18,7 +19,7 @@ class AutorizacionWithFirstEstadoResponseConverter
       observaciones: value.observaciones,
       responsable: value.responsableRef ? { id: value.responsableRef } as IPersona : undefined,
       solicitante: { id: value.solicitanteRef } as IPersona,
-      tituloProyecto: value.tituloProyecto,
+      tituloProyecto: value.tituloProyecto ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.tituloProyecto) : [],
       entidad: value.entidadRef ? { id: value.entidadRef } as IEmpresa : undefined,
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,
@@ -39,7 +40,7 @@ class AutorizacionWithFirstEstadoResponseConverter
       observaciones: value.observaciones,
       responsableRef: value.responsable?.id,
       solicitanteRef: value.solicitante?.id,
-      tituloProyecto: value.tituloProyecto,
+      tituloProyecto: value.tituloProyecto ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.tituloProyecto) : [],
       entidadRef: value.entidad?.id,
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,

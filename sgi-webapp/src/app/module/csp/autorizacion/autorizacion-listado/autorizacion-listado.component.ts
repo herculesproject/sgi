@@ -298,8 +298,8 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
     return new RSQLSgiRestFilter(
-      'estado.fecha', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaSolicitudInicio.value))
-      .and('estado.fecha', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaSolicitudFin.value))
+      'fechaFirstEstado', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaSolicitudInicio.value))
+      .and('fechaFirstEstado', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaSolicitudFin.value))
       .and('estado.estado', SgiRestFilterOperator.EQUALS, controls.estado.value)
       .and('solicitanteRef', SgiRestFilterOperator.EQUALS, controls.solicitante.value?.id);
   }

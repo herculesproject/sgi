@@ -1,3 +1,4 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IEmpresa } from '../sgemp/empresa';
 import { IPersona } from '../sgp/persona';
 import { IConvocatoria } from './convocatoria';
@@ -8,7 +9,7 @@ export interface IAutorizacion {
   observaciones: string;
   responsable: IPersona;
   solicitante: IPersona;
-  tituloProyecto: string;
+  tituloProyecto: I18nFieldValue[];
   entidad: IEmpresa;
   horasDedicacion: number;
   datosResponsable: string;
