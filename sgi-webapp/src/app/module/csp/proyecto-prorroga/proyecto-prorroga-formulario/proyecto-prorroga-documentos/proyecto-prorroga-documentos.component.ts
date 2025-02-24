@@ -33,6 +33,7 @@ const PRORROGA_DOCUMENTO_NOMBRE_KEY = marker('csp.documento.nombre');
 const PRORROGA_DOCUMENTO_FICHERO_KEY = marker('csp.prorroga.documento.fichero');
 const PRORROGA_DOCUMENTO_VISIBLE_KEY = marker('csp.prorroga.documento.visible');
 const DOCUMENTO_KEY = marker('csp.documento');
+const PRORROGA_DOCUMENTO_COMENTARIO_KEY = marker('csp.prorroga.documento.comentario');
 
 enum VIEW_MODE {
   NONE = '',
@@ -73,6 +74,7 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
   msgParamNombreEntity = {};
   msgParamVisibleEntity = {};
   msgParamEntities = {};
+  msgParamComentarioEntity = {};
   textoDelete: string;
 
   private getLevel = (node: NodeDocumento) => node.level;
@@ -120,7 +122,7 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
       fichero: new FormControl(null, Validators.required),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
       visible: new FormControl(null, Validators.required),
-      comentario: new FormControl('')
+      comentario: new FormControl([], I18nValidators.maxLength(2000))
     }));
     this.group.initialize();
 
@@ -164,6 +166,11 @@ export class ProyectoProrrogaDocumentosComponent extends FragmentComponent imple
       DOCUMENTO_KEY,
       MSG_PARAMS.CARDINALIRY.PLURAL
     ).subscribe((value) => this.msgParamEntities = { entity: value });
+
+    this.translate.get(
+      PRORROGA_DOCUMENTO_COMENTARIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   ngOnDestroy() {

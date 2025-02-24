@@ -17,7 +17,7 @@ class ProyectoProrrogaDocumentoResponseConverter extends SgiBaseConverter<IProye
       documentoRef: value.documentoRef,
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento) : null,
       visible: value.visible,
-      comentario: value.comentario
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : []
     };
   }
 
@@ -32,7 +32,7 @@ class ProyectoProrrogaDocumentoResponseConverter extends SgiBaseConverter<IProye
       documentoRef: value.documentoRef,
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento) : null,
       visible: value.visible,
-      comentario: value.comentario
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : []
     };
   }
 }

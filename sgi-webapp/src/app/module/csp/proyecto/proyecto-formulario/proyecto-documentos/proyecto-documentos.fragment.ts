@@ -481,17 +481,8 @@ export class ProyectoDocumentosFragment extends Fragment {
                     prorrogaNode.addChild(tipoDocumentoNode);
                   }
 
-                  const documentoI18n = {
-                    id: documento.id,
-                    nombre: documento.nombre,
-                    tipoDocumento: documento.tipoDocumento,
-                    comentario: [{ lang: Language.ES, value: documento.comentario }],
-                    documentoRef: documento.documentoRef,
-                    visible: documento.visible
-                  } as IDocumentoData;
-
                   const documentoNode = new NodeDocumento(
-                    null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documentoI18n as IDocumentoData), true
+                    null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documento as IDocumentoData), true
                   );
                   tipoDocumentoNode.addChild(documentoNode);
                 });

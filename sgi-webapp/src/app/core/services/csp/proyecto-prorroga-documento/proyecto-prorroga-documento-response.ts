@@ -8,5 +8,5 @@ export interface IProyectoProrrogaDocumentoResponse {
   documentoRef: string;
   tipoDocumento: ITipoDocumentoResponse;
   visible: boolean;
-  comentario: string;
+  comentario: I18nFieldValueResponse[];
 }
