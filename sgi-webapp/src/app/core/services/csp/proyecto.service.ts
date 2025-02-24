@@ -6,7 +6,6 @@ import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/pr
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
 import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
 import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyecto-paquete-trabajo.converter';
-import { PROYECTO_PRORROGA_CONVERTER } from '@core/converters/csp/proyecto-prorroga.converter';
 import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-proyecto-sge.converter';
 import { TipoPartida } from '@core/enums/tipo-partida';
 import { IAnualidadGasto } from '@core/models/csp/anualidad-gasto';
@@ -16,7 +15,6 @@ import { IProyectoEntidadFinanciadoraBackend } from '@core/models/csp/backend/pr
 import { IProyectoEntidadGestoraBackend } from '@core/models/csp/backend/proyecto-entidad-gestora-backend';
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
 import { IProyectoPaqueteTrabajoBackend } from '@core/models/csp/backend/proyecto-paquete-trabajo-backend';
-import { IProyectoProrrogaBackend } from '@core/models/csp/backend/proyecto-prorroga-backend';
 import { IProyectoProyectoSgeBackend } from '@core/models/csp/backend/proyecto-proyecto-sge-backend';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoProyecto } from '@core/models/csp/estado-proyecto';
@@ -114,6 +112,8 @@ import { IProyectoPeriodoJustificacionResponse } from './proyecto-periodo-justif
 import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
 import { IProyectoPeriodoSeguimientoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
 import { PROYECTO_PERIODO_SEGUIMIENTO_RESPONSE_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response.converter';
+import { IProyectoProrrogaResponse } from './proyecto-prorroga/proyecto-prorroga-response';
+import { PROYECTO_PRORROGA_RESPONSE_CONVERTER } from './proyecto-prorroga/proyecto-prorroga-response.converter';
 import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico/proyecto-responsable-economico-response';
 import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
 import { IProyectoSocioResponse } from './proyecto-socio/proyecto-socio-response';
@@ -378,10 +378,10 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
    * @returns observable con la lista de IProyectoProrroga del proyecto
    */
   findAllProyectoProrrogaProyecto(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IProyectoProrroga>> {
-    return this.find<IProyectoProrrogaBackend, IProyectoProrroga>(
+    return this.find<IProyectoProrrogaResponse, IProyectoProrroga>(
       `${this.endpointUrl}/${id}/proyecto-prorrogas`,
       options,
-      PROYECTO_PRORROGA_CONVERTER
+      PROYECTO_PRORROGA_RESPONSE_CONVERTER
     );
   }
 

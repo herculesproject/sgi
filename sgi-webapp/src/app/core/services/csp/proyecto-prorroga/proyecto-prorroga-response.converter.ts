@@ -1,11 +1,12 @@
-import { IProyectoProrrogaBackend } from '@core/models/csp/backend/proyecto-prorroga-backend';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { IProyectoProrrogaResponse } from './proyecto-prorroga-response';
 
-class ProyectoProrrogaConverter extends SgiBaseConverter<IProyectoProrrogaBackend, IProyectoProrroga> {
+class ProyectoProrrogaResponseConverter extends SgiBaseConverter<IProyectoProrrogaResponse, IProyectoProrroga> {
 
-  toTarget(value: IProyectoProrrogaBackend): IProyectoProrroga {
+  toTarget(value: IProyectoProrrogaResponse): IProyectoProrroga {
     if (!value) {
       return value as unknown as IProyectoProrroga;
     }
@@ -17,13 +18,13 @@ class ProyectoProrrogaConverter extends SgiBaseConverter<IProyectoProrrogaBacken
       tipo: value.tipo,
       fechaFin: LuxonUtils.fromBackend(value.fechaFin),
       importe: value.importe,
-      observaciones: value.observaciones
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : []
     };
   }
 
-  fromTarget(value: IProyectoProrroga): IProyectoProrrogaBackend {
+  fromTarget(value: IProyectoProrroga): IProyectoProrrogaResponse {
     if (!value) {
-      return value as unknown as IProyectoProrrogaBackend;
+      return value as unknown as IProyectoProrrogaResponse;
     }
     return {
       id: value.id,
@@ -33,9 +34,9 @@ class ProyectoProrrogaConverter extends SgiBaseConverter<IProyectoProrrogaBacken
       tipo: value.tipo,
       fechaFin: LuxonUtils.toBackend(value.fechaFin),
       importe: value.importe,
-      observaciones: value.observaciones
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : []
     };
   }
 }
 
-export const PROYECTO_PRORROGA_CONVERTER = new ProyectoProrrogaConverter();
+export const PROYECTO_PRORROGA_RESPONSE_CONVERTER = new ProyectoProrrogaResponseConverter();
