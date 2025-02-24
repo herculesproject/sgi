@@ -14,6 +14,7 @@ DELETE FROM test.grupo;
 DELETE FROM test.proyecto_entidad_convocante;
 DELETE FROM test.proyecto_entidad_gestora;
 DELETE FROM test.prorroga_documento;
+DELETE FROM test.proyecto_prorroga_observaciones;
 DELETE FROM test.proyecto_prorroga;
 DELETE FROM test.proyecto_paquete_trabajo_descripcion;
 DELETE FROM test.proyecto_paquete_trabajo;

@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoProrrogaObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
@@ -160,6 +161,9 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
    * @return el objeto ProyectoProrroga
    */
   private ProyectoProrroga generarMockProyectoProrroga(String suffix, Proyecto proyecto, Instant fechaConcesion) {
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones
+        .add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-proyecto-prorroga" + suffix));
 
     // @formatter:off
     ProyectoProrroga proyectoProrroga = ProyectoProrroga.builder()
@@ -169,7 +173,7 @@ class ProrrogaDocumentoRepositoryTest extends BaseRepositoryTest {
         .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
         .importe(BigDecimal.valueOf(123.45))
-        .observaciones("observaciones-proyecto-prorroga" + suffix)
+        .observaciones(proyectoProrrogaObservaciones)
         .build();
     // @formatter:on
     return entityManager.persistAndFlush(proyectoProrroga);

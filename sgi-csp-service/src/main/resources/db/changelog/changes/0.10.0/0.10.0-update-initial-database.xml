@@ -2792,4 +2792,33 @@
 
     <dropColumn columnName="comentario" tableName="proyecto_socio_periodo_justificacion_documento" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-100">
+    <createTable tableName="proyecto_prorroga_observaciones">
+      <column name="proyecto_prorroga_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_prorroga_observaciones"
+      columnNames="proyecto_prorroga_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_prorroga_id"
+      baseTableName="proyecto_prorroga_observaciones"
+      constraintName="FK_PROYECTOPRORROGAOBSERVACIONES_PROYECTOPRORROGA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="proyecto_prorroga" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}proyecto_prorroga_observaciones(proyecto_prorroga_id, value_,
+      lang) SELECT id, observaciones, '${defaultLang}' FROM ${schemaPrefix}proyecto_prorroga WHERE
+      observaciones IS NOT NULL AND NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="proyecto_prorroga" />
+  </changeSet>
 </databaseChangeLog>

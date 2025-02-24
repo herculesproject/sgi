@@ -3,17 +3,20 @@ package org.crue.hercules.sgi.csp.controller;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProrrogaDocumento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoProrrogaObservaciones;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.ProrrogaDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoProrrogaService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ProyectoProrrogaControllerTest
@@ -81,7 +86,8 @@ class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("tipo").value(proyectoProrroga.getTipo().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value(proyectoProrroga.getFechaFin().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("importe").value(proyectoProrroga.getImporte()))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(proyectoProrroga.getObservaciones()));
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value")
+            .value(I18nHelper.getValueForLanguage(proyectoProrroga.getObservaciones(), Language.ES)));
   }
 
   @Test
@@ -109,7 +115,9 @@ class ProyectoProrrogaControllerTest extends BaseControllerTest {
     // given: Existing ProyectoProrroga to be updated
     ProyectoProrroga proyectoProrrogaExistente = generarMockProyectoProrroga(1L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
 
     BDDMockito.given(service.update(ArgumentMatchers.<ProyectoProrroga>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -130,7 +138,8 @@ class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("tipo").value(proyectoProrrogaExistente.getTipo().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value(proyectoProrrogaExistente.getFechaFin().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("importe").value(proyectoProrrogaExistente.getImporte()))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(proyectoProrroga.getObservaciones()));
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value")
+            .value(I18nHelper.getValueForLanguage(proyectoProrroga.getObservaciones(), Language.ES)));
   }
 
   @Test
@@ -244,7 +253,7 @@ class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("fechaConcesion").value("2020-01-01T00:00:00Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-12-31T23:59:59Z"))
         .andExpect(MockMvcResultMatchers.jsonPath("importe").value(BigDecimal.valueOf(123.45)))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones[0].value")
             .value("observaciones-proyecto-prorroga-" + String.format("%03d", id)));
 
   }
@@ -371,7 +380,9 @@ class ProyectoProrrogaControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoProrroga
    */
   private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
-
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES,
+        "observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id))));
     // @formatter:off
     return ProyectoProrroga.builder()
         .id(id)
@@ -381,7 +392,7 @@ class ProyectoProrrogaControllerTest extends BaseControllerTest {
         .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
         .importe(BigDecimal.valueOf(123.45))
-        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
+        .observaciones(proyectoProrrogaObservaciones)
         .build();
     // @formatter:on
   }

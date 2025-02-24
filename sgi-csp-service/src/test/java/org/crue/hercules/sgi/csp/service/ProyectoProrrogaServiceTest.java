@@ -4,14 +4,17 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProrrogaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoProrrogaObservaciones;
 import org.crue.hercules.sgi.csp.repository.ProrrogaDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoEquipoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;
@@ -20,6 +23,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoResponsableEconomicoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoProrrogaServiceImpl;
 import org.crue.hercules.sgi.csp.util.ProyectoHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -267,7 +271,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
     proyectoProrrogaAnterior.setFechaConcesion(proyectoProrroga.getFechaConcesion().minus(Period.ofDays(1)));
     ProyectoProrroga proyectoProrrogaActualizado = generarMockProyectoProrroga(1L, 1L);
     proyectoProrrogaActualizado.setFechaFin(proyectoProrrogaActualizado.getFechaFin().plus(Period.ofDays(1)));
-    proyectoProrrogaActualizado.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrrogaActualizado.setObservaciones(proyectoProrrogaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoProrroga));
 
@@ -315,7 +321,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
   void update_WithoutProyectoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoProrroga without ProyectoId
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
     proyectoProrroga.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
@@ -330,7 +338,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
   void update_WithoutNumProrroga_ThrowsIllegalArgumentException() {
     // given: a ProyectoProrroga without NumProrroga
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
     proyectoProrroga.setNumProrroga(null);
 
     Assertions.assertThatThrownBy(
@@ -345,7 +355,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
   void update_WithoutTipoProrroga_ThrowsIllegalArgumentException() {
     // given: a ProyectoProrroga without TipoProrroga
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
     proyectoProrroga.setTipo(null);
 
     Assertions.assertThatThrownBy(
@@ -360,7 +372,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
   void update_WithoutFechaConcesion_ThrowsIllegalArgumentException() {
     // given: a ProyectoProrroga without FechaConcesion
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
     proyectoProrroga.setFechaConcesion(null);
 
     Assertions.assertThatThrownBy(
@@ -375,7 +389,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
   void update_WithTipoTiempoAndWithoutFechaFin_ThrowsIllegalArgumentException() {
     // given: a ProyectoProrroga without FechaFin
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
     proyectoProrroga.setTipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     proyectoProrroga.setFechaFin(null);
 
@@ -391,7 +407,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
   void update_WithTipoImporteAndWithoutImporte_ThrowsIllegalArgumentException() {
     // given: a ProyectoProrroga without Importe
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
     proyectoProrroga.setTipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE);
     proyectoProrroga.setImporte(null);
 
@@ -408,7 +426,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: a ProyectoProrroga with non existing Proyecto
     ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(1L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
@@ -425,7 +445,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
     // given: Not ultimo ProyectoProrroga
     ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(1L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(1L, 1L);
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
@@ -448,7 +470,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
     ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(2L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
     proyectoProrroga.setFechaConcesion(proyectoProrrogaAnterior.getFechaConcesion().minus(Period.ofDays(1)));
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
@@ -474,7 +498,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
     ProyectoProrroga proyectoProrrogaOriginal = generarMockProyectoProrroga(2L, 1L);
     ProyectoProrroga proyectoProrroga = generarMockProyectoProrroga(2L, 1L);
     proyectoProrroga.setFechaFin(proyecto.getFechaInicio().minus(Period.ofDays(1)));
-    proyectoProrroga.setObservaciones("observaciones-modificada");
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES, "observaciones-modificada"));
+    proyectoProrroga.setObservaciones(proyectoProrrogaObservaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoProrrogaOriginal));
@@ -654,7 +680,9 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
    * @return el objeto ProyectoProrroga
    */
   private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
-
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES,
+        "observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id))));
     // @formatter:off
     return ProyectoProrroga.builder()
         .id(id)
@@ -664,7 +692,7 @@ class ProyectoProrrogaServiceTest extends BaseServiceTest {
         .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
         .fechaFin(Instant.parse("2021-12-01T23:59:59Z"))
         .importe(BigDecimal.valueOf(123.45))
-        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
+        .observaciones(proyectoProrrogaObservaciones)
         .build();
     // @formatter:on
   }

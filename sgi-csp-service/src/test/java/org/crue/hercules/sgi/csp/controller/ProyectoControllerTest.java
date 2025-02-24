@@ -35,6 +35,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajoDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
+import org.crue.hercules.sgi.csp.model.ProyectoProrrogaObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
@@ -1265,7 +1266,7 @@ class ProyectoControllerTest extends BaseControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ProyectoProrroga proyectoPeriodoSeguimiento = proyectoPeriodoSeguimientoResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyectoPeriodoSeguimiento.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoPeriodoSeguimiento.getObservaciones(), Language.ES))
           .isEqualTo("observaciones-proyecto-prorroga-" + String.format("%03d", i));
     }
   }
@@ -1675,6 +1676,9 @@ class ProyectoControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoProrroga
    */
   private ProyectoProrroga generarMockProyectoProrroga(Long id, Long proyectoId) {
+    Set<ProyectoProrrogaObservaciones> proyectoProrrogaObservaciones = new HashSet<>();
+    proyectoProrrogaObservaciones.add(new ProyectoProrrogaObservaciones(Language.ES,
+        "observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id))));
 
     // @formatter:off
     return ProyectoProrroga.builder()
@@ -1685,7 +1689,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         .tipo(ProyectoProrroga.Tipo.TIEMPO_IMPORTE)
         .fechaFin(Instant.parse("2020-12-31T23:59:59Z"))
         .importe(BigDecimal.valueOf(123.45))
-        .observaciones("observaciones-proyecto-prorroga-" + (id == null ? "" : String.format("%03d", id)))
+        .observaciones(proyectoProrrogaObservaciones)
         .build();
     // @formatter:on
   }
