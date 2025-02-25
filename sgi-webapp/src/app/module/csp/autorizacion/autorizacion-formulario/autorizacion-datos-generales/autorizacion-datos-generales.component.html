@@ -61,13 +61,13 @@
             formControlName="convocatoria" investigador="true">
           </sgi-select-convocatoria>
         </mat-form-field>
+
         <!-- Datos Convocatoria -->
-
-
         <mat-form-field fxFlex="50%">
           <mat-label>{{'csp.autorizacion.datos-convocatoria' | translate}}</mat-label>
-          <input matInput formControlName="datosConvocatoria" type="text" id="datosConvocatoria"
+          <sgi-i18n-input formControlName="datosConvocatoria"
             placeholder="{{'csp.autorizacion.datos-convocatoria' | translate}}">
+          </sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.datosConvocatoria.errors?.maxlength">
             {{ 'error.maxlength.entity' | translate:msgParamDatosConvocatoriaEntity }}
           </mat-error>
@@ -175,8 +175,9 @@
         <!-- Datos Convocatoria -->
         <mat-form-field fxFlex="50%">
           <mat-label>{{'csp.autorizacion.datos-convocatoria' | translate}}</mat-label>
-          <input matInput formControlName="datosConvocatoria" type="text" id="datosConvocatoria"
+          <sgi-i18n-input formControlName="datosConvocatoria"
             placeholder="{{'csp.autorizacion.datos-convocatoria' | translate}}">
+          </sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.datosConvocatoria.errors?.maxlength">
             {{ 'error.maxlength.entity' | translate:msgParamDatosConvocatoriaEntity }}
           </mat-error>

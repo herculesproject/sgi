@@ -14,7 +14,7 @@ export interface IAutorizacion {
   horasDedicacion: number;
   datosResponsable: string;
   datosEntidad: string;
-  datosConvocatoria: string;
+  datosConvocatoria: I18nFieldValue[];
   convocatoria: IConvocatoria;
   estado: IEstadoAutorizacion;
 }

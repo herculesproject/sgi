@@ -10,7 +10,7 @@ export interface IAutorizacionResponse {
   horasDedicacion: number;
   datosResponsable: string;
   datosEntidad: string;
-  datosConvocatoria: string;
+  datosConvocatoria: I18nFieldValueResponse[];
   convocatoriaId: number;
   estadoId: number;
 }

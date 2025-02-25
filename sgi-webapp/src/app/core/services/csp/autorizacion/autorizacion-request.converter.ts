@@ -22,7 +22,7 @@ class AutorizacionRequestConverter
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,
       datosEntidad: value.datosEntidad,
-      datosConvocatoria: value.datosConvocatoria,
+      datosConvocatoria: value.datosConvocatoria ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.datosConvocatoria) : [],
       convocatoria: { id: value.convocatoriaId } as IConvocatoria,
       estado: undefined,
     };
@@ -40,7 +40,7 @@ class AutorizacionRequestConverter
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,
       datosEntidad: value.datosEntidad,
-      datosConvocatoria: value.datosConvocatoria,
+      datosConvocatoria: value.datosConvocatoria ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.datosConvocatoria) : [],
       convocatoriaId: value.convocatoria?.id
     };
   }

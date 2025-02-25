@@ -49,7 +49,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       solicitante: new FormControl({ value: null, disabled: true }),
       tituloProyecto: new FormControl([], [I18nValidators.maxLength(250), I18nValidators.required]),
       convocatoria: new FormControl(null),
-      datosConvocatoria: new FormControl(null, Validators.maxLength(250)),
+      datosConvocatoria: new FormControl([], I18nValidators.maxLength(250)),
       entidadParticipa: new FormControl(null, Validators.required),
       datosEntidad: new FormControl(null, Validators.maxLength(250)),
       investigadorPrincipalProyecto: new FormControl(null, [Validators.required, Validators.maxLength(250)]),

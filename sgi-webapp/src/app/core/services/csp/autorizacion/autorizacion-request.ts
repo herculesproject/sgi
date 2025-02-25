@@ -8,6 +8,6 @@ export interface IAutorizacionRequest {
   horasDedicacion: number;
   datosResponsable: string;
   datosEntidad: string;
-  datosConvocatoria: string;
+  datosConvocatoria: I18nFieldValueRequest[];
   convocatoriaId: number;
 }

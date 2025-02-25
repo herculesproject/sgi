@@ -24,7 +24,7 @@ class AutorizacionWithFirstEstadoResponseConverter
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,
       datosEntidad: value.datosEntidad,
-      datosConvocatoria: value.datosConvocatoria,
+      datosConvocatoria: value.datosConvocatoria ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.datosConvocatoria) : [],
       convocatoria: value.convocatoriaId ? { id: value.convocatoriaId } as IConvocatoria : undefined,
       estado: { id: value.estadoId } as IEstadoAutorizacion,
       fechaFirstEstado: LuxonUtils.fromBackend(value.fechaFirstEstado)
@@ -45,7 +45,7 @@ class AutorizacionWithFirstEstadoResponseConverter
       horasDedicacion: value.horasDedicacion,
       datosResponsable: value.datosResponsable,
       datosEntidad: value.datosEntidad,
-      datosConvocatoria: value.datosConvocatoria,
+      datosConvocatoria: value.datosConvocatoria ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.datosConvocatoria) : [],
       convocatoriaId: value.convocatoria?.id,
       estadoId: value.estado.id,
       fechaFirstEstado: LuxonUtils.toBackend(value.fechaFirstEstado)
