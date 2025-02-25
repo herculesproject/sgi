@@ -35,8 +35,7 @@ public class AutorizacionInput implements Serializable {
   @Size(max = Autorizacion.MAX_LENGTH)
   private String datosEntidad;
 
-  @Size(max = Autorizacion.MAX_LENGTH)
-  private String datosConvocatoria;
+  private List<I18nFieldValueDto> datosConvocatoria;
 
   private Long convocatoriaId;
 }

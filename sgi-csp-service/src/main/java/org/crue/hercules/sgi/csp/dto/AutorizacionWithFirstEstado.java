@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.AutorizacionDatosConvocatoria;
 import org.crue.hercules.sgi.csp.model.AutorizacionTituloProyecto;
 
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ public class AutorizacionWithFirstEstado implements Serializable {
   private Integer horasDedicacion;
   private String datosResponsable;
   private String datosEntidad;
-  private String datosConvocatoria;
+  private Collection<AutorizacionDatosConvocatoria> datosConvocatoria;
   private Long convocatoriaId;
   private Long estadoId;
   private Instant fechaFirstEstado;

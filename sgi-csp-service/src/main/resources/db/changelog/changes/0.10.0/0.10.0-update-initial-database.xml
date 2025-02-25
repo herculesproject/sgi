@@ -2362,4 +2362,32 @@
 
     <dropColumn columnName="titulo_proyecto" tableName="autorizacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-86">
+    <createTable tableName="autorizacion_datos_convocatoria">
+      <column name="autorizacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="autorizacion_datos_convocatoria" columnNames="autorizacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="autorizacion_id"
+      baseTableName="autorizacion_datos_convocatoria"
+      constraintName="FK_AUTORIZACIONDATOSCONVOCATORIA_AUTORIZACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="autorizacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}autorizacion_datos_convocatoria(autorizacion_id, value_, lang)
+      SELECT id, datos_convocatoria, '${defaultLang}' FROM ${schemaPrefix}autorizacion WHERE
+      datos_convocatoria IS NOT NULL AND NULLIF(TRIM(datos_convocatoria), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="datos_convocatoria" tableName="autorizacion" />
+  </changeSet>
 </databaseChangeLog>

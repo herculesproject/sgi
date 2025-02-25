@@ -119,8 +119,9 @@ class AutorizacionIT extends BaseIT {
         .isEqualTo(toCreate.getConvocatoriaId());
     Assertions.assertThat(created.getObservaciones()).as("getObservaciones()")
         .isEqualTo(toCreate.getObservaciones());
-    Assertions.assertThat(created.getDatosConvocatoria()).as("getDatosConvocatoria()")
-        .isEqualTo(toCreate.getDatosConvocatoria());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(created.getDatosConvocatoria(), Language.ES))
+        .as("getDatosConvocatoria()")
+        .isEqualTo(I18nHelper.getValueForLanguage(toCreate.getDatosConvocatoria(), Language.ES));
     Assertions.assertThat(created.getDatosEntidad()).as("getDatosEntidad()")
         .isEqualTo(toCreate.getDatosEntidad());
     Assertions.assertThat(created.getDatosResponsable()).as("getDatosResponsable()")
@@ -168,8 +169,9 @@ class AutorizacionIT extends BaseIT {
         .isEqualTo(toUpdate.getConvocatoriaId());
     Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
         .isEqualTo(toUpdate.getObservaciones());
-    Assertions.assertThat(updated.getDatosConvocatoria()).as("getDatosConvocatoria()")
-        .isEqualTo(toUpdate.getDatosConvocatoria());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getDatosConvocatoria(), Language.ES))
+        .as("getDatosConvocatoria()")
+        .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getDatosConvocatoria(), Language.ES));
     Assertions.assertThat(updated.getDatosEntidad()).as("getDatosEntidad()")
         .isEqualTo(toUpdate.getDatosEntidad());
     Assertions.assertThat(updated.getDatosResponsable()).as("getDatosResponsable()")
@@ -789,16 +791,19 @@ class AutorizacionIT extends BaseIT {
     List<I18nFieldValueDto> tituloProyectoAutorizacion = new ArrayList<>();
     tituloProyectoAutorizacion.add(new I18nFieldValueDto(Language.ES, DEFAULT_TITULO_PROYECTO));
 
+    List<I18nFieldValueDto> datosConvocatoriaAutorizacion = new ArrayList<>();
+    datosConvocatoriaAutorizacion.add(new I18nFieldValueDto(Language.ES, DEFAULT_DATOS_CONVOCATORIA));
+
     return AutorizacionInput.builder()
         .convocatoriaId(DEFAULT_CONVOCATORIA_ID)
-        .datosConvocatoria(DEFAULT_DATOS_CONVOCATORIA)
+        .datosConvocatoria(datosConvocatoriaAutorizacion)
         .datosEntidad(DEFAULT_DATOS_ENTIDAD)
         .datosResponsable(DEFAULT_DATOS_RESPONSABLES)
         .entidadRef(DEFAULT_ENTIDAD_REF)
         .horasDedicacion(DEFAULT_HORAS_DEDICADAS)
         .observaciones(DEFAULT_OBSERVACIONES)
         .responsableRef(DEFAULT_RESPONSABLE_REF)
-        .tituloProyecto(tituloProyectoAutorizacion)
+        .tituloProyecto(datosConvocatoriaAutorizacion)
         .build();
   }
 

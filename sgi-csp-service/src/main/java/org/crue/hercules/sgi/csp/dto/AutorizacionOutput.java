@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.AutorizacionDatosConvocatoria;
 import org.crue.hercules.sgi.csp.model.AutorizacionTituloProyecto;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class AutorizacionOutput implements Serializable {
   private Integer horasDedicacion;
   private String datosResponsable;
   private String datosEntidad;
-  private String datosConvocatoria;
+  private Collection<AutorizacionDatosConvocatoria> datosConvocatoria;
   private Long convocatoriaId;
   private Long estadoId;
 }

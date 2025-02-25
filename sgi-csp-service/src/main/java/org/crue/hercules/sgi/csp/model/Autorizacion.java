@@ -95,9 +95,10 @@ public class Autorizacion extends BaseEntity {
   private String datosEntidad;
 
   /** Datos Convocatoria */
-  @Column(name = "datos_convocatoria", length = Autorizacion.MAX_LENGTH, nullable = true)
-  @Size(max = Autorizacion.MAX_LENGTH)
-  private String datosConvocatoria;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "autorizacion_datos_convocatoria", joinColumns = @JoinColumn(name = "autorizacion_id"))
+  @Valid
+  private Set<AutorizacionDatosConvocatoria> datosConvocatoria = new HashSet<>();
 
   /** Convocatoria */
   @Column(name = "convocatoria_id", nullable = true)
