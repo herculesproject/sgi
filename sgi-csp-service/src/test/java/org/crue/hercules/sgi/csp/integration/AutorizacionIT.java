@@ -4,7 +4,9 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.AutorizacionController;
@@ -19,6 +21,7 @@ import org.crue.hercules.sgi.csp.dto.NotificacionProyectoExternoCVNOutput;
 import org.crue.hercules.sgi.csp.model.Autorizacion;
 import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.model.EstadoAutorizacion;
+import org.crue.hercules.sgi.csp.model.EstadoAutorizacionComentario;
 import org.crue.hercules.sgi.csp.repository.EstadoAutorizacionRepository;
 import org.crue.hercules.sgi.csp.service.AutorizacionComService;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
@@ -412,12 +415,16 @@ class AutorizacionIT extends BaseIT {
   void cambiarEstado_ReturnsAutorizacion() throws Exception {
     String roles = "CSP-AUT-E";
     Long idAutorizacion = 1L;
+
+    Set<EstadoAutorizacionComentario> comentarioEstadoAutorizacion = new HashSet<>();
+    comentarioEstadoAutorizacion.add(new EstadoAutorizacionComentario(Language.ES, "Nuevo estado"));
+
     EstadoAutorizacion nuevoEstado = EstadoAutorizacion.builder()
         .id(1L)
         .estado(EstadoAutorizacion.Estado.REVISION)
         .autorizacionId(idAutorizacion)
         .fecha(Instant.now())
-        .comentario("Nuevo estado")
+        .comentario(comentarioEstadoAutorizacion)
         .build();
 
     final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(

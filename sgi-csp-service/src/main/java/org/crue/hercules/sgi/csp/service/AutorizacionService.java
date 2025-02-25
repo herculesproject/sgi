@@ -105,8 +105,7 @@ public class AutorizacionService {
     repository.save(autorizacion);
 
     // Crea el estado inicial de la autorizacion
-    EstadoAutorizacion estadoAutorizacion = addEstadoAutorizacion(autorizacion, EstadoAutorizacion.Estado.BORRADOR,
-        null);
+    EstadoAutorizacion estadoAutorizacion = addEstadoAutorizacion(autorizacion, EstadoAutorizacion.Estado.BORRADOR);
 
     autorizacion.setEstado(estadoAutorizacion);
 
@@ -366,21 +365,19 @@ public class AutorizacionService {
   }
 
   private EstadoAutorizacion addEstadoAutorizacion(Autorizacion autorizacion,
-      EstadoAutorizacion.Estado tipoEstadoAutorizacion,
-      String comentario) {
+      EstadoAutorizacion.Estado tipoEstadoAutorizacion) {
     log.debug(
-        "addEstadoAutorizacion(Autorizacion autorizacion, EstadoAutorizacion.Estado tipoEstadoAutorizacion,String comentario) - start");
+        "addEstadoAutorizacion(Autorizacion autorizacion, EstadoAutorizacion.Estado tipoEstadoAutorizacion) - start");
 
     EstadoAutorizacion estadoAutorizacion = new EstadoAutorizacion();
     estadoAutorizacion.setEstado(tipoEstadoAutorizacion);
     estadoAutorizacion.setAutorizacionId(autorizacion.getId());
-    estadoAutorizacion.setComentario(comentario);
     estadoAutorizacion.setFecha(Instant.now());
 
     EstadoAutorizacion returnValue = estadoAutorizacionRepository.save(estadoAutorizacion);
 
     log.debug(
-        "addEstadoAutorizacion(Autorizacion autorizacion, EstadoAutorizacion.Estado tipoEstadoAutorizacion, String comentario) - end");
+        "addEstadoAutorizacion(Autorizacion autorizacion, EstadoAutorizacion.Estado tipoEstadoAutorizacion) - end");
     return returnValue;
   }
 

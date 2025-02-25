@@ -155,6 +155,7 @@ DELETE FROM test.convocatoria_concepto_gasto;
 DELETE FROM test.convocatoria_partida_descripcion;
 DELETE FROM test.convocatoria_partida;
 UPDATE test.autorizacion SET estado_id = NULL;
+DELETE FROM test.estado_autorizacion_comentario;
 DELETE FROM test.estado_autorizacion;
 DELETE FROM test.certificado_autorizacion;
 DELETE FROM test.autorizacion_titulo_proyecto;
