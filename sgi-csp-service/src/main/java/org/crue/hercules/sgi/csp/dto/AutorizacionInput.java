@@ -21,9 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AutorizacionInput implements Serializable {
 
-  @Size(max = Autorizacion.MAX_LENGTH)
-  private String observaciones;
-
+  private List<I18nFieldValueDto> observaciones;
   private String responsableRef;
   private List<I18nFieldValueDto> tituloProyecto;
   private String entidadRef;

@@ -117,8 +117,9 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(created.getId()).as("getId()").isNotNull();
     Assertions.assertThat(created.getConvocatoriaId()).as("getConvocaoriaId()")
         .isEqualTo(toCreate.getConvocatoriaId());
-    Assertions.assertThat(created.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(toCreate.getObservaciones());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(created.getObservaciones(), Language.ES))
+        .as("getObservaciones()")
+        .isEqualTo(I18nHelper.getValueForLanguage(toCreate.getObservaciones(), Language.ES));
     Assertions.assertThat(I18nHelper.getValueForLanguage(created.getDatosConvocatoria(), Language.ES))
         .as("getDatosConvocatoria()")
         .isEqualTo(I18nHelper.getValueForLanguage(toCreate.getDatosConvocatoria(), Language.ES));
@@ -154,8 +155,12 @@ class AutorizacionIT extends BaseIT {
   void update_ReturnsAutorizacion() throws Exception {
     String roles = "CSP-AUT-INV-ER";
     Long idAutorizacion = 1L;
+
+    List<I18nFieldValueDto> observacionesAutorizacion = new ArrayList<>();
+    observacionesAutorizacion.add(new I18nFieldValueDto(Language.ES, "observaciones actualizadas"));
+
     AutorizacionInput toUpdate = buildMockAutorizacion();
-    toUpdate.setObservaciones("observaciones actualizadas");
+    toUpdate.setObservaciones(observacionesAutorizacion);
 
     final ResponseEntity<AutorizacionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(null, toUpdate, roles), AutorizacionOutput.class, idAutorizacion);
@@ -167,8 +172,9 @@ class AutorizacionIT extends BaseIT {
     Assertions.assertThat(updated.getId()).as("getId()").isEqualTo(idAutorizacion);
     Assertions.assertThat(updated.getConvocatoriaId()).as("getConvocaoriaId()")
         .isEqualTo(toUpdate.getConvocatoriaId());
-    Assertions.assertThat(updated.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(toUpdate.getObservaciones());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getObservaciones(), Language.ES))
+        .as("getObservaciones()")
+        .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getObservaciones(), Language.ES));
     Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getDatosConvocatoria(), Language.ES))
         .as("getDatosConvocatoria()")
         .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getDatosConvocatoria(), Language.ES));
@@ -794,6 +800,9 @@ class AutorizacionIT extends BaseIT {
     List<I18nFieldValueDto> datosConvocatoriaAutorizacion = new ArrayList<>();
     datosConvocatoriaAutorizacion.add(new I18nFieldValueDto(Language.ES, DEFAULT_DATOS_CONVOCATORIA));
 
+    List<I18nFieldValueDto> observacionesAutorizacion = new ArrayList<>();
+    observacionesAutorizacion.add(new I18nFieldValueDto(Language.ES, DEFAULT_OBSERVACIONES));
+
     return AutorizacionInput.builder()
         .convocatoriaId(DEFAULT_CONVOCATORIA_ID)
         .datosConvocatoria(datosConvocatoriaAutorizacion)
@@ -801,7 +810,7 @@ class AutorizacionIT extends BaseIT {
         .datosResponsable(DEFAULT_DATOS_RESPONSABLES)
         .entidadRef(DEFAULT_ENTIDAD_REF)
         .horasDedicacion(DEFAULT_HORAS_DEDICADAS)
-        .observaciones(DEFAULT_OBSERVACIONES)
+        .observaciones(observacionesAutorizacion)
         .responsableRef(DEFAULT_RESPONSABLE_REF)
         .tituloProyecto(datosConvocatoriaAutorizacion)
         .build();

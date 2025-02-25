@@ -159,6 +159,7 @@ DELETE FROM test.estado_autorizacion;
 DELETE FROM test.certificado_autorizacion;
 DELETE FROM test.autorizacion_titulo_proyecto;
 DELETE FROM test.autorizacion_datos_convocatoria;
+DELETE FROM test.autorizacion_observaciones;
 DELETE FROM test.autorizacion;
 DELETE FROM test.convocatoria_palabra_clave;
 DELETE FROM test.convocatoria_entidad_convocante;

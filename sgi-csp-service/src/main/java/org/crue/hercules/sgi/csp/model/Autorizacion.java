@@ -56,9 +56,10 @@ public class Autorizacion extends BaseEntity {
   private Long id;
 
   /** Observaciones */
-  @Column(name = "observaciones", length = Autorizacion.MAX_LENGTH, nullable = true)
-  @Size(max = Autorizacion.MAX_LENGTH)
-  private String observaciones;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "autorizacion_observaciones", joinColumns = @JoinColumn(name = "autorizacion_id"))
+  @Valid
+  private Set<AutorizacionObservaciones> observaciones = new HashSet<>();
 
   /** Responsable Ref */
   @Column(name = "responsable_ref", length = Autorizacion.MAX_LENGTH, nullable = true)
