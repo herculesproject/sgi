@@ -6,7 +6,7 @@ import { IEstadoAutorizacion } from './estado-autorizacion';
 
 export interface IAutorizacion {
   id: number;
-  observaciones: string;
+  observaciones: I18nFieldValue[];
   responsable: IPersona;
   solicitante: IPersona;
   tituloProyecto: I18nFieldValue[];

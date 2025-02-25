@@ -55,7 +55,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
       investigadorPrincipalProyecto: new FormControl(null, [Validators.required, Validators.maxLength(250)]),
       datosIpProyecto: new FormControl(null),
       horasDedicacion: new FormControl(null),
-      observaciones: new FormControl(null, Validators.maxLength(2000))
+      observaciones: new FormControl([], I18nValidators.maxLength(2000))
     });
 
     this.subscriptions.push(form.controls.convocatoria.valueChanges.subscribe(
@@ -63,7 +63,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
         if (this.autorizacionData?.estado?.estado === 'BORRADOR' || !this.isEdit()) {
           if (convocatoria) {
             form.controls.datosConvocatoria.disable();
-            form.controls.datosConvocatoria.setValue(null);
+            form.controls.datosConvocatoria.setValue([]);
           } else if (!this.isVisor) {
             form.controls.datosConvocatoria.enable();
           }
@@ -235,7 +235,7 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
     return observable$.pipe(
       map(value => {
         this.autorizacionData.id = value.id;
-        this.disableCambioEstado$.next(!value.tituloProyecto
+        this.disableCambioEstado$.next(!value.tituloProyecto?.length
           || !value.responsable
           || !value.entidad);
         return this.autorizacionData.id;

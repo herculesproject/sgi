@@ -14,7 +14,7 @@ class AutorizacionRequestConverter
     }
     return {
       id: undefined,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.observaciones) : [],
       responsable: { id: value.responsableRef } as IPersona,
       solicitante: undefined,
       tituloProyecto: value.tituloProyecto ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.tituloProyecto) : [],
@@ -33,7 +33,7 @@ class AutorizacionRequestConverter
       return value as unknown as IAutorizacionRequest;
     }
     return {
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.observaciones) : [],
       responsableRef: value.responsable?.id,
       tituloProyecto: value.tituloProyecto ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.tituloProyecto) : [],
       entidadRef: value.entidad?.id,

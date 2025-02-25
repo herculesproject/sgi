@@ -16,7 +16,7 @@ class AutorizacionWithFirstEstadoResponseConverter
     }
     return {
       id: value.id,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : [],
       responsable: value.responsableRef ? { id: value.responsableRef } as IPersona : undefined,
       solicitante: { id: value.solicitanteRef } as IPersona,
       tituloProyecto: value.tituloProyecto ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.tituloProyecto) : [],
@@ -37,7 +37,7 @@ class AutorizacionWithFirstEstadoResponseConverter
     }
     return {
       id: value.id,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : [],
       responsableRef: value.responsable?.id,
       solicitanteRef: value.solicitante?.id,
       tituloProyecto: value.tituloProyecto ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.tituloProyecto) : [],
