@@ -2534,4 +2534,64 @@
 
     <dropColumn columnName="descripcion" tableName="proyecto_paquete_trabajo" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-92">
+    <createTable tableName="certificado_autorizacion_nombre">
+      <column name="certificado_autorizacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="certificado_autorizacion_nombre"
+      columnNames="certificado_autorizacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="certificado_autorizacion_id"
+      baseTableName="certificado_autorizacion_nombre"
+      constraintName="FK_CERTIFICADOAUTORIZACIONNOMBRE_CERTIFICADOAUTORIZACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="certificado_autorizacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}certificado_autorizacion_nombre(certificado_autorizacion_id,
+      value_, lang) SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}certificado_autorizacion
+      WHERE nombre IS NOT NULL AND NULLIF(TRIM(nombre), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="certificado_autorizacion" />
+  </changeSet>
+
+  <changeSet author="master" id="0.10.0-93">
+    <createTable tableName="certificado_autorizacion_documento_ref">
+      <column name="certificado_autorizacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="certificado_autorizacion_documento_ref"
+      columnNames="certificado_autorizacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="certificado_autorizacion_id"
+      baseTableName="certificado_autorizacion_documento_ref"
+      constraintName="FK_CERTIFICADOAUTORIZACIONDOCUMENTOREF_CERTIFICADOAUTORIZACION"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="certificado_autorizacion" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}certificado_autorizacion_documento_ref(certificado_autorizacion_id, value_,
+      lang) SELECT id, documento_ref, '${defaultLang}' FROM ${schemaPrefix}certificado_autorizacion
+      WHERE documento_ref IS NOT NULL AND NULLIF(TRIM(documento_ref), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="documento_ref" tableName="certificado_autorizacion" />
+  </changeSet>
 </databaseChangeLog>

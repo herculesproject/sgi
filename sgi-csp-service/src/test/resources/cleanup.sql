@@ -160,6 +160,8 @@ DELETE FROM test.convocatoria_partida;
 UPDATE test.autorizacion SET estado_id = NULL;
 DELETE FROM test.estado_autorizacion_comentario;
 DELETE FROM test.estado_autorizacion;
+DELETE FROM test.certificado_autorizacion_nombre;
+DELETE FROM test.certificado_autorizacion_documento_ref;
 DELETE FROM test.certificado_autorizacion;
 DELETE FROM test.autorizacion_titulo_proyecto;
 DELETE FROM test.autorizacion_datos_convocatoria;
