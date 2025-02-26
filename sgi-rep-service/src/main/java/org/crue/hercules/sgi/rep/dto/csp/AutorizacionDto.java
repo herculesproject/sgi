@@ -46,7 +46,7 @@ public class AutorizacionDto extends BaseRestDto {
   private String datosEntidad;
 
   /** Datos Convocatoria */
-  private String datosConvocatoria;
+  private List<I18nFieldValueDto> datosConvocatoria;
 
   /** Convocatoria */
   private Long convocatoriaId;

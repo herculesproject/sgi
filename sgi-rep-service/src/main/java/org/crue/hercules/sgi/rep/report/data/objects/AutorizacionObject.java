@@ -22,7 +22,7 @@ public class AutorizacionObject {
     if (dto.getHorasDedicacion() != null) {
       this.horasDedicacion = Duration.ofHours(dto.getHorasDedicacion());
     }
-    this.datosConvocatoria = dto.getDatosConvocatoria();
+    this.datosConvocatoria = I18nHelper.getFieldValue(dto.getDatosConvocatoria(), SgiReportContextHolder.getLanguage());
     this.datosEntidad = dto.getDatosEntidad();
     this.datosResponsable = dto.getDatosResponsable();
   }
