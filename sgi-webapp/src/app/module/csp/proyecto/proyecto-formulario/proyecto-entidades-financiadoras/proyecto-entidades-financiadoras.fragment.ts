@@ -191,6 +191,7 @@ export class ProyectoEntidadesFinanciadorasFragment extends Fragment {
             update.hasPresupuesto = wrapped.value.hasPresupuesto;
             update.empresa = wrapped.value.empresa;
             target$.value[index] = new StatusWrapper<IEntidadFinanciadora>(update);
+            target$.next(target$.value);
           })
         );
       })

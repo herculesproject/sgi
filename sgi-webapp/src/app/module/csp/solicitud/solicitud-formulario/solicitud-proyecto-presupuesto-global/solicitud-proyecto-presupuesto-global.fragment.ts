@@ -227,6 +227,7 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends FormFragment<ISo
       takeLast(1),
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {
+          this.partidasGastos$.next(this.partidasGastos$.value);
           this.setChanges(false);
         }
       })
@@ -346,7 +347,6 @@ export class SolicitudProyectoPresupuestoGlobalFragment extends FormFragment<ISo
             const solicitudProyectoPresupuestoListado = wrapped.value;
             solicitudProyectoPresupuestoListado.id = created.id;
             this.partidasGastos$.value[index] = new StatusWrapper<ISolicitudProyectoPresupuesto>(solicitudProyectoPresupuestoListado);
-            this.partidasGastos$.next(this.partidasGastos$.value);
           })
         );
       }),

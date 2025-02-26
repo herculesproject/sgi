@@ -350,6 +350,9 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
             map((updatedPartidaPresupuestaria) => {
               const index = this.partidasPresupuestarias$.value
                 .findIndex((currentPartidaPresupuestaria) => currentPartidaPresupuestaria === partidaPresupuestariaListado);
+              const partidasPresupuestariaListado = partidaPresupuestariaListado.partidaPresupuestaria.value;
+              partidasPresupuestariaListado.id = updatedPartidaPresupuestaria.id;
+
               this.partidasPresupuestarias$.value[index] = {
                 partidaPresupuestaria: new StatusWrapper<IProyectoPartida>(updatedPartidaPresupuestaria),
                 convocatoriaPartidaPresupuestaria: this.partidasPresupuestarias$.value[index].convocatoriaPartidaPresupuestaria,
@@ -357,8 +360,11 @@ export class ProyectoPartidasPresupuestariasFragment extends Fragment {
                 partidaSge: partidaPresupuestariaListado.partidaSge,
                 descripcion: updatedPartidaPresupuestaria.descripcion,
                 tipoPartida: updatedPartidaPresupuestaria.tipoPartida,
+                canEdit: true,
                 help: this.partidasPresupuestarias$.value[index].help
               } as IPartidaPresupuestariaListado;
+              this.mapModificable.set(updatedPartidaPresupuestaria.id, true);
+              this.partidasPresupuestarias$.next(this.partidasPresupuestarias$.value);
             })
           );
       })

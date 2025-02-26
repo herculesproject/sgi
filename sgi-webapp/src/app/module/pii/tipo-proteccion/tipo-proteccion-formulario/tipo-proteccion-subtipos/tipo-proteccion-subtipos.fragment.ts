@@ -56,6 +56,7 @@ export class TipoProteccionSubtiposFragment extends Fragment {
       takeLast(1),
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {
+          this.subtiposProteccion$.next(this.subtiposProteccion$.value);
           this.setChanges(false);
         }
       }),

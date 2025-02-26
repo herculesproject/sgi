@@ -253,8 +253,7 @@ export class SolicitudEquipoProyectoFragment extends Fragment {
       }),
       takeLast(1),
       map((results) => {
-        this.proyectoEquipos$.next(results
-        );
+        this.proyectoEquipos$.next(results);
       }),
       tap(() => {
         if (this.isSaveOrUpdateComplete()) {
