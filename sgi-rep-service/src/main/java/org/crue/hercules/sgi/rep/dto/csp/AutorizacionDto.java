@@ -22,7 +22,7 @@ public class AutorizacionDto extends BaseRestDto {
   private Long id;
 
   /** Observaciones */
-  private String observaciones;
+  private List<I18nFieldValueDto> observaciones;
 
   /** Responsable Ref */
   private String responsableRef;
