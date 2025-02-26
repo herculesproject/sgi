@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DOCUMENTO_CONVERTER } from '@core/converters/sgdoc/documento.converter';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { IAutorizacionWithFirstEstado } from '@core/models/csp/autorizacion-with-first-estado';
 import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
-import { IDocumentoBackend } from '@core/models/sgdoc/backend/documento-backend';
-import { IDocumento } from '@core/models/sgdoc/documento';
 import { environment } from '@env';
 import {
   CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor
@@ -210,14 +210,15 @@ export class AutorizacionService extends _AutorizacionMixinBase {
   }
 
   /**
-   * Obtiene el documento de autorización
+   * Obtiene los documentoRefs correspondientes a los certidicados de autorización generados para cada uno de los idiomas disponibles
    * @param idAutorizacion identificador de la autorización
+   * @param fileName Nombre para el informe
    */
-  getInformeAutorizacion(idAutorizacion: number, fileName: string): Observable<IDocumento> {
-    return this.http.get<IDocumentoBackend>(
+  getInformeAutorizacion(idAutorizacion: number, fileName: string): Observable<I18nFieldValue[]> {
+    return this.http.get<I18nFieldValueResponse[]>(
       `${this.endpointUrl}/${idAutorizacion}/documento/${fileName}`
     ).pipe(
-      map(response => DOCUMENTO_CONVERTER.toTarget(response))
+      map(response => I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(response))
     );
   }
 

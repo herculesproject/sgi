@@ -13,6 +13,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { EstadoAutorizacionService } from '@core/services/csp/estado-autorizacion/estado-autorizacion.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -80,6 +81,7 @@ export class AutorizacionListadoInvComponent extends AbstractTablePaginationComp
     private documentoService: DocumentoService,
     public authService: SgiAuthService,
     private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -309,10 +311,11 @@ export class AutorizacionListadoInvComponent extends AbstractTablePaginationComp
   }
 
   downloadFile(value: IAutorizacionListado): void {
+    const documentoRef = this.languageService.getFieldValue(value.certificadoVisible.documentoRef);
     this.subscriptions.push(
       forkJoin({
-        documento: this.documentoService.getInfoFichero(value.certificadoVisible.documento.documentoRef),
-        fichero: this.documentoService.downloadFichero(value.certificadoVisible.documento.documentoRef),
+        documento: this.documentoService.getInfoFichero(documentoRef),
+        fichero: this.documentoService.downloadFichero(documentoRef),
       }).subscribe(
         ({ documento, fichero }) => {
           triggerDownloadToUser(fichero, documento.nombre);
