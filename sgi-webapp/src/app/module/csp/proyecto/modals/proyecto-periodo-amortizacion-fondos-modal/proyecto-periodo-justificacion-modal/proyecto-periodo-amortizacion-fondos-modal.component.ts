@@ -16,6 +16,7 @@ import { SgiRestListResult } from '@sgi/framework/http';
 import { BehaviorSubject, merge } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { IEntidadFinanciadora } from '../../../proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');
@@ -62,10 +63,10 @@ export class ProyectoPeriodoAmortizacionModalComponent
     let fuente = this.translate.instant(FUENTE_FINANCIACION_NO_INFORMADA);
     let tipo = this.translate.instant(TIPO_FINANCIACION_NO_INFORMADO);
     if (entidadFinanciadora?.fuenteFinanciacion?.nombre) {
-      fuente = entidadFinanciadora?.fuenteFinanciacion?.nombre;
+      fuente = this.languageService.getFieldValue(entidadFinanciadora?.fuenteFinanciacion?.nombre);
     }
     if (entidadFinanciadora?.tipoFinanciacion?.nombre) {
-      tipo = entidadFinanciadora?.tipoFinanciacion?.nombre;
+      tipo = this.languageService.getFieldValue(entidadFinanciadora?.tipoFinanciacion?.nombre);
     }
     return entidadFinanciadora?.empresa?.nombre + ' - ' + fuente + ' - ' + tipo;
   }
@@ -87,7 +88,8 @@ export class ProyectoPeriodoAmortizacionModalComponent
     matDialogRef: MatDialogRef<ProyectoPeriodoAmortizacionModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IProyectoPeriodoAmortizacionModalData,
     private proyectoService: ProyectoService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(matDialogRef, !!data.periodoAmortizacion?.proyectoEntidadFinanciadora);
   }
