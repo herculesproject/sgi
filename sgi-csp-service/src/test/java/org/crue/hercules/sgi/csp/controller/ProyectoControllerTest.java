@@ -31,6 +31,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoHitoAviso;
 import org.crue.hercules.sgi.csp.model.ProyectoHitoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajoDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
@@ -1568,6 +1569,11 @@ class ProyectoControllerTest extends BaseControllerTest {
    */
   private ProyectoPaqueteTrabajo generarMockProyectoPaqueteTrabajo(Long id, Long proyectoId) {
 
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-proyecto-paquete-trabajo-" +
+            (id == null ? "" : String.format("%03d", id))));
+
     // @formatter:off
     return ProyectoPaqueteTrabajo.builder()
         .id(id)
@@ -1576,7 +1582,7 @@ class ProyectoControllerTest extends BaseControllerTest {
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))
         .personaMes(1D)
-        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
+        .descripcion(proyectoPaqueteTrabajoDescripcion)
         .build();
     // @formatter:on
   }

@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPaqueteTrabajoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajoDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.repository.ProyectoPaqueteTrabajoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
@@ -271,9 +272,13 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_ReturnsProyectoPaqueteTrabajo() {
     // given: Un nuevo ProyectoPaqueteTrabajo con el tipoPaqueteTrabajo actualizado
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoActualizado = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajoActualizado.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajoActualizado.setDescripcion(proyectoPaqueteTrabajoDescripcion);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(proyectoPaqueteTrabajo));
 
@@ -321,8 +326,12 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutProyectoId_ThrowsIllegalArgumentException() {
     // given: a ProyectoPaqueteTrabajo without ProyectoId
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
     proyectoPaqueteTrabajo.setProyectoId(null);
 
     Assertions.assertThatThrownBy(
@@ -336,8 +345,12 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutNombre_ThrowsIllegalArgumentException() {
     // given: a ProyectoPaqueteTrabajo without Nombre
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
     proyectoPaqueteTrabajo.setNombre(null);
 
     Assertions.assertThatThrownBy(
@@ -351,8 +364,12 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutFechaInicio_ThrowsIllegalArgumentException() {
     // given: a ProyectoPaqueteTrabajo without FechaInicio
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
     proyectoPaqueteTrabajo.setFechaInicio(null);
 
     Assertions.assertThatThrownBy(
@@ -366,8 +383,12 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutFechaFin_ThrowsIllegalArgumentException() {
     // given: a ProyectoPaqueteTrabajo without FechaFin
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
     proyectoPaqueteTrabajo.setFechaFin(null);
 
     Assertions.assertThatThrownBy(
@@ -381,8 +402,12 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithoutPersonaMes_ThrowsIllegalArgumentException() {
     // given: a ProyectoPaqueteTrabajo without FechaFin
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
     proyectoPaqueteTrabajo.setPersonaMes(null);
 
     Assertions.assertThatThrownBy(
@@ -396,9 +421,13 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithFechaInicioGreaterThanFechaFin_ThrowsIllegalArgumentException() {
     // given: Fecha Inicio > fechaFin
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoOriginal = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
     proyectoPaqueteTrabajo.setFechaInicio(proyectoPaqueteTrabajo.getFechaFin().plus(Period.ofDays(1)));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -415,9 +444,13 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithNoExistingProyecto_ThrowsProyectoNotFoundException() {
     // given: a ProyectoPaqueteTrabajo with non existing Proyecto
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoOriginal = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPaqueteTrabajoOriginal));
@@ -433,9 +466,13 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithProyectoWithPermitePaquetesTrabajoFalse_ThrowsIllegalArgumentException() {
     // given: Proyecto with field PermitePaquetesTrabajo = FALSE or NULL
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoOriginal = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPaqueteTrabajoOriginal));
@@ -455,9 +492,13 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithDuplicatedNombreInProyecto_ThrowsIllegalArgumentException() {
     // given: a ProyectoPaqueteTrabajo with duplicated nombre in proyecto
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoOriginal = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPaqueteTrabajoOriginal));
@@ -480,9 +521,13 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
   @Test
   void update_WithDatesOutsideProyectoRange_ThrowsIllegalArgumentException() {
     // given: a ProyectoPaqueteTrabajo with dates aoutside Proyecto Range
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcion-modificada"));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajoOriginal = generarMockProyectoPaqueteTrabajo(1L, 1L);
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = generarMockProyectoPaqueteTrabajo(1L, 1L);
-    proyectoPaqueteTrabajo.setDescripcion("descripcion-modificada");
+    proyectoPaqueteTrabajo.setDescripcion(proyectoPaqueteTrabajoDescripcion);
     proyectoPaqueteTrabajo.setFechaFin(Instant.parse("2022-11-20T23:59:59Z"));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -640,6 +685,10 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
    * @return el objeto ProyectoPaqueteTrabajo
    */
   private ProyectoPaqueteTrabajo generarMockProyectoPaqueteTrabajo(Long id, Long proyectoId) {
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES,
+            "descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id))));
 
     // @formatter:off
     return ProyectoPaqueteTrabajo.builder()
@@ -649,7 +698,7 @@ class ProyectoPaqueteTrabajoServiceTest extends BaseServiceTest {
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))
         .personaMes(1D)
-        .descripcion("descripcion-proyecto-paquete-trabajo-" + (id == null ? "" : String.format("%03d", id)))
+        .descripcion(proyectoPaqueteTrabajoDescripcion)
         .build();
     // @formatter:on
   }

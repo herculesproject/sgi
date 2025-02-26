@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
+import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajoDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeograficoNombre;
@@ -170,13 +171,17 @@ class ProyectoPaqueteTrabajoRepositoryTest extends BaseRepositoryTest {
         .build();
     entityManager.persistAndFlush(proyecto);
 
+    Set<ProyectoPaqueteTrabajoDescripcion> proyectoPaqueteTrabajoDescripcion = new HashSet<>();
+    proyectoPaqueteTrabajoDescripcion.add(
+        new ProyectoPaqueteTrabajoDescripcion(Language.ES, "descripcionProyectoPaqueteTrabajo-" + suffix));
+
     ProyectoPaqueteTrabajo proyectoPaqueteTrabajo = ProyectoPaqueteTrabajo.builder()
         .proyectoId(proyecto.getId())
         .nombre("proyectoPaquete" + suffix)
         .fechaInicio(Instant.parse("2020-01-01T00:00:00Z"))
         .fechaFin(Instant.parse("2020-01-15T23:59:59Z"))
         .personaMes(1D)
-        .descripcion("descripcionProyectoPaqueteTrabajo-" + suffix)
+        .descripcion(proyectoPaqueteTrabajoDescripcion)
         .build();
 
     return entityManager.persistAndFlush(proyectoPaqueteTrabajo);
