@@ -2,7 +2,9 @@ package org.crue.hercules.sgi.rep.report.data.objects;
 
 import java.time.Duration;
 
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.rep.dto.csp.AutorizacionDto;
+import org.crue.hercules.sgi.rep.util.SgiReportContextHolder;
 
 import lombok.Getter;
 
@@ -16,7 +18,7 @@ public class AutorizacionObject {
   private String datosResponsable;
 
   public AutorizacionObject(AutorizacionDto dto) {
-    this.tituloProyecto = dto.getTituloProyecto();
+    this.tituloProyecto = I18nHelper.getFieldValue(dto.getTituloProyecto(), SgiReportContextHolder.getLanguage());
     if (dto.getHorasDedicacion() != null) {
       this.horasDedicacion = Duration.ofHours(dto.getHorasDedicacion());
     }
