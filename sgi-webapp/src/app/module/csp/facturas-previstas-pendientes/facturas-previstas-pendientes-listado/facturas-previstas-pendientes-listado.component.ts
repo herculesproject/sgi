@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { SgiError } from '@core/errors/sgi-error';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
@@ -40,7 +41,7 @@ export interface IFacturaPrevistaPendienteListadoData extends IFacturaPrevistaPe
   tipoFacturacion: ITipoFacturacion;
   fechaConformidad: DateTime;
   estadoValidacionIP: IEstadoValidacionIP;
-  comentario: string;
+  comentario: I18nFieldValue[];
   entidadesFinanciadoras: IProyectoEntidadFinanciadora[];
 }
 

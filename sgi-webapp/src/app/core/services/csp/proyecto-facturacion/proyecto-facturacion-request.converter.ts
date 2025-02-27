@@ -1,3 +1,4 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { ITipoFacturacion } from '@core/models/csp/tipo-facturacion';
@@ -11,7 +12,7 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
 
     return !value ? value as unknown as IProyectoFacturacion : {
       id: undefined,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.comentario) : [],
       fechaConformidad: LuxonUtils.fromBackend(value.fechaConformidad),
       fechaEmision: LuxonUtils.fromBackend(value.fechaEmision),
       importeBase: value.importeBase,
@@ -34,7 +35,7 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
   fromTarget(value: IProyectoFacturacion): IProyectoFacturacionRequest {
 
     return !value ? value as unknown as IProyectoFacturacionRequest : {
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.comentario) : [],
       fechaConformidad: LuxonUtils.toBackend(value.fechaConformidad),
       fechaEmision: LuxonUtils.toBackend(value.fechaEmision),
       importeBase: value.importeBase,

@@ -8,6 +8,6 @@ export interface IFacturaPrevistaResponse {
   fechaEmision: string;
   importeBase: number;
   porcentajeIVA: number;
-  comentario: string;
+  comentario: I18nFieldValueResponse[];
   tipoFacturacion: I18nFieldValueResponse[];
 }

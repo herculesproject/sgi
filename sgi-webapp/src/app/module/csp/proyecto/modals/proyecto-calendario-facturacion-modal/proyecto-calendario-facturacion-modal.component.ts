@@ -9,6 +9,7 @@ import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP, TipoEstadoValidacion }
 import { ITipoFacturacion } from '@core/models/csp/tipo-facturacion';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { TipoFacturacionService } from '@core/services/csp/tipo-facturacion/tipo-facturacion.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject } from 'rxjs';
@@ -143,7 +144,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       fechaEmision: new FormControl(data?.fechaEmision, [Validators.required]),
       importeBase: new FormControl(data?.importeBase, [Validators.required]),
       porcentajeIVA: new FormControl(isNaN(data?.porcentajeIVA) ? this.data?.porcentajeIVA : data?.porcentajeIVA, [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(0), Validators.max(100)]),
-      comentario: new FormControl(data?.comentario, [Validators.maxLength(COMENTARIO_MAX_LENGTH)]),
+      comentario: new FormControl(data?.comentario, [I18nValidators.maxLength(COMENTARIO_MAX_LENGTH)]),
       tipoFacturacion: new FormControl(data?.tipoFacturacion),
       proyectoProrroga: new FormControl(data?.proyectoProrroga),
       nuevoEstadoValidacionIP: new FormControl(null),

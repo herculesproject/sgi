@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
 import { IProyectoProrroga } from '@core/models/csp/proyecto-prorroga';
 import { LuxonUtils } from '@core/utils/luxon-utils';
@@ -12,7 +13,7 @@ class ProyectoFacturacionResponseConverter extends
 
     return !value ? value as unknown as IProyectoFacturacion : {
       id: value.id,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : [],
       estadoValidacionIP: value.estadoValidacionIP,
       fechaConformidad: LuxonUtils.fromBackend(value.fechaConformidad),
       fechaEmision: LuxonUtils.fromBackend(value.fechaEmision),
@@ -29,7 +30,7 @@ class ProyectoFacturacionResponseConverter extends
   fromTarget(value: IProyectoFacturacion): IProyectoFacturacionResponse {
     return !value ? value as unknown as IProyectoFacturacionResponse : {
       id: value.id,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : [],
       estadoValidacionIP: value.estadoValidacionIP,
       fechaConformidad: LuxonUtils.toBackend(value.fechaConformidad),
       fechaEmision: LuxonUtils.toBackend(value.fechaEmision),

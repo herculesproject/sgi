@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { TIPO_ESTADO_VALIDACION_MAP, TipoEstadoValidacion } from '@core/models/csp/estado-validacion-ip';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
@@ -44,7 +45,7 @@ export interface IFacturaPrevistaPendienteReportData extends IFacturaPrevistaPen
   fechaConformidad: DateTime;
   estadoValidacionIP: TipoEstadoValidacion;
   entidadesFinanciadoras: IProyectoEntidadFinanciadora[];
-  comentario: string;
+  comentario: I18nFieldValue[];
 }
 
 @Injectable()

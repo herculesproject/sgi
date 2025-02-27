@@ -15,7 +15,7 @@ class FacturaPrevistaRequestConverter extends SgiBaseConverter<IFacturaPrevistaR
       fechaEmision: LuxonUtils.fromBackend(value.fechaEmision),
       importeBase: value.importeBase,
       porcentajeIVA: value.porcentajeIVA,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.comentario) : [],
       tipoFacturacion: value.tipoFacturacion ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.tipoFacturacion) : [],
     } : value as unknown as IFacturaPrevista;
   }
@@ -28,7 +28,7 @@ class FacturaPrevistaRequestConverter extends SgiBaseConverter<IFacturaPrevistaR
       fechaEmision: LuxonUtils.toBackend(value.fechaEmision),
       importeBase: value.importeBase,
       porcentajeIVA: value.porcentajeIVA,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.comentario) : [],
       tipoFacturacion: value.tipoFacturacion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.tipoFacturacion) : [],
     } : value as unknown as IFacturaPrevistaRequest;
   }

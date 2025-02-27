@@ -1,11 +1,12 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { DateTime } from 'luxon';
 import { IEstadoValidacionIP } from './estado-validacion-ip';
-import { ITipoFacturacion } from './tipo-facturacion';
 import { IProyectoProrroga } from './proyecto-prorroga';
+import { ITipoFacturacion } from './tipo-facturacion';
 
 export interface IProyectoFacturacion {
   id: number;
-  comentario: string;
+  comentario: I18nFieldValue[];
   fechaConformidad: DateTime;
   fechaEmision: DateTime;
   importeBase: number;

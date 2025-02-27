@@ -271,7 +271,7 @@ export class ProyectoCalendarioFacturacionFragment extends Fragment {
 
     const facturaPrevista: IFacturaPrevista = {
       id: itemFacturacion?.facturasEmitidas && itemFacturacion?.facturasEmitidas.length > 0 ? itemFacturacion.facturasEmitidas[0]?.id : null,
-      comentario: itemFacturacion.comentario,
+      comentario: itemFacturacion?.comentario,
       fechaEmision: itemFacturacion.fechaEmision,
       importeBase: itemFacturacion.importeBase,
       numeroPrevision: itemFacturacion.numeroPrevision,
