@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
@@ -74,7 +75,8 @@ class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseControllerTe
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId()))
         .andExpect(
-            MockMvcResultMatchers.jsonPath("comentario").value(proyectoPeriodoSeguimientoDocumento.getComentario()))
+            MockMvcResultMatchers.jsonPath("comentario[0].value").value(
+                I18nHelper.getValueForLanguage(proyectoPeriodoSeguimientoDocumento.getComentario(), Language.ES)))
         .andExpect(
             MockMvcResultMatchers.jsonPath("documentoRef").value(proyectoPeriodoSeguimientoDocumento.getDocumentoRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
@@ -134,8 +136,9 @@ class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseControllerTe
             .value(updatedProyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId()))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id")
             .value(updatedProyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comentario")
-            .value(updatedProyectoPeriodoSeguimientoDocumento.getComentario()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comentario[0].value")
+            .value(I18nHelper.getValueForLanguage(updatedProyectoPeriodoSeguimientoDocumento.getComentario(),
+                Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef")
             .value(updatedProyectoPeriodoSeguimientoDocumento.getDocumentoRef()))
         .andExpect(
@@ -269,12 +272,16 @@ class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseControllerTe
     nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES,
         "Nombre-" + String.format("%03d", (id != null ? id : 1))));
 
+    Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoPeriodoSeguimientoDocumentoComentario(Language.ES,
+        "comentario-" + String.format("%03d", (id != null ? id : 1))));
+
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
     proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
     proyectoPeriodoSeguimientoDocumento.setNombre(nombreDocumento);
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
-    proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimientoDocumento.setComentario(comentarioDocumento);
     proyectoPeriodoSeguimientoDocumento.setTipoDocumento(tipoDocumento);
     proyectoPeriodoSeguimientoDocumento.setVisible(Boolean.TRUE);
 

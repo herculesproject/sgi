@@ -9,12 +9,14 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoPeriodoSeguimientoDocumentoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -158,7 +160,10 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
           public ProyectoPeriodoSeguimientoDocumento answer(InvocationOnMock invocation) throws Throwable {
             ProyectoPeriodoSeguimientoDocumento givenData = invocation.getArgument(0,
                 ProyectoPeriodoSeguimientoDocumento.class);
-            givenData.setComentario("comentarios-modificado");
+            Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentarioDocumento = new HashSet<>();
+            comentarioDocumento
+                .add(new ProyectoPeriodoSeguimientoDocumentoComentario(Language.ES, "comentarios-modificado"));
+            givenData.setComentario(comentarioDocumento);
             return givenData;
           }
         });
@@ -174,7 +179,8 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
         .isEqualTo(proyectoPeriodoSeguimientoDocumento.getProyectoPeriodoSeguimientoId());
     Assertions.assertThat(updated.getTipoDocumento().getId())
         .isEqualTo(proyectoPeriodoSeguimientoDocumento.getTipoDocumento().getId());
-    Assertions.assertThat(updated.getComentario()).isEqualTo("comentarios-modificado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(updated.getComentario(), Language.ES))
+        .isEqualTo("comentarios-modificado");
     Assertions.assertThat(updated.getDocumentoRef()).isEqualTo(proyectoPeriodoSeguimientoDocumento.getDocumentoRef());
     Assertions.assertThat(updated.getNombre()).isEqualTo(proyectoPeriodoSeguimientoDocumento.getNombre());
   }
@@ -407,12 +413,16 @@ class ProyectoPeriodoSeguimientoDocumentoServiceTest extends BaseServiceTest {
     nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES,
         "Nombre-" + String.format("%03d", (id != null ? id : 1))));
 
+    Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoPeriodoSeguimientoDocumentoComentario(Language.ES,
+        "comentario-" + String.format("%03d", (id != null ? id : 1))));
+
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
     proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
     proyectoPeriodoSeguimientoDocumento.setNombre(nombreDocumento);
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
-    proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimientoDocumento.setComentario(comentarioDocumento);
     proyectoPeriodoSeguimientoDocumento.setTipoDocumento(tipoDocumento);
     proyectoPeriodoSeguimientoDocumento.setVisible(Boolean.TRUE);
 

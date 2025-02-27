@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
@@ -95,7 +96,9 @@ class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoExistente = generarMockProyectoPeriodoSeguimientoDocumento(
         1L);
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimientoDocumento(1L);
-    proyectoPeriodoSeguimiento.setComentario("comentario-modificados");
+    Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoPeriodoSeguimientoDocumentoComentario(Language.ES, "comentario-modificados"));
+    proyectoPeriodoSeguimiento.setComentario(comentarioDocumento);
 
     // when: update ProyectoPeriodoSeguimientoDocumento
     final ResponseEntity<ProyectoPeriodoSeguimientoDocumento> response = restTemplate.exchange(
@@ -110,7 +113,8 @@ class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
         .isEqualTo(proyectoPeriodoSeguimientoExistente.getProyectoPeriodoSeguimientoId());
     Assertions.assertThat(responseData.getDocumentoRef()).as("getDocumentoRef()")
         .isEqualTo(proyectoPeriodoSeguimientoExistente.getDocumentoRef());
-    Assertions.assertThat(responseData.getComentario()).as("getComentario()").isEqualTo("comentario-modificados");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getComentario(), Language.ES))
+        .as("getComentario()").isEqualTo("comentario-modificados");
     Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombre(), Language.ES)).as("getNombre()")
         .isEqualTo(I18nHelper.getValueForLanguage(proyectoPeriodoSeguimientoExistente.getNombre(), Language.ES));
     Assertions.assertThat(responseData.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
@@ -188,12 +192,16 @@ class ProyectoPeriodoSeguimientoDocumentoIT extends BaseIT {
     nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES,
         "Nombre-" + String.format("%03d", (id != null ? id : 1))));
 
+    Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoPeriodoSeguimientoDocumentoComentario(Language.ES,
+        "comentario-" + String.format("%03d", (id != null ? id : 1))));
+
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
     proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
     proyectoPeriodoSeguimientoDocumento.setNombre(nombreDocumento);
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
-    proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimientoDocumento.setComentario(comentarioDocumento);
     proyectoPeriodoSeguimientoDocumento.setTipoDocumento(tipoDocumento);
     proyectoPeriodoSeguimientoDocumento.setVisible(Boolean.TRUE);
 

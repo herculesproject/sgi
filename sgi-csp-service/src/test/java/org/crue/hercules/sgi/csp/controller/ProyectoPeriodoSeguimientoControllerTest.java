@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoSeguimientoPresentacionDocum
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
@@ -18,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -371,7 +373,8 @@ class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = proyectoPeriodoSeguimientoDocumentoResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyectoPeriodoSeguimientoDocumento.getComentario())
+      Assertions
+          .assertThat(I18nHelper.getValueForLanguage(proyectoPeriodoSeguimientoDocumento.getComentario(), Language.ES))
           .isEqualTo("comentario-" + String.format("%03d", i));
     }
   }
@@ -483,12 +486,16 @@ class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest {
     nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES,
         "Nombre-" + String.format("%03d", (id != null ? id : 1))));
 
+    Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoPeriodoSeguimientoDocumentoComentario(Language.ES,
+        "comentario-" + String.format("%03d", (id != null ? id : 1))));
+
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
     proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
     proyectoPeriodoSeguimientoDocumento.setNombre(nombreDocumento);
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
-    proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimientoDocumento.setComentario(comentarioDocumento);
     proyectoPeriodoSeguimientoDocumento.setTipoDocumento(tipoDocumento);
     proyectoPeriodoSeguimientoDocumento.setVisible(Boolean.TRUE);
 

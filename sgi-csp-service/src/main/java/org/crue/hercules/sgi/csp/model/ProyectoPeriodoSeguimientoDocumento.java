@@ -57,9 +57,11 @@ public class ProyectoPeriodoSeguimientoDocumento extends BaseEntity {
   private Long proyectoPeriodoSeguimientoId;
 
   /** Comentarios */
-  @Column(name = "comentario", length = 2000, nullable = true)
-  @Size(max = 2000)
-  private String comentario;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "proyecto_periodo_seguimiento_documento_comentario", joinColumns = @JoinColumn(name = "proyecto_periodo_seguimiento_documento_id"))
+  @Valid
+  @Builder.Default
+  private Set<ProyectoPeriodoSeguimientoDocumentoComentario> comentario = new HashSet<>();
 
   /** DocumentoRef */
   @Column(name = "documento_ref", length = 50, nullable = false)
