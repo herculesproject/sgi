@@ -7,6 +7,6 @@ export interface IProyectoSocioPeriodoJustificacionDocumentoResponse {
   nombre: I18nFieldValueResponse[];
   documentoRef: string;
   tipoDocumento: ITipoDocumentoResponse;
-  comentario: string;
+  comentario: I18nFieldValueResponse[];
   visible: boolean;
 }

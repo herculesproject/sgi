@@ -5,6 +5,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IProyectoSocioPeriodoJustificacionDocumento } from '@core/models/csp/proyecto-socio-periodo-justificacion-documento';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -12,9 +13,11 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { Group } from '@core/services/action-service';
 import { TipoDocumentoService } from '@core/services/csp/tipo-documento.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
@@ -24,9 +27,6 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ProyectoSocioPeriodoJustificacionActionService } from '../../proyecto-socio-periodo-justificacion.action.service';
 import { NodeDocumentoProyecto, ProyectoSocioPeriodoJustificacionDocumentosFragment } from './proyecto-socio-periodo-justificacion-documentos.fragment';
-import { I18nFieldValue } from '@core/i18n/i18n-field';
-import { I18nValidators } from '@core/validators/i18n-validator';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_FILE_NOT_FOUND_ERROR = marker('error.file.info');
 const MSG_UPLOAD_SUCCESS = marker('msg.file.upload.success');
@@ -144,7 +144,7 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
       nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
       fichero: new FormControl(null, Validators.required),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
-      comentarios: new FormControl('', Validators.maxLength(2_000)),
+      comentarios: new FormControl([], I18nValidators.maxLength(2_000)),
       visible: new FormControl(true, [Validators.required])
     }));
     this.group.initialize();

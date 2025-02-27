@@ -17,7 +17,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoResponseConverter extends
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       documentoRef: value.documentoRef,
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.toTarget(value.tipoDocumento) : null,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentario) : [],
       visible: value.visible
     };
   }
@@ -32,7 +32,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoResponseConverter extends
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       documentoRef: value.documentoRef,
       tipoDocumento: value.tipoDocumento ? TIPO_DOCUMENTO_RESPONSE_CONVERTER.fromTarget(value.tipoDocumento) : null,
-      comentario: value.comentario,
+      comentario: value.comentario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentario) : [],
       visible: value.visible
     };
   }
