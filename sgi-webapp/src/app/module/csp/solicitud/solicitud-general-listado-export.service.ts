@@ -16,6 +16,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ISolicitudReportData, ISolicitudReportOptions } from './solicitud-listado-export.service';
+import { ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 
 const CODIGO_INTERNO_KEY = marker('csp.solicitud.codigo-registro');
 const CODIGO_EXTERNO_KEY = marker('csp.solicitud.codigo-externo');
@@ -185,7 +186,7 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
     elementsRow.push(solicitante?.emails[0] ? solicitante?.emails[0].email : '');
     elementsRow.push(this.languageService.getFieldValue(solicitud.convocatoria?.titulo));
     elementsRow.push(solicitud.convocatoriaExterna ?? '');
-    elementsRow.push(solicitud.estado?.estado ?? '');
+    elementsRow.push(solicitud.estado?.estado ? this.translate.instant(ESTADO_MAP.get(solicitud.estado?.estado)) : '');
     elementsRow.push(LuxonUtils.toBackend(solicitud.estado?.fechaEstado));
     elementsRow.push(solicitud.estado?.comentario ?? '');
     return elementsRow;
