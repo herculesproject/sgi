@@ -97,6 +97,7 @@ DELETE FROM test.proyecto_partida;
 DELETE FROM test.proyecto_responsable_economico;
 UPDATE test.proyecto_facturacion SET estado_validacion_ip_id = NULL;
 DELETE FROM test.estado_validacion_ip;
+DELETE FROM test.proyecto_facturacion_comentario;
 DELETE FROM test.proyecto_facturacion;
 DELETE FROM test.proyecto_iva;
 DELETE FROM test.proyecto_documento_nombre;

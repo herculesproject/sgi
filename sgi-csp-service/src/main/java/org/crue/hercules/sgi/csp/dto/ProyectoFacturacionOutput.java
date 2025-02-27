@@ -5,12 +5,14 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.ProyectoFacturacionComentario;
+import org.crue.hercules.sgi.csp.model.TipoFacturacionNombre;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.crue.hercules.sgi.csp.model.TipoFacturacionNombre;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,7 +26,7 @@ public class ProyectoFacturacionOutput implements Serializable {
   }
 
   private Long id;
-  private String comentario;
+  private Collection<ProyectoFacturacionComentario> comentario;
   private Instant fechaConformidad;
   private Instant fechaEmision;
   private BigDecimal importeBase;

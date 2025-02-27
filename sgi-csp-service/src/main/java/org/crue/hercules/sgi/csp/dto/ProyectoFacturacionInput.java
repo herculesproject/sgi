@@ -3,11 +3,13 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +31,7 @@ public class ProyectoFacturacionInput implements Serializable {
   private Long id;
 
   @Size(max = ProyectoFacturacion.COMENTARIO_MAX_LENGTH)
-  private String comentario;
+  private List<I18nFieldValueDto> comentario;
 
   private Instant fechaConformidad;
 

@@ -2,9 +2,14 @@ package org.crue.hercules.sgi.csp.model;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
@@ -45,8 +51,11 @@ public class ProyectoFacturacion extends BaseEntity {
   @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME, allocationSize = 1)
   private Long id;
 
-  @Column(name = "comentario", length = COMENTARIO_MAX_LENGTH, nullable = true)
-  private String comentario;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "proyecto_facturacion_comentario", joinColumns = @JoinColumn(name = "proyecto_id"))
+  @Valid
+  @Builder.Default
+  private Set<ProyectoFacturacionComentario> comentario = new HashSet<>();
 
   @Column(name = "fecha_conformidad", nullable = true)
   private Instant fechaConformidad;

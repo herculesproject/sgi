@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
@@ -9,6 +10,7 @@ import org.crue.hercules.sgi.csp.model.EstadoValidacionIP;
 import org.crue.hercules.sgi.csp.model.EstadoValidacionIP.TipoEstadoValidacion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
+import org.crue.hercules.sgi.csp.model.ProyectoFacturacionComentario;
 import org.crue.hercules.sgi.csp.repository.EstadoValidacionIPRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;
 import org.crue.hercules.sgi.csp.repository.TipoFacturacionRepository;
@@ -97,7 +99,9 @@ public class ProyectoFacturacionService {
     ProyectoFacturacion beforeUpdate = this.proyectoFacturacionRepository.findById(toUpdate.getId())
         .orElseThrow(() -> new ProyectoFacturacionNotFoundException(toUpdate.getId()));
 
-    beforeUpdate.setComentario(toUpdate.getComentario());
+    beforeUpdate.setComentario((toUpdate.getComentario().stream()
+        .map(observaciones -> new ProyectoFacturacionComentario(observaciones.getLang(), observaciones.getValue()))
+        .collect(Collectors.toSet())));
     beforeUpdate.setImporteBase(toUpdate.getImporteBase());
     beforeUpdate.setPorcentajeIVA(toUpdate.getPorcentajeIVA());
     beforeUpdate.setTipoFacturacion(toUpdate.getTipoFacturacion());
