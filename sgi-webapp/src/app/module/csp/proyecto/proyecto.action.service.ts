@@ -409,8 +409,7 @@ export class ProyectoActionService extends ActionService {
           proyectoService,
           proyectoPeriodoSeguimientoService,
           convocatoriaService,
-          documentoService,
-          languageService
+          documentoService
         );
         this.proyectoEquipo = new ProyectoEquipoFragment(
           logger,

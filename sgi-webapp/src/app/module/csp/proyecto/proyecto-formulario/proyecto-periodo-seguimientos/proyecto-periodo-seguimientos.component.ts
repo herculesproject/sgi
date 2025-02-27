@@ -13,6 +13,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ROUTE_NAMES } from '@core/route.names';
 import { ProyectoPeriodoSeguimientoService } from '@core/services/csp/proyecto-periodo-seguimiento.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -61,7 +62,8 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
     public actionService: ProyectoActionService,
     private dialogService: DialogService,
     private proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO, actionService, translate);
     this.formPart = this.fragment as ProyectoPeriodoSeguimientosFragment;
@@ -81,6 +83,8 @@ export class ProyectoPeriodoSeguimientosComponent extends FragmentComponent impl
     this.dataSource.sortingDataAccessor =
       (periodoSeguimientoListado: IPeriodoSeguimientoListado, property: string) => {
         switch (property) {
+          case 'observacionesConvocatoria':
+            return periodoSeguimientoListado.observaciones ? this.languageService.getFieldValue(periodoSeguimientoListado.observaciones) : '';
           default:
             return periodoSeguimientoListado[property];
         }

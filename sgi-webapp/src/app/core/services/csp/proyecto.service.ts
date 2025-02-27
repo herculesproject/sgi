@@ -6,7 +6,6 @@ import { PROYECTO_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/csp/pr
 import { PROYECTO_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/proyecto-entidad-gestora.converter';
 import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.converter';
 import { PROYECTO_PAQUETE_TRABAJO_CONVERTER } from '@core/converters/csp/proyecto-paquete-trabajo.converter';
-import { PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER } from '@core/converters/csp/proyecto-periodo-seguimiento.converter';
 import { PROYECTO_PRORROGA_CONVERTER } from '@core/converters/csp/proyecto-prorroga.converter';
 import { PROYECTO_PROYECTO_SGE_CONVERTER } from '@core/converters/csp/proyecto-proyecto-sge.converter';
 import { TipoPartida } from '@core/enums/tipo-partida';
@@ -114,6 +113,7 @@ import { PROYECTO_PARTIDA_PRESUPUESTARIA_RESPONSE_CONVERTER } from './proyecto-p
 import { IProyectoPeriodoJustificacionResponse } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response';
 import { PROYECTO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './proyecto-periodo-justificacion/proyecto-periodo-justificacion-response.converter';
 import { IProyectoPeriodoSeguimientoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
+import { PROYECTO_PERIODO_SEGUIMIENTO_RESPONSE_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response.converter';
 import { IProyectoResponsableEconomicoResponse } from './proyecto-responsable-economico/proyecto-responsable-economico-response';
 import { PROYECTO_RESPONSABLE_ECONOMICO_RESPONSE_CONVERTER } from './proyecto-responsable-economico/proyecto-responsable-economico-response.converter';
 import { IProyectoSocioResponse } from './proyecto-socio/proyecto-socio-response';
@@ -366,7 +366,7 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
     return this.find<IProyectoPeriodoSeguimientoResponse, IProyectoPeriodoSeguimiento>(
       `${this.endpointUrl}/${id}/proyectoperiodoseguimientos`,
       options,
-      PROYECTO_PERIODO_SEGUIMIENTO_CONVERTER
+      PROYECTO_PERIODO_SEGUIMIENTO_RESPONSE_CONVERTER
     );
   }
 

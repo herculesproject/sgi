@@ -1,5 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TipoSeguimiento } from '@core/enums/tipo-seguimiento';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoriaPeriodoSeguimientoCientifico } from '@core/models/csp/convocatoria-periodo-seguimiento-cientifico';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -14,7 +15,6 @@ import { DateTime } from 'luxon';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { comparePeriodoSeguimiento, getFechaFinPeriodoSeguimiento, getFechaInicioPeriodoSeguimiento } from '../../../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento.utils';
-import { LanguageService } from '@core/services/language.service';
 
 const PROYECTO_PERIODO_SEGUIMIENTO_NO_COINCIDE_KEY = marker('info.csp.proyecto-periodo-seguimiento.no-coincide-convocatoria');
 const PROYECTO_PERIODO_SEGUIMIENTO_NO_CONVOCATORIA_KEY = marker('info.csp.proyecto-periodo-seguimiento.no-existe-en-convocatoria');
@@ -40,7 +40,7 @@ export interface IPeriodoSeguimientoListado {
   fechaInicioPresentacion: DateTime;
   fechaFinPresentacion: DateTime;
   tipoSeguimiento: TipoSeguimiento;
-  observaciones: string;
+  observaciones: I18nFieldValue[];
 }
 
 export class ProyectoPeriodoSeguimientosFragment extends Fragment {
@@ -53,8 +53,7 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
     private proyectoService: ProyectoService,
     private proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     private convocatoriaService: ConvocatoriaService,
-    private documentoService: DocumentoService,
-    private readonly languageService: LanguageService
+    private documentoService: DocumentoService
   ) {
     super(key);
     this.setComplete(true);
@@ -238,7 +237,7 @@ export class ProyectoPeriodoSeguimientosFragment extends Fragment {
       periodoSeguimientoListado.fechaInicioPresentacion =
         periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.fechaInicioPresentacion;
       periodoSeguimientoListado.fechaFinPresentacion = periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.fechaFinPresentacion;
-      periodoSeguimientoListado.observaciones = this.languageService.getFieldValue(periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.observaciones);
+      periodoSeguimientoListado.observaciones = periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.observaciones;
 
       if (periodoSeguimientoListado.convocatoriaPeriodoSeguimiento?.mesInicial) {
         periodoSeguimientoListado.fechaInicio = getFechaInicioPeriodoSeguimiento(this.proyecto.fechaInicio,
