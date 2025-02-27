@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_CONVERTER } from '@core/converters/csp/proyecto-socio-periodo-justificacion.converter';
 import { PROYECTO_SOCIO_PERIODO_PAGO_CONVERTER } from '@core/converters/csp/proyecto-socio-periodo-pago.converter';
-import { IProyectoSocioPeriodoJustificacionBackend } from '@core/models/csp/backend/proyecto-socio-periodo-justificacion-backend';
 import { IProyectoSocioPeriodoPagoBackend } from '@core/models/csp/backend/proyecto-socio-periodo-pago-backend';
 import { IProyectoSocio } from '@core/models/csp/proyecto-socio';
 import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
@@ -14,6 +12,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProyectoSocioEquipoResponse } from './proyecto-socio-equipo/proyecto-socio-equipo-response';
 import { PROYECTO_SOCIO_EQUIPO_RESPONSE_CONVERTER } from './proyecto-socio-equipo/proyecto-socio-equipo.converter';
+import { IProyectoSocioPeriodoJustificacionResponse } from './proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion-response';
+import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from './proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion-response.converter';
 import { IProyectoSocioResponse } from './proyecto-socio/proyecto-socio-response';
 import { PROYECTO_SOCIO_RESPONSE_CONVERTER } from './proyecto-socio/proyecto-socio.converter';
 
@@ -79,10 +79,10 @@ export class ProyectoSocioService extends SgiMutableRestService<number, IProyect
    */
   findAllProyectoSocioPeriodoJustificacion(id: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IProyectoSocioPeriodoJustificacion>> {
-    return this.find<IProyectoSocioPeriodoJustificacionBackend, IProyectoSocioPeriodoJustificacion>(
+    return this.find<IProyectoSocioPeriodoJustificacionResponse, IProyectoSocioPeriodoJustificacion>(
       `${this.endpointUrl}/${id}/proyectosocioperiodojustificaciones`,
       options,
-      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_CONVERTER
+      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER
     );
   }
 
