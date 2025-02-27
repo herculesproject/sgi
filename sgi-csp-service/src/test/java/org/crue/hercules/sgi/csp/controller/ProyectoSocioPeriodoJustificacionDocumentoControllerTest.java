@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionDocumentoService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -82,8 +84,9 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
         .andExpect(
             MockMvcResultMatchers.jsonPath("$[0].id").value(proyectoSocioPeriodoJustificacionDocumento.get(0).getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].nombre")
-            .value(proyectoSocioPeriodoJustificacionDocumento.get(0).getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacionDocumento.get(0).getNombre(),
+                Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].comentario")
             .value(proyectoSocioPeriodoJustificacionDocumento.get(0).getComentario()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].documentoRef")
@@ -93,8 +96,9 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].visible")
             .value(proyectoSocioPeriodoJustificacionDocumento.get(0).getVisible()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(5L))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].nombre")
-            .value(proyectoSocioPeriodoJustificacionDocumento.get(1).getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacionDocumento.get(1).getNombre(),
+                Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].comentario")
             .value(proyectoSocioPeriodoJustificacionDocumento.get(1).getComentario()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].documentoRef")
@@ -148,7 +152,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
         // object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("nombre-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("comentario").value("comentario"));
   }
 
@@ -180,10 +184,13 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, "tipo1"));
 
+    Set<ProyectoSocioPeriodoJustificacionDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new ProyectoSocioPeriodoJustificacionDocumentoNombre(Language.ES, "nombre-" + id));
+
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(1L).nombre(nombreTipoDocumento).activo(Boolean.TRUE)
         .build();
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = ProyectoSocioPeriodoJustificacionDocumento
-        .builder().id(id).nombre("nombre-" + id).comentario("comentario").documentoRef("001")
+        .builder().id(id).nombre(nombreDocumento).comentario("comentario").documentoRef("001")
         .proyectoSocioPeriodoJustificacionId(1L).tipoDocumento(tipoDocumento).visible(Boolean.TRUE).build();
     return proyectoSocioPeriodoJustificacionDocumento;
   }

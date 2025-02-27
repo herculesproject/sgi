@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RolSocio;
@@ -100,12 +101,19 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
     TipoDocumento tipoDocumento = entityManager
         .persistAndFlush(TipoDocumento.builder().nombre(nombreTipoDocumento).activo(Boolean.TRUE).build());
 
-    ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento1 = entityManager
-        .persistAndFlush(ProyectoSocioPeriodoJustificacionDocumento.builder().nombre("doc1").documentoRef("001")
-            .proyectoSocioPeriodoJustificacionId(proyectoSocioPeriodoJustificacion1.getId())
-            .tipoDocumento(tipoDocumento).visible(Boolean.TRUE).build());
+    Set<ProyectoSocioPeriodoJustificacionDocumentoNombre> nombreDocumento1 = new HashSet<>();
+    nombreDocumento1.add(new ProyectoSocioPeriodoJustificacionDocumentoNombre(Language.ES, "doc1"));
 
-    entityManager.persistAndFlush(ProyectoSocioPeriodoJustificacionDocumento.builder().nombre("doc2")
+    ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento1 = entityManager
+        .persistAndFlush(
+            ProyectoSocioPeriodoJustificacionDocumento.builder().nombre(nombreDocumento1).documentoRef("001")
+                .proyectoSocioPeriodoJustificacionId(proyectoSocioPeriodoJustificacion1.getId())
+                .tipoDocumento(tipoDocumento).visible(Boolean.TRUE).build());
+
+    Set<ProyectoSocioPeriodoJustificacionDocumentoNombre> nombreDocumento2 = new HashSet<>();
+    nombreDocumento2.add(new ProyectoSocioPeriodoJustificacionDocumentoNombre(Language.ES, "doc2"));
+
+    entityManager.persistAndFlush(ProyectoSocioPeriodoJustificacionDocumento.builder().nombre(nombreDocumento2)
         .documentoRef("002").proyectoSocioPeriodoJustificacionId(proyectoSocioPeriodoJustificacion2.getId())
         .tipoDocumento(tipoDocumento).visible(Boolean.TRUE).build());
 
