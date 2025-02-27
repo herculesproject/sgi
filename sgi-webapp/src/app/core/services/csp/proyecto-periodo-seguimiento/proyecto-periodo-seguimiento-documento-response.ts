@@ -9,5 +9,5 @@ export interface IProyectoPeriodoSeguimientoDocumentoResponse {
   documentoRef: string;
   tipoDocumento: ITipoDocumentoResponse;
   visible: boolean;
-  comentario: string;
+  comentario: I18nFieldValueResponse[];
 }

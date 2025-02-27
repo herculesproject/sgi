@@ -33,6 +33,7 @@ const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_KEY = marker('csp.documento');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_NOMBRE_KEY = marker('csp.documento.nombre');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_FICHERO_KEY = marker('csp.proyecto-periodo-seguimiento.documento.fichero');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_VISIBLE_KEY = marker('csp.proyecto-periodo-seguimiento.documento.visible');
+const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_COMENTARIO_KEY = marker('csp.documento.comentario');
 
 enum VIEW_MODE {
   NONE = '',
@@ -65,6 +66,7 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
   msgParamFicheroEntity = {};
   msgParamNombreEntity = {};
   msgParamVisibleEntity = {};
+  msgParamComentarioEntity = {};
   textoDelete: string;
 
   group = new Group();
@@ -119,7 +121,7 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
       fichero: new FormControl(null, Validators.required),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
       visible: new FormControl(null, Validators.required),
-      comentario: new FormControl('')
+      comentario: new FormControl([], I18nValidators.maxLength(2000))
     }));
     this.group.initialize();
 
@@ -158,6 +160,11 @@ export class ProyectoPeriodoSeguimientoDocumentosComponent extends FragmentCompo
         );
       })
     ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_COMENTARIO_KEY,
+      MSG_PARAMS.CARDINALIRY.SINGULAR
+    ).subscribe((value) => this.msgParamComentarioEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
 
   }
 

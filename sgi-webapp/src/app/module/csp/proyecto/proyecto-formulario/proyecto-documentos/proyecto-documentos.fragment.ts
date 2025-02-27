@@ -358,17 +358,8 @@ export class ProyectoDocumentosFragment extends Fragment {
                     this.nodeLookup.set(keyTipoDocumento, tipoDocumentoNode);
                     periodoNode.addChild(tipoDocumentoNode);
                   }
-                  //TODO: quitar cuando se haga la internacionalización del nombre y comentario de ProyectoPeriodoSeguimientoDocumento
-                  const documentoI18n = {
-                    id: documento.id,
-                    nombre: documento.nombre,
-                    tipoDocumento: documento.tipoDocumento,
-                    comentario: [{ lang: Language.ES, value: documento.comentario }],
-                    documentoRef: documento.documentoRef,
-                    visible: documento.visible
-                  } as IDocumentoData;
                   const documentoNode = new NodeDocumento(
-                    null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documentoI18n), true
+                    null, documento.nombre, 3, new StatusWrapper<IDocumentoData>(documento), true
                   );
                   tipoDocumentoNode.addChild(documentoNode);
                 });
