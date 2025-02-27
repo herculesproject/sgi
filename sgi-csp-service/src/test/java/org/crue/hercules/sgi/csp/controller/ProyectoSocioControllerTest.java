@@ -3,16 +3,16 @@ package org.crue.hercules.sgi.csp.controller;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolProyectoAbreviatura;
@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.csp.service.ProyectoSocioEquipoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioPeriodoPagoService;
 import org.crue.hercules.sgi.csp.service.ProyectoSocioService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -46,6 +47,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * ProyectoSocioControllerTest
@@ -537,7 +540,9 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = proyectoSociosPeriodoJustificacionesResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyectoSocioPeriodoJustificacion.getObservaciones()).isEqualTo("observaciones-" + i);
+      Assertions
+          .assertThat(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacion.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + i);
     }
   }
 
@@ -609,13 +614,13 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
   private ProyectoSocioPeriodoPago generarMockProyectoSocioPeriodoPago(Long id) {
     Set<RolSocioAbreviatura> abreviatura = new HashSet<>();
     abreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
-    
+
     Set<RolSocioNombre> nombre = new HashSet<>();
     nombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
-    
+
     Set<RolSocioDescripcion> descripcion = new HashSet<>();
     descripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
-    
+
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(id)
@@ -649,13 +654,13 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
   private ProyectoSocioEquipo generarMockProyectoSocioEquipo(Long id) {
     Set<RolSocioAbreviatura> rolSocioAbreviatura = new HashSet<>();
     rolSocioAbreviatura.add(new RolSocioAbreviatura(Language.ES, "001"));
-    
+
     Set<RolSocioNombre> rolSocioNombre = new HashSet<>();
     rolSocioNombre.add(new RolSocioNombre(Language.ES, "nombre-001"));
-    
+
     Set<RolSocioDescripcion> rolSocioDescripcion = new HashSet<>();
     rolSocioDescripcion.add(new RolSocioDescripcion(Language.ES, "descripcion-001"));
-    
+
     // @formatter:off
     RolSocio rolSocio = RolSocio.builder()
         .id(id).abreviatura(rolSocioAbreviatura)
@@ -703,17 +708,20 @@ class ProyectoSocioControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoSocioPeriodoJustificacion
    */
   private ProyectoSocioPeriodoJustificacion generarMockProyectoSocioPeriodoJustificacion(Long id) {
-    ProyectoSocioPeriodoJustificacion convocatoriaPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();
-    convocatoriaPeriodoJustificacion.setId(id);
-    convocatoriaPeriodoJustificacion.setProyectoSocioId(id == null ? 1 : id);
-    convocatoriaPeriodoJustificacion.setNumPeriodo(1);
-    convocatoriaPeriodoJustificacion.setFechaInicio(Instant.parse("2020-10-10T00:00:00Z"));
-    convocatoriaPeriodoJustificacion.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));
-    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
-    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
-    convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
+    Set<ProyectoSocioPeriodoJustificacionObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoSocioPeriodoJustificacionObservaciones(Language.ES, "observaciones-" + id));
 
-    return convocatoriaPeriodoJustificacion;
+    ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();
+    proyectoSocioPeriodoJustificacion.setId(id);
+    proyectoSocioPeriodoJustificacion.setProyectoSocioId(id == null ? 1 : id);
+    proyectoSocioPeriodoJustificacion.setNumPeriodo(1);
+    proyectoSocioPeriodoJustificacion.setFechaInicio(Instant.parse("2020-10-10T00:00:00Z"));
+    proyectoSocioPeriodoJustificacion.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));
+    proyectoSocioPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
+    proyectoSocioPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
+    proyectoSocioPeriodoJustificacion.setObservaciones(observaciones);
+
+    return proyectoSocioPeriodoJustificacion;
   }
 
 }

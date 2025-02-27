@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.RolSocioAbreviatura;
@@ -81,17 +82,20 @@ class ProyectoSocioPeriodoJustificacionDocumentoRepositoryTest extends BaseRepos
         .empresaRef("codigo-1")
         .rolSocio(rolSocio)
         .build());
-
+    Set<ProyectoSocioPeriodoJustificacionObservaciones> observaciones1 = new HashSet<>();
+    observaciones1.add(new ProyectoSocioPeriodoJustificacionObservaciones(Language.ES, "observaciones1"));
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion1 = entityManager
         .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1.getId(), 1,
             Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
-            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-1",
-            Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z"), null));
+            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
+            observaciones1, Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z"), null));
+    Set<ProyectoSocioPeriodoJustificacionObservaciones> observaciones2 = new HashSet<>();
+    observaciones2.add(new ProyectoSocioPeriodoJustificacionObservaciones(Language.ES, "observaciones2"));
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion2 = entityManager
         .persistAndFlush(new ProyectoSocioPeriodoJustificacion(null, proyectoSocio1.getId(), 1,
             Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
-            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"), "observaciones-2",
-            Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z"), null));
+            Instant.parse("2020-10-10T00:00:00Z"), Instant.parse("2020-11-20T00:00:00Z"),
+            observaciones2, Boolean.TRUE, Instant.parse("2020-11-20T00:00:00Z"), null));
 
     TipoDocumento tipoDocumento = entityManager
         .persistAndFlush(TipoDocumento.builder().nombre(nombreTipoDocumento).activo(Boolean.TRUE).build());

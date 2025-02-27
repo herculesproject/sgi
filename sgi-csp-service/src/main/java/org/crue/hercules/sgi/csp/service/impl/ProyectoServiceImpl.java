@@ -78,6 +78,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoResponsableEconomico;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.Solicitud;
@@ -94,6 +95,7 @@ import org.crue.hercules.sgi.csp.model.SolicitudProyectoResultadosPrevistos;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioEquipo;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocioPeriodoPago;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -1492,7 +1494,9 @@ public class ProyectoServiceImpl implements ProyectoService {
                   entidadPeriodoJustificacionSolicitud.getMesFinal(), fechaFinProyecto,
                   sgiConfigProperties.getTimeZone()))
               .numPeriodo(entidadPeriodoJustificacionSolicitud.getNumPeriodo())
-              .observaciones(I18nHelper.getFieldValue(entidadPeriodoJustificacionSolicitud.getObservaciones()))
+              .observaciones(
+                  convertObservacionesFromSolicitudProyectoSocioPeriodoJustificacionToProyectoSocioPeriodoJustificacion(
+                      entidadPeriodoJustificacionSolicitud.getObservaciones()))
               .fechaInicioPresentacion(entidadPeriodoJustificacionSolicitud.getFechaInicio())
               .fechaFinPresentacion(entidadPeriodoJustificacionSolicitud.getFechaFin()).build();
 
@@ -2720,6 +2724,13 @@ public class ProyectoServiceImpl implements ProyectoService {
       Set<ConvocatoriaPeriodoSeguimientoCientificoObservaciones> convocatoriaPeriodoSeguimientoObservaciones) {
     return convocatoriaPeriodoSeguimientoObservaciones.stream()
         .map(ppsobs -> new ProyectoPeriodoSeguimientoObservaciones(ppsobs.getLang(), ppsobs.getValue()))
+        .collect(Collectors.toSet());
+  }
+
+  private Set<ProyectoSocioPeriodoJustificacionObservaciones> convertObservacionesFromSolicitudProyectoSocioPeriodoJustificacionToProyectoSocioPeriodoJustificacion(
+      Set<SolicitudProyectoSocioPeriodoJustificacionObservaciones> solicitudProyectoSocioPeriodoJustificacionObservaciones) {
+    return solicitudProyectoSocioPeriodoJustificacionObservaciones.stream()
+        .map(spspjobs -> new ProyectoSocioPeriodoJustificacionObservaciones(spspjobs.getLang(), spspjobs.getValue()))
         .collect(Collectors.toSet());
   }
 

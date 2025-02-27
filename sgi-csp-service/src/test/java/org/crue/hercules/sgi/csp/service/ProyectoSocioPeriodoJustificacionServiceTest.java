@@ -3,8 +3,10 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.Instant;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioNotFoundException;
@@ -13,11 +15,14 @@ import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionDocumentoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoSocioPeriodoJustificacionServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -524,7 +529,9 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
       ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = page.getContent()
           .get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(proyectoSocioPeriodoJustificacion.getId()).isEqualTo(Long.valueOf(i));
-      Assertions.assertThat(proyectoSocioPeriodoJustificacion.getObservaciones()).isEqualTo("observaciones-" + i);
+      Assertions
+          .assertThat(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacion.getObservaciones(), Language.ES))
+          .isEqualTo("observaciones-" + i);
     }
   }
 
@@ -550,7 +557,9 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
         .isEqualTo(Instant.parse("2020-11-20T23:59:59Z"));
     Assertions.assertThat(proyectoSocioPeriodoJustificacion.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
-    Assertions.assertThat(proyectoSocioPeriodoJustificacion.getObservaciones()).as("getObservaciones()")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacion.getObservaciones(), Language.ES))
+        .as("getObservaciones()")
         .isEqualTo("observaciones-1");
   }
 
@@ -589,6 +598,9 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
    * @return el objeto ProyectoSocioPeriodoJustificacion
    */
   private ProyectoSocioPeriodoJustificacion generarMockProyectoSocioPeriodoJustificacion(Long id) {
+    Set<ProyectoSocioPeriodoJustificacionObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoSocioPeriodoJustificacionObservaciones(Language.ES, "observaciones-" + id));
+
     ProyectoSocioPeriodoJustificacion proyectoSocioPeriodoJustificacion = new ProyectoSocioPeriodoJustificacion();
     proyectoSocioPeriodoJustificacion.setId(id);
     proyectoSocioPeriodoJustificacion.setProyectoSocioId(id == null ? 1 : id);
@@ -597,7 +609,7 @@ class ProyectoSocioPeriodoJustificacionServiceTest extends BaseServiceTest {
     proyectoSocioPeriodoJustificacion.setFechaFin(Instant.parse("2020-12-20T23:59:59Z"));
     proyectoSocioPeriodoJustificacion.setFechaInicioPresentacion(Instant.parse("2020-10-10T00:00:00Z"));
     proyectoSocioPeriodoJustificacion.setFechaFinPresentacion(Instant.parse("2020-11-20T23:59:59Z"));
-    proyectoSocioPeriodoJustificacion.setObservaciones("observaciones-" + id);
+    proyectoSocioPeriodoJustificacion.setObservaciones(observaciones);
 
     return proyectoSocioPeriodoJustificacion;
   }

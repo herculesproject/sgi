@@ -63,6 +63,7 @@ DELETE FROM test.solicitud_proyecto;
 DELETE FROM test.proyecto_socio_equipo;
 DELETE FROM test.proyecto_socio_periodo_pago;
 DELETE FROM test.proyecto_socio_periodo_justificacion_documento;
+DELETE FROM test.proyecto_socio_periodo_justificacion_observaciones;
 DELETE FROM test.proyecto_socio_periodo_justificacion;
 DELETE FROM test.proyecto_socio;
 DELETE FROM test.estado_solicitud_comentario;
