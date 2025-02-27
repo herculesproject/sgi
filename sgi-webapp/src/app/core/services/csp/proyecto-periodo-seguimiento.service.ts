@@ -8,7 +8,7 @@ import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@s
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProyectoPeriodoSeguimientoDocumentoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento-response';
-import { PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento.converter';
+import { PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_RESPONSE_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento-response.converter';
 import { PROYECTO_PERIODO_SEGUIMIENTO_PRESENTACION_DOCUMENTACION_REQUEST_CONVERTER } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-presentacion-documentacion-request.converter';
 import { IProyectoPeriodoSeguimientoResponse } from './proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-response';
 
@@ -16,7 +16,7 @@ import { IProyectoPeriodoSeguimientoResponse } from './proyecto-periodo-seguimie
   providedIn: 'root'
 })
 export class ProyectoPeriodoSeguimientoService
-  extends SgiMutableRestService<number, IProyectoPeriodoSeguimientoResponse, IProyectoPeriodoSeguimiento>  {
+  extends SgiMutableRestService<number, IProyectoPeriodoSeguimientoResponse, IProyectoPeriodoSeguimiento> {
   private static readonly MAPPING = '/proyectoperiodoseguimientos';
 
   constructor(protected http: HttpClient) {
@@ -50,7 +50,7 @@ export class ProyectoPeriodoSeguimientoService
     return this.find<IProyectoPeriodoSeguimientoDocumentoResponse, IProyectoPeriodoSeguimientoDocumento>(
       `${this.endpointUrl}/${id}/proyectoperiodoseguimientodocumentos`,
       options,
-      PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_CONVERTER
+      PROYECTO_PERIODO_SEGUIMIENTO_DOCUMENTO_RESPONSE_CONVERTER
     );
   }
 
