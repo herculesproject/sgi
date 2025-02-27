@@ -432,7 +432,7 @@ export class ProyectoDocumentosFragment extends Fragment {
                           //TODO: quitar cuando se haga la internacionalización del nombre y comentario de ProyectoSocioPeriodoJustificacionDocumento
                           const documentoI18n = {
                             id: documento.id,
-                            nombre: [{ lang: Language.ES, value: documento.nombre }],
+                            nombre: documento.nombre,
                             tipoDocumento: documento.tipoDocumento,
                             comentario: [{ lang: Language.ES, value: documento.comentario }],
                             documentoRef: documento.documentoRef,

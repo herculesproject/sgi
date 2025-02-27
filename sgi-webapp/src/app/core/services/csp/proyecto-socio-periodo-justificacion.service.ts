@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_DOCUMENTO_CONVERTER } from '@core/converters/csp/proyecto-socio-periodo-justificacion-documento.converter';
-import { IProyectoSocioPeriodoJustificacionDocumentoBackend } from '@core/models/csp/backend/proyecto-socio-periodo-justificacion-documento-backend';
 import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { IProyectoSocioPeriodoJustificacionDocumento } from '@core/models/csp/proyecto-socio-periodo-justificacion-documento';
 import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion-response.converter';
@@ -9,6 +7,8 @@ import { environment } from '@env';
 import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IProyectoSocioPeriodoJustificacionDocumentoResponse } from './proyecto-socio-periodo-justificacion-documento/proyecto-socio-periodo-justificacion-documento-response';
+import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_DOCUMENTO_RESPONSE_CONVERTER } from './proyecto-socio-periodo-justificacion-documento/proyecto-socio-periodo-justificacion-documento-response.converter';
 import { IProyectoSocioPeriodoJustificacionResponse } from './proyecto-socio-periodo-justificacion/proyecto-socio-periodo-justificacion-response';
 
 const _ProyectoSocioPeriodoJustificacionServiceMixinBase:
@@ -59,10 +59,10 @@ export class ProyectoSocioPeriodoJustificacionService
    */
   findAllProyectoSocioPeriodoJustificacionDocumento(id: number, options?: SgiRestFindOptions)
     : Observable<SgiRestListResult<IProyectoSocioPeriodoJustificacionDocumento>> {
-    return this.find<IProyectoSocioPeriodoJustificacionDocumentoBackend, IProyectoSocioPeriodoJustificacionDocumento>(
+    return this.find<IProyectoSocioPeriodoJustificacionDocumentoResponse, IProyectoSocioPeriodoJustificacionDocumento>(
       `${this.endpointUrl}/${id}/proyectosocioperiodojustificaciondocumentos`,
       options,
-      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_DOCUMENTO_CONVERTER
+      PROYECTO_SOCIO_PERIODO_JUSTIFICACION_DOCUMENTO_RESPONSE_CONVERTER
     );
   }
 

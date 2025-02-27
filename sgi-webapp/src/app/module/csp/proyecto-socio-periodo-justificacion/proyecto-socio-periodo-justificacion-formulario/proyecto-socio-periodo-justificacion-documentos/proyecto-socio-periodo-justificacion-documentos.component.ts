@@ -24,6 +24,9 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ProyectoSocioPeriodoJustificacionActionService } from '../../proyecto-socio-periodo-justificacion.action.service';
 import { NodeDocumentoProyecto, ProyectoSocioPeriodoJustificacionDocumentosFragment } from './proyecto-socio-periodo-justificacion-documentos.fragment';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { I18nValidators } from '@core/validators/i18n-validator';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_FILE_NOT_FOUND_ERROR = marker('error.file.info');
 const MSG_UPLOAD_SUCCESS = marker('msg.file.upload.success');
@@ -90,7 +93,6 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
   private transformer = (node: NodeDocumentoProyecto, level: number) => node;
 
   hasChild = (_: number, node: NodeDocumentoProyecto) => node.childs.length > 0;
-  compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
 
   get readonly(): boolean {
     return this.actionService.readonly;
@@ -103,7 +105,8 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
     private tipoDocumentoService: TipoDocumentoService,
     private snackBar: SnackBarService,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DOCUMENTOS, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -138,7 +141,7 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
     );
     this.subscriptions.push(subcription);
     this.group.load(new FormGroup({
-      nombre: new FormControl('', Validators.required),
+      nombre: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(250)]),
       fichero: new FormControl(null, Validators.required),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
       comentarios: new FormControl('', Validators.maxLength(2_000)),
@@ -367,6 +370,10 @@ export class ProyectoSocioPeriodoJustificacionDocumentosComponent extends Fragme
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;
     this.loadDetails(this.viewingNode);
+  }
+
+  getI18nValue(i18nFieldValue: I18nFieldValue[]): string {
+    return this.languageService.getFieldValue(i18nFieldValue);
   }
 
 }

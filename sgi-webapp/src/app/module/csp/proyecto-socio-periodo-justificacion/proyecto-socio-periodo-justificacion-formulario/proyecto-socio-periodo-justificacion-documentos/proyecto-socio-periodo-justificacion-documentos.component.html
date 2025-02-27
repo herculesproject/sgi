@@ -24,7 +24,7 @@
         </mat-tree-node>
         <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
           <button color="primary" mat-button matTreeNodeToggle
-            [attr.aria-label]="'Toggle ' + node.documento?.value?.nombre">
+            [attr.aria-label]="'Toggle ' + getI18nValue(node.documento?.value?.nombre)">
             <mat-icon class="mat-icon-rtl-mirror">
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
@@ -47,10 +47,13 @@
       <div fxLayout="column" fxLayout.xs="column" fxLayoutGap="10px">
         <mat-form-field class="input-form">
           <mat-label>{{'csp.documento.nombre' | translate}}</mat-label>
-          <input matInput type="text" placeholder="{{'csp.documento.nombre' | translate}}" formControlName="nombre"
-            required>
+          <sgi-i18n-input placeholder="{{'csp.documento.nombre' | translate}}" formControlName="nombre"
+            required></sgi-i18n-input>
           <mat-error *ngIf="formGroup.get('nombre').errors?.required">
             {{'error.required.entity' | translate:msgParamNombreEntity}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.get('nombre').errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamNombreEntity}}
           </mat-error>
         </mat-form-field>
         <mat-form-field class="input-form">
@@ -66,11 +69,8 @@
         <mat-form-field class="input-form">
           <mat-label>{{'csp.documento.tipo' | translate}}
           </mat-label>
-          <mat-select placeholder="{{'csp.documento.tipo' | translate}}" formControlName="tipoDocumento"
-            [compareWith]="compareTipoDocumento">
-            <mat-option [value]="null"></mat-option>
-            <mat-option *ngFor="let tipo of tiposDocumento$ | async" [value]="tipo">{{tipo.nombre}}</mat-option>
-          </mat-select>
+          <sgi-select-tipo-documento placeholder="{{'csp.documento.tipo' | translate}}" formControlName="tipoDocumento">
+          </sgi-select-tipo-documento>
         </mat-form-field>
         <mat-form-field class="input-form">
           <mat-label>{{'csp.proyecto-socio-periodo-justificacion.documento.visible' | translate}}</mat-label>
