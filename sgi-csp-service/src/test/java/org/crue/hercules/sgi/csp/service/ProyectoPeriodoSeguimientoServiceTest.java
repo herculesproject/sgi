@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -24,6 +25,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoDocumentoR
 import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoSeguimientoRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.impl.ProyectoPeriodoSeguimientoServiceImpl;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -266,7 +268,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: Un nuevo ProyectoPeriodoSeguimiento con el tipoHito actualizado
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoActualizado = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimientoActualizado.setObservaciones("obs actualizadas");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "obs actualizadas"));
+    proyectoPeriodoSeguimientoActualizado.setObservaciones(observaciones);
 
     BDDMockito.given(proyectoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(generarMockProyecto(1L)));
@@ -308,7 +312,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento without ProyectoId
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "observaciones actualizar"));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setProyectoId(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -327,7 +333,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento without FechaInicio
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "observaciones actualizar"));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setFechaInicio(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -346,7 +354,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento without FechaFin
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "observaciones actualizar"));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setFechaFin(null);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
@@ -369,7 +379,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
 
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "observaciones actualizar"));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.now());
 
     Proyecto proyecto = generarMockProyecto(1L);
@@ -405,7 +417,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
 
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "observaciones actualizar"));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.now());
 
     Proyecto proyecto = generarMockProyecto(1L);
@@ -437,7 +451,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento with non existing Proyecto
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "observaciones actualizar"));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(proyectoPeriodoSeguimientoOriginal));
@@ -454,7 +470,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento WithInvalidFechas
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "observaciones actualizar"));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-20T00:00:00Z"));
     proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-10-10T23:59:59Z"));
 
@@ -478,7 +496,9 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     // given: a ProyectoPeriodoSeguimiento WithInvalidFechas
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoOriginal = generarMockProyectoPeriodoSeguimiento(1L);
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = generarMockProyectoPeriodoSeguimiento(1L);
-    proyectoPeriodoSeguimiento.setObservaciones("observaciones actualizar");
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "observaciones actualizar"));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setFechaInicioPresentacion(Instant.parse("2020-10-20T00:00:00Z"));
     proyectoPeriodoSeguimiento.setFechaFinPresentacion(Instant.parse("2020-10-10T23:59:59Z"));
 
@@ -704,7 +724,8 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
     for (int i = 31; i <= 37; i++) {
       ProyectoPeriodoSeguimiento proyecto = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(proyecto.getObservaciones()).isEqualTo("obs-" + String.format("%03d", i));
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyecto.getObservaciones(), Language.ES))
+          .isEqualTo("obs-" + String.format("%03d", i));
     }
   }
 
@@ -760,13 +781,17 @@ class ProyectoPeriodoSeguimientoServiceTest extends BaseServiceTest {
    * @return el objeto ProyectoPeriodoSeguimiento
    */
   private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES,
+        "obs-" + String.format("%03d", (id != null ? id : 1))));
+
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
     proyectoPeriodoSeguimiento.setId(id);
     proyectoPeriodoSeguimiento.setProyectoId(id == null ? 1 : id);
     proyectoPeriodoSeguimiento.setNumPeriodo(1);
     proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
-    proyectoPeriodoSeguimiento.setObservaciones("obs-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setTipoSeguimiento(TipoSeguimiento.FINAL);
 
     return proyectoPeriodoSeguimiento;

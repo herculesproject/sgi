@@ -33,6 +33,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajo;
 import org.crue.hercules.sgi.csp.model.ProyectoPaqueteTrabajoDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
@@ -1078,7 +1079,8 @@ class ProyectoControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = proyectoPeriodoSeguimientoResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(proyectoPeriodoSeguimiento.getObservaciones()).isEqualTo("obs-" + i);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(proyectoPeriodoSeguimiento.getObservaciones(), Language.ES))
+          .isEqualTo("obs-" + i);
     }
   }
 
@@ -1635,12 +1637,15 @@ class ProyectoControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoPeriodoSeguimiento
    */
   private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "obs-" + id));
+
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
     proyectoPeriodoSeguimiento.setId(id);
     proyectoPeriodoSeguimiento.setProyectoId(id == null ? 1 : id);
     proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
-    proyectoPeriodoSeguimiento.setObservaciones("obs-" + id);
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
 
     return proyectoPeriodoSeguimiento;
   }

@@ -2660,4 +2660,37 @@
 
     <dropColumn columnName="comentario" tableName="proyecto_periodo_seguimiento_documento" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-96">
+    <createTable tableName="proyecto_periodo_seguimiento_observaciones">
+      <column name="proyecto_periodo_seguimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_periodo_seguimiento_observaciones"
+      columnNames="proyecto_periodo_seguimiento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_periodo_seguimiento_id"
+      baseTableName="proyecto_periodo_seguimiento_observaciones"
+      constraintName="FK_PROYECTOPERIODOSEGUIMIENTOOBSERVACIONES_PROYECTOPERIODOSEGUIMIENTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="proyecto_periodo_seguimiento"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}proyecto_periodo_seguimiento_observaciones(proyecto_periodo_seguimiento_id,
+      value_, lang) SELECT id, observaciones, '${defaultLang}' FROM
+      ${schemaPrefix}proyecto_periodo_seguimiento WHERE observaciones IS NOT NULL AND
+      NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="proyecto_periodo_seguimiento" />
+  </changeSet>
 </databaseChangeLog>

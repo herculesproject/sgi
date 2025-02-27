@@ -7,6 +7,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.SeguimientoEjecucionEconomicaController;
 import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoJustificacionOutput;
+import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoSeguimientoOutput;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoEjecucionEconomica;
 import org.crue.hercules.sgi.csp.dto.ProyectoSeguimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
@@ -172,38 +173,38 @@ class SeguimientoEjecucionEconomicaIT extends BaseIT {
   void findProyectoPeriodosSeguimiento_WithPagingSorting_ReturnsProyectoPeriodoSeguimientoOutputSubList()
       throws Exception {
 
-    // given: data for ProyectoPeriodoJustificacionOutput and a proyectoSgeRef
+    // given: data for ProyectoPeriodoSeguimientoOutput and a proyectoSgeRef
     String proyectoSgeRef = "proyecto-sge-ref-001";
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones,desc";
+    String sort = "observaciones.value,desc";
 
-    // when: find ProyectoPeriodoJustificacionOutput
+    // when: find ProyectoPeriodoSeguimientoOutput
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PERIODO_SEGUIMIENTO)
         .queryParam("s", sort).buildAndExpand(proyectoSgeRef).toUri();
-    final ResponseEntity<List<ProyectoPeriodoJustificacionOutput>> response = restTemplate.exchange(uri,
+    final ResponseEntity<List<ProyectoPeriodoSeguimientoOutput>> response = restTemplate.exchange(uri,
         HttpMethod.GET,
         buildRequest(headers, null, DEFAULT_ROLES),
-        new ParameterizedTypeReference<List<ProyectoPeriodoJustificacionOutput>>() {
+        new ParameterizedTypeReference<List<ProyectoPeriodoSeguimientoOutput>>() {
         });
 
-    // given: ProyectoPeriodoJustificacionOutput data filtered and sorted
+    // given: ProyectoPeriodoSeguimientoOutput data filtered and sorted
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ProyectoPeriodoJustificacionOutput> responseData = response.getBody();
+    final List<ProyectoPeriodoSeguimientoOutput> responseData = response.getBody();
     Assertions.assertThat(responseData).hasSize(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("5");
 
-    Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones())")
-        .isEqualTo("obs-5");
-    Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones())")
-        .isEqualTo("obs-4");
-    Assertions.assertThat(responseData.get(2).getObservaciones()).as("get(2).getObservaciones())")
-        .isEqualTo("obs-003");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones())").isEqualTo("obs-5");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())").isEqualTo("obs-4");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getObservaciones(), Language.ES))
+        .as("get(2).getObservaciones())").isEqualTo("obs-003");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {

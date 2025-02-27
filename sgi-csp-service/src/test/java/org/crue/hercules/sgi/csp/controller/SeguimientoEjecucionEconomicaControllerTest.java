@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.crue.hercules.sgi.csp.dto.SeguimientoJustificacionAnualidad;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoSeguimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
@@ -317,7 +319,7 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       ProyectoPeriodoSeguimientoOutput periodoJustificacion = periodosJustificacionResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(periodoJustificacion.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(periodoJustificacion.getObservaciones(), Language.ES))
           .isEqualTo("obs-" + String.format("%03d", i));
     }
   }
@@ -354,13 +356,17 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
    * @return el objeto ProyectoPeriodoSeguimiento
    */
   private ProyectoPeriodoSeguimiento generarMockProyectoPeriodoSeguimiento(Long id) {
+    Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+    observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "obs-"
+        + String.format("%03d", (id != null ? id : 1))));
+
     ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = new ProyectoPeriodoSeguimiento();
     proyectoPeriodoSeguimiento.setId(id);
     proyectoPeriodoSeguimiento.setProyectoId(id == null ? 1 : id);
     proyectoPeriodoSeguimiento.setNumPeriodo(1);
     proyectoPeriodoSeguimiento.setFechaInicio(Instant.parse("2020-10-19T00:00:00Z"));
     proyectoPeriodoSeguimiento.setFechaFin(Instant.parse("2020-12-19T23:59:59Z"));
-    proyectoPeriodoSeguimiento.setObservaciones("obs-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimiento.setObservaciones(observaciones);
     proyectoPeriodoSeguimiento.setTipoSeguimiento(TipoSeguimiento.FINAL);
 
     return proyectoPeriodoSeguimiento;
@@ -373,7 +379,8 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
   }
 
   private ProyectoPeriodoSeguimientoOutput generarMockProyectoPeriodoSeguimientoOutput(Long id, Instant fechaFin,
-      Instant fechaInicio, Integer numPeriodo, String observaciones, Long proyectoId, TipoSeguimiento tipoSeguimiento) {
+      Instant fechaInicio, Integer numPeriodo, Collection<ProyectoPeriodoSeguimientoObservaciones> observaciones,
+      Long proyectoId, TipoSeguimiento tipoSeguimiento) {
     return ProyectoPeriodoSeguimientoOutput.builder()
         .id(id)
         .fechaFin(fechaFin)

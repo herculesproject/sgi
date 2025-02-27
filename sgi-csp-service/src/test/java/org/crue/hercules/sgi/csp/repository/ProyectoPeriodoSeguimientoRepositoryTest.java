@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -128,6 +129,8 @@ class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest {
     entityManager.persistAndFlush(proyecto2);
 
     for (int i = 11; i > 1; i--) {
+      Set<ProyectoPeriodoSeguimientoObservaciones> observaciones = new HashSet<>();
+      observaciones.add(new ProyectoPeriodoSeguimientoObservaciones(Language.ES, "obs-" + i));
       // @formatter:off
       ProyectoPeriodoSeguimiento proyectoPeriodoSeguimientoCientifico = ProyectoPeriodoSeguimiento
           .builder()
@@ -136,7 +139,7 @@ class ProyectoPeriodoSeguimientoRepositoryTest extends BaseRepositoryTest {
           .tipoSeguimiento(TipoSeguimiento.FINAL)
           .fechaInicio(Instant.now())
           .fechaFin(Instant.from(Instant.now().atZone(ZoneOffset.UTC).plus(Period.ofMonths(1))))
-          .observaciones("obs-" + i)
+          .observaciones(observaciones)
           .build();
         // @formatter:on
 

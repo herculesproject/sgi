@@ -45,6 +45,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartidaDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientificoObservaciones;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto.Estado;
 import org.crue.hercules.sgi.csp.model.EstadoProyectoPeriodoJustificacion;
@@ -69,6 +70,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPartidaDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga.Tipo;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
@@ -938,7 +940,8 @@ public class ProyectoServiceImpl implements ProyectoService {
             projectBuilder.fechaFinPresentacion(convocatoriaSeguimiento.getFechaFinPresentacion());
           }
           projectBuilder
-              .observaciones(I18nHelper.getValueForCurrentLanguage(convocatoriaSeguimiento.getObservaciones()));
+              .observaciones(convertObservacionesFromConvocatoriaProyectoSeguimientoToProyectoPeriodoSeguimiento(
+                  convocatoriaSeguimiento.getObservaciones()));
 
           projectBuilder.convocatoriaPeriodoSeguimientoId(convocatoriaSeguimiento.getId());
           ProyectoPeriodoSeguimiento proyectoPeriodoSeguimiento = projectBuilder.build();
@@ -2711,6 +2714,13 @@ public class ProyectoServiceImpl implements ProyectoService {
       Set<ConvocatoriaPartidaDescripcion> convocatoriaPartidaDescripcion) {
     return convocatoriaPartidaDescripcion.stream()
         .map(cpd -> new ProyectoPartidaDescripcion(cpd.getLang(), cpd.getValue())).collect(Collectors.toSet());
+  }
+
+  private Set<ProyectoPeriodoSeguimientoObservaciones> convertObservacionesFromConvocatoriaProyectoSeguimientoToProyectoPeriodoSeguimiento(
+      Set<ConvocatoriaPeriodoSeguimientoCientificoObservaciones> convocatoriaPeriodoSeguimientoObservaciones) {
+    return convocatoriaPeriodoSeguimientoObservaciones.stream()
+        .map(ppsobs -> new ProyectoPeriodoSeguimientoObservaciones(ppsobs.getLang(), ppsobs.getValue()))
+        .collect(Collectors.toSet());
   }
 
 }
