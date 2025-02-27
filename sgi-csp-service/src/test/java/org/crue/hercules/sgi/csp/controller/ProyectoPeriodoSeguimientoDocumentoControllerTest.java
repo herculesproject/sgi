@@ -5,10 +5,12 @@ import java.util.Set;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoDocumentoService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
@@ -75,7 +77,8 @@ class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseControllerTe
             MockMvcResultMatchers.jsonPath("comentario").value(proyectoPeriodoSeguimientoDocumento.getComentario()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("documentoRef").value(proyectoPeriodoSeguimientoDocumento.getDocumentoRef()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(proyectoPeriodoSeguimientoDocumento.getNombre()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(proyectoPeriodoSeguimientoDocumento.getNombre(), Language.ES)));
   }
 
   @Test
@@ -136,7 +139,8 @@ class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseControllerTe
         .andExpect(MockMvcResultMatchers.jsonPath("documentoRef")
             .value(updatedProyectoPeriodoSeguimientoDocumento.getDocumentoRef()))
         .andExpect(
-            MockMvcResultMatchers.jsonPath("nombre").value(updatedProyectoPeriodoSeguimientoDocumento.getNombre()));
+            MockMvcResultMatchers.jsonPath("nombre[0].value").value(
+                I18nHelper.getValueForLanguage(updatedProyectoPeriodoSeguimientoDocumento.getNombre(), Language.ES)));
   }
 
   @Test
@@ -261,10 +265,14 @@ class ProyectoPeriodoSeguimientoDocumentoControllerTest extends BaseControllerTe
     tipoDocumento.setDescripcion(descripcionTipoDocumento);
     tipoDocumento.setActivo(Boolean.TRUE);
 
+    Set<ProyectoPeriodoSeguimientoDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES,
+        "Nombre-" + String.format("%03d", (id != null ? id : 1))));
+
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
     proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
-    proyectoPeriodoSeguimientoDocumento.setNombre("Nombre-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimientoDocumento.setNombre(nombreDocumento);
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setTipoDocumento(tipoDocumento);

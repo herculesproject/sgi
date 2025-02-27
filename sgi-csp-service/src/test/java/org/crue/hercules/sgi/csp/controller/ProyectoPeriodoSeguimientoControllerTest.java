@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.dto.ProyectoPeriodoSeguimientoPresentacionDocum
 import org.crue.hercules.sgi.csp.exceptions.ProyectoPeriodoSeguimientoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
@@ -478,10 +479,14 @@ class ProyectoPeriodoSeguimientoControllerTest extends BaseControllerTest {
     tipoDocumento.setDescripcion(descripcionTipoDocumento);
     tipoDocumento.setActivo(Boolean.TRUE);
 
+    Set<ProyectoPeriodoSeguimientoDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES,
+        "Nombre-" + String.format("%03d", (id != null ? id : 1))));
+
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = new ProyectoPeriodoSeguimientoDocumento();
     proyectoPeriodoSeguimientoDocumento.setId(id);
     proyectoPeriodoSeguimientoDocumento.setProyectoPeriodoSeguimientoId(id == null ? 1 : id);
-    proyectoPeriodoSeguimientoDocumento.setNombre("Nombre-" + String.format("%03d", (id != null ? id : 1)));
+    proyectoPeriodoSeguimientoDocumento.setNombre(nombreDocumento);
     proyectoPeriodoSeguimientoDocumento.setDocumentoRef("Doc-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setComentario("comentario-" + String.format("%03d", (id != null ? id : 1)));
     proyectoPeriodoSeguimientoDocumento.setTipoDocumento(tipoDocumento);

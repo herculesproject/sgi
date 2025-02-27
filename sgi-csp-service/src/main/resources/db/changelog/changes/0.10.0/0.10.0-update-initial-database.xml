@@ -2594,4 +2594,37 @@
 
     <dropColumn columnName="documento_ref" tableName="certificado_autorizacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-94">
+    <createTable tableName="proyecto_periodo_seguimiento_documento_nombre">
+      <column name="proyecto_periodo_seguimiento_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="proyecto_periodo_seguimiento_documento_nombre"
+      columnNames="proyecto_periodo_seguimiento_documento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="proyecto_periodo_seguimiento_documento_id"
+      baseTableName="proyecto_periodo_seguimiento_documento_nombre"
+      constraintName="FK_PROYECTOPERIODOSEGUIMIENTODOCUMENTONOMBRE_PROYECTOPERIODOSEGUIMIENTODOCUMENTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id"
+      referencedTableName="proyecto_periodo_seguimiento_documento" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}proyecto_periodo_seguimiento_documento_nombre(proyecto_periodo_seguimiento_documento_id,
+      value_, lang) SELECT id, nombre, '${defaultLang}' FROM
+      ${schemaPrefix}proyecto_periodo_seguimiento_documento WHERE nombre IS NOT NULL AND
+      NULLIF(TRIM(nombre), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="proyecto_periodo_seguimiento_documento" />
+  </changeSet>
 </databaseChangeLog>

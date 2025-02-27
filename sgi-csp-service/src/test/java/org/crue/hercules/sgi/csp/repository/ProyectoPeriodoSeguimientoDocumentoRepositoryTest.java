@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucionNombre;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -73,11 +74,14 @@ class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepositoryTe
 
     entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);
 
+    Set<ProyectoPeriodoSeguimientoDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES,"nombre-1"));
+
     ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = ProyectoPeriodoSeguimientoDocumento
         .builder()
         .proyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoCientifico.getId())
         .documentoRef("doc-1")
-        .nombre("nombre-1")
+        .nombre(nombreDocumento)
         .build();
 
     entityManager.persistAndFlush(proyectoPeriodoSeguimientoDocumento);
@@ -136,11 +140,14 @@ class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepositoryTe
 
       entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);
 
+      Set<ProyectoPeriodoSeguimientoDocumentoNombre> nombreDocumento = new HashSet<>();
+      nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES, "nombre-" + i));
+
       ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = ProyectoPeriodoSeguimientoDocumento
           .builder()
           .proyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoCientifico.getId())
           .documentoRef("doc-" + i)
-          .nombre("nombre-" + i)
+          .nombre(nombreDocumento)
           .build();
 
       entityManager.persistAndFlush(proyectoPeriodoSeguimientoDocumento);
@@ -202,11 +209,14 @@ class ProyectoPeriodoSeguimientoDocumentoRepositoryTest extends BaseRepositoryTe
 
       entityManager.persistAndFlush(proyectoPeriodoSeguimientoCientifico);
 
+      Set<ProyectoPeriodoSeguimientoDocumentoNombre> nombreDocumento = new HashSet<>();
+      nombreDocumento.add(new ProyectoPeriodoSeguimientoDocumentoNombre(Language.ES, "nombre-" + i));
+
       ProyectoPeriodoSeguimientoDocumento proyectoPeriodoSeguimientoDocumento = ProyectoPeriodoSeguimientoDocumento
           .builder()
           .proyectoPeriodoSeguimientoId(proyectoPeriodoSeguimientoCientifico.getId())
           .documentoRef("doc-" + i)
-          .nombre("nombre-" + i)
+          .nombre(nombreDocumento)
           .build();
 
       entityManager.persistAndFlush(proyectoPeriodoSeguimientoDocumento);
