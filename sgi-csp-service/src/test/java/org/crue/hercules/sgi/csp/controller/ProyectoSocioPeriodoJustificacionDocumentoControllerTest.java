@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
@@ -87,8 +88,9 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].nombre[0].value")
             .value(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacionDocumento.get(0).getNombre(),
                 Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].comentario")
-            .value(proyectoSocioPeriodoJustificacionDocumento.get(0).getComentario()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].comentario[0].value")
+            .value(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacionDocumento.get(0).getComentario(),
+                Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].documentoRef")
             .value(proyectoSocioPeriodoJustificacionDocumento.get(0).getDocumentoRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].tipoDocumento.id")
@@ -99,8 +101,9 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].nombre[0].value")
             .value(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacionDocumento.get(1).getNombre(),
                 Language.ES)))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].comentario")
-            .value(proyectoSocioPeriodoJustificacionDocumento.get(1).getComentario()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].comentario[0].value")
+            .value(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacionDocumento.get(1).getComentario(),
+                Language.ES)))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].documentoRef")
             .value(proyectoSocioPeriodoJustificacionDocumento.get(1).getDocumentoRef()))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].tipoDocumento.id")
@@ -153,7 +156,7 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoDocumento.id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value").value("nombre-1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("comentario").value("comentario"));
+        .andExpect(MockMvcResultMatchers.jsonPath("comentario[0].value").value("comentario"));
   }
 
   @Test
@@ -187,10 +190,13 @@ class ProyectoSocioPeriodoJustificacionDocumentoControllerTest extends BaseContr
     Set<ProyectoSocioPeriodoJustificacionDocumentoNombre> nombreDocumento = new HashSet<>();
     nombreDocumento.add(new ProyectoSocioPeriodoJustificacionDocumentoNombre(Language.ES, "nombre-" + id));
 
+    Set<ProyectoSocioPeriodoJustificacionDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoSocioPeriodoJustificacionDocumentoComentario(Language.ES, "comentario"));
+
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(1L).nombre(nombreTipoDocumento).activo(Boolean.TRUE)
         .build();
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = ProyectoSocioPeriodoJustificacionDocumento
-        .builder().id(id).nombre(nombreDocumento).comentario("comentario").documentoRef("001")
+        .builder().id(id).nombre(nombreDocumento).comentario(comentarioDocumento).documentoRef("001")
         .proyectoSocioPeriodoJustificacionId(1L).tipoDocumento(tipoDocumento).visible(Boolean.TRUE).build();
     return proyectoSocioPeriodoJustificacionDocumento;
   }

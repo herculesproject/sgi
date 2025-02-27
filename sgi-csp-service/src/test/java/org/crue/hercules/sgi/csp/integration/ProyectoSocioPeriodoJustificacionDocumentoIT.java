@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -161,7 +162,8 @@ class ProyectoSocioPeriodoJustificacionDocumentoIT extends BaseIT {
         .isEqualTo(Boolean.TRUE);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getTipoDocumento().getId())
         .as("get(0).getTipoDocumento().getId()").isEqualTo(1L);
-    Assertions.assertThat(convocatoriaPeriodoJustificacion.getComentario()).as("get(0).getComentario()")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(convocatoriaPeriodoJustificacion.getComentario(), Language.ES))
+        .as("get(0).getComentario()")
         .isEqualTo("comentario-1");
 
   }
@@ -176,9 +178,12 @@ class ProyectoSocioPeriodoJustificacionDocumentoIT extends BaseIT {
     Set<ProyectoSocioPeriodoJustificacionDocumentoNombre> nombreDocumento = new HashSet<>();
     nombreDocumento.add(new ProyectoSocioPeriodoJustificacionDocumentoNombre(Language.ES, "nombre-" + id));
 
+    Set<ProyectoSocioPeriodoJustificacionDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoSocioPeriodoJustificacionDocumentoComentario(Language.ES, "comentario"));
+
     TipoDocumento tipoDocumento = TipoDocumento.builder().id(1L).activo(Boolean.TRUE).build();
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = ProyectoSocioPeriodoJustificacionDocumento
-        .builder().id(id).nombre(nombreDocumento).comentario("comentario").documentoRef("001")
+        .builder().id(id).nombre(nombreDocumento).comentario(comentarioDocumento).documentoRef("001")
         .proyectoSocioPeriodoJustificacionId(1L).tipoDocumento(tipoDocumento).visible(Boolean.TRUE).build();
 
     return proyectoSocioPeriodoJustificacionDocumento;

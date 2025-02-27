@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionDoc
 import org.crue.hercules.sgi.csp.exceptions.ProyectoSocioPeriodoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumento;
+import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoComentario;
 import org.crue.hercules.sgi.csp.model.ProyectoSocioPeriodoJustificacionDocumentoNombre;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoDocumentoNombre;
@@ -288,7 +289,10 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
     Assertions
         .assertThat(I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacionDocumento.getNombre(), Language.ES))
         .as("getNombre()").isEqualTo("nombre-1");
-    Assertions.assertThat(proyectoSocioPeriodoJustificacionDocumento.getComentario()).as("getComentario()")
+    Assertions
+        .assertThat(
+            I18nHelper.getValueForLanguage(proyectoSocioPeriodoJustificacionDocumento.getComentario(), Language.ES))
+        .as("getComentario()")
         .isEqualTo("comentario");
     Assertions.assertThat(proyectoSocioPeriodoJustificacionDocumento.getVisible()).as("getVisible()").isTrue();
 
@@ -326,9 +330,12 @@ class ProyectoSocioPeriodoJustificacionDocumentoServiceTest extends BaseServiceT
     Set<ProyectoSocioPeriodoJustificacionDocumentoNombre> nombreDocumento = new HashSet<>();
     nombreDocumento.add(new ProyectoSocioPeriodoJustificacionDocumentoNombre(Language.ES, "nombre-" + id));
 
+    Set<ProyectoSocioPeriodoJustificacionDocumentoComentario> comentarioDocumento = new HashSet<>();
+    comentarioDocumento.add(new ProyectoSocioPeriodoJustificacionDocumentoComentario(Language.ES, "comentario"));
+
     TipoDocumento tipoDocumento = TipoDocumento.builder().nombre(nombreTipoDocumento).activo(Boolean.TRUE).build();
     ProyectoSocioPeriodoJustificacionDocumento proyectoSocioPeriodoJustificacionDocumento = ProyectoSocioPeriodoJustificacionDocumento
-        .builder().id(id).nombre(nombreDocumento).comentario("comentario").documentoRef("001")
+        .builder().id(id).nombre(nombreDocumento).comentario(comentarioDocumento).documentoRef("001")
         .proyectoSocioPeriodoJustificacionId(proyectoSocioPeriodoJustificacionId).tipoDocumento(tipoDocumento)
         .visible(Boolean.TRUE).build();
 
