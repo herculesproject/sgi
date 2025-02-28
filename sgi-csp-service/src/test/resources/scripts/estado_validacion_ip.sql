@@ -19,12 +19,3 @@ VALUES
 (6, 'VALIDADA', '2021-09-07 11:11:00.000', 3);
 
 ALTER SEQUENCE test.estado_validacion_ip_seq RESTART WITH 100;
-
--- ESTADO_VALIDACION_IP_COMENTARIO
-INSERT INTO test.estado_validacion_ip_comentario (proyecto_facturacion_id, lang, value_) VALUES (1, 'es', '');
-INSERT INTO test.estado_validacion_ip_comentario (proyecto_facturacion_id, lang, value_) VALUES (2, 'es', '');
-INSERT INTO test.estado_validacion_ip_comentario (proyecto_facturacion_id, lang, value_) VALUES (3, 'es', '');
-INSERT INTO test.estado_validacion_ip_comentario (proyecto_facturacion_id, lang, value_) VALUES (4, 'es', '');
-INSERT INTO test.estado_validacion_ip_comentario (proyecto_facturacion_id, lang, value_) VALUES (5, 'es', '');
-INSERT INTO test.estado_validacion_ip_comentario (proyecto_facturacion_id, lang, value_) VALUES (6, 'es', '');
-

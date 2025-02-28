@@ -16,6 +16,6 @@ VALUES
 (3, '2021-09-21 11:11:00.000', '2021-11-11 11:11:00.000', 540.00, 3, 17, 1, NULL, 3);
 
 -- PROYECTO_FACTURACION_COMENTARIO
-INSERT INTO test.proyecto_facturacion_comentario (proyecto_id, lang, value_) VALUES (1, 'es', 'Proyecto Facuración 1');
-INSERT INTO test.proyecto_facturacion_comentario (proyecto_id, lang, value_) VALUES (2, 'es', 'Proyecto Facuración 2');
-INSERT INTO test.proyecto_facturacion_comentario (proyecto_id, lang, value_) VALUES (3, 'es', 'Proyecto Facuración 3');
+INSERT INTO test.proyecto_facturacion_comentario (proyecto_facturacion_id, lang, value_) VALUES (1, 'es', 'Proyecto Facuración 1');
+INSERT INTO test.proyecto_facturacion_comentario (proyecto_facturacion_id, lang, value_) VALUES (2, 'es', 'Proyecto Facuración 2');
+INSERT INTO test.proyecto_facturacion_comentario (proyecto_facturacion_id, lang, value_) VALUES (3, 'es', 'Proyecto Facuración 3');

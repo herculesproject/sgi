@@ -39,8 +39,8 @@ public class ProyectoFacturacionComentario implements Serializable, I18nFieldVal
   private Language lang;
 
   /** Comentario */
-  @Column(name = "value_", length = 2000, nullable = false)
+  @Column(name = "value_", length = 1024, nullable = false)
   @NotBlank
-  @Size(max = 2000)
+  @Size(max = 1024)
   private String value;
 }

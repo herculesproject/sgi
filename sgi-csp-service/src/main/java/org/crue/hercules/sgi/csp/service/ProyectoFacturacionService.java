@@ -100,7 +100,7 @@ public class ProyectoFacturacionService {
         .orElseThrow(() -> new ProyectoFacturacionNotFoundException(toUpdate.getId()));
 
     beforeUpdate.setComentario((toUpdate.getComentario().stream()
-        .map(observaciones -> new ProyectoFacturacionComentario(observaciones.getLang(), observaciones.getValue()))
+        .map(comentario -> new ProyectoFacturacionComentario(comentario.getLang(), comentario.getValue()))
         .collect(Collectors.toSet())));
     beforeUpdate.setImporteBase(toUpdate.getImporteBase());
     beforeUpdate.setPorcentajeIVA(toUpdate.getPorcentajeIVA());
@@ -188,7 +188,10 @@ public class ProyectoFacturacionService {
   }
 
   private EstadoValidacionIP persistEstadoValidacionIP(EstadoValidacionIP fromEstado, Long proyectoFacturacionId) {
-    return this.estadoValidacionIPRepository.save(EstadoValidacionIP.builder().comentario(fromEstado.getComentario())
+    return this.estadoValidacionIPRepository.save(EstadoValidacionIP.builder()
+        .comentario((fromEstado.getComentario().stream()
+            .map(comentario -> new ProyectoFacturacionComentario(comentario.getLang(), comentario.getValue()))
+            .collect(Collectors.toSet())))
         .estado(fromEstado.getEstado()).proyectoFacturacionId(proyectoFacturacionId).build());
   }
 

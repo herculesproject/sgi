@@ -44,15 +44,13 @@ public class ProyectoFacturacion extends BaseEntity {
   protected static final String TABLE_NAME = "proyecto_facturacion";
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
 
-  public static final int COMENTARIO_MAX_LENGTH = 1024;
-
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
   @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME, allocationSize = 1)
   private Long id;
 
   @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "proyecto_facturacion_comentario", joinColumns = @JoinColumn(name = "proyecto_id"))
+  @CollectionTable(name = "proyecto_facturacion_comentario", joinColumns = @JoinColumn(name = "proyecto_facturacion_id"))
   @Valid
   @Builder.Default
   private Set<ProyectoFacturacionComentario> comentario = new HashSet<>();

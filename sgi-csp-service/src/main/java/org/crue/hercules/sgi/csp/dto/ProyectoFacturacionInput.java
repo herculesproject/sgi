@@ -30,7 +30,6 @@ public class ProyectoFacturacionInput implements Serializable {
 
   private Long id;
 
-  @Size(max = ProyectoFacturacion.COMENTARIO_MAX_LENGTH)
   private List<I18nFieldValueDto> comentario;
 
   private Instant fechaConformidad;

@@ -43,8 +43,6 @@ public class EstadoValidacionIP extends BaseEntity {
   protected static final String TABLE_NAME = "estado_validacion_ip";
   private static final String SEQUENCE_NAME = TABLE_NAME + "_seq";
 
-  public static final int COMENTARIO_MAX_LENGTH = 1024;
-
   public enum TipoEstadoValidacion {
     PENDIENTE, NOTIFICADA, VALIDADA, RECHAZADA
   }
@@ -55,7 +53,7 @@ public class EstadoValidacionIP extends BaseEntity {
   private Long id;
 
   @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "estado_validacion_ip_comentario", joinColumns = @JoinColumn(name = "proyecto_facturacion_id"))
+  @CollectionTable(name = "estado_validacion_ip_comentario", joinColumns = @JoinColumn(name = "estado_validacion_ip_id"))
   @Valid
   @Builder.Default
   private Set<ProyectoFacturacionComentario> comentario = new HashSet<>();
