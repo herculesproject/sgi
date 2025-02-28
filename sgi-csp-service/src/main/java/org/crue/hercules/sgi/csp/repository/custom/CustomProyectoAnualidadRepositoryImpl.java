@@ -45,7 +45,6 @@ import org.crue.hercules.sgi.csp.model.ProyectoPeriodoAmortizacion_;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.Proyecto_;
 import org.crue.hercules.sgi.csp.model.SolicitudProyectoSocio;
-import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -636,12 +635,11 @@ public class CustomProyectoAnualidadRepositoryImpl implements CustomProyectoAnua
               .proyectoAcronimo(tuple.get(ALIAS_PROYECTO_ACRONIMO, String.class))
               .proyectoEstado(tuple.get(ALIAS_PROYECTO_ESTADO, EstadoProyecto.class))
               .proyectoSgeRef(tuple.get(AnualidadGasto_.PROYECTO_SGE_REF, String.class))
-              .enviadoSge(tuple.get(ALIAS_PROYECTO_ID, Boolean.class))
+              .enviadoSge(tuple.get(ALIAS_ENVIADO_SGE, Boolean.class))
               .build());
 
       // Añade el titulo del proyecto de la tupla actual
-      ProyectoTitulo tituloProyecto = tuple.get(
-          ProyectoProyectoSgePredicateResolver.Property.NOMBRE_PROYECTO.getCode(), ProyectoTitulo.class);
+      ProyectoTitulo tituloProyecto = tuple.get(ALIAS_PROYECTO_TITULO, ProyectoTitulo.class);
       if (tituloProyecto != null) {
         proyectoAnualidad.getProyectoTitulo().add(tituloProyecto);
       }
