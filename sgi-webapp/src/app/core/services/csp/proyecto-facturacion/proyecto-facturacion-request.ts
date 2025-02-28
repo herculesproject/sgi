@@ -12,7 +12,7 @@ export interface IProyectoFacturacionRequest {
   tipoFacturacionId: number;
   estadoValidacionIP: {
     id: number;
-    comentario: string;
+    comentario: I18nFieldValueRequest[];
     estado: TipoEstadoValidacion;
   }
   proyectoProrrogaId: number;

@@ -22,7 +22,7 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
       tipoFacturacion: { id: value.tipoFacturacionId } as ITipoFacturacion,
       estadoValidacionIP: {
         id: value.estadoValidacionIP?.id,
-        comentario: value.estadoValidacionIP?.comentario,
+        comentario: value.comentario ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.comentario) : [],
         estado: value.estadoValidacionIP?.estado,
         fecha: undefined,
         proyectoFacturacionId: undefined
@@ -45,7 +45,7 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
       tipoFacturacionId: value.tipoFacturacion?.id,
       estadoValidacionIP: {
         id: value.estadoValidacionIP.id,
-        comentario: value.estadoValidacionIP.comentario,
+        comentario: value.estadoValidacionIP.comentario ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.estadoValidacionIP.comentario) : [],
         estado: value.estadoValidacionIP.estado,
       },
       proyectoProrrogaId: value.proyectoProrroga?.id,

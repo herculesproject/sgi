@@ -122,8 +122,9 @@
     <div fxLayout="row" *ngIf="DIALOG_ACTION.VALIDAR_IP === data.action && showMensajeMotivoRechazo$ | async">
       <mat-form-field>
         <mat-label>{{'csp.proyecto-calendario-facturacion.motivo-rechazo' | translate}}</mat-label>
-        <textarea matInput formControlName="mensajeMotivoRechazo" type="text"
-          placeholder="{{'csp.proyecto-calendario-facturacion.motivo-rechazo' | translate}}" required></textarea>
+        <sgi-i18n-textarea formControlName="mensajeMotivoRechazo"
+          placeholder="{{'csp.proyecto-calendario-facturacion.motivo-rechazo' | translate}}" required>
+        </sgi-i18n-textarea>
         <mat-error *ngIf="formGroup.get('mensajeMotivoRechazo').errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamMotivoRechazoEntity}}
         </mat-error>

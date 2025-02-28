@@ -148,7 +148,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       tipoFacturacion: new FormControl(data?.tipoFacturacion),
       proyectoProrroga: new FormControl(data?.proyectoProrroga),
       nuevoEstadoValidacionIP: new FormControl(null),
-      mensajeMotivoRechazo: new FormControl(''),
+      mensajeMotivoRechazo: new FormControl(data?.estadoValidacionIP?.comentario, [I18nValidators.maxLength(COMENTARIO_MAX_LENGTH)]),
       identificadorSge: new FormControl(data?.proyectoSgeRef ? { id: data.proyectoSgeRef } as IProyectoSge : identificadorSgeUnico)
     });
 
@@ -191,7 +191,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
           const isRechazada = newEstado === TipoEstadoValidacion.RECHAZADA;
           this.showMensajeMotivoRechazo$.next(isRechazada);
           form.controls.mensajeMotivoRechazo.setValidators(isRechazada
-            ? [Validators.required, Validators.maxLength(COMENTARIO_MAX_LENGTH)] : []);
+            ? [I18nValidators.required, I18nValidators.maxLength(COMENTARIO_MAX_LENGTH)] : []);
           form.controls.mensajeMotivoRechazo.updateValueAndValidity();
 
           if (this.data.isCalendarioFacturacionSgeEnabled) {
