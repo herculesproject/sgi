@@ -126,7 +126,7 @@ class SeguimientoEjecucionEconomicaIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones,desc";
+    String sort = "observaciones.value,desc";
 
     // when: find ProyectoPeriodoJustificacionOutput
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PERIODO_JUSTIFICACION)
@@ -146,12 +146,12 @@ class SeguimientoEjecucionEconomicaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones())")
-        .isEqualTo("testing periodo 3");
-    Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones())")
-        .isEqualTo("testing periodo 2");
-    Assertions.assertThat(responseData.get(2).getObservaciones()).as("get(2).getObservaciones())")
-        .isEqualTo("testing periodo 1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones())").isEqualTo("testing periodo 3");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())").isEqualTo("testing periodo 2");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getObservaciones(), Language.ES))
+        .as("get(2).getObservaciones())").isEqualTo("testing periodo 1");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {

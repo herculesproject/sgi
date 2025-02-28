@@ -44,6 +44,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartida;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPartidaDescripcion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientificoObservaciones;
 import org.crue.hercules.sgi.csp.model.EstadoProyecto;
@@ -69,6 +70,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoIVA;
 import org.crue.hercules.sgi.csp.model.ProyectoPartida;
 import org.crue.hercules.sgi.csp.model.ProyectoPartidaDescripcion;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoProrroga;
@@ -2428,7 +2430,9 @@ public class ProyectoServiceImpl implements ProyectoService {
                     .fechaInicioPresentacion(periodo.getFechaInicioPresentacion())
                     .fechaFinPresentacion(periodo.getFechaFinPresentacion())
                     .tipoJustificacion(periodo.getTipo())
-                    .observaciones(I18nHelper.getValueForCurrentLanguage(periodo.getObservaciones()))
+                    .observaciones(
+                        convertObservacionesFromConvocatoriaProyectoJustificacionToProyectoPeriodoJustificacion(
+                            periodo.getObservaciones()))
                     .convocatoriaPeriodoJustificacionId(periodo.getId())
                     .fechaInicio(PeriodDateUtil.calculateFechaInicioPeriodo(proyecto.getFechaInicio(),
                         periodo.getMesInicial(), sgiConfigProperties.getTimeZone()))
@@ -2731,6 +2735,13 @@ public class ProyectoServiceImpl implements ProyectoService {
       Set<SolicitudProyectoSocioPeriodoJustificacionObservaciones> solicitudProyectoSocioPeriodoJustificacionObservaciones) {
     return solicitudProyectoSocioPeriodoJustificacionObservaciones.stream()
         .map(spspjobs -> new ProyectoSocioPeriodoJustificacionObservaciones(spspjobs.getLang(), spspjobs.getValue()))
+        .collect(Collectors.toSet());
+  }
+
+  private Set<ProyectoPeriodoJustificacionObservaciones> convertObservacionesFromConvocatoriaProyectoJustificacionToProyectoPeriodoJustificacion(
+      Set<ConvocatoriaPeriodoJustificacionObservaciones> convocatoriaPeriodoJustificacionObservaciones) {
+    return convocatoriaPeriodoJustificacionObservaciones.stream()
+        .map(ppjobs -> new ProyectoPeriodoJustificacionObservaciones(ppjobs.getLang(), ppjobs.getValue()))
         .collect(Collectors.toSet());
   }
 

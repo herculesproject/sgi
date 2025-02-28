@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.dto.SeguimientoJustificacionAnualidad;
 import org.crue.hercules.sgi.csp.enums.TipoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ProyectoPeriodoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimiento;
 import org.crue.hercules.sgi.csp.model.ProyectoPeriodoSeguimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
@@ -209,7 +210,7 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
         });
     for (int i = 31; i <= 37; i++) {
       ProyectoPeriodoJustificacion periodoJustificacion = periodosJustificacionResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(periodoJustificacion.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(periodoJustificacion.getObservaciones(), Language.ES))
           .isEqualTo("observaciones-" + String.format("%03d", i));
     }
   }
@@ -253,9 +254,14 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
 
   private ProyectoPeriodoJustificacion generarMockProyectoPeriodoJustificacion(Long id) {
     final String observacionesSuffix = id != null ? String.format("%03d", id) : "001";
+
+    Set<ProyectoPeriodoJustificacionObservaciones> observaciones = new HashSet<>();
+    observaciones
+        .add(new ProyectoPeriodoJustificacionObservaciones(Language.ES, "observaciones-" + observacionesSuffix));
+
     return ProyectoPeriodoJustificacion.builder()
         .id(id)
-        .observaciones("observaciones-" + observacionesSuffix)
+        .observaciones(observaciones)
         .build();
   }
 

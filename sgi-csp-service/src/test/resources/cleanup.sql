@@ -114,6 +114,7 @@ DELETE FROM test.proyecto_concepto_gasto_observaciones;
 DELETE FROM test.proyecto_concepto_gasto;
 UPDATE test.proyecto_periodo_justificacion SET estado = NULL;
 DELETE FROM test.estado_proyecto_periodo_justificacion;
+DELETE FROM test.proyecto_periodo_justificacion_observaciones;
 DELETE FROM test.proyecto_periodo_justificacion;
 DELETE FROM test.convocatoria_periodo_justificacion_observaciones;
 DELETE FROM test.convocatoria_periodo_justificacion;
