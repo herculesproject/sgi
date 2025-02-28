@@ -110,10 +110,9 @@ class ProyectoFacturacionIT extends BaseIT {
     proyectoFacturacionComentario
         .add(new I18nFieldValueDto(Language.ES, "updated"));
 
-    toUpdate.setComentario(proyectoFacturacionComentario);
     toUpdate.setEstadoValidacionIP(ProyectoFacturacionInput.EstadoValidacionIP.builder()
         .estado(ProyectoFacturacionInput.TipoEstadoValidacion.VALIDADA)
-        .comentario("estado validado")
+        .comentario(proyectoFacturacionComentario)
         .build());
 
     final ResponseEntity<ProyectoFacturacionOutput> response = restTemplate.exchange(

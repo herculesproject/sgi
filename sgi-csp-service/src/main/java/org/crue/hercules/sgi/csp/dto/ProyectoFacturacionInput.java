@@ -65,7 +65,7 @@ public class ProyectoFacturacionInput implements Serializable {
   @Builder
   public static class EstadoValidacionIP implements Serializable {
     private Long id;
-    private String comentario;
+    private List<I18nFieldValueDto> comentario;
     @NotNull
     private TipoEstadoValidacion estado;
   }

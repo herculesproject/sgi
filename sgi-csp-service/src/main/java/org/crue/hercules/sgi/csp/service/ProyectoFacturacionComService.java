@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +15,7 @@ import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput;
 import org.crue.hercules.sgi.csp.dto.sgp.PersonaOutput.Email;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
 import org.crue.hercules.sgi.csp.model.EstadoValidacionIP.TipoEstadoValidacion;
+import org.crue.hercules.sgi.csp.model.EstadoValidacionIPComentario;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoEquipo;
 import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
@@ -278,12 +281,20 @@ public class ProyectoFacturacionComService {
 
     List<String> codigosSge = getCodigosSge(proyecto.getId());
 
+    Set<EstadoValidacionIPComentario> setComentario = proyectoFacturacion.getEstadoValidacionIP().getComentario()
+        .stream()
+        .map(dto -> {
+          EstadoValidacionIPComentario comentario = new EstadoValidacionIPComentario(dto.getLang(), dto.getValue());
+          return comentario;
+        })
+        .collect(Collectors.toSet());
+
     return CspComCalendarioFacturacionValidarIPData.builder()
         .tituloProyecto(I18nHelper.getFieldValue(proyecto.getTitulo()))
         .numPrevision(proyectoFacturacion.getNumeroPrevision())
         .codigosSge(codigosSge)
         .motivoRechazo(proyectoFacturacion.getEstadoValidacionIP().getEstado() == TipoEstadoValidacion.RECHAZADA
-            ? proyectoFacturacion.getEstadoValidacionIP().getComentario()
+            ? I18nHelper.getValueForCurrentLanguage(setComentario)
             : "")
         .nombreApellidosValidador(persona.getNombre() + " " + persona.getApellidos())
         .build();
