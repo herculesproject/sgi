@@ -1,5 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TipoJustificacion } from '@core/enums/tipo-justificacion';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { Estado } from '@core/models/csp/estado-proyecto';
 import { IProyecto } from '@core/models/csp/proyecto';
@@ -8,12 +9,12 @@ import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto-periodo-justificacion/proyecto-periodo-justificacion.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { concatMap, filter, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { comparePeriodoJustificacion, getFechaFinPeriodoSeguimiento, getFechaInicioPeriodoSeguimiento } from '../../../proyecto-periodo-seguimiento/proyecto-periodo-seguimiento.utils';
-import { LanguageService } from '@core/services/language.service';
 
 const PROYECTO_PERIODO_JUSTIFICACION_NO_COINCIDE_KEY = marker('info.csp.proyecto-periodo-justificacion.no-coincide-convocatoria');
 const PROYECTO_PERIODO_JUSTIFICACION_NO_CONVOCATORIA_KEY = marker('info.csp.proyecto-periodo-justificacion.no-existe-en-convocatoria');
@@ -39,7 +40,7 @@ export interface IPeriodoJustificacionListado {
   fechaInicioPresentacion: DateTime;
   fechaFinPresentacion: DateTime;
   tipoJustificacion: TipoJustificacion;
-  observaciones: string;
+  observaciones: I18nFieldValue[];
   isProyectoPeriodoJustificacionDeleteable: boolean;
 }
 
@@ -280,7 +281,7 @@ export class ProyectoCalendarioJustificacionFragment extends Fragment {
       periodoJustificacionListado.fechaInicioPresentacion =
         periodoJustificacionListado.convocatoriaPeriodoJustificacion?.fechaInicioPresentacion;
       periodoJustificacionListado.fechaFinPresentacion = periodoJustificacionListado.convocatoriaPeriodoJustificacion?.fechaFinPresentacion;
-      periodoJustificacionListado.observaciones = this.languageService.getFieldValue(periodoJustificacionListado.convocatoriaPeriodoJustificacion?.observaciones);
+      periodoJustificacionListado.observaciones = periodoJustificacionListado.convocatoriaPeriodoJustificacion?.observaciones;
       if (periodoJustificacionListado.convocatoriaPeriodoJustificacion?.mesInicial) {
         periodoJustificacionListado.fechaInicio = getFechaInicioPeriodoSeguimiento(this.proyecto.fechaInicio,
           periodoJustificacionListado.convocatoriaPeriodoJustificacion.mesInicial);

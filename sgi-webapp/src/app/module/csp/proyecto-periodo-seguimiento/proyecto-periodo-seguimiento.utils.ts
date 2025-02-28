@@ -56,7 +56,7 @@ export function comparePeriodoJustificacion(
     || proyectoPeriodojustificacion.fechaInicioPresentacion?.toMillis() !==
     convocactoriaPeriodoJustificacion.fechaInicioPresentacion?.toMillis()
     || proyectoPeriodojustificacion.fechaFinPresentacion?.toMillis() !== convocactoriaPeriodoJustificacion.fechaFinPresentacion?.toMillis()
-    || (proyectoPeriodojustificacion.observaciones ?? '') !== (convocactoriaPeriodoJustificacion?.observaciones ?? '');
+    || !isObservacionesEquals(proyectoPeriodojustificacion.observaciones, convocactoriaPeriodoJustificacion?.observaciones);
 }
 
 
