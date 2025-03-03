@@ -2878,4 +2878,37 @@
 
     <dropColumn columnName="comentario" tableName="prorroga_documento" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-103">
+    <createTable tableName="notificacion_proyecto_externo_cvn_titulo">
+      <column name="notificacion_proyecto_externo_cvn_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="notificacion_proyecto_externo_cvn_titulo"
+      columnNames="notificacion_proyecto_externo_cvn_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="notificacion_proyecto_externo_cvn_id"
+      baseTableName="notificacion_proyecto_externo_cvn_titulo"
+      constraintName="FK_NOTIFICACIONPROYECTOEXTERNOCVNTITULO_NOTIFICACIONPROYECTOEXTERNOCVN"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="notificacion_proyecto_externo_cvn"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}notificacion_proyecto_externo_cvn_titulo(notificacion_proyecto_externo_cvn_id,
+      value_, lang) SELECT id, titulo, '${defaultLang}' FROM
+      ${schemaPrefix}notificacion_proyecto_externo_cvn WHERE titulo IS NOT NULL AND
+      NULLIF(TRIM(titulo), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="titulo" tableName="notificacion_proyecto_externo_cvn" />
+  </changeSet>
 </databaseChangeLog>

@@ -118,6 +118,7 @@ DELETE FROM test.proyecto_periodo_justificacion;
 DELETE FROM test.convocatoria_periodo_justificacion_observaciones;
 DELETE FROM test.convocatoria_periodo_justificacion;
 DELETE FROM test.notificacion_cvn_entidad_financiadora;
+DELETE FROM test.notificacion_proyecto_externo_cvn_titulo;
 DELETE FROM test.notificacion_proyecto_externo_cvn;
 DELETE FROM test.proyecto_titulo;
 DELETE FROM test.proyecto_observaciones;
