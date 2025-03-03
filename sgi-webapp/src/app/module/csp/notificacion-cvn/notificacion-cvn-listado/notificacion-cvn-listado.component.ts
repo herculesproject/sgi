@@ -16,8 +16,8 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, from, Observable, of } from 'rxjs';
-import { catchError, concatMap, filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { catchError, concatMap, filter, map, switchMap, toArray } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 import { NotificacionCvnAsociarAutorizacionModalComponent } from '../modals/notificacion-cvn-asociar-autorizacion-modal/notificacion-cvn-asociar-autorizacion-modal.component';
@@ -68,6 +68,13 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
   ) {
     super(translate);
     this.initFlexProperties();
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'titulo') {
+        return 'titulo.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -209,7 +216,6 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       }),
       catchError((error) => {
         this.logger.error(error);
-        this.processError(error);
         return of(notificacion);
       })
     );
@@ -246,7 +252,6 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       }),
       catchError((error) => {
         this.logger.error(error);
-        this.processError(error);
         return of(notificacion);
       })
     );
@@ -265,7 +270,7 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
     const controls = this.formGroup.controls;
     return new RSQLSgiRestFilter(
       'solicitanteRef', SgiRestFilterOperator.EQUALS, controls.investigador.value?.id)
-      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('fechaInicio', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioProyectoDesde.value))
       .and('fechaInicio', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaInicioProyectoHasta.value))
       .and('fechaFin', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaFinProyectoDesde.value))
