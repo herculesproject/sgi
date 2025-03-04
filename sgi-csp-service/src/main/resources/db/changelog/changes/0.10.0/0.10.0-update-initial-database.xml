@@ -2514,7 +2514,7 @@
       <column name="lang" type="VARCHAR(2)">
         <constraints nullable="false" />
       </column>
-      <column name="value_" type="CLOB">
+      <column name="value_" type="VARCHAR(2000)">
         <constraints nullable="false" />
       </column>
     </createTable>
