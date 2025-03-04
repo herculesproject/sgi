@@ -250,6 +250,8 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
             return facturaPrevistaPendiente.estadoValidacionIP?.estado ? this.translate.instant(TIPO_ESTADO_VALIDACION_MAP.get(facturaPrevistaPendiente.estadoValidacionIP?.estado)) : '';
           case 'tipoFacturacion.nombre':
             return facturaPrevistaPendiente.tipoFacturacion?.nombre ? this.languageService.getFieldValue(facturaPrevistaPendiente.tipoFacturacion?.nombre) : '';
+          case 'comentario':
+            this.languageService.getFieldValue(facturaPrevistaPendiente.comentario);
           default:
             return facturaPrevistaPendiente[property];
         }

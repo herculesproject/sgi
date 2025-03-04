@@ -141,6 +141,8 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
           return wrapper.value.porcentajeIVA;
         case 'prorroga':
           return wrapper.value.proyectoProrroga.numProrroga;
+        case 'comentario':
+          return this.languageService.getFieldValue(wrapper.value.comentario);
         default:
           return wrapper.value[property];
       }

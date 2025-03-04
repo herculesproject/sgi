@@ -127,7 +127,7 @@
           {{'csp.facturas-previstas-pendientes.comentario' | translate}}
         </th>
         <td mat-cell *matCellDef="let facturaPrevistaPendiente" matTooltip="{{facturaPrevistaPendiente.comentario}}">
-          {{facturaPrevistaPendiente.comentario}}
+          <sgi-i18n-table-field [field]="facturaPrevistaPendiente.comentario"></sgi-i18n-table-field>
         </td>
       </ng-container>
 

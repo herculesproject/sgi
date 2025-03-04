@@ -75,7 +75,7 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
           facturaPrevistaPendiente.importeBase ?? 0,
           facturaPrevistaPendiente.porcentajeIVA ?? 0,
           facturaPrevistaPendiente.importeTotal ?? 0,
-          facturaPrevistaPendiente.comentario ?? '',
+          this.languageService.getFieldValue(facturaPrevistaPendiente.comentario) ?? '',
           facturaPrevistaPendiente.tipoFacturacion,
           LuxonUtils.toBackend(facturaPrevistaPendiente.fechaConformidad),
           facturaPrevistaPendiente.estadoValidacionIP ? this.translate.instant(TIPO_ESTADO_VALIDACION_MAP.get(facturaPrevistaPendiente.estadoValidacionIP)) : ''

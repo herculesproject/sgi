@@ -22,7 +22,7 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
       tipoFacturacion: { id: value.tipoFacturacionId } as ITipoFacturacion,
       estadoValidacionIP: {
         id: value.estadoValidacionIP?.id,
-        comentario: value.comentario ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.comentario) : [],
+        comentario: value.estadoValidacionIP.comentario ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.estadoValidacionIP.comentario) : [],
         estado: value.estadoValidacionIP?.estado,
         fecha: undefined,
         proyectoFacturacionId: undefined
