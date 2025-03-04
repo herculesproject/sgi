@@ -8,13 +8,11 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ConfigService } from '@core/services/cnf/config.service';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { DetalleOperacionesModificacionesFragment } from './detalle-operaciones-modificaciones.fragment';
 import { DetalleOperacionesModificacionesExportModalComponent } from './export/detalle-operaciones-modificaciones-export-modal.component';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-detalle-operaciones-modificaciones',
@@ -35,7 +33,6 @@ export class DetalleOperacionesModificacionesComponent extends FragmentComponent
   @ViewChild('anualSel') selectAnualidades: MatSelect;
 
   private totalElementos = 0;
-  private limiteRegistrosExportacionExcel: string;
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
@@ -43,8 +40,7 @@ export class DetalleOperacionesModificacionesComponent extends FragmentComponent
 
   constructor(
     actionService: EjecucionEconomicaActionService,
-    private matDialog: MatDialog,
-    private readonly cnfService: ConfigService
+    private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.DETALLE_OPERACIONES_MODIFICACIONES, actionService);
 
@@ -58,11 +54,6 @@ export class DetalleOperacionesModificacionesComponent extends FragmentComponent
       this.dataSourceDesglose.data = elements;
       this.totalElementos = elements.length;
     }));
-
-    this.subscriptions.push(
-      this.cnfService.getLimiteRegistrosExportacionExcel('csp-exp-max-num-registros-excel-detalle-operaciones-modificaciones').subscribe(value => {
-        this.limiteRegistrosExportacionExcel = value;
-      }));
   }
 
   public clearDesglose(): void {
@@ -77,7 +68,7 @@ export class DetalleOperacionesModificacionesComponent extends FragmentComponent
           columns: exportData?.columns,
           data: exportData?.data,
           totalRegistrosExportacionExcel: this.totalElementos,
-          limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+          limiteRegistrosExportacionExcel: this.formPart.limiteRegistrosExportacionExcel
         };
 
         const config = {

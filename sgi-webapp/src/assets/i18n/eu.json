@@ -1687,6 +1687,8 @@
   "csp.solicitud.unidad-gestion": "Kudeaketa unitatea",
   "csp.tipo-ambito-geografico": "Eremu geografiko mota",
   "csp.tipo-ambito-geografico.nombre": "Izena",
+  "csp.tipo-dato-economico.GASTO": "Gastua",
+  "csp.tipo-dato-economico.INGRESO": "Sarrera",
   "csp.tipo-documento": "Dokumentu mota{count,plural,=0{} one{} other{k}}",
   "csp.tipo-documento.descripcion": "Deskribapena",
   "csp.tipo-documento.nombre": "Izena",

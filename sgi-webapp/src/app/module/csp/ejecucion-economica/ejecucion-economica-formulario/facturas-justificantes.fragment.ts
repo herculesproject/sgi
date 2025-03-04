@@ -80,16 +80,16 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
     key: number,
     protected proyectoSge: IProyectoSge,
     protected relaciones: IRelacionEjecucionEconomicaWithResponsables[],
+    protected readonly languageService: LanguageService,
     protected proyectoService: ProyectoService,
     proyectoAnualidadService: ProyectoAnualidadService,
     protected gastoProyectoService: GastoProyectoService,
     private proyectoConceptoGastoCodigoEcService: ProyectoConceptoGastoCodigoEcService,
     private proyectoConceptoGastoService: ProyectoConceptoGastoService,
     private configuracion: IConfiguracion,
-    private readonly languageService: LanguageService,
     private readonly translate: TranslateService
   ) {
-    super(key, proyectoSge, relaciones, proyectoService, proyectoAnualidadService, configuracion);
+    super(key, proyectoSge, relaciones, languageService, proyectoService, proyectoAnualidadService, configuracion);
     this.setComplete(true);
   }
 

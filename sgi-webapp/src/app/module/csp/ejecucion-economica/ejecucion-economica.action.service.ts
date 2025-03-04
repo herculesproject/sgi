@@ -5,6 +5,7 @@ import { IRelacionEjecucionEconomica, TipoEntidad } from '@core/models/csp/relac
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IPersona } from '@core/models/sgp/persona';
 import { ActionService } from '@core/services/action-service';
+import { ConfigService } from '@core/services/cnf/config.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoConceptoGastoCodigoEcService } from '@core/services/csp/proyecto-concepto-gasto-codigo-ec.service';
@@ -114,6 +115,7 @@ export class EjecucionEconomicaActionService extends ActionService {
     proyectoPeriodoSeguimientoService: ProyectoPeriodoSeguimientoService,
     proyectoSeguimientoJustificacionService: ProyectoSeguimientoJustificacionService,
     proyectoPeriodoJustificacionSeguimientoService: ProyectoPeriodoJustificacionSeguimientoService,
+    private readonly cnfService: ConfigService,
     private readonly languageService: LanguageService,
     private readonly translateService: TranslateService
   ) {
@@ -134,8 +136,10 @@ export class EjecucionEconomicaActionService extends ActionService {
       id,
       this.data.proyectoSge,
       this.data.relaciones,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
+      cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
     );
@@ -144,8 +148,10 @@ export class EjecucionEconomicaActionService extends ActionService {
       id,
       this.data.proyectoSge,
       this.data.relaciones,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
+      cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
     );
@@ -154,8 +160,10 @@ export class EjecucionEconomicaActionService extends ActionService {
       id,
       this.data.proyectoSge,
       this.data.relaciones,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
+      cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
     );
@@ -164,8 +172,10 @@ export class EjecucionEconomicaActionService extends ActionService {
       id,
       this.data.proyectoSge,
       this.data.relaciones,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
+      cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
     );
@@ -174,8 +184,10 @@ export class EjecucionEconomicaActionService extends ActionService {
       id,
       this.data.proyectoSge,
       this.data.relaciones,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
+      cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
     );
@@ -184,29 +196,61 @@ export class EjecucionEconomicaActionService extends ActionService {
       id,
       this.data.proyectoSge,
       this.data.relaciones,
+      languageService,
       proyectoService,
       proyectoAnualidadService,
+      cnfService,
       ejecucionEconomicaService,
       this.data.configuracion
     );
 
     this.facturasGastos = new FacturasGastosFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService,
-      gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
-      proyectoConceptoGastoService, this.data.configuracion, this.languageService, this.translateService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      this.languageService,
+      proyectoService,
+      proyectoAnualidadService,
+      gastoProyectoService,
+      cnfService,
+      ejecucionEconomicaService,
+      proyectoConceptoGastoCodigoEcService,
+      proyectoConceptoGastoService,
+      this.data.configuracion,
+      this.translateService
+    );
 
     this.viajesDietas = new ViajesDietasFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService,
-      gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
-      proyectoConceptoGastoService, this.data.configuracion, this.languageService, this.translateService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      this.languageService,
+      proyectoService,
+      proyectoAnualidadService,
+      gastoProyectoService,
+      cnfService,
+      ejecucionEconomicaService,
+      proyectoConceptoGastoCodigoEcService,
+      proyectoConceptoGastoService,
+      this.data.configuracion,
+      this.translateService
+    );
 
     this.personalContratado = new PersonalContratadoFragment(
-      id, this.data.proyectoSge, this.data.relaciones,
-      proyectoService, proyectoAnualidadService,
-      gastoProyectoService, ejecucionEconomicaService, proyectoConceptoGastoCodigoEcService,
-      proyectoConceptoGastoService, this.data.configuracion, this.languageService, this.translateService);
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones,
+      this.languageService,
+      proyectoService,
+      proyectoAnualidadService,
+      gastoProyectoService,
+      cnfService,
+      ejecucionEconomicaService,
+      proyectoConceptoGastoCodigoEcService,
+      proyectoConceptoGastoService,
+      this.data.configuracion,
+      this.translateService
+    );
 
     this.clasificacionGastos = new ClasificacionGastosFragment(
       id,
@@ -228,6 +272,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       gastoService,
       proyectoService,
       gastoProyectoService,
+      languageService,
       this.data.configuracion
     );
 

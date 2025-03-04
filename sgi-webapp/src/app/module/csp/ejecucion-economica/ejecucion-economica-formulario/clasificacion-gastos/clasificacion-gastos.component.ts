@@ -88,7 +88,7 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
           const gastoColumn = this.formPart.columns.find(column => column.id === property);
 
           let columnId: string;
-          switch (gasto.tipo) {
+          switch (gasto.tipoOperacion) {
             case TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS:
               columnId = gastoColumn.idFacturasGastos;
               break;
@@ -161,7 +161,7 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
               tituloModal: MODAL_CLASIFICACION_TITLE_KEY,
               proyecto: null,
               vinculacion: null,
-              showDatosCongreso: element.tipo === TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS,
+              showDatosCongreso: element.tipoOperacion === TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS,
               disableProyectoSgi: this.formPart.disableProyectoSgi
             }
           };
@@ -197,7 +197,7 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
 
   private getGastoDetalle(gasto: ClasificacionGasto): Observable<IDatoEconomicoDetalle> {
     let detalleGasto$: Observable<IDatoEconomicoDetalle>;
-    switch (gasto.tipo) {
+    switch (gasto.tipoOperacion) {
       case TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS:
         detalleGasto$ = this.ejecucionEconomicaService.getFacturaGasto(gasto.id);
         break;

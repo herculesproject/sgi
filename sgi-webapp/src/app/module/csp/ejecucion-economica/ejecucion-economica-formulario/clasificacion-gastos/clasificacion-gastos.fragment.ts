@@ -1,5 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { Language } from '@core/i18n/language';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { CardinalidadRelacionSgiSge, IConfiguracion } from '@core/models/csp/configuracion';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
@@ -18,7 +19,7 @@ import { EjecucionEconomicaService, TipoOperacion } from '@core/services/sge/eje
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
-import { BehaviorSubject, Observable, from, merge, of } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, from, merge, of } from 'rxjs';
 import { concatAll, concatMap, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../../ejecucion-economica.action.service';
 import { IColumnDefinition } from '../desglose-economico.fragment';
@@ -31,7 +32,7 @@ export interface ClasificacionGasto extends IDatoEconomico {
   proyecto: IProyecto;
   conceptoGasto: IConceptoGasto;
   clasificadoAutomaticamente: boolean;
-  tipo: TipoOperacion;
+  tipoOperacion: TipoOperacion;
 }
 
 export interface ColumnDefinitionClasificacionGasto extends IColumnDefinition {
@@ -46,9 +47,11 @@ export class ClasificacionGastosFragment extends Fragment {
   protected updatedGastosProyectos: Map<string, IGastoProyecto> = new Map();
 
   private proyectoConceptoGastosMap = new Map<string, IProyectoConceptoGasto>();
+  private columnsLanguage: Map<Language, ColumnDefinitionClasificacionGasto[]> = new Map();
 
   displayColumns: string[] = [];
   columns: ColumnDefinitionClasificacionGasto[] = [];
+  columns$ = new BehaviorSubject<ColumnDefinitionClasificacionGasto[]>([]);
 
   get disableProyectoSgi(): boolean {
     return this.config.cardinalidadRelacionSgiSge === CardinalidadRelacionSgiSge.SGI_1_SGE_1
@@ -73,26 +76,21 @@ export class ClasificacionGastosFragment extends Fragment {
   }
 
   protected onInitialize(): void {
-    this.subscriptions.push(this.getColumns().subscribe(
-      (columns) => {
-        this.columns = columns;
-        this.displayColumns = [
-          'anualidad',
-          'proyecto',
-          'conceptoGasto',
-          'clasificacionSGE',
-          'aplicacionPresupuestaria',
-          'codigoEconomico',
-          'fechaDevengo',
-          ...columns.map(column => column.id),
-          'acciones'
-        ];
 
-        if (this.disableProyectoSgi) {
-          this.displayColumns.splice(1, 1);
-        }
+    this.subscriptions.push(
+      this.languageService.languageChange$.pipe(
+        switchMap(language => forkJoin({
+          columns: this.columnsLanguage.has(language) ? of(this.columnsLanguage.get(language)) : this.getColumns(),
+          language: of(language)
+        }))
+      ).subscribe(({ columns, language }) => {
+        this.columns = columns;
+        this.columnsLanguage.set(language, this.columns);
+        this.columns$.next(this.columns);
+        this.displayColumns = this.getDisplayColumns(this.columns);
       }
-    ));
+      )
+    );
   }
 
   public searchGastos(fechaDesde: string, fechaHasta: string, gastosClasficadosSgiFilter: GastosClasficadosSgiEnum): void {
@@ -102,17 +100,17 @@ export class ClasificacionGastosFragment extends Fragment {
     gastos$ = merge(
       this.ejecucionEconomicaService.getViajesDietas(this.proyectoSge.id).pipe(
         map(gastos => gastos.map(gasto => {
-          return { ...gasto, tipo: TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS } as ClasificacionGasto;
+          return { ...gasto, tipoOperacion: TipoOperacion.FACTURAS_JUSTIFICANTES_VIAJES_DIETAS } as ClasificacionGasto;
         }))
       ),
       this.ejecucionEconomicaService.getFacturasGastos(this.proyectoSge.id).pipe(
         map(gastos => gastos.map(gasto => {
-          return { ...gasto, tipo: TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS } as ClasificacionGasto;
+          return { ...gasto, tipoOperacion: TipoOperacion.FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS } as ClasificacionGasto;
         }))
       ),
       this.ejecucionEconomicaService.getPersonalContratado(this.proyectoSge.id).pipe(
         map(gastos => gastos.map(gasto => {
-          return { ...gasto, tipo: TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO } as ClasificacionGasto;
+          return { ...gasto, tipoOperacion: TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO } as ClasificacionGasto;
         }))
       )
     );
@@ -302,6 +300,10 @@ export class ClasificacionGastosFragment extends Fragment {
     );
   }
 
+  public trackByColumnId(index, column: ColumnDefinitionClasificacionGasto): string {
+    return column.id;
+  }
+
   private getProyecto(proyectoId: number): Observable<IProyecto> {
     const key = proyectoId;
     const existing = this.proyectosMap.get(key);
@@ -405,6 +407,26 @@ export class ClasificacionGastosFragment extends Fragment {
         value: this.translate.instant(CONCEPTO_GASTO_SIN_CLASIFICAR)
       }
     ];
+  }
+
+  private getDisplayColumns(columns: ColumnDefinitionClasificacionGasto[]): string[] {
+    const displayColumns = [
+      'anualidad',
+      'proyecto',
+      'conceptoGasto',
+      'clasificacionSGE',
+      'aplicacionPresupuestaria',
+      'codigoEconomico',
+      'fechaDevengo',
+      ...columns.map(column => column.id),
+      'acciones'
+    ];
+
+    if (this.disableProyectoSgi) {
+      this.displayColumns.splice(1, 1);
+    }
+
+    return displayColumns;
   }
 
 }

@@ -10,7 +10,6 @@ import { MSG_PARAMS } from '@core/i18n';
 import { ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ConfigService } from '@core/services/cnf/config.service';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { DialogService } from '@core/services/dialog.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
@@ -40,7 +39,6 @@ export class ViajesDietasComponent extends FragmentComponent implements OnInit, 
   fxLayoutProperties: FxLayoutProperties;
 
   private totalElementos = 0;
-  private limiteRegistrosExportacionExcel: string;
 
   readonly dataSourceDesglose = new MatTableDataSource<RowTreeDesglose<IDesglose>>();
   @ViewChild('anualSel') selectAnualidades: MatSelect;
@@ -63,8 +61,7 @@ export class ViajesDietasComponent extends FragmentComponent implements OnInit, 
     private ejecucionEconomicaService: EjecucionEconomicaService,
     private gastoProyectoService: GastoProyectoService,
     private matDialog: MatDialog,
-    private dialogService: DialogService,
-    private readonly cnfService: ConfigService
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.VIAJES_DIETAS, actionService);
 
@@ -78,11 +75,6 @@ export class ViajesDietasComponent extends FragmentComponent implements OnInit, 
       this.dataSourceDesglose.data = elements;
       this.totalElementos = elements.length;
     }));
-
-    this.subscriptions.push(
-      this.cnfService.getLimiteRegistrosExportacionExcel('csp-exp-max-num-registros-excel-viajes-dietas').subscribe(value => {
-        this.limiteRegistrosExportacionExcel = value;
-      }));
   }
 
   ngOnDestroy(): void {
@@ -202,7 +194,7 @@ export class ViajesDietasComponent extends FragmentComponent implements OnInit, 
           columns: exportData?.columns,
           data: exportData?.data,
           totalRegistrosExportacionExcel: this.totalElementos,
-          limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel),
+          limiteRegistrosExportacionExcel: this.formPart.limiteRegistrosExportacionExcel,
           rowConfig: this.formPart.rowConfig
         };
 

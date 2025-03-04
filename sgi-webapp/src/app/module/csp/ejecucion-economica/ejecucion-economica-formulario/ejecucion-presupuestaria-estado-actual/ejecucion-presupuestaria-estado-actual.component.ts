@@ -5,10 +5,9 @@ import { MatSelect } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { IDatoEconomico } from '@core/models/sge/dato-economico';
+import { IDatoEconomico, TIPO_DATO_ECONOMICO_MAP } from '@core/models/sge/dato-economico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ConfigService } from '@core/services/cnf/config.service';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
@@ -35,16 +34,18 @@ export class EjecucionPresupuestariaEstadoActualComponent extends FragmentCompon
   @ViewChild('anualSel') selectAnualidades: MatSelect;
 
   private totalElementos = 0;
-  private limiteRegistrosExportacionExcel: string;
 
   get MSG_PARAMS() {
     return MSG_PARAMS;
   }
 
+  get TIPO_DATO_ECONOMICO_MAP() {
+    return TIPO_DATO_ECONOMICO_MAP;
+  }
+
   constructor(
     actionService: EjecucionEconomicaActionService,
-    private matDialog: MatDialog,
-    private readonly cnfService: ConfigService
+    private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL, actionService);
 
@@ -58,11 +59,6 @@ export class EjecucionPresupuestariaEstadoActualComponent extends FragmentCompon
       this.dataSourceDesglose.data = elements;
       this.totalElementos = elements.length;
     }));
-
-    this.subscriptions.push(
-      this.cnfService.getLimiteRegistrosExportacionExcel('csp-exp-max-num-registros-excel-ejecucion-presupuestaria-estado-actual').subscribe(value => {
-        this.limiteRegistrosExportacionExcel = value;
-      }));
   }
 
   public clearDesglose(): void {
@@ -77,7 +73,7 @@ export class EjecucionPresupuestariaEstadoActualComponent extends FragmentCompon
           columns: exportData?.columns,
           data: exportData?.data,
           totalRegistrosExportacionExcel: this.totalElementos,
-          limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+          limiteRegistrosExportacionExcel: this.formPart.limiteRegistrosExportacionExcel
         };
 
         const config = {

@@ -1741,6 +1741,8 @@
   "csp.solicitud.unidad-gestion": "Unidad de gestión",
   "csp.tipo-ambito-geografico": "Tipo de ámbito geográfico",
   "csp.tipo-ambito-geografico.nombre": "Nombre",
+  "csp.tipo-dato-economico.GASTO": "Gasto",
+  "csp.tipo-dato-economico.INGRESO": "Ingreso",
   "csp.tipo-documento": "Tipo{count,plural,=0{} one{} other{s}} de Documento",
   "csp.tipo-documento.descripcion": "Descripción",
   "csp.tipo-documento.nombre": "Nombre",

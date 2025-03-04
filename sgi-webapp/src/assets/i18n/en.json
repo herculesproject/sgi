@@ -1687,6 +1687,8 @@
   "csp.solicitud.unidad-gestion": "Management unit",
   "csp.tipo-ambito-geografico": "Geographical scope type",
   "csp.tipo-ambito-geografico.nombre": "Name",
+  "csp.tipo-dato-economico.GASTO": "Expenditure",
+  "csp.tipo-dato-economico.INGRESO": "Earnings",
   "csp.tipo-documento": "Document type{count,plural,=0{} one{} other{s}}",
   "csp.tipo-documento.descripcion": "Description",
   "csp.tipo-documento.nombre": "Name",

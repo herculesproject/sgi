@@ -8,13 +8,12 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ConfigService } from '@core/services/cnf/config.service';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { DetalleOperacionesIngresosFragment } from './detalle-operaciones-ingresos.fragment';
 import { DetalleOperacionesIngresosExportModalComponent } from './export/detalle-operaciones-ingresos-export-modal.component';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-detalle-operaciones-ingresos',
@@ -31,7 +30,6 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
   msgParamEntity = {};
 
   private totalElementos = 0;
-  private limiteRegistrosExportacionExcel: string;
 
   readonly dataSourceDesglose = new MatTableDataSource<RowTreeDesglose<IDatoEconomico>>();
 
@@ -44,7 +42,6 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
   constructor(
     actionService: EjecucionEconomicaActionService,
     private matDialog: MatDialog,
-    private readonly cnfService: ConfigService,
     private readonly translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DETALLE_OPERACIONES_INGRESOS, actionService, translate);
@@ -59,11 +56,6 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
       this.dataSourceDesglose.data = elements;
       this.totalElementos = elements.length;
     }));
-
-    this.subscriptions.push(
-      this.cnfService.getLimiteRegistrosExportacionExcel('csp-exp-max-num-registros-excel-detalle-operaciones-ingresos').subscribe(value => {
-        this.limiteRegistrosExportacionExcel = value;
-      }));
   }
 
   public clearDesglose(): void {
@@ -79,7 +71,7 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
           columns: exportData?.columns,
           data: exportData?.data,
           totalRegistrosExportacionExcel: this.totalElementos,
-          limiteRegistrosExportacionExcel: Number(this.limiteRegistrosExportacionExcel)
+          limiteRegistrosExportacionExcel: this.formPart.limiteRegistrosExportacionExcel
         };
 
         const config = {
@@ -97,4 +89,5 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
   }
 
   protected setupI18N(): void { }
+
 }

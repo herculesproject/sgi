@@ -1,5 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { IBaseExportModalData } from '@core/component/base-export/base-export-modal-data';
+import { Language } from '@core/i18n/language';
 import { IConfiguracion } from '@core/models/csp/configuracion';
 import { IRelacionEjecucionEconomica, TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
 import { IColumna } from '@core/models/sge/columna';
@@ -8,8 +9,9 @@ import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { Fragment } from '@core/services/action-service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
-import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 
@@ -100,10 +102,14 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
   readonly relaciones$ = new BehaviorSubject<IRelacionEjecucionEconomica[]>([]);
   readonly anualidades$ = new BehaviorSubject<string[]>([]);
 
+  private columnsLanguage: Map<Language, IColumnDefinition[]> = new Map();
+
   displayColumns: string[] = [];
   columns: IColumnDefinition[] = [];
+  columns$ = new BehaviorSubject<IColumnDefinition[]>([]);
   readonly desglose$: Subject<RowTreeDesglose<T>[]> = new BehaviorSubject<RowTreeDesglose<T>[]>([]);
   readonly aniosControl = new FormControl();
+  limiteRegistrosExportacionExcel: number;
 
   get isEjecucionEconomicaGruposEnabled(): boolean {
     return this.config.ejecucionEconomicaGruposEnabled ?? false;
@@ -113,6 +119,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
     key: number,
     protected proyectoSge: IProyectoSge,
     protected relaciones: IRelacionEjecucionEconomicaWithResponsables[],
+    protected readonly languageService: LanguageService,
     protected proyectoService: ProyectoService,
     private proyectoAnualidadService: ProyectoAnualidadService,
     protected readonly config: IConfiguracion
@@ -127,9 +134,32 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
     this.subscriptions.push(this.getAnualidades().subscribe(
       (anios) => this.anualidades$.next(anios)
     ));
+
+    this.subscriptions.push(
+      this.languageService.languageChange$.pipe(
+        switchMap(language => forkJoin({
+          columns: this.columnsLanguage.has(language) ? of(this.columnsLanguage.get(language)) : this.getColumns(),
+          language: of(language)
+        }))
+      ).subscribe(({ columns, language }) => {
+        this.columns = columns;
+        this.columnsLanguage.set(language, this.columns);
+        this.columns$.next(this.columns);
+        this.displayColumns = this.getDisplayColumns(this.getRowConfig(), this.columns);
+      }
+      )
+    );
+
+    this.subscriptions.push(
+      this.getLimiteRegistrosExportacionExcel().subscribe(limite => this.limiteRegistrosExportacionExcel = limite)
+    );
   }
 
   protected abstract getColumns(reducida?: boolean): Observable<IColumnDefinition[]>;
+
+  protected abstract getDisplayColumns(rowConfig: IRowConfig, columns: IColumnDefinition[]): string[];
+
+  protected abstract getLimiteRegistrosExportacionExcel(): Observable<number>;
 
   protected toColumnDefinition(columnas: IColumna[]): IColumnDefinition[] {
     return columnas.map(columna => {
@@ -224,6 +254,10 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
   public clearDesglose(): void {
     const regs: RowTreeDesglose<T>[] = [];
     this.desglose$.next(regs);
+  }
+
+  public trackByColumnId(index, column: IColumnDefinition): string {
+    return column.id;
   }
 
   protected abstract getDatosEconomicos(anualidades: string[]): Observable<IDatoEconomico[]>;
