@@ -123,7 +123,7 @@ export class ProyectoPaquetesTrabajoModalComponent extends DialogFormComponent<P
       fechaFin: new FormControl(this.data?.paqueteTrabajo?.fechaFin, Validators.required),
       personaMes: new FormControl(this.data?.paqueteTrabajo?.personaMes, [
         Validators.min(0), Validators.max(9999), Validators.required]),
-      descripcion: new FormControl(this.data?.paqueteTrabajo?.descripcion, [I18nValidators.maxLength(250)])
+      descripcion: new FormControl(this.data?.paqueteTrabajo?.descripcion, [I18nValidators.maxLength(2000)])
     },
       {
         validators: [
