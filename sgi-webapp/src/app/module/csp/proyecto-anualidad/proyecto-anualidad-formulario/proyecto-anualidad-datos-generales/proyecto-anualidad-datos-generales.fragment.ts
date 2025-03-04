@@ -34,6 +34,10 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
     this.subscriptions.push(this.configServiceCSP.isNotificacionPresupuestosSgeEnabled().subscribe(value => {
       this.isNotificacionPresupuestoSgeEnabled = value;
     }));
+
+    this.subscriptions.push(this.configServiceCSP.isFormatoAnualidadAnio().subscribe(value => {
+      this.refreshValidatorsAnualidadAnio(value);
+    }));
   }
 
   protected buildFormGroup(): FormGroup {
@@ -56,10 +60,6 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
         ]
       }
     );
-
-    if (!this.isAnualidadGenerica) {
-      form.controls.anualidad.setValidators([Validators.required, Validators.pattern('^[1-9][0-9]{3}'), NumberValidator.isInteger()]);
-    }
 
     this.subscriptions.push(
       form.controls.fechaInicio.valueChanges.subscribe((value) => {
@@ -134,5 +134,15 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
 
   private update(proyectoAnualidad: IProyectoAnualidad): Observable<IProyectoAnualidad> {
     return this.service.update(proyectoAnualidad.id, proyectoAnualidad);
+  }
+
+  private refreshValidatorsAnualidadAnio(formatoAnio: boolean) {
+    if (!this.isAnualidadGenerica) {
+      if (formatoAnio) {
+        this.getFormGroup().controls.anualidad.setValidators([Validators.required, Validators.pattern('^[1-9][0-9]{3}'), NumberValidator.isInteger()]);
+      } else {
+        this.getFormGroup().controls.anualidad.setValidators([Validators.required, Validators.pattern('^[1-9][0-9]*$'), NumberValidator.isInteger()]);
+      }
+    }
   }
 }

@@ -160,4 +160,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isFormatoAnualidadAnio(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_FORMATO_ANUALIDAD_ANIO).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
 }

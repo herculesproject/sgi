@@ -50,6 +50,8 @@
   "adm.config.csp.CSP_EXP_MAX_NUM_REGISTROS_EXCEL_VIAJES_DIETAS": "Ejecución económica - Facturas y justificantes - Viajes y dietas - Número máximo de registros en la exportación del listado",
   "adm.config.csp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES": "Columnas a mostrar en Facturas y gastos (ejecución económica - facturas y justificantes)",
   "adm.config.csp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES.description": "Columnas a mostrar en Facturas y gastos (ejecución económica - facturas y justificantes)",
+  "adm.config.csp.CSP_FORMATO_ANUALIDAD_ANIO": "Activar formato de año natural en anualidad de presupuesto de proyecto",
+  "adm.config.csp.CSP_FORMATO_ANUALIDAD_ANIO.description": "Permite activar formato de año natural en anualidad de presupuesto de proyecto, en caso contrario el formato será numérico",
   "adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO": "Formato para el campo referencia interna del proyecto",
   "adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO.description": "Expresión regular que se aplicará para la validación del campo referencia interna (cod Interno) del proyecto. Ejemplo: ^[A-Za-z0-9] '{4}'-[A-Za-z0-9]'{3}'-[A-Za-z0-9]'{3}'$",
   "adm.config.csp.CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA": "Plantilla para el campo referencia interna del proyecto",

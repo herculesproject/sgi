@@ -8,6 +8,7 @@ import { IProyectoAnualidadResumen } from '@core/models/csp/proyecto-anualidad-r
 import { ActionService } from '@core/services/action-service';
 import { AnualidadGastoService } from '@core/services/csp/anualidad-gasto/anualidad-gasto.service';
 import { AnualidadIngresoService } from '@core/services/csp/anualidad-ingreso/anualidad-ingreso.service';
+import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { CodigoEconomicoIngresoService } from '@core/services/sge/codigo-economico-ingreso.service';
@@ -20,7 +21,6 @@ import { ProyectoAnualidadGastosFragment } from './proyecto-anualidad-formulario
 import { ProyectoAnualidadIngresosFragment } from './proyecto-anualidad-formulario/proyecto-anualidad-ingresos/proyecto-anualidad-ingresos.fragment';
 import { ProyectoAnualidadResumenFragment } from './proyecto-anualidad-formulario/proyecto-anualidad-resumen/proyecto-anualidad-resumen.fragment';
 import { PROYECTO_ANUALIDAD_ROUTE_PARAMS } from './proyecto-anualidad-route-params';
-import { ConfigService } from '@core/services/csp/configuracion/config.service';
 
 export interface IProyectoAnualidadData {
   proyecto: IProyecto;
