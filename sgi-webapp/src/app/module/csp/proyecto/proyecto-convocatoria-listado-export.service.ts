@@ -4,13 +4,11 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
-import { LuxonDatePipe } from '@shared/luxon-date-pipe';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -37,8 +35,6 @@ export class ProyectoConvocatoriaListadoExportService extends AbstractTableExpor
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private luxonDatePipe: LuxonDatePipe,
-    private readonly proyectoService: ProyectoService,
     private convocatoriaService: ConvocatoriaService,
     private languageService: LanguageService
   ) {
@@ -135,7 +131,7 @@ export class ProyectoConvocatoriaListadoExportService extends AbstractTableExpor
       elementsRow.push(LuxonUtils.toBackend(convocatoria.fechaPublicacion) ?? '');
       elementsRow.push(LuxonUtils.toBackend(convocatoria.fechaProvisional) ?? '');
       elementsRow.push(LuxonUtils.toBackend(convocatoria.fechaConcesion) ?? '');
-      elementsRow.push(convocatoria.regimenConcurrencia?.nombre ?? '');
+      elementsRow.push(this.languageService.getFieldValue(convocatoria.regimenConcurrencia?.nombre));
     } else {
       elementsRow.push('');
       elementsRow.push('');
