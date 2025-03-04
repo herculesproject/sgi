@@ -20,6 +20,7 @@ import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
 import { GastoService } from '@core/services/sge/gasto/gasto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
@@ -166,7 +167,7 @@ export class ValidacionGastosEditarModalComponent extends DialogFormComponent<Ga
           ]),
         observaciones: new FormControl(observaciones,
           [
-            Validators.maxLength(2000)
+            I18nValidators.maxLength(2000)
           ]),
 
         comentarioEstado: new FormControl(comentarioEstado,

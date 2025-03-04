@@ -9,6 +9,7 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, from, of } from 'rxjs';
 import { mergeMap, toArray } from 'rxjs/operators';
@@ -66,7 +67,7 @@ export class ViajesDietasModalComponent extends DialogFormComponent<DatoEconomic
           ]),
         observaciones: new FormControl(this.data.gastoProyecto?.observaciones,
           [
-            Validators.maxLength(2000)
+            I18nValidators.maxLength(2000)
           ])
       }
     );

@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { Estado } from '@core/models/csp/estado-gasto-proyecto';
 import { IConceptoGastoResponse } from '../concepto-gasto/concepto-gasto-response';
 
@@ -14,5 +15,5 @@ export interface IGastoProyectoResponse {
   };
   fechaCongreso: string;
   importeInscripcion: number;
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
 }

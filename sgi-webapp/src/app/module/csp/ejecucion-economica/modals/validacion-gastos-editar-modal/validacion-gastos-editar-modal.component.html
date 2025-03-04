@@ -103,10 +103,11 @@
                 <mat-label>
                   {{'csp.ejecucion-economica.validacion-gastos.observaciones' | translate}}
                 </mat-label>
-                <textarea #obs matInput formControlName="observaciones"
+                <sgi-i18n-textarea #obs formControlName="observaciones"
                   placeholder="{{'csp.ejecucion-economica.validacion-gastos.observaciones' | translate}}"
-                  maxlength="2000"></textarea>
-                <mat-hint>{{obs.value.length}} / 2000</mat-hint>
+                  maxlength="2000">
+                </sgi-i18n-textarea>
+                <mat-hint>{{obs.editingValue.length}} / 2000</mat-hint>
               </mat-form-field>
             </div>
           </form>
