@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto.TipoEstadoGasto;
 import org.crue.hercules.sgi.csp.model.GastoProyecto;
+import org.crue.hercules.sgi.csp.model.GastoProyectoObservaciones;
 import org.crue.hercules.sgi.csp.repository.EstadoGastoProyectoRepository;
 import org.crue.hercules.sgi.csp.repository.GastoProyectoRepository;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -69,6 +70,8 @@ class GastoProyectoServiceTest extends BaseServiceTest {
 
   private GastoProyecto buildMockGastoProyecto(Long id, ConceptoGasto conceptoGasto, EstadoGastoProyecto estado,
       Instant fechaCongreso, BigDecimal importeInscripcion, String observaciones) {
+    Set<GastoProyectoObservaciones> observacionesGastoProyecto = new HashSet<>();
+    observacionesGastoProyecto.add(new GastoProyectoObservaciones(Language.ES, observaciones));
 
     return GastoProyecto.builder()
         .id(id)
@@ -76,7 +79,7 @@ class GastoProyectoServiceTest extends BaseServiceTest {
         .estado(estado)
         .fechaCongreso(fechaCongreso)
         .importeInscripcion(importeInscripcion)
-        .observaciones(observaciones)
+        .observaciones(observacionesGastoProyecto)
         .build();
   }
 

@@ -109,6 +109,7 @@ DELETE FROM test.proyecto_documento;
 UPDATE test.gasto_proyecto SET concepto_gasto_id = NULL;
 UPDATE test.gasto_proyecto SET estado_gasto_proyecto_id = NULL;
 DELETE FROM test.estado_gasto_proyecto;
+DELETE FROM test.gasto_proyecto_observaciones;
 DELETE FROM test.gasto_proyecto;
 DELETE FROM test.proyecto_area;
 DELETE FROM test.proyecto_clasificacion;

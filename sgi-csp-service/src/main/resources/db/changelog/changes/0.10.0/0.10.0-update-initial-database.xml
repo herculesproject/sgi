@@ -3078,4 +3078,35 @@
 
     <dropColumn columnName="descripcion" tableName="grupo_equipo_instrumental" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-111">
+    <createTable tableName="gasto_proyecto_observaciones">
+      <column name="gasto_proyecto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="gasto_proyecto_observaciones"
+      columnNames="gasto_proyecto_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="gasto_proyecto_id"
+      baseTableName="gasto_proyecto_observaciones"
+      constraintName="FK_GASTOPROYECTOOBSERVACIONES_GASTOPROYECTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="gasto_proyecto"
+      validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}gasto_proyecto_observaciones(gasto_proyecto_id, value_, lang)
+      SELECT id, observaciones, '${defaultLang}' FROM ${schemaPrefix}gasto_proyecto WHERE
+      observaciones IS NOT NULL AND NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="gasto_proyecto" />
+  </changeSet>
 </databaseChangeLog>

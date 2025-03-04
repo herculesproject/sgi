@@ -8,6 +8,7 @@ import java.util.Collection;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto.TipoEstadoGasto;
+import org.crue.hercules.sgi.csp.model.GastoProyectoObservaciones;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,7 @@ public class GastoProyectoOutput implements Serializable {
   private EstadoGastoProyecto estado;
   private Instant fechaCongreso;
   private BigDecimal importeInscripcion;
-  private String observaciones;
+  private Collection<GastoProyectoObservaciones> observaciones;
 
   @Data
   @EqualsAndHashCode(callSuper = false)
