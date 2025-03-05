@@ -282,6 +282,7 @@ export class EjecucionEconomicaActionService extends ActionService {
       this.data.relaciones,
       proyectoService,
       calendarioFacturacionService,
+      languageService,
       this.data.configuracion
     );
 
