@@ -5,5 +5,5 @@ export interface IGrupoEquipoInstrumentalResponse {
   grupoId: number;
   nombre: I18nFieldValueResponse[];
   numRegistro: string;
-  descripcion: string;
+  descripcion: I18nFieldValueResponse[];
 }
