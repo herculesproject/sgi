@@ -5,7 +5,7 @@
     <div fxLayout="row">
       <mat-form-field>
         <mat-label>{{'csp.grupo-equipo-instrumental.nombre' | translate}}</mat-label>
-        <input matInput formControlName="nombre" type="text" required>
+        <sgi-i18n-textarea formControlName="nombre" required></sgi-i18n-textarea>
         <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
           {{'error.required.entity' | translate:msgParamNombreEntity}}
         </mat-error>

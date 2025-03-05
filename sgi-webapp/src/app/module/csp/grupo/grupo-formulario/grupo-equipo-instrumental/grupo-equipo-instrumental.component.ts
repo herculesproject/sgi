@@ -8,8 +8,8 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
 import { GrupoEquipoInstrumentalService } from '@core/services/csp/grupo-equipo-instrumental/grupo-equipo-instrumental.service';
-import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -54,7 +54,8 @@ export class GrupoEquipoInstrumentalComponent extends FragmentComponent implemen
     public actionService: GrupoActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.EQUIPO_INSTRUMENTAL, actionService, translate);
     this.formPart = this.fragment as GrupoEquipoInstrumentalFragment;
@@ -67,6 +68,8 @@ export class GrupoEquipoInstrumentalComponent extends FragmentComponent implemen
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IGrupoEquipoInstrumental>, property: string) => {
         switch (property) {
+          case 'nombre':
+            return this.languageService.getFieldValue(wrapper.value.nombre);
           default:
             return wrapper[property];
         }
