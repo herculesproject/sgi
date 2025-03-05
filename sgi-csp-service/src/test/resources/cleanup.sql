@@ -2,6 +2,7 @@
 -- GIN
 update test.grupo set grupo_especial_investigacion_id = null, grupo_tipo_id = null;
 DELETE FROM test.grupo_equipo_instrumental_nombre;
+DELETE FROM test.grupo_equipo_instrumental_descripcion;
 DELETE FROM test.grupo_equipo;
 DELETE FROM test.grupo_especial_investigacion;
 DELETE FROM test.grupo_tipo;

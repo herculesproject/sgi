@@ -3047,4 +3047,35 @@
 
     <dropColumn columnName="nombre" tableName="grupo_equipo_instrumental" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-110">
+    <createTable tableName="grupo_equipo_instrumental_descripcion">
+      <column name="grupo_equipo_instrumental_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="grupo_equipo_instrumental_descripcion"
+      columnNames="grupo_equipo_instrumental_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="grupo_equipo_instrumental_id"
+      baseTableName="grupo_equipo_instrumental_descripcion"
+      constraintName="FK_GRUPOEQUIPOINSTRUMENTALDESCRIPCION_GRUPOEQUIPOINSTRUMENTAL"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="grupo_equipo_instrumental" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}grupo_equipo_instrumental_descripcion(grupo_equipo_instrumental_id, value_,
+      lang) SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}grupo_equipo_instrumental
+      WHERE descripcion IS NOT NULL AND NULLIF(TRIM(descripcion), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="grupo_equipo_instrumental" />
+  </changeSet>
 </databaseChangeLog>

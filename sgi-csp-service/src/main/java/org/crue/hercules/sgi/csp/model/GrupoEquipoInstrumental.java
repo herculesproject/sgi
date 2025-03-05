@@ -65,9 +65,11 @@ public class GrupoEquipoInstrumental extends BaseEntity {
   private Set<GrupoEquipoInstrumentalNombre> nombre = new HashSet<>();
 
   /** Descripción */
-  @Column(name = "descripcion")
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "grupo_equipo_instrumental_descripcion", joinColumns = @JoinColumn(name = "grupo_equipo_instrumental_id"))
   @Size(max = DESCRIPCION_LENGTH)
-  private String descripcion;
+  @Builder.Default
+  private Set<GrupoEquipoInstrumentalDescripcion> descripcion = new HashSet<>();
 
   /** Grupo */
   @Column(name = "grupo_id", nullable = false)

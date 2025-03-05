@@ -31,7 +31,7 @@ public class GrupoEquipoInstrumentalInput implements Serializable {
   private List<I18nFieldValueDto> nombre;
 
   @Size(max = GrupoEquipoInstrumental.DESCRIPCION_LENGTH)
-  private String descripcion;
+  private List<I18nFieldValueDto> descripcion;
 
   @NotNull
   private Long grupoId;
