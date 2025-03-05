@@ -18,7 +18,7 @@ class ProyectoSeguimientoEjecucionEconomicaResponseConverter
       fechaFinDefinitiva: LuxonUtils.fromBackend(value.fechaFinDefinitiva),
       importeConcedido: value.importeConcedido,
       importeConcedidoCostesIndirectos: value.importeConcedidoCostesIndirectos,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       proyectoId: value.proyectoId,
       proyectoSgeRef: value.proyectoSgeRef,
       tituloConvocatoria: value.tituloConvocatoria ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.tituloConvocatoria) : []
@@ -36,7 +36,7 @@ class ProyectoSeguimientoEjecucionEconomicaResponseConverter
       fechaFinDefinitiva: LuxonUtils.toBackend(value.fechaFinDefinitiva),
       importeConcedido: value.importeConcedido,
       importeConcedidoCostesIndirectos: value.importeConcedidoCostesIndirectos,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       proyectoId: value.proyectoId,
       proyectoSgeRef: value.proyectoSgeRef,
       tituloConvocatoria: value.tituloConvocatoria ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.tituloConvocatoria) : []

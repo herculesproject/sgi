@@ -6,7 +6,7 @@ export interface IProyectoSeguimientoEjecucionEconomica {
   id: number;
   proyectoId: number;
   proyectoSgeRef: string;
-  nombre: string;
+  nombre: I18nFieldValue[];
   codigoExterno: string;
   fechaInicio: DateTime;
   fechaFin: DateTime;
