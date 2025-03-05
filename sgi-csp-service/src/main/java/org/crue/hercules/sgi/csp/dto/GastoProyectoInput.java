@@ -52,7 +52,7 @@ public class GastoProyectoInput implements Serializable {
     private Long id;
     private TipoEstadoGasto estado;
     private Instant fechaEstado;
-    private String comentario;
+    private List<I18nFieldValueDto> comentario;
   }
 
 }

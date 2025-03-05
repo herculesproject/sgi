@@ -12,6 +12,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto;
+import org.crue.hercules.sgi.csp.model.EstadoGastoProyectoComentario;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto.TipoEstadoGasto;
 import org.crue.hercules.sgi.csp.model.GastoProyecto;
 import org.crue.hercules.sgi.csp.model.GastoProyectoObservaciones;
@@ -94,8 +95,11 @@ class GastoProyectoServiceTest extends BaseServiceTest {
   }
 
   private EstadoGastoProyecto buildModkEstadoGastoProyecto(String comentario, TipoEstadoGasto tipoEstado) {
+    Set<EstadoGastoProyectoComentario> comentarioEstadoGastoProyecto = new HashSet<>();
+    comentarioEstadoGastoProyecto.add(new EstadoGastoProyectoComentario(Language.ES, comentario));
+
     return EstadoGastoProyecto.builder()
-        .comentario(comentario)
+        .comentario(comentarioEstadoGastoProyecto)
         .estado(tipoEstado)
         .build();
   }

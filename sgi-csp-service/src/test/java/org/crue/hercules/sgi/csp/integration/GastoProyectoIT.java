@@ -10,8 +10,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.GastoProyectoController;
 import org.crue.hercules.sgi.csp.dto.GastoProyectoInput;
-import org.crue.hercules.sgi.csp.dto.GastoProyectoInput.EstadoGastoProyecto;
 import org.crue.hercules.sgi.csp.dto.GastoProyectoOutput;
+import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto.TipoEstadoGasto;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -220,6 +220,9 @@ class GastoProyectoIT extends BaseIT {
     List<I18nFieldValueDto> observacionesGastoProyecto = new ArrayList<>();
     observacionesGastoProyecto.add(new I18nFieldValueDto(Language.ES, "Testing create"));
 
+    List<I18nFieldValueDto> comentarioEstadoGastoProyecto = new ArrayList<>();
+    comentarioEstadoGastoProyecto.add(new I18nFieldValueDto(Language.ES, "Testing creating new GastoProyecto"));
+
     return GastoProyectoInput.builder()
         .conceptoGastoId(1L)
         .fechaCongreso(Instant.now())
@@ -227,9 +230,9 @@ class GastoProyectoIT extends BaseIT {
         .proyectoId(1L)
         .observaciones(observacionesGastoProyecto)
         .importeInscripcion(new BigDecimal(1111))
-        .estado(EstadoGastoProyecto.builder()
+        .estado(org.crue.hercules.sgi.csp.dto.GastoProyectoInput.EstadoGastoProyecto.builder()
             .estado(TipoEstadoGasto.VALIDADO)
-            .comentario("Testing creating new GastoProyecto")
+            .comentario(comentarioEstadoGastoProyecto)
             .fechaEstado(Instant.now())
             .build())
         .build();

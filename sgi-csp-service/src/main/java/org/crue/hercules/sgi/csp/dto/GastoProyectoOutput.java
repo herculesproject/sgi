@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.crue.hercules.sgi.csp.model.ConceptoGastoDescripcion;
 import org.crue.hercules.sgi.csp.model.ConceptoGastoNombre;
+import org.crue.hercules.sgi.csp.model.EstadoGastoProyectoComentario;
 import org.crue.hercules.sgi.csp.model.EstadoGastoProyecto.TipoEstadoGasto;
 import org.crue.hercules.sgi.csp.model.GastoProyectoObservaciones;
 
@@ -51,6 +52,6 @@ public class GastoProyectoOutput implements Serializable {
     private Long id;
     private TipoEstadoGasto estado;
     private Instant fechaEstado;
-    private String comentario;
+    private Collection<EstadoGastoProyectoComentario> comentario;
   }
 }
