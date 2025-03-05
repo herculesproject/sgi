@@ -3,6 +3,7 @@ import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { ESTADO_GASTO_PROYECTO_REQUEST_CONVERTER } from '../estado-gasto-proyecto/estado-gasto-proyecto-request.converter';
 import { IGastoProyectoRequest } from './gasto-proyecto-request';
 
 class GastoProyectoRequestConverter extends SgiBaseConverter<IGastoProyectoRequest, IGastoProyecto> {
@@ -17,7 +18,7 @@ class GastoProyectoRequestConverter extends SgiBaseConverter<IGastoProyectoReque
       conceptoGasto: {
         id: value.conceptoGastoId
       } as IConceptoGasto,
-      estado: value.estado,
+      estado: ESTADO_GASTO_PROYECTO_REQUEST_CONVERTER.toTarget(value.estado),
       fechaCongreso: LuxonUtils.fromBackend(value.fechaCongreso),
       importeInscripcion: value.importeInscripcion,
       observaciones: value.observaciones ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.observaciones) : []
@@ -31,7 +32,7 @@ class GastoProyectoRequestConverter extends SgiBaseConverter<IGastoProyectoReque
       proyectoId: value.proyectoId,
       gastoRef: value.gastoRef,
       conceptoGastoId: value.conceptoGasto?.id,
-      estado: value.estado,
+      estado: ESTADO_GASTO_PROYECTO_REQUEST_CONVERTER.fromTarget(value.estado),
       fechaCongreso: LuxonUtils.toBackend(value.fechaCongreso),
       importeInscripcion: value.importeInscripcion,
       observaciones: value.observaciones ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.observaciones) : []

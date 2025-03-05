@@ -11,7 +11,7 @@ export interface IGastoProyectoResponse {
     id: number;
     estado: Estado;
     fechaEstado: string;
-    comentario: string;
+    comentario: I18nFieldValueResponse[];
   };
   fechaCongreso: string;
   importeInscripcion: number;

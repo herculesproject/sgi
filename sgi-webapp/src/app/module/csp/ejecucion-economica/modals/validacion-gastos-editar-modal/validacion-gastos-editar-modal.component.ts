@@ -172,7 +172,7 @@ export class ValidacionGastosEditarModalComponent extends DialogFormComponent<Ga
 
         comentarioEstado: new FormControl(comentarioEstado,
           [
-            Validators.maxLength(2000)
+            I18nValidators.maxLength(2000)
           ])
       }
     );

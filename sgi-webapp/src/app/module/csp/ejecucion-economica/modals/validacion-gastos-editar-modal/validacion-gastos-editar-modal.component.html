@@ -119,10 +119,10 @@
         <mat-label>
           {{'csp.ejecucion-economica.validacion-gastos.comentario-estado' | translate}}
         </mat-label>
-        <textarea #coment matInput formControlName="comentarioEstado" type="text"
+        <sgi-i18n-textarea #coment formControlName="comentarioEstado"
           placeholder="{{'csp.ejecucion-economica.validacion-gastos.comentario-estado' | translate}}" maxlength="2000">
-                    </textarea>
-        <mat-hint>{{coment.value.length}} / 2000</mat-hint>
+        </sgi-i18n-textarea>
+        <mat-hint>{{coment.editingValue.length}} / 2000</mat-hint>
       </mat-form-field>
     </form>
   </div>
