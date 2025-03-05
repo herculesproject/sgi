@@ -287,10 +287,18 @@ export class EjecucionEconomicaActionService extends ActionService {
     );
 
     this.seguimientoJustificacionResumen = new SeguimientoJustificacionResumenFragment(
-      id, this.data.proyectoSge, this.data.relaciones.filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO),
-      this.data.configuracion, proyectoService, proyectoSeguimientoEjecucionEconomicaService, empresaService,
-      proyectoPeriodoJustificacionService, proyectoPeriodoSeguimientoService, proyectoSeguimientoJustificacionService,
-      proyectoPeriodoJustificacionSeguimientoService
+      id,
+      this.data.proyectoSge,
+      this.data.relaciones.filter(relacion => relacion.tipoEntidad === TipoEntidad.PROYECTO),
+      this.data.configuracion,
+      proyectoService,
+      proyectoSeguimientoEjecucionEconomicaService,
+      empresaService,
+      proyectoPeriodoJustificacionService,
+      proyectoPeriodoSeguimientoService,
+      proyectoSeguimientoJustificacionService,
+      proyectoPeriodoJustificacionSeguimientoService,
+      cnfService
     );
 
     this.seguimientoJustificacionRequerimientos = new SeguimientoJustificacionRequerimientosFragment(

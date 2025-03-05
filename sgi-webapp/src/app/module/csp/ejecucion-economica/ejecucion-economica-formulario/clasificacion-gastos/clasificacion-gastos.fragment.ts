@@ -88,8 +88,7 @@ export class ClasificacionGastosFragment extends Fragment {
         this.columnsLanguage.set(language, this.columns);
         this.columns$.next(this.columns);
         this.displayColumns = this.getDisplayColumns(this.columns);
-      }
-      )
+      })
     );
   }
 
