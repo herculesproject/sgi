@@ -1,7 +1,13 @@
 package org.crue.hercules.sgi.csp.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -51,10 +57,12 @@ public class GrupoEquipoInstrumental extends BaseEntity {
   private String numRegistro;
 
   /** Nombre */
-  @Column(name = "nombre", nullable = false)
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "grupo_equipo_instrumental_nombre", joinColumns = @JoinColumn(name = "grupo_equipo_instrumental_id"))
   @Size(max = NOMBRE_LENGTH)
   @NotNull
-  private String nombre;
+  @Builder.Default
+  private Set<GrupoEquipoInstrumentalNombre> nombre = new HashSet<>();
 
   /** Descripción */
   @Column(name = "descripcion")

@@ -3016,4 +3016,35 @@
       <column name="pro_anualidad_anio_formato" type="BOOLEAN" defaultValueBoolean="true" />
     </addColumn>
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-109">
+    <createTable tableName="grupo_equipo_instrumental_nombre">
+      <column name="grupo_equipo_instrumental_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(100)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="grupo_equipo_instrumental_nombre"
+      columnNames="grupo_equipo_instrumental_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="grupo_equipo_instrumental_id"
+      baseTableName="grupo_equipo_instrumental_nombre"
+      constraintName="FK_GRUPOEQUIPOINSTRUMENTALNOMBRE_GRUPOEQUIPOINSTRUMENTAL"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="grupo_equipo_instrumental" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}grupo_equipo_instrumental_nombre(grupo_equipo_instrumental_id,
+      value_, lang) SELECT id, nombre, '${defaultLang}' FROM
+      ${schemaPrefix}grupo_equipo_instrumental WHERE nombre IS NOT NULL AND NULLIF(TRIM(nombre), '')
+      IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="grupo_equipo_instrumental" />
+  </changeSet>
 </databaseChangeLog>

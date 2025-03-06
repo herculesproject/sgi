@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.csp.model.GrupoEquipoInstrumentalNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +20,7 @@ public class GrupoEquipoInstrumentalOutput implements Serializable {
 
   private Long id;
   private String numRegistro;
-  private String nombre;
+  private Collection<GrupoEquipoInstrumentalNombre> nombre;
   private String descripcion;
   private Long grupoId;
 
