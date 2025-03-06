@@ -3141,4 +3141,35 @@
 
     <dropColumn columnName="comentario" tableName="estado_gasto_proyecto" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-113">
+    <createTable tableName="tipo_requerimiento_nombre">
+      <column name="tipo_requerimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_requerimiento_nombre"
+      columnNames="tipo_requerimiento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_requerimiento_id"
+      baseTableName="tipo_requerimiento_nombre"
+      constraintName="FK_TIPOREQUERIMIENTONOMBRE_TIPOREQUERIMIENTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_requerimiento"
+      validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_requerimiento_nombre(tipo_requerimiento_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}tipo_requerimiento WHERE nombre IS NOT
+      NULL AND NULLIF(TRIM(nombre), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_requerimiento" />
+  </changeSet>
 </databaseChangeLog>

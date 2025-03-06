@@ -239,4 +239,5 @@ DELETE FROM test.tipo_facturacion;
 DELETE FROM test.configuracion;
 DELETE FROM test.convocatoria_concepto_gasto_codigo_ec;
 DELETE FROM test.convocatoria_concepto_gasto;
+DELETE FROM test.tipo_requerimiento_nombre;
 DELETE FROM test.tipo_requerimiento;

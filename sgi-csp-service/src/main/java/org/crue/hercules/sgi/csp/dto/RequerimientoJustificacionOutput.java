@@ -3,6 +3,9 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.csp.model.TipoRequerimientoNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +51,6 @@ public class RequerimientoJustificacionOutput implements Serializable {
   @Builder
   public static class TipoRequerimiento implements Serializable {
     private Long id;
-    private String nombre;
+    private Collection<TipoRequerimientoNombre> nombre;
   }
 }

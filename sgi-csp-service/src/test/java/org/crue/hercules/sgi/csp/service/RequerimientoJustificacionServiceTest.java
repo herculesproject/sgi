@@ -2,8 +2,10 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,7 +17,9 @@ import org.crue.hercules.sgi.csp.exceptions.RequerimientoJustificacionNotDeletea
 import org.crue.hercules.sgi.csp.exceptions.RequerimientoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.TipoRequerimiento;
+import org.crue.hercules.sgi.csp.model.TipoRequerimientoNombre;
 import org.crue.hercules.sgi.csp.repository.RequerimientoJustificacionRepository;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,9 +100,7 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
             List<RequerimientoJustificacion> content = requerimientoJustificacionList.subList(fromIndex, toIndex);
-            Page<RequerimientoJustificacion> page = new PageImpl<>(content, pageable,
-                requerimientoJustificacionList.size());
-            return page;
+            return new PageImpl<>(content, pageable, requerimientoJustificacionList.size());
           }
         });
 
@@ -335,9 +337,7 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
             List<RequerimientoJustificacion> content = requerimientoJustificacionList.subList(fromIndex, toIndex);
-            Page<RequerimientoJustificacion> page = new PageImpl<>(content, pageable,
-                requerimientoJustificacionList.size());
-            return page;
+            return new PageImpl<>(content, pageable, requerimientoJustificacionList.size());
           }
         });
 
@@ -425,10 +425,13 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
   }
 
   private TipoRequerimiento generarMockTipoRequerimiento(Long id, String nombre, Boolean activo) {
+    Set<TipoRequerimientoNombre> nombreTipoRequerimiento = new HashSet<>();
+    nombreTipoRequerimiento.add(new TipoRequerimientoNombre(Language.ES, nombre));
+
     return TipoRequerimiento.builder()
         .activo(activo)
         .id(id)
-        .nombre(nombre)
+        .nombre(nombreTipoRequerimiento)
         .build();
   }
 
@@ -440,8 +443,7 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
             return null;
           }
           BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(arg0);
-          Object id = wrapper.getPropertyValue("id");
-          return id;
+          return wrapper.getPropertyValue("id");
         });
     BDDMockito.given(entityManager.find(ArgumentMatchers.eq(clazz), ArgumentMatchers.anyLong())).willReturn(object);
   }
