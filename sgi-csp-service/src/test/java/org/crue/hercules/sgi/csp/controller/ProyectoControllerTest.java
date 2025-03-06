@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -39,6 +40,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoProrrogaObservaciones;
 import org.crue.hercules.sgi.csp.model.ProyectoSocio;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.model.RequerimientoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.RolProyecto;
 import org.crue.hercules.sgi.csp.model.RolSocio;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -1372,7 +1374,7 @@ class ProyectoControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       RequerimientoJustificacionOutput requerimiento = requerimientosResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(requerimiento.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(requerimiento.getObservaciones(), Language.ES))
           .isEqualTo("RequerimientoJustificacion-" + String.format("%03d", i));
     }
   }
@@ -1718,9 +1720,13 @@ class ProyectoControllerTest extends BaseControllerTest {
 
   private RequerimientoJustificacion generarMockRequerimientoJustificacion(Long id, String observaciones,
       Long requerimientoPrevioId, TipoRequerimiento tipoRequerimiento) {
+    Set<RequerimientoJustificacionObservaciones> observacionesRequerimientoJustificacion = new HashSet<>();
+    observacionesRequerimientoJustificacion
+        .add(new RequerimientoJustificacionObservaciones(Language.ES, observaciones));
+
     return RequerimientoJustificacion.builder()
         .id(id)
-        .observaciones(observaciones)
+        .observaciones(observacionesRequerimientoJustificacion)
         .requerimientoPrevioId(requerimientoPrevioId)
         .tipoRequerimiento(tipoRequerimiento)
         .build();
@@ -1732,7 +1738,9 @@ class ProyectoControllerTest extends BaseControllerTest {
         requerimientoJustificacion.getObservaciones(), requerimientoJustificacion.getRequerimientoPrevioId());
   }
 
-  private RequerimientoJustificacionOutput generarMockRequerimientoJustificacionOutput(Long id, String observaciones,
+  private RequerimientoJustificacionOutput generarMockRequerimientoJustificacionOutput(
+      Long id,
+      Collection<RequerimientoJustificacionObservaciones> observaciones,
       Long requerimientoPrevioId) {
     return RequerimientoJustificacionOutput.builder()
         .id(id)

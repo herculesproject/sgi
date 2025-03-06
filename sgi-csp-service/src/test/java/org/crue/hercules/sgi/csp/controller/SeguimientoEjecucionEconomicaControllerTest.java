@@ -27,6 +27,7 @@ import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
 import org.crue.hercules.sgi.csp.model.ProyectoSeguimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.model.RequerimientoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoJustificacionSeguimientoService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ProyectoPeriodoSeguimientoService;
@@ -458,7 +459,7 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       RequerimientoJustificacion requerimientoJustificacion = requerimientosJustificacionResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(requerimientoJustificacion.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(requerimientoJustificacion.getObservaciones(), Language.ES))
           .isEqualTo("RequerimientoJustificacion-" + String.format("%03d", i));
     }
   }
@@ -669,9 +670,13 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
 
   private RequerimientoJustificacion generarMockRequerimientoJustificacion(Long id, String observaciones,
       Long requerimientoPrevioId) {
+    Set<RequerimientoJustificacionObservaciones> observacionesRequerimientoJustificacion = new HashSet<>();
+    observacionesRequerimientoJustificacion
+        .add(new RequerimientoJustificacionObservaciones(Language.ES, observaciones));
+
     return RequerimientoJustificacion.builder()
         .id(id)
-        .observaciones(observaciones)
+        .observaciones(observacionesRequerimientoJustificacion)
         .requerimientoPrevioId(requerimientoPrevioId)
         .build();
   }
@@ -682,7 +687,9 @@ class SeguimientoEjecucionEconomicaControllerTest extends BaseControllerTest {
         requerimientoJustificacion.getObservaciones(), requerimientoJustificacion.getRequerimientoPrevioId());
   }
 
-  private RequerimientoJustificacionOutput generarMockRequerimientoJustificacionOutput(Long id, String observaciones,
+  private RequerimientoJustificacionOutput generarMockRequerimientoJustificacionOutput(
+      Long id,
+      Collection<RequerimientoJustificacionObservaciones> observaciones,
       Long requerimientoPrevioId) {
     return RequerimientoJustificacionOutput.builder()
         .id(id)

@@ -16,9 +16,11 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.RequerimientoJustificacionNotDeleteableException;
 import org.crue.hercules.sgi.csp.exceptions.RequerimientoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.model.RequerimientoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.model.TipoRequerimiento;
 import org.crue.hercules.sgi.csp.model.TipoRequerimientoNombre;
 import org.crue.hercules.sgi.csp.repository.RequerimientoJustificacionRepository;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.junit.jupiter.api.BeforeEach;
@@ -118,7 +120,7 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       RequerimientoJustificacion requerimientoJustificacion = page.getContent().get(i);
-      Assertions.assertThat(requerimientoJustificacion.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(requerimientoJustificacion.getObservaciones(), Language.ES))
           .isEqualTo("RequerimientoJustificacion-" + String.format("%03d", j));
     }
   }
@@ -355,7 +357,7 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       RequerimientoJustificacion tipoRequerimiento = page.getContent().get(i);
-      Assertions.assertThat(tipoRequerimiento.getObservaciones())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tipoRequerimiento.getObservaciones(), Language.ES))
           .isEqualTo("RequerimientoJustificacion-" + String.format("%03d", j));
     }
   }
@@ -411,9 +413,13 @@ class RequerimientoJustificacionServiceTest extends BaseServiceTest {
 
   private RequerimientoJustificacion generarMockRequerimientoJustificacion(Long id, String observaciones,
       Long requerimientoPrevioId, TipoRequerimiento tipoRequerimiento) {
+    Set<RequerimientoJustificacionObservaciones> observacionesRequerimientoJustificacion = new HashSet<>();
+    observacionesRequerimientoJustificacion
+        .add(new RequerimientoJustificacionObservaciones(Language.ES, observaciones));
+
     return RequerimientoJustificacion.builder()
         .id(id)
-        .observaciones(observaciones)
+        .observaciones(observacionesRequerimientoJustificacion)
         .requerimientoPrevioId(requerimientoPrevioId)
         .tipoRequerimiento(tipoRequerimiento)
         .build();

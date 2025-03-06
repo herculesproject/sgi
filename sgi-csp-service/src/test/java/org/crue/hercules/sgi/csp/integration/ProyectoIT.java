@@ -3317,7 +3317,7 @@ class ProyectoIT extends BaseIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    String sort = "observaciones,desc";
+    String sort = "observaciones.value,desc";
 
     // when: find RequerimientoJustificacionOutput
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_REQUERIMIENTOS_JUSTIFICACION)
@@ -3337,9 +3337,11 @@ class ProyectoIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("2");
 
-    Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getObservaciones(), Language.ES))
+        .as("get(0).getObservaciones())")
         .isEqualTo("obs-002");
-    Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones())")
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getObservaciones(), Language.ES))
+        .as("get(1).getObservaciones())")
         .isEqualTo("obs-001");
   }
 }
