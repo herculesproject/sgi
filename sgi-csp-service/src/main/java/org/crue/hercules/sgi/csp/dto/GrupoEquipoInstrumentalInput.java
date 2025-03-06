@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,11 +27,9 @@ public class GrupoEquipoInstrumentalInput implements Serializable {
   @Size(max = GrupoEquipoInstrumental.NUM_REGISTRO_LENGTH)
   private String numRegistro;
 
-  @Size(max = GrupoEquipoInstrumental.NOMBRE_LENGTH)
-  @NotNull
+  @NotEmpty
   private List<I18nFieldValueDto> nombre;
 
-  @Size(max = GrupoEquipoInstrumental.DESCRIPCION_LENGTH)
   private List<I18nFieldValueDto> descripcion;
 
   @NotNull
