@@ -6,6 +6,7 @@ import { FieldOrientation } from '@core/models/rep/field-orientation.enum';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportFillService } from '@core/services/rep/abstract-table-export-fill.service';
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,12 +24,14 @@ const EQUIPO_INSTRUMENTAL_NOMBRE_FIELD = 'equipoInstrumentalNombre';
 const EQUIPO_INSTRUMENTAL_NUM_REGISTRO_FIELD = 'equipoInstrumentalNumRegistro';
 
 @Injectable()
-export class GrupoEquipoInstrumentalListadoExportService extends AbstractTableExportFillService<IGrupoReportData, IGrupoReportOptions>{
+export class GrupoEquipoInstrumentalListadoExportService extends AbstractTableExportFillService<IGrupoReportData, IGrupoReportOptions> {
 
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
-    private grupoService: GrupoService
+    private grupoService: GrupoService,
+    private readonly languageService: LanguageService
+
   ) {
     super(translate);
   }
@@ -123,7 +126,7 @@ export class GrupoEquipoInstrumentalListadoExportService extends AbstractTableEx
     grupo.equiposInstrumentales?.forEach(grupoEquipoInstrumental => {
       const equipoInstrumentalElementsRow: any[] = [];
 
-      let equipoInstrumentalTable = grupoEquipoInstrumental?.nombre ?? '';
+      let equipoInstrumentalTable = this.languageService.getFieldValue(grupoEquipoInstrumental?.nombre) ?? '';
       equipoInstrumentalTable += '\n';
       equipoInstrumentalTable += grupoEquipoInstrumental?.numRegistro ?? '';
 
