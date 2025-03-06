@@ -53,6 +53,7 @@ import { SelectEntityComponent } from './select-entity/select-entity.component';
 import { SelectEnumComponent } from './select-enum/select-enum.component';
 import { SelectMultipleComponent } from './select-multiple/select-multiple.component';
 import { SelectComponent } from './select/select.component';
+import { TypeOfPipe } from './typeof-pipe';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { SelectComponent } from './select/select.component';
     SelectMultipleComponent,
     SgiFileUploadComponent,
     SgiInputWithThousandSeparator,
-    SgiTooltipDirective
+    SgiTooltipDirective,
+    TypeOfPipe
   ],
   imports: [
     CommonModule,
@@ -140,7 +142,6 @@ import { SelectComponent } from './select/select.component';
     InfoMessageComponent,
     InputEmailsComponent,
     LuxonDatePipe,
-    SelectMultipleComponent,
     MenuContentComponent,
     MenuContentFooter,
     MenuGroupComponent,
@@ -159,9 +160,11 @@ import { SelectComponent } from './select/select.component';
     SelectEntityComponent,
     SelectEnumComponent,
     SelectMultipleComponent,
+    SelectMultipleComponent,
     SgiFileUploadComponent,
     SgiInputWithThousandSeparator,
-    SgiTooltipDirective
+    SgiTooltipDirective,
+    TypeOfPipe
   ]
 })
 export class SharedModule { }

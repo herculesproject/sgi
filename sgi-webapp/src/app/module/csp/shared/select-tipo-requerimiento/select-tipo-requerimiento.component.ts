@@ -34,7 +34,7 @@ export class SelectTipoRequerimientoComponent extends SelectServiceComponent<ITi
 
   protected loadServiceOptions(): Observable<ITipoRequerimiento[]> {
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC)
     };
     return this.service.findAll(findOptions)
       .pipe(

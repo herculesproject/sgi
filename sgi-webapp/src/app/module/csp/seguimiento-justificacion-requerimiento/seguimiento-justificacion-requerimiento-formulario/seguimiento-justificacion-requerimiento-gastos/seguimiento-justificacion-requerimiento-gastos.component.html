@@ -1,5 +1,5 @@
-<sgi-fragment title="{{ 'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.gastos' | translate }}: {{ 
-    formPart.currentRequerimientoJustificacion?.tipoRequerimiento?.nombre }}">
+<sgi-fragment
+  [titleArray]="['csp.ejecucion-economica.seguimiento-justificacion.requerimiento.gastos' | translate, ':', formPart.currentRequerimientoJustificacion?.tipoRequerimiento?.nombre]">
   <div class="mat-elevation-z4">
     <mat-table [dataSource]="dataSource" matSort matSortActive="justificacionId" matSortDirection="asc">
 

@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { LayoutService, Title } from '@core/services/layout.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -11,6 +12,9 @@ import { Subscription } from 'rxjs';
 export class FragmentTitleComponent implements OnInit, OnDestroy {
   @Input()
   title: string;
+
+  @Input()
+  titleArray: (string | I18nFieldValue)[];
 
   routeTitle: Title;
 

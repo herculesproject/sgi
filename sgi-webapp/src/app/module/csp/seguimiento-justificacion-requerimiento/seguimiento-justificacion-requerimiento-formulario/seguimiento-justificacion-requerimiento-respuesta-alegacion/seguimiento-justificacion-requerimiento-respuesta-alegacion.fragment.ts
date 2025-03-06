@@ -33,7 +33,7 @@ export class SeguimientoJustificacionRequerimientoRespuestaAlegacionFragment ext
   private buildRequerimientoJustificacionFormGroup(): FormGroup {
     return new FormGroup({
       numRequerimiento: new FormControl({ value: '', disabled: true }),
-      tipoRequerimiento: new FormControl({ value: '', disabled: true }),
+      tipoRequerimiento: new FormControl({ value: [], disabled: true }),
     });
   }
 

@@ -1,11 +1,10 @@
+import { ITipoRequerimientoResponse } from "../tipo-requerimiento/tipo-requerimiento-response";
+
 export interface IRequerimientoJustificacionResponse {
   id: number;
   proyectoProyectoSgeId: number;
   numRequerimiento: number;
-  tipoRequerimiento: {
-    id: number;
-    nombre: string;
-  };
+  tipoRequerimiento: ITipoRequerimientoResponse;
   proyectoPeriodoJustificacionId: number;
   requerimientoPrevioId: number;
   fechaNotificacion: string;

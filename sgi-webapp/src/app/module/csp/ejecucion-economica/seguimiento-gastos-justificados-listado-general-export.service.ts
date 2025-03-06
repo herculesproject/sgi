@@ -1188,7 +1188,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
     for (let i = 0; i < this.maxRequerimientos; i++) {
       if (!!requerimientos && requerimientos.length > i) {
         elementsRow.push(requerimientos[i].requerimientosJustificacionAlegacion?.numRequerimiento || '');
-        elementsRow.push(requerimientos[i].requerimientosJustificacionAlegacion?.tipoRequerimiento?.nombre || '');
+        elementsRow.push(this.languageService.getFieldValue(requerimientos[i].requerimientosJustificacionAlegacion?.tipoRequerimiento?.nombre));
         elementsRow.push(LuxonUtils.toBackend(requerimientos[i].requerimientosJustificacionAlegacion?.fechaNotificacion));
         elementsRow.push(this.notIsNullAndNotUndefined(requerimientos[i].aceptado) ? this.getI18nBooleanYesNo(requerimientos[i].aceptado) : '');
         elementsRow.push(requerimientos[i].importeAceptado);

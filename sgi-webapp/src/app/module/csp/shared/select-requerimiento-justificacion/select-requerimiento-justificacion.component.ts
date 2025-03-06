@@ -74,7 +74,7 @@ export class SelectRequerimientoJustificacionComponent extends SelectServiceComp
   ) {
     super(defaultErrorStateMatcher, ngControl, languageService);
     // Override default displayWith
-    this.displayWith = (option) => formatRequerimientoJustificacionNombre(option) ?? '';
+    this.displayWith = (option) => formatRequerimientoJustificacionNombre(option, languageService) ?? '';
     this.disableWith = (option) => {
       if (this.excluded.length) {
         return this.excluded.some((excluded) => excluded.id === option.id);

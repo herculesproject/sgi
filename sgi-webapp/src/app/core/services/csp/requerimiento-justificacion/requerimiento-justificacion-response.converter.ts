@@ -1,13 +1,13 @@
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
-import { ITipoRequerimiento } from '@core/models/csp/tipo-requerimiento';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { TIPO_REQUERIMIENTO_RESPONSE_CONVERTER } from '../tipo-requerimiento/tipo-requerimiento-response.converter';
 import { IRequerimientoJustificacionResponse } from './requerimiento-justificacion-response';
 
 class RequerimientoJustificacionResponseConverter extends
-  SgiBaseConverter<IRequerimientoJustificacionResponse, IRequerimientoJustificacion>{
+  SgiBaseConverter<IRequerimientoJustificacionResponse, IRequerimientoJustificacion> {
   toTarget(value: IRequerimientoJustificacionResponse): IRequerimientoJustificacion {
     if (!value) {
       return value as unknown as IRequerimientoJustificacion;
@@ -37,10 +37,7 @@ class RequerimientoJustificacionResponseConverter extends
       recursoEstimado: value.recursoEstimado,
       requerimientoPrevio: value.requerimientoPrevioId ? { id: value.requerimientoPrevioId } as IRequerimientoJustificacion : null,
       subvencionJustificada: value.subvencionJustificada,
-      tipoRequerimiento: {
-        id: value.tipoRequerimiento.id,
-        nombre: value.tipoRequerimiento.nombre
-      } as ITipoRequerimiento
+      tipoRequerimiento: TIPO_REQUERIMIENTO_RESPONSE_CONVERTER.toTarget(value.tipoRequerimiento)
     };
   }
   fromTarget(value: IRequerimientoJustificacion): IRequerimientoJustificacionResponse {
@@ -71,10 +68,7 @@ class RequerimientoJustificacionResponseConverter extends
       recursoEstimado: value.recursoEstimado,
       requerimientoPrevioId: value.requerimientoPrevio?.id,
       subvencionJustificada: value.subvencionJustificada,
-      tipoRequerimiento: {
-        id: value.tipoRequerimiento.id,
-        nombre: value.tipoRequerimiento.nombre
-      } as ITipoRequerimiento
+      tipoRequerimiento: TIPO_REQUERIMIENTO_RESPONSE_CONVERTER.fromTarget(value.tipoRequerimiento)
     };
   }
 }

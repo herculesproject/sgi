@@ -1,5 +1,5 @@
 <sgi-fragment
-  title="{{ 'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.respuesta-alegacion' | translate }}: {{ formPart?.currentRequerimientoJustificacion?.tipoRequerimiento?.nombre }}">
+  [titleArray]="['csp.ejecucion-economica.seguimiento-justificacion.requerimiento.respuesta-alegacion' | translate, ':', formPart.currentRequerimientoJustificacion?.tipoRequerimiento?.nombre]">
   <section class="form-section">
     <form [formGroup]="formGroup" fxLayout="column">
       <div fxFlex fxLayout="row" fxLayoutGap="10px">
@@ -21,9 +21,10 @@
             <mat-label>
               {{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.tipo-requerimiento' | translate}}
             </mat-label>
-            <input matInput
+            <sgi-i18n-input
               placeholder="{{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.tipo-requerimiento' | translate}}"
-              type="text" formControlName="tipoRequerimiento">
+              formControlName="tipoRequerimiento">
+            </sgi-i18n-input>
           </mat-form-field>
         </form>
 

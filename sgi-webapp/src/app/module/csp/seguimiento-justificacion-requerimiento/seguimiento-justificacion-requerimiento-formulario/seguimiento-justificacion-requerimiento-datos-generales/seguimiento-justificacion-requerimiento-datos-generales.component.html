@@ -1,5 +1,5 @@
-<sgi-fragment title="{{ 'label.datos-generales' | translate }}: {{ formGroup.controls.tipoRequerimiento?.value?.nombre
-  }}">
+<sgi-fragment
+  [titleArray]="['label.datos-generales' | translate, ':', formGroup.controls.tipoRequerimiento?.value?.nombre]">
   <section class="form-section">
     <form [formGroup]="formGroup">
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"

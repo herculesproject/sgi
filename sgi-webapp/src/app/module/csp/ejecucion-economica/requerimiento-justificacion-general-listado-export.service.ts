@@ -738,10 +738,13 @@ export class RequerimientoJustificacionGeneralListadoExportService extends Abstr
     for (let i = 0; i < maxNumRequerimientosJustificacion; i++) {
       if (requerimiento.requerimientosJustificacion && requerimiento.requerimientosJustificacion[i]) {
         rows.push(requerimiento.requerimientosJustificacion[i].numRequerimiento ?? '');
-        rows.push(requerimiento.requerimientosJustificacion[i].tipoRequerimiento?.nombre ?? '');
+        rows.push(this.languageService.getFieldValue(requerimiento.requerimientosJustificacion[i].tipoRequerimiento?.nombre));
         rows.push(requerimiento.requerimientosJustificacion[i].proyectoPeriodoJustificacion?.numPeriodo ?? '');
-        rows.push(requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.numRequerimiento ? (requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.numRequerimiento + ' - ' +
-          requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.tipoRequerimiento?.nombre) : '');
+        rows.push(requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.numRequerimiento
+          ? (requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.numRequerimiento
+            + ' - '
+            + this.languageService.getFieldValue(requerimiento.requerimientosJustificacion[i].requerimientoPrevio?.tipoRequerimiento?.nombre))
+          : '');
         rows.push(requerimiento.requerimientosJustificacion[i].fechaNotificacion ? this.luxonDatePipe.transform(LuxonUtils.toBackend(requerimiento.requerimientosJustificacion[i].fechaNotificacion, true), 'shortDate') : '');
         rows.push(requerimiento.requerimientosJustificacion[i].fechaFinAlegacion ? this.luxonDatePipe.transform(LuxonUtils.toBackend(requerimiento.requerimientosJustificacion[i].fechaFinAlegacion, true), 'short') : '');
         rows.push(requerimiento.requerimientosJustificacion[i].importeAceptado ?? '');

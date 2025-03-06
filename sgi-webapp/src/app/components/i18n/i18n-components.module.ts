@@ -14,6 +14,7 @@ import { I18nLinkComponent } from './i18n-link/i18n-link.component';
 import { I18nTableFieldComponent } from './i18n-table-field/i18n-table-field.component';
 import { I18nTableListFieldsComponent } from './i18n-table-list-fields/i18n-table-list-fields.component';
 import { I18nTextareaComponent } from './i18n-textarea/i18n-textarea.component';
+import { I18nTitleFieldComponent } from './i18n-title-field/i18n-title-field.component';
 import { I18nTreeFieldComponent } from './i18n-tree-field/i18n-tree-field.component';
 
 @NgModule({
@@ -28,6 +29,7 @@ import { I18nTreeFieldComponent } from './i18n-tree-field/i18n-tree-field.compon
     I18nTableFieldComponent,
     I18nTableListFieldsComponent,
     I18nTextareaComponent,
+    I18nTitleFieldComponent,
     I18nTreeFieldComponent
   ],
   imports: [
@@ -49,6 +51,7 @@ import { I18nTreeFieldComponent } from './i18n-tree-field/i18n-tree-field.compon
     I18nTableFieldComponent,
     I18nTableListFieldsComponent,
     I18nTextareaComponent,
+    I18nTitleFieldComponent,
     I18nTreeFieldComponent
   ]
 })
