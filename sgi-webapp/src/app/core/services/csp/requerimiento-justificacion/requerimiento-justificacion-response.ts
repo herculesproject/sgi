@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
 import { ITipoRequerimientoResponse } from "../tipo-requerimiento/tipo-requerimiento-response";
 
 export interface IRequerimientoJustificacionResponse {
@@ -9,7 +10,7 @@ export interface IRequerimientoJustificacionResponse {
   requerimientoPrevioId: number;
   fechaNotificacion: string;
   fechaFinAlegacion: string;
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
   importeAceptadoCd: number;
   importeAceptadoCi: number;
   importeRechazadoCd: number;

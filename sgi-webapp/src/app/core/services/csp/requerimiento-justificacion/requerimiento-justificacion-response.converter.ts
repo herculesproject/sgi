@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
@@ -30,7 +31,7 @@ class RequerimientoJustificacionResponseConverter extends
       importeReintegrarCi: value.importeReintegrarCi,
       interesesReintegrar: value.interesesReintegrar,
       numRequerimiento: value.numRequerimiento,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : [],
       proyectoPeriodoJustificacion: value.proyectoPeriodoJustificacionId ?
         { id: value.proyectoPeriodoJustificacionId } as IProyectoPeriodoJustificacion : null,
       proyectoProyectoSge: value.proyectoProyectoSgeId ? { id: value.proyectoProyectoSgeId } as IProyectoProyectoSge : null,
@@ -62,7 +63,7 @@ class RequerimientoJustificacionResponseConverter extends
       importeReintegrarCi: value.importeReintegrarCi,
       interesesReintegrar: value.interesesReintegrar,
       numRequerimiento: value.numRequerimiento,
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : [],
       proyectoPeriodoJustificacionId: value.proyectoPeriodoJustificacion?.id,
       proyectoProyectoSgeId: value.proyectoProyectoSge?.id,
       recursoEstimado: value.recursoEstimado,
