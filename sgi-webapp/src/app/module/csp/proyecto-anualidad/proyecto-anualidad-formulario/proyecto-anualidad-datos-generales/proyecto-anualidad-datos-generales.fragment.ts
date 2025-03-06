@@ -2,6 +2,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { FormFragment } from '@core/services/action-service';
+import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { NumberValidator } from '@core/validators/number-validator';
@@ -17,15 +18,22 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
   fechaFin$: Subject<DateTime> = new BehaviorSubject<DateTime>(null);
   fechaInicio$: Subject<DateTime> = new BehaviorSubject<DateTime>(null);
 
+  isNotificacionPresupuestoSgeEnabled: boolean;
+
   constructor(
     key: number,
     proyecto: IProyecto,
     private service: ProyectoAnualidadService,
-    private readonly: boolean
+    private configServiceCSP: ConfigService,
+    private readonly: boolean,
   ) {
     super(key);
     this.isAnualidadGenerica = !proyecto.anualidades;
     this.proyecto = proyecto;
+
+    this.subscriptions.push(this.configServiceCSP.isNotificacionPresupuestosSgeEnabled().subscribe(value => {
+      this.isNotificacionPresupuestoSgeEnabled = value;
+    }));
   }
 
   protected buildFormGroup(): FormGroup {
@@ -65,6 +73,12 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
       })
     );
 
+    if (!this.isNotificacionPresupuestoSgeEnabled) {
+      form.controls.presupuestar.disabled;
+    } else {
+      form.controls.presupuestar.enabled;
+    }
+
     if (this.readonly) {
       form.disable();
     }
@@ -96,7 +110,7 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
     this.proyectoAnualidad.anio = form.anualidad.value;
     this.proyectoAnualidad.fechaInicio = form.fechaInicio.value;
     this.proyectoAnualidad.fechaFin = form.fechaFin.value;
-    this.proyectoAnualidad.presupuestar = form.presupuestar.value;
+    this.proyectoAnualidad.presupuestar = this.isNotificacionPresupuestoSgeEnabled ? form.presupuestar.value : false;
     return this.proyectoAnualidad;
   }
 

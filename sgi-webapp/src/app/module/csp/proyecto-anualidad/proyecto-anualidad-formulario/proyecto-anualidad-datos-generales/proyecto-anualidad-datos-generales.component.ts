@@ -5,7 +5,6 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoAnualidadResumen } from '@core/models/csp/proyecto-anualidad-resumen';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { NumberValidator } from '@core/validators/number-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
@@ -34,7 +33,6 @@ export class ProyectoAnualidadDatosGeneralesComponent extends FormFragmentCompon
 
   constructor(private readonly logger: NGXLogger,
     protected actionService: ProyectoAnualidadActionService,
-    private snackBarService: SnackBarService,
     private readonly translate: TranslateService) {
 
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService, translate);

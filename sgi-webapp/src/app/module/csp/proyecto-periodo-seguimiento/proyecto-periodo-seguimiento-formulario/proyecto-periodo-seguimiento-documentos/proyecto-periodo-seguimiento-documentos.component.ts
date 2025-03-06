@@ -33,7 +33,7 @@ const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_KEY = marker('csp.documento');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_NOMBRE_KEY = marker('csp.documento.nombre');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_FICHERO_KEY = marker('csp.proyecto-periodo-seguimiento.documento.fichero');
 const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_VISIBLE_KEY = marker('csp.proyecto-periodo-seguimiento.documento.visible');
-const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_COMENTARIO_KEY = marker('csp.documento.comentario');
+const PERIODO_SEGUIMIENTO_CIENTIFICO_DOCUMENTO_COMENTARIO_KEY = marker('csp.proyecto-periodo-seguimiento.documento.comentario');
 
 enum VIEW_MODE {
   NONE = '',

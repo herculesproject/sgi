@@ -154,4 +154,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     );
   }
 
+  isNotificacionPresupuestosSgeEnabled(): Observable<boolean> {
+    return this.findById(ConfigCsp.CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED).pipe(
+      map(configValue => configValue?.value && configValue.value === 'true')
+    );
+  }
+
 }

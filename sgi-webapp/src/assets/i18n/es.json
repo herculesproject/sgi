@@ -67,6 +67,8 @@
   "adm.config.csp.CSP_MODIFICACION_PROYECTO_SGE_ENABLED": "Modificación proyecto SGE",
   "adm.config.csp.CSP_MODIFICACION_PROYECTO_SGE_ENABLED.description": "Habilitar la acción de solicitar modificación de los datos del proyecto SGE",
   "adm.config.csp.CSP_NOMBRE_SISTEMA_GESTION_EXTERNO": "Texto acceso a sistema corporativo secundario de gestión de la investigación",
+  "adm.config.csp.CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED": "Integración de notificación de presupuestos al SGE",
+  "adm.config.csp.CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED.description": "Habilitar la integración de notificación de los presupuestos al SGE",
   "adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED": "Obtener partidas SGE",
   "adm.config.csp.CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED.description": "Habilitar creación de Partidas presupuestarias en el SGE",
   "adm.config.csp.CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES": "Columnas a mostrar en Personal Contratado (ejecución económica - facturas y justificantes)",

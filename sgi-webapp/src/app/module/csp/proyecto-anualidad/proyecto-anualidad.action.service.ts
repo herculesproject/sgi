@@ -20,6 +20,7 @@ import { ProyectoAnualidadGastosFragment } from './proyecto-anualidad-formulario
 import { ProyectoAnualidadIngresosFragment } from './proyecto-anualidad-formulario/proyecto-anualidad-ingresos/proyecto-anualidad-ingresos.fragment';
 import { ProyectoAnualidadResumenFragment } from './proyecto-anualidad-formulario/proyecto-anualidad-resumen/proyecto-anualidad-resumen.fragment';
 import { PROYECTO_ANUALIDAD_ROUTE_PARAMS } from './proyecto-anualidad-route-params';
+import { ConfigService } from '@core/services/csp/configuracion/config.service';
 
 export interface IProyectoAnualidadData {
   proyecto: IProyecto;
@@ -66,7 +67,8 @@ export class ProyectoAnualidadActionService extends ActionService {
     codigoEconomicoIngresoService: CodigoEconomicoIngresoService,
     partidaPresupuestariaGastoSgeService: PartidaPresupuestariaGastoSgeService,
     partidaPresupuestariaIngresoSgeService: PartidaPresupuestariaIngresoSgeService,
-    proyectoAnualidadService: ProyectoAnualidadService
+    proyectoAnualidadService: ProyectoAnualidadService,
+    configServiceCSP: ConfigService
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_ANUALIDAD_DATA_KEY];
@@ -80,6 +82,7 @@ export class ProyectoAnualidadActionService extends ActionService {
       id,
       this.data.proyecto,
       proyectoAnualidadService,
+      configServiceCSP,
       this.data.readonly
     );
 

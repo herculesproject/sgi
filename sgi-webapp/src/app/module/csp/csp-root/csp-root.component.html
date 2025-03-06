@@ -30,9 +30,11 @@
     [route]="[CSP_ROUTE_NAMES.EJECUCION_ECONOMICA]" icon="functions"
     title="{{'menu.csp.ejecucion-economica' | translate}}">
   </sgi-menu-item>
-  <sgi-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-EJEC-E']" [route]="[CSP_ROUTE_NAMES.NOTIFICACION_PRESUPUESTO_SGE]"
-    icon="swap_horiz" title="{{'menu.csp.notificacion-presupuesto-sge' | translate}}">
-  </sgi-menu-item>
+  <ng-container *ngIf="isNotificacionPresupuestoSgeEnabled">
+    <sgi-menu-item *sgiHasAnyAuthorityForAnyUO="['CSP-EJEC-E']" [route]="[CSP_ROUTE_NAMES.NOTIFICACION_PRESUPUESTO_SGE]"
+      icon="swap_horiz" title="{{'menu.csp.notificacion-presupuesto-sge' | translate}}">
+    </sgi-menu-item>
+  </ng-container>
   <sgi-menu-item *sgiHasAnyAuthorityForAnyUO="['AUTH']" icon="insert_invitation"
     title="{{'menu.csp.timesheet' | translate}}">
   </sgi-menu-item>

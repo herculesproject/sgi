@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MSG_PARAMS } from '@core/i18n';
 import { ConfigService } from '@core/services/cnf/config.service';
+import { ConfigService as ConfigServiceCSP } from '@core/services/csp/configuracion/config.service';
 import { forkJoin, Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
 
@@ -33,18 +34,26 @@ export class CspRootComponent implements OnDestroy {
     return this._nombreSistemaGestionExterno;
   }
 
+  _isNotificacionPresupuestoSgeEnabled: boolean;
+  get isNotificacionPresupuestoSgeEnabled(): boolean {
+    return this._isNotificacionPresupuestoSgeEnabled;
+  }
+
   constructor(
-    private configService: ConfigService
+    private configService: ConfigService,
+    private configServiceCSP: ConfigServiceCSP
   ) {
     this.subscriptions.push(
       forkJoin(
         {
           nombre: this.configService.getNombreSistemaGestionExterno(),
-          url: this.configService.getUrlSistemaGestionExterno()
+          url: this.configService.getUrlSistemaGestionExterno(),
+          notificacionPresupuestoSge: this.configServiceCSP.isNotificacionPresupuestosSgeEnabled()
         }
-      ).subscribe(({ nombre, url }) => {
+      ).subscribe(({ nombre, url, notificacionPresupuestoSge }) => {
         this._nombreSistemaGestionExterno = nombre;
         this._urlSistemaGestionExterno = url;
+        this._isNotificacionPresupuestoSgeEnabled = notificacionPresupuestoSge;
       })
     );
   }
