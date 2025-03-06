@@ -3004,4 +3004,10 @@
 
     <dropColumn columnName="comentario" tableName="estado_validacion_ip" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-107">
+    <addColumn tableName="configuracion">
+      <column name="sge_notificacion_presupuesto" type="BOOLEAN" defaultValueBoolean="false" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

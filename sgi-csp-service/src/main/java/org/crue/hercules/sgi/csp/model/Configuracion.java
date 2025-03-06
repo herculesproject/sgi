@@ -182,7 +182,11 @@ public class Configuracion extends BaseEntity {
      * Permitir creación de solicitudes sin convocatoria desde perfil de
      * investigación
      */
-    SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED("solicitudesSinConvocatoriaInvestigadorEnabled");
+    SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED("solicitudesSinConvocatoriaInvestigadorEnabled"),
+    /**
+     * Determina si hay integración de las notificaciones de presupuesto al SGE
+     */
+    NOTIFICACION_PRESUPUESTO_SGE_ENABLED("notificacionPresupuestoSgeEnabled");
 
     private final String key;
 
@@ -362,6 +366,12 @@ public class Configuracion extends BaseEntity {
   @Column(name = "inv_solicitudes_sin_convocatoria", columnDefinition = "boolean default false", nullable = false, unique = true)
   private Boolean solicitudesSinConvocatoriaInvestigadorEnabled;
 
+  /**
+   * Determina si hay integración de las notificaciones de presupuesto al SGE
+   */
+  @Column(name = "sge_notificacion_presupuesto", columnDefinition = "boolean default true", nullable = false, unique = true)
+  private Boolean notificacionPresupuestoSgeEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -414,6 +424,8 @@ public class Configuracion extends BaseEntity {
         return this.getProyectoSocioPaisFilterEnabled();
       case SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED:
         return this.getSolicitudesSinConvocatoriaInvestigadorEnabled();
+      case NOTIFICACION_PRESUPUESTO_SGE_ENABLED:
+        return this.getNotificacionPresupuestoSgeEnabled();
       default:
         return null;
     }
@@ -501,6 +513,9 @@ public class Configuracion extends BaseEntity {
         break;
       case SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED:
         this.setSolicitudesSinConvocatoriaInvestigadorEnabled(Boolean.valueOf(newValue));
+        break;
+      case NOTIFICACION_PRESUPUESTO_SGE_ENABLED:
+        this.setNotificacionPresupuestoSgeEnabled(Boolean.valueOf(newValue));
         break;
     }
   }
