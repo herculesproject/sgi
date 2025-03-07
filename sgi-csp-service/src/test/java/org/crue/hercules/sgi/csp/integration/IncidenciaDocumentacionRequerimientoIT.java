@@ -106,8 +106,8 @@ class IncidenciaDocumentacionRequerimientoIT extends BaseIT {
 
     IncidenciaDocumentacionRequerimientoOutput output = response.getBody();
     Assertions.assertThat(output.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(output.getIncidencia()).as("getIncidencia()")
-        .isEqualTo(input.getIncidencia());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getIncidencia(), Language.ES)).as("getIncidencia()")
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getIncidencia(), Language.ES));
     Assertions.assertThat(I18nHelper.getValueForLanguage(output.getNombreDocumento(), Language.ES))
         .as("getNombreDocumento()")
         .isEqualTo(I18nHelper.getValueForLanguage(input.getNombreDocumento(), Language.ES));
@@ -148,8 +148,8 @@ class IncidenciaDocumentacionRequerimientoIT extends BaseIT {
     IncidenciaDocumentacionRequerimientoOutput output = response.getBody();
     Assertions.assertThat(output.getId()).as("getId()")
         .isEqualTo(incidenciaDocumentacionRequerimientoId);
-    Assertions.assertThat(output.getIncidencia()).as("getIncidencia()")
-        .isEqualTo(input.getIncidencia());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getIncidencia(), Language.ES)).as("getIncidencia()")
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getIncidencia(), Language.ES));
     Assertions.assertThat(I18nHelper.getValueForLanguage(output.getNombreDocumento(), Language.ES))
         .as("getNombreDocumento()")
         .isEqualTo(I18nHelper.getValueForLanguage(input.getNombreDocumento(), Language.ES));
@@ -199,8 +199,11 @@ class IncidenciaDocumentacionRequerimientoIT extends BaseIT {
     List<I18nFieldValueDto> nombreDocumentoIncidencia = new ArrayList<>();
     nombreDocumentoIncidencia.add(new I18nFieldValueDto(Language.ES, "IncidenciaDocumentacionRequerimiento-" + suffix));
 
+    List<I18nFieldValueDto> incidenciaDocumentacion = new ArrayList<>();
+    incidenciaDocumentacion.add(new I18nFieldValueDto(Language.ES, "Incidencia-" + suffix));
+
     return IncidenciaDocumentacionRequerimientoInput.builder()
-        .incidencia("Incidencia-" + suffix)
+        .incidencia(incidenciaDocumentacion)
         .nombreDocumento(nombreDocumentoIncidencia)
         .requerimientoJustificacionId(1L)
         .build();

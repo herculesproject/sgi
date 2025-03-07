@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
+import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoIncidencia;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoNombreDocumento;
 import org.crue.hercules.sgi.csp.repository.IncidenciaDocumentacionRequerimientoRepository;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -175,9 +176,14 @@ class IncidenciaDocumentacionRequerimientoServiceTest extends BaseServiceTest {
     String incidenciaToUpdate = "Incidencia-123";
     IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimientoToUpdate = generarMockIncidenciaDocumentacionRequerimiento(
         id, requerimientoJustificacionId);
+
+    Set<IncidenciaDocumentacionRequerimientoIncidencia> incidenciaDocumentacion = new HashSet<>();
+    incidenciaDocumentacion
+        .add(new IncidenciaDocumentacionRequerimientoIncidencia(Language.ES, incidenciaToUpdate));
+
     IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimientoOnDB = generarMockIncidenciaDocumentacionRequerimiento(
         id, requerimientoJustificacionId);
-    incidenciaDocumentacionRequerimientoToUpdate.setIncidencia(incidenciaToUpdate);
+    incidenciaDocumentacionRequerimientoToUpdate.setIncidencia(incidenciaDocumentacion);
 
     BDDMockito.given(incidenciaDocumentacionRequerimientoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(incidenciaDocumentacionRequerimientoOnDB));
@@ -195,7 +201,9 @@ class IncidenciaDocumentacionRequerimientoServiceTest extends BaseServiceTest {
     Assertions.assertThat(incidenciaDocumentacionRequerimiento.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(incidenciaDocumentacionRequerimiento.getRequerimientoJustificacionId())
         .as("getRequerimientoJustificacionId()").isEqualTo(requerimientoJustificacionId);
-    Assertions.assertThat(incidenciaDocumentacionRequerimiento.getIncidencia()).as("getIncidencia()")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(incidenciaDocumentacionRequerimiento.getIncidencia(), Language.ES))
+        .as("getIncidencia()")
         .isEqualTo(incidenciaToUpdate);
   }
 
@@ -260,10 +268,14 @@ class IncidenciaDocumentacionRequerimientoServiceTest extends BaseServiceTest {
     nombreDocumentoIncidencia
         .add(new IncidenciaDocumentacionRequerimientoNombreDocumento(Language.ES, nombreDocumento));
 
+    Set<IncidenciaDocumentacionRequerimientoIncidencia> incidenciaDocumentacion = new HashSet<>();
+    incidenciaDocumentacion
+        .add(new IncidenciaDocumentacionRequerimientoIncidencia(Language.ES, incidencia));
+
     return IncidenciaDocumentacionRequerimiento.builder()
         .id(id)
         .alegacion(alegacion)
-        .incidencia(incidencia)
+        .incidencia(incidenciaDocumentacion)
         .nombreDocumento(nombreDocumentoIncidencia)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();

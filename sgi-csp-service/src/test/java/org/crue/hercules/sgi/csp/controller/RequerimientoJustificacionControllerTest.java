@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.AlegacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
+import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoIncidencia;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoNombreDocumento;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacionObservaciones;
@@ -588,10 +589,14 @@ class RequerimientoJustificacionControllerTest extends BaseControllerTest {
     nombreDocumentoIncidencia
         .add(new IncidenciaDocumentacionRequerimientoNombreDocumento(Language.ES, nombreDocumento));
 
+    Set<IncidenciaDocumentacionRequerimientoIncidencia> incidenciaDocumentacion = new HashSet<>();
+    incidenciaDocumentacion
+        .add(new IncidenciaDocumentacionRequerimientoIncidencia(Language.ES, incidencia));
+
     return IncidenciaDocumentacionRequerimiento.builder()
         .id(id)
         .alegacion(alegacion)
-        .incidencia(incidencia)
+        .incidencia(incidenciaDocumentacion)
         .nombreDocumento(nombreDocumentoIncidencia)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();

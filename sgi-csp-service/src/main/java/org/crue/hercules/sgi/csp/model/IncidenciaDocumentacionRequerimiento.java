@@ -57,8 +57,11 @@ public class IncidenciaDocumentacionRequerimiento extends BaseEntity {
   @Builder.Default
   private Set<IncidenciaDocumentacionRequerimientoNombreDocumento> nombreDocumento = new HashSet<>();
 
-  @Column(name = "incidencia", nullable = true, length = DEFAULT_LONG_TEXT_LENGTH)
-  private String incidencia;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "incidencia_documentacion_requerimiento_incidencia", joinColumns = @JoinColumn(name = "incidencia_documentacion_requerimiento_id"))
+  @Valid
+  @Builder.Default
+  private Set<IncidenciaDocumentacionRequerimientoIncidencia> incidencia = new HashSet<>();
 
   @Column(name = "alegacion", nullable = true, length = DEFAULT_LONG_TEXT_LENGTH)
   private String alegacion;
