@@ -1,4 +1,5 @@
 import { TipoPropiedad } from '@core/enums/tipo-propiedad';
+import { ITipoProteccionResponse } from '../tipo-proteccion/tipo-proteccion-response';
 
 export interface IInvencionResponse {
   id: number;
@@ -7,14 +8,6 @@ export interface IInvencionResponse {
   descripcion: string;
   comentarios: string;
   proyectoRef: string;
-  tipoProteccion: {
-    id: number;
-    nombre: string;
-    padre: {
-      id: number;
-      nombre: string;
-    };
-    tipoPropiedad: TipoPropiedad;
-  }
+  tipoProteccion: ITipoProteccionResponse;
   activo: boolean;
 }

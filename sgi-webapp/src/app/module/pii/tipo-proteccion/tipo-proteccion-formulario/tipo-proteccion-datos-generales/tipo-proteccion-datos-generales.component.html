@@ -16,8 +16,8 @@
     <div fxFlex="calc(50 - 10px)">
       <mat-form-field>
         <mat-label>{{'pii.tipo-proteccion.nombre' | translate}}</mat-label>
-        <input matInput formControlName="nombre" type="text" id="nombre"
-          placeholder="{{'pii.tipo-proteccion.nombre' | translate}}" required cdkFocusInitial>
+        <sgi-i18n-input formControlName="nombre" placeholder="{{'pii.tipo-proteccion.nombre' | translate}}" required
+          cdkFocusInitial></sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
           {{'error.required.entity' | translate:msgParamNombreEntity}}
         </mat-error>

@@ -4,8 +4,10 @@ import { ITipoProteccion } from "@core/models/pii/tipo-proteccion";
 import { LuxonUtils } from "@core/utils/luxon-utils";
 import { SgiBaseConverter } from "@sgi/framework/core";
 import { IInvencionRequest } from "./invencion-request";
+import { TIPO_PROTECCION_REQUEST_CONVERTER } from "../tipo-proteccion/tipo-proteccion-request.converter";
+import { ValueConverter } from "@angular/compiler/src/render3/view/template";
 
-class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInvencion>{
+class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInvencion> {
 
   toTarget(value: IInvencionRequest): IInvencion {
     if (!value) {
@@ -32,7 +34,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
       fechaComunicacion: LuxonUtils.toBackend(value.fechaComunicacion),
       descripcion: value.descripcion,
       proyectoRef: value.proyecto?.id?.toString(),
-      tipoProteccionId: value.tipoProteccion?.id,
+      tipoProteccionId: value.tipoProteccion ? TIPO_PROTECCION_REQUEST_CONVERTER.fromTarget(value.tipoProteccion).id : null,
       comentarios: value.comentarios
     };
   }

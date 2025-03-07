@@ -58,7 +58,7 @@ export class SelectTipoProteccionComponent extends SelectServiceExtendedComponen
 
   protected loadServiceOptions(): Observable<ITipoProteccion[]> {
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC),
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC),
       filter: new RSQLSgiRestFilter('tipoPropiedad', SgiRestFilterOperator.EQUALS, this.tipoPropiedad)
     };
     return this.tipoProteccionService.findAll(findOptions).pipe(map(({ items }) => items));

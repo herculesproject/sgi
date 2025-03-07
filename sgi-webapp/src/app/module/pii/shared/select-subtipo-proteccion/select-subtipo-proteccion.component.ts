@@ -61,7 +61,7 @@ export class SelectSubtipoProteccionComponent extends SelectServiceExtendedCompo
     }
     this.addTarget = `/${Module.PII.path}/${PII_ROUTE_NAMES.TIPO_PROTECCION}/${this.tipoProteccionId}/${PII_TIPO_PROTECCION_ROUTE_NAMES.SUBTIPOS}`;
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC)
     };
     return this.tipoProteccionService.findSubtipos(this.tipoProteccionId, findOptions).pipe(
       map(({ items }) => items));

@@ -8,6 +8,7 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { Status, StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -68,7 +69,8 @@ export class TipoProteccionSubtiposComponent extends FragmentComponent implement
     readonly actionService: TipoProteccionActionService,
     private readonly matDialog: MatDialog,
     private readonly dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.SUBTIPOS, actionService, translate);
 
@@ -78,9 +80,18 @@ export class TipoProteccionSubtiposComponent extends FragmentComponent implement
   ngOnInit(): void {
     super.ngOnInit();
 
-
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<ITipoProteccion>, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return this.languageService.getFieldValue(wrapper.value?.nombre);
+          default:
+            return wrapper.value[property];
+        }
+      };
     this.dataSource.sort = this.sort;
+
     this.subscriptions.push(this.formPart.subtiposProteccion$.subscribe(elements => {
       this.dataSource.data = elements;
     }));

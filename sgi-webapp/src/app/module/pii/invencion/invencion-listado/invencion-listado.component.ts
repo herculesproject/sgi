@@ -116,6 +116,13 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
     this.fxLayoutProperties.xs = 'column';
     this.sectoresAplicacion$ = sectorAplicacionService.findAll().pipe(map(({ items }) => items));
     this.tiposProteccion$ = tipoProteccionService.findAll().pipe(map(({ items }) => items));
+
+    this.resolveSortProperty = (column: string) => {
+      if (column == 'tipoProteccion.nombre') {
+        return 'tipoProteccion.nombre.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {

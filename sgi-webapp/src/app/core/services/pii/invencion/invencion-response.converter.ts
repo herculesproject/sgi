@@ -4,8 +4,9 @@ import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IInvencionResponse } from './invencion-response';
+import { TIPO_PROTECCION_RESPONSE_CONVERTER } from '../tipo-proteccion/tipo-proteccion-response.converter';
 
-class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, IInvencion>{
+class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, IInvencion> {
   toTarget(value: IInvencionResponse): IInvencion {
     if (!value) {
       return value as unknown as IInvencion;
@@ -17,15 +18,7 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
       descripcion: value.descripcion,
       comentarios: value.comentarios,
       proyecto: value.proyectoRef !== null ? { id: +value.proyectoRef } as IProyecto : null,
-      tipoProteccion: {
-        id: value.tipoProteccion.id,
-        nombre: value.tipoProteccion.nombre,
-        padre: value.tipoProteccion.padre !== null ? {
-          id: value.tipoProteccion.padre?.id,
-          nombre: value.tipoProteccion.padre?.nombre
-        } : null,
-        tipoPropiedad: value.tipoProteccion.tipoPropiedad
-      } as ITipoProteccion,
+      tipoProteccion: value.tipoProteccion ? TIPO_PROTECCION_RESPONSE_CONVERTER.toTarget(value.tipoProteccion) : null,
       activo: value.activo
     };
   }
@@ -40,15 +33,7 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
       descripcion: value.descripcion,
       comentarios: value.comentarios,
       proyectoRef: value.proyecto?.id?.toString(),
-      tipoProteccion: {
-        id: value.tipoProteccion.id,
-        nombre: value.tipoProteccion.nombre,
-        padre: value.tipoProteccion.padre !== null ? {
-          id: value.tipoProteccion.padre?.id,
-          nombre: value.tipoProteccion.padre?.nombre
-        } : null,
-        tipoPropiedad: value.tipoProteccion.tipoPropiedad
-      },
+      tipoProteccion: value.tipoProteccion ? TIPO_PROTECCION_RESPONSE_CONVERTER.fromTarget(value.tipoProteccion) : null,
       activo: value.activo
     };
   }
