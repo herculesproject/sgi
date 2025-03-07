@@ -48,6 +48,8 @@ export const FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP: Map<Factur
 
 export interface IConfiguracion {
   id: number;
+  /** Habilitar que se muestre el buscador de proyectos económicos al pulsar el botón de "Añadir identificador SGE" en la pantalla de  "Configuración económica - Identificación" */
+  altaBuscadorSgeEnabled: boolean;
   /** Expresión regular para validar el formato del código de las partidas presupuestarias */
   formatoPartidaPresupuestaria: string;
   /** Plantilla informativa del formato del código de las partidas presupuestarias */

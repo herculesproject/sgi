@@ -10,6 +10,7 @@ class ConfiguracionResponseConverter
     }
     return {
       id: value.id,
+      altaBuscadorSgeEnabled: value.altaBuscadorSgeEnabled,
       amortizacionFondosSgeEnabled: value.amortizacionFondosSgeEnabled,
       calendarioFacturacionSgeEnabled: value.calendarioFacturacionSgeEnabled ? ModoEjecucion[value.calendarioFacturacionSgeEnabled] : null,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge ? CardinalidadRelacionSgiSge[value.cardinalidadRelacionSgiSge] : null,
@@ -43,6 +44,7 @@ class ConfiguracionResponseConverter
     }
     return {
       id: value.id,
+      altaBuscadorSgeEnabled: value.altaBuscadorSgeEnabled,
       amortizacionFondosSgeEnabled: value.amortizacionFondosSgeEnabled,
       calendarioFacturacionSgeEnabled: value.calendarioFacturacionSgeEnabled,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge,
