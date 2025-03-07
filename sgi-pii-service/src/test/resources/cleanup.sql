@@ -21,6 +21,7 @@ DELETE FROM test.solicitud_proteccion;
 DELETE FROM test.reparto;
 DELETE FROM test.invencion;
 DELETE FROM test.tipo_proteccion_nombre;
+DELETE FROM test.tipo_proteccion_descripcion;
 DELETE FROM test.tipo_proteccion;
 DELETE FROM test.tipo_caducidad;
 DELETE FROM test.tipo_procedimiento;

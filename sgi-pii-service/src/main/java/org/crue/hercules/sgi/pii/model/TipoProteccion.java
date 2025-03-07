@@ -64,8 +64,11 @@ public class TipoProteccion extends BaseActivableEntity {
   private Set<TipoProteccionNombre> nombre = new HashSet<>();
 
   /** Descripcion */
-  @Column(name = "descripcion", length = TipoProteccion.DESCRIPCION_LENGTH, nullable = true)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_proteccion_descripcion", joinColumns = @JoinColumn(name = "tipo_proteccion_id"))
+  @Valid
+  @Builder.Default
+  private Set<TipoProteccionDescripcion> descripcion = new HashSet<>();
 
   /** TipoProteccion padre */
   @ManyToOne

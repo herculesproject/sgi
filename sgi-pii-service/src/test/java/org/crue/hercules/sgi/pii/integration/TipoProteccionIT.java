@@ -71,7 +71,7 @@ class TipoProteccionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter)
@@ -114,7 +114,7 @@ class TipoProteccionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     // when: find Convocatoria
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort).queryParam("q", filter)
@@ -157,7 +157,7 @@ class TipoProteccionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     // when: find SubtiposProteccion
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SUBTIPOS).queryParam("s", sort).queryParam("q", filter)
@@ -199,7 +199,7 @@ class TipoProteccionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     // when: find SubtiposProteccion
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SUBTIPOS + PATH_TODOS).queryParam("s", sort).queryParam("q", filter)
@@ -355,9 +355,12 @@ class TipoProteccionIT extends BaseIT {
     List<I18nFieldValueDto> nombreTipoProteccion = new ArrayList<>();
     nombreTipoProteccion.add(new I18nFieldValueDto(Language.ES, "Testing tipo Proteccion"));
 
+    List<I18nFieldValueDto> descripcionTipoProteccion = new ArrayList<>();
+    descripcionTipoProteccion.add(new I18nFieldValueDto(Language.ES, "Testing tipo Proteccion"));
+
     return TipoProteccionInput.builder()
     .nombre(nombreTipoProteccion)
-    .descripcion("Testing tipo Proteccion")
+    .descripcion(descripcionTipoProteccion)
     .tipoPropiedad(TipoPropiedad.INTELECTUAL)
     .build();
   }

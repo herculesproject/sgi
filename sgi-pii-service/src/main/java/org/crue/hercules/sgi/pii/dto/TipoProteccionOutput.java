@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
+import org.crue.hercules.sgi.pii.model.TipoProteccionDescripcion;
 import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class TipoProteccionOutput implements Serializable {
 
   private Collection<TipoProteccionNombre> nombre;
 
-  private String descripcion;
+  private Collection<TipoProteccionDescripcion> descripcion;
 
   private Long padreId;
 
