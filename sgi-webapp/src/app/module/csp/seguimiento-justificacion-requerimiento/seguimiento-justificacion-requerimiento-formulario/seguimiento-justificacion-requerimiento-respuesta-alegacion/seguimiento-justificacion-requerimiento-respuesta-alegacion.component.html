@@ -183,7 +183,7 @@
             {{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.incidencia-documento.documento' |
             translate}} </th>
           <td mat-cell *matCellDef="let wrapper">
-            {{wrapper.value.nombreDocumento}}
+            <sgi-i18n-table-field [field]="wrapper.value.nombreDocumento"></sgi-i18n-table-field>
           </td>
         </ng-container>
 

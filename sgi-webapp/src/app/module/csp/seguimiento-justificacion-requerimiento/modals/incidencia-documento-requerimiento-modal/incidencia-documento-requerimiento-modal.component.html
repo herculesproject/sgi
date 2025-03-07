@@ -7,11 +7,15 @@
       <mat-form-field fxFlex="66%">
         <mat-label>{{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.incidencia-documento.documento' |
           translate}}</mat-label>
-        <input matInput formControlName="nombreDocumento" id="nombreDocumento"
+        <sgi-i18n-input formControlName="nombreDocumento"
           placeholder="{{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.incidencia-documento.documento' | translate}}"
           required>
+        </sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.nombreDocumento.errors?.required">
           {{'error.required.entity' | translate:msgParamDocumentoJustificacionEntity}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.nombreDocumento.errors?.maxlength">
+          {{'error.maxlength.entity' | translate:msgParamDocumentoJustificacionEntity}}
         </mat-error>
       </mat-form-field>
     </div>

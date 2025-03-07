@@ -8,6 +8,7 @@ import { FormFragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IAlegacionRequerimiento } from '@core/models/csp/alegacion-requerimiento';
 import { IIncidenciaDocumentacionRequerimiento } from '@core/models/csp/incidencia-documentacion-requerimiento';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -42,6 +43,7 @@ export class SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent
     readonly actionService: SeguimientoJustificacionRequerimientoActionService,
     private readonly translate: TranslateService,
     private matDialog: MatDialog,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.RESPUESTA_ALEGACION, actionService, translate);
     this.formPart = this.fragment as SeguimientoJustificacionRequerimientoRespuestaAlegacionFragment;
@@ -59,6 +61,15 @@ export class SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent
 
   private initIncidenciaDocumentacionTable(): void {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IIncidenciaDocumentacionRequerimiento>, property: string) => {
+        switch (property) {
+          case 'nombreDocumento':
+            return this.languageService.getFieldValue(wrapper.value.nombreDocumento);
+          default:
+            return wrapper[property];
+        }
+      };
     this.dataSource.sort = this.sort;
     this.getIncidenciaDocumentacionTableData();
   }
