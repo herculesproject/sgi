@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.AlegacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionIncidencia;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoAlegacion;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoIncidencia;
@@ -616,22 +617,29 @@ class RequerimientoJustificacionControllerTest extends BaseControllerTest {
 
   private GastoRequerimientoJustificacionOutput generarMockGastoRequerimientoJustificacionOutput(
       GastoRequerimientoJustificacion gastoRequerimientoJustificacion) {
-    return generarMockGastoRequerimientoJustificacionOutput(gastoRequerimientoJustificacion.getId(),
-        gastoRequerimientoJustificacion.getAceptado(),
-        gastoRequerimientoJustificacion.getAlegacion(),
-        gastoRequerimientoJustificacion.getGastoRef(),
-        gastoRequerimientoJustificacion.getIdentificadorJustificacion(),
-        gastoRequerimientoJustificacion.getImporteAceptado(),
-        gastoRequerimientoJustificacion.getImporteAlegado(),
-        gastoRequerimientoJustificacion.getImporteRechazado(),
-        gastoRequerimientoJustificacion.getIncidencia(),
-        gastoRequerimientoJustificacion.getRequerimientoJustificacionId());
+    return GastoRequerimientoJustificacionOutput.builder()
+        .id(gastoRequerimientoJustificacion.getId())
+        .aceptado(gastoRequerimientoJustificacion.getAceptado())
+        .alegacion(gastoRequerimientoJustificacion.getAlegacion())
+        .gastoRef(gastoRequerimientoJustificacion.getGastoRef())
+        .identificadorJustificacion(gastoRequerimientoJustificacion.getIdentificadorJustificacion())
+        .importeAceptado(gastoRequerimientoJustificacion.getImporteAceptado())
+        .importeAlegado(gastoRequerimientoJustificacion.getImporteAlegado())
+        .importeRechazado(gastoRequerimientoJustificacion.getImporteRechazado())
+        .incidencia(gastoRequerimientoJustificacion.getIncidencia())
+        .requerimientoJustificacionId(gastoRequerimientoJustificacion.getRequerimientoJustificacionId())
+        .build();
   }
 
   private GastoRequerimientoJustificacion generarMockGastoRequerimientoJustificacion(Long id, Boolean aceptado,
       String alegacion, String gastoRef, String identificadorJustificacion, BigDecimal importeAceptado,
       BigDecimal importeAlegado, BigDecimal importeRechazado,
       String incidencia, Long requerimientoJustificacionId) {
+
+    Set<GastoRequerimientoJustificacionIncidencia> incidenciaGastoRequerimientoJustificacion = new HashSet<>();
+    incidenciaGastoRequerimientoJustificacion
+        .add(new GastoRequerimientoJustificacionIncidencia(Language.ES, incidencia));
+
     return GastoRequerimientoJustificacion.builder()
         .id(id)
         .aceptado(aceptado)
@@ -641,25 +649,7 @@ class RequerimientoJustificacionControllerTest extends BaseControllerTest {
         .importeAceptado(importeAceptado)
         .importeAlegado(importeAlegado)
         .importeRechazado(importeRechazado)
-        .incidencia(incidencia)
-        .requerimientoJustificacionId(requerimientoJustificacionId)
-        .build();
-  }
-
-  private GastoRequerimientoJustificacionOutput generarMockGastoRequerimientoJustificacionOutput(
-      Long id, Boolean aceptado, String alegacion, String gastoRef, String identificadorJustificacion,
-      BigDecimal importeAceptado, BigDecimal importeAlegado, BigDecimal importeRechazado, String incidencia,
-      Long requerimientoJustificacionId) {
-    return GastoRequerimientoJustificacionOutput.builder()
-        .id(id)
-        .aceptado(aceptado)
-        .alegacion(alegacion)
-        .gastoRef(gastoRef)
-        .identificadorJustificacion(identificadorJustificacion)
-        .importeAceptado(importeAceptado)
-        .importeAlegado(importeAlegado)
-        .importeRechazado(importeRechazado)
-        .incidencia(incidencia)
+        .incidencia(incidenciaGastoRequerimientoJustificacion)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();
   }

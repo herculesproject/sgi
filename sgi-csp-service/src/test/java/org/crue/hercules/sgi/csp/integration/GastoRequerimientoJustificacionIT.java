@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.integration;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.GastoRequerimientoJustificacionController;
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionOutput;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -25,7 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de GastoRequerimientoJustificacion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GastoRequerimientoJustificacionIT extends BaseIT {
+class GastoRequerimientoJustificacionIT extends BaseIT {
 
   private static final String CONTROLLER_BASE_PATH = GastoRequerimientoJustificacionController.REQUEST_MAPPING;
   private static final String PATH_ID = GastoRequerimientoJustificacionController.PATH_ID;
@@ -39,8 +42,7 @@ public class GastoRequerimientoJustificacionIT extends BaseIT {
     headers.set("Authorization", String.format("bearer %s",
         tokenBuilder.buildToken("usr-002", roles)));
 
-    HttpEntity<Object> request = new HttpEntity<>(entity, headers);
-    return request;
+    return new HttpEntity<>(entity, headers);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -202,16 +204,27 @@ public class GastoRequerimientoJustificacionIT extends BaseIT {
 
   private GastoRequerimientoJustificacionInput generarMockGastoRequerimientoJustificacionInput(
       Long requerimientoJustificacionId, String alegacion) {
-    return generarMockGastoRequerimientoJustificacionInput(Boolean.TRUE, alegacion,
-        "12345", "11/1111",
-        null, null, null,
-        null, requerimientoJustificacionId);
+    return generarMockGastoRequerimientoJustificacionInput(
+        Boolean.TRUE,
+        alegacion,
+        "12345",
+        "11/1111",
+        null,
+        null,
+        null,
+        null,
+        requerimientoJustificacionId);
   }
 
   private GastoRequerimientoJustificacionInput generarMockGastoRequerimientoJustificacionInput(Boolean aceptado,
       String alegacion, String gastoRef, String identificadorJustificacion, BigDecimal importeAceptado,
       BigDecimal importeAlegado, BigDecimal importeRechazado,
       String incidencia, Long requerimientoJustificacionId) {
+    List<I18nFieldValueDto> incidenciaGastoRequerimiento = new ArrayList<>();
+    if (incidencia != null) {
+      incidenciaGastoRequerimiento.add(new I18nFieldValueDto(Language.ES, incidencia));
+    }
+
     return GastoRequerimientoJustificacionInput.builder()
         .aceptado(aceptado)
         .alegacion(alegacion)
@@ -220,7 +233,7 @@ public class GastoRequerimientoJustificacionIT extends BaseIT {
         .importeAceptado(importeAceptado)
         .importeAlegado(importeAlegado)
         .importeRechazado(importeRechazado)
-        .incidencia(incidencia)
+        .incidencia(incidenciaGastoRequerimiento)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();
   }

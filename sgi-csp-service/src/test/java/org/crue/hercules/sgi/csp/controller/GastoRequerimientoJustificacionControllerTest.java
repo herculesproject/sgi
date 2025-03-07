@@ -3,15 +3,19 @@ package org.crue.hercules.sgi.csp.controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.converter.GastoRequerimientoJustificacionConverter;
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionIncidencia;
 import org.crue.hercules.sgi.csp.service.GastoRequerimientoJustificacionService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -37,7 +41,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * GastoRequerimientoJustificacionControllerTest
  */
 @WebMvcTest(GastoRequerimientoJustificacionController.class)
-public class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
+class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
 
   @MockBean
   private GastoRequerimientoJustificacionService service;
@@ -117,10 +121,7 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
           }
         });
     BDDMockito.given(service.update(ArgumentMatchers.<GastoRequerimientoJustificacion>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          GastoRequerimientoJustificacion gastoRequerimientoJustificacion = invocation.getArgument(0);
-          return gastoRequerimientoJustificacion;
-        });
+        .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
     BDDMockito.given(converter.convert(ArgumentMatchers.<GastoRequerimientoJustificacion>any()))
         .willAnswer(new Answer<GastoRequerimientoJustificacionOutput>() {
           @Override
@@ -188,8 +189,7 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
             int toIndex = fromIndex + size;
             toIndex = toIndex > gastos.size() ? gastos.size() : toIndex;
             List<GastoRequerimientoJustificacion> content = gastos.subList(fromIndex, toIndex);
-            Page<GastoRequerimientoJustificacion> page = new PageImpl<>(content, pageable, gastos.size());
-            return page;
+            return new PageImpl<>(content, pageable, gastos.size());
           }
         });
     BDDMockito
@@ -198,13 +198,9 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
           @Override
           public Page<GastoRequerimientoJustificacionOutput> answer(InvocationOnMock invocation) throws Throwable {
             Page<GastoRequerimientoJustificacion> pageInput = invocation.getArgument(0);
-            List<GastoRequerimientoJustificacionOutput> content = pageInput.getContent().stream().map(input -> {
-              return generarMockGastoRequerimientoJustificacionOutput(input);
-            }).collect(Collectors.toList());
-            Page<GastoRequerimientoJustificacionOutput> pageOutput = new PageImpl<>(content,
-                pageInput.getPageable(),
-                pageInput.getTotalElements());
-            return pageOutput;
+            List<GastoRequerimientoJustificacionOutput> content = pageInput.getContent().stream()
+                .map(input -> generarMockGastoRequerimientoJustificacionOutput(input)).toList();
+            return new PageImpl<>(content, pageInput.getPageable(), pageInput.getTotalElements());
           }
         });
 
@@ -253,8 +249,7 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
           @Override
           public Page<GastoRequerimientoJustificacion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
-            Page<GastoRequerimientoJustificacion> page = new PageImpl<>(gastos, pageable, 0);
-            return page;
+            return new PageImpl<>(gastos, pageable, 0);
           }
         });
     BDDMockito
@@ -263,8 +258,7 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
         .willAnswer(new Answer<Page<GastoRequerimientoJustificacionOutput>>() {
           @Override
           public Page<GastoRequerimientoJustificacionOutput> answer(InvocationOnMock invocation) throws Throwable {
-            Page<GastoRequerimientoJustificacionOutput> page = new PageImpl<>(Collections.emptyList());
-            return page;
+            return new PageImpl<>(Collections.emptyList());
           }
         });
 
@@ -312,6 +306,11 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
       String alegacion, String gastoRef, String identificadorJustificacion, BigDecimal importeAceptado,
       BigDecimal importeAlegado, BigDecimal importeRechazado,
       String incidencia, Long requerimientoJustificacionId) {
+
+    Set<GastoRequerimientoJustificacionIncidencia> incidenciaGastoRequerimientoJustificacion = new HashSet<>();
+    incidenciaGastoRequerimientoJustificacion
+        .add(new GastoRequerimientoJustificacionIncidencia(Language.ES, incidencia));
+
     return GastoRequerimientoJustificacion.builder()
         .id(id)
         .aceptado(aceptado)
@@ -321,7 +320,7 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
         .importeAceptado(importeAceptado)
         .importeAlegado(importeAlegado)
         .importeRechazado(importeRechazado)
-        .incidencia(incidencia)
+        .incidencia(incidenciaGastoRequerimientoJustificacion)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();
   }
@@ -338,6 +337,9 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
       String alegacion, String gastoRef, String identificadorJustificacion, BigDecimal importeAceptado,
       BigDecimal importeAlegado, BigDecimal importeRechazado,
       String incidencia, Long requerimientoJustificacionId) {
+    List<I18nFieldValueDto> incidenciaGastoRequerimiento = new ArrayList<>();
+    incidenciaGastoRequerimiento.add(new I18nFieldValueDto(Language.ES, incidencia));
+
     return GastoRequerimientoJustificacionInput.builder()
         .aceptado(aceptado)
         .alegacion(alegacion)
@@ -346,7 +348,8 @@ public class GastoRequerimientoJustificacionControllerTest extends BaseControlle
         .importeAceptado(importeAceptado)
         .importeAlegado(importeAlegado)
         .importeRechazado(importeRechazado)
-        .incidencia(incidencia)
+        .incidencia(
+            incidenciaGastoRequerimiento)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();
   }
