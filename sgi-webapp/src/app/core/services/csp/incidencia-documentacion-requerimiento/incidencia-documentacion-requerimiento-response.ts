@@ -5,5 +5,5 @@ export interface IIncidenciaDocumentacionRequerimientoResponse {
   requerimientoJustificacionId: number;
   nombreDocumento: I18nFieldValueResponse[];
   incidencia: I18nFieldValueResponse[];
-  alegacion: string;
+  alegacion: I18nFieldValueResponse[];
 }

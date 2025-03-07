@@ -37,8 +37,9 @@
           {{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.incidencia-documento.alegacion'
           | translate}}
         </mat-label>
-        <textarea matInput formControlName="alegacion" id="alegacion"
-          placeholder="{{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.incidencia-documento.alegacion' | translate}}"></textarea>
+        <sgi-i18n-textarea formControlName="alegacion"
+          placeholder="{{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.incidencia-documento.alegacion' | translate}}">
+        </sgi-i18n-textarea>
         <mat-error *ngIf="formGroup.controls.alegacion.errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamAlegacionEntity}}
         </mat-error>

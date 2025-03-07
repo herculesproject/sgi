@@ -5,6 +5,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogFormComponent } from '@core/component/dialog-form.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IIncidenciaDocumentacionRequerimiento } from '@core/models/csp/incidencia-documentacion-requerimiento';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 
 const ALEGACION_KEY = marker('csp.ejecucion-economica.seguimiento-justificacion.requerimiento.incidencia-documento.alegacion');
@@ -38,7 +39,7 @@ export class IncidenciaDocumentacionRequerimientoAlegacionModalComponent
     return new FormGroup({
       nombreDocumento: new FormControl({ value: this.data?.nombreDocumento, disabled: true }),
       incidencia: new FormControl({ value: this.data.incidencia, disabled: true }),
-      alegacion: new FormControl(this.data.alegacion, Validators.maxLength(2000)),
+      alegacion: new FormControl(this.data.alegacion, I18nValidators.maxLength(2000)),
     });
   }
 

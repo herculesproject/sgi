@@ -68,6 +68,8 @@ export class SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent
             return this.languageService.getFieldValue(wrapper.value.nombreDocumento);
           case 'incidencia':
             return this.languageService.getFieldValue(wrapper.value.incidencia);
+          case 'alegacion':
+            return this.languageService.getFieldValue(wrapper.value.alegacion);
           default:
             return wrapper[property];
         }
