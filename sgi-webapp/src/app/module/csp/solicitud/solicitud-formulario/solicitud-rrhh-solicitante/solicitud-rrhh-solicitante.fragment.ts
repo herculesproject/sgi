@@ -334,7 +334,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
   }
 
   private fillDatosContactoAndPersonalesSolicitante(solicitante: IPersona): Observable<IPersona> {
-    if (!!!solicitante?.id) {
+    if (!!!solicitante?.id || Object.keys(solicitante).length == 1) {
       return of(solicitante);
     }
 

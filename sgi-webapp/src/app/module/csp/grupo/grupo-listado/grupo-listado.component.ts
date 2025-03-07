@@ -267,10 +267,8 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
         if (grupo.investigadoresPrincipales.length < idsInvestigadoresPrincipales.length) {
           grupo.investigadoresPrincipales.push(
             ...idsInvestigadoresPrincipales
-              .filter(id => grupo.investigadoresPrincipales.map(i => i.id).includes(id))
-              .map(id => {
-                return { id } as IPersona;
-              })
+              .filter(id => !grupo.investigadoresPrincipales.some(i => i.id === id))
+              .map(id => ({ id } as IPersona))
           )
         }
 
@@ -279,7 +277,7 @@ export class GrupoListadoComponent extends AbstractTablePaginationComponent<IGru
       catchError((error) => {
         this.logger.error(error);
         this.processError(error);
-        return EMPTY;
+        return of(grupo);
       })
     );
   }
