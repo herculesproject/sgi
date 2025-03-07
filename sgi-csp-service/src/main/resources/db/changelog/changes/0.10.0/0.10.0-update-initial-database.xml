@@ -3010,4 +3010,10 @@
       <column name="sge_notificacion_presupuesto" type="BOOLEAN" defaultValueBoolean="false" />
     </addColumn>
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-108">
+    <addColumn tableName="configuracion">
+      <column name="pro_anualidad_anio_formato" type="BOOLEAN" defaultValueBoolean="true" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

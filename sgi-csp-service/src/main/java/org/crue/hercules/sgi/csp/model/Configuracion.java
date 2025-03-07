@@ -183,10 +183,16 @@ public class Configuracion extends BaseEntity {
      * investigación
      */
     SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED("solicitudesSinConvocatoriaInvestigadorEnabled"),
+
     /**
      * Determina si hay integración de las notificaciones de presupuesto al SGE
      */
-    NOTIFICACION_PRESUPUESTO_SGE_ENABLED("notificacionPresupuestoSgeEnabled");
+    NOTIFICACION_PRESUPUESTO_SGE_ENABLED("notificacionPresupuestoSgeEnabled"),
+
+    /**
+     * Permite aplicar el formato de anio en la anualidad
+     */
+    FORMATO_ANUALIDAD_ANIO("formatoAnualidadAnio");
 
     private final String key;
 
@@ -372,6 +378,12 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_notificacion_presupuesto", columnDefinition = "boolean default true", nullable = false, unique = true)
   private Boolean notificacionPresupuestoSgeEnabled;
 
+  /**
+   * Permite aplicar el formato de anio en la anualidad
+   */
+  @Column(name = "pro_anualidad_anio_formato", columnDefinition = "boolean default true", nullable = false, unique = true)
+  private Boolean formatoAnualidadAnio;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -426,6 +438,8 @@ public class Configuracion extends BaseEntity {
         return this.getSolicitudesSinConvocatoriaInvestigadorEnabled();
       case NOTIFICACION_PRESUPUESTO_SGE_ENABLED:
         return this.getNotificacionPresupuestoSgeEnabled();
+      case FORMATO_ANUALIDAD_ANIO:
+        return this.getFormatoAnualidadAnio();
       default:
         return null;
     }
@@ -516,6 +530,9 @@ public class Configuracion extends BaseEntity {
         break;
       case NOTIFICACION_PRESUPUESTO_SGE_ENABLED:
         this.setNotificacionPresupuestoSgeEnabled(Boolean.valueOf(newValue));
+        break;
+      case FORMATO_ANUALIDAD_ANIO:
+        this.setFormatoAnualidadAnio(Boolean.valueOf(newValue));
         break;
     }
   }
