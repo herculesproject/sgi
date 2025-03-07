@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <property name="schemaPrefix" value="" />
+  <property name="defaultLang" value="es" />
+
+  <changeSet author="master" id="00.06-00-1">
+    <createTable tableName="tipo_proteccion_nombre">
+      <column name="tipo_proteccion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_proteccion_nombre" columnNames="tipo_proteccion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_proteccion_id"
+      baseTableName="tipo_proteccion_nombre"
+      constraintName="FK_TIPOPROTECCIONNOMBRE_TIPOPROTECCION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_proteccion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_proteccion_nombre(tipo_proteccion_id, value_, lang) SELECT
+      id, nombre, '${defaultLang}' FROM ${schemaPrefix}tipo_proteccion WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_proteccion" />
+  </changeSet>
+
+</databaseChangeLog>
