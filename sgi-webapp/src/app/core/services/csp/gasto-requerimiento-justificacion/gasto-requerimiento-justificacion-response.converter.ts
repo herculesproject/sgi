@@ -14,7 +14,7 @@ class GastoRequerimientoJustificacionResponseConverter
     return {
       id: value.id,
       aceptado: value.aceptado,
-      alegacion: value.alegacion,
+      alegacion: value.alegacion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.alegacion) : [],
       gasto: value.gastoRef ? { id: value.gastoRef } as IGastoJustificado : null,
       identificadorJustificacion: value.identificadorJustificacion,
       importeAceptado: value.importeAceptado,
@@ -32,7 +32,7 @@ class GastoRequerimientoJustificacionResponseConverter
     return {
       id: value.id,
       aceptado: value.aceptado,
-      alegacion: value.alegacion,
+      alegacion: value.alegacion ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.alegacion) : [],
       gastoRef: value.gasto?.id,
       identificadorJustificacion: value.identificadorJustificacion,
       importeAceptado: value.importeAceptado,

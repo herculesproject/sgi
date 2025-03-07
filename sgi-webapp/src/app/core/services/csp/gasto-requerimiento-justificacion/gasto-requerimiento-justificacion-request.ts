@@ -8,6 +8,6 @@ export interface IGastoRequerimientoJustificacionRequest {
   importeAlegado: number;
   aceptado: boolean;
   incidencia: I18nFieldValueRequest[];
-  alegacion: string;
+  alegacion: I18nFieldValueRequest[];
   identificadorJustificacion: string;
 }

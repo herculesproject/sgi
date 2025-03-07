@@ -1195,7 +1195,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
         elementsRow.push(requerimientos[i].importeRechazado);
         elementsRow.push(this.languageService.getFieldValue(requerimientos[i].incidencia));
         elementsRow.push(requerimientos[i].importeAlegado);
-        elementsRow.push(requerimientos[i].alegacion || '');
+        elementsRow.push(this.languageService.getFieldValue(requerimientos[i].alegacion));
         elementsRow.push(requerimientos[i].requerimientosJustificacionAlegacion?.importeAceptado);
         elementsRow.push(requerimientos[i].requerimientosJustificacionAlegacion?.importeAceptadoCd);
         elementsRow.push(requerimientos[i].requerimientosJustificacionAlegacion?.importeAceptadoCi);

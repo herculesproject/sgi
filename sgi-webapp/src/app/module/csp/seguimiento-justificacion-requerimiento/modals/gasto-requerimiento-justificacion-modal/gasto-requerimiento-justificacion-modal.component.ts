@@ -84,7 +84,7 @@ export class GastoRequerimientoJustificacionModalComponent
       importeRechazado: new FormControl(this.gastoRequerimiento.importeRechazado),
       incidencia: new FormControl(this.gastoRequerimiento.incidencia, I18nValidators.maxLength(2000)),
       importeAlegado: new FormControl(this.gastoRequerimiento.importeAlegado),
-      alegacion: new FormControl(this.gastoRequerimiento.alegacion, Validators.maxLength(2000)),
+      alegacion: new FormControl(this.gastoRequerimiento.alegacion, I18nValidators.maxLength(2000)),
     });
 
     if (!this.isEdit()) {

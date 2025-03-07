@@ -16,7 +16,7 @@ class GastoRequerimientoJustificacionRequestConverter
     }
     return {
       aceptado: value.aceptado,
-      alegacion: value.alegacion,
+      alegacion: value.alegacion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.alegacion) : [],
       gastoRef: value.gasto?.id,
       identificadorJustificacion: value.identificadorJustificacion,
       importeAceptado: value.importeAceptado,
