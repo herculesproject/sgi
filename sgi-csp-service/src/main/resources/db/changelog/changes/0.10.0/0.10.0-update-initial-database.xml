@@ -3205,4 +3205,37 @@
 
     <dropColumn columnName="observaciones" tableName="requerimiento_justificacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-115">
+    <createTable tableName="incidencia_documentacion_requerimiento_nombre_documento">
+      <column name="incidencia_documentacion_requerimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="incidencia_documentacion_requerimiento_nombre_documento"
+      columnNames="incidencia_documentacion_requerimiento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="incidencia_documentacion_requerimiento_id"
+      baseTableName="incidencia_documentacion_requerimiento_nombre_documento"
+      constraintName="FK_INCIDENCIADOCUMENTACIONREQUERIMIENTONOMBREDOCUMENTO_INCIDENCIADOCUMENTACIONREQUERIMIENTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id"
+      referencedTableName="incidencia_documentacion_requerimiento" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}incidencia_documentacion_requerimiento_nombre_documento(incidencia_documentacion_requerimiento_id,
+      value_, lang) SELECT id, nombre_documento, '${defaultLang}' FROM
+      ${schemaPrefix}incidencia_documentacion_requerimiento WHERE nombre_documento IS NOT NULL AND
+      NULLIF(TRIM(nombre_documento), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre_documento" tableName="incidencia_documentacion_requerimiento" />
+  </changeSet>
 </databaseChangeLog>

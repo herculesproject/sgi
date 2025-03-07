@@ -16,15 +16,17 @@
   }
 */
 
-INSERT INTO test.incidencia_documentacion_requerimiento
-(id, requerimiento_justificacion_id, nombre_documento ,incidencia, alegacion)
-VALUES(1, 1, 'nombre-documento-001', 'incidencia-001', 'alegacion-001');
-INSERT INTO test.incidencia_documentacion_requerimiento
-(id, requerimiento_justificacion_id, nombre_documento ,incidencia, alegacion)
-VALUES(2, 1, 'nombre-documento-002', 'incidencia-002', 'alegacion-002');
-INSERT INTO test.incidencia_documentacion_requerimiento
-(id, requerimiento_justificacion_id, nombre_documento ,incidencia, alegacion)
-VALUES(3, 1, 'nombre-documento-003', 'incidencia-003', 'alegacion-003');
-INSERT INTO test.incidencia_documentacion_requerimiento
-(id, requerimiento_justificacion_id, nombre_documento ,incidencia, alegacion)
-VALUES(4, 2, 'nombre-documento-001', 'incidencia-001', 'alegacion-001');
+INSERT INTO test.incidencia_documentacion_requerimiento (id, requerimiento_justificacion_id, incidencia, alegacion)
+VALUES(1, 1, 'incidencia-001', 'alegacion-001');
+INSERT INTO test.incidencia_documentacion_requerimiento (id, requerimiento_justificacion_id, incidencia, alegacion)
+VALUES(2, 1, 'incidencia-002', 'alegacion-002');
+INSERT INTO test.incidencia_documentacion_requerimiento (id, requerimiento_justificacion_id, incidencia, alegacion)
+VALUES(3, 1, 'incidencia-003', 'alegacion-003');
+INSERT INTO test.incidencia_documentacion_requerimiento (id, requerimiento_justificacion_id, incidencia, alegacion)
+VALUES(4, 2, 'incidencia-001', 'alegacion-001');
+
+-- INCIDENCIA_DOCUMENTACION_REQUERIMIENTO_NOMBRE_DOCUMENTO
+INSERT INTO test.incidencia_documentacion_requerimiento_nombre_documento (incidencia_documentacion_requerimiento_id, lang, value_) VALUES (1,  'es', 'nombre-documento-001');
+INSERT INTO test.incidencia_documentacion_requerimiento_nombre_documento (incidencia_documentacion_requerimiento_id, lang, value_) VALUES (2,  'es', 'nombre-documento-002');
+INSERT INTO test.incidencia_documentacion_requerimiento_nombre_documento (incidencia_documentacion_requerimiento_id, lang, value_) VALUES (3,  'es', 'nombre-documento-003');
+INSERT INTO test.incidencia_documentacion_requerimiento_nombre_documento (incidencia_documentacion_requerimiento_id, lang, value_) VALUES (4,  'es', 'nombre-documento-001');

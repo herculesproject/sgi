@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoNombreDocumento;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class IncidenciaDocumentacionRequerimientoOutput implements Serializable {
   private Long id;
   private Long requerimientoJustificacionId;
-  private String nombreDocumento;
+  private Collection<IncidenciaDocumentacionRequerimientoNombreDocumento> nombreDocumento;
   private String incidencia;
   private String alegacion;
 }

@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.AlegacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
+import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoNombreDocumento;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.RequerimientoJustificacionObservaciones;
 import org.crue.hercules.sgi.csp.service.AlegacionRequerimientoService;
@@ -289,7 +290,7 @@ class RequerimientoJustificacionControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       IncidenciaDocumentacionRequerimientoOutput incidencia = incidenciasResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(incidencia.getNombreDocumento())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(incidencia.getNombreDocumento(), Language.ES))
           .isEqualTo("IncidenciaDocumentacionRequerimiento-" + String.format("%03d", i));
     }
   }
@@ -571,33 +572,27 @@ class RequerimientoJustificacionControllerTest extends BaseControllerTest {
 
   private IncidenciaDocumentacionRequerimientoOutput generarMockIncidenciaDocumentacionRequerimientoOutput(
       IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimiento) {
-    return generarMockIncidenciaDocumentacionRequerimientoOutput(incidenciaDocumentacionRequerimiento.getId(),
-        incidenciaDocumentacionRequerimiento.getAlegacion(),
-        incidenciaDocumentacionRequerimiento.getIncidencia(),
-        incidenciaDocumentacionRequerimiento.getNombreDocumento(),
-        incidenciaDocumentacionRequerimiento.getRequerimientoJustificacionId());
+    return IncidenciaDocumentacionRequerimientoOutput.builder()
+        .id(incidenciaDocumentacionRequerimiento.getId())
+        .alegacion(incidenciaDocumentacionRequerimiento.getAlegacion())
+        .incidencia(incidenciaDocumentacionRequerimiento.getIncidencia())
+        .nombreDocumento(incidenciaDocumentacionRequerimiento.getNombreDocumento())
+        .requerimientoJustificacionId(incidenciaDocumentacionRequerimiento.getRequerimientoJustificacionId())
+        .build();
   }
 
   private IncidenciaDocumentacionRequerimiento generarMockIncidenciaDocumentacionRequerimiento(Long id,
       String alegacion,
       String incidencia, String nombreDocumento, Long requerimientoJustificacionId) {
+    Set<IncidenciaDocumentacionRequerimientoNombreDocumento> nombreDocumentoIncidencia = new HashSet<>();
+    nombreDocumentoIncidencia
+        .add(new IncidenciaDocumentacionRequerimientoNombreDocumento(Language.ES, nombreDocumento));
+
     return IncidenciaDocumentacionRequerimiento.builder()
         .id(id)
         .alegacion(alegacion)
         .incidencia(incidencia)
-        .nombreDocumento(nombreDocumento)
-        .requerimientoJustificacionId(requerimientoJustificacionId)
-        .build();
-  }
-
-  private IncidenciaDocumentacionRequerimientoOutput generarMockIncidenciaDocumentacionRequerimientoOutput(Long id,
-      String alegacion,
-      String incidencia, String nombreDocumento, Long requerimientoJustificacionId) {
-    return IncidenciaDocumentacionRequerimientoOutput.builder()
-        .id(id)
-        .alegacion(alegacion)
-        .incidencia(incidencia)
-        .nombreDocumento(nombreDocumento)
+        .nombreDocumento(nombreDocumentoIncidencia)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();
   }
