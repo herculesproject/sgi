@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
+import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoAlegacion;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoIncidencia;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoNombreDocumento;
 import org.crue.hercules.sgi.csp.repository.IncidenciaDocumentacionRequerimientoRepository;
@@ -178,8 +179,7 @@ class IncidenciaDocumentacionRequerimientoServiceTest extends BaseServiceTest {
         id, requerimientoJustificacionId);
 
     Set<IncidenciaDocumentacionRequerimientoIncidencia> incidenciaDocumentacion = new HashSet<>();
-    incidenciaDocumentacion
-        .add(new IncidenciaDocumentacionRequerimientoIncidencia(Language.ES, incidenciaToUpdate));
+    incidenciaDocumentacion.add(new IncidenciaDocumentacionRequerimientoIncidencia(Language.ES, incidenciaToUpdate));
 
     IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimientoOnDB = generarMockIncidenciaDocumentacionRequerimiento(
         id, requerimientoJustificacionId);
@@ -228,11 +228,14 @@ class IncidenciaDocumentacionRequerimientoServiceTest extends BaseServiceTest {
     Long id = 123L;
     Long requerimientoJustificacionId = 1234L;
     String alegacionToUpdate = "Alegacion-123";
+    Set<IncidenciaDocumentacionRequerimientoAlegacion> alegacionDocumentacion = new HashSet<>();
+    alegacionDocumentacion.add(new IncidenciaDocumentacionRequerimientoAlegacion(Language.ES, alegacionToUpdate));
+
     IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimientoToUpdate = generarMockIncidenciaDocumentacionRequerimiento(
         id, requerimientoJustificacionId);
     IncidenciaDocumentacionRequerimiento incidenciaDocumentacionRequerimientoOnDB = generarMockIncidenciaDocumentacionRequerimiento(
         id, requerimientoJustificacionId);
-    incidenciaDocumentacionRequerimientoToUpdate.setAlegacion(alegacionToUpdate);
+    incidenciaDocumentacionRequerimientoToUpdate.setAlegacion(alegacionDocumentacion);
 
     BDDMockito.given(incidenciaDocumentacionRequerimientoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(incidenciaDocumentacionRequerimientoOnDB));
@@ -250,7 +253,9 @@ class IncidenciaDocumentacionRequerimientoServiceTest extends BaseServiceTest {
     Assertions.assertThat(incidenciaDocumentacionRequerimiento.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(incidenciaDocumentacionRequerimiento.getRequerimientoJustificacionId())
         .as("getRequerimientoJustificacionId()").isEqualTo(requerimientoJustificacionId);
-    Assertions.assertThat(incidenciaDocumentacionRequerimiento.getAlegacion()).as("getAlegacion()")
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(incidenciaDocumentacionRequerimiento.getAlegacion(), Language.ES))
+        .as("getAlegacion()")
         .isEqualTo(alegacionToUpdate);
   }
 
@@ -269,12 +274,14 @@ class IncidenciaDocumentacionRequerimientoServiceTest extends BaseServiceTest {
         .add(new IncidenciaDocumentacionRequerimientoNombreDocumento(Language.ES, nombreDocumento));
 
     Set<IncidenciaDocumentacionRequerimientoIncidencia> incidenciaDocumentacion = new HashSet<>();
-    incidenciaDocumentacion
-        .add(new IncidenciaDocumentacionRequerimientoIncidencia(Language.ES, incidencia));
+    incidenciaDocumentacion.add(new IncidenciaDocumentacionRequerimientoIncidencia(Language.ES, incidencia));
+
+    Set<IncidenciaDocumentacionRequerimientoAlegacion> alegacionDocumentacion = new HashSet<>();
+    alegacionDocumentacion.add(new IncidenciaDocumentacionRequerimientoAlegacion(Language.ES, alegacion));
 
     return IncidenciaDocumentacionRequerimiento.builder()
         .id(id)
-        .alegacion(alegacion)
+        .alegacion(alegacionDocumentacion)
         .incidencia(incidenciaDocumentacion)
         .nombreDocumento(nombreDocumentoIncidencia)
         .requerimientoJustificacionId(requerimientoJustificacionId)

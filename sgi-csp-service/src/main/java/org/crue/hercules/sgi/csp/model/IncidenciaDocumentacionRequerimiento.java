@@ -63,8 +63,11 @@ public class IncidenciaDocumentacionRequerimiento extends BaseEntity {
   @Builder.Default
   private Set<IncidenciaDocumentacionRequerimientoIncidencia> incidencia = new HashSet<>();
 
-  @Column(name = "alegacion", nullable = true, length = DEFAULT_LONG_TEXT_LENGTH)
-  private String alegacion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "incidencia_documentacion_requerimiento_alegacion", joinColumns = @JoinColumn(name = "incidencia_documentacion_requerimiento_id"))
+  @Valid
+  @Builder.Default
+  private Set<IncidenciaDocumentacionRequerimientoAlegacion> alegacion = new HashSet<>();
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne

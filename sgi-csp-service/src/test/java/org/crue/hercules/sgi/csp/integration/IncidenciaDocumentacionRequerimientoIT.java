@@ -190,8 +190,8 @@ class IncidenciaDocumentacionRequerimientoIT extends BaseIT {
     IncidenciaDocumentacionRequerimientoOutput output = response.getBody();
     Assertions.assertThat(output.getId()).as("getId()")
         .isEqualTo(incidenciaDocumentacionRequerimientoId);
-    Assertions.assertThat(output.getAlegacion()).as("getAlegacion()")
-        .isEqualTo(input.getAlegacion());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getAlegacion(), Language.ES)).as("getAlegacion()")
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getAlegacion(), Language.ES));
   }
 
   private IncidenciaDocumentacionRequerimientoInput generarMockIncidenciaDocumentacionRequerimientoInput(
@@ -211,8 +211,11 @@ class IncidenciaDocumentacionRequerimientoIT extends BaseIT {
 
   private IncidenciaDocumentacionRequerimientoAlegacionInput generarMockIncidenciaDocumentacionRequerimientoAlegacionInput(
       String alegacion) {
+    List<I18nFieldValueDto> alegacionDocumentacion = new ArrayList<>();
+    alegacionDocumentacion.add(new I18nFieldValueDto(Language.ES, alegacion));
+
     return IncidenciaDocumentacionRequerimientoAlegacionInput.builder()
-        .alegacion(alegacion)
+        .alegacion(alegacionDocumentacion)
         .build();
   }
 }

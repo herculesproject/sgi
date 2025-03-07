@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoAlegaci
 import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoInput;
 import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoOutput;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
+import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoAlegacion;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoIncidencia;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoNombreDocumento;
 import org.crue.hercules.sgi.csp.service.IncidenciaDocumentacionRequerimientoService;
@@ -209,7 +210,7 @@ class IncidenciaDocumentacionRequerimientoControllerTest extends BaseControllerT
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(incidenciaDocumentacionRequerimientoId))
         .andExpect(
-            MockMvcResultMatchers.jsonPath("alegacion").value(alegacion));
+            MockMvcResultMatchers.jsonPath("alegacion[0].value").value(alegacion));
   }
 
   private IncidenciaDocumentacionRequerimiento generarMockIncidenciaDocumentacionRequerimiento(
@@ -229,7 +230,12 @@ class IncidenciaDocumentacionRequerimientoControllerTest extends BaseControllerT
 
   private IncidenciaDocumentacionRequerimiento generarMockIncidenciaDocumentacionRequerimiento(
       IncidenciaDocumentacionRequerimientoAlegacionInput input, Long id) {
-    return generarMockIncidenciaDocumentacionRequerimiento(id, input.getAlegacion(), null, null, null);
+    return generarMockIncidenciaDocumentacionRequerimiento(
+        id,
+        I18nHelper.getValueForLanguage(input.getAlegacion(), Language.ES),
+        null,
+        null,
+        null);
   }
 
   private IncidenciaDocumentacionRequerimiento generarMockIncidenciaDocumentacionRequerimiento(Long id,
@@ -242,9 +248,12 @@ class IncidenciaDocumentacionRequerimientoControllerTest extends BaseControllerT
     Set<IncidenciaDocumentacionRequerimientoIncidencia> incidenciaDocumentacion = new HashSet<>();
     incidenciaDocumentacion.add(new IncidenciaDocumentacionRequerimientoIncidencia(Language.ES, incidencia));
 
+    Set<IncidenciaDocumentacionRequerimientoAlegacion> alegacionDocumentacion = new HashSet<>();
+    alegacionDocumentacion.add(new IncidenciaDocumentacionRequerimientoAlegacion(Language.ES, alegacion));
+
     return IncidenciaDocumentacionRequerimiento.builder()
         .id(id)
-        .alegacion(alegacion)
+        .alegacion(alegacionDocumentacion)
         .incidencia(incidenciaDocumentacion)
         .nombreDocumento(nombreDocumentoIncidencia)
         .requerimientoJustificacionId(requerimientoJustificacionId)
@@ -285,8 +294,11 @@ class IncidenciaDocumentacionRequerimientoControllerTest extends BaseControllerT
 
   private IncidenciaDocumentacionRequerimientoAlegacionInput generarMockIncidenciaDocumentacionRequerimientoAlegacionInput(
       String alegacion) {
+    List<I18nFieldValueDto> alegacionDocumentacion = new ArrayList<>();
+    alegacionDocumentacion.add(new I18nFieldValueDto(Language.ES, alegacion));
+
     return IncidenciaDocumentacionRequerimientoAlegacionInput.builder()
-        .alegacion(alegacion)
+        .alegacion(alegacionDocumentacion)
         .build();
   }
 }

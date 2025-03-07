@@ -3271,4 +3271,37 @@
 
     <dropColumn columnName="incidencia" tableName="incidencia_documentacion_requerimiento" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-117">
+    <createTable tableName="incidencia_documentacion_requerimiento_alegacion">
+      <column name="incidencia_documentacion_requerimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="incidencia_documentacion_requerimiento_alegacion"
+      columnNames="incidencia_documentacion_requerimiento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="incidencia_documentacion_requerimiento_id"
+      baseTableName="incidencia_documentacion_requerimiento_alegacion"
+      constraintName="FK_INCIDENCIADOCUMENTACIONREQUERIMIENTOALEGACION_INCIDENCIADOCUMENTACIONREQUERIMIENTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id"
+      referencedTableName="incidencia_documentacion_requerimiento" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}incidencia_documentacion_requerimiento_alegacion(incidencia_documentacion_requerimiento_id,
+      value_, lang) SELECT id, alegacion, '${defaultLang}' FROM
+      ${schemaPrefix}incidencia_documentacion_requerimiento WHERE alegacion IS NOT NULL AND
+      NULLIF(TRIM(alegacion), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="alegacion" tableName="incidencia_documentacion_requerimiento" />
+  </changeSet>
 </databaseChangeLog>
