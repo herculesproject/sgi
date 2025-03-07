@@ -291,7 +291,9 @@
             {{'csp.ejecucion-economica.seguimiento-justificacion.requerimiento.incidencia-documento.incidencia' |
             translate}}
           </th>
-          <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.incidencia}} </td>
+          <td mat-cell *matCellDef="let wrapper">
+            <sgi-i18n-table-field [field]="wrapper.value.incidencia"></sgi-i18n-table-field>
+          </td>
         </ng-container>
 
         <!-- Acciones  Column -->

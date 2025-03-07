@@ -66,6 +66,8 @@ export class SeguimientoJustificacionRequerimientoRespuestaAlegacionComponent
         switch (property) {
           case 'nombreDocumento':
             return this.languageService.getFieldValue(wrapper.value.nombreDocumento);
+          case 'incidencia':
+            return this.languageService.getFieldValue(wrapper.value.incidencia);
           default:
             return wrapper[property];
         }

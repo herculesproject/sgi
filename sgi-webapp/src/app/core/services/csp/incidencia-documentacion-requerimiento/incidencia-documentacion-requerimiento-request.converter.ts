@@ -15,7 +15,7 @@ class IncidenciaDocumentacionRequerimientoIncidenciaRequestConverter
       return value as unknown as IIncidenciaDocumentacionRequerimientoRequest;
     }
     return {
-      incidencia: value.incidencia,
+      incidencia: value.incidencia ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.incidencia) : [],
       nombreDocumento: value.nombreDocumento ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombreDocumento) : [],
       requerimientoJustificacionId: value.requerimientoJustificacion?.id
     };

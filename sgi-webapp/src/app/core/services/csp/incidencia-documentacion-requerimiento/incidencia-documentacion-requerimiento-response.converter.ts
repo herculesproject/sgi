@@ -13,7 +13,7 @@ class IncidenciaDocumentacionRequerimientoResponseConverter
     return {
       id: value.id,
       alegacion: value.alegacion,
-      incidencia: value.incidencia,
+      incidencia: value.incidencia ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.incidencia) : [],
       nombreDocumento: value.nombreDocumento ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombreDocumento) : [],
       requerimientoJustificacion: value.requerimientoJustificacionId ?
         { id: value.requerimientoJustificacionId } as IRequerimientoJustificacion : null

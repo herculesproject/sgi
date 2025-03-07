@@ -46,7 +46,7 @@ export class IncidenciaDocumentoRequerimientoModalComponent
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
       nombreDocumento: new FormControl(this.data?.nombreDocumento, [I18nValidators.required, I18nValidators.maxLength(250)]),
-      incidencia: new FormControl(this.data.incidencia, Validators.maxLength(2000)),
+      incidencia: new FormControl(this.data.incidencia, I18nValidators.maxLength(2000)),
     });
   }
 
