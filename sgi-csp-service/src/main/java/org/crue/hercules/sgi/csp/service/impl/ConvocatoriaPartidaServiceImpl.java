@@ -174,7 +174,7 @@ public class ConvocatoriaPartidaServiceImpl implements ConvocatoriaPartidaServic
 
     configuracionRepository.findFirstByOrderByIdAsc()
         .ifPresent(configuracion -> Assert.isTrue(
-            Boolean.TRUE.equals(configuracion.getPartidasPresupuestariasSGE()) ||
+            Boolean.TRUE.equals(configuracion.getPartidasPresupuestariasSgeEnabled()) ||
                 convocatoriaPartida.getCodigo().matches(configuracion.getFormatoPartidaPresupuestaria()),
             ApplicationContextSupport.getMessage("formato.codigo.invalido")));
 

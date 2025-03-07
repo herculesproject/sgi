@@ -272,11 +272,11 @@ public class Configuracion extends BaseEntity {
 
   /** Habilitar creación de Partidas presupuestarias en el SGE */
   @Column(name = "partidas_presupuestarias_sge", columnDefinition = "boolean default false", nullable = true, unique = true)
-  private Boolean partidasPresupuestariasSGE;
+  private Boolean partidasPresupuestariasSgeEnabled;
 
   /** Habilitar creación de periodos de amortización de fondos en el SGE */
   @Column(name = "sge_amortizacion_fondos", columnDefinition = "boolean default false", nullable = false, unique = true)
-  private Boolean amortizacionFondosSGE;
+  private Boolean amortizacionFondosSgeEnabled;
 
   /**
    * Habilitar que se muestre el buscador de proyectos económicos al pulsar el
@@ -284,20 +284,20 @@ public class Configuracion extends BaseEntity {
    * "Configuración económica - Identificación"
    */
   @Column(name = "sge_alta_buscador", columnDefinition = "boolean default false", nullable = false, unique = true)
-  private Boolean altaBuscadorSGE;
+  private Boolean altaBuscadorSgeEnabled;
 
   /**
    * Habilitar la integración de gastos justificados (apartado seguimiento de
    * justificación).
    */
   @Column(name = "sge_gastos_justificados", columnDefinition = "boolean default false", nullable = false, unique = true)
-  private Boolean gastosJustificadosSGE;
+  private Boolean gastosJustificadosSgeEnabled;
 
   /**
    * Habilitar la acción de solicitar modificación de los datos del proyecto SGE
    */
   @Column(name = "sge_modificacion", columnDefinition = "boolean default false", nullable = false, unique = true)
-  private Boolean modificacionProyectoSge;
+  private Boolean modificacionProyectoSgeEnabled;
 
   /**
    * Habilitar la visualización del campo Sector IVA proveniente de la integración
@@ -407,15 +407,15 @@ public class Configuracion extends BaseEntity {
       case CARDINALIDAD_RELACION_SGI_SGE:
         return this.getCardinalidadRelacionSgiSge();
       case PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED:
-        return this.getPartidasPresupuestariasSGE();
+        return this.getPartidasPresupuestariasSgeEnabled();
       case AMORTIZACION_FONDOS_SGE_ENABLED:
-        return this.getAmortizacionFondosSGE();
+        return this.getAmortizacionFondosSgeEnabled();
       case ALTA_BUSCADOR_SGE_ENABLED:
-        return this.getAltaBuscadorSGE();
+        return this.getAltaBuscadorSgeEnabled();
       case GASTOS_JUSTIFICADOS_SGE_ENABLED:
-        return this.getGastosJustificadosSGE();
+        return this.getGastosJustificadosSgeEnabled();
       case MODIFICACION_PROYECTO_SGE_ENABLED:
-        return this.getModificacionProyectoSge();
+        return this.getModificacionProyectoSgeEnabled();
       case SECTOR_IVA_SGE_ENABLED:
         return this.getSectorIvaSgeEnabled();
       case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
@@ -478,19 +478,19 @@ public class Configuracion extends BaseEntity {
         this.setCardinalidadRelacionSgiSge(CardinalidadRelacionSgiSge.valueOf(newValue));
         break;
       case PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED:
-        this.setPartidasPresupuestariasSGE(Boolean.valueOf(newValue));
+        this.setPartidasPresupuestariasSgeEnabled(Boolean.valueOf(newValue));
         break;
       case AMORTIZACION_FONDOS_SGE_ENABLED:
-        this.setAmortizacionFondosSGE(Boolean.valueOf(newValue));
+        this.setAmortizacionFondosSgeEnabled(Boolean.valueOf(newValue));
         break;
       case ALTA_BUSCADOR_SGE_ENABLED:
-        this.setAltaBuscadorSGE(Boolean.valueOf(newValue));
+        this.setAltaBuscadorSgeEnabled(Boolean.valueOf(newValue));
         break;
       case GASTOS_JUSTIFICADOS_SGE_ENABLED:
-        this.setGastosJustificadosSGE(Boolean.valueOf(newValue));
+        this.setGastosJustificadosSgeEnabled(Boolean.valueOf(newValue));
         break;
       case MODIFICACION_PROYECTO_SGE_ENABLED:
-        this.setModificacionProyectoSge(Boolean.valueOf(newValue));
+        this.setModificacionProyectoSgeEnabled(Boolean.valueOf(newValue));
         break;
       case SECTOR_IVA_SGE_ENABLED:
         this.setSectorIvaSgeEnabled(Boolean.valueOf(newValue));

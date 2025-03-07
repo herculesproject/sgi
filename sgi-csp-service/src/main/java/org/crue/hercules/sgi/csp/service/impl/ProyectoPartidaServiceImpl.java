@@ -193,7 +193,7 @@ public class ProyectoPartidaServiceImpl implements ProyectoPartidaService {
 
     configuracionRepository.findFirstByOrderByIdAsc()
         .ifPresent(configuracion -> Assert.isTrue(
-            Boolean.TRUE.equals(configuracion.getPartidasPresupuestariasSGE())
+            Boolean.TRUE.equals(configuracion.getPartidasPresupuestariasSgeEnabled())
                 || proyectoPartida.getCodigo().matches(configuracion.getFormatoPartidaPresupuestaria()),
             ApplicationContextSupport.getMessage("formato.codigo.invalido")));
 
