@@ -75,7 +75,7 @@ export class TipoProteccionSubtipoModalComponent extends DialogFormComponent<Sta
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       nombre: new FormControl(this.data?.value.nombre ?? [], [I18nValidators.maxLength(50)]),
-      descripcion: new FormControl(this.data?.value.descripcion, [Validators.maxLength(250)]),
+      descripcion: new FormControl(this.data?.value.descripcion ?? [], [I18nValidators.maxLength(250)]),
     });
 
     return formGroup;

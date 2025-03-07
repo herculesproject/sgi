@@ -25,7 +25,7 @@ export class TipoProteccionDatosGeneralesFragment extends FormFragment<ITipoProt
   protected buildFormGroup(): FormGroup {
     const fb = new FormGroup({
       nombre: new FormControl([], [I18nValidators.maxLength(50)]),
-      descripcion: new FormControl('', [Validators.maxLength(250)]),
+      descripcion: new FormControl([], [I18nValidators.maxLength(250)]),
       tipoPropiedad: new FormControl('', [Validators.required])
     });
 

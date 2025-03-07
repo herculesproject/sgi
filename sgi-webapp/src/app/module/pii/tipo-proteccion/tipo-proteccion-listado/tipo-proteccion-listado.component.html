@@ -16,7 +16,9 @@
       <ng-container matColumnDef="descripcion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.tipo-proteccion.descripcion' | translate}}
         </th>
-        <td mat-cell *matCellDef="let tipoProteccion">{{tipoProteccion.descripcion}}</td>
+        <td mat-cell *matCellDef="let tipoProteccion">
+          <sgi-i18n-table-field [field]="tipoProteccion.descripcion"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
       <!-- TipoPropiedad -->

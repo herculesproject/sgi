@@ -86,6 +86,8 @@ export class TipoProteccionSubtiposComponent extends FragmentComponent implement
         switch (property) {
           case 'nombre':
             return this.languageService.getFieldValue(wrapper.value?.nombre);
+          case 'descripcion':
+            return this.languageService.getFieldValue(wrapper.value?.descripcion);
           default:
             return wrapper.value[property];
         }

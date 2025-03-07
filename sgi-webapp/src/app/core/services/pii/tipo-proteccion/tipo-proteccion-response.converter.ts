@@ -11,7 +11,7 @@ class TipoProteccionResponseConverter extends SgiBaseConverter<ITipoProteccionRe
     return {
       id: value.id,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.descripcion) : [],
       tipoPropiedad: value.tipoPropiedad,
       padre: value.padre ? TIPO_PROTECCION_RESPONSE_CONVERTER.toTarget(value.padre) : null,
       activo: value.activo
@@ -24,7 +24,7 @@ class TipoProteccionResponseConverter extends SgiBaseConverter<ITipoProteccionRe
     return {
       id: value.id,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.descripcion) : [],
       tipoPropiedad: value.tipoPropiedad,
       padre: value.padre ? TIPO_PROTECCION_RESPONSE_CONVERTER.fromTarget(value.padre) : null,
       activo: value.activo
