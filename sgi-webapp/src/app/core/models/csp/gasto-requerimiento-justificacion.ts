@@ -1,3 +1,4 @@
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IGastoJustificado } from '../sge/gasto-justificado';
 import { IRequerimientoJustificacion } from './requerimiento-justificacion';
 
@@ -8,7 +9,7 @@ export interface IGastoRequerimientoJustificacion {
   importeRechazado: number;
   importeAlegado: number;
   aceptado: boolean;
-  incidencia: string;
+  incidencia: I18nFieldValue[];
   alegacion: string;
   identificadorJustificacion: string;
   requerimientoJustificacion: IRequerimientoJustificacion;

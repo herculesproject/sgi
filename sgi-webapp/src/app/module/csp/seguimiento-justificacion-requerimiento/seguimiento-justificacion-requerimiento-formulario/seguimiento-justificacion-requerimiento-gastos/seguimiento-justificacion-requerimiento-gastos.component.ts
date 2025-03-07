@@ -13,7 +13,6 @@ import { DialogService } from '@core/services/dialog.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { GastoRequerimientoJustificacionModalComponent, GastoRequerimientoJustificacionModalData } from '../../modals/gasto-requerimiento-justificacion-modal/gasto-requerimiento-justificacion-modal.component';
 import { GastosJustificadosModalComponent, IGastosJustificadosModalData } from '../../modals/gastos-justificados-modal/gastos-justificados-modal.component';
 import { SeguimientoJustificacionRequerimientoActionService } from '../../seguimiento-justificacion-requerimiento.action.service';

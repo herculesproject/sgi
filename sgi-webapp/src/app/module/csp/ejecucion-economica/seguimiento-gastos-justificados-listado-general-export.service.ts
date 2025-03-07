@@ -1193,7 +1193,7 @@ export class SeguimientoGastosJustificadosResumenListadoGeneralExportService
         elementsRow.push(this.notIsNullAndNotUndefined(requerimientos[i].aceptado) ? this.getI18nBooleanYesNo(requerimientos[i].aceptado) : '');
         elementsRow.push(requerimientos[i].importeAceptado);
         elementsRow.push(requerimientos[i].importeRechazado);
-        elementsRow.push(requerimientos[i].incidencia || '');
+        elementsRow.push(this.languageService.getFieldValue(requerimientos[i].incidencia));
         elementsRow.push(requerimientos[i].importeAlegado);
         elementsRow.push(requerimientos[i].alegacion || '');
         elementsRow.push(requerimientos[i].requerimientosJustificacionAlegacion?.importeAceptado);
