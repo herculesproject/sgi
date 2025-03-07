@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.AlegacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionAlegacion;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionIncidencia;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimiento;
 import org.crue.hercules.sgi.csp.model.IncidenciaDocumentacionRequerimientoAlegacion;
@@ -411,7 +412,7 @@ class RequerimientoJustificacionControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       GastoRequerimientoJustificacionOutput gasto = gastoResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(gasto.getAlegacion())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(gasto.getAlegacion(), Language.ES))
           .isEqualTo("Alegacion-" + String.format("%03d", i));
     }
   }
@@ -640,10 +641,13 @@ class RequerimientoJustificacionControllerTest extends BaseControllerTest {
     incidenciaGastoRequerimientoJustificacion
         .add(new GastoRequerimientoJustificacionIncidencia(Language.ES, incidencia));
 
+    Set<GastoRequerimientoJustificacionAlegacion> alegacionGastoRequerimientoJustificacion = new HashSet<>();
+    alegacionGastoRequerimientoJustificacion.add(new GastoRequerimientoJustificacionAlegacion(Language.ES, alegacion));
+
     return GastoRequerimientoJustificacion.builder()
         .id(id)
         .aceptado(aceptado)
-        .alegacion(alegacion)
+        .alegacion(alegacionGastoRequerimientoJustificacion)
         .gastoRef(gastoRef)
         .identificadorJustificacion(identificadorJustificacion)
         .importeAceptado(importeAceptado)

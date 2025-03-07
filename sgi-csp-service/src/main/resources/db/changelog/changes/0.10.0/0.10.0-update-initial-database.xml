@@ -3337,4 +3337,37 @@
 
     <dropColumn columnName="incidencia" tableName="gasto_requerimiento_justificacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-119">
+    <createTable tableName="gasto_requerimiento_justificacion_alegacion">
+      <column name="gasto_requerimiento_justificacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="gasto_requerimiento_justificacion_alegacion"
+      columnNames="gasto_requerimiento_justificacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="gasto_requerimiento_justificacion_id"
+      baseTableName="gasto_requerimiento_justificacion_alegacion"
+      constraintName="FK_GASTOREQUERIMIENTOJUSTIFICACIONALEGACION_GASTOREQUERIMIENTOJUSTIFICACION"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id"
+      referencedTableName="gasto_requerimiento_justificacion" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}gasto_requerimiento_justificacion_alegacion(gasto_requerimiento_justificacion_id,
+      value_, lang) SELECT id, alegacion, '${defaultLang}' FROM
+      ${schemaPrefix}gasto_requerimiento_justificacion WHERE alegacion IS NOT NULL AND
+      NULLIF(TRIM(alegacion), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="alegacion" tableName="gasto_requerimiento_justificacion" />
+  </changeSet>
 </databaseChangeLog>

@@ -78,9 +78,12 @@ public class GastoRequerimientoJustificacion extends BaseEntity {
   @Builder.Default
   private Set<GastoRequerimientoJustificacionIncidencia> incidencia = new HashSet<>();
 
-  /** Identificador justificacion */
-  @Column(name = "alegacion", length = DEFAULT_LONG_TEXT_LENGTH, nullable = true)
-  private String alegacion;
+  /** Alegacion */
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "gasto_requerimiento_justificacion_alegacion", joinColumns = @JoinColumn(name = "gasto_requerimiento_justificacion_id"))
+  @Valid
+  @Builder.Default
+  private Set<GastoRequerimientoJustificacionAlegacion> alegacion = new HashSet<>();
 
   /** Identificador justificacion */
   @Column(name = "identificador_justificacion", length = EXTERNAL_REF_LENGTH, nullable = true)

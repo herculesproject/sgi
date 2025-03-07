@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.controller.GastoRequerimientoJustificacionContr
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -76,8 +77,8 @@ class GastoRequerimientoJustificacionIT extends BaseIT {
 
     GastoRequerimientoJustificacionOutput output = response.getBody();
     Assertions.assertThat(output.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(output.getAlegacion()).as("getAlegacion()")
-        .isEqualTo(input.getAlegacion());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getAlegacion(), Language.ES)).as("getAlegacion()")
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getAlegacion(), Language.ES));
     Assertions.assertThat(output.getRequerimientoJustificacionId()).as("getRequerimientoJustificacionId()")
         .isEqualTo(input.getRequerimientoJustificacionId());
   }
@@ -116,8 +117,8 @@ class GastoRequerimientoJustificacionIT extends BaseIT {
 
     GastoRequerimientoJustificacionOutput output = response.getBody();
     Assertions.assertThat(output.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(output.getAlegacion()).as("getAlegacion()")
-        .isEqualTo(input.getAlegacion());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getAlegacion(), Language.ES)).as("getAlegacion()")
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getAlegacion(), Language.ES));
     Assertions.assertThat(output.getRequerimientoJustificacionId()).as("getRequerimientoJustificacionId()")
         .isEqualTo(input.getRequerimientoJustificacionId());
   }
@@ -225,9 +226,12 @@ class GastoRequerimientoJustificacionIT extends BaseIT {
       incidenciaGastoRequerimiento.add(new I18nFieldValueDto(Language.ES, incidencia));
     }
 
+    List<I18nFieldValueDto> alegacionGastoRequerimiento = new ArrayList<>();
+    alegacionGastoRequerimiento.add(new I18nFieldValueDto(Language.ES, alegacion));
+
     return GastoRequerimientoJustificacionInput.builder()
         .aceptado(aceptado)
-        .alegacion(alegacion)
+        .alegacion(alegacionGastoRequerimiento)
         .gastoRef(gastoRef)
         .identificadorJustificacion(identificadorJustificacion)
         .importeAceptado(importeAceptado)

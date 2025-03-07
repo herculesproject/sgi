@@ -12,9 +12,11 @@ import org.crue.hercules.sgi.csp.converter.GastoRequerimientoJustificacionConver
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.GastoRequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionAlegacion;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionIncidencia;
 import org.crue.hercules.sgi.csp.service.GastoRequerimientoJustificacionService;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
@@ -94,7 +96,7 @@ class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
         // and the created GastoRequerimientoJustificacionInput is resturned as JSON
         // object
         .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("alegacion").value(alegacion));
+        .andExpect(MockMvcResultMatchers.jsonPath("alegacion[0].value").value(alegacion));
   }
 
   @Test
@@ -144,7 +146,7 @@ class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(
             gastoRequerimientoJustificacionId))
-        .andExpect(MockMvcResultMatchers.jsonPath("alegacion").value(alegacion));
+        .andExpect(MockMvcResultMatchers.jsonPath("alegacion[0].value").value(alegacion));
   }
 
   @Test
@@ -229,7 +231,7 @@ class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
     for (int i = 31; i <= 37; i++) {
       GastoRequerimientoJustificacionOutput gasto = gastoResponse
           .get(i - (page * pageSize) - 1);
-      Assertions.assertThat(gasto.getAlegacion())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(gasto.getAlegacion(), Language.ES))
           .isEqualTo("Alegacion-" + String.format("%03d", i));
     }
   }
@@ -284,22 +286,22 @@ class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
 
   private GastoRequerimientoJustificacion generarMockGastoRequerimientoJustificacion(
       GastoRequerimientoJustificacionInput input) {
-    return generarMockGastoRequerimientoJustificacion(null, input.getRequerimientoJustificacionId(),
-        input.getAlegacion());
+    return generarMockGastoRequerimientoJustificacion(input.getRequerimientoJustificacionId(), null);
   }
 
   private GastoRequerimientoJustificacion generarMockGastoRequerimientoJustificacion(
       GastoRequerimientoJustificacionInput input, Long id) {
-    return generarMockGastoRequerimientoJustificacion(id, input.getRequerimientoJustificacionId(),
-        input.getAlegacion());
-  }
-
-  private GastoRequerimientoJustificacion generarMockGastoRequerimientoJustificacion(Long id,
-      Long requerimientoJustificacionId, String alegacion) {
-    return generarMockGastoRequerimientoJustificacion(id, Boolean.TRUE, alegacion,
-        null, "11/1111",
-        null, null, null,
-        null, requerimientoJustificacionId);
+    return generarMockGastoRequerimientoJustificacion(
+        id,
+        Boolean.TRUE,
+        I18nHelper.getValueForLanguage(input.getAlegacion(), Language.ES),
+        null,
+        "11/1111",
+        null,
+        null,
+        null,
+        null,
+        input.getRequerimientoJustificacionId());
   }
 
   private GastoRequerimientoJustificacion generarMockGastoRequerimientoJustificacion(Long id, Boolean aceptado,
@@ -311,10 +313,13 @@ class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
     incidenciaGastoRequerimientoJustificacion
         .add(new GastoRequerimientoJustificacionIncidencia(Language.ES, incidencia));
 
+    Set<GastoRequerimientoJustificacionAlegacion> alegacionGastoRequerimientoJustificacion = new HashSet<>();
+    alegacionGastoRequerimientoJustificacion.add(new GastoRequerimientoJustificacionAlegacion(Language.ES, alegacion));
+
     return GastoRequerimientoJustificacion.builder()
         .id(id)
         .aceptado(aceptado)
-        .alegacion(alegacion)
+        .alegacion(alegacionGastoRequerimientoJustificacion)
         .gastoRef(gastoRef)
         .identificadorJustificacion(identificadorJustificacion)
         .importeAceptado(importeAceptado)
@@ -327,10 +332,16 @@ class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
 
   private GastoRequerimientoJustificacionInput generarMockGastoRequerimientoJustificacionInput(
       Long requerimientoJustificacionId, String alegacion) {
-    return generarMockGastoRequerimientoJustificacionInput(Boolean.TRUE, alegacion,
-        null, "11/1111",
-        null, null, null,
-        null, requerimientoJustificacionId);
+    return generarMockGastoRequerimientoJustificacionInput(
+        Boolean.TRUE,
+        alegacion,
+        null,
+        "11/1111",
+        null,
+        null,
+        null,
+        null,
+        requerimientoJustificacionId);
   }
 
   private GastoRequerimientoJustificacionInput generarMockGastoRequerimientoJustificacionInput(Boolean aceptado,
@@ -340,9 +351,12 @@ class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
     List<I18nFieldValueDto> incidenciaGastoRequerimiento = new ArrayList<>();
     incidenciaGastoRequerimiento.add(new I18nFieldValueDto(Language.ES, incidencia));
 
+    List<I18nFieldValueDto> alegacionGastoRequerimiento = new ArrayList<>();
+    alegacionGastoRequerimiento.add(new I18nFieldValueDto(Language.ES, alegacion));
+
     return GastoRequerimientoJustificacionInput.builder()
         .aceptado(aceptado)
-        .alegacion(alegacion)
+        .alegacion(alegacionGastoRequerimiento)
         .gastoRef(gastoRef)
         .identificadorJustificacion(identificadorJustificacion)
         .importeAceptado(importeAceptado)
@@ -356,17 +370,10 @@ class GastoRequerimientoJustificacionControllerTest extends BaseControllerTest {
 
   private GastoRequerimientoJustificacionOutput generarMockGastoRequerimientoJustificacionOutput(
       GastoRequerimientoJustificacion gastoRequerimientoJustificacion) {
-    return generarMockGastoRequerimientoJustificacionOutput(gastoRequerimientoJustificacion.getId(),
-        gastoRequerimientoJustificacion.getRequerimientoJustificacionId(),
-        gastoRequerimientoJustificacion.getAlegacion());
-  }
-
-  private GastoRequerimientoJustificacionOutput generarMockGastoRequerimientoJustificacionOutput(Long id,
-      Long requerimientoJustificacionId, String alegacion) {
     return GastoRequerimientoJustificacionOutput.builder()
-        .id(id)
-        .alegacion(alegacion)
-        .requerimientoJustificacionId(requerimientoJustificacionId)
+        .id(gastoRequerimientoJustificacion.getId())
+        .alegacion(gastoRequerimientoJustificacion.getAlegacion())
+        .requerimientoJustificacionId(gastoRequerimientoJustificacion.getRequerimientoJustificacionId())
         .build();
   }
 }

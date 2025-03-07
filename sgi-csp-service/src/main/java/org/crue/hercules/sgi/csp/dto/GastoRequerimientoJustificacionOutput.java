@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionAlegacion;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionIncidencia;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,6 @@ public class GastoRequerimientoJustificacionOutput implements Serializable {
   private BigDecimal importeAlegado;
   private Boolean aceptado;
   private Collection<GastoRequerimientoJustificacionIncidencia> incidencia;
-  private String alegacion;
+  private Collection<GastoRequerimientoJustificacionAlegacion> alegacion;
   private String identificadorJustificacion;
 }

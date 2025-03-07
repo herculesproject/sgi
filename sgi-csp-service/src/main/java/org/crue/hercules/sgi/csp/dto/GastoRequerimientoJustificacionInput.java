@@ -37,8 +37,7 @@ public class GastoRequerimientoJustificacionInput implements Serializable {
 
   private List<I18nFieldValueDto> incidencia;
 
-  @Size(max = BaseEntity.DEFAULT_LONG_TEXT_LENGTH)
-  private String alegacion;
+  private List<I18nFieldValueDto> alegacion;
 
   @Size(max = BaseEntity.EXTERNAL_REF_LENGTH)
   private String identificadorJustificacion;

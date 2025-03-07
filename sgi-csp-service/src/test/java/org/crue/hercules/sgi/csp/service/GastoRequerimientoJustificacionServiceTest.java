@@ -10,6 +10,7 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.GastoRequerimientoJustificacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
+import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionAlegacion;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionIncidencia;
 import org.crue.hercules.sgi.csp.repository.GastoRequerimientoJustificacionRepository;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -270,10 +271,13 @@ class GastoRequerimientoJustificacionServiceTest extends BaseServiceTest {
     incidenciaGastoRequerimientoJustificacion
         .add(new GastoRequerimientoJustificacionIncidencia(Language.ES, incidencia));
 
+    Set<GastoRequerimientoJustificacionAlegacion> alegacionGastoRequerimientoJustificacion = new HashSet<>();
+    alegacionGastoRequerimientoJustificacion.add(new GastoRequerimientoJustificacionAlegacion(Language.ES, alegacion));
+
     return GastoRequerimientoJustificacion.builder()
         .id(id)
         .aceptado(aceptado)
-        .alegacion(alegacion)
+        .alegacion(alegacionGastoRequerimientoJustificacion)
         .gastoRef(gastoRef)
         .identificadorJustificacion(identificadorJustificacion)
         .importeAceptado(importeAceptado)
