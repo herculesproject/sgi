@@ -445,7 +445,8 @@ class RequerimientoJustificacionIT extends BaseIT {
     Assertions.assertThat(responseData).isNotNull();
     Assertions.assertThat(responseData.getRequerimientoJustificacionId()).as("getId()")
         .isEqualTo(requerimientoJustificacionId);
-    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()").isEqualTo("Observacion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getObservaciones(), Language.ES))
+        .as("getObservaciones()").isEqualTo("Observacion-001");
   }
 
   private RequerimientoJustificacionInput generarMockRequerimientoJustificacionInput(String observaciones,

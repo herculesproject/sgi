@@ -1,11 +1,15 @@
 package org.crue.hercules.sgi.csp.integration;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.controller.AlegacionRequerimientoController;
 import org.crue.hercules.sgi.csp.dto.AlegacionRequerimientoInput;
 import org.crue.hercules.sgi.csp.dto.AlegacionRequerimientoOutput;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -122,9 +126,12 @@ class AlegacionRequerimientoIT extends BaseIT {
 
   private AlegacionRequerimientoInput generarMockAlegacionRequerimientoInput(String justificanteReintegro,
       String observaciones, Long requerimientoJustificacionId) {
+    List<I18nFieldValueDto> observacionesAlegacionRequerimiento = new ArrayList<>();
+    observacionesAlegacionRequerimiento.add(new I18nFieldValueDto(Language.ES, observaciones));
+
     return AlegacionRequerimientoInput.builder()
         .justificanteReintegro(justificanteReintegro)
-        .observaciones(observaciones)
+        .observaciones(observacionesAlegacionRequerimiento)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();
   }

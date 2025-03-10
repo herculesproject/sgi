@@ -95,6 +95,7 @@ DELETE FROM test.incidencia_documentacion_requerimiento;
 DELETE FROM test.gasto_requerimiento_justificacion_incidencia;
 DELETE FROM test.gasto_requerimiento_justificacion_alegacion;
 DELETE FROM test.gasto_requerimiento_justificacion;
+DELETE FROM test.alegacion_requerimiento_observaciones;
 DELETE FROM test.alegacion_requerimiento;
 DELETE FROM test.requerimiento_justificacion_observaciones;
 DELETE FROM test.requerimiento_justificacion;

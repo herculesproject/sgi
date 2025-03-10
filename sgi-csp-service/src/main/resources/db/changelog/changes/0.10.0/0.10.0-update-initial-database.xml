@@ -3370,4 +3370,36 @@
 
     <dropColumn columnName="alegacion" tableName="gasto_requerimiento_justificacion" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-120">
+    <createTable tableName="alegacion_requerimiento_observaciones">
+      <column name="alegacion_requerimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="alegacion_requerimiento_observaciones"
+      columnNames="alegacion_requerimiento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="alegacion_requerimiento_id"
+      baseTableName="alegacion_requerimiento_observaciones"
+      constraintName="FK_ALEGACIONREQUERIMIENTOOBSERVACIONES_ALEGACIONREQUERIMIENTO"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id"
+      referencedTableName="alegacion_requerimiento" validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}alegacion_requerimiento_observaciones(alegacion_requerimiento_id, value_, lang)
+      SELECT id, observaciones, '${defaultLang}' FROM ${schemaPrefix}alegacion_requerimiento WHERE
+      observaciones IS NOT NULL AND NULLIF(TRIM(observaciones), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="observaciones" tableName="alegacion_requerimiento" />
+  </changeSet>
 </databaseChangeLog>

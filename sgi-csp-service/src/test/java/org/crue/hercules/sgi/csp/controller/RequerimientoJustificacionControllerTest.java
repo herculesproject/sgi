@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.dto.IncidenciaDocumentacionRequerimientoOutput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionInput;
 import org.crue.hercules.sgi.csp.dto.RequerimientoJustificacionOutput;
 import org.crue.hercules.sgi.csp.model.AlegacionRequerimiento;
+import org.crue.hercules.sgi.csp.model.AlegacionRequerimientoObservaciones;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacion;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionAlegacion;
 import org.crue.hercules.sgi.csp.model.GastoRequerimientoJustificacionIncidencia;
@@ -667,26 +668,23 @@ class RequerimientoJustificacionControllerTest extends BaseControllerTest {
 
   private AlegacionRequerimiento generarMockAlegacionRequerimiento(Long id,
       String justificanteReintegro, String observaciones, Long requerimientoJustificacionId) {
+    Set<AlegacionRequerimientoObservaciones> observacionesAlegacionRequerimiento = new HashSet<>();
+    observacionesAlegacionRequerimiento.add(new AlegacionRequerimientoObservaciones(Language.ES, observaciones));
+
     return AlegacionRequerimiento.builder()
         .id(id)
         .justificanteReintegro(justificanteReintegro)
-        .observaciones(observaciones)
+        .observaciones(observacionesAlegacionRequerimiento)
         .requerimientoJustificacionId(requerimientoJustificacionId)
         .build();
   }
 
   private AlegacionRequerimientoOutput generarMockAlegacionRequerimientoOutput(AlegacionRequerimiento input) {
-    return generarMockAlegacionRequerimientoOutput(input.getId(), input.getJustificanteReintegro(),
-        input.getObservaciones(), input.getRequerimientoJustificacionId());
-  }
-
-  private AlegacionRequerimientoOutput generarMockAlegacionRequerimientoOutput(Long id,
-      String justificanteReintegro, String observaciones, Long requerimientoJustificacionId) {
     return AlegacionRequerimientoOutput.builder()
-        .id(id)
-        .justificanteReintegro(justificanteReintegro)
-        .observaciones(observaciones)
-        .requerimientoJustificacionId(requerimientoJustificacionId)
+        .id(input.getId())
+        .justificanteReintegro(input.getJustificanteReintegro())
+        .observaciones(input.getObservaciones())
+        .requerimientoJustificacionId(input.getRequerimientoJustificacionId())
         .build();
   }
 }
