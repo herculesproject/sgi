@@ -58,13 +58,15 @@ export class ProyectoAnualidadDatosGeneralesComponent extends FormFragmentCompon
   ngOnInit(): void {
     super.ngOnInit();
 
-
-
     if (!this.formPart.isAnualidadGenerica && !this.formPart.isEdit()) {
+      let validatorPattern = Validators.pattern('^[1-9][0-9]{3}');
+      if (!this.formPart.isFormatoAnio) {
+        validatorPattern = Validators.pattern('^[1-9][0-9]*$');
+      }
       this.formGroup.controls.anualidad.setValidators(
         [
           Validators.required,
-          Validators.pattern('^[1-9][0-9]{3}'),
+          validatorPattern,
           NumberValidator.isInteger(),
           ProyectoAnualidadDatosGeneralesComponent.isDuplicated(this.actionService.anualidades)
         ]

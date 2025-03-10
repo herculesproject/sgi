@@ -25,4 +25,6 @@ export interface IConfiguracionResponse {
   solicitudesSinConvocatoriaInvestigadorEnabled: boolean;
   validacionClasificacionGastos: string;
   viajesDietasColumnasFijasVisibles: string;
+  notificacionPresupuestoSgeEnabled: boolean;
+  formatoAnualidadAnio: boolean;
 }

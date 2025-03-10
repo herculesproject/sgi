@@ -1926,6 +1926,7 @@
   "error.csp.proyecto-periodo-seguimiento-cientifico.fecha-inicio.after": "Start date must be later than project start date",
   "error.csp.proyecto-periodo-seguimiento-cientifico.tipoSeguimiento.duplicate": "A final period already exists",
   "error.csp.proyecto-periodo-seguimiento-cientifico.tipoSeguimiento.duplicate-convocatoria": "The project already has a \"final\" type follow-up period. You must edit this period and modify the type before you can apply the new final period set in the call to the project",
+  "error.csp.proyecto-presupuesto.anualidad.numero.pattern": "Must be a number plus than 0",
   "error.csp.proyecto-presupuesto.anualidad.pattern": "Must be a valid year",
   "error.csp.proyecto-responsable-economico.fecha.invalid": "Date is not within valid range of participation in the project",
   "error.csp.proyecto-seguimiento-cientifico.fecha-concesion.after": "Must be later than the date on which the last extension was awarded",

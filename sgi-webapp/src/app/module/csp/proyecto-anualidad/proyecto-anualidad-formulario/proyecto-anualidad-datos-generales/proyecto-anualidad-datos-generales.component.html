@@ -12,8 +12,11 @@
           <mat-error *ngIf="formGroup.controls.anualidad.errors?.duplicate">
             {{'error.duplicate.anualidad' | translate}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.anualidad.errors?.pattern">
+          <mat-error *ngIf="formGroup.controls.anualidad.errors?.pattern && this.formPart.isFormatoAnio">
             {{'error.csp.proyecto-presupuesto.anualidad.pattern' | translate}}
+          </mat-error>
+          <mat-error *ngIf="formGroup.controls.anualidad.errors?.pattern && !this.formPart.isFormatoAnio">
+            {{'error.csp.proyecto-presupuesto.anualidad.numero.pattern' | translate}}
           </mat-error>
           <mat-error *ngIf="formGroup.controls.anualidad.errors?.required">
             {{ 'error.required.entity' | translate:msgParamAnualidadEntity}}

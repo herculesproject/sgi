@@ -1926,6 +1926,7 @@
   "error.csp.proyecto-periodo-seguimiento-cientifico.fecha-inicio.after": "Hasiera datak proiektuaren hasiera data baino geroagokoa izan behar du.",
   "error.csp.proyecto-periodo-seguimiento-cientifico.tipoSeguimiento.duplicate": "Jada badago amaierako aldi bat.",
   "error.csp.proyecto-periodo-seguimiento-cientifico.tipoSeguimiento.duplicate-convocatoria": "Proiektuak jada badu jarraipen zientifikorako \"amaierako\" aldi bat. Aldi hori editatu eta aldi mota aldatu behar duzu, proiektuari deialdian ezarritako amaierako aldi berria aplikatu ahal izateko.",
+  "error.csp.proyecto-presupuesto.anualidad.numero.pattern": "Debe ser un número mayor que 0",
   "error.csp.proyecto-presupuesto.anualidad.pattern": "Urte baliodun bat izan behar du.",
   "error.csp.proyecto-responsable-economico.fecha.invalid": "Data ez dago proiektuan parte hartzeko tarte baliodunaren barruan.",
   "error.csp.proyecto-seguimiento-cientifico.fecha-concesion.after": "Azken luzapenaren onarpen data baino geroagokoa izan behar du.",

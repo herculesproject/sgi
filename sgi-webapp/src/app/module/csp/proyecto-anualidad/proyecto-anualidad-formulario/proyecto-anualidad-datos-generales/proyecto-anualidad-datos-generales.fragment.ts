@@ -19,6 +19,7 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
   fechaInicio$: Subject<DateTime> = new BehaviorSubject<DateTime>(null);
 
   isNotificacionPresupuestoSgeEnabled: boolean;
+  isFormatoAnio: boolean;
 
   constructor(
     key: number,
@@ -30,14 +31,6 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
     super(key);
     this.isAnualidadGenerica = !proyecto.anualidades;
     this.proyecto = proyecto;
-
-    this.subscriptions.push(this.configServiceCSP.isNotificacionPresupuestosSgeEnabled().subscribe(value => {
-      this.isNotificacionPresupuestoSgeEnabled = value;
-    }));
-
-    this.subscriptions.push(this.configServiceCSP.isFormatoAnualidadAnio().subscribe(value => {
-      this.refreshValidatorsAnualidadAnio(value);
-    }));
   }
 
   protected buildFormGroup(): FormGroup {
@@ -73,11 +66,15 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
       })
     );
 
-    if (!this.isNotificacionPresupuestoSgeEnabled) {
-      form.controls.presupuestar.disabled;
-    } else {
-      form.controls.presupuestar.enabled;
-    }
+    this.subscriptions.push(this.configServiceCSP.isFormatoAnualidadAnio().subscribe(value => {
+      this.isFormatoAnio = value;
+      this.refreshValidatorsAnualidadAnio(value);
+    }));
+
+    this.subscriptions.push(this.configServiceCSP.isNotificacionPresupuestosSgeEnabled().subscribe(value => {
+      this.isNotificacionPresupuestoSgeEnabled = value;
+      this.refreshControlPresupuestar(value)
+    }));
 
     if (this.readonly) {
       form.disable();
@@ -134,6 +131,14 @@ export class ProyectoAnualidadDatosGeneralesFragment extends FormFragment<IProye
 
   private update(proyectoAnualidad: IProyectoAnualidad): Observable<IProyectoAnualidad> {
     return this.service.update(proyectoAnualidad.id, proyectoAnualidad);
+  }
+
+  private refreshControlPresupuestar(enable: boolean) {
+    if (enable) {
+      this.getFormGroup().controls.presupuestar.enable();
+    } else {
+      this.getFormGroup().controls.presupuestar.disable();
+    }
   }
 
   private refreshValidatorsAnualidadAnio(formatoAnio: boolean) {

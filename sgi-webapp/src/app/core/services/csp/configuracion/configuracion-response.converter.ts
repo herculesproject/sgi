@@ -34,7 +34,9 @@ class ConfiguracionResponseConverter
       sectorIvaSgeEnabled: value.sectorIvaSgeEnabled,
       solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos ? ValidacionClasificacionGastos[value.validacionClasificacionGastos] : null,
-      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s])
+      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
+      notificacionPresupuestoSgeEnabled: value.notificacionPresupuestoSgeEnabled,
+      formatoAnualidadAnio: value.formatoAnualidadAnio,
     };
   }
 
@@ -68,7 +70,9 @@ class ConfiguracionResponseConverter
       sectorIvaSgeEnabled: value.sectorIvaSgeEnabled,
       solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos,
-      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.join(',')
+      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.join(','),
+      notificacionPresupuestoSgeEnabled: value.notificacionPresupuestoSgeEnabled,
+      formatoAnualidadAnio: value.formatoAnualidadAnio,
     };
   }
 }

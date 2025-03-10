@@ -98,4 +98,8 @@ export interface IConfiguracion {
   proyectoSocioPaisFilterEnabled: boolean;
   /** Permitir creación de solicitudes sin convocatoria desde perfil de investigación */
   solicitudesSinConvocatoriaInvestigadorEnabled: boolean;
+  /** Integración de notificación de presupuestos al SGE */
+  notificacionPresupuestoSgeEnabled: boolean;
+  /** Permite activar formato de año natural en anualidad de presupuesto de proyecto */
+  formatoAnualidadAnio: boolean;
 }

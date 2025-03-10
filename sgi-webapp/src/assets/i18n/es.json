@@ -1981,6 +1981,7 @@
   "error.csp.proyecto-periodo-seguimiento-cientifico.fecha-inicio.after": "La fecha de inicio debe ser posterior a la fecha de inicio del proyecto",
   "error.csp.proyecto-periodo-seguimiento-cientifico.tipoSeguimiento.duplicate": "Ya existe un periodo final",
   "error.csp.proyecto-periodo-seguimiento-cientifico.tipoSeguimiento.duplicate-convocatoria": "El proyecto ya dispone de un periodo de seguimiento científico de tipo \"final\". Debe de editar ese periodo y modificar el tipo del mismo antes de poder aplicar al proyecto el nuevo periodo final establecido en la convocatoria",
+  "error.csp.proyecto-presupuesto.anualidad.numero.pattern": "Debe ser un número mayor que 0",
   "error.csp.proyecto-presupuesto.anualidad.pattern": "Debe ser un año válido",
   "error.csp.proyecto-responsable-economico.fecha.invalid": "La fecha no está dentro del rango valido de participación en el proyecto",
   "error.csp.proyecto-seguimiento-cientifico.fecha-concesion.after": "Debe ser posterior a la fecha de concesión de la última prórroga",
