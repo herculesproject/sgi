@@ -39,7 +39,7 @@ public class GrupoEquipoInstrumentalDescripcion implements Serializable, I18nFie
   private Language lang;
 
   /** Observaciones */
-  @Column(name = "value_", length = 100, nullable = false)
+  @Column(name = "value_", length = 250, nullable = false)
   @NotBlank
   @Size(max = 250)
   private String value;
