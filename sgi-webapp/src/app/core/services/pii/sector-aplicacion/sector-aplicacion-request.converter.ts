@@ -11,7 +11,7 @@ class SectorAplicacionRequestConverter extends SgiBaseConverter<ISectorAplicacio
     return {
       id: undefined,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombre) : [],
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.descripcion) : [],
       activo: true
     };
   }
@@ -21,7 +21,7 @@ class SectorAplicacionRequestConverter extends SgiBaseConverter<ISectorAplicacio
     }
     return {
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.descripcion) : [],
     };
   }
 }
