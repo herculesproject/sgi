@@ -7,7 +7,9 @@
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.sector-aplicacion.nombre' | translate}}
         </th>
-        <td mat-cell *matCellDef="let sectorAplicacion">{{sectorAplicacion.nombre}}</td>
+        <td mat-cell *matCellDef="let sectorAplicacion">
+          <sgi-i18n-table-field [field]="sectorAplicacion.nombre"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
       <!-- Descripción -->

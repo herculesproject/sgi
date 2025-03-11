@@ -119,7 +119,9 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                   {{'pii.invencion.sector' | translate}}
                 </th>
-                <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.sectorAplicacion.nombre}} </td>
+                <td mat-cell *matCellDef="let wrapper">
+                  <sgi-i18n-table-field [field]="wrapper.value.sectorAplicacion.nombre"></sgi-i18n-table-field>
+                </td>
               </ng-container>
 
               <!-- Acciones Column -->

@@ -78,7 +78,7 @@
             {{'pii.invencion-contrato.sector-licenciado.sector' | translate}}
           </mat-header-cell>
           <mat-cell mat-cell *matCellDef="let wrapper">
-            {{ wrapper.value.sectorAplicacion.nombre }}
+            <sgi-i18n-table-field [field]="wrapper.value.sectorAplicacion.nombre"></sgi-i18n-table-field>
           </mat-cell>
         </ng-container>
 

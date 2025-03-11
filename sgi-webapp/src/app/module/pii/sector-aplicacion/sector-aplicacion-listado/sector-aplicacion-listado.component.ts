@@ -54,6 +54,13 @@ export class SectorAplicacionListadoComponent extends AbstractTablePaginationCom
     private readonly translate: TranslateService
   ) {
     super(translate);
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'nombre') {
+        return 'nombre.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {

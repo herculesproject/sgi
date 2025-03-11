@@ -60,7 +60,7 @@ export class SelectSectorAplicacionComponent extends SelectServiceExtendedCompon
 
   protected loadServiceOptions(): Observable<ISectorAplicacion[]> {
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC)
     };
     return this.sectorAplicacionService.findAll(findOptions).pipe(map(({ items }) => items));
   }

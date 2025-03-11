@@ -19,6 +19,7 @@ import { switchMap } from 'rxjs/operators';
 import { InvencionActionService } from '../../invencion.action.service';
 import { ISectorLicenciadoModalData, SectorLicenciadoModalComponent } from '../../modals/sector-licenciado-modal/sector-licenciado-modal.component';
 import { IContratoAsociadoTableData, InvencionContratosFragment } from './invencion-contratos.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const SECTOR_LICENCIADO_KEY = marker('pii.invencion-contrato.sector-licenciado');
@@ -61,7 +62,7 @@ export class InvencionContratosComponent extends FragmentComponent implements On
           case 'pais':
             return wrapper.value.pais.nombre;
           case 'sector':
-            return wrapper.value.sectorAplicacion.nombre;
+            return this.languageService.getFieldValue(wrapper.value.sectorAplicacion.nombre);
           case 'fechaInicioLicencia':
             return wrapper.value.fechaInicioLicencia;
           case 'fechaFinLicencia':
