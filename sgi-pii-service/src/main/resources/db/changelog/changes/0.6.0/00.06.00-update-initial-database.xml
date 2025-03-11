@@ -91,4 +91,33 @@
 
     <dropColumn columnName="nombre" tableName="sector_aplicacion" />
   </changeSet>
+
+  <changeSet author="master" id="00.06-00-4">
+    <createTable tableName="sector_aplicacion_descripcion">
+      <column name="sector_aplicacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="sector_aplicacion_descripcion"
+      columnNames="sector_aplicacion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="sector_aplicacion_id"
+      baseTableName="sector_aplicacion_descripcion"
+      constraintName="FK_SECTORAPLICACIONDESCRIPCION_SECTORAPLICACION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="sector_aplicacion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}sector_aplicacion_descripcion(sector_aplicacion_id, value_,
+      lang) SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}sector_aplicacion WHERE
+      descripcion IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="sector_aplicacion" />
+  </changeSet>
 </databaseChangeLog>

@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.pii.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.pii.model.SectorAplicacionDescripcion;
 import org.crue.hercules.sgi.pii.model.SectorAplicacionNombre;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +20,6 @@ import lombok.NoArgsConstructor;
 public class SectorAplicacionOutput implements Serializable {
   private Long id;
   private Collection<SectorAplicacionNombre> nombre;
-  private String descripcion;
+  private Collection<SectorAplicacionDescripcion> descripcion;
   private Boolean activo;
 }

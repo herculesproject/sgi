@@ -62,7 +62,12 @@ public class SectorAplicacion extends BaseActivableEntity {
 
   /** Descripción */
   /** Si tiene padre equivale a nombre requerido size 50 y único */
-  @Column(name = "descripcion", length = DESCRIPCION_LENGTH, nullable = false)
-  private String descripcion;
+
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "sector_aplicacion_descripcion", joinColumns = @JoinColumn(name = "sector_aplicacion_id"))
+  @NotEmpty
+  @Valid
+  @Builder.Default
+  private Set<SectorAplicacionDescripcion> descripcion = new HashSet<>();
 
 }

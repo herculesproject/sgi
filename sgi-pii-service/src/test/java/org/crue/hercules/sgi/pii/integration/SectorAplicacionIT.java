@@ -146,8 +146,8 @@ class SectorAplicacionIT extends BaseIT {
     Assertions.assertThat(sectorAplicacionOutput.getId()).as("id").isEqualTo(1);
     Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
         .isEqualTo("nombre-sector-aplicacion-001");
-    Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descripcion-sector-aplicacion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getDescripcion(), Language.ES))
+        .as("descripcion").isEqualTo("descripcion-sector-aplicacion-001");
 
   }
 
@@ -171,8 +171,8 @@ class SectorAplicacionIT extends BaseIT {
     Assertions.assertThat(sectorAplicacionOutput.getId()).as("id").isEqualTo(4);
     Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
         .isEqualTo("nombre-sector-aplicacion");
-    Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descripcion-sector-aplicacion");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getDescripcion(), Language.ES))
+        .as("descripcion").isEqualTo("descripcion-sector-aplicacion");
 
   }
 
@@ -189,7 +189,10 @@ class SectorAplicacionIT extends BaseIT {
     Long sectorAplicacionId = 1L;
 
     SectorAplicacionInput sectorAplicacionInput = generaMockSectorAplicacionInput();
-    sectorAplicacionInput.setDescripcion("descripcion-sector-aplicacion-modificado");
+
+    List<I18nFieldValueDto> descripcionSectorAplicacion = new ArrayList<>();
+    descripcionSectorAplicacion.add(new I18nFieldValueDto(Language.ES, "descripcion-sector-aplicacion-modificado"));
+    sectorAplicacionInput.setDescripcion(descripcionSectorAplicacion);
 
     final ResponseEntity<SectorAplicacionOutput> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
@@ -200,8 +203,8 @@ class SectorAplicacionIT extends BaseIT {
     Assertions.assertThat(sectorAplicacionOutput.getId()).as("id").isEqualTo(1);
     Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
         .isEqualTo("nombre-sector-aplicacion");
-    Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descripcion-sector-aplicacion-modificado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getDescripcion(), Language.ES))
+        .as("descripcion").isEqualTo("descripcion-sector-aplicacion-modificado");
 
   }
 
@@ -228,8 +231,8 @@ class SectorAplicacionIT extends BaseIT {
         .isEqualTo(Boolean.TRUE);
     Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
         .isEqualTo("nombre-sector-aplicacion-003");
-    Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descripcion-sector-aplicacion-003");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getDescripcion(), Language.ES))
+        .as("descripcion").isEqualTo("descripcion-sector-aplicacion-003");
 
   }
 
@@ -256,8 +259,8 @@ class SectorAplicacionIT extends BaseIT {
         .isEqualTo(Boolean.FALSE);
     Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
         .isEqualTo("nombre-sector-aplicacion-001");
-    Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descripcion-sector-aplicacion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getDescripcion(), Language.ES))
+        .as("descripcion").isEqualTo("descripcion-sector-aplicacion-001");
 
   }
 
@@ -271,9 +274,12 @@ class SectorAplicacionIT extends BaseIT {
     List<I18nFieldValueDto> nombreSectorAplicacion = new ArrayList<>();
     nombreSectorAplicacion.add(new I18nFieldValueDto(Language.ES, "nombre-sector-aplicacion"));
 
+    List<I18nFieldValueDto> descripcionSectorAplicacion = new ArrayList<>();
+    descripcionSectorAplicacion.add(new I18nFieldValueDto(Language.ES, "descripcion-sector-aplicacion"));
+
     SectorAplicacionInput sectorAplicacionInput = new SectorAplicacionInput();
     sectorAplicacionInput.setNombre(nombreSectorAplicacion);
-    sectorAplicacionInput.setDescripcion("descripcion-sector-aplicacion");
+    sectorAplicacionInput.setDescripcion(descripcionSectorAplicacion);
 
     return sectorAplicacionInput;
   }
