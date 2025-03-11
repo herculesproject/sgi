@@ -1,10 +1,14 @@
 package org.crue.hercules.sgi.pii.integration;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.pii.dto.SectorAplicacionInput;
 import org.crue.hercules.sgi.pii.dto.SectorAplicacionOutput;
 import org.junit.jupiter.api.Test;
@@ -60,7 +64,7 @@ class SectorAplicacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "nombre=ke=-00";
+    String filter = "nombre.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -98,7 +102,7 @@ class SectorAplicacionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "nombre=ke=-00";
+    String filter = "nombre.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -140,7 +144,8 @@ class SectorAplicacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final SectorAplicacionOutput sectorAplicacionOutput = response.getBody();
     Assertions.assertThat(sectorAplicacionOutput.getId()).as("id").isEqualTo(1);
-    Assertions.assertThat(sectorAplicacionOutput.getNombre()).as("nombre").isEqualTo("nombre-sector-aplicacion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
+        .isEqualTo("nombre-sector-aplicacion-001");
     Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
         .isEqualTo("descripcion-sector-aplicacion-001");
 
@@ -164,7 +169,8 @@ class SectorAplicacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     final SectorAplicacionOutput sectorAplicacionOutput = response.getBody();
     Assertions.assertThat(sectorAplicacionOutput.getId()).as("id").isEqualTo(4);
-    Assertions.assertThat(sectorAplicacionOutput.getNombre()).as("nombre").isEqualTo("nombre-sector-aplicacion");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
+        .isEqualTo("nombre-sector-aplicacion");
     Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
         .isEqualTo("descripcion-sector-aplicacion");
 
@@ -192,7 +198,8 @@ class SectorAplicacionIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final SectorAplicacionOutput sectorAplicacionOutput = response.getBody();
     Assertions.assertThat(sectorAplicacionOutput.getId()).as("id").isEqualTo(1);
-    Assertions.assertThat(sectorAplicacionOutput.getNombre()).as("nombre").isEqualTo("nombre-sector-aplicacion");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
+        .isEqualTo("nombre-sector-aplicacion");
     Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
         .isEqualTo("descripcion-sector-aplicacion-modificado");
 
@@ -219,7 +226,8 @@ class SectorAplicacionIT extends BaseIT {
     Assertions.assertThat(sectorAplicacionOutput.getId()).as("id").isEqualTo(3);
     Assertions.assertThat(sectorAplicacionOutput.getActivo()).as("activo")
         .isEqualTo(Boolean.TRUE);
-    Assertions.assertThat(sectorAplicacionOutput.getNombre()).as("nombre").isEqualTo("nombre-sector-aplicacion-003");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
+        .isEqualTo("nombre-sector-aplicacion-003");
     Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
         .isEqualTo("descripcion-sector-aplicacion-003");
 
@@ -246,7 +254,8 @@ class SectorAplicacionIT extends BaseIT {
     Assertions.assertThat(sectorAplicacionOutput.getId()).as("id").isEqualTo(1);
     Assertions.assertThat(sectorAplicacionOutput.getActivo()).as("activo")
         .isEqualTo(Boolean.FALSE);
-    Assertions.assertThat(sectorAplicacionOutput.getNombre()).as("nombre").isEqualTo("nombre-sector-aplicacion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(sectorAplicacionOutput.getNombre(), Language.ES)).as("nombre")
+        .isEqualTo("nombre-sector-aplicacion-001");
     Assertions.assertThat(sectorAplicacionOutput.getDescripcion()).as("descripcion")
         .isEqualTo("descripcion-sector-aplicacion-001");
 
@@ -258,8 +267,12 @@ class SectorAplicacionIT extends BaseIT {
    * @return el objeto SectorAplicacionInput
    */
   private SectorAplicacionInput generaMockSectorAplicacionInput() {
+
+    List<I18nFieldValueDto> nombreSectorAplicacion = new ArrayList<>();
+    nombreSectorAplicacion.add(new I18nFieldValueDto(Language.ES, "nombre-sector-aplicacion"));
+
     SectorAplicacionInput sectorAplicacionInput = new SectorAplicacionInput();
-    sectorAplicacionInput.setNombre("nombre-sector-aplicacion");
+    sectorAplicacionInput.setNombre(nombreSectorAplicacion);
     sectorAplicacionInput.setDescripcion("descripcion-sector-aplicacion");
 
     return sectorAplicacionInput;

@@ -7,6 +7,7 @@ DELETE FROM test.periodo_titularidad;
 DELETE FROM test.invencion_area_conocimiento;
 DELETE FROM test.invencion_sector_aplicacion;
 DELETE FROM test.sector_licenciado;
+DELETE FROM test.sector_aplicacion_nombre;
 DELETE FROM test.sector_aplicacion;
 DELETE FROM test.informe_patentabilidad;
 DELETE FROM test.resultado_informe_patentabilidad;
