@@ -6,8 +6,9 @@ import { IEmpresa } from "@core/models/sgemp/empresa";
 import { LuxonUtils } from "@core/utils/luxon-utils";
 import { SgiBaseConverter } from "@sgi/framework/core";
 import { IInformePatentabilidadResponse } from "./informe-patentabilidad-response";
+import { RESULTADO_INFORME_PATENTABILIDAD_RESPONSE_CONVERTER } from "../resultado-informe-patentabilidad/resultado-informe-patentabilidad-response.converter";
 
-class InformePatentabilidadResponseConverter extends SgiBaseConverter<IInformePatentabilidadResponse, IInformePatentabilidad>{
+class InformePatentabilidadResponseConverter extends SgiBaseConverter<IInformePatentabilidadResponse, IInformePatentabilidad> {
 
   toTarget(value: IInformePatentabilidadResponse): IInformePatentabilidad {
     if (!value) {
@@ -19,11 +20,7 @@ class InformePatentabilidadResponseConverter extends SgiBaseConverter<IInformePa
       fecha: LuxonUtils.fromBackend(value.fecha),
       nombre: value.nombre,
       documento: { documentoRef: value.documentoRef } as IDocumento,
-      resultadoInformePatentabilidad: {
-        id: value.resultadoInformePatentabilidad.id,
-        nombre: value.resultadoInformePatentabilidad.nombre,
-        descripcion: value.resultadoInformePatentabilidad.descripcion
-      } as IResultadoInformePatentibilidad,
+      resultadoInformePatentabilidad: value.resultadoInformePatentabilidad ? RESULTADO_INFORME_PATENTABILIDAD_RESPONSE_CONVERTER.toTarget(value.resultadoInformePatentabilidad) : null,
       entidadCreadora: { id: value.entidadCreadoraRef } as IEmpresa,
       contactoEntidadCreadora: value.contactoEntidadCreadora,
       contactoExaminador: value.contactoExaminador,
@@ -41,7 +38,7 @@ class InformePatentabilidadResponseConverter extends SgiBaseConverter<IInformePa
       fecha: LuxonUtils.toBackend(value.fecha),
       nombre: value.nombre,
       documentoRef: value.documento?.documentoRef,
-      resultadoInformePatentabilidad: value.resultadoInformePatentabilidad,
+      resultadoInformePatentabilidad: value.resultadoInformePatentabilidad ? RESULTADO_INFORME_PATENTABILIDAD_RESPONSE_CONVERTER.fromTarget(value.resultadoInformePatentabilidad) : null,
       entidadCreadoraRef: value.entidadCreadora.id,
       contactoEntidadCreadora: value.contactoEntidadCreadora,
       contactoExaminador: value.contactoExaminador,

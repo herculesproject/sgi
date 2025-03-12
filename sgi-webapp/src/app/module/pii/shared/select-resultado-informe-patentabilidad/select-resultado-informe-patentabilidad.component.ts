@@ -42,7 +42,7 @@ export class SelectResultadoInformePatentabilidadComponent extends SelectService
 
   protected loadServiceOptions(): Observable<IResultadoInformePatentibilidad[]> {
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC)
     };
     return this.resultadoInformePatentabilidadService.findAll(findOptions).pipe(map(({ items }) => items));
   }
