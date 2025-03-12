@@ -112,7 +112,8 @@ export class GrupoListadoInvComponent extends AbstractTablePaginationComponent<I
 
     return new RSQLSgiRestFilter('nombre.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombre.value)
       .and('codigo', SgiRestFilterOperator.LIKE_ICASE, controls.codigo.value)
-      .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.proyectoSgeRef.value);
+      .and('proyectoSgeRef', SgiRestFilterOperator.EQUALS, controls.proyectoSgeRef.value)
+      .and('isModuloInvestigador', SgiRestFilterOperator.EQUALS, 'true');
   }
 
   protected resetFilters(): void {
