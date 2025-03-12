@@ -11,6 +11,7 @@ DELETE FROM test.sector_aplicacion_nombre;
 DELETE FROM test.sector_aplicacion_descripcion;
 DELETE FROM test.sector_aplicacion;
 DELETE FROM test.informe_patentabilidad;
+DELETE FROM test.resultado_informe_patentabilidad_nombre;
 DELETE FROM test.resultado_informe_patentabilidad;
 DELETE FROM test.reparto_equipo_inventor;
 DELETE FROM test.invencion_inventor;

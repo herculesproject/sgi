@@ -9,7 +9,7 @@
   <property name="schemaPrefix" value="" />
   <property name="defaultLang" value="es" />
 
-  <changeSet author="master" id="00.06-00-1">
+  <changeSet author="master" id="00.06.00-1">
     <createTable tableName="tipo_proteccion_nombre">
       <column name="tipo_proteccion_id" type="BIGINT">
         <constraints nullable="false" />
@@ -36,7 +36,7 @@
     <dropColumn columnName="nombre" tableName="tipo_proteccion" />
   </changeSet>
 
-  <changeSet author="master" id="00.06-00-2">
+  <changeSet author="master" id="00.06.00-2">
     <createTable tableName="tipo_proteccion_descripcion">
       <column name="tipo_proteccion_id" type="BIGINT">
         <constraints nullable="false" />
@@ -64,7 +64,7 @@
     <dropColumn columnName="descripcion" tableName="tipo_proteccion" />
   </changeSet>
 
-  <changeSet author="master" id="00.06-00-3">
+  <changeSet author="master" id="00.06.00-3">
     <createTable tableName="sector_aplicacion_nombre">
       <column name="sector_aplicacion_id" type="BIGINT">
         <constraints nullable="false" />
@@ -92,7 +92,7 @@
     <dropColumn columnName="nombre" tableName="sector_aplicacion" />
   </changeSet>
 
-  <changeSet author="master" id="00.06-00-4">
+  <changeSet author="master" id="00.06.00-4">
     <createTable tableName="sector_aplicacion_descripcion">
       <column name="sector_aplicacion_id" type="BIGINT">
         <constraints nullable="false" />
@@ -120,4 +120,39 @@
 
     <dropColumn columnName="descripcion" tableName="sector_aplicacion" />
   </changeSet>
+
+  <changeSet author="master" id="00.06.00-5">
+    <createTable tableName="resultado_informe_patentabilidad_nombre">
+      <column name="resultado_informe_patentabilidad_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="resultado_informe_patentabilidad_nombre"
+      columnNames="resultado_informe_patentabilidad_id, lang" />
+
+    <addForeignKeyConstraint
+      baseColumnNames="resultado_informe_patentabilidad_id"
+      baseTableName="resultado_informe_patentabilidad_nombre"
+      constraintName="FK_RESULTADOINFORMEPATENTABILIDADNOMBRE_RESULTADOINFORMEPATENTABILIDAD"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id"
+      referencedTableName="resultado_informe_patentabilidad"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}resultado_informe_patentabilidad_nombre(resultado_informe_patentabilidad_id,
+      value_, lang) SELECT id, nombre, '${defaultLang}' FROM
+      ${schemaPrefix}resultado_informe_patentabilidad WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="resultado_informe_patentabilidad" />
+  </changeSet>
+
 </databaseChangeLog>
