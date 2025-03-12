@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.pii.controller.ResultadoInformePatentabilidadController;
 import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidad;
+import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidadDescripcion;
 import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidadNombre;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -88,7 +89,11 @@ class ResultadoInformePatentabilidadIT extends BaseIT {
 
     ResultadoInformePatentabilidad resultadoInformePatentabilidad = generarMockResultadoInformePatentabilidad(
         idResultadoInformePatentabilidad);
-    resultadoInformePatentabilidad.setDescripcion("descripcion-modificada");
+
+    Set<ResultadoInformePatentabilidadDescripcion> descripcionResultadoInformePatentabilidad = new HashSet<>();
+    descripcionResultadoInformePatentabilidad
+        .add(new ResultadoInformePatentabilidadDescripcion(Language.ES, "descripcion-modificada"));
+    resultadoInformePatentabilidad.setDescripcion(descripcionResultadoInformePatentabilidad);
 
     final ResponseEntity<ResultadoInformePatentabilidad> response = restTemplate.exchange(
         CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
@@ -123,7 +128,7 @@ class ResultadoInformePatentabilidadIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
         .queryParam("q", filter).build(false)
@@ -171,7 +176,7 @@ class ResultadoInformePatentabilidadIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false)
@@ -286,10 +291,14 @@ class ResultadoInformePatentabilidadIT extends BaseIT {
     nombreResultadoInformePatentabilidad.add(new ResultadoInformePatentabilidadNombre(Language.ES,
         "nombre-resultado-" + String.format("%03d", id)));
 
+    Set<ResultadoInformePatentabilidadDescripcion> descripcionResultadoInformePatentabilidad = new HashSet<>();
+    descripcionResultadoInformePatentabilidad.add(new ResultadoInformePatentabilidadDescripcion(Language.ES,
+        "descripcion-resultado-" + String.format("%03d", id)));
+
     ResultadoInformePatentabilidad resultadoInformePatentabilidad = new ResultadoInformePatentabilidad();
     resultadoInformePatentabilidad.setId(id);
     resultadoInformePatentabilidad.setNombre(nombreResultadoInformePatentabilidad);
-    resultadoInformePatentabilidad.setDescripcion("descripcion-resultado-" + String.format("%03d", id));
+    resultadoInformePatentabilidad.setDescripcion(descripcionResultadoInformePatentabilidad);
 
     return resultadoInformePatentabilidad;
   }

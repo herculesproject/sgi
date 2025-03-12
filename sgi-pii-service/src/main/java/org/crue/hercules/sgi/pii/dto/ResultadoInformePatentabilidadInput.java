@@ -23,8 +23,6 @@ import lombok.NoArgsConstructor;
 public class ResultadoInformePatentabilidadInput implements Serializable {
   @NotEmpty
   private List<I18nFieldValueDto> nombre;
-
-  @Size(max = ResultadoInformePatentabilidad.DESCRIPCION_LENGTH)
-  private String descripcion;
+  private List<I18nFieldValueDto> descripcion;
 
 }

@@ -59,7 +59,11 @@ public class ResultadoInformePatentabilidad extends BaseActivableEntity {
   private Set<ResultadoInformePatentabilidadNombre> nombre = new HashSet<>();
 
   /** Descripcion */
-  @Column(name = "descripcion", length = DESCRIPCION_LENGTH, nullable = true)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "resultado_informe_patentabilidad_descripcion", joinColumns = @JoinColumn(name = "resultado_informe_patentabilidad_id"))
+  @NotEmpty
+  @Valid
+  @Builder.Default
+  private Set<ResultadoInformePatentabilidadDescripcion> descripcion = new HashSet<>();
 
 }

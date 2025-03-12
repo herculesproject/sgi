@@ -155,4 +155,36 @@
     <dropColumn columnName="nombre" tableName="resultado_informe_patentabilidad" />
   </changeSet>
 
+  <changeSet author="master" id="00.06.00-6">
+    <createTable tableName="resultado_informe_patentabilidad_descripcion">
+      <column name="resultado_informe_patentabilidad_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="resultado_informe_patentabilidad_descripcion"
+      columnNames="resultado_informe_patentabilidad_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="resultado_informe_patentabilidad_id"
+      baseTableName="resultado_informe_patentabilidad_descripcion"
+      constraintName="FK_RESULTADOINFORMEPATENTABILIDADDESCRIPCION_RESULTADOINFORMEPATENTABILIDAD"
+      deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="resultado_informe_patentabilidad"
+      validate="true" />
+
+    <sql>INSERT INTO
+      ${schemaPrefix}resultado_informe_patentabilidad_descripcion(resultado_informe_patentabilidad_id,
+      value_, lang) SELECT id, descripcion, '${defaultLang}' FROM
+      ${schemaPrefix}resultado_informe_patentabilidad WHERE descripcion IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="resultado_informe_patentabilidad" />
+  </changeSet>
+
 </databaseChangeLog>

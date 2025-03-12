@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.pii.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidadDescripcion;
 import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidadNombre;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class ResultadoInformePatentabilidadOutput implements Serializable {
   private Long id;
   private Collection<ResultadoInformePatentabilidadNombre> nombre;
-  private String descripcion;
+  private Collection<ResultadoInformePatentabilidadDescripcion> descripcion;
   private Boolean activo;
 
 }
