@@ -8,6 +8,7 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IProcedimiento } from '@core/models/pii/procedimiento';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Subscription } from 'rxjs';
@@ -50,7 +51,7 @@ export class SolicitudProteccionProcedimientosListadoComponent extends FragmentC
     private readonly matDialog: MatDialog,
     private readonly dialogService: DialogService,
     private readonly translate: TranslateService,
-
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.PROCEDIMIENTOS, actionService, translate);
     this.formPart = this.fragment as SolicitudProteccionProcedimientosFragment;
@@ -68,6 +69,8 @@ export class SolicitudProteccionProcedimientosListadoComponent extends FragmentC
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (item: StatusWrapper<IProcedimiento>, property: string) => {
       switch (property) {
+        case 'tipo-procedimiento':
+          return this.languageService.getFieldValue(item.value.tipoProcedimiento?.nombre);
         default: return item.value[property];
       }
     };

@@ -2,9 +2,10 @@ import { IProcedimiento } from '@core/models/pii/procedimiento';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { TIPO_PROCEDIMIENTO_RESPONSE_CONVERTER } from '../../tipo-procedimiento/tipo-procedimiento-response.converter';
 import { IProcedimientoResponse } from './solicitud-proteccion-procedimiento-response';
 
-class SolicitudProteccionProcedimientoResponseConverter extends SgiBaseConverter<IProcedimientoResponse, IProcedimiento>{
+class SolicitudProteccionProcedimientoResponseConverter extends SgiBaseConverter<IProcedimientoResponse, IProcedimiento> {
   toTarget(value: IProcedimientoResponse): IProcedimiento {
     if (!value) {
       return value as unknown as IProcedimiento;
@@ -17,7 +18,7 @@ class SolicitudProteccionProcedimientoResponseConverter extends SgiBaseConverter
       fechaLimiteAccion: LuxonUtils.fromBackend(value.fechaLimiteAccion),
       generarAviso: value.generarAviso,
       solicitudProteccion: { id: value.solicitudProteccionId } as ISolicitudProteccion,
-      tipoProcedimiento: value.tipoProcedimiento
+      tipoProcedimiento: value.tipoProcedimiento ? TIPO_PROCEDIMIENTO_RESPONSE_CONVERTER.toTarget(value.tipoProcedimiento) : null
     };
   }
 
@@ -33,7 +34,7 @@ class SolicitudProteccionProcedimientoResponseConverter extends SgiBaseConverter
       fechaLimiteAccion: LuxonUtils.toBackend(value.fechaLimiteAccion),
       generarAviso: value.generarAviso,
       solicitudProteccionId: value.solicitudProteccion?.id,
-      tipoProcedimiento: value.tipoProcedimiento
+      tipoProcedimiento: value.tipoProcedimiento ? TIPO_PROCEDIMIENTO_RESPONSE_CONVERTER.fromTarget(value.tipoProcedimiento) : null
     };
   }
 }

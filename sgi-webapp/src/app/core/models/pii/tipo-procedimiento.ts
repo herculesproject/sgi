@@ -1,6 +1,8 @@
+import { I18nFieldValue } from "@core/i18n/i18n-field";
+
 export interface ITipoProcedimiento {
   id: number;
-  nombre: string;
+  nombre: I18nFieldValue[];
   descripcion: string;
   activo: boolean;
 }

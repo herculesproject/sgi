@@ -42,7 +42,7 @@ export class SelectTipoProcedimientoComponent extends SelectServiceExtendedCompo
 
   protected loadServiceOptions(): Observable<ITipoProcedimiento[]> {
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC)
     };
     return this.tipoProcedimientoService.findAll(findOptions).pipe(map(({ items }) => items));
   }
