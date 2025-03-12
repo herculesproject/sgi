@@ -7,8 +7,8 @@ export interface IResultadoInformePatentibilidadResponse {
   /** Nombre */
   nombre: I18nFieldValueResponse[];
 
-  /** Nombre */
-  descripcion: string;
+  /** Descripción */
+  descripcion: I18nFieldValueResponse[];
 
   /** Activo */
   activo: boolean;

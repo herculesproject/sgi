@@ -4,6 +4,6 @@ export interface IResultadoInformePatentibilidadRequest {
   /** Nombre */
   nombre: I18nFieldValueRequest[];
 
-  /** Nombre */
-  descripcion: string;
+  /** Descripción */
+  descripcion: I18nFieldValueRequest[];
 }

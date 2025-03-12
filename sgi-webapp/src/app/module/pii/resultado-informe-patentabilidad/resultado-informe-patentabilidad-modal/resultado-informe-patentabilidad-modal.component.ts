@@ -91,7 +91,7 @@ export class ResultadoInformePatentabilidadModalComponent
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
       nombre: new FormControl(this.resultadoInformePatentibilidad?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
-      descripcion: new FormControl(this.resultadoInformePatentibilidad?.descripcion ?? '', [Validators.required, Validators.maxLength(250)]),
+      descripcion: new FormControl(this.resultadoInformePatentibilidad?.descripcion ?? [], [I18nValidators.required, I18nValidators.maxLength(250)]),
     });
     return formGroup;
   }
