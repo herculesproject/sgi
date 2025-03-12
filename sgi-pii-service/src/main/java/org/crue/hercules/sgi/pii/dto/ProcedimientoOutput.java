@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.pii.dto;
 
 import java.time.Instant;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.pii.model.TipoProcedimientoNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +34,7 @@ public class ProcedimientoOutput {
   @Builder
   public static class TipoProcedimiento {
     private Long id;
-    private String nombre;
+    private Collection<TipoProcedimientoNombre> nombre;
     private String descripcion;
   }
 

@@ -187,4 +187,31 @@
     <dropColumn columnName="descripcion" tableName="resultado_informe_patentabilidad" />
   </changeSet>
 
+  <changeSet author="master" id="00.06.00-7">
+    <createTable tableName="tipo_procedimiento_nombre">
+      <column name="tipo_procedimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="tipo_procedimiento_nombre" columnNames="tipo_procedimiento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="tipo_procedimiento_id"
+      baseTableName="tipo_procedimiento_nombre"
+      constraintName="FK_TIPOPROCEDIMIENTONOMBRE_TIPOPROCEDIMIENTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="tipo_procedimiento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}tipo_procedimiento_nombre(tipo_procedimiento_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}tipo_procedimiento WHERE nombre IS NOT
+      NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="tipo_procedimiento" />
+  </changeSet>
 </databaseChangeLog>

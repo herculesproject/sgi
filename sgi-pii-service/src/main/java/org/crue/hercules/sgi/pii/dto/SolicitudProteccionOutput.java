@@ -2,9 +2,11 @@ package org.crue.hercules.sgi.pii.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Collection;
 
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
+import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,7 +72,7 @@ public class SolicitudProteccionOutput implements Serializable {
 
       private Long id;
       private TipoPropiedad tipoPropiedad;
-      private String nombre;
+      private Collection<TipoProteccionNombre> nombre;
     }
   }
 
