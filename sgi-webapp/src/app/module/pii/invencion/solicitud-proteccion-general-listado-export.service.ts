@@ -176,7 +176,7 @@ export class SolicitudProteccionGeneralListadoExportService extends
 
     return [
       LuxonUtils.toBackend(solicitud.fechaPrioridadSolicitud) ?? '',
-      solicitud.viaProteccion?.nombre ?? '',
+      this.languageService.getFieldValue(solicitud.viaProteccion?.nombre),
       solicitud.pais?.nombre ?? '',
       solicitud.numeroSolicitud ? solicitud.numeroSolicitud.toString() : '',
       solicitud.invencion.titulo ?? '',

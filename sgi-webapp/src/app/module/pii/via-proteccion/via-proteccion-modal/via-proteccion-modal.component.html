@@ -4,8 +4,8 @@
     <div fxLayout="row">
       <mat-form-field>
         <mat-label>{{'pii.via-proteccion.nombre' | translate}}</mat-label>
-        <input matInput formControlName="nombre" type="text" id="nombre"
-          placeholder="{{'pii.via-proteccion.nombre' | translate}}" required cdkFocusInitial>
+        <sgi-i18n-input formControlName="nombre" placeholder="{{'pii.via-proteccion.nombre' | translate}}" required
+          cdkFocusInitial></sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
           {{'error.required.entity' | translate:msgParamNombreEntity}}
         </mat-error>

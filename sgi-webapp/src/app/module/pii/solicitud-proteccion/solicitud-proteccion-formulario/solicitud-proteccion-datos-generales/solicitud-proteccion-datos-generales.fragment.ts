@@ -7,6 +7,7 @@ import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
 import { IViaProteccion } from '@core/models/pii/via-proteccion';
 import { IPais } from '@core/models/sgo/pais';
 import { FormFragment } from '@core/services/action-service';
+import { LanguageService } from '@core/services/language.service';
 import { PaisValidadoService } from '@core/services/pii/solicitud-proteccion/pais-validado/pais-validado.service';
 import { SolicitudProteccionService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion.service';
 import { TipoCaducidadService } from '@core/services/pii/tipo-caducidad/tipo-caducidad.service';
@@ -317,7 +318,7 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
       .subscribe((via: IViaProteccion) => {
         this.enableOrDisablePaisSelector(via, form.controls.pais as FormControl);
         this.isExtensionInternacional$.next(via.extensionInternacional);
-        this.isViaEuropea.next(via.nombre === 'Europea');
+        this.isViaEuropea.next(via.nombre.find(v => v.lang.code == 'es').value === 'Europea');
         if (!this.shouldShowFechaFinPrioridad(via)) {
           form.controls.fechaFinPrioridad.setValidators([]);
           form.controls.fechaFinPrioridad.setValue(null);

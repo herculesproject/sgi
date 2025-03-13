@@ -65,7 +65,7 @@ export class SelectViaProteccionComponent extends SelectServiceExtendedComponent
     const findOptions: SgiRestFindOptions = {
       filter: new RSQLSgiRestFilter('activo', SgiRestFilterOperator.EQUALS, 'true')
         .and('tipoPropiedad', SgiRestFilterOperator.EQUALS, this.tipoPropiedad),
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC)
     };
     return this.viaProteccionService.findTodos(findOptions).pipe(map(({ items }) => items));
   }

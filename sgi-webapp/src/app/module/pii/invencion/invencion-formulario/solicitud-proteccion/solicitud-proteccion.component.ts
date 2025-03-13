@@ -14,6 +14,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ROUTE_NAMES } from '@core/route.names';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { SolicitudProteccionService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
@@ -110,7 +111,8 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
     private matDialog: MatDialog,
     private dialogService: DialogService,
     private readonly cnfService: ConfigService,
-    private solicitudProteccionService: SolicitudProteccionService
+    private solicitudProteccionService: SolicitudProteccionService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.SOLICITUDES_PROTECCION, actionService, translate);
     this.formPart = this.fragment as SolicitudProteccionFragment;
@@ -145,7 +147,8 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
   ngAfterViewInit() {
     this.dataSource.sortingDataAccessor = (item: ISolicitudProteccion, property: string) => {
       switch (property) {
-        case 'viaProteccion.nombre': return item.viaProteccion.nombre;
+        case 'viaProteccion.nombre':
+          return this.languageService.getFieldValue(item.viaProteccion.nombre);
         default: return item[property];
       }
     };
@@ -336,6 +339,7 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
 
   public onClearFilters(): void {
     this.formGroup.reset();
+    this.onSearch();
   }
 
   private setupSearchFormGroup(): FormGroup {
@@ -396,10 +400,17 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
         index: reset ? 0 : this.paginator?.pageIndex,
         size: this.paginator?.pageSize,
       },
-      sort: new RSQLSgiRestSort(this.sort?.active, SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
+      sort: new RSQLSgiRestSort(this.resolveSortProperty(this.sort?.active), SgiRestSortDirection.fromSortDirection(this.sort?.direction)),
       filter,
     };
     this.findOptions = options;
     return options;
+  }
+
+  private resolveSortProperty(column: string): string {
+    if (column == 'viaProteccion.nombre') {
+      return 'viaProteccion.nombre.value';
+    }
+    return column;
   }
 }

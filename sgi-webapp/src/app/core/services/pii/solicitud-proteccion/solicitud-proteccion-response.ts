@@ -2,6 +2,7 @@ import { IInvencion } from '@core/models/pii/invencion';
 import { Estado } from '@core/models/pii/solicitud-proteccion';
 import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
 import { IViaProteccion } from '@core/models/pii/via-proteccion';
+import { IViaProteccionResponse } from '../via-proteccion/via-proteccion-response';
 
 export interface ISolicitudProteccionResponse {
   id: number;
@@ -12,7 +13,7 @@ export interface ISolicitudProteccionResponse {
   fechaPublicacion: string;
   fechaConcesion: string;
   fechaCaducidad: string;
-  viaProteccion: IViaProteccion;
+  viaProteccion: IViaProteccionResponse;
   numeroSolicitud: string;
   numeroPublicacion: string;
   numeroConcesion: string;

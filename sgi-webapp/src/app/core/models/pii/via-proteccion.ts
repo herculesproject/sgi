@@ -1,8 +1,9 @@
 import { TipoPropiedad } from '@core/enums/tipo-propiedad';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 
 export interface IViaProteccion {
   id: number;
-  nombre: string;
+  nombre: I18nFieldValue[];
   descripcion: string;
   tipoPropiedad: TipoPropiedad;
   mesesPrioridad: number;
