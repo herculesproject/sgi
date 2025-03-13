@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -58,7 +57,11 @@ public class TipoProcedimiento extends BaseActivableEntity {
   @Builder.Default
   private Set<TipoProcedimientoNombre> nombre = new HashSet<>();
 
-  @Column(name = "descripcion", length = TipoProcedimiento.DESCRIPCION_LENGTH, nullable = true)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_procedimiento_descripcion", joinColumns = @JoinColumn(name = "tipo_procedimiento_id"))
+  @NotEmpty
+  @Valid
+  @Builder.Default
+  private Set<TipoProcedimientoDescripcion> descripcion = new HashSet<>();
 
 }

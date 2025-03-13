@@ -3,10 +3,8 @@ package org.crue.hercules.sgi.pii.dto;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
-import org.crue.hercules.sgi.pii.model.TipoProcedimiento;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +23,5 @@ public class TipoProcedimientoInput {
   private List<I18nFieldValueDto> nombre;
 
   @NotEmpty
-  @Size(max = TipoProcedimiento.DESCRIPCION_LENGTH)
-  private String descripcion;
+  private List<I18nFieldValueDto> descripcion;
 }
