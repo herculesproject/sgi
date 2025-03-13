@@ -89,7 +89,7 @@ export class TipoProcedimientoModalComponent
   protected buildFormGroup(): FormGroup {
     return new FormGroup({
       nombre: new FormControl(this.tipoProcedimiento?.nombre ?? [], [I18nValidators.required, I18nValidators.maxLength(50)]),
-      descripcion: new FormControl(this.tipoProcedimiento?.descripcion ?? '', [Validators.required, Validators.maxLength(250)]),
+      descripcion: new FormControl(this.tipoProcedimiento?.descripcion ?? [], [I18nValidators.required, I18nValidators.maxLength(250)]),
     });
   }
 

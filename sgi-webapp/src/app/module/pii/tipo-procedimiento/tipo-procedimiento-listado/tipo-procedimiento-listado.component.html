@@ -16,7 +16,9 @@
       <ng-container matColumnDef="descripcion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'pii.tipo-procedimiento.descripcion' | translate}}
         </th>
-        <td mat-cell *matCellDef="let tipoProcedimiento">{{tipoProcedimiento.descripcion}}</td>
+        <td mat-cell *matCellDef="let tipoProcedimiento">
+          <sgi-i18n-table-field [field]="tipoProcedimiento.descripcion"></sgi-i18n-table-field>
+        </td>
       </ng-container>
 
       <!-- Activo -->

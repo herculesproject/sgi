@@ -62,6 +62,8 @@ export class TipoProcedimientoListadoComponent extends AbstractTablePaginationCo
     this.resolveSortProperty = (column: string) => {
       if (column === 'nombre') {
         return 'nombre.value';
+      } else if (column === 'descripcion') {
+        return 'descripcion.value';
       }
       return column;
     }
