@@ -32,6 +32,7 @@ DELETE FROM test.tipo_procedimiento_nombre;
 DELETE FROM test.tipo_procedimiento_descripcion;
 DELETE FROM test.tipo_procedimiento;
 DELETE FROM test.tramo_reparto;
+DELETE FROM test.via_proteccion_nombre;
 DELETE FROM test.via_proteccion;
 
 

@@ -7,6 +7,7 @@ import java.util.Collection;
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
 import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
+import org.crue.hercules.sgi.pii.model.ViaProteccionNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -88,7 +89,7 @@ public class SolicitudProteccionOutput implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String nombre;
+    private Collection<ViaProteccionNombre> nombre;
     private String descripcion;
     private TipoPropiedad tipoPropiedad;
     private Boolean paisEspecifico;
