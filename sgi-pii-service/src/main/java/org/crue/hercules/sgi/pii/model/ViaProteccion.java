@@ -64,8 +64,12 @@ public class ViaProteccion extends BaseActivableEntity {
   @Builder.Default
   private Set<ViaProteccionNombre> nombre = new HashSet<>();
 
-  @Column(name = "descripcion", length = ViaProteccion.DESCRIPCION_LENGTH, nullable = true)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "via_proteccion_descripcion", joinColumns = @JoinColumn(name = "via_proteccion_id"))
+  @NotEmpty
+  @Valid
+  @Builder.Default
+  private Set<ViaProteccionDescripcion> descripcion = new HashSet<>();
 
   @Enumerated(EnumType.STRING)
   @Column(name = "tipo_propiedad")

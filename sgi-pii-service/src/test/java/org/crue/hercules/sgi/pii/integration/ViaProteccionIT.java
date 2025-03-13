@@ -120,8 +120,8 @@ class ViaProteccionIT extends BaseIT {
     Assertions.assertThat(viaProteccionOutput.getId()).as("id").isNotNull();
     Assertions.assertThat(I18nHelper.getValueForLanguage(viaProteccionOutput.getNombre(), Language.ES))
         .as("nombre[0].value").isEqualTo("nombre-via-proteccion");
-    Assertions.assertThat(viaProteccionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descripcion-via-proteccion");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(viaProteccionOutput.getDescripcion(), Language.ES))
+        .as("descripcion[0].value").isEqualTo("descripcion-via-proteccion");
 
   }
 
@@ -150,8 +150,8 @@ class ViaProteccionIT extends BaseIT {
     Assertions.assertThat(viaProteccionOutput.getId()).as("id").isNotNull();
     Assertions.assertThat(I18nHelper.getValueForLanguage(viaProteccionOutput.getNombre(), Language.ES))
         .as("nombre[0].value").isEqualTo("nombre-via-proteccion-003");
-    Assertions.assertThat(viaProteccionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descricion-via-proteccion-003");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(viaProteccionOutput.getDescripcion(), Language.ES))
+        .as("descripcion[0].value").isEqualTo("descripcion-via-proteccion-003");
 
   }
 
@@ -180,8 +180,8 @@ class ViaProteccionIT extends BaseIT {
     Assertions.assertThat(viaProteccionOutput.getId()).as("id").isNotNull();
     Assertions.assertThat(I18nHelper.getValueForLanguage(viaProteccionOutput.getNombre(), Language.ES))
         .as("nombre[0].value").isEqualTo("nombre-via-proteccion-002");
-    Assertions.assertThat(viaProteccionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descricion-via-proteccion-002");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(viaProteccionOutput.getDescripcion(), Language.ES))
+        .as("descripcion[0].value").isEqualTo("descripcion-via-proteccion-002");
 
   }
 
@@ -198,7 +198,10 @@ class ViaProteccionIT extends BaseIT {
     Long viaProteccionId = 1L;
 
     ViaProteccionInput viaProteccionInput = generarMockViaProteccionInput();
-    viaProteccionInput.setDescripcion("descricion-via-proteccion-modificado");
+
+    List<I18nFieldValueDto> descripcionViaProteccion = new ArrayList<>();
+    descripcionViaProteccion.add(new I18nFieldValueDto(Language.ES, "descripcion-via-proteccion-modificado"));
+    viaProteccionInput.setDescripcion(descripcionViaProteccion);
 
     ResponseEntity<ViaProteccionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(null,
@@ -212,8 +215,8 @@ class ViaProteccionIT extends BaseIT {
     Assertions.assertThat(viaProteccionOutput.getId()).as("id").isNotNull();
     Assertions.assertThat(I18nHelper.getValueForLanguage(viaProteccionOutput.getNombre(), Language.ES))
         .as("nombre[0].value").isEqualTo("nombre-via-proteccion");
-    Assertions.assertThat(viaProteccionOutput.getDescripcion()).as("descripcion")
-        .isEqualTo("descricion-via-proteccion-modificado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(viaProteccionOutput.getDescripcion(), Language.ES))
+        .as("descripcion[0].value").isEqualTo("descripcion-via-proteccion-modificado");
 
   }
 
@@ -226,9 +229,12 @@ class ViaProteccionIT extends BaseIT {
     List<I18nFieldValueDto> nombreViaProteccion = new ArrayList<>();
     nombreViaProteccion.add(new I18nFieldValueDto(Language.ES, "nombre-via-proteccion"));
 
+    List<I18nFieldValueDto> descripcionViaProteccion = new ArrayList<>();
+    descripcionViaProteccion.add(new I18nFieldValueDto(Language.ES, "descripcion-via-proteccion"));
+
     ViaProteccionInput viaProteccionInput = new ViaProteccionInput();
     viaProteccionInput.setNombre(nombreViaProteccion);
-    viaProteccionInput.setDescripcion("descripcion-via-proteccion");
+    viaProteccionInput.setDescripcion(descripcionViaProteccion);
     viaProteccionInput.setExtensionInternacional(Boolean.FALSE);
     viaProteccionInput.setMesesPrioridad(1);
     viaProteccionInput.setPaisEspecifico(Boolean.FALSE);

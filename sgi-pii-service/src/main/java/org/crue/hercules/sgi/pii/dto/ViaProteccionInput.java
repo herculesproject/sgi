@@ -4,11 +4,9 @@ import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
-import org.crue.hercules.sgi.pii.model.ViaProteccion;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,8 +25,7 @@ public class ViaProteccionInput {
   private List<I18nFieldValueDto> nombre;
 
   @NotEmpty
-  @Size(max = ViaProteccion.DESCRIPCION_LENGTH)
-  private String descripcion;
+  private List<I18nFieldValueDto> descripcion;
 
   @NotNull
   private TipoPropiedad tipoPropiedad;

@@ -271,4 +271,31 @@
     <dropColumn columnName="nombre" tableName="via_proteccion" />
   </changeSet>
 
+  <changeSet author="master" id="00.06.00-10">
+    <createTable tableName="via_proteccion_descripcion">
+      <column name="via_proteccion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="via_proteccion_descripcion" columnNames="via_proteccion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="via_proteccion_id"
+      baseTableName="via_proteccion_descripcion"
+      constraintName="FK_VIAPROTECCIONDESCRIPCION_VIAPROTECCION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="via_proteccion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}via_proteccion_descripcion(via_proteccion_id, value_, lang)
+      SELECT id, descripcion, '${defaultLang}' FROM ${schemaPrefix}via_proteccion WHERE descripcion
+      IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="via_proteccion" />
+  </changeSet>
 </databaseChangeLog>

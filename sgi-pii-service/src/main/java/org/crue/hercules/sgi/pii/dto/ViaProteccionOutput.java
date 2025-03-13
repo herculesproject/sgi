@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
+import org.crue.hercules.sgi.pii.model.ViaProteccionDescripcion;
 import org.crue.hercules.sgi.pii.model.ViaProteccionNombre;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class ViaProteccionOutput implements Serializable {
 
   private Collection<ViaProteccionNombre> nombre;
 
-  private String descripcion;
+  private Collection<ViaProteccionDescripcion> descripcion;
 
   private TipoPropiedad tipoPropiedad;
 
