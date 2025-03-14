@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
+import org.crue.hercules.sgi.pii.model.InvencionTitulo;
 import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InvencionOutput {
   private Long id;
-  private String titulo;
+  private Collection<InvencionTitulo> titulo;
   private Instant fechaComunicacion;
   private String descripcion;
   private String comentarios;
