@@ -51,8 +51,8 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
           <mat-label>{{'pii.invencion.descripcion' | translate}}</mat-label>
-          <textarea matInput formControlName="descripcion" id="descripcion"
-            placeholder="{{'pii.invencion.descripcion' | translate}}" required></textarea>
+          <sgi-i18n-textarea formControlName="descripcion" placeholder="{{'pii.invencion.descripcion' | translate}}"
+            required></sgi-i18n-textarea>
           <mat-error *ngIf="formGroup.controls.descripcion.errors?.required">
             {{'error.required.entity' | translate:msgParamDescripcionEntity}}
           </mat-error>

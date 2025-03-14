@@ -82,7 +82,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       id: new FormControl({ value: '', disabled: true }),
       titulo: new FormControl([], [I18nValidators.maxLength(250)]),
       fechaComunicacion: new FormControl(this.getTodayAtFirstTime()),
-      descripcion: new FormControl('', [Validators.maxLength(2000)]),
+      descripcion: new FormControl([], [I18nValidators.maxLength(2000)]),
       tipoProteccion: new FormControl(null, [Validators.required]),
       subtipoProteccion: new FormControl(null),
       proyecto: new FormControl(null),

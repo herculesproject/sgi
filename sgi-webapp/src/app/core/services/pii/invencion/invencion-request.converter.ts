@@ -17,7 +17,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
       id: undefined,
       titulo: value.titulo ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.titulo) : [],
       fechaComunicacion: LuxonUtils.fromBackend(value.fechaComunicacion),
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.descripcion) : [],
       proyecto: value.proyectoRef !== null ? { id: +value.proyectoRef } as IProyecto : null,
       tipoProteccion: { id: value.tipoProteccionId } as ITipoProteccion,
       comentarios: value.comentarios,
@@ -32,7 +32,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
     return {
       titulo: value.titulo ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.titulo) : [],
       fechaComunicacion: LuxonUtils.toBackend(value.fechaComunicacion),
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.descripcion) : [],
       proyectoRef: value.proyecto?.id?.toString(),
       tipoProteccionId: value.tipoProteccion ? TIPO_PROTECCION_REQUEST_CONVERTER.fromTarget(value.tipoProteccion).id : null,
       comentarios: value.comentarios

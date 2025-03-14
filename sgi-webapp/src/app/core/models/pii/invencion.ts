@@ -7,7 +7,7 @@ export interface IInvencion {
   id: number;
   titulo: I18nFieldValue[];
   fechaComunicacion: DateTime;
-  descripcion: string;
+  descripcion: I18nFieldValue[];
   comentarios: string;
   proyecto: IProyecto;
   tipoProteccion: ITipoProteccion;
