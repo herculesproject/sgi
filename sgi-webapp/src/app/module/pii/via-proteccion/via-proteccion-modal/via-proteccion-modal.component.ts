@@ -68,7 +68,7 @@ export class ViaProteccionModalComponent extends DialogActionComponent<IViaProte
   protected buildFormGroup(): FormGroup {
     const form = new FormGroup({
       nombre: new FormControl(this.viaProteccion.nombre ?? [], [I18nValidators.maxLength(50), I18nValidators.required]),
-      descripcion: new FormControl(this.viaProteccion.descripcion ?? '', [Validators.maxLength(250), Validators.required]),
+      descripcion: new FormControl(this.viaProteccion.descripcion ?? [], [I18nValidators.maxLength(250), I18nValidators.required]),
       tipoPropiedad: new FormControl(this.viaProteccion.tipoPropiedad ?? null, [Validators.required]),
       mesesPrioridad: new FormControl(this.viaProteccion.mesesPrioridad ?? 1, [Validators.required]),
       paisEspecifico: new FormControl(this.viaProteccion.paisEspecifico ?? false, []),
