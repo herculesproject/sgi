@@ -327,4 +327,32 @@
     <dropColumn columnName="titulo" tableName="invencion" />
   </changeSet>
 
+  <changeSet author="master" id="00.06.00-12">
+    <createTable tableName="invencion_descripcion">
+      <column name="invencion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="invencion_descripcion" columnNames="invencion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="invencion_id"
+      baseTableName="invencion_descripcion"
+      constraintName="FK_INVENCIONDESCRIPCION_INVENCION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="invencion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}invencion_descripcion(invencion_id, value_, lang) SELECT id,
+      descripcion, '${defaultLang}' FROM ${schemaPrefix}invencion WHERE descripcion IS NOT NULL AND
+      NULLIF(TRIM(descripcion), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="descripcion" tableName="invencion" />
+  </changeSet>
+
 </databaseChangeLog>

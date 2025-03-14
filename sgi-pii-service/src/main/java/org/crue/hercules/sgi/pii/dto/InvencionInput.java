@@ -32,8 +32,7 @@ public class InvencionInput implements Serializable {
   private Instant fechaComunicacion;
 
   @NotEmpty
-  @Size(max = Invencion.LONG_TEXT_LENGTH)
-  private String descripcion;
+  private List<I18nFieldValueDto> descripcion;
 
   @Size(max = Invencion.LONG_TEXT_LENGTH)
   private String comentarios;

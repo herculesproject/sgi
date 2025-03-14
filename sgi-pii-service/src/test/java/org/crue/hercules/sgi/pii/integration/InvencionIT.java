@@ -6,9 +6,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
@@ -28,7 +26,6 @@ import org.crue.hercules.sgi.pii.dto.InvencionOutput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionInput;
 import org.crue.hercules.sgi.pii.dto.InvencionSectorAplicacionOutput;
 import org.crue.hercules.sgi.pii.dto.SolicitudProteccionOutput;
-import org.crue.hercules.sgi.pii.model.InvencionTitulo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -95,7 +92,7 @@ class InvencionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -134,7 +131,7 @@ class InvencionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -163,7 +160,7 @@ class InvencionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -203,7 +200,7 @@ class InvencionIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     String sort = "id,desc";
-    String filter = "descripcion=ke=-00";
+    String filter = "descripcion.value=ke=-00";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_TODOS).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -239,7 +236,8 @@ class InvencionIT extends BaseIT {
     Assertions.assertThat(invencionOutput.getId()).as("id").isEqualTo(1);
     Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getTitulo(), Language.ES))
         .as("titulo[0].value").isEqualTo("titulo-invencion-001");
-    Assertions.assertThat(invencionOutput.getDescripcion()).as("descripcion").isEqualTo("descripcion-invencion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getDescripcion(), Language.ES))
+        .as("descripcion[0].value").isEqualTo("descripcion-invencion-001");
 
   }
 
@@ -265,7 +263,8 @@ class InvencionIT extends BaseIT {
     Assertions.assertThat(invencionOutput.getId()).as("id").isEqualTo(5);
     Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getTitulo(), Language.ES)).as("titulo")
         .isEqualTo("titulo-invencion");
-    Assertions.assertThat(invencionOutput.getDescripcion()).as("descripcion").isEqualTo("descripcion-invencion");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getDescripcion(), Language.ES))
+        .as("descripcion[0].value").isEqualTo("descripcion-invencion");
 
   }
 
@@ -915,9 +914,12 @@ class InvencionIT extends BaseIT {
     List<I18nFieldValueDto> tituloInvencion = new ArrayList<>();
     tituloInvencion.add(new I18nFieldValueDto(Language.ES, "titulo-invencion"));
 
+    List<I18nFieldValueDto> descripcionInvencion = new ArrayList<>();
+    descripcionInvencion.add(new I18nFieldValueDto(Language.ES, "descripcion-invencion"));
+
     InvencionInput invencionInput = new InvencionInput();
     invencionInput.setTitulo(tituloInvencion);
-    invencionInput.setDescripcion("descripcion-invencion");
+    invencionInput.setDescripcion(descripcionInvencion);
     invencionInput.setComentarios("comentarios-invencion");
     invencionInput.setFechaComunicacion(Instant.parse("2020-10-19T00:00:00Z"));
     invencionInput.setTipoProteccionId(1L);

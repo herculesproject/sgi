@@ -67,8 +67,13 @@ public class Invencion extends BaseActivableEntity {
   private Instant fechaComunicacion;
 
   /** Descripcion */
-  @Column(name = "descripcion", length = LONG_TEXT_LENGTH, nullable = false)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "invencion_descripcion", joinColumns = @JoinColumn(name = "invencion_id"))
+  @NotEmpty
+  @Valid
+  @Builder.Default
+  private Set<InvencionDescripcion> descripcion = new HashSet<>();
+
 
   /** Comentarios */
   @Column(name = "comentarios", length = LONG_TEXT_LENGTH, nullable = true)
