@@ -179,7 +179,7 @@ export class SolicitudProteccionGeneralListadoExportService extends
       this.languageService.getFieldValue(solicitud.viaProteccion?.nombre),
       solicitud.pais?.nombre ?? '',
       solicitud.numeroSolicitud ? solicitud.numeroSolicitud.toString() : '',
-      solicitud.invencion.titulo ?? '',
+      this.languageService.getFieldValue(solicitud.invencion.titulo),
       this.languageService.getFieldValue(solicitud.invencion.tipoProteccion.nombre),
       this.translate.instant(ESTADO_MAP.get(solicitud.estado)) ?? '',
       this.notIsNullAndNotUndefined(solicitud.fechaFinPriorPresFasNacRec) ? 'S' : 'N',

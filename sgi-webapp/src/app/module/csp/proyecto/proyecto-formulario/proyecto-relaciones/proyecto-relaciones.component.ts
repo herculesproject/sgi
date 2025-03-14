@@ -81,11 +81,7 @@ export class ProyectoRelacionesComponent extends FragmentComponent implements On
           case 'tipoEntidadRelacionada':
             return wrapper.value.tipoEntidadRelacionada;
           case 'entidadRelacionada':
-            if ([TipoEntidad.CONVOCATORIA, TipoEntidad.PROYECTO, TipoEntidad.GRUPO].includes(wrapper.value.tipoEntidadRelacionada)) { // TODO: eliminar el if/else y el as I18nFieldValue[] cuando se terminen los 4 tipos
-              return this.languageService.getFieldValue(wrapper.value.entidadRelacionada.titulo as I18nFieldValue[]);
-            } else {
-              return wrapper.value.entidadRelacionada.titulo;
-            }
+            return this.languageService.getFieldValue(wrapper.value.entidadRelacionada.titulo as I18nFieldValue[]);
           case 'refEntidadConvocante':
             return wrapper.value.entidadConvocanteRef;
           case 'codigoSGE':

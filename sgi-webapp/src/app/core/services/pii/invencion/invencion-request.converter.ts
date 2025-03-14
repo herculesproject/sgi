@@ -1,11 +1,11 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from "@core/i18n/i18n-field.converter";
 import { IProyecto } from "@core/models/csp/proyecto";
 import { IInvencion } from "@core/models/pii/invencion";
 import { ITipoProteccion } from "@core/models/pii/tipo-proteccion";
 import { LuxonUtils } from "@core/utils/luxon-utils";
 import { SgiBaseConverter } from "@sgi/framework/core";
-import { IInvencionRequest } from "./invencion-request";
 import { TIPO_PROTECCION_REQUEST_CONVERTER } from "../tipo-proteccion/tipo-proteccion-request.converter";
-import { ValueConverter } from "@angular/compiler/src/render3/view/template";
+import { IInvencionRequest } from "./invencion-request";
 
 class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInvencion> {
 
@@ -15,7 +15,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
     }
     return {
       id: undefined,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.titulo) : [],
       fechaComunicacion: LuxonUtils.fromBackend(value.fechaComunicacion),
       descripcion: value.descripcion,
       proyecto: value.proyectoRef !== null ? { id: +value.proyectoRef } as IProyecto : null,
@@ -30,7 +30,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
       return value as unknown as IInvencionRequest;
     }
     return {
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.titulo) : [],
       fechaComunicacion: LuxonUtils.toBackend(value.fechaComunicacion),
       descripcion: value.descripcion,
       proyectoRef: value.proyecto?.id?.toString(),

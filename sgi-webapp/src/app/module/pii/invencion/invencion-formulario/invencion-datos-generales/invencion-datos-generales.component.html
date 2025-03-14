@@ -19,8 +19,8 @@
         [fxFlex.gt-md]="fxFlexProperties66.gtMd" [fxFlexOrder]="fxFlexProperties66.order">
         <mat-form-field fxFill>
           <mat-label>{{'pii.invencion.titulo' | translate}}</mat-label>
-          <input matInput formControlName="titulo" type="text" id="titulo"
-            placeholder="{{'pii.invencion.titulo' | translate}}" required>
+          <sgi-i18n-input formControlName="titulo" placeholder="{{'pii.invencion.titulo' | translate}}"
+            required></sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.titulo.errors?.required">
             {{'error.required.entity' | translate:msgParamTituloEntity}}
           </mat-error>

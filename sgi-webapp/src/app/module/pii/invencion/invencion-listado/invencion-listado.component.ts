@@ -120,6 +120,8 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
     this.resolveSortProperty = (column: string) => {
       if (column == 'tipoProteccion.nombre') {
         return 'tipoProteccion.nombre.value';
+      } else if (column == 'titulo') {
+        return 'titulo.value';
       }
       return column;
     }
@@ -187,7 +189,7 @@ export class InvencionListadoComponent extends AbstractTablePaginationComponent<
         LuxonUtils.toBackend(controls.fechaComunicacionHasta.value))
       .and('tipoProteccion', SgiRestFilterOperator.EQUALS, controls.tipoProteccion.value?.id?.toString())
       .and('sectoresAplicacion.sectorAplicacion.id', SgiRestFilterOperator.EQUALS, controls.sectorAplicacion.value?.id?.toString())
-      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
+      .and('titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo.value)
       .and('inventores.inventorRef', SgiRestFilterOperator.LIKE_ICASE, controls.inventor.value?.id?.toString());
     if (this.isBusquedaAvanzada) {
       filter.and('solicitudesProteccion.numeroSolicitud', SgiRestFilterOperator.EQUALS, controls.solicitudNumero.value)

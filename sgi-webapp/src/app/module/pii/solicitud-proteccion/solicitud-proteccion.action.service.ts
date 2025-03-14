@@ -16,6 +16,7 @@ import { SOLICITUD_PROTECCION_DATA_KEY } from './solicitud-proteccion-data.resol
 import { SolicitudProteccionDatosGeneralesFragment } from './solicitud-proteccion-formulario/solicitud-proteccion-datos-generales/solicitud-proteccion-datos-generales.fragment';
 import { SolicitudProteccionProcedimientosFragment } from './solicitud-proteccion-formulario/solicitud-proteccion-procedimientos/solicitud-proteccion-procedimientos.fragment';
 import { SOLICITUD_PROTECCION_ROUTE_PARAMS } from './solicitud-proteccion-route-params';
+import { LanguageService } from '@core/services/language.service';
 
 export interface ISolicitudProteccionData {
   invencion: IInvencion;
@@ -46,7 +47,8 @@ export class SolicitudProteccionActionService extends ActionService {
     private paisValidadoService: PaisValidadoService,
     private solicitudProteccionProcedimientoService: SolicitudProteccionProcedimientoService,
     private procedimientoDocumentoService: SolicitudProteccionProcedimientoDocumentoService,
-    private documentoService: DocumentoService
+    private documentoService: DocumentoService,
+    private readonly languageService: LanguageService
   ) {
     super();
 
@@ -61,7 +63,7 @@ export class SolicitudProteccionActionService extends ActionService {
       id,
       this.data.invencion.id,
       this.data.invencion.tipoProteccion.tipoPropiedad,
-      this.data.invencion.titulo,
+      this.languageService.getFieldValue(this.data.invencion.titulo),
       this.solicitudProteccionService,
       this.data.readonly,
       this.paisService,

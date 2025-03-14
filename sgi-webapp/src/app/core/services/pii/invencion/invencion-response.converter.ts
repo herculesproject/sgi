@@ -1,10 +1,10 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IInvencion } from '@core/models/pii/invencion';
-import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
-import { IInvencionResponse } from './invencion-response';
 import { TIPO_PROTECCION_RESPONSE_CONVERTER } from '../tipo-proteccion/tipo-proteccion-response.converter';
+import { IInvencionResponse } from './invencion-response';
 
 class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, IInvencion> {
   toTarget(value: IInvencionResponse): IInvencion {
@@ -14,7 +14,7 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
     return {
       id: value.id,
       fechaComunicacion: LuxonUtils.fromBackend(value.fechaComunicacion),
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       descripcion: value.descripcion,
       comentarios: value.comentarios,
       proyecto: value.proyectoRef !== null ? { id: +value.proyectoRef } as IProyecto : null,
@@ -29,7 +29,7 @@ class InvencionResponseConverter extends SgiBaseConverter<IInvencionResponse, II
     return {
       id: value.id,
       fechaComunicacion: LuxonUtils.toBackend(value.fechaComunicacion),
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       descripcion: value.descripcion,
       comentarios: value.comentarios,
       proyectoRef: value.proyecto?.id?.toString(),

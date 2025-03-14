@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
-import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IGrupo } from '@core/models/csp/grupo';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IInvencion } from '@core/models/pii/invencion';
-import { IRelacion, TipoEntidad } from '@core/models/rel/relacion';
+import { IRelacion, TIPO_ENTIDAD_MAP, TipoEntidad } from '@core/models/rel/relacion';
 import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
@@ -172,12 +171,8 @@ export class ProyectoRelacionListadoExportService extends AbstractTableExportFil
 
   private fillRowsEntidadExcel(elementsRow: any[], proyectoRelacion: ProyectoRelacionListadoExport) {
     if (proyectoRelacion) {
-      elementsRow.push(proyectoRelacion.tipoEntidadRelacionada ?? '');
-      if ([TipoEntidad.CONVOCATORIA, TipoEntidad.PROYECTO, TipoEntidad.GRUPO].includes(proyectoRelacion.tipoEntidadRelacionada)) { // TODO: eliminar el if/else y el as I18nFieldValue[] cuando se terminen los 4 tipos
-        elementsRow.push(this.languageService.getFieldValue(proyectoRelacion.entidadRelacionada?.titulo as I18nFieldValue[]));
-      } else {
-        elementsRow.push(proyectoRelacion.entidadRelacionada?.titulo ?? '');
-      }
+      elementsRow.push(proyectoRelacion.tipoEntidadRelacionada ? this.translate.instant(TIPO_ENTIDAD_MAP.get(proyectoRelacion.tipoEntidadRelacionada)) : '');
+      elementsRow.push(this.languageService.getFieldValue(proyectoRelacion.entidadRelacionada?.titulo));
     } else {
       elementsRow.push('');
       elementsRow.push('');
