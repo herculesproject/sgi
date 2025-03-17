@@ -1,11 +1,11 @@
-import { IResultadoInformePatentibilidad } from "@core/models/pii/resultado-informe-patentabilidad";
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
 import { IResultadoInformePatentibilidadResponse } from "../resultado-informe-patentabilidad/resultado-informe-patentabilidad-response";
 
 export interface IInformePatentabilidadResponse {
   id: number;
   invencionId: number;
   fecha: string;
-  nombre: string;
+  nombre: I18nFieldValueResponse[];
   documentoRef: string;
   resultadoInformePatentabilidad: IResultadoInformePatentibilidadResponse;
   entidadCreadoraRef: string;

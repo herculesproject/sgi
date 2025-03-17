@@ -6,8 +6,9 @@ import { IEmpresa } from "@core/models/sgemp/empresa";
 import { LuxonUtils } from "@core/utils/luxon-utils";
 import { SgiBaseConverter } from "@sgi/framework/core";
 import { IInformePatentabilidadRequest } from "./informe-patentabilidad-request";
+import { I18N_FIELD_REQUEST_CONVERTER } from "@core/i18n/i18n-field.converter";
 
-class InformePatentabilidadRequestConverter extends SgiBaseConverter<IInformePatentabilidadRequest, IInformePatentabilidad>{
+class InformePatentabilidadRequestConverter extends SgiBaseConverter<IInformePatentabilidadRequest, IInformePatentabilidad> {
 
   toTarget(value: IInformePatentabilidadRequest): IInformePatentabilidad {
     if (!value) {
@@ -17,7 +18,7 @@ class InformePatentabilidadRequestConverter extends SgiBaseConverter<IInformePat
       id: undefined,
       invencion: { id: value.invencionId } as IInvencion,
       fecha: LuxonUtils.fromBackend(value.fecha),
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombre) : [],
       documento: { documentoRef: value.documentoRef } as IDocumento,
       resultadoInformePatentabilidad: { id: value.resultadoInformePatentabilidadId } as IResultadoInformePatentibilidad,
       entidadCreadora: { id: value.entidadCreadoraRef } as IEmpresa,
@@ -34,7 +35,7 @@ class InformePatentabilidadRequestConverter extends SgiBaseConverter<IInformePat
     return {
       invencionId: value.invencion?.id,
       fecha: LuxonUtils.toBackend(value.fecha),
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],
       documentoRef: value.documento?.documentoRef,
       resultadoInformePatentabilidadId: value.resultadoInformePatentabilidad?.id,
       entidadCreadoraRef: value.entidadCreadora?.id,

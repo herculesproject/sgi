@@ -139,7 +139,7 @@ export class InvencionInformesPatentabilidadComponent extends FragmentComponent 
           case 'fecha':
             return wrapper.value.fecha;
           case 'nombre':
-            return wrapper.value.nombre;
+            return this.languageService.getFieldValue(wrapper.value.nombre);
           case 'fichero':
             return wrapper.value.documento.nombre;
           case 'entidadCreadora':
