@@ -20,7 +20,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
       descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.descripcion) : [],
       proyecto: value.proyectoRef !== null ? { id: +value.proyectoRef } as IProyecto : null,
       tipoProteccion: { id: value.tipoProteccionId } as ITipoProteccion,
-      comentarios: value.comentarios,
+      comentarios: value.comentarios ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.comentarios) : [],
       activo: true
     };
   }
@@ -35,7 +35,7 @@ class InvencionRequestConverter extends SgiBaseConverter<IInvencionRequest, IInv
       descripcion: value.descripcion ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.descripcion) : [],
       proyectoRef: value.proyecto?.id?.toString(),
       tipoProteccionId: value.tipoProteccion ? TIPO_PROTECCION_REQUEST_CONVERTER.fromTarget(value.tipoProteccion).id : null,
-      comentarios: value.comentarios
+      comentarios: value.comentarios ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.comentarios) : []
     };
   }
 }

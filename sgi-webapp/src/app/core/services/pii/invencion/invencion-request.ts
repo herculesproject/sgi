@@ -4,7 +4,7 @@ export interface IInvencionRequest {
   titulo: I18nFieldValueRequest[];
   fechaComunicacion: string;
   descripcion: I18nFieldValueRequest[];
-  comentarios: string;
+  comentarios: I18nFieldValueRequest[];
   proyectoRef: string;
   tipoProteccionId: number;
 }

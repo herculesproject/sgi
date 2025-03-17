@@ -6,7 +6,7 @@ export interface IInvencionResponse {
   titulo: I18nFieldValueResponse[];
   fechaComunicacion: string;
   descripcion: I18nFieldValueResponse[];
-  comentarios: string;
+  comentarios: I18nFieldValueResponse[];
   proyectoRef: string;
   tipoProteccion: ITipoProteccionResponse;
   activo: boolean;

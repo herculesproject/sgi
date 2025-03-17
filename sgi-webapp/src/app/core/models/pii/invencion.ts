@@ -8,7 +8,7 @@ export interface IInvencion {
   titulo: I18nFieldValue[];
   fechaComunicacion: DateTime;
   descripcion: I18nFieldValue[];
-  comentarios: string;
+  comentarios: I18nFieldValue[];
   proyecto: IProyecto;
   tipoProteccion: ITipoProteccion;
   activo: boolean;

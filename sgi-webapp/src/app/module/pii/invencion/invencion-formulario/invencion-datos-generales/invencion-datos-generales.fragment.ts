@@ -86,7 +86,7 @@ export class InvencionDatosGeneralesFragment extends FormFragment<IInvencion> {
       tipoProteccion: new FormControl(null, [Validators.required]),
       subtipoProteccion: new FormControl(null),
       proyecto: new FormControl(null),
-      comentarios: new FormControl('', [Validators.maxLength(2000)]),
+      comentarios: new FormControl([], [I18nValidators.maxLength(2000)]),
       palabrasClave: new FormControl(null)
     });
 
