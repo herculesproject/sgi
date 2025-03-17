@@ -110,7 +110,8 @@ class InformePatentabilidadControllerIT extends BaseIT {
     final InformePatentabilidadOutput created = response.getBody();
 
     Assertions.assertThat(created.getId()).as("id").isNotNull();
-    Assertions.assertThat(created.getComentarios()).as("getComentarios()").isEqualTo(toCreate.getComentarios());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(created.getComentarios(), Language.ES)).as("getComentarios()")
+        .isEqualTo(I18nHelper.getValueForLanguage(toCreate.getComentarios(), Language.ES));
     Assertions.assertThat(created.getContactoEntidadCreadora()).as("getContactoEntidadCreadora()")
         .isEqualTo(toCreate.getContactoEntidadCreadora());
     Assertions.assertThat(created.getContactoExaminador()).as("getContactoExaminador()")
@@ -180,7 +181,8 @@ class InformePatentabilidadControllerIT extends BaseIT {
     final InformePatentabilidadOutput created = response.getBody();
 
     Assertions.assertThat(created.getId()).as("id").isEqualTo(toUpdateId);
-    Assertions.assertThat(created.getComentarios()).as("getComentarios()").isEqualTo(toUpdate.getComentarios());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(created.getComentarios(), Language.ES)).as("getComentarios()")
+        .isEqualTo(I18nHelper.getValueForLanguage(toUpdate.getComentarios(), Language.ES));
     Assertions.assertThat(created.getContactoEntidadCreadora()).as("getContactoEntidadCreadora()")
         .isEqualTo(toUpdate.getContactoEntidadCreadora());
     Assertions.assertThat(created.getContactoExaminador()).as("getContactoExaminador()")
@@ -252,8 +254,11 @@ class InformePatentabilidadControllerIT extends BaseIT {
     List<I18nFieldValueDto> nombreInformePatentabilidad = new ArrayList<>();
     nombreInformePatentabilidad.add(new I18nFieldValueDto(Language.ES, "mocked informe patentabilidad"));
 
+    List<I18nFieldValueDto> comentariosInformePatentabilidad = new ArrayList<>();
+    comentariosInformePatentabilidad.add(new I18nFieldValueDto(Language.ES, "mocked informe"));
+
     return InformePatentabilidadInput.builder()
-        .comentarios("mocked informe")
+        .comentarios(comentariosInformePatentabilidad)
         .invencionId(invencionId)
         .contactoEntidadCreadora("mocked contacto entidad creadora")
         .contactoExaminador("mocked contacto examinador")

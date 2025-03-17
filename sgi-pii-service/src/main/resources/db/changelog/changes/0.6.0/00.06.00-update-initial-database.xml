@@ -439,4 +439,33 @@
 
     <dropColumn columnName="nombre" tableName="informe_patentabilidad" />
   </changeSet>
+
+  <changeSet author="master" id="00.06.00-16">
+    <createTable tableName="informe_patentabilidad_comentarios">
+      <column name="informe_patentabilidad_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="informe_patentabilidad_comentarios"
+      columnNames="informe_patentabilidad_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="informe_patentabilidad_id"
+      baseTableName="informe_patentabilidad_comentarios"
+      constraintName="FK_INFORMEPATENTABILIDADCOMENTARIOS_INFORMEPATENTABILIDAD" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="informe_patentabilidad" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}informe_patentabilidad_comentarios(informe_patentabilidad_id,
+      value_, lang) SELECT id, comentarios, '${defaultLang}' FROM
+      ${schemaPrefix}informe_patentabilidad WHERE comentarios IS NOT NULL</sql>
+
+    <dropColumn columnName="comentarios" tableName="informe_patentabilidad" />
+  </changeSet>
 </databaseChangeLog>

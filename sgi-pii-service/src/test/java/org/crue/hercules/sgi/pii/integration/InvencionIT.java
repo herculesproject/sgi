@@ -610,8 +610,9 @@ class InvencionIT extends BaseIT {
     Assertions.assertThat(informePatentabilidadOutput.size()).isEqualTo(1);
     Assertions.assertThat(informePatentabilidadOutput.get(0).getId()).as("id").isEqualTo(1);
     Assertions.assertThat(informePatentabilidadOutput.get(0).getInvencionId()).as("invencionId").isEqualTo(1);
-    Assertions.assertThat(informePatentabilidadOutput.get(0).getComentarios()).as("comentarios")
-        .isEqualTo("comentarios-001");
+    Assertions
+        .assertThat(I18nHelper.getValueForLanguage(informePatentabilidadOutput.get(0).getComentarios(), Language.ES))
+        .as("comentarios[0].value").isEqualTo("comentarios-001");
 
   }
 

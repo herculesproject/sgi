@@ -52,6 +52,5 @@ public class InformePatentabilidadInput {
   @Size(max = InformePatentabilidad.CONTACTO_LENGTH)
   private String contactoExaminador;
 
-  @Size(max = InformePatentabilidad.LONG_TEXT_LENGTH)
-  private String comentarios;
+  private List<I18nFieldValueDto> comentarios;
 }

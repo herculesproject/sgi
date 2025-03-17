@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.pii.dto;
 import java.time.Instant;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.pii.model.InformePatentabilidadComentarios;
 import org.crue.hercules.sgi.pii.model.InformePatentabilidadNombre;
 import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidadDescripcion;
 import org.crue.hercules.sgi.pii.model.ResultadoInformePatentabilidadNombre;
@@ -28,7 +29,7 @@ public class InformePatentabilidadOutput {
   private String entidadCreadoraRef;
   private String contactoEntidadCreadora;
   private String contactoExaminador;
-  private String comentarios;
+  private Collection<InformePatentabilidadComentarios> comentarios;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

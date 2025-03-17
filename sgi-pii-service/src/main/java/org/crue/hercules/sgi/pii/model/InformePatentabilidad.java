@@ -90,8 +90,11 @@ public class InformePatentabilidad extends BaseEntity {
   private String contactoExaminador;
 
   /** Comentarios */
-  @Column(name = "comentarios", length = LONG_TEXT_LENGTH, nullable = true)
-  private String comentarios;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "informe_patentabilidad_comentarios", joinColumns = @JoinColumn(name = "informe_patentabilidad_id"))
+  @Valid
+  @Builder.Default
+  private Set<InformePatentabilidadComentarios> comentarios = new HashSet<>();
 
   // Relation mappings for JPA metamodel generation only
   @ManyToOne
