@@ -34,8 +34,7 @@ public class InvencionInput implements Serializable {
   @NotEmpty
   private List<I18nFieldValueDto> descripcion;
 
-  @Size(max = Invencion.LONG_TEXT_LENGTH)
-  private String comentarios;
+  private List<I18nFieldValueDto> comentarios;
 
   private String proyectoRef;
 

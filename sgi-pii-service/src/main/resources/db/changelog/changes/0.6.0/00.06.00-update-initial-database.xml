@@ -355,4 +355,32 @@
     <dropColumn columnName="descripcion" tableName="invencion" />
   </changeSet>
 
+  <changeSet author="master" id="00.06.00-13">
+    <createTable tableName="invencion_comentarios">
+      <column name="invencion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="invencion_comentarios" columnNames="invencion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="invencion_id"
+      baseTableName="invencion_comentarios"
+      constraintName="FK_INVENCIONCOMENTARIOS_INVENCION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="invencion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}invencion_comentarios(invencion_id, value_, lang) SELECT id,
+      comentarios, '${defaultLang}' FROM ${schemaPrefix}invencion WHERE comentarios IS NOT NULL AND
+      NULLIF(TRIM(comentarios), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="comentarios" tableName="invencion" />
+  </changeSet>
+
 </databaseChangeLog>

@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
+import org.crue.hercules.sgi.pii.model.InvencionComentarios;
 import org.crue.hercules.sgi.pii.model.InvencionDescripcion;
 import org.crue.hercules.sgi.pii.model.InvencionTitulo;
 import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
@@ -24,7 +25,7 @@ public class InvencionOutput {
   private Collection<InvencionTitulo> titulo;
   private Instant fechaComunicacion;
   private Collection<InvencionDescripcion> descripcion;
-  private String comentarios;
+  private Collection<InvencionComentarios> comentarios;
   private String proyectoRef;
   private TipoProteccion tipoProteccion;
   private Boolean activo;

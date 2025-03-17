@@ -74,10 +74,12 @@ public class Invencion extends BaseActivableEntity {
   @Builder.Default
   private Set<InvencionDescripcion> descripcion = new HashSet<>();
 
-
   /** Comentarios */
-  @Column(name = "comentarios", length = LONG_TEXT_LENGTH, nullable = true)
-  private String comentarios;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "invencion_comentarios", joinColumns = @JoinColumn(name = "invencion_id"))
+  @Valid
+  @Builder.Default
+  private Set<InvencionComentarios> comentarios = new HashSet<>();
 
   /** Proyecto ref */
   @Column(name = "proyecto_ref", length = REF_LENGTH, nullable = true)

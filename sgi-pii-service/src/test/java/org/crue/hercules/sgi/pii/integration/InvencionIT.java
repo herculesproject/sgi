@@ -281,7 +281,9 @@ class InvencionIT extends BaseIT {
     String[] roles = { "PII-INV-E" };
     Long invencionId = 1L;
     InvencionInput invencionInput = generaMockInvencionInput();
-    invencionInput.setComentarios("comentarios-invencion-modificado");
+    List<I18nFieldValueDto> comentariosInvencion = new ArrayList<>();
+    comentariosInvencion.add(new I18nFieldValueDto(Language.ES, "comentarios-invencion-modificado"));
+    invencionInput.setComentarios(comentariosInvencion);
 
     final ResponseEntity<InvencionOutput> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT,
@@ -293,8 +295,8 @@ class InvencionIT extends BaseIT {
     Assertions.assertThat(invencionOutput.getId()).as("id").isEqualTo(1);
     Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getTitulo(), Language.ES))
         .as("titulo[0].value").isEqualTo("titulo-invencion");
-    Assertions.assertThat(invencionOutput.getComentarios()).as("comentarios")
-        .isEqualTo("comentarios-invencion-modificado");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getComentarios(), Language.ES))
+        .as("comentarios[0].value").isEqualTo("comentarios-invencion-modificado");
 
   }
 
@@ -323,8 +325,8 @@ class InvencionIT extends BaseIT {
     Assertions.assertThat(invencionOutput.getId()).as("id").isEqualTo(4);
     Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getTitulo(), Language.ES))
         .as("titulo[0].value").isEqualTo("titulo-invencion-004");
-    Assertions.assertThat(invencionOutput.getComentarios()).as("comentarios")
-        .isEqualTo("comentarios-invencion-004");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getComentarios(), Language.ES))
+        .as("comentarios[0].value").isEqualTo("comentarios-invencion-004");
 
   }
 
@@ -352,8 +354,8 @@ class InvencionIT extends BaseIT {
     Assertions.assertThat(invencionOutput.getId()).as("id").isEqualTo(1);
     Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getTitulo(), Language.ES))
         .as("titulo[0].value").isEqualTo("titulo-invencion-001");
-    Assertions.assertThat(invencionOutput.getComentarios()).as("comentarios")
-        .isEqualTo("comentarios-invencion-001");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(invencionOutput.getComentarios(), Language.ES))
+        .as("comentarios[0].value").isEqualTo("comentarios-invencion-001");
 
   }
 
@@ -917,10 +919,13 @@ class InvencionIT extends BaseIT {
     List<I18nFieldValueDto> descripcionInvencion = new ArrayList<>();
     descripcionInvencion.add(new I18nFieldValueDto(Language.ES, "descripcion-invencion"));
 
+    List<I18nFieldValueDto> comentariosInvencion = new ArrayList<>();
+    comentariosInvencion.add(new I18nFieldValueDto(Language.ES, "comentarios-invencion"));
+
     InvencionInput invencionInput = new InvencionInput();
     invencionInput.setTitulo(tituloInvencion);
     invencionInput.setDescripcion(descripcionInvencion);
-    invencionInput.setComentarios("comentarios-invencion");
+    invencionInput.setComentarios(comentariosInvencion);
     invencionInput.setFechaComunicacion(Instant.parse("2020-10-19T00:00:00Z"));
     invencionInput.setTipoProteccionId(1L);
 
