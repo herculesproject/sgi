@@ -75,7 +75,7 @@ export class ClasificacionGastosComponent extends FragmentComponent implements O
         case 'anualidad':
           return gasto.anualidad;
         case 'proyecto':
-          return gasto.proyecto?.titulo;
+          return this.languageService.getFieldValue(gasto.proyecto?.titulo);
         case 'clasificacionSGE':
           return gasto.clasificacionSGE?.nombre;
         case 'conceptoGasto':

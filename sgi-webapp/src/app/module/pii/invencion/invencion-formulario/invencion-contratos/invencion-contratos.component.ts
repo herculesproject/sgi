@@ -11,6 +11,7 @@ import { ISectorLicenciado } from '@core/models/pii/sector-licenciado';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPersona } from '@core/models/sgp/persona';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -83,6 +84,7 @@ export class InvencionContratosComponent extends FragmentComponent implements On
     private readonly translate: TranslateService,
     private readonly dialogService: DialogService,
     private readonly matDialog: MatDialog,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.CONTRATOS, actionService, translate);
     this.formPart = this.fragment as InvencionContratosFragment;
@@ -188,7 +190,7 @@ export class InvencionContratosComponent extends FragmentComponent implements On
           case 'fecha':
             return contratosAsociado.contrato?.fechaInicio;
           case 'nombre':
-            return contratosAsociado.contrato?.titulo;
+            return this.languageService.getFieldValue(contratosAsociado.contrato?.titulo);
           case 'entidadFinanciadora':
             return this.getFirstEntidadFinanciadora(contratosAsociado.entidadesFinanciadoras);
           case 'investigadorResponsable':
