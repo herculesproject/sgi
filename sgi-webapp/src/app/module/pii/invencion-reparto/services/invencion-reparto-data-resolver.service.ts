@@ -24,18 +24,7 @@ export class InvencionRepartoDataResolverService {
   }
 
   getGastosColumns(invencionId: string): Observable<IColumnDefinition[]> {
-    return this.gastosInvencionService.getColumnas(invencionId)
-      .pipe(
-        map(columnas => columnas.map(columna => {
-          return {
-            id: columna.id,
-            name: columna.nombre,
-            compute: columna.acumulable,
-            importeReparto: columna.importeReparto
-          };
-        })
-        )
-      );
+    return this.gastosInvencionService.getColumnas(invencionId);
   }
 
   /**

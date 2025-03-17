@@ -19,7 +19,6 @@ import { switchMap } from 'rxjs/operators';
 import { InvencionActionService } from '../../invencion.action.service';
 import { ISectorLicenciadoModalData, SectorLicenciadoModalComponent } from '../../modals/sector-licenciado-modal/sector-licenciado-modal.component';
 import { IContratoAsociadoTableData, InvencionContratosFragment } from './invencion-contratos.fragment';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const SECTOR_LICENCIADO_KEY = marker('pii.invencion-contrato.sector-licenciado');
