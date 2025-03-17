@@ -16,6 +16,7 @@ DELETE FROM test.resultado_informe_patentabilidad_descripcion;
 DELETE FROM test.resultado_informe_patentabilidad;
 DELETE FROM test.reparto_equipo_inventor;
 DELETE FROM test.invencion_inventor;
+DELETE FROM test.invencion_documento_nombre;
 DELETE FROM test.invencion_documento;
 DELETE FROM test.reparto_ingreso;
 DELETE FROM test.reparto_gasto;
