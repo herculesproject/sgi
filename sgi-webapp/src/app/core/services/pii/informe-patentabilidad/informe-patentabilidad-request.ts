@@ -9,5 +9,5 @@ export interface IInformePatentabilidadRequest {
   entidadCreadoraRef: string;
   contactoEntidadCreadora: string;
   contactoExaminador: string;
-  comentarios: string;
+  comentarios: I18nFieldValueRequest[];
 }

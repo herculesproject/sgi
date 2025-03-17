@@ -1,3 +1,4 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from "@core/i18n/i18n-field.converter";
 import { IInformePatentabilidad } from "@core/models/pii/informe-patentabilidad";
 import { IInvencion } from "@core/models/pii/invencion";
 import { IResultadoInformePatentibilidad } from "@core/models/pii/resultado-informe-patentabilidad";
@@ -6,7 +7,6 @@ import { IEmpresa } from "@core/models/sgemp/empresa";
 import { LuxonUtils } from "@core/utils/luxon-utils";
 import { SgiBaseConverter } from "@sgi/framework/core";
 import { IInformePatentabilidadRequest } from "./informe-patentabilidad-request";
-import { I18N_FIELD_REQUEST_CONVERTER } from "@core/i18n/i18n-field.converter";
 
 class InformePatentabilidadRequestConverter extends SgiBaseConverter<IInformePatentabilidadRequest, IInformePatentabilidad> {
 
@@ -24,7 +24,7 @@ class InformePatentabilidadRequestConverter extends SgiBaseConverter<IInformePat
       entidadCreadora: { id: value.entidadCreadoraRef } as IEmpresa,
       contactoEntidadCreadora: value.contactoEntidadCreadora,
       contactoExaminador: value.contactoExaminador,
-      comentarios: value.comentarios
+      comentarios: value.comentarios ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.comentarios) : []
     };
   }
 
@@ -41,7 +41,7 @@ class InformePatentabilidadRequestConverter extends SgiBaseConverter<IInformePat
       entidadCreadoraRef: value.entidadCreadora?.id,
       contactoEntidadCreadora: value.contactoEntidadCreadora,
       contactoExaminador: value.contactoExaminador,
-      comentarios: value.comentarios
+      comentarios: value.comentarios ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.comentarios) : []
     };
   }
 }

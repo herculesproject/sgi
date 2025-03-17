@@ -24,7 +24,7 @@ class InformePatentabilidadResponseConverter extends SgiBaseConverter<IInformePa
       entidadCreadora: { id: value.entidadCreadoraRef } as IEmpresa,
       contactoEntidadCreadora: value.contactoEntidadCreadora,
       contactoExaminador: value.contactoExaminador,
-      comentarios: value.comentarios
+      comentarios: value.comentarios ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentarios) : []
     };
   }
 
@@ -42,7 +42,7 @@ class InformePatentabilidadResponseConverter extends SgiBaseConverter<IInformePa
       entidadCreadoraRef: value.entidadCreadora.id,
       contactoEntidadCreadora: value.contactoEntidadCreadora,
       contactoExaminador: value.contactoExaminador,
-      comentarios: value.comentarios
+      comentarios: value.comentarios ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentarios) : []
     };
   }
 }
