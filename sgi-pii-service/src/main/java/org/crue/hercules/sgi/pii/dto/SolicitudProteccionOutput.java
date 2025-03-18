@@ -7,6 +7,7 @@ import java.util.Collection;
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
 import org.crue.hercules.sgi.pii.model.InvencionTitulo;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
+import org.crue.hercules.sgi.pii.model.SolicitudProteccionComentarios;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccionTitulo;
 import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
 import org.crue.hercules.sgi.pii.model.ViaProteccionDescripcion;
@@ -46,7 +47,7 @@ public class SolicitudProteccionOutput implements Serializable {
   private TipoCaducidad tipoCaducidad;
   private String agentePropiedadRef;
   private String paisProteccionRef;
-  private String comentarios;
+  private Collection<SolicitudProteccionComentarios> comentarios;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

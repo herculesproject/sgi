@@ -124,8 +124,11 @@ public class SolicitudProteccion extends BaseEntity {
   @Column(name = "pais_proteccion_ref", nullable = true)
   private String paisProteccionRef;
 
-  @Column(name = "comentarios", length = COMENTARIOS_MAX_LENGTH, nullable = true)
-  private String comentarios;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "solicitud_proteccion_comentarios", joinColumns = @JoinColumn(name = "solicitud_proteccion_id"))
+  @Valid
+  @Builder.Default
+  private Set<SolicitudProteccionComentarios> comentarios = new HashSet<>();
 
   @OneToMany(mappedBy = "solicitudProteccion")
   @Getter(AccessLevel.NONE)

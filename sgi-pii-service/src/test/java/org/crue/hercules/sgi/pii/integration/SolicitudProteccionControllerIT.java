@@ -162,7 +162,8 @@ class SolicitudProteccionControllerIT extends BaseIT {
     Assertions.assertThat(output.getFechaPrioridadSolicitud()).isEqualTo(input.getFechaPrioridadSolicitud());
     Assertions.assertThat(output.getFechaPublicacion()).isEqualTo(input.getFechaPublicacion());
     Assertions.assertThat(output.getAgentePropiedadRef()).isEqualTo(input.getAgentePropiedadRef());
-    Assertions.assertThat(output.getComentarios()).isEqualTo(input.getComentarios());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getComentarios(), Language.ES))
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getComentarios(), Language.ES));
     Assertions.assertThat(output.getNumeroConcesion()).isEqualTo(input.getNumeroConcesion());
     Assertions.assertThat(output.getNumeroPublicacion()).isEqualTo(input.getNumeroPublicacion());
     Assertions.assertThat(output.getNumeroRegistro()).isEqualTo(input.getNumeroRegistro());
@@ -213,7 +214,8 @@ class SolicitudProteccionControllerIT extends BaseIT {
     Assertions.assertThat(output.getFechaPrioridadSolicitud()).isEqualTo(input.getFechaPrioridadSolicitud());
     Assertions.assertThat(output.getFechaPublicacion()).isEqualTo(input.getFechaPublicacion());
     Assertions.assertThat(output.getAgentePropiedadRef()).isEqualTo(input.getAgentePropiedadRef());
-    Assertions.assertThat(output.getComentarios()).isEqualTo(input.getComentarios());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getComentarios(), Language.ES))
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getComentarios(), Language.ES));
     Assertions.assertThat(output.getNumeroConcesion()).isEqualTo(input.getNumeroConcesion());
     Assertions.assertThat(output.getNumeroPublicacion()).isEqualTo(input.getNumeroPublicacion());
     Assertions.assertThat(output.getNumeroRegistro()).isEqualTo(input.getNumeroRegistro());
@@ -369,9 +371,12 @@ class SolicitudProteccionControllerIT extends BaseIT {
     List<I18nFieldValueDto> tituloSolicitudProteccion = new ArrayList<>();
     tituloSolicitudProteccion.add(new I18nFieldValueDto(Language.ES, "Testing Solicitud"));
 
+    List<I18nFieldValueDto> comentariosSolicitudProteccion = new ArrayList<>();
+    comentariosSolicitudProteccion.add(new I18nFieldValueDto(Language.ES, "comentarios"));
+
     return SolicitudProteccionInput.builder()
         .agentePropiedadRef("agentePropiedadRef")
-        .comentarios("comentarios")
+        .comentarios(comentariosSolicitudProteccion)
         .estado(SolicitudProteccion.EstadoSolicitudProteccion.SOLICITADA)
         .fechaPrioridadSolicitud(Instant.now())
         .invencionId(3L)

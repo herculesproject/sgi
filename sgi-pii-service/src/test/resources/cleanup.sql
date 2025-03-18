@@ -25,6 +25,7 @@ DELETE FROM test.reparto_gasto;
 DELETE FROM test.invencion_gasto;
 DELETE FROM test.invencion_ingreso;
 DELETE FROM test.solicitud_proteccion_titulo;
+DELETE FROM test.solicitud_proteccion_comentarios;
 DELETE FROM test.solicitud_proteccion;
 DELETE FROM test.reparto;
 DELETE FROM test.invencion_titulo;

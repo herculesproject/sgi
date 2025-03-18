@@ -498,4 +498,33 @@
     <dropColumn columnName="titulo" tableName="solicitud_proteccion" />
   </changeSet>
 
+  <changeSet author="master" id="00.06.00-18">
+    <createTable tableName="solicitud_proteccion_comentarios">
+      <column name="solicitud_proteccion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="solicitud_proteccion_comentarios"
+      columnNames="solicitud_proteccion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id"
+      baseTableName="solicitud_proteccion_comentarios"
+      constraintName="FK_SOLICITUDPROTECCIONCOMENTARIOS_SOLICITUDPROTECCION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="solicitud_proteccion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}solicitud_proteccion_comentarios(solicitud_proteccion_id,
+      value_, lang) SELECT id, comentarios, '${defaultLang}' FROM
+      ${schemaPrefix}solicitud_proteccion WHERE comentarios IS NOT NULL AND
+      NULLIF(TRIM(comentarios), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="comentarios" tableName="solicitud_proteccion" />
+  </changeSet>
 </databaseChangeLog>

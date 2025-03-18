@@ -61,5 +61,5 @@ public class SolicitudProteccionInput {
 
   private String paisProteccionRef;
 
-  private String comentarios;
+  private List<I18nFieldValueDto> comentarios;
 }
