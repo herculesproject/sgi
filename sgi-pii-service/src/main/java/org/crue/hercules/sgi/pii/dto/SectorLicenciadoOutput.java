@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.pii.dto;
 import java.time.Instant;
 import java.util.Collection;
 
+import org.crue.hercules.sgi.pii.model.SectorAplicacionDescripcion;
 import org.crue.hercules.sgi.pii.model.SectorAplicacionNombre;
 
 import lombok.AllArgsConstructor;
@@ -34,6 +35,6 @@ public class SectorLicenciadoOutput {
   public static class SectorAplicacion {
     private Long id;
     private Collection<SectorAplicacionNombre> nombre;
-    private String descripcion;
+    private Collection<SectorAplicacionDescripcion> descripcion;
   }
 }
