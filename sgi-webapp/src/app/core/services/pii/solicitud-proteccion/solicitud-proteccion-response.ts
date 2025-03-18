@@ -4,6 +4,7 @@ import { Estado } from '@core/models/pii/solicitud-proteccion';
 import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
 import { IViaProteccionResponse } from '../via-proteccion/via-proteccion-response';
 import { IInvencionResponse } from '../invencion/invencion-response';
+import { ITipoCaducidadResponse } from '../tipo-caducidad/tipo-caducidad-response';
 
 export interface ISolicitudProteccionResponse {
   id: number;
@@ -20,7 +21,7 @@ export interface ISolicitudProteccionResponse {
   numeroConcesion: string;
   numeroRegistro: string;
   estado: Estado;
-  tipoCaducidad: ITipoCaducidad;
+  tipoCaducidad: ITipoCaducidadResponse;
   agentePropiedadRef: string;
   paisProteccionRef: string;
   comentarios: I18nFieldValueResponse[];

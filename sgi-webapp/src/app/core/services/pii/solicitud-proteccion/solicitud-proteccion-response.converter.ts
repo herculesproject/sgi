@@ -8,6 +8,7 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { INVENCION_RESPONSE_CONVERTER } from '../invencion/invencion-response.converter';
 import { VIA_PROTECCION_RESPONSE_CONVERTER } from '../via-proteccion/via-proteccion-response.converter';
 import { ISolicitudProteccionResponse } from './solicitud-proteccion-response';
+import { TIPO_CADUCIDAD_RESPONSE_CONVERTER } from '../tipo-caducidad/tipo-caducidad-response.converter';
 
 export class SolicitudProteccionResponseConverter extends SgiBaseConverter<ISolicitudProteccionResponse, ISolicitudProteccion> {
 
@@ -28,7 +29,7 @@ export class SolicitudProteccionResponseConverter extends SgiBaseConverter<ISoli
       numeroRegistro: value.numeroRegistro,
       numeroSolicitud: value.numeroSolicitud,
       paisProteccion: { id: value.paisProteccionRef } as IPais,
-      tipoCaducidad: value.tipoCaducidad as ITipoCaducidad,
+      tipoCaducidad: value.tipoCaducidad ? TIPO_CADUCIDAD_RESPONSE_CONVERTER.toTarget(value.tipoCaducidad) : null,
       titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       viaProteccion: value.viaProteccion ? VIA_PROTECCION_RESPONSE_CONVERTER.toTarget(value.viaProteccion) : null,
     } : (value as unknown as ISolicitudProteccion);
@@ -51,7 +52,7 @@ export class SolicitudProteccionResponseConverter extends SgiBaseConverter<ISoli
       numeroRegistro: value.numeroRegistro,
       numeroSolicitud: value.numeroSolicitud,
       paisProteccionRef: value.paisProteccion.id,
-      tipoCaducidad: value.tipoCaducidad,
+      tipoCaducidad: value.tipoCaducidad ? TIPO_CADUCIDAD_RESPONSE_CONVERTER.fromTarget(value.tipoCaducidad) : null,
       titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       viaProteccion: value.viaProteccion ? VIA_PROTECCION_RESPONSE_CONVERTER.fromTarget(value.viaProteccion) : null,
     } : (value as unknown as ISolicitudProteccionResponse);
