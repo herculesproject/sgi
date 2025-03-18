@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.pii.model.InvencionTitulo;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccionComentarios;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccionTitulo;
+import org.crue.hercules.sgi.pii.model.TipoCaducidadDescripcion;
 import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
 import org.crue.hercules.sgi.pii.model.ViaProteccionDescripcion;
 import org.crue.hercules.sgi.pii.model.ViaProteccionNombre;
@@ -114,6 +115,6 @@ public class SolicitudProteccionOutput implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String descripcion;
+    private Collection<TipoCaducidadDescripcion> descripcion;
   }
 }
