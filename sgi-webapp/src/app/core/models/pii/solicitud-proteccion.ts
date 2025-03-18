@@ -25,7 +25,7 @@ export interface ISolicitudProteccion {
   tipoCaducidad: ITipoCaducidad;
   agentePropiedad: IEmpresa;
   paisProteccion: IPais;
-  comentarios: string;
+  comentarios: I18nFieldValue[];
 }
 
 export enum Estado {

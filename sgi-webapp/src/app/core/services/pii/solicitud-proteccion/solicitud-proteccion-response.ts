@@ -23,5 +23,5 @@ export interface ISolicitudProteccionResponse {
   tipoCaducidad: ITipoCaducidad;
   agentePropiedadRef: string;
   paisProteccionRef: string;
-  comentarios: string;
+  comentarios: I18nFieldValueResponse[];
 }

@@ -102,7 +102,7 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
       numeroConcesion: new FormControl('', [Validators.maxLength(this.NUMERO_CONCESION_MAX_LENGTH)]),
       fechaConcesion: new FormControl(null, []),
       agentePropiedad: new FormControl(null, []),
-      comentarios: new FormControl('', [Validators.maxLength(this.COMENTARIOS_MAX_LENGTH)]),
+      comentarios: new FormControl([], [I18nValidators.maxLength(this.COMENTARIOS_MAX_LENGTH)]),
       numeroRegistro: new FormControl('', [Validators.maxLength(this.NUMERO_REGISTRO_MAX_LENGTH)]),
       fechaCaducidad: new FormControl(null, []),
       tipoCaducidad: new FormControl(null, []),
