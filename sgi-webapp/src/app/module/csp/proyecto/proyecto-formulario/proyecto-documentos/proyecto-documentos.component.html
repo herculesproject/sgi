@@ -28,8 +28,8 @@
             <mat-icon class="mat-icon-rtl-mirror">
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
-            <sgi-i18n-tree-field [field]="node.title"
-              [appendText]="node.childs.length > 0 ? '' : '\*'"></sgi-i18n-tree-field>
+            <sgi-i18n-tree-field [field]="node.title" [appendText]="node.childs.length > 0 ? '' : '\*'"
+              [params]="node.params"></sgi-i18n-tree-field>
           </button>
         </mat-tree-node>
       </mat-tree>

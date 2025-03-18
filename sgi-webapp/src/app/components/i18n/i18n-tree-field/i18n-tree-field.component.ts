@@ -10,7 +10,7 @@ import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { Language } from '@core/i18n/language';
 import { LanguageService } from '@core/services/language.service';
-import { TranslateService } from '@ngx-translate/core';
+import { ITranslateParams } from '@core/utils/translate-params';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -83,10 +83,19 @@ export class I18nTreeFieldComponent implements OnDestroy {
   }
   private _fixedValue: string;
 
+  @Input()
+  set params(params: ITranslateParams) {
+    this._params = params;
+  }
+  get params(): ITranslateParams {
+    return this._params;
+  }
+
+  private _params = {};
+
   constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
     public readonly languageService: LanguageService,
-    private readonly translateService: TranslateService
   ) {
     this.languageService.languageChange$.pipe(takeUntil(this._destroy)).subscribe(() => this.resolveValue());
   }

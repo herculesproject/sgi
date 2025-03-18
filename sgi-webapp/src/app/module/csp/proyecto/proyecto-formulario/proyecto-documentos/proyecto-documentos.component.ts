@@ -344,7 +344,7 @@ export class ProyectoDocumentosComponent extends FragmentComponent implements On
   switchToNew(): void {
     const wrapper = new StatusWrapper<IProyectoDocumento>({} as IProyectoDocumento);
     wrapper.value.visible = true;
-    const newNode: NodeDocumento = new NodeDocumento(null, undefined, 2, wrapper);
+    const newNode: NodeDocumento = new NodeDocumento(null, undefined, 2, null, wrapper);
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;
     this.loadDetails(this.viewingNode);
