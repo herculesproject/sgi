@@ -1,12 +1,17 @@
 package org.crue.hercules.sgi.pii.model;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +23,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
 
@@ -64,8 +70,12 @@ public class SolicitudProteccion extends BaseEntity {
   @ActivableIsActivo(entityClass = Invencion.class, groups = { OnCrear.class, OnActualizarInvencion.class })
   private Invencion invencion;
 
-  @Column(name = "titulo", length = TITULO_MAX_LENGTH, nullable = false)
-  private String titulo;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "solicitud_proteccion_titulo", joinColumns = @JoinColumn(name = "solicitud_proteccion_id"))
+  @NotEmpty
+  @Valid
+  @Builder.Default
+  private Set<SolicitudProteccionTitulo> titulo = new HashSet<>();
 
   @Column(name = "fecha_prioridad_solicitud", nullable = false)
   private Instant fechaPrioridadSolicitud;

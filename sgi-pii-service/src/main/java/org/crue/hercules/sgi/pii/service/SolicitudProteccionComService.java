@@ -4,11 +4,9 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.pii.config.SgiConfigProperties;
 import org.crue.hercules.sgi.pii.dto.com.EmailOutput;
 import org.crue.hercules.sgi.pii.dto.com.PiiComMesesHastaFinPrioridadSolicitudProteccionData;
@@ -18,6 +16,8 @@ import org.crue.hercules.sgi.pii.repository.SolicitudProteccionRepository;
 import org.crue.hercules.sgi.pii.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.pii.service.sgi.SgiApiComService;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +76,7 @@ public class SolicitudProteccionComService {
       Integer monthsBeforeFechaFinPrioridad) {
     PiiComMesesHastaFinPrioridadSolicitudProteccionData data = PiiComMesesHastaFinPrioridadSolicitudProteccionData
         .builder()
-        .solicitudTitle(solicitud.getTitulo())
+        .solicitudTitle(I18nHelper.getValueForCurrentLanguage(solicitud.getTitulo()))
         .fechaFinPrioridad(solicitud.getFechaFinPriorPresFasNacRec())
         .monthsBeforeFechaFinPrioridad(monthsBeforeFechaFinPrioridad)
         .build();
@@ -97,7 +97,7 @@ public class SolicitudProteccionComService {
       Integer monthsBeforeFechaFinPresentacion) {
     PiiComMesesHastaFinPrioridadSolicitudProteccionData data = PiiComMesesHastaFinPrioridadSolicitudProteccionData
         .builder()
-        .solicitudTitle(solicitud.getTitulo())
+        .solicitudTitle(I18nHelper.getValueForCurrentLanguage(solicitud.getTitulo()))
         .fechaFinPrioridad(solicitud.getFechaFinPriorPresFasNacRec())
         .monthsBeforeFechaFinPrioridad(monthsBeforeFechaFinPresentacion)
         .build();
@@ -128,8 +128,7 @@ public class SolicitudProteccionComService {
     }
 
     return destinatarios.stream()
-        .map(destinatario -> Recipient.builder().name(destinatario).address(destinatario).build())
-        .collect(Collectors.toList());
+        .map(destinatario -> Recipient.builder().name(destinatario).address(destinatario).build()).toList();
   }
 
 }

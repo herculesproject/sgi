@@ -5,7 +5,9 @@ import java.time.Instant;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.pii.enums.TipoPropiedad;
+import org.crue.hercules.sgi.pii.model.InvencionTitulo;
 import org.crue.hercules.sgi.pii.model.SolicitudProteccion;
+import org.crue.hercules.sgi.pii.model.SolicitudProteccionTitulo;
 import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
 import org.crue.hercules.sgi.pii.model.ViaProteccionDescripcion;
 import org.crue.hercules.sgi.pii.model.ViaProteccionNombre;
@@ -29,7 +31,7 @@ public class SolicitudProteccionOutput implements Serializable {
 
   private Long id;
   private Invencion invencion;
-  private String titulo;
+  private Collection<SolicitudProteccionTitulo> titulo;
   private Instant fechaPrioridadSolicitud;
   private Instant fechaFinPriorPresFasNacRec;
   private Instant fechaPublicacion;
@@ -59,7 +61,7 @@ public class SolicitudProteccionOutput implements Serializable {
 
     private Long id;
     private Invencion.TipoProteccion tipoProteccion;
-    private String titulo;
+    private Collection<InvencionTitulo> titulo;
 
     @Data
     @EqualsAndHashCode(callSuper = false)

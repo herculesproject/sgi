@@ -468,4 +468,34 @@
 
     <dropColumn columnName="comentarios" tableName="informe_patentabilidad" />
   </changeSet>
+
+  <changeSet author="master" id="00.06.00-17">
+    <createTable tableName="solicitud_proteccion_titulo">
+      <column name="solicitud_proteccion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="solicitud_proteccion_titulo"
+      columnNames="solicitud_proteccion_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="solicitud_proteccion_id"
+      baseTableName="solicitud_proteccion_titulo"
+      constraintName="FK_SOLICITUDPROTECCIONTITULO_SOLICITUDPROTECCION" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="solicitud_proteccion" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}solicitud_proteccion_titulo(solicitud_proteccion_id, value_,
+      lang) SELECT id, titulo, '${defaultLang}' FROM ${schemaPrefix}solicitud_proteccion WHERE
+      titulo IS NOT NULL AND NULLIF(TRIM(titulo), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="titulo" tableName="solicitud_proteccion" />
+  </changeSet>
+
 </databaseChangeLog>
