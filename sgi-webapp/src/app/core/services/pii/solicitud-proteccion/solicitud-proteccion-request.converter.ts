@@ -1,3 +1,4 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IInvencion } from '@core/models/pii/invencion';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
@@ -28,7 +29,7 @@ export class SolicitudProteccionRequestConverter extends SgiBaseConverter<ISolic
       numeroSolicitud: value.numeroSolicitud,
       paisProteccion: { id: value.paisProteccionRef } as IPais,
       tipoCaducidad: { id: value.tipoCaducidadId } as ITipoCaducidad,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.titulo) : [],
       viaProteccion: { id: value.viaProteccionId } as IViaProteccion,
     } as ISolicitudProteccion : (value as unknown as ISolicitudProteccion);
   }
@@ -50,7 +51,7 @@ export class SolicitudProteccionRequestConverter extends SgiBaseConverter<ISolic
       numeroSolicitud: value.numeroSolicitud,
       paisProteccionRef: value.paisProteccion?.id,
       tipoCaducidadId: value.tipoCaducidad?.id,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.titulo) : [],
       viaProteccionId: value.viaProteccion.id,
     } : (value as unknown as ISolicitudProteccionRequest);
   }

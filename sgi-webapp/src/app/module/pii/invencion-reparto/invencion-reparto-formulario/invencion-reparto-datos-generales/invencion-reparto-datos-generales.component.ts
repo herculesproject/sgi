@@ -7,6 +7,7 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IRepartoGasto } from '@core/models/pii/reparto-gasto';
 import { IRepartoIngreso } from '@core/models/pii/reparto-ingreso';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { Subscription } from 'rxjs';
 import { InvencionRepartoActionService } from '../../invencion-reparto.action.service';
@@ -37,6 +38,7 @@ export class InvencionRepartoDatosGeneralesComponent extends FragmentComponent i
   constructor(
     public actionService: InvencionRepartoActionService,
     private readonly matDialog: MatDialog,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formPart = this.fragment as InvencionRepartoDatosGeneralesFragment;
@@ -56,7 +58,7 @@ export class InvencionRepartoDatosGeneralesComponent extends FragmentComponent i
     this.gastosDataSource.sortingDataAccessor = (wrapper: StatusWrapper<IRepartoGasto>, property: string) => {
       switch (property) {
         case 'solicitudProteccion':
-          return wrapper.value.invencionGasto?.solicitudProteccion?.titulo;
+          return this.languageService.getFieldValue(wrapper.value.invencionGasto?.solicitudProteccion?.titulo);
         case 'importePendienteDeducir':
           return wrapper.value.invencionGasto?.importePendienteDeducir;
         case 'importeADeducir':

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IInvencion } from '@core/models/pii/invencion';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ActionService } from '@core/services/action-service';
+import { LanguageService } from '@core/services/language.service';
 import { PaisValidadoService } from '@core/services/pii/solicitud-proteccion/pais-validado/pais-validado.service';
 import { SolicitudProteccionProcedimientoDocumentoService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion-procedimiento-documento/solicitud-proteccion-procedimiento-documento.service';
 import { SolicitudProteccionProcedimientoService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion-procedimiento/solicitud-proteccion-procedimiento.service';
@@ -16,7 +17,6 @@ import { SOLICITUD_PROTECCION_DATA_KEY } from './solicitud-proteccion-data.resol
 import { SolicitudProteccionDatosGeneralesFragment } from './solicitud-proteccion-formulario/solicitud-proteccion-datos-generales/solicitud-proteccion-datos-generales.fragment';
 import { SolicitudProteccionProcedimientosFragment } from './solicitud-proteccion-formulario/solicitud-proteccion-procedimientos/solicitud-proteccion-procedimientos.fragment';
 import { SOLICITUD_PROTECCION_ROUTE_PARAMS } from './solicitud-proteccion-route-params';
-import { LanguageService } from '@core/services/language.service';
 
 export interface ISolicitudProteccionData {
   invencion: IInvencion;
@@ -63,7 +63,7 @@ export class SolicitudProteccionActionService extends ActionService {
       id,
       this.data.invencion.id,
       this.data.invencion.tipoProteccion.tipoPropiedad,
-      this.languageService.getFieldValue(this.data.invencion.titulo),
+      this.data.invencion.titulo,
       this.solicitudProteccionService,
       this.data.readonly,
       this.paisService,

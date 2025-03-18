@@ -1,28 +1,29 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { ESTADO_MAP } from '@core/models/pii/reparto';
 import { IRepartoGasto } from '@core/models/pii/reparto-gasto';
 import { IRepartoIngreso } from '@core/models/pii/reparto-ingreso';
 import { ITramoReparto } from '@core/models/pii/tramo-reparto';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { LanguageService } from '@core/services/language.service';
+import { NumberUtils } from '@core/utils/number.utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NumberValidator } from '@core/validators/number-validator';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+import { getPersonaEmailListConcatenated } from 'src/app/esb/sgp/shared/pipes/persona-email.pipe';
 import { TramoRepartoTramoPipe } from '../../../tramo-reparto/pipes/tramo-reparto-tramo.pipe';
 import { InvencionRepartoActionService } from '../../invencion-reparto.action.service';
-import { InvencionRepartoEquipoInventorFragment, IRepartoEquipoInventorTableData } from './invencion-reparto-equipo-inventor.fragment';
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RepartoEquipoModalComponent } from '../../modals/reparto-equipo-modal/reparto-equipo-modal.component';
-import { NumberUtils } from '@core/utils/number.utils';
-import { ESTADO_MAP } from '@core/models/pii/reparto';
-import { getPersonaEmailListConcatenated } from 'src/app/esb/sgp/shared/pipes/persona-email.pipe';
+import { InvencionRepartoEquipoInventorFragment, IRepartoEquipoInventorTableData } from './invencion-reparto-equipo-inventor.fragment';
 
 const UNIVERSIDAD_PERCENTAGE = marker('pii.reparto.reparto-equipo.porcentaje-universidad');
 const INVENTORES_PERCENTAGE = marker('pii.reparto.reparto-equipo.porcentaje-inventores');
@@ -103,6 +104,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
     private readonly tramoRepartoPipe: TramoRepartoTramoPipe,
     private readonly translate: TranslateService,
     private readonly matDialog: MatDialog,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.REPARTO_EQUIPO_INVENTOR, actionService, translate);
     this.formPart = this.fragment as InvencionRepartoEquipoInventorFragment;
@@ -141,7 +143,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
     this.gastosDataSource.sortingDataAccessor = (repartoGasto: IRepartoGasto, property: string) => {
       switch (property) {
         case 'solicitudProteccion':
-          return repartoGasto.invencionGasto?.solicitudProteccion?.titulo;
+          return this.languageService.getFieldValue(repartoGasto.invencionGasto?.solicitudProteccion?.titulo);
         case 'importePendienteDeducir':
           return repartoGasto.invencionGasto?.importePendienteDeducir;
         case 'importeADeducir':

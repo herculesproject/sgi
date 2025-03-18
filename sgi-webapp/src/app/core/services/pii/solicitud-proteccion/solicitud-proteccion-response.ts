@@ -1,13 +1,14 @@
+import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { IInvencion } from '@core/models/pii/invencion';
 import { Estado } from '@core/models/pii/solicitud-proteccion';
 import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
-import { IViaProteccion } from '@core/models/pii/via-proteccion';
 import { IViaProteccionResponse } from '../via-proteccion/via-proteccion-response';
+import { IInvencionResponse } from '../invencion/invencion-response';
 
 export interface ISolicitudProteccionResponse {
   id: number;
-  invencion: IInvencion;
-  titulo: string;
+  invencion: IInvencionResponse;
+  titulo: I18nFieldValueResponse[];
   fechaPrioridadSolicitud: string;
   fechaFinPriorPresFasNacRec: string;
   fechaPublicacion: string;

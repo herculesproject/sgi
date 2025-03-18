@@ -33,7 +33,7 @@
           {{'pii.invencion-gasto.solicitud-proteccion' | translate}}
         </mat-header-cell>
         <mat-cell mat-cell *matCellDef="let wrapper">
-          {{wrapper.value.solicitudProteccion?.titulo }}
+          <sgi-i18n-table-field [field]="wrapper.value.solicitudProteccion?.titulo"></sgi-i18n-table-field>
         </mat-cell>
       </ng-container>
 

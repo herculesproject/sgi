@@ -1,5 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TipoPropiedad } from '@core/enums/tipo-propiedad';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IInvencion } from '@core/models/pii/invencion';
 import { IPaisValidado } from '@core/models/pii/pais-validado';
 import { Estado, ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
@@ -7,7 +8,6 @@ import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
 import { IViaProteccion } from '@core/models/pii/via-proteccion';
 import { IPais } from '@core/models/sgo/pais';
 import { FormFragment } from '@core/services/action-service';
-import { LanguageService } from '@core/services/language.service';
 import { PaisValidadoService } from '@core/services/pii/solicitud-proteccion/pais-validado/pais-validado.service';
 import { SolicitudProteccionService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion.service';
 import { TipoCaducidadService } from '@core/services/pii/tipo-caducidad/tipo-caducidad.service';
@@ -15,6 +15,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PaisService } from '@core/services/sgo/pais/pais.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, concat, forkJoin, from, Observable, of, Subscription } from 'rxjs';
@@ -56,7 +57,7 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
     key: number,
     private invencionId: number,
     public tipoPropiedad: TipoPropiedad,
-    private invencionTitulo: string,
+    private invencionTitulo: I18nFieldValue[],
     private solicitudProteccionService: SolicitudProteccionService,
     public readonly: boolean,
     private paisService: PaisService,
@@ -89,7 +90,7 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
 
     const form: FormGroup = new FormGroup({
       titulo: new FormControl(
-        !this.getKey() ? this.defaultTitle : null, [Validators.maxLength(this.TITULO_MAX_LENGTH), Validators.required]
+        !this.getKey() ? this.defaultTitle : [], [I18nValidators.maxLength(this.TITULO_MAX_LENGTH), I18nValidators.required]
       ),
       viaProteccion: new FormControl('', Validators.required),
       pais: new FormControl(null, [Validators.required]),
@@ -261,8 +262,7 @@ export class SolicitudProteccionDatosGeneralesFragment extends FormFragment<ISol
 
   }
 
-  private get defaultTitle(): string {
-
+  private get defaultTitle(): I18nFieldValue[] {
     return this.solicitudProteccion.titulo || this.invencionTitulo;
   }
 

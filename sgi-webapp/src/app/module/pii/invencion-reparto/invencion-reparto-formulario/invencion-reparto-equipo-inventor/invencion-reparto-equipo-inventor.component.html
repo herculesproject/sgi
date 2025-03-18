@@ -44,7 +44,8 @@
           {{'pii.reparto.gasto.solicitud-proteccion' | translate}}
         </th>
         <td mat-cell mat-cell *matCellDef="let repartoGasto">
-          {{repartoGasto.invencionGasto?.solicitudProteccion?.titulo }}
+          <sgi-i18n-table-field
+            [field]="repartoGasto.invencionGasto?.solicitudProteccion?.titulo"></sgi-i18n-table-field>
         </td>
       </ng-container>
 

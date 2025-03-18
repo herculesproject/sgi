@@ -366,7 +366,7 @@ export class SolicitudProteccionComponent extends FragmentComponent implements O
         LuxonUtils.toBackend(controls.fechaFinPrioridadDesde?.value))
       .and('fechaFinPriorPresFasNacRec', SgiRestFilterOperator.LOWER_OR_EQUAL,
         LuxonUtils.toBackend(controls.fechaFinPrioridadHasta?.value))
-      .and('titulo', SgiRestFilterOperator.LIKE_ICASE, controls.titulo?.value?.toString())
+      .and('titulo.value', SgiRestFilterOperator.LIKE_ICASE, controls.titulo?.value?.toString())
       .and('viaProteccion.id', SgiRestFilterOperator.EQUALS, controls.viaProteccion.value?.id?.toString())
       .and('paisProteccionRef', SgiRestFilterOperator.EQUALS, controls.pais.value?.id?.toString())
       .and('estado', SgiRestFilterOperator.EQUALS, controls.estado?.value?.toString());

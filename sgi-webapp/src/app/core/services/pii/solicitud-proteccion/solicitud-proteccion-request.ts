@@ -1,9 +1,10 @@
+import { I18nFieldValueRequest } from '@core/i18n/i18n-field-request';
 import { Estado } from '@core/models/pii/solicitud-proteccion';
 
 export interface ISolicitudProteccionRequest {
 
   invencionId: number;
-  titulo: string;
+  titulo: I18nFieldValueRequest[];
   fechaPrioridadSolicitud: string;
   fechaFinPriorPresFasNacRec: string;
   fechaPublicacion: string;

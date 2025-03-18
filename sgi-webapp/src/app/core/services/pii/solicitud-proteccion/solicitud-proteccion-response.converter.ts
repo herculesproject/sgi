@@ -1,10 +1,11 @@
-import { IInvencion } from '@core/models/pii/invencion';
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPais } from '@core/models/sgo/pais';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
+import { INVENCION_RESPONSE_CONVERTER } from '../invencion/invencion-response.converter';
 import { VIA_PROTECCION_RESPONSE_CONVERTER } from '../via-proteccion/via-proteccion-response.converter';
 import { ISolicitudProteccionResponse } from './solicitud-proteccion-response';
 
@@ -21,14 +22,14 @@ export class SolicitudProteccionResponseConverter extends SgiBaseConverter<ISoli
       agentePropiedad: { id: value.agentePropiedadRef } as IEmpresa,
       comentarios: value.comentarios,
       estado: value.estado,
-      invencion: value.invencion as IInvencion,
+      invencion: value.invencion ? INVENCION_RESPONSE_CONVERTER.toTarget(value.invencion) : null,
       numeroConcesion: value.numeroConcesion,
       numeroPublicacion: value.numeroPublicacion,
       numeroRegistro: value.numeroRegistro,
       numeroSolicitud: value.numeroSolicitud,
       paisProteccion: { id: value.paisProteccionRef } as IPais,
       tipoCaducidad: value.tipoCaducidad as ITipoCaducidad,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.titulo) : [],
       viaProteccion: value.viaProteccion ? VIA_PROTECCION_RESPONSE_CONVERTER.toTarget(value.viaProteccion) : null,
     } : (value as unknown as ISolicitudProteccion);
   }
@@ -44,14 +45,14 @@ export class SolicitudProteccionResponseConverter extends SgiBaseConverter<ISoli
       agentePropiedadRef: value.agentePropiedad.id,
       comentarios: value.comentarios,
       estado: value.estado,
-      invencion: value.invencion,
+      invencion: value.invencion ? INVENCION_RESPONSE_CONVERTER.fromTarget(value.invencion) : null,
       numeroConcesion: value.numeroConcesion,
       numeroPublicacion: value.numeroPublicacion,
       numeroRegistro: value.numeroRegistro,
       numeroSolicitud: value.numeroSolicitud,
       paisProteccionRef: value.paisProteccion.id,
       tipoCaducidad: value.tipoCaducidad,
-      titulo: value.titulo,
+      titulo: value.titulo ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.titulo) : [],
       viaProteccion: value.viaProteccion ? VIA_PROTECCION_RESPONSE_CONVERTER.fromTarget(value.viaProteccion) : null,
     } : (value as unknown as ISolicitudProteccionResponse);
   }
