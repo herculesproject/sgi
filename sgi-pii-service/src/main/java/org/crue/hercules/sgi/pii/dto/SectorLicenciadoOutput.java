@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.pii.dto;
 
 import java.time.Instant;
+import java.util.Collection;
+
+import org.crue.hercules.sgi.pii.model.SectorAplicacionNombre;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +33,7 @@ public class SectorLicenciadoOutput {
   @Builder
   public static class SectorAplicacion {
     private Long id;
-    private String nombre;
+    private Collection<SectorAplicacionNombre> nombre;
     private String descripcion;
   }
 }
