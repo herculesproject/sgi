@@ -24,7 +24,8 @@
       #sortGastos="matSort">
 
       <!-- Columnas dinamicas -->
-      <ng-container *ngFor="let column of formPart.gastosColumns" [matColumnDef]="column.id">
+      <ng-container *ngFor="let column of formPart.columnsGastos$ | async; trackBy: formPart.trackByColumnId"
+        [matColumnDef]="column.id">
         <th mat-header-cell *matHeaderCellDef [class.computed]="column.compute" mat-sort-header>
           {{column.name}}
         </th>
@@ -79,8 +80,8 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="formPart.displayGastosColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: formPart.displayGastosColumns;">
+      <tr mat-header-row *matHeaderRowDef="formPart.displayColumnsGastos"></tr>
+      <tr mat-row *matRowDef="let row; columns: formPart.displayColumnsGastos;">
       </tr>
       <tr mat-footer-row *matFooterRowDef="['totalGastosCaption', 'importeADeducir']" class="footer-row-total"></tr>
     </table>
@@ -92,7 +93,8 @@
       #sortIngresos="matSort">
 
       <!-- Columnas dinamicas -->
-      <ng-container *ngFor="let column of formPart.ingresosColumns" [matColumnDef]="column.id">
+      <ng-container *ngFor="let column of formPart.columnsIngresos$ | async; trackBy: formPart.trackByColumnId"
+        [matColumnDef]="column.id">
         <th mat-header-cell *matHeaderCellDef [class.computed]="column.compute" mat-sort-header>
           {{column.name}}
         </th>
@@ -136,8 +138,8 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="formPart.displayIngresosColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: formPart.displayIngresosColumns;">
+      <tr mat-header-row *matHeaderRowDef="formPart.displayColumnsIngresos"></tr>
+      <tr mat-row *matRowDef="let row; columns: formPart.displayColumnsIngresos;">
       </tr>
       <tr mat-footer-row *matFooterRowDef="['totalIngresosCaption', 'importeARepartir']" class="footer-row-total"></tr>
     </table>

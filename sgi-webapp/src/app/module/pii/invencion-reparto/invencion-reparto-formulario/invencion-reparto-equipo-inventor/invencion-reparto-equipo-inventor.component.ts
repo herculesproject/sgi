@@ -149,7 +149,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
         case 'importeADeducir':
           return repartoGasto.importeADeducir;
         default:
-          const gastoColumn = this.formPart.gastosColumns.find(column => column.id === property);
+          const gastoColumn = this.formPart.columnsGastos.find(column => column.id === property);
           return gastoColumn ? repartoGasto.invencionGasto.gasto.columnas[gastoColumn.id] : repartoGasto[property];
       }
     };
@@ -169,7 +169,7 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
         case 'importeARepartir':
           return repartoIngreso.importeARepartir;
         default:
-          const gastoColumn = this.formPart.gastosColumns.find(column => column.id === property);
+          const gastoColumn = this.formPart.columnsGastos.find(column => column.id === property);
           return gastoColumn ? repartoIngreso.invencionIngreso.ingreso.columnas[gastoColumn.id] : repartoIngreso[property];
       }
     };
@@ -295,11 +295,11 @@ export class InvencionRepartoEquipoInventorComponent extends FragmentComponent i
   }
 
   getTotalGastosCaptionColspan(): number {
-    return this.formPart.displayGastosColumns.length - 1;
+    return this.formPart.displayColumnsGastos.length - 1;
   }
 
   getTotalIngresosCaptionColspan(): number {
-    return this.formPart.displayIngresosColumns.length - 1;
+    return this.formPart.displayColumnsIngresos.length - 1;
   }
 
   getTotalRepartoEquipoInventorCaptionColspan(): number {

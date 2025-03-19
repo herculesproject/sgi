@@ -64,7 +64,7 @@ export class InvencionRepartoDatosGeneralesComponent extends FragmentComponent i
         case 'importeADeducir':
           return wrapper.value.importeADeducir;
         default:
-          const gastoColumn = this.formPart.gastosColumns.find(column => column.id === property);
+          const gastoColumn = this.formPart.columnsGastos.find(column => column.id === property);
           return gastoColumn ? wrapper.value.invencionGasto.gasto.columnas[gastoColumn.id] : wrapper.value[property];
       }
     };
@@ -82,7 +82,7 @@ export class InvencionRepartoDatosGeneralesComponent extends FragmentComponent i
         case 'importeARepartir':
           return wrapper.value.importeARepartir;
         default:
-          const gastoColumn = this.formPart.gastosColumns.find(column => column.id === property);
+          const gastoColumn = this.formPart.columnsGastos.find(column => column.id === property);
           return gastoColumn ? wrapper.value.invencionIngreso.ingreso.columnas[gastoColumn.id] : wrapper.value[property];
       }
     };
@@ -100,7 +100,7 @@ export class InvencionRepartoDatosGeneralesComponent extends FragmentComponent i
   }
 
   getTotalGastosCaptionColspan(): number {
-    return this.formPart.displayGastosColumns.length - 2;
+    return this.formPart.displayColumnsGastos.length - 2;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -141,7 +141,7 @@ export class InvencionRepartoDatosGeneralesComponent extends FragmentComponent i
   }
 
   getTotalIngresosCaptionColspan(): number {
-    return this.formPart.displayIngresosColumns.length - 2;
+    return this.formPart.displayColumnsIngresos.length - 2;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

@@ -19,12 +19,12 @@ export class InvencionRepartoDataResolverService {
     private readonly gastosInvencionService: GastosInvencionService,
   ) { }
 
-  getGastosReparto(invencionId: string): Observable<IDatoEconomico[]> {
-    return this.gastosInvencionService.getGastos(invencionId, TipoOperacion.REPARTO);
+  getGastosReparto(invencionId: number): Observable<IDatoEconomico[]> {
+    return this.gastosInvencionService.getGastos(invencionId.toString(), TipoOperacion.REPARTO);
   }
 
-  getGastosColumns(invencionId: string): Observable<IColumnDefinition[]> {
-    return this.gastosInvencionService.getColumnas(invencionId);
+  getGastosColumns(invencionId: number): Observable<IColumnDefinition[]> {
+    return this.gastosInvencionService.getColumnas(invencionId.toString());
   }
 
   /**
