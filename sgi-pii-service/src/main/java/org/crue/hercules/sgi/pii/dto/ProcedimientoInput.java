@@ -37,7 +37,6 @@ public class ProcedimientoInput {
 
   private Boolean generarAviso;
 
-  @Size(max = Procedimiento.COMENTARIOS_MAX_LENGTH)
-  private String comentarios;
+  private List<I18nFieldValueDto> comentarios;
 
 }

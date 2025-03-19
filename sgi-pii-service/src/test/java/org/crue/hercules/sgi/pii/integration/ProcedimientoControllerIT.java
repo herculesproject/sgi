@@ -252,9 +252,12 @@ class ProcedimientoControllerIT extends BaseIT {
     List<I18nFieldValueDto> accionATomarProcedimiento = new ArrayList<>();
     accionATomarProcedimiento.add(new I18nFieldValueDto(Language.ES, "Acción"));
 
+    List<I18nFieldValueDto> comentariosProcedimiento = new ArrayList<>();
+    comentariosProcedimiento.add(new I18nFieldValueDto(Language.ES, "testing procedimiento"));
+
     return ProcedimientoInput.builder()
         .accionATomar(accionATomarProcedimiento)
-        .comentarios("testing procedimiento")
+        .comentarios(comentariosProcedimiento)
         .fecha(Instant.now())
         .fechaLimiteAccion(Instant.now().plus(3, ChronoUnit.DAYS))
         .solicitudProteccionId(1L)

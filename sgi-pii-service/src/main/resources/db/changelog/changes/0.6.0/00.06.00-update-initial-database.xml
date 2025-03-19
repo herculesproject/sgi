@@ -583,4 +583,35 @@
 
     <dropColumn columnName="accion_a_tomar" tableName="procedimiento" />
   </changeSet>
+
+  <changeSet author="master" id="00.06.00-21">
+    <createTable tableName="procedimiento_comentarios">
+      <column name="procedimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="procedimiento_comentarios"
+      columnNames="procedimiento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="procedimiento_id"
+      baseTableName="procedimiento_comentarios"
+      constraintName="FK_PROCEDIMIENTOCOMENTARIOS_PROCEDIMIENTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="procedimiento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}procedimiento_comentarios(procedimiento_id, value_, lang) SELECT
+      id, comentarios, '${defaultLang}' FROM ${schemaPrefix}procedimiento WHERE comentarios IS NOT
+      NULL AND NULLIF(TRIM(comentarios), '') IS NOT NULL</sql>
+
+    <dropColumn columnName="comentarios" tableName="procedimiento" />
+  </changeSet>
+
+
 </databaseChangeLog>

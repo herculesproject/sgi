@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Collection;
 
 import org.crue.hercules.sgi.pii.model.ProcedimientoAccionATomar;
+import org.crue.hercules.sgi.pii.model.ProcedimientoComentarios;
 import org.crue.hercules.sgi.pii.model.TipoProcedimientoDescripcion;
 import org.crue.hercules.sgi.pii.model.TipoProcedimientoNombre;
 
@@ -27,7 +28,7 @@ public class ProcedimientoOutput {
   private Collection<ProcedimientoAccionATomar> accionATomar;
   private Instant fechaLimiteAccion;
   private Boolean generarAviso;
-  private String comentarios;
+  private Collection<ProcedimientoComentarios> comentarios;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

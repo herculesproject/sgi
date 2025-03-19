@@ -86,8 +86,12 @@ public class Procedimiento extends BaseEntity {
   @Column(name = "generar_aviso", nullable = true)
   private Boolean generarAviso;
 
-  @Column(name = "comentarios", length = COMENTARIOS_MAX_LENGTH, nullable = true)
-  private String comentarios;
+  /** Comentarios */
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "procedimiento_comentarios", joinColumns = @JoinColumn(name = "procedimiento_id"))
+  @Valid
+  @Builder.Default
+  private Set<ProcedimientoComentarios> comentarios = new HashSet<>();
 
   /**
    * Interfaz para marcar validaciones en la creacion de la entidad.
