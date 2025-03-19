@@ -114,7 +114,7 @@
           {{'eer.empresa-explotacion-resultados.objeto-social' | translate}}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.objetoSocial}}
+          <sgi-i18n-table-field [field]="element.objetoSocial"></sgi-i18n-table-field>
         </td>
       </ng-container>
 

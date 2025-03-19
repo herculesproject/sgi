@@ -27,7 +27,7 @@ class EmpresaExplotacionResultadosRequestConverter
       nombreRazonSocial: value.nombreRazonSocial ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombreRazonSocial) : [],
       notario: value.notario,
       numeroProtocolo: value.numeroProtocolo,
-      objetoSocial: value.objetoSocial,
+      objetoSocial: value.objetoSocial ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.objetoSocial) : [],
       observaciones: value.observaciones,
       solicitante: value.solicitanteRef ? { id: value.solicitanteRef } as IPersona : undefined,
       activo: undefined
@@ -52,7 +52,7 @@ class EmpresaExplotacionResultadosRequestConverter
       nombreRazonSocial: value.nombreRazonSocial ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombreRazonSocial) : [],
       notario: value.notario,
       numeroProtocolo: value.numeroProtocolo,
-      objetoSocial: value.objetoSocial,
+      objetoSocial: value.objetoSocial ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.objetoSocial) : [],
       observaciones: value.observaciones,
       solicitanteRef: value.solicitante?.id
     };

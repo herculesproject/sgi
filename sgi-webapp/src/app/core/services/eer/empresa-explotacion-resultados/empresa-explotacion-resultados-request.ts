@@ -7,7 +7,7 @@ export interface IEmpresaExplotacionResultadosRequest {
   solicitanteRef: string;
   nombreRazonSocial: I18nFieldValueRequest[];
   entidadRef: string;
-  objetoSocial: string;
+  objetoSocial: I18nFieldValueRequest[];
   conocimientoTecnologia: string;
   numeroProtocolo: string;
   notario: string;

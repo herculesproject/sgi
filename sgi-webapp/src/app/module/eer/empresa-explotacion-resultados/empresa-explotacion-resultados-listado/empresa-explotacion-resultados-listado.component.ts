@@ -68,6 +68,8 @@ export class EmpresaExplotacionResultadosListadoComponent
     this.resolveSortProperty = (column: string) => {
       if (column === 'nombreRazonSocial') {
         return 'nombreRazonSocial.value';
+      } else if (column === 'objetoSocial') {
+        return 'objetoSocial.value';
       }
       return column;
     }
@@ -137,7 +139,7 @@ export class EmpresaExplotacionResultadosListadoComponent
     const controls = this.formGroup.controls;
     const rsqlFilter = new RSQLSgiRestFilter('nombreRazonSocial.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombreRazonSocial.value)
       .and('entidadRef', SgiRestFilterOperator.LIKE_ICASE, controls.entidad.value?.id)
-      .and('objetoSocial', SgiRestFilterOperator.LIKE_ICASE, controls.objetoSocial.value)
+      .and('objetoSocial.value', SgiRestFilterOperator.LIKE_ICASE, controls.objetoSocial.value)
       .and('fechaConstitucion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaConstitucionDesde.value))
       .and('fechaConstitucion', SgiRestFilterOperator.LOWER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaConstitucionHasta.value))
       .and('fechaIncorporacion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaIncorporacionDesde.value))

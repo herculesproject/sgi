@@ -70,11 +70,10 @@
         <!--Objeto social -->
         <mat-form-field>
           <mat-label>{{'eer.empresa-explotacion-resultados.objeto-social' | translate}}</mat-label>
-          <textarea matInput type="text" #objSocial
-            placeholder="{{'eer.empresa-explotacion-resultados.objeto-social' | translate}}"
+          <sgi-i18n-textarea #objSocial placeholder="{{'eer.empresa-explotacion-resultados.objeto-social' | translate}}"
             formControlName="objetoSocial" maxLength="1000" required>
-            </textarea>
-          <mat-hint align="end">{{objSocial.value.length}} / 1000</mat-hint>
+          </sgi-i18n-textarea>
+          <mat-hint align="end">{{objSocial.editingValue.length}} / 1000</mat-hint>
           <mat-error *ngIf="formGroup.controls.objetoSocial.errors?.required">
             {{ 'error.required.entity' | translate:msgParamObjetoSocialEntity }}
           </mat-error>

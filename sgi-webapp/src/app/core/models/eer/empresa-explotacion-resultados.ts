@@ -38,7 +38,7 @@ export interface IEmpresaExplotacionResultados {
   solicitante: IPersona;
   nombreRazonSocial: I18nFieldValue[];
   entidad: IEmpresa;
-  objetoSocial: string;
+  objetoSocial: I18nFieldValue[];
   conocimientoTecnologia: string;
   numeroProtocolo: string;
   notario: string;
