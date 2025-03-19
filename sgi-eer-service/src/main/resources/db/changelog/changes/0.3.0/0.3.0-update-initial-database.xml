@@ -64,4 +64,31 @@
     <dropColumn columnName="objeto_social" tableName="empresa" />
   </changeSet>
 
+  <changeSet author="master" id="0.3.0-3">
+    <createTable tableName="empresa_conocimiento_tecnologia">
+      <column name="empresa_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(1000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="empresa_conocimiento_tecnologia" columnNames="empresa_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="empresa_id"
+      baseTableName="empresa_conocimiento_tecnologia"
+      constraintName="FK_EMPRESACONOCIMIENTOTECNOLOGIA_EMPRESA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="empresa" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}empresa_conocimiento_tecnologia(empresa_id, value_, lang) SELECT
+      id, conocimiento_tecnologia, '${defaultLang}' FROM ${schemaPrefix}empresa WHERE
+      conocimiento_tecnologia IS NOT NULL</sql>
+
+    <dropColumn columnName="conocimiento_tecnologia" tableName="empresa" />
+  </changeSet>
 </databaseChangeLog>

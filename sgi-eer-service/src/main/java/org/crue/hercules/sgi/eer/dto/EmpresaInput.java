@@ -44,9 +44,8 @@ public class EmpresaInput implements Serializable {
   @NotEmpty
   private List<I18nFieldValueDto> objetoSocial;
 
-  @Size(max = Empresa.CONOCIMIENTO_TECNOLOGIA_LENGTH)
-  @NotBlank
-  private String conocimientoTecnologia;
+  @NotEmpty
+  private List<I18nFieldValueDto> conocimientoTecnologia;
 
   @Size(max = Empresa.NUMERO_PROTOCOLO_LENGTH)
   private String numeroProtocolo;

@@ -20,7 +20,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -131,10 +130,12 @@ public class Empresa extends BaseActivableEntity {
   private Set<EmpresaObjetoSocial> objetoSocial = new HashSet<>();
 
   /** Conocimiento tecnologica */
-  @Column(name = "conocimiento_tecnologia", length = Empresa.CONOCIMIENTO_TECNOLOGIA_LENGTH, nullable = false)
-  @Size(max = Empresa.CONOCIMIENTO_TECNOLOGIA_LENGTH)
-  @NotBlank
-  private String conocimientoTecnologia;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "empresa_conocimiento_tecnologia", joinColumns = @JoinColumn(name = "empresa_id"))
+  @Valid
+  @NotEmpty
+  @Builder.Default
+  private Set<EmpresaConocimientoTecnologia> conocimientoTecnologia = new HashSet<>();
 
   /** Número protocolo */
   @Column(name = "numero_protocolo", length = Empresa.NUMERO_PROTOCOLO_LENGTH, nullable = true)

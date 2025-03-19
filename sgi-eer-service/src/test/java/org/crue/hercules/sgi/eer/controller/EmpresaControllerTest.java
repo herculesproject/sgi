@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.eer.exceptions.EmpresaNotFoundException;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
+import org.crue.hercules.sgi.eer.model.EmpresaConocimientoTecnologia;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
 import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
@@ -429,9 +430,12 @@ class EmpresaControllerTest extends BaseControllerTest {
     Set<EmpresaObjetoSocial> objetoSocialEmpresa = new HashSet<>();
     objetoSocialEmpresa.add(new EmpresaObjetoSocial(Language.ES, "objetoSocial"));
 
+    Set<EmpresaConocimientoTecnologia> conocimientoTecnologiaEmpresa = new HashSet<>();
+    conocimientoTecnologiaEmpresa.add(new EmpresaConocimientoTecnologia(Language.ES, "conocimientoTecnologia"));
+
     return Empresa.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
         .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial(objetoSocialEmpresa)
-        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(activo)
+        .conocimientoTecnologia(conocimientoTecnologiaEmpresa).nombreRazonSocial(nombreEmpresa).activo(activo)
         .build();
   }
 
@@ -448,9 +452,12 @@ class EmpresaControllerTest extends BaseControllerTest {
 
     Set<EmpresaObjetoSocial> objetoSocialEmpresa = new HashSet<>();
     objetoSocialEmpresa.add(new EmpresaObjetoSocial(Language.ES, "objetoSocial"));
+
+    Set<EmpresaConocimientoTecnologia> conocimientoTecnologiaEmpresa = new HashSet<>();
+    conocimientoTecnologiaEmpresa.add(new EmpresaConocimientoTecnologia(Language.ES, "conocimientoTecnologia"));
     return EmpresaOutput.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
         .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial(objetoSocialEmpresa)
-        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(activo)
+        .conocimientoTecnologia(conocimientoTecnologiaEmpresa).nombreRazonSocial(nombreEmpresa).activo(activo)
         .build();
   }
 

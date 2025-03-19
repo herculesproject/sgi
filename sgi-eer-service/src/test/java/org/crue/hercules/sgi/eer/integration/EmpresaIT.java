@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eer.dto.EmpresaComposicionSociedadOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
 import org.crue.hercules.sgi.eer.model.Empresa;
+import org.crue.hercules.sgi.eer.model.EmpresaConocimientoTecnologia;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaAdministracionSociedad.TipoAdministracion;
@@ -72,9 +73,11 @@ class EmpresaIT extends BaseIT {
     nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial"));
     Set<EmpresaObjetoSocial> objetoSocialEmpresa = new HashSet<>();
     objetoSocialEmpresa.add(new EmpresaObjetoSocial(Language.ES, "objetoSocial"));
+    Set<EmpresaConocimientoTecnologia> conocimientoTecnologiaEmpresa = new HashSet<>();
+    conocimientoTecnologiaEmpresa.add(new EmpresaConocimientoTecnologia(Language.ES, "conocimientoTecnologia"));
     Empresa data = Empresa.builder().fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
         .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial(objetoSocialEmpresa)
-        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(Boolean.TRUE)
+        .conocimientoTecnologia(conocimientoTecnologiaEmpresa).nombreRazonSocial(nombreEmpresa).activo(Boolean.TRUE)
         .build();
 
     // when: create Empresa
@@ -105,9 +108,11 @@ class EmpresaIT extends BaseIT {
     nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial " + id));
     Set<EmpresaObjetoSocial> objetoSocialEmpresa = new HashSet<>();
     objetoSocialEmpresa.add(new EmpresaObjetoSocial(Language.ES, "objetoSocial"));
+    Set<EmpresaConocimientoTecnologia> conocimientoTecnologiaEmpresa = new HashSet<>();
+    conocimientoTecnologiaEmpresa.add(new EmpresaConocimientoTecnologia(Language.ES, "conocimientoTecnologia"));
     Empresa data = Empresa.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
         .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial(objetoSocialEmpresa)
-        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa)
+        .conocimientoTecnologia(conocimientoTecnologiaEmpresa).nombreRazonSocial(nombreEmpresa)
         .activo(Boolean.TRUE)
         .build();
 

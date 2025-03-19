@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
+import org.crue.hercules.sgi.eer.model.EmpresaConocimientoTecnologia;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
 import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
 
@@ -28,7 +29,7 @@ public class EmpresaOutput implements Serializable {
   private Collection<EmpresaNombreRazonSocial> nombreRazonSocial;
   private String entidadRef;
   private Collection<EmpresaObjetoSocial> objetoSocial;
-  private String conocimientoTecnologia;
+  private Collection<EmpresaConocimientoTecnologia> conocimientoTecnologia;
   private String numeroProtocolo;
   private String notario;
   private Instant fechaConstitucion;
