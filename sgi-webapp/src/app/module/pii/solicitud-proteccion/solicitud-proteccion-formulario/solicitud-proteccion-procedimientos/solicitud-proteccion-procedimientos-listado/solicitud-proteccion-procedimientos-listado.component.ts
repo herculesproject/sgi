@@ -71,6 +71,8 @@ export class SolicitudProteccionProcedimientosListadoComponent extends FragmentC
       switch (property) {
         case 'tipo-procedimiento':
           return this.languageService.getFieldValue(item.value.tipoProcedimiento?.nombre);
+        case 'accion':
+          return this.languageService.getFieldValue(item.value.accionATomar);
         default: return item.value[property];
       }
     };

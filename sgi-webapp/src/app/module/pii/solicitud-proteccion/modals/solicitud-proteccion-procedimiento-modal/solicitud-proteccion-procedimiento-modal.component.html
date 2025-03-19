@@ -30,8 +30,8 @@
       <mat-form-field fxFlex="65">
         <mat-label>{{'pii.solicitud-proteccion.procedimiento.accion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL }}
         </mat-label>
-        <input matInput formControlName="accionATomar" id="accionATomar"
-          placeholder="{{'pii.solicitud-proteccion.procedimiento.accion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL }}">
+        <sgi-i18n-input formControlName="accionATomar"
+          placeholder="{{'pii.solicitud-proteccion.procedimiento.accion' | translate:MSG_PARAMS.CARDINALIRY.PLURAL }}"></sgi-i18n-input>
         <mat-error *ngIf="formGroup.controls.accionATomar.errors?.maxlength">
           {{'error.maxlength.entity' | translate:msgParamAccionATomarEntity }}
         </mat-error>

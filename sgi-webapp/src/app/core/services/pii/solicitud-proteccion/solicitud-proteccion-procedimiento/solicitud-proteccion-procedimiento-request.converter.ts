@@ -1,3 +1,4 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProcedimiento } from '@core/models/pii/procedimiento';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { ITipoProcedimiento } from '@core/models/pii/tipo-procedimiento';
@@ -5,13 +6,13 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IProcedimientoRequest } from './solicitud-proteccion-procedimiento-request';
 
-export class SolicitudProteccionProcedimientoRequestConverter extends SgiBaseConverter<IProcedimientoRequest, IProcedimiento>{
+export class SolicitudProteccionProcedimientoRequestConverter extends SgiBaseConverter<IProcedimientoRequest, IProcedimiento> {
 
   toTarget(value: IProcedimientoRequest): IProcedimiento {
 
     return value ? {
       id: undefined,
-      accionATomar: value.accionATomar,
+      accionATomar: value.accionATomar ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.accionATomar) : [],
       comentarios: value.comentarios,
       fecha: LuxonUtils.fromBackend(value.fecha),
       fechaLimiteAccion: LuxonUtils.fromBackend(value.fechaLimiteAccion),
@@ -23,7 +24,7 @@ export class SolicitudProteccionProcedimientoRequestConverter extends SgiBaseCon
 
   fromTarget(value: IProcedimiento): IProcedimientoRequest {
     return value ? {
-      accionATomar: value.accionATomar,
+      accionATomar: value.accionATomar ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.accionATomar) : [],
       comentarios: value.comentarios,
       fecha: LuxonUtils.toBackend(value.fecha),
       fechaLimiteAccion: LuxonUtils.toBackend(value.fechaLimiteAccion),
