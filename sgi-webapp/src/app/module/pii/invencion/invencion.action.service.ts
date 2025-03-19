@@ -152,7 +152,13 @@ export class InvencionActionService extends ActionService {
       this.addFragment(this.FRAGMENT.GASTOS, this.invencionGastos);
 
       this.invencionIngresos = new InvencionIngresosFragment(
-        this.data.invencion, ingresosInvencionService, invencionService, relacionService, proyectoService);
+        this.data.invencion,
+        ingresosInvencionService,
+        invencionService,
+        relacionService,
+        proyectoService,
+        languageService
+      );
       this.addFragment(this.FRAGMENT.INGRESOS, this.invencionIngresos);
 
       this.periodosTitularidad = new PeriodoTitularidadFragment(this.id, logger, periodoTitularidadService, invencionService,
