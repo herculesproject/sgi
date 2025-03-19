@@ -16,7 +16,7 @@ class EmpresaExplotacionResultadosRequestConverter
       id: undefined,
       fechaSolicitud: LuxonUtils.fromBackend(value.fechaSolicitud),
       tipoEmpresa: value.tipoEmpresa,
-      conocimientoTecnologia: value.conocimientoTecnologia,
+      conocimientoTecnologia: value.conocimientoTecnologia ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.conocimientoTecnologia) : [],
       entidad: value.entidadRef ? { id: value.entidadRef } as IEmpresa : undefined,
       estado: value.estado,
       fechaAprobacionCG: LuxonUtils.fromBackend(value.fechaAprobacionCG),
@@ -41,7 +41,7 @@ class EmpresaExplotacionResultadosRequestConverter
     return {
       fechaSolicitud: LuxonUtils.toBackend(value.fechaSolicitud),
       tipoEmpresa: value.tipoEmpresa,
-      conocimientoTecnologia: value.conocimientoTecnologia,
+      conocimientoTecnologia: value.conocimientoTecnologia ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.conocimientoTecnologia) : [],
       entidadRef: value.entidad?.id,
       estado: value.estado,
       fechaAprobacionCG: LuxonUtils.toBackend(value.fechaAprobacionCG),

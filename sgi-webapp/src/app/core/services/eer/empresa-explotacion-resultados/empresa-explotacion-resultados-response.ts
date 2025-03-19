@@ -9,7 +9,7 @@ export interface IEmpresaExplotacionResultadosResponse {
   nombreRazonSocial: I18nFieldValueResponse[];
   entidadRef: string;
   objetoSocial: I18nFieldValueResponse[];
-  conocimientoTecnologia: string;
+  conocimientoTecnologia: I18nFieldValueResponse[];
   numeroProtocolo: string;
   notario: string;
   fechaConstitucion: string;
