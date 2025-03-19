@@ -46,10 +46,9 @@
         <!-- Nombre razón social -->
         <mat-form-field *ngIf="this.formPart.showRazonSocial">
           <mat-label>{{'eer.empresa-explotacion-resultados.nombre-razon-social' | translate}}</mat-label>
-          <input matInput type="text"
-            placeholder="{{'eer.empresa-explotacion-resultados.nombre-razon-social' | translate}}"
+          <sgi-i18n-input placeholder="{{'eer.empresa-explotacion-resultados.nombre-razon-social' | translate}}"
             formControlName="nombreRazonSocial" [required]="this.formPart.showRazonSocial"
-            [readonly]="!this.formPart.showRazonSocial">
+            [disabled]="!this.formPart.showRazonSocial"></sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.nombreRazonSocial.errors?.required">
             {{ 'error.required.entity' | translate:msgParamNombreRazonSocialEntity }}
           </mat-error>

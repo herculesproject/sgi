@@ -4,6 +4,7 @@ import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IEmpresaExplotacionResultadosRequest } from './empresa-explotacion-resultados-request';
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class EmpresaExplotacionResultadosRequestConverter
   extends SgiBaseConverter<IEmpresaExplotacionResultadosRequest, IEmpresaExplotacionResultados> {
@@ -23,7 +24,7 @@ class EmpresaExplotacionResultadosRequestConverter
       fechaConstitucion: LuxonUtils.fromBackend(value.fechaConstitucion),
       fechaDesvinculacion: LuxonUtils.fromBackend(value.fechaDesvinculacion),
       fechaIncorporacion: LuxonUtils.fromBackend(value.fechaIncorporacion),
-      nombreRazonSocial: value.nombreRazonSocial,
+      nombreRazonSocial: value.nombreRazonSocial ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.nombreRazonSocial) : [],
       notario: value.notario,
       numeroProtocolo: value.numeroProtocolo,
       objetoSocial: value.objetoSocial,
@@ -48,7 +49,7 @@ class EmpresaExplotacionResultadosRequestConverter
       fechaConstitucion: LuxonUtils.toBackend(value.fechaConstitucion),
       fechaDesvinculacion: LuxonUtils.toBackend(value.fechaDesvinculacion),
       fechaIncorporacion: LuxonUtils.toBackend(value.fechaIncorporacion),
-      nombreRazonSocial: value.nombreRazonSocial,
+      nombreRazonSocial: value.nombreRazonSocial ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombreRazonSocial) : [],
       notario: value.notario,
       numeroProtocolo: value.numeroProtocolo,
       objetoSocial: value.objetoSocial,

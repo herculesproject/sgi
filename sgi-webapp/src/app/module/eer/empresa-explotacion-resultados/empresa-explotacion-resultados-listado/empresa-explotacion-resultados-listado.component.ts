@@ -64,6 +64,13 @@ export class EmpresaExplotacionResultadosListadoComponent
     private empresaService: EmpresaService
   ) {
     super(translate);
+
+    this.resolveSortProperty = (column: string) => {
+      if (column === 'nombreRazonSocial') {
+        return 'nombreRazonSocial.value';
+      }
+      return column;
+    }
   }
 
   ngOnInit(): void {
@@ -128,7 +135,7 @@ export class EmpresaExplotacionResultadosListadoComponent
 
   protected createFilter(): SgiRestFilter {
     const controls = this.formGroup.controls;
-    const rsqlFilter = new RSQLSgiRestFilter('nombreRazonSocial', SgiRestFilterOperator.LIKE_ICASE, controls.nombreRazonSocial.value)
+    const rsqlFilter = new RSQLSgiRestFilter('nombreRazonSocial.value', SgiRestFilterOperator.LIKE_ICASE, controls.nombreRazonSocial.value)
       .and('entidadRef', SgiRestFilterOperator.LIKE_ICASE, controls.entidad.value?.id)
       .and('objetoSocial', SgiRestFilterOperator.LIKE_ICASE, controls.objetoSocial.value)
       .and('fechaConstitucion', SgiRestFilterOperator.GREATHER_OR_EQUAL, LuxonUtils.toBackend(controls.fechaConstitucionDesde.value))

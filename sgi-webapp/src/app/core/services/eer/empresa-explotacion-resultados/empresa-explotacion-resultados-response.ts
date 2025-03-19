@@ -1,3 +1,4 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
 import { EstadoEmpresa, TipoEmpresa } from "@core/models/eer/empresa-explotacion-resultados";
 
 export interface IEmpresaExplotacionResultadosResponse {
@@ -5,7 +6,7 @@ export interface IEmpresaExplotacionResultadosResponse {
   fechaSolicitud: string;
   tipoEmpresa: TipoEmpresa;
   solicitanteRef: string;
-  nombreRazonSocial: string;
+  nombreRazonSocial: I18nFieldValueResponse[];
   entidadRef: string;
   objetoSocial: string;
   conocimientoTecnologia: string;
