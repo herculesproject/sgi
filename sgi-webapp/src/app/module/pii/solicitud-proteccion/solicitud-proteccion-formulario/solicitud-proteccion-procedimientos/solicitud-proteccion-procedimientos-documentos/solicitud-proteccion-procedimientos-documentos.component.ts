@@ -10,12 +10,11 @@ import { IProcedimientoDocumento } from '@core/models/pii/procedimiento-document
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
-import { SolicitudProteccionProcedimientoDocumentoService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion-procedimiento-documento/solicitud-proteccion-procedimiento-documento.service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { SolicitudProteccionProcedimientoDocumentoModalComponent } from '../../../modals/solicitud-proteccion-procedimiento-documento-modal/solicitud-proteccion-procedimiento-documento-modal.component';
@@ -69,10 +68,9 @@ export class SolicitudProteccionProcedimientosDocumentosComponent extends Fragme
     private snackBarService: SnackBarService,
     private translate: TranslateService,
     private matDialog: MatDialog,
-    private solicitudProteccionProcedimientoDocumentoService: SolicitudProteccionProcedimientoDocumentoService,
-    private logger: NGXLogger,
     private documentoService: DocumentoService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.PROCEDIMIENTOS, actionService, translate);
     this.formPart = this.fragment as SolicitudProteccionProcedimientosFragment;
@@ -84,6 +82,16 @@ export class SolicitudProteccionProcedimientosDocumentosComponent extends Fragme
 
 
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor = (wrapper: StatusWrapper<IProcedimientoDocumento>, property: string) => {
+      switch (property) {
+        case 'nombre':
+          return this.languageService.getFieldValue(wrapper.value?.nombre);
+        case 'fichero':
+          return wrapper.value?.documento?.nombre;
+        default:
+          return wrapper.value[property];
+      }
+    }
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.procedimientoDocumentos$.subscribe(elements => {
       this.dataSource.data = elements;
