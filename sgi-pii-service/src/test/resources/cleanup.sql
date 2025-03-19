@@ -1,5 +1,6 @@
 -- vacia la bd
 DELETE FROM test.pais_validado;
+DELETE FROM test.procedimiento_documento_nombre;
 DELETE FROM test.procedimiento_documento;
 DELETE FROM test.procedimiento_accion_a_tomar;
 DELETE FROM test.procedimiento_comentarios;

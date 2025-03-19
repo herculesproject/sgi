@@ -4,10 +4,8 @@ import java.time.Instant;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
-import org.crue.hercules.sgi.pii.model.Procedimiento;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

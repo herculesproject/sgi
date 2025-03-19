@@ -613,5 +613,34 @@
     <dropColumn columnName="comentarios" tableName="procedimiento" />
   </changeSet>
 
+  <changeSet author="master" id="00.06.00-22">
+    <createTable tableName="procedimiento_documento_nombre">
+      <column name="procedimiento_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="procedimiento_documento_nombre"
+      columnNames="procedimiento_documento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="procedimiento_documento_id"
+      baseTableName="procedimiento_documento_nombre"
+      constraintName="FK_PROCEDIMIENTODOCUMENTONOMBRE_PROCEDIMIENTODOCUMENTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="procedimiento_documento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}procedimiento_documento_nombre(procedimiento_documento_id,
+      value_, lang) SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}procedimiento_documento
+      WHERE nombre IS NOT NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="procedimiento_documento" />
+  </changeSet>
+
 
 </databaseChangeLog>
