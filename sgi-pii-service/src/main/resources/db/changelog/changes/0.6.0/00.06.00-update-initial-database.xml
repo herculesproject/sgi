@@ -555,4 +555,32 @@
 
     <dropColumn columnName="descripcion" tableName="tipo_caducidad" />
   </changeSet>
+
+  <changeSet author="master" id="00.06.00-20">
+    <createTable tableName="procedimiento_accion_a_tomar">
+      <column name="procedimiento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(500)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="procedimiento_accion_a_tomar" columnNames="procedimiento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="procedimiento_id"
+      baseTableName="procedimiento_accion_a_tomar"
+      constraintName="FK_PROCEDIMIENTOACCIONATOMAR_PROCEDIMIENTO" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="procedimiento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}procedimiento_accion_a_tomar(procedimiento_id, value_, lang)
+      SELECT id, accion_a_tomar, '${defaultLang}' FROM ${schemaPrefix}procedimiento WHERE
+      accion_a_tomar IS NOT NULL</sql>
+
+    <dropColumn columnName="accion_a_tomar" tableName="procedimiento" />
+  </changeSet>
 </databaseChangeLog>

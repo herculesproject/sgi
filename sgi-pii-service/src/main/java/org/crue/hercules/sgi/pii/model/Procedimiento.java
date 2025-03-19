@@ -1,9 +1,14 @@
 package org.crue.hercules.sgi.pii.model;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 
 import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
 
@@ -66,8 +72,11 @@ public class Procedimiento extends BaseEntity {
   private final SolicitudProteccion solicitudProteccion = null;
 
   /** Acciones a Tomar */
-  @Column(name = "accion_a_tomar", length = LONG_TEXT_LENGTH, nullable = true)
-  private String accionATomar;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "procedimiento_accion_a_tomar", joinColumns = @JoinColumn(name = "procedimiento_id"))
+  @Valid
+  @Builder.Default
+  private Set<ProcedimientoAccionATomar> accionATomar = new HashSet<>();
 
   /** Fecha límite del procedimiento asociado a la solicitud */
   @Column(name = "fecha_limite_accion", nullable = true)

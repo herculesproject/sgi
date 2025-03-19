@@ -3,10 +3,14 @@ package org.crue.hercules.sgi.pii.integration;
 import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.pii.dto.ProcedimientoDocumentoOutput;
 import org.crue.hercules.sgi.pii.dto.ProcedimientoInput;
 import org.crue.hercules.sgi.pii.dto.ProcedimientoOutput;
@@ -78,7 +82,8 @@ class ProcedimientoControllerIT extends BaseIT {
     Assertions.assertThat(output.getFechaLimiteAccion()).isEqualTo(input.getFechaLimiteAccion());
     Assertions.assertThat(output.getGenerarAviso()).isTrue();
     Assertions.assertThat(output.getSolicitudProteccionId()).isEqualTo(input.getSolicitudProteccionId());
-    Assertions.assertThat(output.getAccionATomar()).isEqualTo(input.getAccionATomar());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getAccionATomar(), Language.ES))
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getAccionATomar(), Language.ES));
     Assertions.assertThat(output.getTipoProcedimiento()).isNotNull();
     Assertions.assertThat(output.getTipoProcedimiento().getId()).isEqualTo(input.getTipoProcedimientoId());
   }
@@ -119,7 +124,8 @@ class ProcedimientoControllerIT extends BaseIT {
     Assertions.assertThat(output.getFechaLimiteAccion()).isEqualTo(expected.getFechaLimiteAccion());
     Assertions.assertThat(output.getGenerarAviso()).isTrue();
     Assertions.assertThat(output.getSolicitudProteccionId()).isEqualTo(expected.getSolicitudProteccionId());
-    Assertions.assertThat(output.getAccionATomar()).isEqualTo(expected.getAccionATomar());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getAccionATomar(), Language.ES))
+        .isEqualTo(I18nHelper.getValueForLanguage(expected.getAccionATomar(), Language.ES));
     Assertions.assertThat(output.getTipoProcedimiento().getId()).isEqualTo(expected.getTipoProcedimiento().getId());
   }
 
@@ -158,7 +164,8 @@ class ProcedimientoControllerIT extends BaseIT {
         .isEqualTo(input.getFechaLimiteAccion().toEpochMilli());
     Assertions.assertThat(output.getGenerarAviso()).isTrue();
     Assertions.assertThat(output.getSolicitudProteccionId()).isEqualTo(input.getSolicitudProteccionId());
-    Assertions.assertThat(output.getAccionATomar()).isEqualTo(input.getAccionATomar());
+    Assertions.assertThat(I18nHelper.getValueForLanguage(output.getAccionATomar(), Language.ES))
+        .isEqualTo(I18nHelper.getValueForLanguage(input.getAccionATomar(), Language.ES));
     Assertions.assertThat(output.getTipoProcedimiento()).isNotNull();
     Assertions.assertThat(output.getTipoProcedimiento().getId()).isEqualTo(input.getTipoProcedimientoId());
   }
@@ -242,9 +249,11 @@ class ProcedimientoControllerIT extends BaseIT {
   }
 
   private ProcedimientoInput buildMockProcedimientoInput() {
+    List<I18nFieldValueDto> accionATomarProcedimiento = new ArrayList<>();
+    accionATomarProcedimiento.add(new I18nFieldValueDto(Language.ES, "Acción"));
 
     return ProcedimientoInput.builder()
-        .accionATomar("Acción")
+        .accionATomar(accionATomarProcedimiento)
         .comentarios("testing procedimiento")
         .fecha(Instant.now())
         .fechaLimiteAccion(Instant.now().plus(3, ChronoUnit.DAYS))

@@ -55,7 +55,7 @@ public class ProcedimientoComService {
     PiiComFechaLimiteProcedimientoData data = PiiComFechaLimiteProcedimientoData.builder()
         .tipoProcedimiento(I18nHelper.getValueForCurrentLanguage(procedimiento.getTipoProcedimiento().getDescripcion()))
         .fechaLimite(procedimiento.getFechaLimiteAccion())
-        .accionATomar(procedimiento.getAccionATomar())
+        .accionATomar(I18nHelper.getValueForCurrentLanguage(procedimiento.getAccionATomar()))
         .build();
 
     EmailOutput comunicado = null;
