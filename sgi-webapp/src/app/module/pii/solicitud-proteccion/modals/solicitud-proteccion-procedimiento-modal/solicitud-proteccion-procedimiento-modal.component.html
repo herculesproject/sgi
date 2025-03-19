@@ -60,8 +60,8 @@
 
     <mat-form-field fxFlex>
       <mat-label>{{'pii.solicitud-proteccion.procedimiento.comentarios' | translate}}</mat-label>
-      <textarea matInput formControlName="comentarios" id="comentarios"
-        placeholder="{{'pii.solicitud-proteccion.procedimiento.comentarios' | translate}}"></textarea>
+      <sgi-i18n-textarea formControlName="comentarios"
+        placeholder="{{'pii.solicitud-proteccion.procedimiento.comentarios' | translate}}"></sgi-i18n-textarea>
       <mat-error *ngIf="formGroup.controls.comentarios.errors?.maxlength">
         {{'error.maxlength.entity' | translate:msgParamComentariosEntity}}
       </mat-error>

@@ -81,7 +81,7 @@ export class SolicitudProteccionProcedimientoModalComponent
           I18nValidators.maxLength(this.ACCIONES_A_TOMAR_MAX_LENGTH)
         ]),
         comentarios: new FormControl(this.data?.procedimiento.value.comentarios, [
-          Validators.maxLength(this.COMENTARIOS_MAX_LENGTH)
+          I18nValidators.maxLength(this.COMENTARIOS_MAX_LENGTH)
         ]),
         fecha: new FormControl(this.data?.procedimiento.value.fecha, [
           Validators.required,

@@ -12,6 +12,6 @@ export interface IProcedimiento {
   accionATomar: I18nFieldValue[];
   fechaLimiteAccion: DateTime;
   generarAviso: boolean;
-  comentarios: string;
+  comentarios: I18nFieldValue[];
 
 }

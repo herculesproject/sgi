@@ -14,7 +14,7 @@ class SolicitudProteccionProcedimientoResponseConverter extends SgiBaseConverter
     return {
       id: value.id,
       accionATomar: value.accionATomar ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.accionATomar) : [],
-      comentarios: value.comentarios,
+      comentarios: value.comentarios ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentarios) : [],
       fecha: LuxonUtils.fromBackend(value.fecha),
       fechaLimiteAccion: LuxonUtils.fromBackend(value.fechaLimiteAccion),
       generarAviso: value.generarAviso,
@@ -30,7 +30,7 @@ class SolicitudProteccionProcedimientoResponseConverter extends SgiBaseConverter
     return {
       id: value.id,
       accionATomar: value.accionATomar ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.accionATomar) : [],
-      comentarios: value.comentarios,
+      comentarios: value.comentarios ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentarios) : [],
       fecha: LuxonUtils.toBackend(value.fecha),
       fechaLimiteAccion: LuxonUtils.toBackend(value.fechaLimiteAccion),
       generarAviso: value.generarAviso,

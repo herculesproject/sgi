@@ -8,6 +8,6 @@ export interface IProcedimientoRequest {
   accionATomar: I18nFieldValueRequest[];
   fechaLimiteAccion: string;
   generarAviso: boolean;
-  comentarios: string;
+  comentarios: I18nFieldValueRequest[];
 
 }
