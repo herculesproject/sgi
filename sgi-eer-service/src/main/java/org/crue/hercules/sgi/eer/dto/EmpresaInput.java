@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eer.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Size;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,8 +35,7 @@ public class EmpresaInput implements Serializable {
   @Size(max = Empresa.REFERENCIAS_LENGTH)
   private String solicitanteRef;
 
-  @Size(max = Empresa.NOMBRE_RAZON_SOCIAL_LENGTH)
-  private String nombreRazonSocial;
+  private List<I18nFieldValueDto> nombreRazonSocial;
 
   @Size(max = Empresa.REFERENCIAS_LENGTH)
   private String entidadRef;

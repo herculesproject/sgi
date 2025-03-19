@@ -3,7 +3,9 @@ package org.crue.hercules.sgi.eer.integration;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eer.controller.EmpresaController;
@@ -16,6 +18,9 @@ import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaAdministracionSociedad.TipoAdministracion;
 import org.crue.hercules.sgi.eer.model.EmpresaComposicionSociedad.TipoAportacion;
+import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -62,9 +67,11 @@ class EmpresaIT extends BaseIT {
   void create_ReturnsEmpresa() throws Exception {
     String[] roles = { "EER-EER-V", "EER-EER-C", "EER-EER-E", "EER-EER-B", "EER-EER-R" };
     // given: new Empresa
+    Set<EmpresaNombreRazonSocial> nombreEmpresa = new HashSet<>();
+    nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial"));
     Empresa data = Empresa.builder().fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
         .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial("objetoSocial")
-        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial("nombreRazonSocial").activo(Boolean.TRUE)
+        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(Boolean.TRUE)
         .build();
 
     // when: create Empresa
@@ -91,9 +98,11 @@ class EmpresaIT extends BaseIT {
     String[] roles = { "EER-EER-V", "EER-EER-C", "EER-EER-E", "EER-EER-B", "EER-EER-R" };
     Long id = 2L;
     // given: existing Empresa to be updated
+    Set<EmpresaNombreRazonSocial> nombreEmpresa = new HashSet<>();
+    nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial " + id));
     Empresa data = Empresa.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
         .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial("objetoSocial")
-        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial("nombreRazonSocial " + id)
+        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa)
         .activo(Boolean.TRUE)
         .build();
 
@@ -128,8 +137,8 @@ class EmpresaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     EmpresaOutput empresaDisabled = response.getBody();
     Assertions.assertThat(empresaDisabled.getId()).as("getId()").isEqualTo(idEmpresa);
-    Assertions.assertThat(empresaDisabled.getNombreRazonSocial()).as("getNombreRazonSocial()")
-        .isEqualTo("nombreRazonSocial 3");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(empresaDisabled.getNombreRazonSocial(), Language.ES))
+        .as("getNombreRazonSocial()").isEqualTo("nombreRazonSocial 3");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -150,8 +159,8 @@ class EmpresaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     EmpresaOutput responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
-    Assertions.assertThat(responseData.getNombreRazonSocial()).as("getNombreRazonSocial()")
-        .isEqualTo("nombreRazonSocial 1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.getNombreRazonSocial(), Language.ES))
+        .as("getNombreRazonSocial()").isEqualTo("nombreRazonSocial 1");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
@@ -170,7 +179,7 @@ class EmpresaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "nombreRazonSocial=ke=nombreRazonSocial";
+    String filter = "nombreRazonSocial.value=ke=nombreRazonSocial";
 
     // when: find Empresa
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
@@ -188,12 +197,12 @@ class EmpresaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(responseData.get(0).getNombreRazonSocial()).as("get(0).getNombreRazonSocial())")
-        .isEqualTo("nombreRazonSocial 3");
-    Assertions.assertThat(responseData.get(1).getNombreRazonSocial()).as("get(1).getNombreRazonSocial())")
-        .isEqualTo("nombreRazonSocial 2");
-    Assertions.assertThat(responseData.get(2).getNombreRazonSocial()).as("get(2).getNombreRazonSocial())")
-        .isEqualTo("nombreRazonSocial 1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getNombreRazonSocial(), Language.ES))
+        .as("get(0).getNombreRazonSocial())").isEqualTo("nombreRazonSocial 3");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(1).getNombreRazonSocial(), Language.ES))
+        .as("get(1).getNombreRazonSocial())").isEqualTo("nombreRazonSocial 2");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(2).getNombreRazonSocial(), Language.ES))
+        .as("get(2).getNombreRazonSocial())").isEqualTo("nombreRazonSocial 1");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {

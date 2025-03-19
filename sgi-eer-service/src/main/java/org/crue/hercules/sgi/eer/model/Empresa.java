@@ -1,18 +1,25 @@
 package org.crue.hercules.sgi.eer.model;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -23,6 +30,7 @@ import org.crue.hercules.sgi.framework.validation.ActivableIsActivo;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -102,9 +110,11 @@ public class Empresa extends BaseActivableEntity {
   private String solicitanteRef;
 
   /** Nombre */
-  @Column(name = "nombre_razon_social", length = Empresa.NOMBRE_RAZON_SOCIAL_LENGTH, nullable = true)
-  @Size(max = Empresa.NOMBRE_RAZON_SOCIAL_LENGTH)
-  private String nombreRazonSocial;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "empresa_nombre_razon_social", joinColumns = @JoinColumn(name = "empresa_id"))
+  @Valid
+  @Builder.Default
+  private Set<EmpresaNombreRazonSocial> nombreRazonSocial = new HashSet<>();
 
   /** EntidadRef */
   @Column(name = "entidad_ref", length = Empresa.REFERENCIAS_LENGTH, nullable = true)

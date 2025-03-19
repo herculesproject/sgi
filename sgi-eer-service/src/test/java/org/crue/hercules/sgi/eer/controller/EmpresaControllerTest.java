@@ -3,16 +3,16 @@ package org.crue.hercules.sgi.eer.controller;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eer.converter.EmpresaAdministracionSociedadConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaComposicionSociedadConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaConverter;
-import org.crue.hercules.sgi.eer.converter.EmpresaEquipoEmprendedorConverter;
 import org.crue.hercules.sgi.eer.converter.EmpresaDocumentoConverter;
+import org.crue.hercules.sgi.eer.converter.EmpresaEquipoEmprendedorConverter;
 import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaInput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
@@ -21,13 +21,16 @@ import org.crue.hercules.sgi.eer.exceptions.EmpresaNotFoundException;
 import org.crue.hercules.sgi.eer.model.Empresa;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
+import org.crue.hercules.sgi.eer.model.TipoDocumento;
 import org.crue.hercules.sgi.eer.service.EmpresaAdministracionSociedadService;
 import org.crue.hercules.sgi.eer.service.EmpresaComposicionSociedadService;
-import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
-import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
-import org.crue.hercules.sgi.eer.model.TipoDocumento;
 import org.crue.hercules.sgi.eer.service.EmpresaDocumentoService;
+import org.crue.hercules.sgi.eer.service.EmpresaEquipoEmprendedorService;
 import org.crue.hercules.sgi.eer.service.EmpresaService;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,6 +51,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * EmpresaControllerTest
@@ -116,7 +121,8 @@ class EmpresaControllerTest extends BaseControllerTest {
         // then: new Empresa is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombreRazonSocial").value(empresa.getNombreRazonSocial()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombreRazonSocial[0].value")
+            .value(I18nHelper.getValueForLanguage(empresa.getNombreRazonSocial(), Language.ES)));
   }
 
   @Test
@@ -175,7 +181,8 @@ class EmpresaControllerTest extends BaseControllerTest {
         // then: Empresa is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(data.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombreRazonSocial").value(data.getNombreRazonSocial()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombreRazonSocial[0].value")
+            .value(I18nHelper.getValueForLanguage(data.getNombreRazonSocial(), Language.ES)));
   }
 
   @Test
@@ -251,7 +258,8 @@ class EmpresaControllerTest extends BaseControllerTest {
         // then: return disabled Empresa
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombreRazonSocial").value(empresa.getNombreRazonSocial()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombreRazonSocial[0].value")
+            .value(I18nHelper.getValueForLanguage(empresa.getNombreRazonSocial(), Language.ES)));
   }
 
   @Test
@@ -375,7 +383,8 @@ class EmpresaControllerTest extends BaseControllerTest {
     // containing Nombre='Nombre-31' to 'Nombre-40'
     for (int i = 0, j = 1; i < 10; i++, j++) {
       Empresa item = actual.get(i);
-      Assertions.assertThat(item.getNombreRazonSocial()).isEqualTo("nombreRazonSocial-" + j);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getNombreRazonSocial(), Language.ES))
+          .isEqualTo("nombreRazonSocial-" + j);
     }
   }
 
@@ -413,9 +422,11 @@ class EmpresaControllerTest extends BaseControllerTest {
    * @return Empresa
    */
   private Empresa generarMockEmpresa(Long id, Boolean activo) {
+    Set<EmpresaNombreRazonSocial> nombreEmpresa = new HashSet<>();
+    nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial-" + id));
     return Empresa.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
         .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial("objetoSocial")
-        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial("nombreRazonSocial-" + id).activo(activo)
+        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(activo)
         .build();
   }
 
@@ -427,9 +438,11 @@ class EmpresaControllerTest extends BaseControllerTest {
    * @return Empresa
    */
   private EmpresaOutput generarMockEmpresaOutput(Long id, Boolean activo) {
+    Set<EmpresaNombreRazonSocial> nombreEmpresa = new HashSet<>();
+    nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial-" + id));
     return EmpresaOutput.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
         .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial("objetoSocial")
-        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial("nombreRazonSocial-" + id).activo(activo)
+        .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(activo)
         .build();
   }
 

@@ -2,9 +2,11 @@ package org.crue.hercules.sgi.eer.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Collection;
 
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
+import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +24,7 @@ public class EmpresaOutput implements Serializable {
   private Instant fechaSolicitud;
   private TipoEmpresa tipoEmpresa;
   private String solicitanteRef;
-  private String nombreRazonSocial;
+  private Collection<EmpresaNombreRazonSocial> nombreRazonSocial;
   private String entidadRef;
   private String objetoSocial;
   private String conocimientoTecnologia;
