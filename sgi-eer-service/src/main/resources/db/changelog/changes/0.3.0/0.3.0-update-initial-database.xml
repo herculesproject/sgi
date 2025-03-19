@@ -37,4 +37,31 @@
     <dropColumn columnName="nombre_razon_social" tableName="empresa" />
   </changeSet>
 
+  <changeSet author="master" id="0.3.0-2">
+    <createTable tableName="empresa_objeto_social">
+      <column name="empresa_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(1000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="empresa_objeto_social" columnNames="empresa_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="empresa_id"
+      baseTableName="empresa_objeto_social"
+      constraintName="FK_EMPRESAOBJETOSOCIAL_EMPRESA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="empresa" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}empresa_objeto_social(empresa_id, value_, lang) SELECT id,
+      objeto_social, '${defaultLang}' FROM ${schemaPrefix}empresa WHERE objeto_social IS NOT NULL</sql>
+
+    <dropColumn columnName="objeto_social" tableName="empresa" />
+  </changeSet>
+
 </databaseChangeLog>

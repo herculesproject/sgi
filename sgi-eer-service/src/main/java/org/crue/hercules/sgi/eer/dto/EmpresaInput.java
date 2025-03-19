@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -40,9 +41,8 @@ public class EmpresaInput implements Serializable {
   @Size(max = Empresa.REFERENCIAS_LENGTH)
   private String entidadRef;
 
-  @Size(max = Empresa.OBJETO_SOCIAL_LENGTH)
-  @NotBlank
-  private String objetoSocial;
+  @NotEmpty
+  private List<I18nFieldValueDto> objetoSocial;
 
   @Size(max = Empresa.CONOCIMIENTO_TECNOLOGIA_LENGTH)
   @NotBlank

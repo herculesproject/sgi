@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
+import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
 import org.crue.hercules.sgi.eer.service.EmpresaAdministracionSociedadService;
 import org.crue.hercules.sgi.eer.service.EmpresaComposicionSociedadService;
@@ -424,8 +425,12 @@ class EmpresaControllerTest extends BaseControllerTest {
   private Empresa generarMockEmpresa(Long id, Boolean activo) {
     Set<EmpresaNombreRazonSocial> nombreEmpresa = new HashSet<>();
     nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial-" + id));
+
+    Set<EmpresaObjetoSocial> objetoSocialEmpresa = new HashSet<>();
+    objetoSocialEmpresa.add(new EmpresaObjetoSocial(Language.ES, "objetoSocial"));
+
     return Empresa.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
-        .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial("objetoSocial")
+        .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial(objetoSocialEmpresa)
         .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(activo)
         .build();
   }
@@ -440,8 +445,11 @@ class EmpresaControllerTest extends BaseControllerTest {
   private EmpresaOutput generarMockEmpresaOutput(Long id, Boolean activo) {
     Set<EmpresaNombreRazonSocial> nombreEmpresa = new HashSet<>();
     nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial-" + id));
+
+    Set<EmpresaObjetoSocial> objetoSocialEmpresa = new HashSet<>();
+    objetoSocialEmpresa.add(new EmpresaObjetoSocial(Language.ES, "objetoSocial"));
     return EmpresaOutput.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
-        .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial("objetoSocial")
+        .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial(objetoSocialEmpresa)
         .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(activo)
         .build();
   }

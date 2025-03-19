@@ -7,6 +7,7 @@ import java.util.Collection;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
+import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,7 @@ public class EmpresaOutput implements Serializable {
   private String solicitanteRef;
   private Collection<EmpresaNombreRazonSocial> nombreRazonSocial;
   private String entidadRef;
-  private String objetoSocial;
+  private Collection<EmpresaObjetoSocial> objetoSocial;
   private String conocimientoTecnologia;
   private String numeroProtocolo;
   private String notario;

@@ -21,6 +21,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -122,10 +123,12 @@ public class Empresa extends BaseActivableEntity {
   private String entidadRef;
 
   /** Objeto social */
-  @Column(name = "objeto_social", length = Empresa.OBJETO_SOCIAL_LENGTH, nullable = false)
-  @Size(max = Empresa.OBJETO_SOCIAL_LENGTH)
-  @NotBlank
-  private String objetoSocial;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "empresa_objeto_social", joinColumns = @JoinColumn(name = "empresa_id"))
+  @Valid
+  @NotEmpty
+  @Builder.Default
+  private Set<EmpresaObjetoSocial> objetoSocial = new HashSet<>();
 
   /** Conocimiento tecnologica */
   @Column(name = "conocimiento_tecnologia", length = Empresa.CONOCIMIENTO_TECNOLOGIA_LENGTH, nullable = false)

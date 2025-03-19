@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaAdministracionSociedad.TipoAdministracion;
 import org.crue.hercules.sgi.eer.model.EmpresaComposicionSociedad.TipoAportacion;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
+import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -69,8 +70,10 @@ class EmpresaIT extends BaseIT {
     // given: new Empresa
     Set<EmpresaNombreRazonSocial> nombreEmpresa = new HashSet<>();
     nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial"));
+    Set<EmpresaObjetoSocial> objetoSocialEmpresa = new HashSet<>();
+    objetoSocialEmpresa.add(new EmpresaObjetoSocial(Language.ES, "objetoSocial"));
     Empresa data = Empresa.builder().fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
-        .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial("objetoSocial")
+        .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial(objetoSocialEmpresa)
         .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa).activo(Boolean.TRUE)
         .build();
 
@@ -100,8 +103,10 @@ class EmpresaIT extends BaseIT {
     // given: existing Empresa to be updated
     Set<EmpresaNombreRazonSocial> nombreEmpresa = new HashSet<>();
     nombreEmpresa.add(new EmpresaNombreRazonSocial(Language.ES, "nombreRazonSocial " + id));
+    Set<EmpresaObjetoSocial> objetoSocialEmpresa = new HashSet<>();
+    objetoSocialEmpresa.add(new EmpresaObjetoSocial(Language.ES, "objetoSocial"));
     Empresa data = Empresa.builder().id(id).fechaSolicitud(Instant.now()).tipoEmpresa(TipoEmpresa.EBT)
-        .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial("objetoSocial")
+        .estado(EstadoEmpresa.EN_TRAMITACION).objetoSocial(objetoSocialEmpresa)
         .conocimientoTecnologia("conocimientoTecnologia").nombreRazonSocial(nombreEmpresa)
         .activo(Boolean.TRUE)
         .build();
