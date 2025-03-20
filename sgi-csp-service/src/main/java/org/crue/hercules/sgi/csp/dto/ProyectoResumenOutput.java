@@ -1,9 +1,6 @@
 package org.crue.hercules.sgi.csp.dto;
 
 import java.time.Instant;
-import java.util.Collection;
-
-import org.crue.hercules.sgi.csp.model.ProyectoTitulo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProyectoResumenOutput {
   private Long id;
-  private Collection<ProyectoTitulo> titulo;
+  private String titulo;
   private String acronimo;
   private String codigoExterno;
   private Instant fechaInicio;

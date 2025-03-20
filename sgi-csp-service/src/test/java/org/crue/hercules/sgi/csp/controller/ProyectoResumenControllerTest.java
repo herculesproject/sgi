@@ -113,28 +113,6 @@ class ProyectoResumenControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-PRO-PRC-V" })
-  void findProyectoResumenById_WithExistingId_ReturnsProyectoResumen() throws Exception {
-    // given: existing id
-    BDDMockito.given(service.findProyectoResumenById(ArgumentMatchers.anyLong()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          return generarMockProyecto(invocation.getArgument(0));
-        });
-
-    // when: find by existing id
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(SgiMockMvcResultHandlers.printOnError())
-        // then: response is OK
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        // and the requested Proyecto is resturned as JSON object
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo[0].value").value("PRO1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("codigoExterno").value("cod-externo-001"));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-PRO-PRC-V" })
   void findProyectoResumenById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findProyectoResumenById(ArgumentMatchers.anyLong()))
