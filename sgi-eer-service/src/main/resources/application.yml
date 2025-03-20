@@ -109,6 +109,8 @@ spring:
 #    # Disable X-Frame-Options (disable only for development)
 #    frameoptions:
 #      enable: false
+preliquibase:
+  enabled: true
 logging:
   level:
     org:
