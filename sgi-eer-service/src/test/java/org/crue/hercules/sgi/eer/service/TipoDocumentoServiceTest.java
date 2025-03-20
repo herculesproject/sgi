@@ -1,11 +1,16 @@
 package org.crue.hercules.sgi.eer.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
+import org.crue.hercules.sgi.eer.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eer.repository.TipoDocumentoRepository;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -73,7 +78,7 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     for (int i = 31; i <= 37; i++) {
       TipoDocumento tipoDocumento = page.getContent()
           .get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(tipoDocumento.getNombre())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES))
           .isEqualTo(NOMBRE_PREFIX + String.format("%03d", i));
     }
   }
@@ -118,7 +123,7 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
     for (int i = 31; i <= 37; i++) {
       TipoDocumento tipoDocumento = page.getContent()
           .get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(tipoDocumento.getNombre())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(tipoDocumento.getNombre(), Language.ES))
           .isEqualTo(NOMBRE_PREFIX + String.format("%03d", i));
       Assertions.assertThat(tipoDocumento.getPadre().getId())
           .isEqualTo(padreId);
@@ -136,11 +141,13 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
 
   private TipoDocumento generateTipoDocumento(Long id, Boolean activo, String nombre, String descripcion,
       TipoDocumento padre) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
     return TipoDocumento.builder()
         .activo(activo)
         .descripcion(descripcion)
         .id(id)
-        .nombre(nombre)
+        .nombre(nombreTipoDocumento)
         .padre(padre)
         .build();
   }

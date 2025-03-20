@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumentoComentarios;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumentoNombre;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
+import org.crue.hercules.sgi.eer.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eer.repository.EmpresaDocumentoRepository;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -350,11 +351,13 @@ class EmpresaDocumentoServiceTest extends BaseServiceTest {
 
   private TipoDocumento generateTipoDocumentoMock(Long id, Boolean activo, String nombre, String descripcion,
       TipoDocumento padre) {
+    Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
+    nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
     return TipoDocumento.builder()
         .activo(activo)
         .descripcion(descripcion)
         .id(id)
-        .nombre(nombre)
+        .nombre(nombreTipoDocumento)
         .padre(padre)
         .build();
   }
