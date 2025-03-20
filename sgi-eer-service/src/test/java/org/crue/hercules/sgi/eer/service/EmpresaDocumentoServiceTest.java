@@ -1,8 +1,10 @@
 package org.crue.hercules.sgi.eer.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,8 +14,11 @@ import javax.validation.ValidationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eer.exceptions.EmpresaDocumentoNotFoundException;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumentoNombre;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
 import org.crue.hercules.sgi.eer.repository.EmpresaDocumentoRepository;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -127,7 +132,9 @@ class EmpresaDocumentoServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.saveAndFlush(ArgumentMatchers.<EmpresaDocumento>any()))
         .will((InvocationOnMock invocation) -> {
           EmpresaDocumento empresaDocumentoUpdated = invocation.getArgument(0);
-          empresaDocumentoUpdated.setNombre(nombreToUpdate);
+          Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
+          nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombreToUpdate));
+          empresaDocumentoUpdated.setNombre(nombreDocumento);
           return empresaDocumentoUpdated;
         });
 
@@ -290,7 +297,7 @@ class EmpresaDocumentoServiceTest extends BaseServiceTest {
       EmpresaDocumento empresaDocumento = page.getContent()
           .get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(empresaDocumento.getEmpresaId()).as("getEmpresaId()").isEqualTo(empresaId);
-      Assertions.assertThat(empresaDocumento.getNombre())
+      Assertions.assertThat(I18nHelper.getValueForLanguage(empresaDocumento.getNombre(), Language.ES))
           .isEqualTo(NOMBRE_PREFIX + String.format("%03d", i));
     }
   }
@@ -318,12 +325,14 @@ class EmpresaDocumentoServiceTest extends BaseServiceTest {
   private EmpresaDocumento generateEmpresaDocumentoMock(Long id, Long empresaId, TipoDocumento tipoDocumento,
       String nombre,
       String comentarios, String documentoRef) {
+    Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
     return EmpresaDocumento.builder()
         .comentarios(comentarios)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)
-        .nombre(nombre)
+        .nombre(nombreDocumento)
         .tipoDocumento(tipoDocumento)
         .build();
   }

@@ -145,4 +145,32 @@
 
     <dropColumn columnName="observaciones" tableName="empresa" />
   </changeSet>
+
+  <changeSet author="master" id="0.3.0-6">
+    <createTable tableName="empresa_documento_nombre">
+      <column name="empresa_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="empresa_documento_nombre" columnNames="empresa_documento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="empresa_documento_id"
+      baseTableName="empresa_documento_nombre"
+      constraintName="FK_EMPRESADOCUMENTONOMBRE_EMPRESA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="empresa_documento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}empresa_documento_nombre(empresa_documento_id, value_, lang)
+      SELECT id, nombre, '${defaultLang}' FROM ${schemaPrefix}empresa_documento WHERE nombre IS NOT
+      NULL</sql>
+
+    <dropColumn columnName="nombre" tableName="empresa_documento" />
+  </changeSet>
 </databaseChangeLog>

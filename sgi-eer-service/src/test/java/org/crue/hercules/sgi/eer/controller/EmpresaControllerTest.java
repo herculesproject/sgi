@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaConocimientoTecnologia;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumentoNombre;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
 import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
@@ -523,7 +524,7 @@ class EmpresaControllerTest extends BaseControllerTest {
     // containing Nombre='Documento-31' to 'Documento-40'
     for (int i = 0, j = 1; i < 10; i++, j++) {
       EmpresaDocumento item = actual.get(i);
-      Assertions.assertThat(item.getNombre()).isEqualTo("Documento-" + j);
+      Assertions.assertThat(I18nHelper.getValueForLanguage(item.getNombre(), Language.ES)).isEqualTo("Documento-" + j);
     }
   }
 
@@ -564,12 +565,14 @@ class EmpresaControllerTest extends BaseControllerTest {
   private EmpresaDocumento generateEmpresaDocumentoMock(Long id, Long empresaId, TipoDocumento tipoDocumento,
       String nombre,
       String comentarios, String documentoRef) {
+    Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
     return EmpresaDocumento.builder()
         .comentarios(comentarios)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)
-        .nombre(nombre)
+        .nombre(nombreDocumento)
         .tipoDocumento(tipoDocumento)
         .build();
   }
@@ -581,12 +584,14 @@ class EmpresaControllerTest extends BaseControllerTest {
 
   private EmpresaDocumentoOutput generateEmpresaDocumentoOutputMock(Long id, Long empresaId,
       TipoDocumentoOutput tipoDocumento, String nombre, String comentarios, String documentoRef) {
+    Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
     return EmpresaDocumentoOutput.builder()
         .comentarios(comentarios)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)
-        .nombre(nombre)
+        .nombre(nombreDocumento)
         .tipoDocumento(tipoDocumento)
         .build();
   }

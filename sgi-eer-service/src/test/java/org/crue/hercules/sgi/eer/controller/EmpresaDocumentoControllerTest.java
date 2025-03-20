@@ -1,12 +1,21 @@
 package org.crue.hercules.sgi.eer.controller;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.crue.hercules.sgi.eer.converter.EmpresaDocumentoConverter;
 import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoInput;
 import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.TipoDocumentoOutput;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumentoNombre;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
 import org.crue.hercules.sgi.eer.service.EmpresaDocumentoService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.test.web.servlet.result.SgiMockMvcResultHandlers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -70,7 +79,8 @@ class EmpresaDocumentoControllerTest extends BaseControllerTest {
         // then: new EmpresaDocumento is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(output.getNombre()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(output.getNombre(), Language.ES)));
   }
 
   @Test
@@ -112,7 +122,8 @@ class EmpresaDocumentoControllerTest extends BaseControllerTest {
         // then: EmpresaDocumento is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(output.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(output.getNombre()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre[0].value")
+            .value(I18nHelper.getValueForLanguage(output.getNombre(), Language.ES)));
   }
 
   @Test
@@ -164,12 +175,14 @@ class EmpresaDocumentoControllerTest extends BaseControllerTest {
   private EmpresaDocumento generateEmpresaDocumentoMock(Long id, Long empresaId, TipoDocumento tipoDocumento,
       String nombre,
       String comentarios, String documentoRef) {
+    Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
     return EmpresaDocumento.builder()
         .comentarios(comentarios)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)
-        .nombre(nombre)
+        .nombre(nombreDocumento)
         .tipoDocumento(tipoDocumento)
         .build();
   }
@@ -181,12 +194,14 @@ class EmpresaDocumentoControllerTest extends BaseControllerTest {
 
   private EmpresaDocumentoOutput generateEmpresaDocumentoOutputMock(Long id, Long empresaId,
       TipoDocumentoOutput tipoDocumento, String nombre, String comentarios, String documentoRef) {
+    Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
+    nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
     return EmpresaDocumentoOutput.builder()
         .comentarios(comentarios)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)
-        .nombre(nombre)
+        .nombre(nombreDocumento)
         .tipoDocumento(tipoDocumento)
         .build();
   }
@@ -198,11 +213,13 @@ class EmpresaDocumentoControllerTest extends BaseControllerTest {
 
   private EmpresaDocumentoInput generateEmpresaDocumentoInputMock(Long empresaId,
       Long tipoDocumentoId, String nombre, String comentarios, String documentoRef) {
+    List<I18nFieldValueDto> nombreDocumento = new ArrayList<>();
+    nombreDocumento.add(new I18nFieldValueDto(Language.ES, nombre));
     return EmpresaDocumentoInput.builder()
         .comentarios(comentarios)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
-        .nombre(nombre)
+        .nombre(nombreDocumento)
         .tipoDocumentoId(tipoDocumentoId)
         .build();
   }

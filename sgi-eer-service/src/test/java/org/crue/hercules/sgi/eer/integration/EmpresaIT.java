@@ -14,11 +14,11 @@ import org.crue.hercules.sgi.eer.dto.EmpresaComposicionSociedadOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.EmpresaOutput;
 import org.crue.hercules.sgi.eer.model.Empresa;
-import org.crue.hercules.sgi.eer.model.EmpresaConocimientoTecnologia;
 import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaAdministracionSociedad.TipoAdministracion;
 import org.crue.hercules.sgi.eer.model.EmpresaComposicionSociedad.TipoAportacion;
+import org.crue.hercules.sgi.eer.model.EmpresaConocimientoTecnologia;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
 import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -233,7 +233,7 @@ class EmpresaIT extends BaseIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id,desc";
-    String filter = "nombre=ke=Documento";
+    String filter = "nombre.value=ke=Documento";
 
     // when: find EmpresaDocumento
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_DOCUMENTOS).queryParam("s", sort)
@@ -252,8 +252,8 @@ class EmpresaIT extends BaseIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("1");
 
-    Assertions.assertThat(responseData.get(0).getNombre()).as("get(0).getNombre())")
-        .isEqualTo("Documento de procedimiento 1");
+    Assertions.assertThat(I18nHelper.getValueForLanguage(responseData.get(0).getNombre(), Language.ES))
+        .as("get(0).getNombre())").isEqualTo("Documento de procedimiento 1");
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {
