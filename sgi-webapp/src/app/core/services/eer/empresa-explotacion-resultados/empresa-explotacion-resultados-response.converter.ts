@@ -28,7 +28,7 @@ class EmpresaExplotacionResultadosResponseConverter
       notario: value.notario ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.notario) : [],
       numeroProtocolo: value.numeroProtocolo,
       objetoSocial: value.objetoSocial ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.objetoSocial) : [],
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.observaciones) : [],
       solicitante: value.solicitanteRef ? { id: value.solicitanteRef } as IPersona : undefined,
       activo: value.activo
     };
@@ -54,7 +54,7 @@ class EmpresaExplotacionResultadosResponseConverter
       notario: value.notario ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.notario) : [],
       numeroProtocolo: value.numeroProtocolo,
       objetoSocial: value.objetoSocial ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.objetoSocial) : [],
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.observaciones) : [],
       solicitanteRef: value.solicitante?.id,
       activo: value.activo
     };

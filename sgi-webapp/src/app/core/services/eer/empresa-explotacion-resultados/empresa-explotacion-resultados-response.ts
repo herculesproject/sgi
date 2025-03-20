@@ -17,7 +17,7 @@ export interface IEmpresaExplotacionResultadosResponse {
   fechaIncorporacion: string;
   fechaDesvinculacion: string;
   fechaCese: string;
-  observaciones: string;
+  observaciones: I18nFieldValueResponse[];
   estado: EstadoEmpresa;
   activo: boolean;
 }

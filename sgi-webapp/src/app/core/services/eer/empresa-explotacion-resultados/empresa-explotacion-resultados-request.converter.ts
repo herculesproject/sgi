@@ -28,7 +28,7 @@ class EmpresaExplotacionResultadosRequestConverter
       notario: value.notario ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.notario) : [],
       numeroProtocolo: value.numeroProtocolo,
       objetoSocial: value.objetoSocial ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.objetoSocial) : [],
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.observaciones) : [],
       solicitante: value.solicitanteRef ? { id: value.solicitanteRef } as IPersona : undefined,
       activo: undefined
     };
@@ -53,7 +53,7 @@ class EmpresaExplotacionResultadosRequestConverter
       notario: value.notario ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.notario) : [],
       numeroProtocolo: value.numeroProtocolo,
       objetoSocial: value.objetoSocial ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.objetoSocial) : [],
-      observaciones: value.observaciones,
+      observaciones: value.observaciones ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.observaciones) : [],
       solicitanteRef: value.solicitante?.id
     };
   }

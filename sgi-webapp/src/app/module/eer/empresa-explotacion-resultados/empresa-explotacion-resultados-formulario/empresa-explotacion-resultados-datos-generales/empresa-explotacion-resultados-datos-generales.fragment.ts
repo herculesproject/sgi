@@ -78,7 +78,7 @@ export class EmpresaExplotacionResultadosDatosGeneralesFragment extends FormFrag
       fechaIncorporacion: new FormControl(null),
       fechaDesvinculacion: new FormControl(null),
       fechaCese: new FormControl(null),
-      observaciones: new FormControl(null, Validators.maxLength(2000))
+      observaciones: new FormControl([], I18nValidators.maxLength(2000))
     });
 
     this.subscriptions.push(

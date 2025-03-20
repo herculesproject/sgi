@@ -16,6 +16,6 @@ export interface IEmpresaExplotacionResultadosRequest {
   fechaIncorporacion: string;
   fechaDesvinculacion: string;
   fechaCese: string;
-  observaciones: string;
+  observaciones: I18nFieldValueRequest[];
   estado: EstadoEmpresa;
 }

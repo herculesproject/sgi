@@ -181,9 +181,8 @@
         <!-- Observaciones -->
         <mat-form-field fxFlex="100%">
           <mat-label>{{'eer.empresa-explotacion-resultados.observaciones' | translate}}</mat-label>
-          <textarea matInput formControlName="observaciones" type="text"
-            placeholder="{{'eer.empresa-explotacion-resultados.observaciones' | translate}}">
-                  </textarea>
+          <sgi-i18n-textarea formControlName="observaciones"
+            placeholder="{{'eer.empresa-explotacion-resultados.observaciones' | translate}}"></sgi-i18n-textarea>
           <mat-error *ngIf="formGroup.controls.observaciones.errors?.maxlength">
             {{ 'error.maxlength.entity' | translate:msgParamObservacionesEntity }}
           </mat-error>

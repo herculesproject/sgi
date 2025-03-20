@@ -47,7 +47,7 @@ export interface IEmpresaExplotacionResultados {
   fechaIncorporacion: DateTime;
   fechaDesvinculacion: DateTime;
   fechaCese: DateTime;
-  observaciones: string;
+  observaciones: I18nFieldValue[];
   estado: EstadoEmpresa;
   activo: boolean;
 }
