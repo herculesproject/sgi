@@ -1,12 +1,9 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
+
 export interface ITipoDocumentoResponse {
   id: number;
-  nombre: string;
+  nombre: I18nFieldValueResponse[];
   descripcion: string;
-  padre: {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    activo: boolean;
-  };
+  padre: ITipoDocumentoResponse;
   activo: boolean;
 }

@@ -36,7 +36,7 @@ export class SelectTipoDocumentoComponent extends SelectServiceExtendedComponent
 
   protected loadServiceOptions(): Observable<ITipoDocumento[]> {
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC)
     };
     return this.tipoDocumentoService.findAll(findOptions).pipe(map(({ items }) => items));
   }

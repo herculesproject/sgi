@@ -55,7 +55,7 @@ export class SelectSubtipoDocumentoComponent extends SelectServiceExtendedCompon
       return of([]);
     }
     const findOptions: SgiRestFindOptions = {
-      sort: new RSQLSgiRestSort('nombre', SgiRestSortDirection.ASC)
+      sort: new RSQLSgiRestSort('nombre.value', SgiRestSortDirection.ASC)
     };
     return this.tipoDocumentoService.findSubtipos(this.tipoDocumentoId, findOptions).pipe(
       map(({ items }) => items));
