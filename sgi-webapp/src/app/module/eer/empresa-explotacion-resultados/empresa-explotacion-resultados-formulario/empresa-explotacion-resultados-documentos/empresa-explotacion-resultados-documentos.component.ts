@@ -5,14 +5,17 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { IEmpresaDocumento } from '@core/models/eer/empresa-documento';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Group } from '@core/services/action-service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiFileUploadComponent, UploadEvent } from '@shared/file-upload/file-upload.component';
 import { Subscription } from 'rxjs';
@@ -88,7 +91,8 @@ export class EmpresaExplotacionResultadosDocumentosComponent extends FragmentCom
     public actionService: EmpresaExplotacionResultadosActionService,
     private documentoService: DocumentoService,
     private snackBar: SnackBarService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.DOCUMENTOS, actionService, translate);
     this.fxFlexProperties = new FxFlexProperties();
@@ -116,9 +120,9 @@ export class EmpresaExplotacionResultadosDocumentosComponent extends FragmentCom
       this.dataSource.data = documentos;
     }));
     this.group.load(new FormGroup({
-      nombre: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(250)
+      nombre: new FormControl([], [
+        I18nValidators.required,
+        I18nValidators.maxLength(250)
       ]),
       tipoDocumento: new FormControl(null),
       subtipoDocumento: new FormControl(null),
@@ -327,5 +331,9 @@ export class EmpresaExplotacionResultadosDocumentosComponent extends FragmentCom
         );
       })
     ).subscribe((value) => this.textoDelete = value);
+  }
+
+  getI18nValue(i18nFieldValue: I18nFieldValue[]): string {
+    return this.languageService.getFieldValue(i18nFieldValue);
   }
 }

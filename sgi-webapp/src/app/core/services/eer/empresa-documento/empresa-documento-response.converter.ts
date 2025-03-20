@@ -1,3 +1,4 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IEmpresaDocumento } from '@core/models/eer/empresa-documento';
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
 import { ITipoDocumento } from '@core/models/eer/tipo-documento';
@@ -16,7 +17,7 @@ class EmpresaDocumentoResponseConverter
       comentarios: value.comentarios,
       documento: value.documentoRef ? { documentoRef: value.documentoRef } as IDocumento : undefined,
       empresa: value.empresaId ? { id: value.empresaId } as IEmpresaExplotacionResultados : undefined,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       subtipoDocumento: this.getSubtipoDocumento(value),
       tipoDocumento: this.getTipoDocumento(value)
     };
@@ -31,7 +32,7 @@ class EmpresaDocumentoResponseConverter
       comentarios: value.comentarios,
       documentoRef: value.documento.documentoRef,
       empresaId: value.empresa.id,
-      nombre: value.nombre,
+      nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],
       tipoDocumento: value.subtipoDocumento ?
         {
           id: value.subtipoDocumento.id,

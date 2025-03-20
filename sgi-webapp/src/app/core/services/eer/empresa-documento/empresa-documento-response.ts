@@ -1,6 +1,8 @@
+import { I18nFieldValueResponse } from "@core/i18n/i18n-field-response";
+
 export interface IEmpresaDocumentoResponse {
   id: number;
-  nombre: string;
+  nombre: I18nFieldValueResponse[];
   documentoRef: string;
   comentarios: string;
   empresaId: number;
