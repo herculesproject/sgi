@@ -127,8 +127,8 @@
         <!-- Notario -->
         <mat-form-field>
           <mat-label>{{'eer.empresa-explotacion-resultados.notario' | translate}}</mat-label>
-          <input matInput type="text" placeholder="{{'eer.empresa-explotacion-resultados.notario' | translate}}"
-            formControlName="notario">
+          <sgi-i18n-input placeholder="{{'eer.empresa-explotacion-resultados.notario' | translate}}"
+            formControlName="notario"></sgi-i18n-input>
           <mat-error *ngIf="formGroup.controls.notario.errors?.maxlength">
             {{ 'error.maxlength.entity' | translate:msgParamNotarioEntity }}
           </mat-error>

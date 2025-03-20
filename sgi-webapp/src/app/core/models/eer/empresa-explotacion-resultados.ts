@@ -41,7 +41,7 @@ export interface IEmpresaExplotacionResultados {
   objetoSocial: I18nFieldValue[];
   conocimientoTecnologia: I18nFieldValue[];
   numeroProtocolo: string;
-  notario: string;
+  notario: I18nFieldValue[];
   fechaConstitucion: DateTime;
   fechaAprobacionCG: DateTime;
   fechaIncorporacion: DateTime;

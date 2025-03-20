@@ -72,7 +72,7 @@ export class EmpresaExplotacionResultadosDatosGeneralesFragment extends FormFrag
       objetoSocial: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(1000)]),
       conocimientoTecnologia: new FormControl([], [I18nValidators.required, I18nValidators.maxLength(1000)]),
       numeroProtocolo: new FormControl(null, Validators.maxLength(50)),
-      notario: new FormControl(null, Validators.maxLength(250)),
+      notario: new FormControl([], I18nValidators.maxLength(250)),
       fechaConstitucion: new FormControl(null),
       fechaAprobacionCG: new FormControl(null),
       fechaIncorporacion: new FormControl(null),
