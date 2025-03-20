@@ -91,4 +91,31 @@
 
     <dropColumn columnName="conocimiento_tecnologia" tableName="empresa" />
   </changeSet>
+
+  <changeSet author="master" id="0.3.0-4">
+    <createTable tableName="empresa_notario">
+      <column name="empresa_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="empresa_notario" columnNames="empresa_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="empresa_id"
+      baseTableName="empresa_notario"
+      constraintName="FK_EMPRESANOTARIO_EMPRESA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="empresa" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}empresa_notario(empresa_id, value_, lang) SELECT id, notario,
+      '${defaultLang}' FROM ${schemaPrefix}empresa WHERE notario IS NOT NULL</sql>
+
+    <dropColumn columnName="notario" tableName="empresa" />
+  </changeSet>
 </databaseChangeLog>

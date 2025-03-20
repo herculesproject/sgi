@@ -143,9 +143,11 @@ public class Empresa extends BaseActivableEntity {
   private String numeroProtocolo;
 
   /** Notario */
-  @Column(name = "notario", length = Empresa.NOTARIO_LENGTH, nullable = true)
-  @Size(max = Empresa.NOTARIO_LENGTH)
-  private String notario;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "empresa_notario", joinColumns = @JoinColumn(name = "empresa_id"))
+  @Valid
+  @Builder.Default
+  private Set<EmpresaNotario> notario = new HashSet<>();
 
   /** Fecha constitución */
   @Column(name = "fecha_constitucion", nullable = true)

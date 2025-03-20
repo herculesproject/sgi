@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaConocimientoTecnologia;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
+import org.crue.hercules.sgi.eer.model.EmpresaNotario;
 import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
 
 import lombok.AllArgsConstructor;
@@ -31,7 +32,7 @@ public class EmpresaOutput implements Serializable {
   private Collection<EmpresaObjetoSocial> objetoSocial;
   private Collection<EmpresaConocimientoTecnologia> conocimientoTecnologia;
   private String numeroProtocolo;
-  private String notario;
+  private Collection<EmpresaNotario> notario;
   private Instant fechaConstitucion;
   private Instant fechaAprobacionCG;
   private Instant fechaIncorporacion;

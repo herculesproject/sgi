@@ -50,8 +50,7 @@ public class EmpresaInput implements Serializable {
   @Size(max = Empresa.NUMERO_PROTOCOLO_LENGTH)
   private String numeroProtocolo;
 
-  @Size(max = Empresa.NOTARIO_LENGTH)
-  private String notario;
+  private List<I18nFieldValueDto> notario;
 
   private Instant fechaConstitucion;
 
