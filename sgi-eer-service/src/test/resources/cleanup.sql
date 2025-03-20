@@ -1,6 +1,7 @@
 -- vacia la bd
 DELETE FROM test.empresa_equipo_emprendedor;
 DELETE FROM test.empresa_documento_nombre;
+DELETE FROM test.empresa_documento_comentarios;
 DELETE FROM test.empresa_documento;
 UPDATE test.tipo_documento SET tipo_documento_padre_id = null;
 DELETE FROM test.tipo_documento;

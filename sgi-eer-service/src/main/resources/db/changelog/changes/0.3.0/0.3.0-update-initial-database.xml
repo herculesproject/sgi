@@ -173,4 +173,34 @@
 
     <dropColumn columnName="nombre" tableName="empresa_documento" />
   </changeSet>
+
+  <changeSet author="master" id="0.3.0-7">
+    <createTable tableName="empresa_documento_comentarios">
+      <column name="empresa_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="lang" type="VARCHAR(2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="value_" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="empresa_documento_comentarios"
+      columnNames="empresa_documento_id, lang" />
+
+    <addForeignKeyConstraint baseColumnNames="empresa_documento_id"
+      baseTableName="empresa_documento_comentarios"
+      constraintName="FK_EMPRESADOCUMENTOCOMENTARIOS_EMPRESA" deferrable="false"
+      initiallyDeferred="false"
+      referencedColumnNames="id" referencedTableName="empresa_documento" validate="true" />
+
+    <sql>INSERT INTO ${schemaPrefix}empresa_documento_comentarios(empresa_documento_id, value_,
+      lang) SELECT id, comentarios, '${defaultLang}' FROM ${schemaPrefix}empresa_documento WHERE
+      comentarios IS NOT NULL</sql>
+
+    <dropColumn columnName="comentarios" tableName="empresa_documento" />
+  </changeSet>
+
 </databaseChangeLog>

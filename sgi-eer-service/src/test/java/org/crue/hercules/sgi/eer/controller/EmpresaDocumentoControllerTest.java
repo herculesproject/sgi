@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoInput;
 import org.crue.hercules.sgi.eer.dto.EmpresaDocumentoOutput;
 import org.crue.hercules.sgi.eer.dto.TipoDocumentoOutput;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumentoComentarios;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumentoNombre;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
 import org.crue.hercules.sgi.eer.service.EmpresaDocumentoService;
@@ -177,8 +178,10 @@ class EmpresaDocumentoControllerTest extends BaseControllerTest {
       String comentarios, String documentoRef) {
     Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
     nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
+    Set<EmpresaDocumentoComentarios> comentariosDocumento = new HashSet<>();
+    comentariosDocumento.add(new EmpresaDocumentoComentarios(Language.ES, comentarios));
     return EmpresaDocumento.builder()
-        .comentarios(comentarios)
+        .comentarios(comentariosDocumento)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)
@@ -196,8 +199,10 @@ class EmpresaDocumentoControllerTest extends BaseControllerTest {
       TipoDocumentoOutput tipoDocumento, String nombre, String comentarios, String documentoRef) {
     Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
     nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
+    Set<EmpresaDocumentoComentarios> comentariosDocumento = new HashSet<>();
+    comentariosDocumento.add(new EmpresaDocumentoComentarios(Language.ES, comentarios));
     return EmpresaDocumentoOutput.builder()
-        .comentarios(comentarios)
+        .comentarios(comentariosDocumento)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)
@@ -215,8 +220,10 @@ class EmpresaDocumentoControllerTest extends BaseControllerTest {
       Long tipoDocumentoId, String nombre, String comentarios, String documentoRef) {
     List<I18nFieldValueDto> nombreDocumento = new ArrayList<>();
     nombreDocumento.add(new I18nFieldValueDto(Language.ES, nombre));
+    List<I18nFieldValueDto> comentariosDocumento = new ArrayList<>();
+    comentariosDocumento.add(new I18nFieldValueDto(Language.ES, comentarios));
     return EmpresaDocumentoInput.builder()
-        .comentarios(comentarios)
+        .comentarios(comentariosDocumento)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .nombre(nombreDocumento)

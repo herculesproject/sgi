@@ -61,8 +61,11 @@ public class EmpresaDocumento extends BaseEntity {
   private String documentoRef;
 
   /** Comentarios */
-  @Column(name = "comentarios", length = LONG_TEXT_LENGTH, nullable = true)
-  private String comentarios;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "empresa_documento_comentarios", joinColumns = @JoinColumn(name = "empresa_documento_id"))
+  @Valid
+  @Builder.Default
+  private Set<EmpresaDocumentoComentarios> comentarios = new HashSet<>();
 
   /** Id de la empresa */
   @Column(name = "empresa_id", nullable = false)

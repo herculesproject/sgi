@@ -14,6 +14,7 @@ import javax.validation.ValidationException;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eer.exceptions.EmpresaDocumentoNotFoundException;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumentoComentarios;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumentoNombre;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
 import org.crue.hercules.sgi.eer.repository.EmpresaDocumentoRepository;
@@ -327,8 +328,10 @@ class EmpresaDocumentoServiceTest extends BaseServiceTest {
       String comentarios, String documentoRef) {
     Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
     nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
+    Set<EmpresaDocumentoComentarios> comentariosDocumento = new HashSet<>();
+    comentariosDocumento.add(new EmpresaDocumentoComentarios(Language.ES, comentarios));
     return EmpresaDocumento.builder()
-        .comentarios(comentarios)
+        .comentarios(comentariosDocumento)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)

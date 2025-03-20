@@ -30,8 +30,7 @@ public class EmpresaDocumentoInput {
   @Size(max = BaseEntity.REF_LENGTH)
   private String documentoRef;
 
-  @Size(max = BaseEntity.LONG_TEXT_LENGTH)
-  private String comentarios;
+  private List<I18nFieldValueDto> comentarios;
 
   @NotNull
   private Long empresaId;

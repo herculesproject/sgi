@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.eer.model.Empresa.EstadoEmpresa;
 import org.crue.hercules.sgi.eer.model.Empresa.TipoEmpresa;
 import org.crue.hercules.sgi.eer.model.EmpresaConocimientoTecnologia;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumento;
+import org.crue.hercules.sgi.eer.model.EmpresaDocumentoComentarios;
 import org.crue.hercules.sgi.eer.model.EmpresaDocumentoNombre;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
 import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
@@ -567,8 +568,10 @@ class EmpresaControllerTest extends BaseControllerTest {
       String comentarios, String documentoRef) {
     Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
     nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
+    Set<EmpresaDocumentoComentarios> comentariosDocumento = new HashSet<>();
+    comentariosDocumento.add(new EmpresaDocumentoComentarios(Language.ES, comentarios));
     return EmpresaDocumento.builder()
-        .comentarios(comentarios)
+        .comentarios(comentariosDocumento)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)
@@ -586,8 +589,10 @@ class EmpresaControllerTest extends BaseControllerTest {
       TipoDocumentoOutput tipoDocumento, String nombre, String comentarios, String documentoRef) {
     Set<EmpresaDocumentoNombre> nombreDocumento = new HashSet<>();
     nombreDocumento.add(new EmpresaDocumentoNombre(Language.ES, nombre));
+    Set<EmpresaDocumentoComentarios> comentariosDocumento = new HashSet<>();
+    comentariosDocumento.add(new EmpresaDocumentoComentarios(Language.ES, comentarios));
     return EmpresaDocumentoOutput.builder()
-        .comentarios(comentarios)
+        .comentarios(comentariosDocumento)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .id(id)

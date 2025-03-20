@@ -157,8 +157,10 @@ class EmpresaDocumentoIT extends BaseIT {
       Long tipoDocumentoId, String nombre, String comentarios, String documentoRef) {
     List<I18nFieldValueDto> nombreDocumento = new ArrayList<>();
     nombreDocumento.add(new I18nFieldValueDto(Language.ES, nombre));
+    List<I18nFieldValueDto> comentariosDocumento = new ArrayList<>();
+    comentariosDocumento.add(new I18nFieldValueDto(Language.ES, comentarios));
     return EmpresaDocumentoInput.builder()
-        .comentarios(comentarios)
+        .comentarios(comentariosDocumento)
         .documentoRef(documentoRef)
         .empresaId(empresaId)
         .nombre(nombreDocumento)
