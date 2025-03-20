@@ -7,7 +7,7 @@ export interface IEmpresaDocumento {
   id: number;
   nombre: I18nFieldValue[];
   documento: IDocumento;
-  comentarios: string;
+  comentarios: I18nFieldValue[];
   empresa: IEmpresaExplotacionResultados;
   tipoDocumento: ITipoDocumento;
   subtipoDocumento: ITipoDocumento;

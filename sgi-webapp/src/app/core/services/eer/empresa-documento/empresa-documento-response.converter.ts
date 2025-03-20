@@ -14,7 +14,7 @@ class EmpresaDocumentoResponseConverter
     }
     return {
       id: value.id,
-      comentarios: value.comentarios,
+      comentarios: value.comentarios ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.comentarios) : [],
       documento: value.documentoRef ? { documentoRef: value.documentoRef } as IDocumento : undefined,
       empresa: value.empresaId ? { id: value.empresaId } as IEmpresaExplotacionResultados : undefined,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
@@ -29,7 +29,7 @@ class EmpresaDocumentoResponseConverter
     }
     return {
       id: value.id,
-      comentarios: value.comentarios,
+      comentarios: value.comentarios ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.comentarios) : [],
       documentoRef: value.documento.documentoRef,
       empresaId: value.empresa.id,
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(value.nombre) : [],

@@ -14,7 +14,7 @@ class EmpresaDocumentoRequestConverter
       return value as unknown as IEmpresaDocumentoRequest;
     }
     return {
-      comentarios: value.comentarios,
+      comentarios: value.comentarios ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.comentarios) : [],
       documentoRef: value.documento.documentoRef,
       empresaId: value.empresa.id,
       nombre: value.nombre ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.nombre) : [],

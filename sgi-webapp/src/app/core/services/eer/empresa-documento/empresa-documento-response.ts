@@ -4,7 +4,7 @@ export interface IEmpresaDocumentoResponse {
   id: number;
   nombre: I18nFieldValueResponse[];
   documentoRef: string;
-  comentarios: string;
+  comentarios: I18nFieldValueResponse[];
   empresaId: number;
   tipoDocumento: {
     id: number;

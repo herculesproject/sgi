@@ -31,6 +31,7 @@ const MSG_FILE_NOT_FOUND_ERROR = marker('error.file.info');
 const EMPRESA_DOCUMENTO_KEY = marker('eer.empresa-documento');
 const EMPRESA_DOCUMENTO_NOMBRE_KEY = marker('eer.empresa-documento.nombre');
 const EMPRESA_DOCUMENTO_DOCUMENTO_KEY = marker('eer.empresa-documento.documento');
+const EMPRESA_DOCUMENTO_COMENTARIOS_KEY = marker('eer.empresa-documento.comentarios');
 
 enum VIEW_MODE {
   NONE = '',
@@ -69,6 +70,7 @@ export class EmpresaExplotacionResultadosDocumentosComponent extends FragmentCom
   msgParamEntity = {};
   msgParamNombreEntity = {};
   msgParamDocumentoEntity = {};
+  msgParamComentariosEntity = {};
   textoDelete: string;
 
   private getLevel = (node: NodeDocumento) => node.level;
@@ -127,7 +129,7 @@ export class EmpresaExplotacionResultadosDocumentosComponent extends FragmentCom
       tipoDocumento: new FormControl(null),
       subtipoDocumento: new FormControl(null),
       documento: new FormControl(null, Validators.required),
-      comentarios: new FormControl('')
+      comentarios: new FormControl([], I18nValidators.maxLength(2000))
     }));
     this.group.initialize();
 
@@ -331,6 +333,11 @@ export class EmpresaExplotacionResultadosDocumentosComponent extends FragmentCom
         );
       })
     ).subscribe((value) => this.textoDelete = value);
+
+    this.translate.get(
+      EMPRESA_DOCUMENTO_COMENTARIOS_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamComentariosEntity = { entity: value, ...MSG_PARAMS.GENDER.MALE, ...MSG_PARAMS.CARDINALIRY.PLURAL });
   }
 
   getI18nValue(i18nFieldValue: I18nFieldValue[]): string {
