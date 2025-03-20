@@ -9,4 +9,5 @@ DELETE FROM test.empresa_nombre_razon_social;
 DELETE FROM test.empresa_objeto_social;
 DELETE FROM test.empresa_conocimiento_tecnologia;
 DELETE FROM test.empresa_notario;
+DELETE FROM test.empresa_observaciones;
 DELETE FROM test.empresa;

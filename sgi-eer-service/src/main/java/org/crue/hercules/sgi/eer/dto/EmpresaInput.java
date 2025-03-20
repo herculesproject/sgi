@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -62,8 +61,7 @@ public class EmpresaInput implements Serializable {
 
   private Instant fechaCese;
 
-  @Size(max = Empresa.OBSERVACIONES_LENGTH)
-  private String observaciones;
+  private List<I18nFieldValueDto> observaciones;
 
   @NotNull
   private EstadoEmpresa estado;

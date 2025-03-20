@@ -170,9 +170,11 @@ public class Empresa extends BaseActivableEntity {
   private Instant fechaCese;
 
   /** Observaciones */
-  @Column(name = "observaciones", length = Empresa.OBSERVACIONES_LENGTH, nullable = true)
-  @Size(max = Empresa.OBSERVACIONES_LENGTH)
-  private String observaciones;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "empresa_observaciones", joinColumns = @JoinColumn(name = "empresa_id"))
+  @Valid
+  @Builder.Default
+  private Set<EmpresaObservaciones> observaciones = new HashSet<>();
 
   /** Estado empresa */
   @Column(name = "estado", length = Empresa.ESTADO_EMPRESA_LENGTH, nullable = false)
