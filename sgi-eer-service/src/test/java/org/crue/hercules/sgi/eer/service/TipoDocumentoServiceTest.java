@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
+import org.crue.hercules.sgi.eer.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.eer.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eer.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
@@ -143,9 +144,11 @@ class TipoDocumentoServiceTest extends BaseServiceTest {
       TipoDocumento padre) {
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento = new HashSet<>();
+    descripcionTipoDocumento.add(new TipoDocumentoDescripcion(Language.ES, descripcion));
     return TipoDocumento.builder()
         .activo(activo)
-        .descripcion(descripcion)
+        .descripcion(descripcionTipoDocumento)
         .id(id)
         .nombre(nombreTipoDocumento)
         .padre(padre)

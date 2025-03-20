@@ -56,8 +56,11 @@ public class TipoDocumento extends BaseActivableEntity {
   private Set<TipoDocumentoNombre> nombre = new HashSet<>();
 
   /** Descripción */
-  @Column(name = "descripcion", length = SHORT_TEXT_LENGTH, nullable = true)
-  private String descripcion;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "tipo_documento_descripcion", joinColumns = @JoinColumn(name = "tipo_documento_id"))
+  @Valid
+  @Builder.Default
+  private Set<TipoDocumentoDescripcion> descripcion = new HashSet<>();
 
   @ManyToOne
   @JoinColumn(name = "tipo_documento_padre_id", nullable = true, foreignKey = @ForeignKey(name = "FK_TIPODOCUMENTO_PADRE"))

@@ -28,6 +28,7 @@ import org.crue.hercules.sgi.eer.model.EmpresaDocumentoNombre;
 import org.crue.hercules.sgi.eer.model.EmpresaNombreRazonSocial;
 import org.crue.hercules.sgi.eer.model.EmpresaObjetoSocial;
 import org.crue.hercules.sgi.eer.model.TipoDocumento;
+import org.crue.hercules.sgi.eer.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.eer.model.TipoDocumentoNombre;
 import org.crue.hercules.sgi.eer.service.EmpresaAdministracionSociedadService;
 import org.crue.hercules.sgi.eer.service.EmpresaComposicionSociedadService;
@@ -610,9 +611,11 @@ class EmpresaControllerTest extends BaseControllerTest {
       TipoDocumento padre) {
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento = new HashSet<>();
+    descripcionTipoDocumento.add(new TipoDocumentoDescripcion(Language.ES, descripcion));
     return TipoDocumento.builder()
         .activo(activo)
-        .descripcion(descripcion)
+        .descripcion(descripcionTipoDocumento)
         .id(id)
         .nombre(nombreTipoDocumento)
         .padre(padre)
@@ -627,9 +630,11 @@ class EmpresaControllerTest extends BaseControllerTest {
       String descripcion, TipoDocumentoOutput padre) {
     Set<TipoDocumentoNombre> nombreTipoDocumento = new HashSet<>();
     nombreTipoDocumento.add(new TipoDocumentoNombre(Language.ES, nombre));
+    Set<TipoDocumentoDescripcion> descripcionTipoDocumento = new HashSet<>();
+    descripcionTipoDocumento.add(new TipoDocumentoDescripcion(Language.ES, descripcion));
     return TipoDocumentoOutput.builder()
         .activo(activo)
-        .descripcion(descripcion)
+        .descripcion(descripcionTipoDocumento)
         .id(id)
         .nombre(nombreTipoDocumento)
         .padre(padre)

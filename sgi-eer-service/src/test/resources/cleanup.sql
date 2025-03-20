@@ -5,6 +5,7 @@ DELETE FROM test.empresa_documento_comentarios;
 DELETE FROM test.empresa_documento;
 UPDATE test.tipo_documento SET tipo_documento_padre_id = null;
 DELETE FROM test.tipo_documento_nombre;
+DELETE FROM test.tipo_documento_descripcion;
 DELETE FROM test.tipo_documento;
 DELETE FROM test.empresa_composicion_sociedad;
 DELETE FROM test.empresa_administracion_sociedad;

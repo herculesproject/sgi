@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eer.dto;
 
 import java.util.Collection;
 
+import org.crue.hercules.sgi.eer.model.TipoDocumentoDescripcion;
 import org.crue.hercules.sgi.eer.model.TipoDocumentoNombre;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class TipoDocumentoOutput {
   private Long id;
   private Collection<TipoDocumentoNombre> nombre;
-  private String descripcion;
+  private Collection<TipoDocumentoDescripcion> descripcion;
   private TipoDocumentoOutput padre;
   private Boolean activo;
 }
