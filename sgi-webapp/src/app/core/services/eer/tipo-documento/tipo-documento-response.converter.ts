@@ -11,7 +11,7 @@ class TipoDocumentoResponseConverter
     }
     return {
       id: value.id,
-      descripcion: value.descripcion,
+      descripcion: value.descripcion ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.descripcion) : [],
       nombre: value.nombre ? I18N_FIELD_RESPONSE_CONVERTER.toTargetArray(value.nombre) : [],
       activo: value.activo
     };
