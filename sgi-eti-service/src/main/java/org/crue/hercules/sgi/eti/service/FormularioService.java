@@ -58,4 +58,15 @@ public interface FormularioService {
    */
   void completado(Long memoriaId, Formulario.Tipo formularioTipo) throws MemoriaNotFoundException;
 
+  /**
+   * Actualiza o crea el report asociado al {@link Formulario} en el idioma
+   * especificado
+   * 
+   * @param id          el id de la entidad {@link Formulario}.
+   * @param language    Idioma
+   * @param reportValue report
+   * @return Formulario del report asociado
+   */
+  Formulario updateReport(Long id, Language language, byte[] reportValue);
+
 }

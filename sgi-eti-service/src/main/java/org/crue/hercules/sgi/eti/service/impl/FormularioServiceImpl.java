@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
+import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -146,6 +147,38 @@ public class FormularioServiceImpl implements FormularioService {
         }
         break;
     }
+  }
+
+  /**
+   * Actualiza o crea el report asociado al {@link Formulario} en el idioma
+   * especificado
+   * 
+   * @param id          el id de la entidad {@link Formulario}.
+   * @param language    Idioma
+   * @param reportValue report
+   * @return Formulario del report asociado
+   */
+  @Transactional
+  public Formulario updateReport(Long id, Language language, byte[] reportValue) {
+    log.debug("updateReport(Long id, Language language, byte[] reportValue) - start");
+
+    AssertHelper.idNotNull(id, Formulario.class);
+
+    FormularioReport report = null;
+    if (this.existReport(id, language)) {
+      // Actualiza el value del report
+      report = formularioReportRepository.findById(new FormularioReportPK(id, language))
+          .orElseThrow(() -> new FormularioNotFoundException(id));
+      report.setValue(reportValue);
+    } else {
+      // Crea una nueva entidad report con el value indicado
+      report = new FormularioReport(id, language, reportValue);
+    }
+
+    FormularioReport returnValue = formularioReportRepository.saveAndFlush(report);
+
+    log.debug("updateReport(Long id, Language language, byte[] reportValue) - end");
+    return this.findById(returnValue.getFormularioId());
   }
 
 }
