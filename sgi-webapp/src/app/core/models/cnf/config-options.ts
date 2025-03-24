@@ -8,12 +8,14 @@ export enum ConfigType {
   FILE = 'file',
   SELECT = 'select',
   SELECT_MULTIPLE = 'select-multiple',
-  CONFIG_GROUP_TITLE = 'config-group-title'
+  CONFIG_GROUP_TITLE = 'config-group-title',
+  SELECT_FILE = 'select-file'
 }
 
 export enum ConfigModule {
   CNF,
   CSP,
+  ETI,
   NONE
 }
 

@@ -1,9 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IBloque } from '@core/models/eti/bloque';
 import { FormularioTipo, IFormulario } from '@core/models/eti/formulario';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { IBloqueResponse } from './bloque/bloque-response';
 import { BLOQUE_RESPONSE_CONVERTER } from './bloque/bloque-response.converter';
@@ -54,6 +54,26 @@ export class FormularioService extends _FormularioServiceMixinBase {
     params = params.append('tipoFormulario', tipoFormulario);
 
     return this.http.head<void>(url, { params });
+  }
+
+  downloadReport(formularioId: number): Observable<Blob> {
+    return this.http.get(`${this.endpointUrl}/${formularioId}/report`, {
+      headers: new HttpHeaders().set('Accept', 'application/octet-stream'), responseType: 'blob'
+    });
+  }
+
+  findByCodigoFormulario(codigo: string): Observable<SgiRestListResult<IFormulario>> {
+    const options: SgiRestFindOptions = {
+      filter: new RSQLSgiRestFilter('codigo', SgiRestFilterOperator.LIKE_ICASE, codigo)
+    };
+    return this.findAll(options);
+  }
+
+  updateResourceFormularioWithStatus(formularioId: number, file: File): Observable<HttpEvent<any>> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.patch(`${this.endpointUrl}/${formularioId}/report`, formData, { observe: 'events', reportProgress: true });
   }
 
 }

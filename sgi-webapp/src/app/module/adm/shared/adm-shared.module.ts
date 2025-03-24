@@ -13,6 +13,7 @@ import { ConfigSelectCspComponent } from './config-select-csp/config-select-csp.
 import { ConfigSelectMultipleCnfComponent } from './config-select-multiple-cnf/config-select-multiple-cnf.component';
 import { ConfigSelectMultipleCspComponent } from './config-select-multiple-csp/config-select-multiple-csp.component';
 import { ResourceUploadComponent } from './resource-upload/resource-upload.component';
+import { ConfigSelectFileEtiComponent } from './config-select-file-eti/config-select-file-eti.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ResourceUploadComponent } from './resource-upload/resource-upload.compo
     ConfigSelectCspComponent,
     ConfigSelectMultipleCnfComponent,
     ConfigSelectMultipleCspComponent,
+    ConfigSelectFileEtiComponent,
     ResourceUploadComponent
   ],
   imports: [
@@ -43,6 +45,7 @@ import { ResourceUploadComponent } from './resource-upload/resource-upload.compo
     ConfigSelectCspComponent,
     ConfigSelectMultipleCnfComponent,
     ConfigSelectMultipleCspComponent,
+    ConfigSelectFileEtiComponent,
     ResourceUploadComponent
   ]
 })

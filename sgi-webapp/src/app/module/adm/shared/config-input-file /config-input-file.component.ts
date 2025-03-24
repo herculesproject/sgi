@@ -30,7 +30,18 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
   msgParamLabel = {};
   textoUpdateSuccess: string;
 
-  @ViewChild('uploader') private uploader: ResourceUploadComponent;
+  private _uploader: ResourceUploadComponent;
+
+  @ViewChild('uploader') set uploader(component: ResourceUploadComponent) {
+    if (component) {
+      this._uploader = component;
+      this.subscriptions.push(component.selectionChange.subscribe(file => {
+        this.fileSelection = file;
+      }));
+    }
+  }
+
+  private fileSelection: File = null;
 
   @Input()
   set key(key: string) {
@@ -107,7 +118,7 @@ export class ConfigInputFileComponent implements OnInit, OnDestroy {
 
   save(): void {
     this.subscriptions.push(
-      this.uploader.uploadSelection(this.key + this.getCodeIdioma())
+      this._uploader.handleUploadRequest(this.resourceService.updateWithStatus(this.key + this.getCodeIdioma(), this.fileSelection))
         .subscribe(
           () => {
             this.snackBarService.showSuccess(this.textoUpdateSuccess);
