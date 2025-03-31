@@ -481,7 +481,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
       for (let j = 0; j < maxNumEquipoInstrumental; j++) {
         const grupoLineaEquipoInstrumental = grupoLineasEquipoInstrumental[j];
         if (grupoLineaEquipoInstrumental) {
-          elementsRow.push(grupoLineaEquipoInstrumental.grupoEquipoInstrumental?.nombre ?? '');
+          elementsRow.push(this.languageService.getFieldValue(grupoLineaEquipoInstrumental.grupoEquipoInstrumental?.nombre));
         } else {
           elementsRow.push('');
         }

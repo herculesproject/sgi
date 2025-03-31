@@ -15,6 +15,7 @@ import { switchMap } from 'rxjs/operators';
 import { GrupoLineaInvestigacionActionService } from '../../grupo-linea-investigacion.action.service';
 import { GrupoLineaEquipoInstrumentalModalComponent, GrupoLineaEquipoInstrumentalModalData } from '../../modals/grupo-linea-equipo-instrumental-modal/grupo-linea-equipo-instrumental-modal.component';
 import { GrupoLineaEquipoInstrumentalFragment } from './grupo-linea-equipo-instrumental.fragment';
+import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const GRUPO_EQUIPO_INSTRUMENTAL_KEY = marker('csp.grupo-equipo.equipo-instrumental');
@@ -49,7 +50,8 @@ export class GrupoLineaEquipoInstrumentalComponent extends FragmentComponent imp
     public actionService: GrupoLineaInvestigacionActionService,
     private matDialog: MatDialog,
     private dialogService: DialogService,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService
   ) {
     super(actionService.FRAGMENT.EQUIPO_INSTRUMENTAL, actionService, translate);
     this.formPart = this.fragment as GrupoLineaEquipoInstrumentalFragment;
@@ -62,6 +64,12 @@ export class GrupoLineaEquipoInstrumentalComponent extends FragmentComponent imp
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IGrupoLineaEquipoInstrumental>, property: string) => {
         switch (property) {
+          case 'nombre':
+            return this.languageService.getFieldValue(wrapper.value.grupoEquipoInstrumental?.nombre);
+          case 'descripcion':
+            return this.languageService.getFieldValue(wrapper.value.grupoEquipoInstrumental?.descripcion);
+          case 'numRegistro':
+            return wrapper.value.grupoEquipoInstrumental?.numRegistro;
           default:
             return wrapper[property];
         }
