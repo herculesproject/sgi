@@ -29,7 +29,7 @@ public class DetalleGrupoInvestigacionObject {
   private ResumenSexenioObject sexenios;
   private List<ResumenProduccionCientificaObject> produccionesCientificas;
   private ResumenCosteIndirectoObject costesIndirectos;
-  private List<ResumenTotalObject> totales;
+  private List<ResumenTotalObject> totales = new ArrayList<>();
 
   public DetalleGrupoInvestigacionObject(DetalleGrupoInvestigacionOutput dto) {
     this.grupo = dto.getGrupo();
@@ -41,7 +41,7 @@ public class DetalleGrupoInvestigacionObject {
     this.precioPuntoCostesIndirectos = dto.getPrecioPuntoCostesIndirectos();
     this.precioPuntoSexenio = dto.getPrecioPuntoSexenio();
     if (!CollectionUtils.isEmpty(dto.getTotales())) {
-      this.totales = dto.getTotales().stream().map(ResumenTotalObject::new).toList();
+      this.totales.addAll(dto.getTotales().stream().map(ResumenTotalObject::new).toList());
     }
     if (!CollectionUtils.isEmpty(dto.getProduccionesCientificas())) {
       this.produccionesCientificas = dto.getProduccionesCientificas().stream()
