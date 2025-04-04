@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { MSG_PARAMS } from '@core/i18n';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { ConfigService as ConfigServiceCSP } from '@core/services/csp/configuracion/config.service';
+import { LanguageService } from '@core/services/language.service';
 import { forkJoin, Subscription } from 'rxjs';
 import { CSP_ROUTE_NAMES } from '../csp-route-names';
 
@@ -25,13 +26,13 @@ export class CspRootComponent implements OnDestroy {
   // tslint:disable-next-line: variable-name
   _urlSistemaGestionExterno: string;
   get urlSistemaGestionExterno(): string {
-    return this._urlSistemaGestionExterno;
+    return this.parseI18nValue(this._urlSistemaGestionExterno);
   }
 
   // tslint:disable-next-line: variable-name
   _nombreSistemaGestionExterno: string;
   get nombreSistemaGestionExterno(): string {
-    return this._nombreSistemaGestionExterno;
+    return this.parseI18nValue(this._nombreSistemaGestionExterno);
   }
 
   _isNotificacionPresupuestoSgeEnabled: boolean;
@@ -41,7 +42,8 @@ export class CspRootComponent implements OnDestroy {
 
   constructor(
     private configService: ConfigService,
-    private configServiceCSP: ConfigServiceCSP
+    private configServiceCSP: ConfigServiceCSP,
+    private languageService: LanguageService
   ) {
     this.subscriptions.push(
       forkJoin(
@@ -56,6 +58,18 @@ export class CspRootComponent implements OnDestroy {
         this._isNotificacionPresupuestoSgeEnabled = notificacionPresupuestoSge;
       })
     );
+  }
+
+  private parseI18nValue(value: string): string {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return this.languageService.getFieldValue(parsed);
+      }
+      return value;
+    } catch {
+      return value;
+    }
   }
 
   ngOnDestroy(): void {

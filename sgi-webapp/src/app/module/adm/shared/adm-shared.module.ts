@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { ConfigI18nInputTextCnfComponent } from './config-i18n-input-text-cnf/config-i18n-input-text-cnf.component';
 import { ConfigInputEmailsComponent } from './config-input-emails /config-input-emails.component';
 import { ConfigInputFileComponent } from './config-input-file /config-input-file.component';
 import { ConfigInputTextCnfComponent } from './config-input-text-cnf/config-input-text-cnf.component';
@@ -21,6 +22,7 @@ import { ConfigSelectFileEtiComponent } from './config-select-file-eti/config-se
     ConfigInputFileComponent,
     ConfigInputTextCnfComponent,
     ConfigInputTextCspComponent,
+    ConfigI18nInputTextCnfComponent,
     ConfigSelectCnfComponent,
     ConfigSelectCspComponent,
     ConfigSelectMultipleCnfComponent,
@@ -41,6 +43,7 @@ import { ConfigSelectFileEtiComponent } from './config-select-file-eti/config-se
     ConfigInputFileComponent,
     ConfigInputTextCnfComponent,
     ConfigInputTextCspComponent,
+    ConfigI18nInputTextCnfComponent,
     ConfigSelectCnfComponent,
     ConfigSelectCspComponent,
     ConfigSelectMultipleCnfComponent,

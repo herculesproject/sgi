@@ -9,7 +9,8 @@ export enum ConfigType {
   SELECT = 'select',
   SELECT_MULTIPLE = 'select-multiple',
   CONFIG_GROUP_TITLE = 'config-group-title',
-  SELECT_FILE = 'select-file'
+  SELECT_FILE = 'select-file',
+  I18N_TEXT = 'i18n-text'
 }
 
 export enum ConfigModule {
