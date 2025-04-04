@@ -9,7 +9,7 @@
   <property name="schemaPrefix" value="" />
   <property name="defaultLang" value="es" />
 
-  <changeSet context="!test" author="master" id="00.08.00-resources-update-oracle">
+  <changeSet context="!test" author="master" id="00.08.00-resources-update">
 
     <!-- rep-common-header-logo -->
     <!-- Update value if mach default_value -->
@@ -23,6 +23,16 @@
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="rep-common-header-logo" />
+      </whereParams>
+    </update>
+
+    <update tableName="resources">
+      <column name="name" value="web-i18n-${defaultLang}" />
+      <column
+        name="description" value="i18n ${defaultLang}" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-i18n-es" />
       </whereParams>
     </update>
   </changeSet>
@@ -42,13 +52,27 @@
       <column name="value" value="[&quot;es&quot;, &quot;en&quot;, &quot;eu&quot;]" />
     </insert>
 
-    <update tableName="resources">
-      <column name="name" value="web-i18n-${defaultLang}" />
+    <update tableName="config">
+      <column name="value"
+        valueComputed="'[{&quot;lang&quot;:&quot;${defaultLang}&quot;, &quot;value&quot;:&quot;' || value || '&quot;}]'" />
       <column
-        name="description" value="i18n ${defaultLang}" />
+        name="default_value"
+        valueComputed="'[{&quot;lang&quot;:&quot;${defaultLang}&quot;, &quot;value&quot;:&quot;' || default_value || '&quot;}]'" />
       <where>:name=:value</where>
       <whereParams>
-        <param name="name" value="web-i18n-es" />
+        <param name="name" value="nombre-sistema-gestion-externo" />
+      </whereParams>
+    </update>
+
+    <update tableName="config">
+      <column name="value"
+        valueComputed="'[{&quot;lang&quot;:&quot;${defaultLang}&quot;, &quot;value&quot;:&quot;' || value || '&quot;}]'" />
+      <column
+        name="default_value"
+        valueComputed="'[{&quot;lang&quot;:&quot;${defaultLang}&quot;, &quot;value&quot;:&quot;' || value || '&quot;}]'" />
+     <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="url-sistema-gestion-externo" />
       </whereParams>
     </update>
   </changeSet>
