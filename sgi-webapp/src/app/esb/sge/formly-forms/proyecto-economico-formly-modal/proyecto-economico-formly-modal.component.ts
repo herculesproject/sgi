@@ -198,15 +198,15 @@ export class ProyectoEconomicoFormlyModalComponent
               id: proyecto.id,
               fechaInicio: proyecto.fechaInicio,
               fechaFin: proyecto.fechaFin,
-              finalidad: {
+              finalidad: proyecto.finalidad?.id ? {
                 id: proyecto.finalidad.id,
                 nombre: this.languageService.getFieldValue(proyecto.finalidad.nombre)
-              },
+              } : null,
               finalidadI18n: proyecto.finalidad,
-              modeloEjecucion: {
+              modeloEjecucion: proyecto.modeloEjecucion?.id ? {
                 id: proyecto.modeloEjecucion.id,
                 nombre: this.languageService.getFieldValue(proyecto.modeloEjecucion.nombre)
-              },
+              } : null,
               modeloEjecucionI18n: proyecto.modeloEjecucion,
               titulo: this.languageService.getFieldValue(proyecto.titulo),
               tituloI18n: proyecto.titulo
