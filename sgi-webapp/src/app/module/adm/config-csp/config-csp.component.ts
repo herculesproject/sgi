@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
-import { CARDINALIDAD_RELACION_SGI_SGE_MAP, FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP, MODO_EJECUCION_MAP, VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
+import { CARDINALIDAD_RELACION_SGI_SGE_MAP, FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP, MODO_EJECUCION_MAP, SGE_FILTRO_ANUALIDADES_MAP, VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { Observable, of } from 'rxjs';
@@ -67,6 +67,7 @@ export enum ConfigCsp {
   CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED = "detalleOperacionesModificacionesEnabled",
   CSP_EJECUCION_ECONOMICA_GRUPOS_ENABLED = 'ejecucionEconomicaGruposEnabled',
   CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES = 'facturasGastosColumnasFijasVisibles',
+  CSP_FORMATO_ANUALIDAD_ANIO = "formatoAnualidadAnio",
   CSP_FORMATO_CODIGO_INTERNO_PROYECTO = 'formatoCodigoInternoProyecto',
   CSP_FORMATO_CODIGO_INTERNO_PROYECTO_PLANTILLA = 'plantillaFormatoCodigoInternoProyecto',
   CSP_FORMATO_IDENTIFICADOR_JUSTIFICACION = 'formatoIdentificadorJustificacion',
@@ -75,17 +76,17 @@ export enum ConfigCsp {
   CSP_FORMATO_PARTIDA_PRESUPUESTARIA_PLANTILLA = 'plantillaFormatoPartidaPresupuestaria',
   CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED = "gastosJustificadosSgeEnabled",
   CSP_MODIFICACION_PROYECTO_SGE_ENABLED = "modificacionProyectoSgeEnabled",
+  CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED = 'notificacionPresupuestoSgeEnabled',
   CSP_PARTIDAS_PRESUPUESTARIAS_SGE_ENABLED = "partidasPresupuestariasSgeEnabled",
   CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES = 'personalContratadoColumnasFijasVisibles',
   CSP_PROYECTO_SGE_ALTA_MODO_EJECUCION = "proyectoSgeAltaModoEjecucion",
   CSP_PROYECTO_SGE_MODIFICACION_MODO_EJECUCION = "proyectoSgeModificacionModoEjecucion",
+  CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED = 'proyectoSocioPaisFilterEnabled',
   CSP_SECTOR_IVA_SGE_ENABLED = "sectorIvaSgeEnabled",
   CSP_SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED = "solicitudesSinConvocatoriaInvestigadorEnabled",
   CSP_VALIDACION_CLASIFICACION_GASTOS = 'validacionClasificacionGastos',
   CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES = 'viajesDietasColumnasFijasVisibles',
-  CSP_PROYECTO_SOCIO_PAIS_FILTER_ENABLED = 'proyectoSocioPaisFilterEnabled',
-  CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED = 'notificacionPresupuestoSgeEnabled',
-  CSP_FORMATO_ANUALIDAD_ANIO = "formatoAnualidadAnio",
+  CSP_SGE_FILTRO_ANUALIDADES = 'sgeFiltroAnualidades'
 }
 
 @Component({
@@ -124,6 +125,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_DETALLE_OPERACIONES_MODIFICACIONES_ENABLED.description`) }],
     [ConfigCsp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_NOTIFICACION_PRESUPUESTOS_SGE_ENABLED.description`) }],
+    [ConfigCsp.CSP_SGE_FILTRO_ANUALIDADES, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_SGE_FILTRO_ANUALIDADES`), options: this.getSgeFiltroAnualidadesValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SGE_FILTRO_ANUALIDADES.description`) }],
     [ConfigCsp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.csp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES`), options: this.getFacturasJustificantesColumnasFijasConfigurablesValues(), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES.description`) }],
     [ConfigCsp.CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.csp.CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES`), options: this.getFacturasJustificantesColumnasFijasConfigurablesValues(), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES.description`) }],
     [ConfigCsp.CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.csp.CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES`), options: this.getFacturasJustificantesColumnasFijasConfigurablesValues(), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES.description`) }],
@@ -244,6 +246,16 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     const keyValueList: KeyValue<string, string>[] = [];
 
     for (const [key, value] of VALIDACION_CLASIFICACION_GASTOS_MAP.entries()) {
+      keyValueList.push({ key, value });
+    }
+
+    return of(keyValueList);
+  }
+
+  private getSgeFiltroAnualidadesValues(): Observable<KeyValue<string, string>[]> {
+    const keyValueList: KeyValue<string, string>[] = [];
+
+    for (const [key, value] of SGE_FILTRO_ANUALIDADES_MAP.entries()) {
       keyValueList.push({ key, value });
     }
 

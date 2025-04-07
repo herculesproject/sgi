@@ -1014,4 +1014,17 @@ export class ProyectoService extends _ProyectoServiceMixinBase {
     return this.http.patch<IProyecto>(`${this.endpointUrl}/${id}/init-fecha-inicio`, undefined);
   }
 
+  /**
+   * Obtiene la lista de anualidades de un proyecto comprendidas entre su fecha
+   * de inicio y us fecha de fin o fecha de fin definitiva si esta informada
+   * 
+   * @param id Identificador de {@link Proyecto}
+   * @return la lista de anualidades del proyecto, y una lista vacia si no tiene anualidades 
+   */
+  getAnualidadesProyecto(id: number): Observable<string[]> {
+    return this.get<string[]>(`${this.endpointUrl}/${id}/anualidades-fechas-proyecto`).pipe(
+      map(response => response ?? [])
+    );
+  }
+
 }

@@ -23,6 +23,11 @@ export enum FacturasJustificantesColumnasFijasConfigurables {
   APLICACION_PRESUPUESTARIA = 'APLICACION_PRESUPUESTARIA'
 }
 
+export enum SgeFiltroAnualidades {
+  ANUALIDADES_OPCIONALES = 'ANUALIDADES_OPCIONALES',
+  ANUALIDADES_OBLIGATORIAS = 'ANUALIDADES_OBLIGATORIAS'
+}
+
 export const CARDINALIDAD_RELACION_SGI_SGE_MAP: Map<CardinalidadRelacionSgiSge, string> = new Map([
   [CardinalidadRelacionSgiSge.SGI_1_SGE_1, marker(`csp.cardinalidad-relacion-sgi-sge.SGI_1_SGE_1`)],
   [CardinalidadRelacionSgiSge.SGI_1_SGE_N, marker(`csp.cardinalidad-relacion-sgi-sge.SGI_1_SGE_N`)],
@@ -44,6 +49,11 @@ export const VALIDACION_CLASIFICACION_GASTOS_MAP: Map<ValidacionClasificacionGas
 export const FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP: Map<FacturasJustificantesColumnasFijasConfigurables, string> = new Map([
   [FacturasJustificantesColumnasFijasConfigurables.CLASIFICACION_SGE, marker(`csp.facturas-justificantes-columnas-fijas-configurables.CLASIFICACION_SGE`)],
   [FacturasJustificantesColumnasFijasConfigurables.APLICACION_PRESUPUESTARIA, marker(`csp.facturas-justificantes-columnas-fijas-configurables.APLICACION_PRESUPUESTARIA`)]
+]);
+
+export const SGE_FILTRO_ANUALIDADES_MAP: Map<SgeFiltroAnualidades, string> = new Map([
+  [SgeFiltroAnualidades.ANUALIDADES_OPCIONALES, marker(`csp.sge-filtro-anualidades.ANUALIDADES_OPCIONALES`)],
+  [SgeFiltroAnualidades.ANUALIDADES_OBLIGATORIAS, marker(`csp.sge-filtro-anualidades.ANUALIDADES_OBLIGATORIAS`)]
 ]);
 
 export interface IConfiguracion {
@@ -102,4 +112,6 @@ export interface IConfiguracion {
   notificacionPresupuestoSgeEnabled: boolean;
   /** Permite activar formato de año natural en anualidad de presupuesto de proyecto */
   formatoAnualidadAnio: boolean;
+  /** Define el comportamiento del filtro de anualidades en Ejecución Económica. */
+  sgeFiltroAnualidades: SgeFiltroAnualidades;
 }

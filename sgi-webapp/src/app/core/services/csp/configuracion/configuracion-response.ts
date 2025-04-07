@@ -8,11 +8,13 @@ export interface IConfiguracionResponse {
   detalleOperacionesModificacionesEnabled: boolean;
   ejecucionEconomicaGruposEnabled: boolean;
   facturasGastosColumnasFijasVisibles: string;
+  formatoAnualidadAnio: boolean;
   formatoCodigoInternoProyecto: string;
   formatoIdentificadorJustificacion: string;
   formatoPartidaPresupuestaria: string;
   gastosJustificadosSgeEnabled: boolean;
   modificacionProyectoSgeEnabled: boolean;
+  notificacionPresupuestoSgeEnabled: boolean;
   partidasPresupuestariasSgeEnabled: boolean;
   personalContratadoColumnasFijasVisibles: string;
   plantillaFormatoCodigoInternoProyecto: string;
@@ -22,9 +24,8 @@ export interface IConfiguracionResponse {
   proyectoSgeModificacionModoEjecucion: string;
   proyectoSocioPaisFilterEnabled: boolean;
   sectorIvaSgeEnabled: boolean;
+  sgeFiltroAnualidades: string;
   solicitudesSinConvocatoriaInvestigadorEnabled: boolean;
   validacionClasificacionGastos: string;
   viajesDietasColumnasFijasVisibles: string;
-  notificacionPresupuestoSgeEnabled: boolean;
-  formatoAnualidadAnio: boolean;
 }

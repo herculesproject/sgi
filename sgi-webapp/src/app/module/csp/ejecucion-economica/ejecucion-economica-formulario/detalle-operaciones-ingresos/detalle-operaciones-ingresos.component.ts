@@ -3,6 +3,7 @@ import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
@@ -14,6 +15,8 @@ import { EjecucionEconomicaActionService } from '../../ejecucion-economica.actio
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { DetalleOperacionesIngresosFragment } from './detalle-operaciones-ingresos.fragment';
 import { DetalleOperacionesIngresosExportModalComponent } from './export/detalle-operaciones-ingresos-export-modal.component';
+
+const ANUALIDAD_KEY = marker('csp.proyecto-presupuesto.anualidad');
 
 @Component({
   selector: 'sgi-detalle-operaciones-ingresos',
@@ -27,7 +30,7 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  msgParamEntity = {};
+  msgParamAnualidadesEntity = {};
 
   private totalElementos = 0;
 
@@ -88,6 +91,11 @@ export class DetalleOperacionesIngresosComponent extends FragmentComponent imple
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  protected setupI18N(): void { }
+  protected setupI18N(): void {
+    this.translate.get(
+      ANUALIDAD_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamAnualidadesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+  }
 
 }

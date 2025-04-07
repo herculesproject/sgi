@@ -3,16 +3,20 @@ import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { DetalleOperacionesModificacionesFragment } from './detalle-operaciones-modificaciones.fragment';
 import { DetalleOperacionesModificacionesExportModalComponent } from './export/detalle-operaciones-modificaciones-export-modal.component';
+
+const ANUALIDAD_KEY = marker('csp.proyecto-presupuesto.anualidad');
 
 @Component({
   selector: 'sgi-detalle-operaciones-modificaciones',
@@ -26,7 +30,7 @@ export class DetalleOperacionesModificacionesComponent extends FragmentComponent
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  msgParamEntity = {};
+  msgParamAnualidadesEntity = {};
 
   readonly dataSourceDesglose = new MatTableDataSource<RowTreeDesglose<IDatoEconomico>>();
 
@@ -40,7 +44,8 @@ export class DetalleOperacionesModificacionesComponent extends FragmentComponent
 
   constructor(
     actionService: EjecucionEconomicaActionService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private translate: TranslateService
   ) {
     super(actionService.FRAGMENT.DETALLE_OPERACIONES_MODIFICACIONES, actionService);
 
@@ -85,5 +90,10 @@ export class DetalleOperacionesModificacionesComponent extends FragmentComponent
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  protected setupI18N(): void { }
+  protected setupI18N(): void {
+    this.translate.get(
+      ANUALIDAD_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamAnualidadesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+  }
 }

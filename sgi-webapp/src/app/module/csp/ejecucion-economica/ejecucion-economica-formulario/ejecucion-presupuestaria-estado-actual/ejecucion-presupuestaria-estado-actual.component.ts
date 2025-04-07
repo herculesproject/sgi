@@ -3,16 +3,20 @@ import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
 import { IDatoEconomico, TIPO_DATO_ECONOMICO_MAP } from '@core/models/sge/dato-economico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
 import { EjecucionPresupuestariaEstadoActualFragment } from './ejecucion-presupuestaria-estado-actual.fragment';
 import { EjecucionPresupuestariaEstadoActualExportModalComponent } from './export/ejecucion-presupuestaria-estado-actual-export-modal.component';
+
+const ANUALIDAD_KEY = marker('csp.proyecto-presupuesto.anualidad');
 
 @Component({
   selector: 'sgi-ejecucion-presupuestaria-estado-actual',
@@ -27,8 +31,7 @@ export class EjecucionPresupuestariaEstadoActualComponent extends FragmentCompon
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  msgParamEntity = {};
-  textoDelete: string;
+  msgParamAnualidadesEntity = {};
 
   readonly dataSourceDesglose = new MatTableDataSource<RowTreeDesglose<IDatoEconomico>>();
   @ViewChild('anualSel') selectAnualidades: MatSelect;
@@ -45,7 +48,8 @@ export class EjecucionPresupuestariaEstadoActualComponent extends FragmentCompon
 
   constructor(
     actionService: EjecucionEconomicaActionService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private translate: TranslateService
   ) {
     super(actionService.FRAGMENT.EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL, actionService);
 
@@ -90,6 +94,11 @@ export class EjecucionPresupuestariaEstadoActualComponent extends FragmentCompon
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  protected setupI18N(): void { }
+  protected setupI18N(): void {
+    this.translate.get(
+      ANUALIDAD_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamAnualidadesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+  }
 
 }

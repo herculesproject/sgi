@@ -12,6 +12,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
 import { DialogService } from '@core/services/dialog.service';
 import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
@@ -24,6 +25,7 @@ import { FacturasGastosFragment } from './facturas-gastos.fragment';
 
 const MODAL_CLASIFICACION_TITLE_KEY = marker('title.csp.ejecucion-economica.facturas-gastos');
 const MSG_ACCEPT_CLASIFICACION = marker('csp.ejecucion-economica.clasificacion-gastos.aceptar');
+const ANUALIDAD_KEY = marker('csp.proyecto-presupuesto.anualidad');
 
 @Component({
   selector: 'sgi-facturas-gastos',
@@ -37,7 +39,7 @@ export class FacturasGastosComponent extends FragmentComponent implements OnInit
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  msgParamEntity = {};
+  msgParamAnualidadesEntity = {};
 
   readonly dataSourceDesglose = new MatTableDataSource<RowTreeDesglose<IDesglose>>();
   @ViewChild('anualSel') selectAnualidades: MatSelect;
@@ -61,7 +63,8 @@ export class FacturasGastosComponent extends FragmentComponent implements OnInit
     private ejecucionEconomicaService: EjecucionEconomicaService,
     private gastoProyectoService: GastoProyectoService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private translate: TranslateService
   ) {
     super(actionService.FRAGMENT.FACTURAS_GASTOS, actionService);
 
@@ -190,5 +193,11 @@ export class FacturasGastosComponent extends FragmentComponent implements OnInit
     this.formPart.clearDesglose();
   }
 
-  protected setupI18N(): void { }
+  protected setupI18N(): void {
+    this.translate.get(
+      ANUALIDAD_KEY,
+      MSG_PARAMS.CARDINALIRY.PLURAL
+    ).subscribe((value) => this.msgParamAnualidadesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
+  }
+
 }
