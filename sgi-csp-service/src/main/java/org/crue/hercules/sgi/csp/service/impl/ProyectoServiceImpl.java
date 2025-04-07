@@ -2,12 +2,14 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -1207,7 +1209,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         .filter(proyectoEquipo -> proyectoEquipo.getFechaInicio() == null || fechaFinProyecto == null
             || (proyectoEquipo.getFechaInicio() != null && fechaFinProyecto != null
                 && !proyectoEquipo.getFechaInicio().isAfter(fechaFinProyecto)))
-        .toList();
+        .collect(Collectors.toList());
 
     miembrosEquipoProyectoUpdated.addAll(
         miembrosEquipoProyecto.stream()
@@ -1307,7 +1309,7 @@ public class ProyectoServiceImpl implements ProyectoService {
             || fechaFinProyecto == null
             || (responsableEconomicoProyecto.getFechaInicio() != null && fechaFinProyecto != null
                 && !responsableEconomicoProyecto.getFechaInicio().isAfter(fechaFinProyecto)))
-        .toList();
+        .collect(Collectors.toList());
 
     responsablesEconomicosProyectoUpdated.addAll(
         responsablesEconomicosProyecto.stream()
@@ -1594,7 +1596,7 @@ public class ProyectoServiceImpl implements ProyectoService {
             proyectoEquipoSocio -> proyectoEquipoSocio.getFechaInicio() == null || fechaFinProyecto == null
                 || (proyectoEquipoSocio.getFechaInicio() != null && fechaFinProyecto != null
                     && !proyectoEquipoSocio.getFechaInicio().isAfter(fechaFinProyecto)))
-        .toList();
+        .collect(Collectors.toList());
 
     miembrosEquipoSocioProyectoUpdated.addAll(
         miembrosEquipoSocioProyecto.stream()
@@ -1852,7 +1854,7 @@ public class ProyectoServiceImpl implements ProyectoService {
                     proyectoConceptoGasto.getFechaInicio(),
                     proyectoConceptoGasto.getFechaFin(),
                     proyectoConceptoGasto.getProyectoId()))
-        .toList();
+        .collect(Collectors.toList());
 
     proyectoConceptoGastoCodigoEcs.addAll(
         proyectoCodigosEconomicos.stream()
@@ -2682,6 +2684,35 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     log.debug("getProyectoApartadosToBeCopied({}) - end", id);
     return proyectoApartadosToBeCopied;
+  }
+
+  @Override
+  public List<String> getAnualidadesFechasProyecto(Long id) {
+    Proyecto proyecto = findById(id);
+
+    Instant fechaInicioProyecto = proyecto.getFechaInicio();
+    Instant fechaFinProyecto = Optional.ofNullable(proyecto.getFechaFinDefinitiva())
+        .orElse(proyecto.getFechaFin());
+
+    if (fechaInicioProyecto == null) {
+      return Collections.emptyList();
+    }
+
+    // Si la fecha de fin es null se asigna la fecha actual
+    if (fechaFinProyecto == null) {
+      fechaFinProyecto = Instant.now();
+    }
+
+    int anioInicio = fechaInicioProyecto.atZone(sgiConfigProperties.getTimeZone().toZoneId()).getYear();
+    int anioFin = fechaFinProyecto.atZone(sgiConfigProperties.getTimeZone().toZoneId()).getYear();
+
+    if (anioFin < anioInicio) {
+      return Collections.emptyList();
+    }
+
+    return IntStream.rangeClosed(anioInicio, anioFin)
+        .mapToObj(String::valueOf)
+        .toList();
   }
 
   private Set<ContextoProyectoObjetivos> convertObjetivosFromSolicitudToProyecto(

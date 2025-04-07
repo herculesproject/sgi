@@ -3402,4 +3402,11 @@
 
     <dropColumn columnName="observaciones" tableName="alegacion_requerimiento" />
   </changeSet>
+
+  <changeSet author="master" id="0.10.0-121">
+    <addColumn tableName="configuracion">
+      <column name="sge_filtro_anualidades" type="varchar(50)" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

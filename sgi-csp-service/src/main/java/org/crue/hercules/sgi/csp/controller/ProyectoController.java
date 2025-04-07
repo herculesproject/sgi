@@ -130,6 +130,9 @@ public class ProyectoController {
   public static final String PATH_INVESTIGADOR = PATH_SEPARATOR + "investigador";
 
   public static final String PATH_ID = PATH_SEPARATOR + "{id}";
+  public static final String PATH_ANUALIDADES = PATH_ID + PATH_SEPARATOR + "anualidades";
+  public static final String PATH_ANUALIDADES_FECHAS_PROYECTO = PATH_ID + PATH_SEPARATOR
+      + "anualidades-fechas-proyecto";
   public static final String PATH_ANUALIDAD_GASTOS = PATH_ID + PATH_SEPARATOR + "anualidad-gastos";
   public static final String PATH_ANUALIDAD_INGRESOS = PATH_ID + PATH_SEPARATOR + "anualidad-ingresos";
   public static final String PATH_APARTADOS_WITH_DATES = PATH_ID + PATH_SEPARATOR + "has-apartados-with-dates";
@@ -855,7 +858,7 @@ public class ProyectoController {
    * @return el listado de entidades {@link ProyectoAnualidadResumen} del
    *         {@link Proyecto}.
    */
-  @GetMapping("/{id}/anualidades")
+  @GetMapping(PATH_ANUALIDADES)
   @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-PRO-V','CSP-PRO-E')")
   public ResponseEntity<Page<ProyectoAnualidadResumen>> findAllProyectoAnualidadResumen(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -1802,6 +1805,23 @@ public class ProyectoController {
     Proyecto returnValue = service.initFechaInicio(id);
     log.debug("initFechaInicio(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Obtiene la lista de anualidades de un proyecto comprendidas entre su fecha
+   * de inicio y us fecha de fin o fecha de fin definitiva si esta informada
+   * 
+   * @param id Identificador de {@link Proyecto}
+   * @return la lista de anualidades del proyecto
+   */
+  @GetMapping(PATH_ANUALIDADES_FECHAS_PROYECTO)
+  @PreAuthorize("(isClient() and hasAuthority('SCOPE_sgi-csp')) or hasAnyAuthorityForAnyUO('CSP-PRO-E')")
+  public ResponseEntity<List<String>> getAnualidadesFechasProyecto(@PathVariable Long id) {
+    log.debug("getAnualidadesFechasProyecto(Long id) - start");
+    List<String> returnValue = service.getAnualidadesFechasProyecto(id);
+    log.debug("getAnualidadesFechasProyecto(Long id) - end");
+    return returnValue.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        : new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
 }

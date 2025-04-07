@@ -65,6 +65,11 @@ public class Configuracion extends BaseEntity {
     FECHA_DEVENGO
   }
 
+  public enum SgeFiltroAnualidades {
+    ANUALIDADES_OPCIONALES,
+    ANUALIDADES_OBLIGATORIAS;
+  }
+
   public enum Param {
     /**
      * Formato codigo partida presupuestaria
@@ -183,16 +188,18 @@ public class Configuracion extends BaseEntity {
      * investigación
      */
     SOLICITUDES_SIN_CONVOCATORIA_INVESTIGADOR_ENABLED("solicitudesSinConvocatoriaInvestigadorEnabled"),
-
     /**
      * Determina si hay integración de las notificaciones de presupuesto al SGE
      */
     NOTIFICACION_PRESUPUESTO_SGE_ENABLED("notificacionPresupuestoSgeEnabled"),
-
     /**
      * Permite aplicar el formato de anio en la anualidad
      */
-    FORMATO_ANUALIDAD_ANIO("formatoAnualidadAnio");
+    FORMATO_ANUALIDAD_ANIO("formatoAnualidadAnio"),
+    /**
+     * Define el comportamiento del filtro de anualidades en Ejecución Económica
+     */
+    SGE_FILTRO_ANUALIDADES("sgeFiltroAnualidades");
 
     private final String key;
 
@@ -384,6 +391,11 @@ public class Configuracion extends BaseEntity {
   @Column(name = "pro_anualidad_anio_formato", columnDefinition = "boolean default true", nullable = false, unique = true)
   private Boolean formatoAnualidadAnio;
 
+  /** Define el comportamiento del filtro de anualidades en Ejecución Económica */
+  @Column(name = "sge_filtro_anualidades", nullable = false, unique = true)
+  @Enumerated(EnumType.STRING)
+  private SgeFiltroAnualidades sgeFiltroAnualidades;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -440,6 +452,8 @@ public class Configuracion extends BaseEntity {
         return this.getNotificacionPresupuestoSgeEnabled();
       case FORMATO_ANUALIDAD_ANIO:
         return this.getFormatoAnualidadAnio();
+      case SGE_FILTRO_ANUALIDADES:
+        return this.getSgeFiltroAnualidades();
       default:
         return null;
     }
@@ -533,6 +547,9 @@ public class Configuracion extends BaseEntity {
         break;
       case FORMATO_ANUALIDAD_ANIO:
         this.setFormatoAnualidadAnio(Boolean.valueOf(newValue));
+        break;
+      case SGE_FILTRO_ANUALIDADES:
+        this.setSgeFiltroAnualidades(SgeFiltroAnualidades.valueOf(newValue));
         break;
     }
   }
