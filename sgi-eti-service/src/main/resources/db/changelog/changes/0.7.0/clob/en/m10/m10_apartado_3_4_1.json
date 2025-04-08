@@ -45,7 +45,7 @@
               "options": {
                 "compareTo": "formStateProperty",
                 "formStateProperty": "memoria.peticionEvaluacion.fechaInicio",
-                "message": "Debe ser posterior a la fecha de inicio del proyecto (datos generales solicitud evaluación)"
+                "message": "This must be later than the project start date (assessment application general details)"
               }
             }
           ]

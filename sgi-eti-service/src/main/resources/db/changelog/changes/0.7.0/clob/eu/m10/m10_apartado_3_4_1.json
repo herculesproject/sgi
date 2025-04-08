@@ -45,7 +45,7 @@
               "options": {
                 "compareTo": "formStateProperty",
                 "formStateProperty": "memoria.peticionEvaluacion.fechaInicio",
-                "message": "Debe ser posterior a la fecha de inicio del proyecto (datos generales solicitud evaluación)"
+                "message": "Proiektuaren hasiera data baino geroagokoa izan behar du (ebaluazio eskaeraren datu orokorrak)"
               }
             }
           ]

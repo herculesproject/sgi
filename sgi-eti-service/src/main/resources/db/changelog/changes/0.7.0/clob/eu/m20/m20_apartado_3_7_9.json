@@ -34,12 +34,12 @@
         "key": "extraccionSangreTable",
         "hideExpression": "!field.parent.model.extraccionSangreRadio || field.parent.model.extraccionSangreRadio === 'no'",
         "templateOptions": {
-          "entity": "extracción sangre",
+          "entity": "blood extraction",
           "gender": "female"
         },
         "fieldArray": {
           "templateOptions": {
-            "text": "Extracción sangre"
+            "text": "Blood extraction"
           },
           "fieldGroup": [
             {
