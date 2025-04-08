@@ -256,4 +256,152 @@
     <dropColumn columnName="descripcion" tableName="tipo_documento" />
   </changeSet>
 
+  <changeSet author="master" id="0.3.0-10">
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'Procedure documents' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Documentos de procedimiento'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'Prozeduraren agiriak' FROM ${schemaPrefix}tipo_documento_nombre
+      WHERE value_ = 'Documentos de procedimiento'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'Corporate documents' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Documentos corporativos'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'Agiri korporatiboak' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Documentos corporativos'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'Social statutes' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Estatutos sociales'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'Estatutu sozialak' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Estatutos sociales'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'Creation application' FROM ${schemaPrefix}tipo_documento_nombre
+      WHERE value_ = 'Solicitud de creación'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'Sortzeko eskaera' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Solicitud de creación'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'Membership application' FROM ${schemaPrefix}tipo_documento_nombre
+      WHERE value_ = 'Solicitud de incorporación'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'Txertatzeko eskaera' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Solicitud de incorporación'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'OTRI viability report' FROM ${schemaPrefix}tipo_documento_nombre
+      WHERE value_ = 'Informe viabilidad de la OTRI'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'ITRBaren bideragarritasun txostena' FROM
+      ${schemaPrefix}tipo_documento_nombre WHERE value_ = 'Informe viabilidad de la OTRI'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'Annual accounts report' FROM ${schemaPrefix}tipo_documento_nombre
+      WHERE value_ = 'Informe anual de cuentas'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'Kontuen urteko txostena' FROM ${schemaPrefix}tipo_documento_nombre
+      WHERE value_ = 'Informe anual de cuentas'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'Meeting minutes' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Acta de reunión'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'Bileraren akta' FROM ${schemaPrefix}tipo_documento_nombre WHERE
+      value_ = 'Acta de reunión'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'en', 'Change to corporate composition' FROM
+      ${schemaPrefix}tipo_documento_nombre WHERE value_ = 'Modificación composición sociedad'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_nombre (tipo_documento_id, lang, value_) SELECT
+      tipo_documento_id, 'eu', 'Sozietatearen osaketa aldatzea' FROM
+      ${schemaPrefix}tipo_documento_nombre WHERE value_ = 'Modificación composición sociedad'; </sql>
+  </changeSet>
+
+  <changeSet author="master" id="0.3.0-11">
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'Procedure documents' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Documentos de procedimiento'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'Prozeduraren agiriak' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Documentos de procedimiento'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'Corporate documents' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Documentos corporativos'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'Agiri korporatiboak' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Documentos corporativos'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'Social statutes' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Estatutos sociales'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'Estatutu sozialak' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Estatutos sociales'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'Creation application' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Solicitud de creación'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'Sortzeko eskaera' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Solicitud de creación'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'Membership application' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Solicitud de incorporación'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'Txertatzeko eskaera' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Solicitud de incorporación'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'OTRI viability report' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Informe viabilidad de la OTRI'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'ITRBaren bideragarritasun txostena' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Informe viabilidad de la OTRI'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'Annual accounts report' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Informe anual de cuentas'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'Kontuen urteko txostena' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Informe anual de cuentas'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'Meeting minutes' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Acta de reunión'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'Bileraren akta' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Acta de reunión'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'en', 'Change to corporate composition' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Modificación composición sociedad'; </sql>
+
+    <sql> INSERT INTO ${schemaPrefix}tipo_documento_descripcion (tipo_documento_id, lang, value_)
+      SELECT tipo_documento_id, 'eu', 'Sozietatearen osaketa aldatzea' FROM
+      ${schemaPrefix}tipo_documento_descripcion WHERE value_ = 'Modificación composición sociedad'; </sql>
+  </changeSet>
+
 </databaseChangeLog>
