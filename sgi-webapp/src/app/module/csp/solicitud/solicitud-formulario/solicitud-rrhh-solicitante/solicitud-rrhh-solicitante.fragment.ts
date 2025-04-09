@@ -47,6 +47,8 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
     return !!!this.solicitanteExterno || !Object.values(this.solicitanteExterno).some(x => x !== null && x !== undefined && x !== '');
   }
 
+  errorPersonaRefInvestigador = false;
+
   constructor(
     private readonly logger: NGXLogger,
     readonly solicitud: ISolicitud,
@@ -321,6 +323,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
     return this.personaService.findById(id).pipe(
       catchError((err) => {
         this.logger.error(err);
+        this.errorPersonaRefInvestigador = true;
         return of({ id } as IPersona);
       }),
       switchMap((solicitante: IPersona) => {

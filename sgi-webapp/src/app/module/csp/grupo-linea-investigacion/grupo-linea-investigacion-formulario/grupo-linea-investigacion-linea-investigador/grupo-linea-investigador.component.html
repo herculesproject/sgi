@@ -8,7 +8,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.grupo-linea-investigador.email' |
           translate}}
         </th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.persona | personaEmail}} </td>
+        <td mat-cell *matCellDef="let wrapper" sgpNotFoundError [model]="wrapper.value.persona"> {{wrapper.value.persona
+          | personaEmail}} </td>
       </ng-container>
 
       <!-- nombre Column -->

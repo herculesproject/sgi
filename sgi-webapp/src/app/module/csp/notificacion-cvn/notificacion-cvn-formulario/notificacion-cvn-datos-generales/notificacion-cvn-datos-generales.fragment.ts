@@ -81,6 +81,10 @@ export class NotificacionCvnDatosGeneralesFragment extends FormFragment<INotific
             map(responsable => {
               notificacion.responsable = responsable;
               return notificacion;
+            }),
+            catchError((error) => {
+              this.logger.error(error);
+              return of(notificacion);
             })
           );
         } else {
@@ -93,6 +97,10 @@ export class NotificacionCvnDatosGeneralesFragment extends FormFragment<INotific
             map(solicitante => {
               notificacion.solicitante = solicitante;
               return notificacion;
+            }),
+            catchError((error) => {
+              this.logger.error(error);
+              return of(notificacion);
             })
           );
         } else {

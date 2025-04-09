@@ -268,8 +268,7 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
                 }),
                 catchError((error) => {
                   this.logger.error(error);
-                  this.processError(error);
-                  return EMPTY;
+                  return of(autorizacionListado);
                 }));
             } else {
               return of(autorizacionListado);

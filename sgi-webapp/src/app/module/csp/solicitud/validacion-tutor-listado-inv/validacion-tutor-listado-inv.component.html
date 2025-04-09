@@ -48,8 +48,8 @@
         <th mat-header-cell *matHeaderCellDef>
           {{'csp.validacion-solicitudes-tutor.solicitante' | translate}}
         </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.nombreSolicitante }}
+        <td mat-cell *matCellDef="let element" sgpNotFoundError [model]="element.solicitanteIP">
+          {{ element.solicitanteIP?.nombre }} {{element.solicitanteIP?.apellidos}}
         </td>
       </ng-container>
 

@@ -75,7 +75,8 @@
       <!-- Solicitante Column -->
       <ng-container matColumnDef="solicitante">
         <th mat-header-cell *matHeaderCellDef> {{'csp.autorizacion.solicitante' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.autorizacion?.solicitante.nombre}}
+        <td mat-cell *matCellDef="let element" sgpNotFoundError [model]="element.autorizacion?.solicitante">
+          {{element.autorizacion?.solicitante.nombre}}
           {{element.autorizacion?.solicitante.apellidos}}</td>
       </ng-container>
 

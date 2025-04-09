@@ -5,6 +5,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
 import { Estado, ESTADO_MAP } from '@core/models/csp/estado-solicitud';
 import { ISolicitud } from '@core/models/csp/solicitud';
+import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
@@ -17,7 +18,7 @@ import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operato
 
 interface SolicitudListado extends ISolicitud {
   tituloConvocatoria: I18nFieldValue[];
-  nombreSolicitante: string;
+  solicitanteIP: IPersona;
   tituloTrabajo: I18nFieldValue[];
 }
 
@@ -121,8 +122,10 @@ export class ValidacionTutorListadoInvComponent extends AbstractTablePaginationC
             const personas = result.items;
 
             solicitudes.forEach((solicitud) => {
-              solicitud.solicitante = personas.find((persona) => solicitud.solicitante?.id === persona.id);
-
+              const personaSearch = personas.find((persona) => solicitud.solicitante?.id === persona.id);
+              if (personaSearch) {
+                solicitud.solicitante = personaSearch;
+              }
             });
             return response;
           }),
@@ -136,16 +139,26 @@ export class ValidacionTutorListadoInvComponent extends AbstractTablePaginationC
       switchMap(response =>
         from(response.items).pipe(
           mergeMap(solicitud => {
+            solicitud.solicitanteIP = { id: solicitud.solicitante?.id } as IPersona;
             if (!!!solicitud.solicitante?.id) {
               return this.solicitudService.findSolicitanteExterno(solicitud.id).pipe(
                 map(solicitanteExterno => {
-                  solicitud.nombreSolicitante = `${solicitanteExterno?.nombre ?? ''} ${solicitanteExterno?.apellidos ?? ''}`;
+                  if (solicitanteExterno?.nombre) {
+                    solicitud.solicitanteIP.nombre = solicitanteExterno?.nombre;
+                    solicitud.solicitanteIP.apellidos = solicitanteExterno?.apellidos;
+                  }
                   return solicitud;
+                }),
+                catchError((error) => {
+                  this.processError(error);
+                  return of(solicitud);
                 })
               );
             }
-
-            solicitud.nombreSolicitante = `${solicitud.solicitante.nombre ?? ''} ${solicitud.solicitante.apellidos ?? ''}`;
+            if (solicitud.solicitante?.nombre) {
+              solicitud.solicitanteIP.nombre = solicitud.solicitante?.nombre;
+              solicitud.solicitanteIP.apellidos = solicitud.solicitante?.apellidos;
+            }
             return of(solicitud);
           }),
           toArray(),
