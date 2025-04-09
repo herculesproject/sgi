@@ -30,6 +30,7 @@ import { BehaviorSubject, combineLatest, forkJoin, from, merge, Observable, of, 
 import { catchError, concatMap, distinctUntilChanged, filter, map, mergeMap, skip, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IColumnDefinition } from 'src/app/module/csp/ejecucion-economica/ejecucion-economica-formulario/desglose-economico.fragment';
 import { InvencionRepartoDataResolverService } from '../../services/invencion-reparto-data-resolver.service';
+import { NGXLogger } from 'ngx-logger';
 
 export interface IRepartoEquipoInventorTableData {
   repartoEquipoInventor: IRepartoEquipoInventor;
@@ -85,6 +86,7 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
   }
 
   constructor(
+    private readonly logger: NGXLogger,
     private readonly invencion: IInvencion,
     private reparto: IReparto,
     private readonly dataResolverService: InvencionRepartoDataResolverService,
@@ -486,7 +488,11 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
       map(entidad => {
         inventor.entidad = entidad;
         return inventor;
-      })
+      }),
+      catchError(err => {
+        this.logger.error(err);
+        return of(inventor);
+      }),
     );
   }
 

@@ -245,7 +245,8 @@
           <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
             {{'pii.reparto.equipo-inventor.nombre' | translate}}
           </th>
-          <td mat-cell mat-cell *matCellDef="let wrapper">
+          <td mat-cell mat-cell *matCellDef="let wrapper"
+            [model]="wrapper.value.repartoEquipoInventor?.invencionInventor?.inventor" sgpNotFoundError>
             {{ wrapper.value.repartoEquipoInventor?.invencionInventor?.inventor?.nombre }}
           </td>
         </ng-container>

@@ -22,6 +22,7 @@ import { InvencionRepartoDatosGeneralesFragment } from './invencion-reparto-form
 import { InvencionRepartoEquipoInventorFragment } from './invencion-reparto-formulario/invencion-reparto-equipo-inventor/invencion-reparto-equipo-inventor.fragment';
 import { INVENCION_REPARTO_ROUTE_PARAMS } from './invencion-reparto-route-params';
 import { InvencionRepartoDataResolverService } from './services/invencion-reparto-data-resolver.service';
+import { NGXLogger } from 'ngx-logger';
 
 export interface IInvencionRepartoData {
   canEdit: boolean;
@@ -60,7 +61,8 @@ export class InvencionRepartoActionService extends ActionService {
     readonly proyectoService: ProyectoService,
     readonly repartoEquipoInventorService: RepartoEquipoInventorService,
     readonly languageService: LanguageService,
-    readonly decimalPipe: DecimalPipe
+    readonly decimalPipe: DecimalPipe,
+    readonly logger: NGXLogger,
   ) {
     super();
     this.id = Number(route.snapshot.paramMap.get(INVENCION_REPARTO_ROUTE_PARAMS.ID));
@@ -73,6 +75,7 @@ export class InvencionRepartoActionService extends ActionService {
 
     if (this.isEdit()) {
       this.repartoEquipoInventor = new InvencionRepartoEquipoInventorFragment(
+        this.logger,
         invencion,
         this.data.reparto,
         dataResolverService,
