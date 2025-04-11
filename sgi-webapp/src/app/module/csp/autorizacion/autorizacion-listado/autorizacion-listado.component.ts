@@ -233,12 +233,12 @@ export class AutorizacionListadoComponent extends AbstractTablePaginationCompone
               return this.empresaService.findById(autorizacionListado?.autorizacion?.entidad?.id).pipe(
                 map((empresa) => {
                   autorizacionListado.entidadPaticipacionNombre = empresa?.nombre;
+                  autorizacionListado.autorizacion.entidad = empresa;
                   return autorizacionListado;
                 }),
                 catchError((error) => {
                   this.logger.error(error);
-                  this.processError(error);
-                  return EMPTY;
+                  return of(autorizacionListado);
                 }));
             } else {
               autorizacionListado.entidadPaticipacionNombre = autorizacionListado?.autorizacion?.datosEntidad;

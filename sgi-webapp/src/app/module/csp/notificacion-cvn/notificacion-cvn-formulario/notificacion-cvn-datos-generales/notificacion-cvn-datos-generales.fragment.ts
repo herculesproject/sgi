@@ -133,6 +133,10 @@ export class NotificacionCvnDatosGeneralesFragment extends FormFragment<INotific
                       map(entidadFinanciadora => {
                         entidad.entidadFinanciadora = entidadFinanciadora;
                         return entidadFinanciadora;
+                      }),
+                      catchError((error) => {
+                        this.logger.error(error);
+                        return of(entidad);
                       })
                     );
                   } else {
@@ -159,6 +163,10 @@ export class NotificacionCvnDatosGeneralesFragment extends FormFragment<INotific
             map(entidadParticipacion => {
               notificacion.entidadParticipacion = entidadParticipacion;
               return notificacion;
+            }),
+            catchError((error) => {
+              this.logger.error(error);
+              return of(notificacion);
             })
           );
         } else {

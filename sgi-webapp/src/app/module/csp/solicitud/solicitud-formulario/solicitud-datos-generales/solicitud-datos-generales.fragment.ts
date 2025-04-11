@@ -790,7 +790,10 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
                 element.plan = this.getPlan(element.entidadConvocante.programa);
                 return element;
               }),
-              catchError(() => of(element))
+              catchError((err) => {
+                this.logger.error(err);
+                return of(element)
+              })
             );
           }),
           takeLast(1),

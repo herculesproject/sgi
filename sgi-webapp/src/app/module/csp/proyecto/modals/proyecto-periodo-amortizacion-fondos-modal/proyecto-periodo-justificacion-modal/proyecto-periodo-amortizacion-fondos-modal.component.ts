@@ -29,6 +29,7 @@ const IMPORTE_KEY = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacio
 const FECHA_LIMITE_AMORTIZACION_KEY = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacion.fecha-limite-amortizacion');
 const TIPO_FINANCIACION_NO_INFORMADO = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacion.tipo-financiacion-no-informado');
 const FUENTE_FINANCIACION_NO_INFORMADA = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacion.fuente-financiacion-no-informada');
+const NOMBRE_EMPRESA_NO_INFORMADO = marker('csp.proyecto-amortizacion-fondos.periodo-amortizacion.nombre-empresa-no-informado');
 export interface IProyectoPeriodoAmortizacionModalData {
   proyectoId: number;
   title: string;
@@ -62,13 +63,17 @@ export class ProyectoPeriodoAmortizacionModalComponent
   readonly displayerEntidadFinanciadora = (entidadFinanciadora: IEntidadFinanciadora): string => {
     let fuente = this.translate.instant(FUENTE_FINANCIACION_NO_INFORMADA);
     let tipo = this.translate.instant(TIPO_FINANCIACION_NO_INFORMADO);
+    let nombreEmpresa = this.translate.instant(NOMBRE_EMPRESA_NO_INFORMADO);
     if (entidadFinanciadora?.fuenteFinanciacion?.nombre) {
       fuente = this.languageService.getFieldValue(entidadFinanciadora?.fuenteFinanciacion?.nombre);
     }
     if (entidadFinanciadora?.tipoFinanciacion?.nombre) {
       tipo = this.languageService.getFieldValue(entidadFinanciadora?.tipoFinanciacion?.nombre);
     }
-    return entidadFinanciadora?.empresa?.nombre + ' - ' + fuente + ' - ' + tipo;
+    if (entidadFinanciadora?.empresa?.nombre) {
+      nombreEmpresa = entidadFinanciadora?.empresa?.nombre;
+    }
+    return nombreEmpresa + ' - ' + fuente + ' - ' + tipo;
   }
 
   readonly comparerIdentificadorSge = (o1: StatusWrapper<IProyectoProyectoSge>, o2: StatusWrapper<IProyectoProyectoSge>): boolean => {

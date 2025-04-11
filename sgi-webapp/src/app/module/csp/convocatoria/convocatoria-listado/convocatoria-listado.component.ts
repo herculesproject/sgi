@@ -26,8 +26,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, from, Observable, of } from 'rxjs';
-import { catchError, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators';
+import { EMPTY, forkJoin, from, Observable, of } from 'rxjs';
+import { catchError, concatMap, map, mergeAll, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { ConvocatoriaListadoExportModalComponent } from '../modals/convocatoria-listado-export-modal/convocatoria-listado-export-modal.component';
 
 const MSG_BUTTON_ADD = marker('btn.add.entity');
@@ -306,7 +306,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             }
             return of(element);
           }),
-          map((convocatoriaListado) => {
+          concatMap((convocatoriaListado) => {
             return this.convocatoriaService.findEntidadesFinanciadoras(convocatoriaListado.convocatoria.id).pipe(
               map(entidadFinanciadora => {
                 if (entidadFinanciadora.items.length > 0) {
@@ -332,8 +332,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                     }),
                     catchError((error) => {
                       this.logger.error(error);
-                      this.processError(error);
-                      return EMPTY;
+                      convocatoriaListado.entidadFinanciadoraEmpresa = { id: convocatoriaListado.entidadFinanciadora?.empresa?.id } as IEmpresa;
+                      return of(convocatoriaListado);
                     })
                   );
                 }
@@ -370,8 +370,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                         }),
                         catchError((error) => {
                           this.logger.error(error);
-                          this.processError(error);
-                          return EMPTY;
+                          convocatoriaListado.entidadConvocanteEmpresa = { id: convocatoriaListado.entidadConvocante?.entidad?.id } as IEmpresa;
+                          return of(convocatoriaListado);
                         })
                       );
                     }
@@ -381,7 +381,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
               })
             );
           }),
-          mergeAll(),
+          toArray(),
           map(() => result)
         );
       }),

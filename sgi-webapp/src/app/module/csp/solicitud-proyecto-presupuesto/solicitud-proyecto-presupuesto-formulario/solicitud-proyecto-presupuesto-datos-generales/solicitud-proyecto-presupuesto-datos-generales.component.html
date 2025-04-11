@@ -8,8 +8,8 @@
         [fxFlexOrder]="fxFlexProperties.order">
         <mat-form-field fxFill>
           <mat-label>{{'csp.solicitud-proyecto-presupuesto.datos-generales.nombre' | translate}}</mat-label>
-          <input matInput formControlName="nombre" type="text" id="nombre"
-            placeholder="{{'csp.solicitud-proyecto-presupuesto.datos-generales.nombre' | translate}}">
+          <sgi-select-empresa placeholder="{{'csp.solicitud-proyecto-presupuesto.datos-generales.nombre' | translate}}"
+            formControlName="nombre"></sgi-select-empresa>
         </mat-form-field>
       </div>
     </div>

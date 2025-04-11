@@ -232,7 +232,6 @@ export class NotificacionCvnListadoComponent extends AbstractTablePaginationComp
       }),
       catchError((error) => {
         this.logger.error(error);
-        this.processError(error);
         return of(notificacion);
       })
 

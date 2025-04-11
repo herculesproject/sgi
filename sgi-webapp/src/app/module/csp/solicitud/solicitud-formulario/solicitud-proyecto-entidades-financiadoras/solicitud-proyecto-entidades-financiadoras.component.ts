@@ -18,12 +18,13 @@ import { LanguageService } from '@core/services/language.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
-import { from, Subscription } from 'rxjs';
-import { map, mergeAll, switchMap, take, takeLast } from 'rxjs/operators';
+import { from, of, Subscription } from 'rxjs';
+import { catchError, map, mergeAll, switchMap, take, takeLast } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../shared/entidad-financiadora-modal/entidad-financiadora-modal.component';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudProyectoEntidadesFinanciadorasFragment, SolicitudProyectoEntidadFinanciadoraAjenaData } from './solicitud-proyecto-entidades-financiadoras.fragment';
+import { NGXLogger } from 'ngx-logger';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY = marker('csp.solicitud-entidad-financiadora');
@@ -86,6 +87,7 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
   }
 
   constructor(
+    private readonly logger: NGXLogger,
     private actionService: SolicitudActionService,
     private router: Router,
     private route: ActivatedRoute,
@@ -271,6 +273,10 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
                       entidadesFinanciadora.empresa = empresa;
                       return entidadesFinanciadora;
                     }),
+                    catchError((err) => {
+                      this.logger.error(err);
+                      return of(entidadesFinanciadora);
+                    })
                   );
 
               }),

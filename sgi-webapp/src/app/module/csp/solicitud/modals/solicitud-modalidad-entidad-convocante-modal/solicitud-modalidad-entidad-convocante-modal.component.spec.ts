@@ -12,6 +12,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgempSharedModule } from 'src/app/esb/sgemp/shared/sgemp-shared.module';
 import { SolicitudModalidadEntidadConvocanteModalComponent, SolicitudModalidadEntidadConvocanteModalData } from './solicitud-modalidad-entidad-convocante-modal.component';
 
 describe('SolicitudModalidadEntidadConvocanteComponent', () => {
@@ -31,6 +32,7 @@ describe('SolicitudModalidadEntidadConvocanteComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule,
         SgiAuthModule,
+        SgempSharedModule,
         TestUtils.getIdiomas()
       ],
       providers: [

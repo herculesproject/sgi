@@ -984,6 +984,7 @@
   "csp.proyecto-amortizacion-fondos.periodo-amortizacion.fuente-financiacion-no-informada": "Uninformed source",
   "csp.proyecto-amortizacion-fondos.periodo-amortizacion.identificador-sge": "SGE Identifier",
   "csp.proyecto-amortizacion-fondos.periodo-amortizacion.importe": "Amount",
+  "csp.proyecto-amortizacion-fondos.periodo-amortizacion.nombre-empresa-no-informado": "Uninformed entity",
   "csp.proyecto-amortizacion-fondos.periodo-amortizacion.periodo": "Period",
   "csp.proyecto-amortizacion-fondos.periodo-amortizacion.select-entidad-financiadora": "Funding entity - Funding source - Funding type",
   "csp.proyecto-amortizacion-fondos.periodo-amortizacion.tipo-financiacion": "Funding type",

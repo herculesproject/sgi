@@ -8,7 +8,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'csp.proyecto-entidad-convocante.programa.nombre' | translate }}
         </th>
-        <td mat-cell *matCellDef="let proyectoEntidadConvocanteData">
+        <td mat-cell *matCellDef="let proyectoEntidadConvocanteData" sgempNotFoundError
+          [model]="proyectoEntidadConvocanteData.entidad">
           {{ proyectoEntidadConvocanteData.entidad.nombre }}
         </td>
       </ng-container>

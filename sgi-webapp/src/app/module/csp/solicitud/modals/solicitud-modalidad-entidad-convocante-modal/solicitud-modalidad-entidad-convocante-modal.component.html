@@ -5,8 +5,9 @@
       <!-- Entidad convocante -->
       <mat-form-field fxFlex>
         <mat-label>{{'csp.solicitud-modalidad.entidad-convocante' | translate}}</mat-label>
-        <input matInput formControlName="entidadConvocante" type="text"
-          placeholder="{{'csp.solicitud-modalidad.entidad-convocante' | translate}}" maxlength="100">
+        <sgi-select-empresa placeholder="{{'csp.solicitud-modalidad.entidad-convocante' | translate}}"
+          formControlName="entidadConvocante">
+        </sgi-select-empresa>
       </mat-form-field>
     </div>
     <!-- Plan-->

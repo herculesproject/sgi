@@ -158,6 +158,10 @@ export class AutorizacionDatosGeneralesFragment extends FormFragment<IAutorizaci
             map(entidad => {
               autorizacionData.entidad = entidad;
               return autorizacionData;
+            }),
+            catchError((error) => {
+              this.logger.error(error);
+              return of(autorizacionData);
             })
           );
         } else {

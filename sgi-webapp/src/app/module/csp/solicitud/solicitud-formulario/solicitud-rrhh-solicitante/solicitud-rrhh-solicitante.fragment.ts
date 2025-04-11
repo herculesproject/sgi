@@ -373,7 +373,15 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
   }
 
   private loadUniversidad(id: string): Observable<IEmpresa> {
-    return id ? this.empresaService.findById(id) : of(null);
+    return id ? this.empresaService.findById(id).pipe(
+      map(empresa => {
+        return empresa;
+      }),
+      catchError((error) => {
+        this.logger.error(error);
+        return of({ id } as IEmpresa);
+      })
+    ) : of(null);
   }
 
   private loadAreaAnep(id: string): Observable<SolicitudRrhhAreaAnepListado> {

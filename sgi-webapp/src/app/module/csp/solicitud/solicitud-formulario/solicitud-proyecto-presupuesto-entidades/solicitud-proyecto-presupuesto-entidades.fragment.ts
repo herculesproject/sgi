@@ -11,6 +11,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, map, mergeAll, switchMap, takeLast, tap } from 'rxjs/operators';
 import { SolicitudProyectoEntidadFinanciadoraAjenaData } from '../solicitud-proyecto-entidades-financiadoras/solicitud-proyecto-entidades-financiadoras.fragment';
+import { NGXLogger } from 'ngx-logger';
 
 export interface EntidadFinanciadoraDesglosePresupuesto {
   solicitudProyectoEntidadId: number;
@@ -30,6 +31,7 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
   private solicitudProyecto: ISolicitudProyecto;
 
   constructor(
+    private readonly logger: NGXLogger,
     key: number,
     public readonly convocatoriaId: number,
     private solicitudService: SolicitudService,
@@ -306,6 +308,10 @@ export class SolicitudProyectoPresupuestoEntidadesFragment extends FormFragment<
                       solicitudProyectoEntidad.entidadFinanciadora.empresa = empresa;
                       return solicitudProyectoEntidad;
                     }),
+                    catchError((err) => {
+                      this.logger.error(err);
+                      return of(solicitudProyectoEntidad);
+                    })
                   );
 
               }),

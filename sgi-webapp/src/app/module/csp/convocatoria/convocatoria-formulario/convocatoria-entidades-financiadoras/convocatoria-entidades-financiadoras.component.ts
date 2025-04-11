@@ -12,6 +12,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../shared/entidad-financiadora-modal/entidad-financiadora-modal.component';
@@ -47,6 +48,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   selectedEmpresas: IEmpresa[];
 
   constructor(
+    private readonly logger: NGXLogger,
     protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private empresaService: EmpresaService,
@@ -115,7 +117,8 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
                   wrapper.value.empresa = empresa;
                   return wrapper;
                 }),
-                catchError(() => {
+                catchError((error) => {
+                  this.logger.error(error);
                   return of(wrapper);
                 })
               );

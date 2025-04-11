@@ -392,7 +392,7 @@ export class ProyectoActionService extends ActionService {
 
     } else {
       if (this.isEdit()) {
-        this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(
+        this.entidadesFinanciadoras = new ProyectoEntidadesFinanciadorasFragment(logger,
           id, this.data.proyecto?.solicitudId, proyectoService, proyectoEntidadFinanciadoraService, empresaService, solicitudService,
           false);
         this.socios = new ProyectoSociosFragment(id, empresaService, proyectoService, proyectoSocioService,
@@ -429,6 +429,7 @@ export class ProyectoActionService extends ActionService {
           datosPersonalesService
         );
         this.entidadGestora = new ProyectoEntidadGestoraFragment(
+          logger,
           fb,
           id,
           proyectoService,
@@ -498,7 +499,7 @@ export class ProyectoActionService extends ActionService {
           proyectoAgrupacionGastoService, this.readonly, this.data?.isVisor);
         this.proyectoCalendarioJustificacion = new ProyectoCalendarioJustificacionFragment(this.data?.proyecto?.id, this.data?.proyecto,
           this.readonly, proyectoService, proyectoPeriodoJustificacionService, convocatoriaService, languageService);
-        this.amortizacionFondos = new ProyectoAmortizacionFondosFragment(this.data?.proyecto?.id, this.data?.proyecto?.anualidades,
+        this.amortizacionFondos = new ProyectoAmortizacionFondosFragment(logger, this.data?.proyecto?.id, this.data?.proyecto?.anualidades,
           this.data.proyecto?.solicitudId, proyectoPeriodoAmortizacionService, proyectoEntidadFinanciadoraService, empresaService,
           proyectoAnualidadService, periodoAmortizacionService, configService);
         this.consultaPresupuesto = new ProyectoConsultaPresupuestoFragment(
