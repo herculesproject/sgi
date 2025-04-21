@@ -68,7 +68,7 @@ export class InvencionGeneralListadoExportService extends
 
     return [
       invencionData.id,
-      invencionData.titulo,
+      this.languageService.getFieldValue(invencionData.titulo),
       LuxonUtils.toBackend(invencionData.fechaComunicacion),
       this.languageService.getFieldValue(invencionData.tipoProteccion.nombre)
     ];
