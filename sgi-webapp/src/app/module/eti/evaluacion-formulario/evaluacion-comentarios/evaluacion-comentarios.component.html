@@ -5,7 +5,7 @@
       <!-- Evaluador Column -->
       <ng-container matColumnDef="evaluador.nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'eti.comentario.evaluador' | translate}}</th>
-        <td mat-cell *matCellDef="let wrapper">
+        <td mat-cell *matCellDef="let wrapper" sgpNotFoundError [model]="wrapper.value.evaluador">
           {{wrapper.value.evaluador?.nombre}} {{wrapper.value.evaluador?.apellidos}}
         </td>
       </ng-container>

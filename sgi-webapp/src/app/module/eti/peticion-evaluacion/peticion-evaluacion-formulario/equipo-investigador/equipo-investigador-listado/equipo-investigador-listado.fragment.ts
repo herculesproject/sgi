@@ -8,6 +8,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 
@@ -23,6 +24,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
   solicitantePeticionEvaluacion: IPersona;
 
   constructor(
+    private readonly logger: NGXLogger,
     key: number,
     private personaService: PersonaService,
     private peticionEvaluacionService: PeticionEvaluacionService,
@@ -77,7 +79,14 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
                       this.sgiAuthService.authStatus$.getValue().userRefId && element.value.eliminable;
                     return element;
                   }),
+                  catchError((err) => {
+                    this.logger.error(err);
+                    return of(element);
+                  }),
                   switchMap(() => {
+                    if (!element.value.persona?.nombre) {
+                      return of(element);
+                    }
                     return this.vinculacionService.findByPersonaId(element.value.persona.id).pipe(
                       map((vinculacion) => {
                         element.value.persona.vinculacion = vinculacion;
@@ -87,6 +96,9 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
                     );
                   }),
                   switchMap(() => {
+                    if (!element.value.persona?.nombre) {
+                      return of(element);
+                    }
                     return this.datosAcademicosService.findByPersonaId(element.value.persona.id).pipe(
                       map((datosAcademicos) => {
                         element.value.persona.datosAcademicos = datosAcademicos;

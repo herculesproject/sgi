@@ -123,14 +123,14 @@ export class PeticionEvaluacionActionService extends ActionService {
       this.configuracionService,
       this.readonly
     );
-    this.equipoInvestigadorListado = new EquipoInvestigadorListadoFragment(
+    this.equipoInvestigadorListado = new EquipoInvestigadorListadoFragment(logger,
       this.peticionEvaluacion?.id, personaService, peticionEvaluacionService, sgiAuthService, datosAcademicosService, vinculacionService);
     this.memoriasListado = new MemoriasListadoFragment(
       this.peticionEvaluacion?.id,
       peticionEvaluacionService,
       memoriaService,
       this.isInvestigador);
-    this.tareas = new PeticionEvaluacionTareasFragment(this.peticionEvaluacion?.id, personaService, tareaService,
+    this.tareas = new PeticionEvaluacionTareasFragment(logger, this.peticionEvaluacion?.id, personaService, tareaService,
       peticionEvaluacionService, this.equipoInvestigadorListado, this.memoriasListado);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);

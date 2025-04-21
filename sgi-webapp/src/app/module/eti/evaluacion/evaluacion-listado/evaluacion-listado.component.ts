@@ -18,8 +18,9 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
 import { Observable, from, of } from 'rxjs';
-import { map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { TipoComentario } from '../evaluacion-listado-export.service';
 import { EvaluacionListadoExportModalComponent, IEvaluacionListadoModalData } from '../modals/evaluacion-listado-export-modal/evaluacion-listado-export-modal.component';
@@ -66,6 +67,7 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   }
 
   constructor(
+    private readonly logger: NGXLogger,
     private readonly evaluacionesService: EvaluacionService,
     protected readonly snackBarService: SnackBarService,
     protected readonly personaService: PersonaService,
@@ -148,6 +150,10 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
                 map(persona => {
                   evaluacion.memoria.peticionEvaluacion.solicitante = persona;
                   return evaluacion;
+                }),
+                catchError(err => {
+                  this.logger.error(err);
+                  return of(evaluacion);
                 })
               );
             }

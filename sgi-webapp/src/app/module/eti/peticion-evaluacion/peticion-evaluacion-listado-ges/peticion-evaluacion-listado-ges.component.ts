@@ -23,7 +23,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { PeticionEvaluacionListadoExportModalComponent } from '../modals/peticion-evaluacion-listado-export-modal/peticion-evaluacion-listado-export-modal.component';
@@ -146,71 +146,65 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   protected createObservable(reset?: boolean): Observable<SgiRestListResult<IPeticionEvaluacionWithMemorias>> {
     return this.peticionesEvaluacionService.findAll(this.getFindOptions(reset)).pipe(
-      map((response) => {
-        // Return the values
-        return response;
-      }),
       switchMap((response) => {
         if (!response.items || response.items.length === 0) {
           return of({} as SgiRestListResult<IPeticionEvaluacionWithMemorias>);
         }
-        const personaIdsEvaluadores = new Set<string>();
 
         const items = response.items as unknown as IPeticionEvaluacionWithMemorias[];
+        const personaIdsEvaluadores = new Set<string>();
 
-        items.forEach((peticionEvaluacion: IPeticionEvaluacionWithMemorias) => {
+        const peticionesConMemorias$ = items.map((peticionEvaluacion) => {
           personaIdsEvaluadores.add(peticionEvaluacion?.solicitante?.id);
-          this.peticionesEvaluacionService
-            .findMemorias(
-              peticionEvaluacion.id
-            ).pipe(
-              map((response) => {
-                // Return the values
-                return response.items as IMemoriaPeticionEvaluacion[];
-              }),
-              catchError(() => {
-                return of([]);
-              })
-            ).subscribe((memorias: IMemoriaPeticionEvaluacion[]) => {
+
+          const memorias$ = this.peticionesEvaluacionService.findMemorias(peticionEvaluacion.id).pipe(
+            map((res) => res.items as IMemoriaPeticionEvaluacion[]),
+            catchError(() => of([]))
+          );
+
+          const asignables$ = this.memoriaService.findAllMemoriasAsignablesPeticionEvaluacion(peticionEvaluacion.id).pipe(
+            map((res) => res.items as IMemoria[]),
+            catchError(() => of([]))
+          );
+
+          return forkJoin([memorias$, asignables$]).pipe(
+            map(([memorias, asignables]) => {
               peticionEvaluacion.memorias = memorias;
-            });
+              peticionEvaluacion.memoriasAsignables = asignables;
+              return peticionEvaluacion;
+            })
+          );
+        });
 
-          this.memoriaService
-            .findAllMemoriasAsignablesPeticionEvaluacion(
-              peticionEvaluacion.id
-            ).pipe(
-              map((response) => {
-                // Return the values
-                return response.items as IMemoria[];
+        return forkJoin(peticionesConMemorias$).pipe(
+          switchMap((peticionesConMemorias) => {
+            return this.personaService.findAllByIdIn([...personaIdsEvaluadores]).pipe(
+              map((result) => {
+                const personas = result.items;
+                peticionesConMemorias.forEach((peticion) => {
+                  const datosPersona = personas.find(p => p.id === peticion.solicitante.id);
+                  if (datosPersona) {
+                    peticion.solicitante = datosPersona;
+                  }
+                });
+
+                return {
+                  page: response.page,
+                  total: response.total,
+                  items: peticionesConMemorias
+                } as SgiRestListResult<IPeticionEvaluacionWithMemorias>;
               }),
-              catchError(() => {
-                return of([]);
+              catchError((error) => {
+                this.logger.error(error);
+                return of({
+                  page: response.page,
+                  total: response.total,
+                  items: peticionesConMemorias
+                });
               })
-            ).subscribe((memorias: IMemoria[]) => {
-              peticionEvaluacion.memoriasAsignables = memorias;
-            });
-        });
-
-        const personaSubscription = this.personaService.findAllByIdIn([...personaIdsEvaluadores]).subscribe((result) => {
-          const personas = result.items;
-          items.forEach((peticionEvaluacion: IPeticionEvaluacionWithMemorias) => {
-            const datosPersona = personas.find((persona) =>
-              peticionEvaluacion.solicitante.id === persona.id);
-            peticionEvaluacion.solicitante = datosPersona;
-          });
-        },
-          (error) => {
-            this.logger.error(error);
-            this.processError(error);
-          }
+            );
+          })
         );
-        this.suscripciones.push(personaSubscription);
-        let peticionesListado: SgiRestListResult<IPeticionEvaluacionWithMemorias>;
-        return of(peticionesListado = {
-          page: response.page,
-          total: response.total,
-          items: items
-        });
       }),
       catchError((error) => {
         this.logger.error(error);

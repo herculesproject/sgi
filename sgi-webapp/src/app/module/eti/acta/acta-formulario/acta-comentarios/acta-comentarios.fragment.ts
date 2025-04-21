@@ -15,6 +15,7 @@ import { SgiAuthService } from '@sgi/framework/auth';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { Rol } from '../../acta-rol';
+import { NGXLogger } from 'ngx-logger';
 
 export class ActaComentariosFragment extends Fragment {
 
@@ -32,6 +33,7 @@ export class ActaComentariosFragment extends Fragment {
   }
 
   constructor(
+    private readonly logger: NGXLogger,
     key: number,
     private actaService: ActaService,
     private service: EvaluacionService,
@@ -88,7 +90,11 @@ export class ActaComentariosFragment extends Fragment {
                           comentario.evaluador = persona;
                           this.comentarios$.next([...current]);
                           this.evaluaciones$.next([...evaluacionesComentario]);
-                        });
+                        },
+                          (error) => {
+                            this.logger.error(error);
+                            return comentario;
+                          });
                       });
                     } else {
                       this.evaluaciones$.next([...evaluacionesComentario]);

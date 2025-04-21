@@ -141,6 +141,10 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
               map((personaInfo) => {
                 evaluacion.memoria.peticionEvaluacion.solicitante = personaInfo;
                 return evaluacion;
+              }),
+              catchError(err => {
+                this.logger.error(err);
+                return of(evaluacion);
               })
             );
             listObservables.push(evaluacion$);

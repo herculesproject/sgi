@@ -19,8 +19,9 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { IEvaluacionWithComentariosEnviados } from '../../evaluacion-evaluador/evaluacion-evaluador-listado/evaluacion-evaluador-listado.component';
 import { ISeguimientoListadoModalData, SeguimientoListadoExportModalComponent } from '../modals/seguimiento-listado-export-modal/seguimiento-listado-export-modal.component';
 import { RolPersona } from '../seguimiento-listado-export.service';
@@ -54,6 +55,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   }
 
   constructor(
+    private readonly logger: NGXLogger,
     private readonly personaService: PersonaService,
     private readonly evaluadorService: EvaluadorService,
     private matDialog: MatDialog,
@@ -122,21 +124,25 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   }
 
   protected loadTable(reset?: boolean): void {
-    const evaluaciones$ = this.getObservableLoadTable(reset);
     this.suscripciones.push(
-      evaluaciones$.subscribe(
-        (evaluaciones) => {
-          this.evaluaciones = [];
-          if (evaluaciones) {
-            this.evaluaciones = this.sortByIsEvaluador1orEvaluador2(evaluaciones) as IEvaluacionWithComentariosEnviados[];
-            this.loadSolicitantes();
-            this.loadEvaluacionWithComentariosEnviados();
-            this.loadExistsEvaluacionWithComentarioAbiertos();
-          }
-        },
-        (error) => {
-          this.processError(error);
-        })
+      this.getObservableLoadTable(reset).pipe(
+        map((evaluaciones: IEvaluacion[]) =>
+          this.sortByIsEvaluador1orEvaluador2(evaluaciones)
+        ),
+        tap((sortedEvaluaciones: IEvaluacion[]) => {
+          this.evaluaciones = sortedEvaluaciones as IEvaluacionWithComentariosEnviados[];
+        }),
+        switchMap((evaluacionesSorted: IEvaluacionWithComentariosEnviados[]) =>
+          forkJoin([
+            this.loadSolicitantes(evaluacionesSorted),
+            this.loadEvaluacionWithComentariosEnviados(evaluacionesSorted),
+            this.loadExistsEvaluacionWithComentarioAbiertos(evaluacionesSorted)
+          ])
+        )
+      ).subscribe({
+        next: () => { },
+        error: (error: any) => this.processError(error)
+      })
     );
   }
 
@@ -157,50 +163,55 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   /**
    * Carga los datos de los solicitantes de las evaluaciones
    */
-  private loadSolicitantes(): void {
-    this.evaluaciones.forEach((evaluacion) => {
+  private loadSolicitantes(evaluaciones: IEvaluacionWithComentariosEnviados[]): Observable<IEvaluacionWithComentariosEnviados[]> {
+    return forkJoin(evaluaciones.map((evaluacion) => {
       const personaRef = evaluacion.memoria?.peticionEvaluacion?.solicitante?.id;
       if (personaRef) {
-        this.suscripciones.push(
-          this.personaService.findById(personaRef).subscribe(
-            (persona: IPersona) => evaluacion.memoria.peticionEvaluacion.solicitante = persona,
-            (error) => {
-              this.processError(error);
-            }
-          )
+        return this.personaService.findById(personaRef).pipe(
+          map((persona: IPersona) => {
+            evaluacion.memoria!.peticionEvaluacion!.solicitante = persona;
+            return evaluacion
+          }),
+          catchError((error) => {
+            this.logger.error(error);
+            return of(evaluacion);
+          })
         );
       }
-    });
+      return of(evaluacion);
+    }));
   }
 
-  private loadEvaluacionWithComentariosEnviados(): void {
-    this.evaluaciones.forEach((evaluacion) => {
-      this.suscripciones.push(
-        this.evaluacionService.isComentariosEvaluadorEnviados(evaluacion.id).subscribe(
-          (res: boolean) => {
-            evaluacion.enviada = res;
-          },
-          (error) => {
-            this.processError(error);
-          }
-        )
-      );
-    })
+  private loadEvaluacionWithComentariosEnviados(evaluaciones: IEvaluacionWithComentariosEnviados[]): Observable<IEvaluacionWithComentariosEnviados[]> {
+    return forkJoin(evaluaciones.map((evaluacion) =>
+      this.evaluacionService.isComentariosEvaluadorEnviados(evaluacion.id).pipe(
+        map((res: boolean) => {
+          evaluacion.enviada = res;
+          return evaluacion;
+        }),
+        catchError((error) => {
+          this.processError(error);
+          return of(evaluacion);
+        }),
+        map(() => evaluacion)
+      )
+    ));
   }
 
-  private loadExistsEvaluacionWithComentarioAbiertos(): void {
-    this.evaluaciones.forEach((evaluacion) => {
-      this.suscripciones.push(
-        this.evaluacionService.isPosibleEnviarComentarios(evaluacion.id).subscribe(
-          (res: boolean) => {
-            evaluacion.permitirEnviarComentarios = res;
-          },
-          (error) => {
-            this.processError(error);
-          }
-        )
-      );
-    })
+  private loadExistsEvaluacionWithComentarioAbiertos(evaluaciones: IEvaluacionWithComentariosEnviados[]): Observable<IEvaluacionWithComentariosEnviados[]> {
+    return forkJoin(evaluaciones.map((evaluacion) =>
+      this.evaluacionService.isPosibleEnviarComentarios(evaluacion.id).pipe(
+        map((res: boolean) => {
+          evaluacion.permitirEnviarComentarios = res;
+          return evaluacion;
+        }),
+        catchError((error) => {
+          this.processError(error);
+          return of(evaluacion);
+        }),
+        map(() => evaluacion)
+      )
+    ));
   }
 
   protected createFilter(): SgiRestFilter {

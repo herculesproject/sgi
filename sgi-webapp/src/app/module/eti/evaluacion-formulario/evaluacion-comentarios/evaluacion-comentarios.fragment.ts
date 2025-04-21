@@ -7,8 +7,9 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, from, merge, of } from 'rxjs';
-import { endWith, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { catchError, endWith, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { Rol } from '../evaluacion-formulario.action.service';
 
 export class EvaluacionComentarioFragment extends Fragment {
@@ -19,6 +20,7 @@ export class EvaluacionComentarioFragment extends Fragment {
   private dictamen: IDictamen;
 
   constructor(
+    private readonly logger: NGXLogger,
     key: number,
     private rol: Rol,
     private service: EvaluacionService,
@@ -47,6 +49,10 @@ export class EvaluacionComentarioFragment extends Fragment {
                 map(persona => {
                   element.evaluador = persona;
                   return element;
+                }),
+                catchError(err => {
+                  this.logger.error(err);
+                  return of(element);
                 })
               );
             }),

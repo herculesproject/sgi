@@ -19,7 +19,7 @@ import { CKEDITOR_CONFIG, CkEditorConfig } from '@shared/sgi-ckeditor-config';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
 import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-datos-generales.fragment';
 
@@ -34,6 +34,7 @@ const CONVOCATORIA_VIDEOCONFERENCIA_KEY = marker('eti.convocatoria-reunion.video
 const CONVOCATORIA_LUGAR_KEY = marker('eti.convocatoria-reunion.lugar');
 const CONVOCATORIA_ORDEN_DIA_KEY = marker('eti.convocatoria-reunion.orden-dia');
 const CONVOCATORIA_CONVOCANTES_KEY = marker('eti.convocatoria-reunion.convocantes');
+const SGP_NOT_FOUND = marker("error.sgp.not-found");
 
 @Component({
   selector: 'sgi-convocatoria-reunion-datos-generales',
@@ -202,7 +203,9 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     const personas = listado.items;
     evaluadores.forEach((convocante) => {
       const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.persona.id === persona.id);
-      convocante.persona = datosPersonaConvocante;
+      if (datosPersonaConvocante) {
+        convocante.persona = datosPersonaConvocante;
+      }
     });
     return evaluadores;
   }
@@ -242,5 +245,15 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   getDatosConvocantesFormulario(): IEvaluador[] {
     const convocantes: IEvaluador[] = this.formGroup.controls.convocantes.value;
     return convocantes;
+  }
+
+  getPersonaConvocante(convocante: IPersona): string {
+    if (convocante?.nombre) {
+      return `${convocante?.nombre} ${convocante?.apellidos}`;
+    } else if (convocante?.id) {
+      return this.translate.instant(SGP_NOT_FOUND, { ids: convocante.id, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    } else {
+      return null;
+    }
   }
 }

@@ -37,7 +37,7 @@ export class EvaluacionEvaluacionFragment extends FormFragment<IMemoria> {
       comite: [{ value: null, disabled: true }],
       fechaEvaluacion: [{ value: null, disabled: true }],
       referenciaMemoria: [{ value: '', disabled: true }],
-      solicitante: [{ value: '', disabled: true }],
+      solicitante: [{ value: null, disabled: true }],
       version: [{ value: '', disabled: true }],
       dictamen: [null, [Validators.required]],
       comentario: [[], [I18nValidators.maxLength(2000)]]
@@ -80,7 +80,7 @@ export class EvaluacionEvaluacionFragment extends FormFragment<IMemoria> {
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,
-      solicitante: `${value.peticionEvaluacion?.solicitante?.nombre} ${value.peticionEvaluacion?.solicitante?.apellidos}`,
+      solicitante: value.peticionEvaluacion?.solicitante,
       dictamen: this.evaluacion.dictamen,
       comentario: this.evaluacion.comentario
     };

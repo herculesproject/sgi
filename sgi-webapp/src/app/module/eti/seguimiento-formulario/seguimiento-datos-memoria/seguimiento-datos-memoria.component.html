@@ -29,7 +29,8 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.solicitante' | translate}}</mat-label>
-        <input matInput formControlName="solicitante" placeholder="{{'eti.solicitante' | translate}}">
+        <sgi-select-persona placeholder="{{'eti.solicitante' | translate}}"
+          formControlName="solicitante"></sgi-select-persona>
       </mat-form-field>
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"

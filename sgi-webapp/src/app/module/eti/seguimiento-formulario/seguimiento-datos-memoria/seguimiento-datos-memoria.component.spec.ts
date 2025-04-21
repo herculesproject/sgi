@@ -7,6 +7,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 import { EtiSharedModule } from '../../shared/eti-shared.module';
 import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
@@ -35,7 +36,8 @@ describe('SeguimientoDatosMemoriaComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         SgiAuthModule,
-        EtiSharedModule
+        EtiSharedModule,
+        SgpSharedModule
       ],
       providers: [
         { provide: SeguimientoFormularioActionService, useClass: SeguimientoEvaluarActionService },

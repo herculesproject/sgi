@@ -165,7 +165,14 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
                 element.equipoTrabajo.persona = persona;
                 return element;
               }),
+              catchError((err) => {
+                this.logger.error(err);
+                return of(element);
+              }),
               switchMap(() => {
+                if (!element.equipoTrabajo.persona?.nombre) {
+                  return of(element);
+                }
                 return this.vinculacionService.findByPersonaId(element.equipoTrabajo.persona.id).pipe(
                   map((vinculacion) => {
                     element.equipoTrabajo.persona.vinculacion = vinculacion;
@@ -175,6 +182,9 @@ export abstract class MemoriaFormlyFormFragment extends Fragment {
                 );
               }),
               switchMap(() => {
+                if (!element.equipoTrabajo.persona?.nombre) {
+                  return of(element);
+                }
                 return this.datosAcademicosService.findByPersonaId(element.equipoTrabajo.persona.id).pipe(
                   map((datosAcademicos) => {
                     element.equipoTrabajo.persona.datosAcademicos = datosAcademicos;

@@ -119,7 +119,7 @@
         <mat-label>{{'eti.convocatoria-reunion.convocantes' | translate}}</mat-label>
         <mat-select matNativeControl formControlName="convocantes" multiple required>
           <mat-option *ngFor="let convocante of formFragment.evaluadoresComite" [value]="convocante">
-            {{convocante?.persona?.nombre}} {{convocante?.persona?.apellidos}}
+            {{getPersonaConvocante(convocante.persona)}}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="formGroup.controls.convocantes.errors?.required">

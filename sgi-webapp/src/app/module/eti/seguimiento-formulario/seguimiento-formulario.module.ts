@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { ComentarioModule } from '../comentario/comentario.module';
 import { DocumentacionMemoriaModule } from '../documentacion-memoria/documentacion-memoria.module';
 import { EtiSharedModule } from '../shared/eti-shared.module';
@@ -35,7 +36,8 @@ import { SeguimientoListadoComentariosEquipoEvaluadorComponent } from './seguimi
     FormsModule,
     ReactiveFormsModule,
     ComentarioModule,
-    DocumentacionMemoriaModule
+    DocumentacionMemoriaModule,
+    SgpSharedModule
   ],
   exports: [
     SeguimientoComentariosComponent,

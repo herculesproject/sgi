@@ -118,7 +118,9 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
     const personas = listado.items;
     evaluadores.forEach((convocante) => {
       const datosPersonaConvocante = personas.find((persona) => convocante.persona.id === persona.id);
-      convocante.persona = datosPersonaConvocante;
+      if (datosPersonaConvocante) {
+        convocante.persona = datosPersonaConvocante;
+      }
     });
     return evaluadores;
   }

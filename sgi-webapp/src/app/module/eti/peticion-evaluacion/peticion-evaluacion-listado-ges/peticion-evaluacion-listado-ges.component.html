@@ -75,7 +75,7 @@
       <ng-container matColumnDef="solicitante">
         <th mat-header-cell *matHeaderCellDef> {{'eti.solicitante' | translate}}
         </th>
-        <td mat-cell *matCellDef="let peticionEvaluacion">
+        <td mat-cell *matCellDef="let peticionEvaluacion" sgpNotFoundError [model]="peticionEvaluacion.solicitante">
           {{peticionEvaluacion.solicitante?.nombre}} {{peticionEvaluacion.solicitante?.apellidos}}
         </td>
       </ng-container>

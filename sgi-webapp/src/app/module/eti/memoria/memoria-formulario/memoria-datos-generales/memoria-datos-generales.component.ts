@@ -20,6 +20,7 @@ const MEMORIA_TIPO_KEY = marker('eti.memoria.tipo');
 const MEMORIA_CODIGO_ORGANO_COMPETENTE = marker('eti.memoria.codigo-organo-compentente');
 const MEMORIA_TITULO_DESCRIPTIVO = marker('eti.memoria.titulo-descriptivo');
 const INFO_TITLE_DESCRIPTIVO = marker('eti.memoria.info.titulo-descriptivo');
+const SGP_NOT_FOUND = marker("error.sgp.not-found");
 
 @Component({
   selector: 'sgi-memoria-datos-generales',
@@ -133,7 +134,13 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   }
 
   displayerPersonaResponsable = (personaResponsable: IPersona): string => {
-    return `${personaResponsable?.nombre} ${personaResponsable?.apellidos} (${this.getEmailPrincipal(personaResponsable)})`;
+    if (personaResponsable?.nombre) {
+      return `${personaResponsable?.nombre} ${personaResponsable?.apellidos} (${this.getEmailPrincipal(personaResponsable)})`;
+    } else if (personaResponsable?.id) {
+      return this.translate.instant(SGP_NOT_FOUND, { ids: personaResponsable.id, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    } else {
+      return null;
+    }
   }
 
   private getEmailPrincipal({ emails }: IPersona): string {

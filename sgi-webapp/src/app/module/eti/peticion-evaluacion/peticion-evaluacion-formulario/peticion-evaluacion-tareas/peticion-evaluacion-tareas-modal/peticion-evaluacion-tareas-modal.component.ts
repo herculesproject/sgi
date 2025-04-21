@@ -28,6 +28,7 @@ const TAREA_FORMACION_ESPECIFICA_KEY = marker('eti.peticion-evaluacion.tarea.for
 const TAREA_EXPERIENCIA_KEY = marker('eti.peticion-evaluacion.tarea.experiencia');
 const TAREA_ANIO_KEY = marker('eti.peticion-evaluacion.tarea.anio');
 const TAREA_ORGANISMO_KEY = marker('eti.peticion-evaluacion.tarea.organismo');
+const SGP_NOT_FOUND = marker("error.sgp.not-found");
 
 export interface PeticionEvaluacionTareasModalComponentData {
   tarea: ITareaWithIsEliminable;
@@ -207,8 +208,13 @@ export class PeticionEvaluacionTareasModalComponent
    * returns persona del equipo de trabajo
    */
   displayerPersonaEquipoTrabajo = (persona: IPersona): string => {
-    return persona && persona.id ?
-      `${persona?.nombre} ${persona?.apellidos} (${this.getEmailPrincipal(persona)})` : null;
+    if (persona?.nombre) {
+      return `${persona?.nombre} ${persona?.apellidos} (${this.getEmailPrincipal(persona)})`;
+    } else if (persona?.id) {
+      return this.translate.instant(SGP_NOT_FOUND, { ids: persona.id, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+    } else {
+      return null;
+    }
   }
 
   private getEmailPrincipal({ emails }: IPersona): string {
@@ -232,9 +238,27 @@ export class PeticionEvaluacionTareasModalComponent
         personaIds.add(equipoTrabajo?.persona?.id);
       });
 
-      this.subscriptions.push(this.personaService.findAllByIdIn([...personaIds]).subscribe((result) => {
-        this.personas$.next(result.items);
-      }));
+      const idsArray = Array.from(personaIds);
+
+      this.subscriptions.push(
+        this.personaService.findAllByIdIn(idsArray).pipe(
+          map((result) => {
+            const personasMap = new Map<string, IPersona>();
+            result.items.forEach((persona) => {
+              personasMap.set(persona.id, persona);
+            });
+
+            // Asegurar que todos los ids estén presentes
+            const personasCompletas = idsArray.map((id) => {
+              return personasMap.get(id) || { id } as IPersona;
+            });
+
+            return personasCompletas;
+          })
+        ).subscribe((personasCompletas) => {
+          this.personas$.next(personasCompletas);
+        })
+      );
     }
   }
 

@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { EvaluadorListadoExportModalComponent } from '../modals/evaluador-listado-export-modal/evaluador-listado-export-modal.component';
@@ -190,9 +190,10 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         if (reset) {
           this.paginator.pageIndex = 0;
         }
-        // Return the values
-        return this.getDatosEvaluadores(response.items);
+
+        return response.items;
       }),
+      switchMap((evaluadores) => this.getDatosEvaluadores(evaluadores)),
       catchError((error) => {
         this.logger.error(error);
         // On error reset pagination values
@@ -209,9 +210,9 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * @param evaluadores el listado de evaluadores
    * returns los evaluadores con todos sus datos
    */
-  getDatosEvaluadores(evaluadores: IEvaluador[]): IEvaluador[] {
+  getDatosEvaluadores(evaluadores: IEvaluador[]): Observable<IEvaluador[]> {
     this.personasRef = [];
-    evaluadores.forEach((evaluador) => {
+    return forkJoin(evaluadores.map((evaluador) => {
 
       if ((evaluador.fechaAlta != null && evaluador.fechaAlta <= DateTime.now()) &&
         ((evaluador.fechaBaja != null && evaluador.fechaBaja >= DateTime.now()) || (evaluador.fechaBaja == null))) {
@@ -225,9 +226,8 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
       }
 
       // cambiar en futuro pasando las referencias de las personas
-      evaluador = this.loadDatosUsuario(evaluador);
-    });
-    return evaluadores;
+      return this.loadDatosUsuario(evaluador);
+    }));
   }
 
   /**
@@ -235,19 +235,17 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * @param evaluador el evaluador
    * returns el evaluador con los datos de persona
    */
-  loadDatosUsuario(evaluador: IEvaluador): IEvaluador {
-    const personaServiceOneSubscription = this.personaService.findById(evaluador.persona.id)
-      .subscribe(
-        (persona: IPersona) => {
-          evaluador.persona = persona;
-        },
-        (error) => {
-          this.logger.error(error);
-          this.processError(error);
-        }
-      );
-    this.suscripciones.push(personaServiceOneSubscription);
-    return evaluador;
+  private loadDatosUsuario(evaluador: IEvaluador): Observable<IEvaluador> {
+    return this.personaService.findById(evaluador.persona.id).pipe(
+      map((persona: IPersona) => {
+        evaluador.persona = persona;
+        return evaluador;
+      }),
+      catchError((error) => {
+        this.logger.error(error);
+        return of(evaluador);
+      })
+    );
   }
 
   /**

@@ -19,6 +19,7 @@ import { ActaMemoriasFragment } from './acta-formulario/acta-memorias/acta-memor
 import { Rol } from './acta-rol';
 import { BloqueService } from '@core/services/eti/bloque.service';
 import { ApartadoService } from '@core/services/eti/apartado.service';
+import { LoggerConfig, NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class ActaActionService extends ActionService {
@@ -40,6 +41,7 @@ export class ActaActionService extends ActionService {
   private rol: Rol;
 
   constructor(
+    private readonly logger: NGXLogger,
     fb: FormBuilder,
     route: ActivatedRoute,
     service: ActaService,
@@ -63,9 +65,8 @@ export class ActaActionService extends ActionService {
 
     this.datosGenerales = new ActaDatosGeneralesFragment(fb, this.acta?.id, this.rol, service);
     this.memorias = new ActaMemoriasFragment(this.acta?.convocatoriaReunion?.id, convocatoriaReunionService);
-    this.asistentes = new ActaAsistentesFragment(
-      this.acta?.convocatoriaReunion?.id, convocatoriaReunionService, personaService, asistenteService);
-    this.comentarios = new ActaComentariosFragment(this.acta?.id, service, evaluacionService, convocatoriaReunionService, personaService, authService, this.rol, apartadoService, bloqueService);
+    this.asistentes = new ActaAsistentesFragment(this.logger, this.acta?.convocatoriaReunion?.id, convocatoriaReunionService, personaService, asistenteService);
+    this.comentarios = new ActaComentariosFragment(this.logger, this.acta?.id, service, evaluacionService, convocatoriaReunionService, personaService, authService, this.rol, apartadoService, bloqueService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.MEMORIAS, this.memorias);

@@ -10,11 +10,12 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
+import { EtiSharedModule } from '../../shared/eti-shared.module';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionEvaluacionComponent } from './evaluacion-evaluacion.component';
-import { EtiSharedModule } from '../../shared/eti-shared.module';
 
 
 describe('EvaluacionEvaluacionComponent', () => {
@@ -39,7 +40,8 @@ describe('EvaluacionEvaluacionComponent', () => {
         RouterTestingModule,
         SgiAuthModule,
         SharedModule,
-        EtiSharedModule
+        EtiSharedModule,
+        SgpSharedModule
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },

@@ -4,8 +4,9 @@ import { AsistenteService } from '@core/services/eti/asistente.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { endWith, map, mergeMap } from 'rxjs/operators';
+import { catchError, endWith, map, mergeMap } from 'rxjs/operators';
 
 export class ActaAsistentesFragment extends Fragment {
 
@@ -14,6 +15,7 @@ export class ActaAsistentesFragment extends Fragment {
   private selectedIdConvocatoria: number;
 
   constructor(
+    private readonly logger: NGXLogger,
     key: number,
     private service: ConvocatoriaReunionService,
     private personaService: PersonaService,
@@ -40,6 +42,11 @@ export class ActaAsistentesFragment extends Fragment {
               this.personaService.findById(asistente.evaluador.persona.id).pipe(
                 map((usuarioInfo) => {
                   asistente.evaluador.persona = usuarioInfo;
+                  return asistente;
+                }),
+                catchError(err => {
+                  this.logger.error(err);
+                  return of(asistente);
                 })
               ).subscribe();
             });

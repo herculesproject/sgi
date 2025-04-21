@@ -22,7 +22,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
@@ -152,12 +152,8 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
    * @param memorias el listado de memorias
    * returns los responsables de memorias con todos sus datos
    */
-  getDatosResponsablesMemorias(memorias: IMemoriaPeticionEvaluacion[]): IMemoriaPeticionEvaluacion[] {
-    memorias.forEach((memoria) => {
-      // cambiar en futuro pasando las referencias de las personas
-      memoria = this.loadDatosResponsable(memoria);
-    });
-    return memorias;
+  private getDatosResponsablesMemorias(memorias: IMemoriaPeticionEvaluacion[]): Observable<IMemoriaPeticionEvaluacion[]> {
+    return forkJoin(memorias.map(memoria => this.loadDatosResponsable(memoria)));
   }
 
   /**
@@ -165,19 +161,17 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
    * @param memoria la memoria
    * returns la memoria con los datos del responsable
    */
-  loadDatosResponsable(memoria: IMemoriaPeticionEvaluacion): IMemoriaPeticionEvaluacion {
-    const personaServiceOneSubscription = this.personaService.findById(memoria.solicitante.id)
-      .subscribe(
-        (persona: IPersona) => {
-          memoria.solicitante = persona;
-        },
-        (error) => {
-          this.logger.error(error);
-          this.processError(error);
-        }
-      );
-    this.suscripciones.push(personaServiceOneSubscription);
-    return memoria;
+  private loadDatosResponsable(memoria: IMemoriaPeticionEvaluacion): Observable<IMemoriaPeticionEvaluacion> {
+    return this.personaService.findById(memoria.solicitante.id).pipe(
+      map(persona => {
+        memoria.solicitante = persona;
+        return memoria;
+      }),
+      catchError(error => {
+        this.logger.error(error);
+        return of(memoria);
+      })
+    )
   }
 
   protected initColumns(): void {
@@ -194,19 +188,16 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
       .and('textoContenidoRespuestaFormulario', SgiRestFilterOperator.LIKE_ICASE, this.formGroup.controls.texto.value);
   }
 
-  protected loadTable(reset?: boolean) {
+  protected loadTable(reset?: boolean): void {
     this.memorias$ = this.getObservableLoadTable(reset).pipe(
-      map((response) => {
-        // Reset pagination to first page
+      switchMap((memorias: IMemoriaPeticionEvaluacion[]) => {
         if (reset) {
           this.paginator.pageIndex = 0;
         }
-        // Return the values
-        return this.getDatosResponsablesMemorias(response as unknown as IMemoriaPeticionEvaluacion[]);
+        return this.getDatosResponsablesMemorias(memorias);
       }),
       catchError((error) => {
         this.logger.error(error);
-        // On error reset pagination values
         this.paginator.firstPage();
         this.processError(error);
         return of([]);

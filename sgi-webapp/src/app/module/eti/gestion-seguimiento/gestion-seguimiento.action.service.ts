@@ -13,12 +13,14 @@ import { Rol, SeguimientoFormularioActionService } from '../seguimiento-formular
 import { IEvaluacionWithComentariosEnviados } from '../evaluacion-evaluador/evaluacion-evaluador-listado/evaluacion-evaluador-listado.component';
 import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class GestionSeguimientoActionService extends SeguimientoFormularioActionService {
 
 
   constructor(
+    private readonly logger: NGXLogger,
     fb: FormBuilder,
     route: ActivatedRoute,
     service: EvaluacionService,
@@ -34,7 +36,7 @@ export class GestionSeguimientoActionService extends SeguimientoFormularioAction
       this.evaluacion = route.snapshot.data.evaluacion;
       this.enableEdit();
     }
-    this.evaluaciones = new SeguimientoEvaluacionFragment(
+    this.evaluaciones = new SeguimientoEvaluacionFragment(logger,
       fb, this.evaluacion?.id, snackBarService, service, personaService);
     this.comentarios = new SeguimientoComentarioFragment(this.evaluacion?.id, Rol.GESTOR, service, personaService, authService, this.apartadoService, this.bloqueService);
     this.documentacion = new SeguimientoDocumentacionFragment(this.evaluacion?.id);

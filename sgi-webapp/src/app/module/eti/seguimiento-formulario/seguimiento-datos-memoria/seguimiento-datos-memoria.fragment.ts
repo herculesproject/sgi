@@ -27,7 +27,7 @@ export class SeguimientoDatosMemoriaFragment extends FormFragment<IMemoria> {
       comite: [{ value: null, disabled: true }],
       fechaEvaluacion: [{ value: null, disabled: true }],
       referenciaMemoria: [{ value: '', disabled: true }],
-      solicitante: [{ value: '', disabled: true }],
+      solicitante: [{ value: null, disabled: true }],
       version: [{ value: '', disabled: true }]
     });
     return fb;
@@ -66,7 +66,7 @@ export class SeguimientoDatosMemoriaFragment extends FormFragment<IMemoria> {
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,
-      solicitante: `${value?.peticionEvaluacion.solicitante?.nombre} ${value?.peticionEvaluacion?.solicitante?.apellidos}`
+      solicitante: value.peticionEvaluacion?.solicitante
     };
     return patch;
   }
