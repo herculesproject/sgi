@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -13,12 +12,11 @@ import javax.validation.ConstraintValidatorContext;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.pii.model.TipoProteccion;
 import org.crue.hercules.sgi.pii.model.TipoProteccionNombre;
-import org.crue.hercules.sgi.pii.model.TipoProteccion_;
 import org.crue.hercules.sgi.pii.repository.TipoProteccionRepository;
 import org.crue.hercules.sgi.pii.repository.specification.TipoProteccionSpecifications;
+import org.crue.hercules.sgi.pii.util.SgiStringUtils;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -169,7 +167,8 @@ public class UniqueNombreTipoProteccionValidator
         .filter(nombreI18n -> tipoProteccion.getNombre().stream()
             .anyMatch(
                 tipoProteccionNombre -> tipoProteccionNombre.getLang().equals(nombreI18n.getLang())
-                    && tipoProteccionNombre.getValue().equals(nombreI18n.getValue())))
+                    && SgiStringUtils.normalize(tipoProteccionNombre.getValue())
+                        .equals(SgiStringUtils.normalize(nombreI18n.getValue()))))
         .findFirst();
   }
 
