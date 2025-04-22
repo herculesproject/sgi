@@ -52,6 +52,7 @@ public class UniqueNombreLineaInvestigacionActivaValidator
     // Add "entity" message parameter this the message-revolved entity name so it
     // can be used in the error message
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
+    hibernateContext.addMessageParameter("entity", ApplicationContextSupport.getMessage(LineaInvestigacion.class));
     hibernateContext.addMessageParameter("nombre", nombreI18n.getValue());
 
     // Disable default message to allow binding the message to a property

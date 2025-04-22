@@ -41,7 +41,7 @@ public class UniqueNombreTipoFacturacionActivoValidator
       boolean returnValue = (!tipoFacturacion.isPresent()
           || tipoFacturacion.get().getId().equals(value.getId()));
       if (!returnValue) {
-        addEntityMessageParameter(context);
+        addEntityMessageParameter(context, nombre);
         return false;
       }
     }
@@ -49,11 +49,13 @@ public class UniqueNombreTipoFacturacionActivoValidator
     return true;
   }
 
-  private void addEntityMessageParameter(ConstraintValidatorContext context) {
+  private void addEntityMessageParameter(ConstraintValidatorContext context,
+      TipoFacturacionNombre tipoFacturacionNombre) {
     // Add "entity" message parameter this the message-revolved entity name so it
     // can be used in the error message
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
     hibernateContext.addMessageParameter("entity", ApplicationContextSupport.getMessage(TipoFacturacion.class));
+    hibernateContext.addMessageParameter("nombre", tipoFacturacionNombre.getValue());
 
     // Disable default message to allow binding the message to a property
     hibernateContext.disableDefaultConstraintViolation();

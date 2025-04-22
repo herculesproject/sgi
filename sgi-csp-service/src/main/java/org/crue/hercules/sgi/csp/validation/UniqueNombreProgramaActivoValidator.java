@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.ProgramaNombre;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProgramaSpecifications;
+import org.crue.hercules.sgi.csp.util.SgiStringUtils;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
@@ -180,7 +181,8 @@ public class UniqueNombreProgramaActivoValidator
         .filter(nombreI18n -> programa.getNombre().stream()
             .anyMatch(
                 programaNombre -> programaNombre.getLang().equals(nombreI18n.getLang())
-                    && programaNombre.getValue().equals(nombreI18n.getValue())))
+                    && SgiStringUtils.normalize(programaNombre.getValue())
+                        .equals(SgiStringUtils.normalize(nombreI18n.getValue()))))
         .findFirst();
   }
 

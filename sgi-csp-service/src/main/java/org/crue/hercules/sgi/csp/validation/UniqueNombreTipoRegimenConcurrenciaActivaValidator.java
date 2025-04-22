@@ -42,7 +42,7 @@ public class UniqueNombreTipoRegimenConcurrenciaActivaValidator
       boolean returnValue = (!tipoRegimenConcurrencia.isPresent()
           || tipoRegimenConcurrencia.get().getId().equals(value.getId()));
       if (!returnValue) {
-        addEntityMessageParameter(context);
+        addEntityMessageParameter(context, nombreI18n);
         return false;
       }
     }
@@ -50,11 +50,13 @@ public class UniqueNombreTipoRegimenConcurrenciaActivaValidator
     return true;
   }
 
-  private void addEntityMessageParameter(ConstraintValidatorContext context) {
+  private void addEntityMessageParameter(ConstraintValidatorContext context,
+      TipoRegimenConcurrenciaNombre tipoRegimenConcurrenciaNombre) {
     // Add "entity" message parameter this the message-revolved entity name so it
     // can be used in the error message
     HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
     hibernateContext.addMessageParameter("entity", ApplicationContextSupport.getMessage(TipoRegimenConcurrencia.class));
+    hibernateContext.addMessageParameter("nombre", tipoRegimenConcurrenciaNombre.getValue());
 
     // Disable default message to allow binding the message to a property
     hibernateContext.disableDefaultConstraintViolation();

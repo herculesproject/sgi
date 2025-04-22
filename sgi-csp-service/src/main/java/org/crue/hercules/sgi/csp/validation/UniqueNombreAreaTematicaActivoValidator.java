@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.AreaTematicaNombre;
 import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.AreaTematicaSpecifications;
+import org.crue.hercules.sgi.csp.util.SgiStringUtils;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
@@ -165,7 +166,8 @@ public class UniqueNombreAreaTematicaActivoValidator
         .filter(nombreI18n -> areaTematica.getNombre().stream()
             .anyMatch(
                 areaTematicaNombre -> areaTematicaNombre.getLang().equals(nombreI18n.getLang())
-                    && areaTematicaNombre.getValue().equals(nombreI18n.getValue())))
+                    && SgiStringUtils.normalize(areaTematicaNombre.getValue())
+                        .equals(SgiStringUtils.normalize(nombreI18n.getValue()))))
         .findFirst();
   }
 
