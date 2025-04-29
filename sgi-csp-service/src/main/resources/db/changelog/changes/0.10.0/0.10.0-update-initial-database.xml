@@ -3409,4 +3409,11 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.10.0-122">
+    <addColumn tableName="configuracion">
+      <column name="sge_ejecucionpresupuestaria_gastos_detalle" type="BOOLEAN"
+        defaultValueBoolean="false" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

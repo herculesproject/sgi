@@ -199,7 +199,11 @@ public class Configuracion extends BaseEntity {
     /**
      * Define el comportamiento del filtro de anualidades en Ejecución Económica
      */
-    SGE_FILTRO_ANUALIDADES("sgeFiltroAnualidades");
+    SGE_FILTRO_ANUALIDADES("sgeFiltroAnualidades"),
+    /**
+     * Habilita el modal para el detalle en ejecuciñon presupuestaria - Gastos
+     */
+    SGE_EJECUCION_PRESUPUESTARIA_GASTOS_DETALLE_ENABLED("sgeEjecucionPresupuestariaGastosDetalleEnabled");
 
     private final String key;
 
@@ -396,6 +400,12 @@ public class Configuracion extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private SgeFiltroAnualidades sgeFiltroAnualidades;
 
+  /**
+   * Habilita el modal para el detalle en ejecuciñon presupuestaria - Gastos
+   */
+  @Column(name = "sge_ejecucionpresupuestaria_gastos_detalle", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean sgeEjecucionPresupuestariaGastosDetalleEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -454,6 +464,8 @@ public class Configuracion extends BaseEntity {
         return this.getFormatoAnualidadAnio();
       case SGE_FILTRO_ANUALIDADES:
         return this.getSgeFiltroAnualidades();
+      case SGE_EJECUCION_PRESUPUESTARIA_GASTOS_DETALLE_ENABLED:
+        return this.getSgeEjecucionPresupuestariaGastosDetalleEnabled();
       default:
         return null;
     }
@@ -550,6 +562,9 @@ public class Configuracion extends BaseEntity {
         break;
       case SGE_FILTRO_ANUALIDADES:
         this.setSgeFiltroAnualidades(SgeFiltroAnualidades.valueOf(newValue));
+        break;
+      case SGE_EJECUCION_PRESUPUESTARIA_GASTOS_DETALLE_ENABLED:
+        this.setSgeEjecucionPresupuestariaGastosDetalleEnabled(Boolean.valueOf(newValue));
         break;
     }
   }
