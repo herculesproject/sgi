@@ -114,4 +114,6 @@ export interface IConfiguracion {
   formatoAnualidadAnio: boolean;
   /** Define el comportamiento del filtro de anualidades en Ejecución Económica. */
   sgeFiltroAnualidades: SgeFiltroAnualidades;
+  /** Habilita el modal para el detalle en ejecuciñon presupuestaria - Gasto */
+  sgeEjecucionPresupuestariaGastosDetalleEnabled: boolean;
 }

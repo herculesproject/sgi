@@ -105,9 +105,10 @@ export abstract class EjecucionPresupuestariaFragment extends DesgloseEconomicoF
 
       const datoEconomico = new RowTreeDesglose(
         {
+          id: element.id,
           anualidad: element.anualidad,
           tipo: element.tipo,
-          partidaPresupuestaria: element.partidaPresupuestaria,
+          partidaPresupuestaria: !groupByAplicacionPresupuestaria ? element.partidaPresupuestaria : '',
           columnas: this.processColumnsValues(element.columnas, this.columns, false)
         } as IDatoEconomico
       );

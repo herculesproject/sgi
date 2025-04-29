@@ -42,6 +42,7 @@ export class DetalleOperacionesModificacionesFragment extends EjecucionPresupues
 
   protected getRowConfig(): IRowConfig {
     return {
+      actionsShow: false,
       anualidadGroupBy: true,
       anualidadShow: true,
       aplicacionPresupuestariaGroupBy: true,

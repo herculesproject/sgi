@@ -15,6 +15,10 @@ import { EjecucionPresupuestariaFragment } from '../ejecucion-presupuestaria.fra
 
 export class EjecucionPresupuestariaGastosFragment extends EjecucionPresupuestariaFragment {
 
+  get rowConfig(): IRowConfig {
+    return this.getRowConfig();
+  }
+
   constructor(
     key: number,
     proyectoSge: IProyectoSge,
@@ -33,8 +37,8 @@ export class EjecucionPresupuestariaGastosFragment extends EjecucionPresupuestar
     super.onInitialize();
   }
 
-  protected getColumns(): Observable<IColumnDefinition[]> {
-    return this.ejecucionEconomicaService.getColumnasEjecucionPresupuestariaGastos(this.proyectoSge.id)
+  protected getColumns(reducida?: boolean): Observable<IColumnDefinition[]> {
+    return this.ejecucionEconomicaService.getColumnasEjecucionPresupuestariaGastos(this.proyectoSge.id, reducida)
       .pipe(
         map(response => this.toColumnDefinition(response))
       );
@@ -42,9 +46,10 @@ export class EjecucionPresupuestariaGastosFragment extends EjecucionPresupuestar
 
   protected getRowConfig(): IRowConfig {
     return {
+      actionsShow: !!this.config.sgeEjecucionPresupuestariaGastosDetalleEnabled,
       anualidadGroupBy: true,
       anualidadShow: true,
-      aplicacionPresupuestariaGroupBy: true,
+      aplicacionPresupuestariaGroupBy: false,
       aplicacionPresupuestariaShow: true,
       clasificacionSgeGroupBy: false,
       clasificacionSgeShow: false,
@@ -56,8 +61,8 @@ export class EjecucionPresupuestariaGastosFragment extends EjecucionPresupuestar
     };
   }
 
-  protected getDatosEconomicos(anualidades: string[]): Observable<IDatoEconomico[]> {
-    return this.ejecucionEconomicaService.getEjecucionPresupuestariaGastos(this.proyectoSge.id, anualidades);
+  protected getDatosEconomicos(anualidades: string[], reducida?: boolean): Observable<IDatoEconomico[]> {
+    return this.ejecucionEconomicaService.getEjecucionPresupuestariaGastos(this.proyectoSge.id, anualidades, reducida);
   }
 
   protected getDisplayColumns(rowConfig: IRowConfig, columns: IColumnDefinition[]): string[] {
@@ -76,6 +81,10 @@ export class EjecucionPresupuestariaGastosFragment extends EjecucionPresupuestar
     }
 
     displayColumns.push(...columns.map(column => column.id));
+
+    if (rowConfig?.actionsShow) {
+      displayColumns.push('acciones');
+    }
 
     return displayColumns;
   }

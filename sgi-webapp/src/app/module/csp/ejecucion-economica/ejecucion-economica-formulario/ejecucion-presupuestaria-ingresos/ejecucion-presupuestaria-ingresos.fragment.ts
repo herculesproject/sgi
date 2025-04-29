@@ -42,6 +42,7 @@ export class EjecucionPresupuestariaIngresosFragment extends EjecucionPresupuest
 
   protected getRowConfig(): IRowConfig {
     return {
+      actionsShow: false,
       anualidadGroupBy: true,
       anualidadShow: true,
       aplicacionPresupuestariaGroupBy: true,

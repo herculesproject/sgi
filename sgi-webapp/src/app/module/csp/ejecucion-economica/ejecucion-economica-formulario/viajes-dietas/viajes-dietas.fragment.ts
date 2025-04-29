@@ -62,6 +62,7 @@ export class ViajesDietasFragment extends FacturasJustificantesFragment {
 
   protected getRowConfig(): IRowConfig {
     return {
+      actionsShow: true,
       anualidadGroupBy: true,
       anualidadShow: true,
       aplicacionPresupuestariaGroupBy: this.config.viajesDietasColumnasFijasVisibles?.some(c => c === FacturasJustificantesColumnasFijasConfigurables.APLICACION_PRESUPUESTARIA),

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatOption } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -9,10 +9,13 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
+import { EjecucionPresupuestariaGastosModalComponent, EjecucionPresupuestariaGastosModalData } from '../../modals/ejecucion-presupuestaria-gastos-modal/ejecucion-presupuestaria-gastos-modal.component';
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
+import { IDesglose } from '../facturas-justificantes.fragment';
 import { EjecucionPresupuestariaGastosFragment } from './ejecucion-presupuestaria-gastos.fragment';
 import { EjecucionPresupuestariaGastosExportModalComponent } from './export/ejecucion-presupuestaria-gastos-export-modal.component';
 
@@ -43,6 +46,7 @@ export class EjecucionPresupuestariaGastosComponent extends FragmentComponent im
 
   constructor(
     actionService: EjecucionEconomicaActionService,
+    private readonly ejecucionEconomicaService: EjecucionEconomicaService,
     private matDialog: MatDialog,
     private translate: TranslateService
   ) {
@@ -83,6 +87,22 @@ export class EjecucionPresupuestariaGastosComponent extends FragmentComponent im
       },
       this.formPart.processError
     ));
+  }
+
+  openModalView(element: IDesglose): void {
+    this.subscriptions.push(
+      this.ejecucionEconomicaService.getEjecucionPresupuestariaGasto(element.id).subscribe(
+        (detalle) => {
+          const config: MatDialogConfig<EjecucionPresupuestariaGastosModalData> = {
+            data: {
+              ...detalle,
+              rowConfig: this.formPart.rowConfig
+            }
+          };
+          this.matDialog.open(EjecucionPresupuestariaGastosModalComponent, config);
+        }
+      )
+    );
   }
 
   ngOnDestroy(): void {

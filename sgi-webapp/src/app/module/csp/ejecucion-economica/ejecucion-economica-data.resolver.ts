@@ -15,7 +15,7 @@ import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable, from, of, throwError } from 'rxjs';
+import { EMPTY, Observable, forkJoin, from, of, throwError } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { EJECUCION_ECONOMICA_ROUTE_PARAMS } from './ejecucion-economica-route-params';
 import { IEjecucionEconomicaData } from './ejecucion-economica.action.service';
@@ -44,15 +44,23 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
 
   protected resolveEntity(route: ActivatedRouteSnapshot): Observable<IEjecucionEconomicaData> {
 
-    return this.relacionEjecucionEconomicaService.findRelacionesProyectoSgeRef(route.paramMap.get(EJECUCION_ECONOMICA_ROUTE_PARAMS.ID)).pipe(
-      map(relaciones => {
+    return forkJoin({
+      configuracion: this.configuracionService.getConfiguracion(),
+      relaciones: this.relacionEjecucionEconomicaService.findRelacionesProyectoSgeRef(route.paramMap.get(EJECUCION_ECONOMICA_ROUTE_PARAMS.ID))
+    }).pipe(
+      map(({ configuracion, relaciones }) => {
         return {
+          configuracion,
           proyectoSge: { id: route.paramMap.get(EJECUCION_ECONOMICA_ROUTE_PARAMS.ID) } as IProyectoSge,
           readonly: false,
           relaciones
         } as IEjecucionEconomicaData;
       }),
       switchMap(data => {
+        if (!data.configuracion.sectorIvaSgeEnabled) {
+          return of(data);
+        }
+
         return this.proyectoSgeService.findById(data.proyectoSge.id).pipe(
           switchMap(proyectoSge => {
             if (!proyectoSge) {
@@ -132,14 +140,6 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
           toArray(),
           map(() => {
             return response;
-          })
-        )
-      ),
-      switchMap(data =>
-        this.configuracionService.getConfiguracion().pipe(
-          map(configuracion => {
-            data.configuracion = configuracion;
-            return data;
           })
         )
       )

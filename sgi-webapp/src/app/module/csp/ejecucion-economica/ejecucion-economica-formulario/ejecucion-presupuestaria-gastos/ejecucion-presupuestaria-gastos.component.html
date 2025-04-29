@@ -45,6 +45,10 @@
           <mat-header-cell *matHeaderCellDef>{{'sge.dato-economico.partida-presupuestaria' | translate}}
           </mat-header-cell>
           <mat-cell *matCellDef="let element">
+            <mat-icon color="primary" *ngIf="element.level === 1 && element.childs.length > 0"
+              (click)="element.expanded ? element.collapse() : element.expand()">
+              {{element.expanded ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
             {{element.item.partidaPresupuestaria }}
           </mat-cell>
         </ng-container>
@@ -60,6 +64,17 @@
             <ng-container *ngIf="!column.compute">
               {{element.item.columnas[column.id]}}
             </ng-container>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <mat-header-cell *matHeaderCellDef>{{'label.actions' | translate}}
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="openModalView(element.item)"
+              *ngIf="element.childs.length === 0" matTooltip="{{'btn.view' | translate}}">
+              <mat-icon>visibility</mat-icon>
+            </button>
           </mat-cell>
         </ng-container>
 

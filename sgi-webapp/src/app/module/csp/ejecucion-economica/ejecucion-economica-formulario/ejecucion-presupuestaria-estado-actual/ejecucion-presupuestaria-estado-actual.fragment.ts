@@ -42,6 +42,7 @@ export class EjecucionPresupuestariaEstadoActualFragment extends EjecucionPresup
 
   protected getRowConfig(): IRowConfig {
     return {
+      actionsShow: false,
       anualidadGroupBy: true,
       anualidadShow: true,
       aplicacionPresupuestariaGroupBy: true,

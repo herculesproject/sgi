@@ -52,6 +52,7 @@ import { ViajesDietasExportService } from './ejecucion-economica-formulario/viaj
 import { ViajesDietasComponent } from './ejecucion-economica-formulario/viajes-dietas/viajes-dietas.component';
 import { EjecucionEconomicaListadoComponent } from './ejecucion-economica-listado/ejecucion-economica-listado.component';
 import { EjecucionEconomicaRoutingModule } from './ejecucion-economica-routing.module';
+import { EjecucionPresupuestariaGastosModalComponent } from './modals/ejecucion-presupuestaria-gastos-modal/ejecucion-presupuestaria-gastos-modal.component';
 import { FacturasEmitidasModalComponent } from './modals/facturas-emitidas-modal/facturas-emitidas-modal.component';
 import { FacturasGastosModalComponent } from './modals/facturas-gastos-modal/facturas-gastos-modal.component';
 import { FacturasJustificantesClasificacionModal } from './modals/facturas-justificantes-clasificacion-modal/facturas-justificantes-clasificacion-modal.component';
@@ -87,6 +88,7 @@ import { SeguimientoGastosJustificadosResumenListadoGeneralExportService } from 
     EjecucionPresupuestariaEstadoActualExportModalComponent,
     EjecucionPresupuestariaGastosComponent,
     EjecucionPresupuestariaGastosExportModalComponent,
+    EjecucionPresupuestariaGastosModalComponent,
     EjecucionPresupuestariaIngresosComponent,
     EjecucionPresupuestariaIngresosExportModalComponent,
     FacturasEmitidasComponent,

@@ -17,6 +17,7 @@ import { distinctUntilChanged, map, mergeMap, reduce, switchMap } from 'rxjs/ope
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 
 export interface IRowConfig {
+  actionsShow: boolean;
   anualidadGroupBy: boolean;
   anualidadShow: boolean;
   aplicacionPresupuestariaGroupBy: boolean;
@@ -290,9 +291,10 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
       data: [],
       columns: []
     };
+    const reducida = false;
     return of(exportData).pipe(
       switchMap((exportDataResult) => {
-        return this.getDatosEconomicos(anualidades).pipe(
+        return this.getDatosEconomicos(anualidades, reducida).pipe(
           map(data => {
             exportDataResult.data = data;
             return exportDataResult;
@@ -300,7 +302,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
         );
       }),
       switchMap((exportDataResult) => {
-        return this.getColumns(false).pipe(
+        return this.getColumns(reducida).pipe(
           map((columns) => {
             exportDataResult.columns = columns;
             return exportDataResult;
@@ -313,7 +315,8 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
   public loadDesglose(): void {
     const anualidades = this.aniosControl.value ?? [];
     this.clearProblems();
-    this.getDatosEconomicos(anualidades)
+    const reducida = true;
+    this.getDatosEconomicos(anualidades, reducida)
       .pipe(
         switchMap(response => this.buildRows(response, this.getRowConfig()))
       ).subscribe(
@@ -338,7 +341,7 @@ export abstract class DesgloseEconomicoFragment<T extends IDatoEconomico> extend
     return column.id;
   }
 
-  protected abstract getDatosEconomicos(anualidades: string[]): Observable<IDatoEconomico[]>;
+  protected abstract getDatosEconomicos(anualidades: string[], reducida: boolean): Observable<IDatoEconomico[]>;
 
   protected abstract buildRows(datosEconomicos: IDatoEconomico[], rowConfig: IRowConfig): Observable<RowTreeDesglose<T>[]>;
 

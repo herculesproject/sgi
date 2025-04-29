@@ -62,6 +62,7 @@ export class FacturasGastosFragment extends FacturasJustificantesFragment {
 
   protected getRowConfig(): IRowConfig {
     return {
+      actionsShow: true,
       anualidadGroupBy: true,
       anualidadShow: true,
       aplicacionPresupuestariaGroupBy: this.config.facturasGastosColumnasFijasVisibles?.some(c => c === FacturasJustificantesColumnasFijasConfigurables.APLICACION_PRESUPUESTARIA),
