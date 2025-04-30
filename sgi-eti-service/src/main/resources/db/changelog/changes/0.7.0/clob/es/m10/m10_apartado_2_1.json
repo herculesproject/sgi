@@ -32,11 +32,11 @@
           "fieldGroup": [
             {
               "key": "nombre",
-              "type": "person",
+              "type": "input",
               "templateOptions": {
                 "label": "Nombre",
                 "order": 10,
-                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona"
+                "expressionModelValue": "formState.tareas[$1].equipoTrabajo.persona?.nombre"
               }
             },
             {
