@@ -203,7 +203,11 @@ public class Configuracion extends BaseEntity {
     /**
      * Habilita el modal para el detalle en ejecuciñon presupuestaria - Gastos
      */
-    SGE_EJECUCION_PRESUPUESTARIA_GASTOS_DETALLE_ENABLED("sgeEjecucionPresupuestariaGastosDetalleEnabled");
+    SGE_EJECUCION_PRESUPUESTARIA_GASTOS_DETALLE_ENABLED("sgeEjecucionPresupuestariaGastosDetalleEnabled"),
+    /**
+     * Habilita el modal para el detalle en detalle operaciones - Gastos
+     */
+    SGE_DETALLE_OPERACIONES_GASTOS_DETALLE_ENABLED("sgeDetalleOperacionesGastosDetalleEnabled");
 
     private final String key;
 
@@ -401,10 +405,16 @@ public class Configuracion extends BaseEntity {
   private SgeFiltroAnualidades sgeFiltroAnualidades;
 
   /**
-   * Habilita el modal para el detalle en ejecuciñon presupuestaria - Gastos
+   * Habilita el modal para el detalle en ejecucion presupuestaria - Gastos
    */
   @Column(name = "sge_ejecucionpresupuestaria_gastos_detalle", columnDefinition = "boolean default false", nullable = false, unique = true)
   private Boolean sgeEjecucionPresupuestariaGastosDetalleEnabled;
+
+  /**
+   * Habilita el modal para el detalle en detalle operaciones - Gastos
+   */
+  @Column(name = "sge_detalleoperaciones_gastos_detalle", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean sgeDetalleOperacionesGastosDetalleEnabled;
 
   public Object getParamValue(Param key) {
     switch (key) {
@@ -466,6 +476,8 @@ public class Configuracion extends BaseEntity {
         return this.getSgeFiltroAnualidades();
       case SGE_EJECUCION_PRESUPUESTARIA_GASTOS_DETALLE_ENABLED:
         return this.getSgeEjecucionPresupuestariaGastosDetalleEnabled();
+      case SGE_DETALLE_OPERACIONES_GASTOS_DETALLE_ENABLED:
+        return this.getSgeDetalleOperacionesGastosDetalleEnabled();
       default:
         return null;
     }
@@ -565,6 +577,9 @@ public class Configuracion extends BaseEntity {
         break;
       case SGE_EJECUCION_PRESUPUESTARIA_GASTOS_DETALLE_ENABLED:
         this.setSgeEjecucionPresupuestariaGastosDetalleEnabled(Boolean.valueOf(newValue));
+        break;
+      case SGE_DETALLE_OPERACIONES_GASTOS_DETALLE_ENABLED:
+        this.setSgeDetalleOperacionesGastosDetalleEnabled(Boolean.valueOf(newValue));
         break;
     }
   }
