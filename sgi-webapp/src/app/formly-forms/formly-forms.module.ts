@@ -106,7 +106,6 @@ export function validatorFactory(
           component: I18nCkeditorTypeComponent,
           wrappers: ['form-field'],
         },
-        { name: 'person', extends: 'td' },
       ],
       wrappers: [
         {

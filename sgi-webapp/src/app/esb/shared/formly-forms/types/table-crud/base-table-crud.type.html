@@ -59,11 +59,6 @@
             <sgi-i18n-table-field [field]="model[i][currentField.key]"></sgi-i18n-table-field>
           </p>
 
-          <p *ngSwitchCase="'person'" [ngClass]="{'not-found-error': !model[i][currentField.key]?.nombre}">
-            {{ model[i][currentField.key]?.nombre ? model[i][currentField.key].nombre :
-            getSgpError(model[i][currentField.key].id) }}
-          </p>
-
           <p *ngSwitchDefault>{{model[i][currentField.key]}}</p>
         </td>
       </ng-container>

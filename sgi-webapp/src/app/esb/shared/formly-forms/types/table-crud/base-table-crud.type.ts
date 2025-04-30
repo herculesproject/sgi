@@ -19,7 +19,6 @@ interface FieldsToRender {
 
 const BTN_ADD_ENTITY = marker('btn.add.entity');
 const LABEL_HEADER_ACCIONES = marker('label.actions');
-const SGP_NOT_FOUND = marker("error.sgp.not-found");
 
 export enum TYPE_RENDER_COLUMN {
   ONE_ELEMENT = 'oneElement',
@@ -119,10 +118,6 @@ export abstract class BaseTableCRUDTypeComponent extends FieldArrayType implemen
 
   getDisplayColumns(): string[] {
     return this.fieldsToRender.filter(field => field.key).map(field => field.key.toString());
-  }
-
-  getSgpError(id: string): string {
-    return this.translate.instant(SGP_NOT_FOUND, { ids: id, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
   }
 
   remove(row: any) {
