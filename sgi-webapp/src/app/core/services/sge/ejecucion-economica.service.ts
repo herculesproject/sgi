@@ -69,8 +69,8 @@ export class EjecucionEconomicaService extends SgiRestBaseService {
     return this.getColumnas(proyectoEconomicoId, TipoOperacion.EJECUCION_PRESUPUESTARIA_INGRESOS);
   }
 
-  getColumnasDetalleOperacionesGastos(proyectoEconomicoId: string): Observable<IColumna[]> {
-    return this.getColumnas(proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_GASTOS);
+  getColumnasDetalleOperacionesGastos(proyectoEconomicoId: string, reducida = true): Observable<IColumna[]> {
+    return this.getColumnas(proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_GASTOS, reducida);
   }
 
   getColumnasDetalleOperacionesIngresos(proyectoEconomicoId: string): Observable<IColumna[]> {
@@ -149,11 +149,11 @@ export class EjecucionEconomicaService extends SgiRestBaseService {
     return this.getDatosEconomicos(sort, proyectoEconomicoId, TipoOperacion.EJECUCION_PRESUPUESTARIA_INGRESOS, anualidades);
   }
 
-  getDetalleOperacionesGastos(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
+  getDetalleOperacionesGastos(proyectoEconomicoId: string, anualidades: string[] = [], reducida = true): Observable<IDatoEconomico[]> {
     const sort = new RSQLSgiRestSort('anualidad', SgiRestSortDirection.DESC)
       .and('partidaPresupuestaria', SgiRestSortDirection.ASC)
       .and('codigoEconomico.id', SgiRestSortDirection.ASC);
-    return this.getDatosEconomicos(sort, proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_GASTOS, anualidades);
+    return this.getDatosEconomicos(sort, proyectoEconomicoId, TipoOperacion.DETALLE_OPERACIONES_GASTOS, anualidades, reducida);
   }
 
   getDetalleOperacionesIngresos(proyectoEconomicoId: string, anualidades: string[] = []): Observable<IDatoEconomico[]> {
@@ -245,6 +245,10 @@ export class EjecucionEconomicaService extends SgiRestBaseService {
 
   getPersonaContratada(id: string): Observable<IDatoEconomicoDetalle> {
     return this.getDatoEconomicoDetalle(id, TipoOperacion.FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO);
+  }
+
+  getDetalleOperacionesGasto(id: string): Observable<IDatoEconomicoDetalle> {
+    return this.getDatoEconomicoDetalle(id, TipoOperacion.DETALLE_OPERACIONES_GASTOS);
   }
 
   getEjecucionPresupuestariaGasto(id: string): Observable<IDatoEconomicoDetalle> {

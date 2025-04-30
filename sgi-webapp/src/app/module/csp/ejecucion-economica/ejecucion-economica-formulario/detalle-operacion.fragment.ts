@@ -106,6 +106,7 @@ export abstract class DetalleOperacionFragment extends DesgloseEconomicoFragment
 
       const datoEconomico = new RowTreeDesglose(
         {
+          id: element.id,
           anualidad: element.anualidad,
           tipo: element.tipo,
           partidaPresupuestaria: element.partidaPresupuestaria,

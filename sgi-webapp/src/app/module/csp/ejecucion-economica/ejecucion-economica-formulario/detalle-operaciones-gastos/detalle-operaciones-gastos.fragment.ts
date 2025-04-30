@@ -15,6 +15,10 @@ import { DetalleOperacionFragment } from '../detalle-operacion.fragment';
 
 export class DetalleOperacionesGastosFragment extends DetalleOperacionFragment {
 
+  get rowConfig(): IRowConfig {
+    return this.getRowConfig();
+  }
+
   constructor(
     key: number,
     proyectoSge: IProyectoSge,
@@ -33,8 +37,8 @@ export class DetalleOperacionesGastosFragment extends DetalleOperacionFragment {
     super.onInitialize();
   }
 
-  protected getColumns(): Observable<IColumnDefinition[]> {
-    return this.ejecucionEconomicaService.getColumnasDetalleOperacionesGastos(this.proyectoSge.id)
+  protected getColumns(reducida?: boolean): Observable<IColumnDefinition[]> {
+    return this.ejecucionEconomicaService.getColumnasDetalleOperacionesGastos(this.proyectoSge.id, reducida)
       .pipe(
         map(response => this.toColumnDefinition(response))
       );
@@ -42,7 +46,7 @@ export class DetalleOperacionesGastosFragment extends DetalleOperacionFragment {
 
   protected getRowConfig(): IRowConfig {
     return {
-      actionsShow: false,
+      actionsShow: !!this.config.sgeDetalleOperacionesGastosDetalleEnabled,
       anualidadGroupBy: true,
       anualidadShow: true,
       aplicacionPresupuestariaGroupBy: true,
@@ -57,8 +61,8 @@ export class DetalleOperacionesGastosFragment extends DetalleOperacionFragment {
     };
   }
 
-  protected getDatosEconomicos(anualidades: string[]): Observable<IDatoEconomico[]> {
-    return this.ejecucionEconomicaService.getDetalleOperacionesGastos(this.proyectoSge.id, anualidades);
+  protected getDatosEconomicos(anualidades: string[], reducida?: boolean): Observable<IDatoEconomico[]> {
+    return this.ejecucionEconomicaService.getDetalleOperacionesGastos(this.proyectoSge.id, anualidades, reducida);
   }
 
   protected getDisplayColumns(rowConfig: IRowConfig, columns: IColumnDefinition[]): string[] {
@@ -74,6 +78,10 @@ export class DetalleOperacionesGastosFragment extends DetalleOperacionFragment {
 
     displayColumns.push('codigoEconomico');
     displayColumns.push(...columns.map(column => column.id));
+
+    if (rowConfig?.actionsShow) {
+      displayColumns.push('acciones');
+    }
 
     return displayColumns;
   }

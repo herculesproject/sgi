@@ -24,6 +24,7 @@ export interface IConfiguracionResponse {
   proyectoSgeModificacionModoEjecucion: string;
   proyectoSocioPaisFilterEnabled: boolean;
   sectorIvaSgeEnabled: boolean;
+  sgeDetalleOperacionesGastosDetalleEnabled: boolean;
   sgeEjecucionPresupuestariaGastosDetalleEnabled: boolean;
   sgeFiltroAnualidades: string;
   solicitudesSinConvocatoriaInvestigadorEnabled: boolean;

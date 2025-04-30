@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatOption } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -9,10 +9,13 @@ import { MSG_PARAMS } from '@core/i18n';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { EjecucionEconomicaService } from '@core/services/sge/ejecucion-economica.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { EjecucionEconomicaActionService } from '../../ejecucion-economica.action.service';
+import { DetalleOperacionesGastosModalComponent, DetalleOperacionesGastosModalData } from '../../modals/detalle-operaciones-gastos-modal/detalle-operaciones-gastos-modal.component';
 import { IDesgloseEconomicoExportData, RowTreeDesglose } from '../desglose-economico.fragment';
+import { IDesglose } from '../facturas-justificantes.fragment';
 import { DetalleOperacionesGastosFragment } from './detalle-operaciones-gastos.fragment';
 import { DetalleOperacionesGastosExportModalComponent } from './export/detalle-operaciones-gastos-export-modal.component';
 
@@ -45,6 +48,7 @@ export class DetalleOperacionesGastosComponent extends FragmentComponent impleme
 
   constructor(
     actionService: EjecucionEconomicaActionService,
+    private readonly ejecucionEconomicaService: EjecucionEconomicaService,
     private matDialog: MatDialog,
     private translate: TranslateService
   ) {
@@ -86,6 +90,22 @@ export class DetalleOperacionesGastosComponent extends FragmentComponent impleme
       },
       this.formPart.processError
     ));
+  }
+
+  openModalView(element: IDesglose): void {
+    this.subscriptions.push(
+      this.ejecucionEconomicaService.getDetalleOperacionesGasto(element.id).subscribe(
+        (detalle) => {
+          const config: MatDialogConfig<DetalleOperacionesGastosModalData> = {
+            data: {
+              ...detalle,
+              rowConfig: this.formPart.rowConfig
+            }
+          };
+          this.matDialog.open(DetalleOperacionesGastosModalComponent, config);
+        }
+      )
+    );
   }
 
   ngOnDestroy(): void {

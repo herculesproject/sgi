@@ -90,6 +90,20 @@
           </mat-footer-cell>
         </ng-container>
 
+        <ng-container matColumnDef="acciones">
+          <mat-header-cell *matHeaderCellDef>{{'label.actions' | translate}}
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="openModalView(element.item)"
+              *ngIf="element.childs.length === 0" matTooltip="{{'btn.view' | translate}}">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </mat-cell>
+          <mat-footer-cell *matFooterCellDef>
+
+          </mat-footer-cell>
+        </ng-container>
+
         <mat-header-row *matHeaderRowDef="formPart.displayColumns; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: formPart.displayColumns;"
           [class.expanded-row]="!!row.parent && !!!row.parent?.expanded">

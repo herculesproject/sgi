@@ -116,4 +116,6 @@ export interface IConfiguracion {
   sgeFiltroAnualidades: SgeFiltroAnualidades;
   /** Habilita el modal para el detalle en ejecuciñon presupuestaria - Gasto */
   sgeEjecucionPresupuestariaGastosDetalleEnabled: boolean;
+  /** Habilita el modal para el detalle en detalle operaciones - Gastos */
+  sgeDetalleOperacionesGastosDetalleEnabled: boolean;
 }
