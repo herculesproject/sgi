@@ -562,8 +562,8 @@ export abstract class FacturasJustificantesFragment extends DesgloseEconomicoFra
   }
 
   protected compareFechaDevengoDesglose(itemA: IDesglose, itemB: IDesglose): number {
-    const fechaDevengoInMillisItemA = itemA?.fechaDevengo.toMillis() ?? 0;
-    const fechaDevengoInMillisItemB = itemB?.fechaDevengo.toMillis() ?? 0;
+    const fechaDevengoInMillisItemA = itemA?.fechaDevengo?.toMillis() ?? 0;
+    const fechaDevengoInMillisItemB = itemB?.fechaDevengo?.toMillis() ?? 0;
     return fechaDevengoInMillisItemB - fechaDevengoInMillisItemA;
   }
 
