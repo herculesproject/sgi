@@ -479,6 +479,10 @@ export class InvencionRepartoEquipoInventorFragment extends Fragment {
       map(inventor => {
         invencionInventor.inventor = inventor;
         return invencionInventor;
+      }),
+      catchError(err => {
+        this.logger.error(err);
+        return of(invencionInventor);
       })
     );
   }
