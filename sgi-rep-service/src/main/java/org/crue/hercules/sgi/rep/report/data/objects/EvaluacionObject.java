@@ -20,7 +20,9 @@ public class EvaluacionObject {
   public EvaluacionObject(EvaluacionDto dto) {
     this.version = dto.getVersion();
     this.tipo = TipoEvaluacion.fromCode(dto.getTipoEvaluacion().getId());
-    this.dictamen = Dictamen.fromCode(dto.getDictamen().getId());
+    if (dto.getDictamen() != null) {
+      this.dictamen = Dictamen.fromCode(dto.getDictamen().getId());
+    }
     this.comentario = I18nHelper.getFieldValue(dto.getComentario(), SgiReportContextHolder.getLanguage());
     this.convocatoria = new ConvocatoriaReunionObject(dto.getConvocatoriaReunion());
     this.memoria = new MemoriaObject(dto.getMemoria());
