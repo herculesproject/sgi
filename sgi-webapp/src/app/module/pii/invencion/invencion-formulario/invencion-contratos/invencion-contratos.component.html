@@ -30,7 +30,8 @@
           <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
             {{'pii.invencion-contrato.contratos-asociados.entidadFinanciadora' | translate}}
           </mat-header-cell>
-          <mat-cell mat-cell *matCellDef="let contratosAsociado"
+          <mat-cell mat-cell *matCellDef="let contratosAsociado" sgempNotFoundError
+            [model]="getFirstEntidadFinanciadora(contratosAsociado.entidadesFinanciadoras)"
             matTooltip="{{getEntidadesFinanciadorasTooltip(contratosAsociado.entidadesFinanciadoras)}}">
             {{ getFirstEntidadFinanciadora(contratosAsociado.entidadesFinanciadoras)?.nombre }}
           </mat-cell>

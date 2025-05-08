@@ -14,6 +14,7 @@ import { PaisService } from '@core/services/sgo/pais/pais.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 
@@ -32,6 +33,7 @@ export class InvencionContratosFragment extends Fragment {
 
   constructor(
     key: number,
+    private logger: NGXLogger,
     public candEdit: boolean,
     private sectorLicenciadoService: SectorLicenciadoService,
     private relacionService: RelacionService,
@@ -99,7 +101,14 @@ export class InvencionContratosFragment extends Fragment {
 
   private fillEntidadFinanciadoraData$(contratoAsociado: IContratoAsociadoTableData): Observable<IContratoAsociadoTableData> {
     return from(contratoAsociado.entidadesFinanciadoras).pipe(
-      mergeMap(entidadFinanciadora => this.empresaService.findById(entidadFinanciadora.id)
+      mergeMap(entidadFinanciadora =>
+        this.empresaService.findById(entidadFinanciadora.id).pipe(
+          map(entidad => entidad),
+          catchError(err => {
+            this.logger.error(err);
+            return of(entidadFinanciadora);
+          })
+        )
       ),
       toArray(),
       map(entidadesFinanciadoras => {

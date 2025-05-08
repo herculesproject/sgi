@@ -25,6 +25,7 @@ const SECTOR_LICENCIADO_KEY = marker('pii.invencion-contrato.sector-licenciado')
 const MSG_PENDING_CHANGES = marker('msg.pii.sector-licenciado.unsaved');
 const MSG_BUTTON_CONTINUE = marker('btn.continue');
 const MSG_BUTTON_CANCEL = marker('btn.cancel');
+const SGEMP_NOT_FOUND = marker("error.sgemp.not-found");
 
 @Component({
   selector: 'sgi-invencion-contratos',
@@ -107,9 +108,10 @@ export class InvencionContratosComponent extends FragmentComponent implements On
   }
 
   getEntidadesFinanciadorasTooltip(entidadesFinanciadoras: IEmpresa[]): string {
-    return entidadesFinanciadoras.reduce((prev, current, index) =>
-      index === 0 ? prev + current.nombre : prev + ', ' + current.nombre
-      , '');
+    return entidadesFinanciadoras.reduce((prev, current, index) => {
+      const nombreEntidad = current.nombre ?? this.translate.instant(SGEMP_NOT_FOUND, { ids: current?.id, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+      return index === 0 ? prev + nombreEntidad : prev + ', ' + nombreEntidad;
+    }, '');
   }
 
   getInventorResponsableCompleteName(investigadorPrincipal: IPersona): string {
