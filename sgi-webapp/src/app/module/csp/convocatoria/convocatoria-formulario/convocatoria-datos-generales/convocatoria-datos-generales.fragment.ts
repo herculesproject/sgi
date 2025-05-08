@@ -212,6 +212,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
                   return convocatoria;
                 }),
                 catchError((error) => {
+                  this.getFormGroup().get('entidadGestora').setValue(this.convocatoriaEntidadGestora.empresa);
                   this.logger.error(error);
                   return of(convocatoria);
                 })

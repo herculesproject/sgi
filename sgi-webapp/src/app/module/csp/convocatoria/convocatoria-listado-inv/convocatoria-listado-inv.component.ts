@@ -30,6 +30,7 @@ import { EMPTY, forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { INV_ROUTE_NAMES } from 'src/app/module/inv/inv-route-names';
 import { CONVOCATORIA_ID_KEY } from '../../solicitud/solicitud-crear/solicitud-crear.guard';
+import { NGXLogger } from 'ngx-logger';
 
 const AREA_TEMATICA_KEY = marker('csp.area-tematica');
 
@@ -74,6 +75,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
   }
 
   constructor(
+    private logger: NGXLogger,
     private convocatoriaService: ConvocatoriaService,
     private empresaService: EmpresaService,
     private personaService: PersonaService,
@@ -175,8 +177,9 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
                           return convocatoriaListado;
                         }),
                         catchError((error) => {
-                          this.processError(error);
-                          return EMPTY;
+                          this.logger.error(error);
+                          convocatoriaListado.entidadFinanciadoraEmpresa = convocatoriaListado.entidadFinanciadora.empresa;
+                          return of(convocatoriaListado);
                         })
                       );
                     }
@@ -208,8 +211,9 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
                               return convocatoriaListado;
                             }),
                             catchError((error) => {
-                              this.processError(error);
-                              return EMPTY;
+                              this.logger.error(error);
+                              convocatoriaListado.entidadConvocanteEmpresa = convocatoriaListado.entidadConvocante.entidad;
+                              return of(convocatoriaListado);
                             })
                           );
                         }

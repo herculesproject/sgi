@@ -18,13 +18,13 @@ import { LanguageService } from '@core/services/language.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
 import { from, of, Subscription } from 'rxjs';
-import { catchError, map, mergeAll, switchMap, take, takeLast } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap, take, toArray } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../shared/entidad-financiadora-modal/entidad-financiadora-modal.component';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudProyectoEntidadesFinanciadorasFragment, SolicitudProyectoEntidadFinanciadoraAjenaData } from './solicitud-proyecto-entidades-financiadoras.fragment';
-import { NGXLogger } from 'ngx-logger';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_KEY = marker('csp.solicitud-entidad-financiadora');
@@ -263,31 +263,25 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       .findEntidadesFinanciadorasConvocatoriaSolicitud(this.formPart.getKey() as number)
       .pipe(
         map(result => result.items),
-        switchMap((entidadesFinanciadoras) => {
-          return from(entidadesFinanciadoras)
-            .pipe(
-              map((entidadesFinanciadora) => {
-                return this.empresaService.findById(entidadesFinanciadora.empresa.id)
-                  .pipe(
-                    map(empresa => {
-                      entidadesFinanciadora.empresa = empresa;
-                      return entidadesFinanciadora;
-                    }),
-                    catchError((err) => {
-                      this.logger.error(err);
-                      return of(entidadesFinanciadora);
-                    })
-                  );
-
-              }),
-              mergeAll(),
-              map(() => {
-                return entidadesFinanciadoras;
-              })
-            );
-        }),
-        takeLast(1)
-      ).subscribe((result) => {
+        switchMap(entidadesFinanciadoras => {
+          return from(entidadesFinanciadoras).pipe(
+            concatMap(entidadFinanciadora =>
+              this.empresaService.findById(entidadFinanciadora.empresa.id).pipe(
+                map(empresa => {
+                  entidadFinanciadora.empresa = empresa;
+                  return entidadFinanciadora;
+                }),
+                catchError(err => {
+                  this.logger.error(err);
+                  return of(entidadFinanciadora);
+                })
+              )
+            ),
+            toArray()
+          );
+        })
+      )
+      .subscribe(result => {
         this.dataSourceEntidadesFinanciadorasConvocatoria.data = result;
       });
 

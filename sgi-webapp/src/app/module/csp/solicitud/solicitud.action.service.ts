@@ -415,6 +415,7 @@ export class SolicitudActionService extends ActionService {
       datosPersonalesService,
       personaService,
       empresaService,
+      translate,
       this.readonly
     );
 

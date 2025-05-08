@@ -252,14 +252,16 @@
       <ng-container matColumnDef="entidadConvocante">
         <th mat-header-cell *matHeaderCellDef>
           {{'csp.convocatoria-entidad-convocante' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}} </th>
-        <td mat-cell *matCellDef="let element">{{element.entidadConvocanteEmpresa.nombre}}</td>
+        <td mat-cell *matCellDef="let element" sgempNotFoundError [model]="element.entidadConvocanteEmpresa">
+          {{element.entidadConvocanteEmpresa.nombre}}</td>
       </ng-container>
 
       <!-- Entidad Financiadora Column -->
       <ng-container matColumnDef="entidadFinanciadora">
         <th mat-header-cell *matHeaderCellDef>
           {{'csp.convocatoria-entidad-financiadora' | translate:MSG_PARAMS.CARDINALIRY.SINGULAR}} </th>
-        <td mat-cell *matCellDef="let element">{{element.entidadFinanciadoraEmpresa.nombre}}</td>
+        <td mat-cell *matCellDef="let element" sgempNotFoundError [model]="element.entidadFinanciadoraEmpresa">
+          {{element.entidadFinanciadoraEmpresa.nombre}}</td>
       </ng-container>
 
       <!-- Fuente Financiacion Column -->

@@ -1,4 +1,7 @@
+import { getMultipleValuesInSingleSelectionError } from '@angular/cdk/collections';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MSG_PARAMS } from '@core/i18n';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
@@ -15,10 +18,12 @@ import { ClasificacionService } from '@core/services/sgo/clasificacion.service';
 import { DatosContactoService } from '@core/services/sgp/datos-contacto/datos-contacto.service';
 import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
 
+const SGEMP_NOT_FOUND = marker("error.sgemp.not-found");
 export interface ISolicitudSolicitanteRrhh extends ISolicitudRrhh {
   solicitante: IPersona;
   solicitanteExterno: ISolicitanteExterno;
@@ -61,6 +66,7 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
     private readonly datosPersonalesService: DatosPersonalesService,
     private readonly personaService: PersonaService,
     private readonly empresaService: EmpresaService,
+    private readonly translateService: TranslateService,
     private readonly: boolean
   ) {
     super(solicitud?.id, true);
@@ -149,9 +155,20 @@ export class SolicitudRrhhSolitanteFragment extends FormFragment<ISolicitudSolic
   }
 
   buildPatch(solicitudSolicitanteRrhh: ISolicitudSolicitanteRrhh): { [key: string]: any } {
-    const universidadText = this.isInvestigador
-      ? solicitudSolicitanteRrhh?.universidad?.nombre ?? solicitudSolicitanteRrhh?.universidadDatos
-      : solicitudSolicitanteRrhh?.universidadDatos;
+    let universidadText = null;
+    this.getFormGroup().controls.universidadText.setErrors(null);
+    if (this.isInvestigador) {
+      if (solicitudSolicitanteRrhh?.universidad?.nombre) {
+        universidadText = solicitudSolicitanteRrhh.universidad.nombre;
+      } else if (solicitudSolicitanteRrhh?.universidad?.id) {
+        this.getFormGroup().controls.universidadText.setErrors({ universidadNotFound: true });
+        universidadText = this.translateService.instant(SGEMP_NOT_FOUND, { ids: solicitudSolicitanteRrhh?.universidad?.id, ...MSG_PARAMS.CARDINALIRY.SINGULAR });
+      } else {
+        universidadText = solicitudSolicitanteRrhh?.universidadDatos;
+      }
+    } else {
+      universidadText = solicitudSolicitanteRrhh?.universidadDatos;
+    }
 
     let formValues: { [key: string]: any } = {
       universidadSelect: solicitudSolicitanteRrhh?.universidad,
