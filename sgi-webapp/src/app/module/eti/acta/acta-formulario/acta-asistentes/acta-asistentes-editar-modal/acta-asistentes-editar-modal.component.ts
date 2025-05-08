@@ -76,10 +76,7 @@ export class ActaAsistentesEditarModalComponent extends DialogFormComponent<IAsi
 
   protected buildFormGroup(): FormGroup {
     const formGroup = new FormGroup({
-      asistente: new FormControl(
-        this.asistente?.evaluador?.persona?.nombre + ' ' + this.asistente?.evaluador?.persona?.apellidos,
-        [Validators.required]
-      ),
+      asistente: new FormControl(this.asistente?.evaluador?.persona, [Validators.required]),
       asistencia: new FormControl(!!this.asistente.asistencia, [Validators.required]),
       motivo: new FormControl(this.asistente.motivo ?? [], !!!this.asistente.asistencia ? I18nValidators.required : undefined),
     });

@@ -12,8 +12,8 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { endWith, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, from, merge, Observable, of } from 'rxjs';
+import { catchError, endWith, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { Rol } from '../../acta-rol';
 import { NGXLogger } from 'ngx-logger';
 
@@ -60,54 +60,64 @@ export class ActaComentariosFragment extends Fragment {
   loadEvaluaciones(idConvocatoria: number): void {
     if (!this.isInitialized() || this.selectedIdConvocatoria !== idConvocatoria || this.evaluaciones$.value.length === 0) {
       this.selectedIdConvocatoria = idConvocatoria;
-      this.subscriptions.push(this.convocatoriaReunionService.findEvaluacionesActivas(this.selectedIdConvocatoria).pipe(
-        map((response) => response.items),
-        switchMap((evaluaciones) => {
-          const evaluacionesComentario: IEvaluacion[] = [];
-          const current = [];
-          return from(evaluaciones).pipe(
-            mergeMap(evaluacion => {
-              if (evaluacion.dictamen?.activo) {
-                evaluacionesComentario.push(evaluacion);
-                this.idsEvaluacion.push(evaluacion.id);
-                this.showAddComentarios = this.checkAddComentario(evaluacion);
-                return this.service.getComentariosActa(evaluacion.id, this.isRolGestor()).pipe(
-                  map((comentarios) => {
-                    if (comentarios.length > 0) {
-                      this.comentarios$.value.forEach(comentario => {
-                        if (!evaluacionesComentario.some(ev => ev.id === comentario.value.evaluacion.id)) {
-                          evaluacionesComentario.push(comentario.value.evaluacion);
-                          this.idsEvaluacion.push(comentario.value.evaluacion.id);
-                        }
-                      });
-                      comentarios.forEach(comentario => {
-                        this.personaService.findById(comentario.evaluador.id).subscribe(persona => {
-                          current.push(new StatusWrapper<IComentario>(comentario));
-                          if (!evaluacionesComentario.some(ev => ev.id === comentario.evaluacion.id)) {
-                            evaluacionesComentario.push(comentario.evaluacion);
-                            this.idsEvaluacion.push(comentario.evaluacion.id);
-                          }
-                          comentario.evaluador = persona;
-                          this.comentarios$.next([...current]);
-                          this.evaluaciones$.next([...evaluacionesComentario]);
-                        },
-                          (error) => {
+      this.subscriptions.push(
+        this.convocatoriaReunionService.findEvaluacionesActivas(this.selectedIdConvocatoria).pipe(
+          map(response => response.items),
+          switchMap((evaluaciones) => {
+            const evaluacionesComentario: IEvaluacion[] = [];
+            const current: StatusWrapper<IComentario>[] = [];
+
+            return from(evaluaciones).pipe(
+              mergeMap(evaluacion => {
+                if (evaluacion.dictamen?.activo) {
+                  evaluacionesComentario.push(evaluacion);
+                  this.idsEvaluacion.push(evaluacion.id);
+                  this.showAddComentarios = this.checkAddComentario(evaluacion);
+
+                  return this.service.getComentariosActa(evaluacion.id, this.isRolGestor()).pipe(
+                    switchMap((comentarios) => {
+                      if (comentarios.length === 0) {
+                        return of([]);
+                      }
+
+                      const comentariosEvaluador$ = comentarios.map(comentario =>
+                        this.personaService.findById(comentario.evaluador.id).pipe(
+                          catchError(error => {
                             this.logger.error(error);
+                            return of(comentario.evaluador);
+                          }),
+                          map(persona => {
+                            if (!evaluacionesComentario.some(ev => ev.id === comentario.evaluacion.id)) {
+                              evaluacionesComentario.push(comentario.evaluacion);
+                              this.idsEvaluacion.push(comentario.evaluacion.id);
+                            }
+
+                            comentario.evaluador = persona;
+                            current.push(new StatusWrapper<IComentario>(comentario));
+
                             return comentario;
-                          });
-                      });
-                    } else {
+                          })
+                        )
+                      );
+
+                      return forkJoin(comentariosEvaluador$);
+                    }),
+                    tap(() => {
+                      this.comentarios$.next([...current]);
                       this.evaluaciones$.next([...evaluacionesComentario]);
-                    }
-                    return comentarios;
-                  }));
-              } else {
-                this.showAddComentarios = false;
-                return of(null);
-              }
-            })
-          );
-        })).subscribe());
+                    })
+                  );
+
+                } else {
+                  this.showAddComentarios = false;
+                  return of([]);
+                }
+              }),
+              toArray()
+            );
+          })
+        ).subscribe()
+      );
     }
   }
 

@@ -148,16 +148,20 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
         map((evaluaciones: IEvaluacion[]) =>
           this.sortByIsEvaluador1orEvaluador2(evaluaciones)
         ),
-        tap((sortedEvaluaciones: IEvaluacion[]) => {
-          this.evaluaciones = sortedEvaluaciones as IEvaluacionWithComentariosEnviados[];
-        }),
         switchMap((evaluacionesSorted: IEvaluacionWithComentariosEnviados[]) =>
-          forkJoin([
-            this.loadSolicitantes(evaluacionesSorted),
-            this.loadEvaluacionWithComentariosEnviados(evaluacionesSorted),
-            this.loadExistsEvaluacionWithComentarioAbiertos(evaluacionesSorted)
-          ])
-        )
+          this.loadSolicitantes(evaluacionesSorted).pipe(
+            switchMap(updatedSolicitantes =>
+              this.loadEvaluacionWithComentariosEnviados(updatedSolicitantes).pipe(
+                switchMap(updatedComentarios =>
+                  this.loadExistsEvaluacionWithComentarioAbiertos(updatedComentarios)
+                )
+              )
+            )
+          )
+        ),
+        tap((evaluacionesCompletas: IEvaluacionWithComentariosEnviados[]) => {
+          this.evaluaciones = evaluacionesCompletas;
+        })
       ).subscribe({
         next: () => { },
         error: (error: any) => this.processError(error)

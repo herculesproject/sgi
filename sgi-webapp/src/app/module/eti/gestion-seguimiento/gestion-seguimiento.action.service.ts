@@ -38,7 +38,7 @@ export class GestionSeguimientoActionService extends SeguimientoFormularioAction
     }
     this.evaluaciones = new SeguimientoEvaluacionFragment(logger,
       fb, this.evaluacion?.id, snackBarService, service, personaService);
-    this.comentarios = new SeguimientoComentarioFragment(this.evaluacion?.id, Rol.GESTOR, service, personaService, authService, this.apartadoService, this.bloqueService);
+    this.comentarios = new SeguimientoComentarioFragment(logger, this.evaluacion?.id, Rol.GESTOR, service, personaService, authService);
     this.documentacion = new SeguimientoDocumentacionFragment(this.evaluacion?.id);
 
     this.addFragment(this.FRAGMENT.COMENTARIOS, this.comentarios);

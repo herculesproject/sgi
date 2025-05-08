@@ -19,7 +19,7 @@ import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, from, of } from 'rxjs';
+import { Observable, forkJoin, from, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 import { TipoComentario } from '../evaluacion-listado-export.service';
@@ -142,25 +142,24 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
   protected loadTable(reset?: boolean) {
     this.evaluaciones$ = this.getObservableLoadTable(reset).pipe(
       switchMap((evaluaciones) => {
-        return from(evaluaciones).pipe(
-          mergeMap(evaluacion => {
-            const personaId = evaluacion.memoria?.peticionEvaluacion?.solicitante?.id;
-            if (personaId) {
-              return this.personaService.findById(personaId).pipe(
-                map(persona => {
-                  evaluacion.memoria.peticionEvaluacion.solicitante = persona;
-                  return evaluacion;
-                }),
-                catchError(err => {
-                  this.logger.error(err);
-                  return of(evaluacion);
-                })
-              );
-            }
+        const evaluacionesObservables = evaluaciones.map(evaluacion => {
+          const personaId = evaluacion.memoria?.peticionEvaluacion?.solicitante?.id;
+          if (personaId) {
+            return this.personaService.findById(personaId).pipe(
+              map(persona => {
+                evaluacion.memoria.peticionEvaluacion.solicitante = persona;
+                return evaluacion;
+              }),
+              catchError(err => {
+                this.logger.error(err);
+                return of(evaluacion);
+              })
+            );
+          } else {
             return of(evaluacion);
-          }),
-          map(() => evaluaciones)
-        );
+          }
+        });
+        return forkJoin(evaluacionesObservables);
       })
     );
   }

@@ -5,7 +5,7 @@ import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reun
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { BehaviorSubject, forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, endWith, map, mergeMap } from 'rxjs/operators';
 
 export class ActaAsistentesFragment extends Fragment {
@@ -36,9 +36,9 @@ export class ActaAsistentesFragment extends Fragment {
     if (!this.isInitialized() || this.selectedIdConvocatoria !== idConvocatoria) {
       this.selectedIdConvocatoria = idConvocatoria;
       this.service.findAsistentes(idConvocatoria).pipe(
-        map((response) => {
-          if (response.items) {
-            response.items.forEach((asistente) => {
+        mergeMap((response) => {
+          if (response.items && response.items.length > 0) {
+            const asistenteObservables = response.items.map((asistente) =>
               this.personaService.findById(asistente.evaluador.persona.id).pipe(
                 map((usuarioInfo) => {
                   asistente.evaluador.persona = usuarioInfo;
@@ -48,16 +48,16 @@ export class ActaAsistentesFragment extends Fragment {
                   this.logger.error(err);
                   return of(asistente);
                 })
-              ).subscribe();
-            });
-            return response.items.map((asistente) => new StatusWrapper<IAsistente>(asistente));
+              )
+            );
+            return forkJoin(asistenteObservables);
+          } else {
+            return of([]);
           }
-          else {
-            return [];
-          }
-        })
-      ).subscribe((asistentes) => {
-        this.asistentes$.next(asistentes);
+        }),
+        map((asistentes) => asistentes.map((asistente) => new StatusWrapper<IAsistente>(asistente)))
+      ).subscribe((asistentesWrapper) => {
+        this.asistentes$.next(asistentesWrapper);
       });
     }
   }

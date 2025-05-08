@@ -8,6 +8,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { ActaAsistentesEditarModalComponent } from './acta-asistentes-editar-modal.component';
 
 describe('ActaAsistentesEditarModalComponent', () => {
@@ -26,7 +27,8 @@ describe('ActaAsistentesEditarModalComponent', () => {
         ReactiveFormsModule,
         FormsModule,
         SgiAuthModule,
-        SharedModule
+        SharedModule,
+        SgpSharedModule
       ],
       providers: [
         { provide: MatDialogRef, useValue: TestUtils.buildDialogCommonMatDialogRef() },
