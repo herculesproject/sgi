@@ -1,7 +1,7 @@
 <sgi-fragment title="{{'menu.csp.solicitudes.entidades-financiadoras' | translate}}">
 
   <!-- Entidades financiadoras convocatoria -->
-  <div class="entidades-financiadoras-convocatoria" *ngIf="showEntidadesFinanciadorasConvocatoria">
+  <div class="entidades-financiadoras-convocatoria" *ngIf="showEntidadesFinanciadorasConvocatoria$ | async">
     <h3>{{'list.entity' | translate:msgParamConvocatoriaEntity}}</h3>
 
     <div class="mat-elevation-z4">

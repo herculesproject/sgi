@@ -236,6 +236,10 @@ export class SolicitudActionService extends ActionService {
     return this.proyectoDatos.coordinadorExterno$;
   }
 
+  get origenSolicitud$() {
+    return this.datosGenerales.origenSolicitud$;
+  }
+
   constructor(
     logger: NGXLogger,
     private route: ActivatedRoute,
@@ -923,4 +927,5 @@ export class SolicitudActionService extends ActionService {
     const solicitud = this.datosGenerales.getValue();
     return solicitud.formularioSolicitud === FormularioSolicitud.RRHH && solicitud.estado.estado === Estado.BORRADOR;
   }
+
 }

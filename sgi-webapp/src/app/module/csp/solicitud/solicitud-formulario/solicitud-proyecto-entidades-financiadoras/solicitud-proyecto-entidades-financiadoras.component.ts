@@ -19,7 +19,7 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { from, of, Subscription } from 'rxjs';
+import { from, Observable, of, Subscription } from 'rxjs';
 import { catchError, concatMap, map, switchMap, take, toArray } from 'rxjs/operators';
 import { EntidadFinanciadoraDataModal, EntidadFinanciadoraModalComponent } from '../../../shared/entidad-financiadora-modal/entidad-financiadora-modal.component';
 import { SOLICITUD_ROUTE_NAMES } from '../../solicitud-route-names';
@@ -82,8 +82,11 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
   @ViewChild('paginatorEntidadesFinanciadorasAjenas', { static: true }) paginatorEntidadesFinanciadorasAjena: MatPaginator;
   @ViewChild('sortEntidadesFinanciadorasAjenas', { static: true }) sortEntidadesFinanciadorasAjena: MatSort;
 
-  get showEntidadesFinanciadorasConvocatoria(): boolean {
-    return this.actionService.solicitud.origenSolicitud === OrigenSolicitud.CONVOCATORIA_SGI;
+  get showEntidadesFinanciadorasConvocatoria$(): Observable<boolean> {
+    return this.actionService.origenSolicitud$.pipe(
+      map(origenSolicitud => {
+        return origenSolicitud === OrigenSolicitud.CONVOCATORIA_SGI;
+      }));
   }
 
   constructor(
@@ -143,9 +146,13 @@ export class SolicitudProyectoEntidadesFinanciadorasComponent extends FragmentCo
       });
     this.subscriptions.push(subscriptionEntidadesFinanciadorasAjenas);
 
-    if (this.showEntidadesFinanciadorasConvocatoria) {
-      this.initializeEntidadesFinanciadorasConvocatoria();
-    }
+    this.subscriptions.push(this.showEntidadesFinanciadorasConvocatoria$.subscribe(
+      (mostrar) => {
+        if (mostrar) {
+          this.initializeEntidadesFinanciadorasConvocatoria();
+        }
+      }
+    ));
   }
 
   protected setupI18N(): void {
