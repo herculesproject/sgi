@@ -24,20 +24,25 @@ export class CspRootComponent implements OnDestroy {
   }
 
   // tslint:disable-next-line: variable-name
-  _urlSistemaGestionExterno: string;
+  private _urlSistemaGestionExterno: string;
   get urlSistemaGestionExterno(): string {
     return this.parseI18nValue(this._urlSistemaGestionExterno);
   }
 
   // tslint:disable-next-line: variable-name
-  _nombreSistemaGestionExterno: string;
+  private _nombreSistemaGestionExterno: string;
   get nombreSistemaGestionExterno(): string {
     return this.parseI18nValue(this._nombreSistemaGestionExterno);
   }
 
-  _isNotificacionPresupuestoSgeEnabled: boolean;
+  private _isNotificacionPresupuestoSgeEnabled: boolean;
   get isNotificacionPresupuestoSgeEnabled(): boolean {
     return this._isNotificacionPresupuestoSgeEnabled;
+  }
+
+  private _isEjecucionEconomicaEnabled: boolean;
+  get isEjecucionEconomicaEnabled(): boolean {
+    return this._isEjecucionEconomicaEnabled;
   }
 
   constructor(
@@ -50,12 +55,14 @@ export class CspRootComponent implements OnDestroy {
         {
           nombre: this.configService.getNombreSistemaGestionExterno(),
           url: this.configService.getUrlSistemaGestionExterno(),
-          notificacionPresupuestoSge: this.configServiceCSP.isNotificacionPresupuestosSgeEnabled()
+          notificacionPresupuestoSge: this.configServiceCSP.isNotificacionPresupuestosSgeEnabled(),
+          integracionesEccSgeEnabled: this.configServiceCSP.getIntegracionesEccSgeEnabled()
         }
-      ).subscribe(({ nombre, url, notificacionPresupuestoSge }) => {
+      ).subscribe(({ nombre, url, notificacionPresupuestoSge, integracionesEccSgeEnabled }) => {
         this._nombreSistemaGestionExterno = nombre;
         this._urlSistemaGestionExterno = url;
         this._isNotificacionPresupuestoSgeEnabled = notificacionPresupuestoSge;
+        this._isEjecucionEconomicaEnabled = integracionesEccSgeEnabled?.length > 0;
       })
     );
   }

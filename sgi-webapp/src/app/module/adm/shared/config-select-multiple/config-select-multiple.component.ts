@@ -135,7 +135,30 @@ export abstract class ConfigSelectMultipleComponent implements OnInit, OnDestroy
 
   hasChanges(): boolean {
     const controlValue: string[] = this.formGroup.controls.configValue.value?.map(value => value.key);
-    const configValue: string[] = this.configValue?.value;
+    let configValue: string[] = null;
+
+    if (this.configValue?.value && this.configValue?.value.length > 0) {
+      if (Array.isArray(this.configValue?.value)) {
+        configValue = this.configValue?.value;
+      } else if (typeof this.configValue?.value === 'string') {
+        try {
+          // Intentamos parsear como JSON
+          const parsed = JSON.parse(this.configValue?.value);
+          if (Array.isArray(parsed)) {
+            configValue = parsed;
+          } else {
+            // Si no es un array JSON válido, lo partimos por comas
+            configValue = this.configValue?.value.split(',').map(v => v.trim());
+          }
+        } catch (e) {
+          // Si no es un JSON válido, lo partimos por comas
+          configValue = this.configValue?.value.split(',').map(v => v.trim());
+        }
+      }
+    } else {
+      configValue = [];
+    }
+
     if (!!controlValue && !!configValue) {
       if (controlValue.length === configValue.length) {
         return !configValue.every((c) => controlValue.includes(c));
@@ -200,5 +223,4 @@ export abstract class ConfigSelectMultipleComponent implements OnInit, OnDestroy
 
   protected abstract getValue(key: string): Observable<IConfigValue>;
   protected abstract updateValue(key: string, newValue: string[]): Observable<IConfigValue>;
-
 }

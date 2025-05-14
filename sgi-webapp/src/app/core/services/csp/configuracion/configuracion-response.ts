@@ -5,7 +5,7 @@ export interface IConfiguracionResponse {
   calendarioFacturacionSgeEnabled: string;
   cardinalidadRelacionSgiSge: string;
   dedicacionMinimaGrupo: number;
-  detalleOperacionesModificacionesEnabled: boolean;
+  integracionesEccSgeEnabled: string;
   ejecucionEconomicaGruposEnabled: boolean;
   facturasGastosColumnasFijasVisibles: string;
   formatoAnualidadAnio: boolean;

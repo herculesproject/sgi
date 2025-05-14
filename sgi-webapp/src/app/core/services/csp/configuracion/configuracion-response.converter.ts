@@ -1,4 +1,4 @@
-import { CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeFiltroAnualidades, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
+import { CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeFiltroAnualidades, SgeIntegracionesEccMenus, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IConfiguracionResponse } from './configuracion-response';
 
@@ -15,7 +15,7 @@ class ConfiguracionResponseConverter
       calendarioFacturacionSgeEnabled: value.calendarioFacturacionSgeEnabled ? ModoEjecucion[value.calendarioFacturacionSgeEnabled] : null,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge ? CardinalidadRelacionSgiSge[value.cardinalidadRelacionSgiSge] : null,
       dedicacionMinimaGrupo: value.dedicacionMinimaGrupo,
-      detalleOperacionesModificacionesEnabled: value.detalleOperacionesModificacionesEnabled,
+      integracionesEccSgeEnabled: value.integracionesEccSgeEnabled?.split(',').map(ecc => SgeIntegracionesEccMenus[ecc]),
       ejecucionEconomicaGruposEnabled: value.ejecucionEconomicaGruposEnabled,
       facturasGastosColumnasFijasVisibles: value.facturasGastosColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
       formatoAnualidadAnio: value.formatoAnualidadAnio,
@@ -54,7 +54,7 @@ class ConfiguracionResponseConverter
       calendarioFacturacionSgeEnabled: value.calendarioFacturacionSgeEnabled,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge,
       dedicacionMinimaGrupo: value.dedicacionMinimaGrupo,
-      detalleOperacionesModificacionesEnabled: value.detalleOperacionesModificacionesEnabled,
+      integracionesEccSgeEnabled: JSON.stringify(value.integracionesEccSgeEnabled?.join(',')),
       ejecucionEconomicaGruposEnabled: value.ejecucionEconomicaGruposEnabled,
       facturasGastosColumnasFijasVisibles: value.facturasGastosColumnasFijasVisibles?.join(','),
       formatoAnualidadAnio: value.formatoAnualidadAnio,

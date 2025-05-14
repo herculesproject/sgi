@@ -56,6 +56,37 @@ export const SGE_FILTRO_ANUALIDADES_MAP: Map<SgeFiltroAnualidades, string> = new
   [SgeFiltroAnualidades.ANUALIDADES_OBLIGATORIAS, marker(`csp.sge-filtro-anualidades.ANUALIDADES_OBLIGATORIAS`)]
 ]);
 
+export enum SgeIntegracionesEccMenus {
+  ECC_EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL = 'ECC_EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL',
+  ECC_EJECUCION_PRESUPUESTARIA_GASTOS = 'ECC_EJECUCION_PRESUPUESTARIA_GASTOS',
+  ECC_EJECUCION_PRESUPUESTARIA_INGRESOS = 'ECC_EJECUCION_PRESUPUESTARIA_INGRESOS',
+  ECC_DETALLE_OPERACIONES_GASTOS = 'ECC_DETALLE_OPERACIONES_GASTOS',
+  ECC_DETALLE_OPERACIONES_INGRESOS = 'ECC_DETALLE_OPERACIONES_INGRESOS',
+  ECC_DETALLE_OPERACIONES_MODIFICACIONES = 'ECC_DETALLE_OPERACIONES_MODIFICACIONES',
+  ECC_FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS = 'ECC_FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS',
+  ECC_FACTURAS_JUSTIFICANTES_VIAJES_DIETAS = 'ECC_FACTURAS_JUSTIFICANTES_VIAJES_DIETAS',
+  ECC_FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO = 'ECC_FACTURAS_JUSTIFICANTES_VIAJES_DIETAS',
+  ECC_FACTURAS_EMITIDAS = 'ECC_FACTURAS_EMITIDAS',
+  ECC_SEGUIMIENTO_JUSTIFICACION_RESUMEN = 'ECC_SEGUIMIENTO_JUSTIFICACION_RESUMEN',
+  ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS = 'ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS'
+}
+
+export const SGE_INTEGRACIONES_ECC_MENUS_MAP: Map<SgeIntegracionesEccMenus, string> = new Map([
+  [SgeIntegracionesEccMenus.ECC_EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL, marker(`csp.sge-integraciones-ecc-menus.ECC_EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL`)],
+  [SgeIntegracionesEccMenus.ECC_EJECUCION_PRESUPUESTARIA_GASTOS, marker(`csp.sge-integraciones-ecc-menus.ECC_EJECUCION_PRESUPUESTARIA_GASTOS`)],
+  [SgeIntegracionesEccMenus.ECC_EJECUCION_PRESUPUESTARIA_INGRESOS, marker(`csp.sge-integraciones-ecc-menus.ECC_EJECUCION_PRESUPUESTARIA_INGRESOS`)],
+  [SgeIntegracionesEccMenus.ECC_DETALLE_OPERACIONES_GASTOS, marker(`csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_GASTOS`)],
+  [SgeIntegracionesEccMenus.ECC_DETALLE_OPERACIONES_INGRESOS, marker(`csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_INGRESOS`)],
+  [SgeIntegracionesEccMenus.ECC_DETALLE_OPERACIONES_MODIFICACIONES, marker(`csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_MODIFICACIONES`)],
+  [SgeIntegracionesEccMenus.ECC_FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS, marker(`csp.sge-integraciones-ecc-menus.ECC_FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS`)],
+  [SgeIntegracionesEccMenus.ECC_FACTURAS_JUSTIFICANTES_VIAJES_DIETAS, marker(`csp.sge-integraciones-ecc-menus.ECC_FACTURAS_JUSTIFICANTES_VIAJES_DIETAS`)],
+  [SgeIntegracionesEccMenus.ECC_FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO, marker(`csp.sge-integraciones-ecc-menus.ECC_FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO`)],
+  [SgeIntegracionesEccMenus.ECC_FACTURAS_EMITIDAS, marker(`csp.sge-integraciones-ecc-menus.ECC_FACTURAS_EMITIDAS`)],
+  [SgeIntegracionesEccMenus.ECC_SEGUIMIENTO_JUSTIFICACION_RESUMEN, marker(`csp.sge-integraciones-ecc-menus.ECC_SEGUIMIENTO_JUSTIFICACION_RESUMEN`)],
+  [SgeIntegracionesEccMenus.ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS, marker(`csp.sge-integraciones-ecc-menus.ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS`)]
+]);
+
+
 export interface IConfiguracion {
   id: number;
   /** Habilitar que se muestre el buscador de proyectos económicos al pulsar el botón de "Añadir identificador SGE" en la pantalla de  "Configuración económica - Identificación" */
@@ -90,8 +121,8 @@ export interface IConfiguracion {
   modificacionProyectoSgeEnabled: boolean;
   /** Habilitar la visualización del campo Sector IVA proveniente de la integración con el SGE */
   sectorIvaSgeEnabled: boolean;
-  /** Habilitar la visualización de la la opción de menú "Modificaciones" dentro de "Ejecución económica - Detalle de operaciones" */
-  detalleOperacionesModificacionesEnabled: boolean;
+  /** Habilitar la visualización de las opciones del menú de ejecución económica */
+  integracionesEccSgeEnabled: SgeIntegracionesEccMenus[];
   /** Determina si el alta del proyecto económico en el SGE se realiza de forma sincrona o de forma asíncrona */
   proyectoSgeAltaModoEjecucion: ModoEjecucion;
   /** Determina si la modificacion del proyecto económico en el SGE se realiza de forma sincrona o de forma asíncrona */
