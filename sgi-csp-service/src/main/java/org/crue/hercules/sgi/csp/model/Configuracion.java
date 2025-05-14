@@ -70,6 +70,21 @@ public class Configuracion extends BaseEntity {
     ANUALIDADES_OBLIGATORIAS;
   }
 
+  public enum SgeIntegracionesEccMenus {
+    ECC_EJECUCION_PRESUPUESTARIA_ESTADO_ACTUAL,
+    ECC_EJECUCION_PRESUPUESTARIA_GASTOS,
+    ECC_EJECUCION_PRESUPUESTARIA_INGRESOS,
+    ECC_DETALLE_OPERACIONES_GASTOS,
+    ECC_DETALLE_OPERACIONES_INGRESOS,
+    ECC_DETALLE_OPERACIONES_MODIFICACIONES,
+    ECC_FACTURAS_JUSTIFICANTES_FACTURAS_GASTOS,
+    ECC_FACTURAS_JUSTIFICANTES_VIAJES_DIETAS,
+    ECC_FACTURAS_JUSTIFICANTES_PERSONAL_CONTRATADO,
+    ECC_FACTURAS_EMITIDAS,
+    ECC_SEGUIMIENTO_JUSTIFICACION_RESUMEN,
+    ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS
+  }
+
   public enum Param {
     /**
      * Formato codigo partida presupuestaria
@@ -143,10 +158,9 @@ public class Configuracion extends BaseEntity {
      */
     SECTOR_IVA_SGE_ENABLED("sectorIvaSgeEnabled"),
     /**
-     * Habilitar la visualización de la la opción de menú "Modificaciones" dentro de
-     * "Ejecución económica - Detalle de operaciones"
+     * Habilitar la visualización de las opciones del menú de ejecución económica
      */
-    DETALLE_OPERACIONES_MODIFICACIONES_ENABLED("detalleOperacionesModificacionesEnabled"),
+    INTEGRACIONES_ECC_SGE_ENABLED("integracionesEccSgeEnabled"),
     /**
      * Determina si el alta del proyecto económico en el SGE se realiza de forma
      * sincrona o de forma asíncrona
@@ -322,11 +336,10 @@ public class Configuracion extends BaseEntity {
   private Boolean sectorIvaSgeEnabled;
 
   /**
-   * Habilitar la visualización de la la opción de menú "Modificaciones" dentro de
-   * "Ejecución económica - Detalle de operaciones"
+   * Habilitar la visualización de las opciones del menú de ejecución económica
    */
-  @Column(name = "sge_modificaciones", columnDefinition = "boolean default true", nullable = false, unique = true)
-  private Boolean detalleOperacionesModificacionesEnabled;
+  @Column(name = "sge_integraciones_ecc_habilitadas", nullable = true, unique = true)
+  private String integracionesEccSgeEnabled;
 
   /**
    * Determina si el alta del proyecto económico en el SGE se realiza de forma
@@ -450,8 +463,8 @@ public class Configuracion extends BaseEntity {
         return this.getModificacionProyectoSgeEnabled();
       case SECTOR_IVA_SGE_ENABLED:
         return this.getSectorIvaSgeEnabled();
-      case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
-        return this.getDetalleOperacionesModificacionesEnabled();
+      case INTEGRACIONES_ECC_SGE_ENABLED:
+        return this.getIntegracionesEccSgeEnabled();
       case PROYECTO_SGE_ALTA_MODO_EJECUCION:
         return this.getProyectoSgeAltaModoEjecucion();
       case PROYECTO_SGE_MODIFICACION_MODO_EJECUCION:
@@ -533,8 +546,10 @@ public class Configuracion extends BaseEntity {
       case SECTOR_IVA_SGE_ENABLED:
         this.setSectorIvaSgeEnabled(Boolean.valueOf(newValue));
         break;
-      case DETALLE_OPERACIONES_MODIFICACIONES_ENABLED:
-        this.setDetalleOperacionesModificacionesEnabled(Boolean.valueOf(newValue));
+      case INTEGRACIONES_ECC_SGE_ENABLED:
+        if (isValidEnumString(newValue, SgeIntegracionesEccMenus.class, true)) {
+          this.setIntegracionesEccSgeEnabled(newValue);
+        }
         break;
       case PROYECTO_SGE_ALTA_MODO_EJECUCION:
         this.setProyectoSgeAltaModoEjecucion(ModoEjecucion.valueOf(newValue));

@@ -3423,4 +3423,12 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.10.0-124">
+    <dropColumn tableName="configuracion" columnName="sge_modificaciones" />
+
+    <addColumn tableName="configuracion">
+      <column name="sge_integraciones_ecc_habilitadas" type="varchar(1000)" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
