@@ -188,7 +188,8 @@ public class ProyectoSeguimientoCientificoComService {
               .fechaInicio(periodo.getFechaInicioPresentacion())
               .fechaFin(periodo.getFechaFinPresentacion())
               .numPeriodo(periodo.getNumPeriodo())
-              .titulo(I18nHelper.getFieldValue(proyecto.getTitulo()))
+              .titulo(proyecto.getTitulo())
+              .enlaceAplicacion(sgiConfigProperties.getWebUrl())
               .build();
           EmailOutput comunicado = null;
           try {

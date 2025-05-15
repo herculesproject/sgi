@@ -79,7 +79,7 @@ public class ProyectoSocioPeriodoPagoComService {
     CspComVencimientoPeriodoPagoSocioData data = CspComVencimientoPeriodoPagoSocioData.builder()
         .fechaPrevistaPago(periodo.getFechaPrevistaPago())
         .nombreEntidadColaboradora(empresa.getNombre())
-        .titulo(I18nHelper.getFieldValue(proyecto.getTitulo()))
+        .titulo(proyecto.getTitulo())
         .build();
     List<Recipient> recipients = getRecipientsUG(proyecto.getUnidadGestionRef());
     EmailOutput comunicado = null;

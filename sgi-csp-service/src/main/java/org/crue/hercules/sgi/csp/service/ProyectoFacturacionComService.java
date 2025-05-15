@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +31,11 @@ import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
-import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +62,8 @@ public class ProyectoFacturacionComService {
   private final SgiApiComService emailService;
   private final SgiApiSgpService sgiApiSgpService;
   private final SgiApiSgempService sgiApiSgempService;
+  private final MessageSource messageSource;
+  private final I18nConfig i18nConfig;
 
   public void enviarComunicado(ProyectoFacturacion proyectoFacturacion) throws JsonProcessingException {
 
@@ -221,14 +228,20 @@ public class ProyectoFacturacionComService {
       ProyectoFacturacion proyectoFacturacion,
       Proyecto proyecto, PersonaOutput persona) {
 
+    List<I18nFieldValue> i18nSinEspecificar = new ArrayList<>();
+    for (Language language : i18nConfig.getEnabledLanguages()) {
+      i18nSinEspecificar.add(new I18nFieldValueDto(language,
+          messageSource.getMessage(MSG_SIN_ESPEFICAR, null, Locale.forLanguageTag(language.getCode()))));
+    }
+
     return CspComCalendarioFacturacionNotificarData
         .builder()
         .codigosSge(this.getCodigosSge(proyectoFacturacion.getProyectoId()))
-        .tituloProyecto(I18nHelper.getFieldValue(proyecto.getTitulo()))
+        .tituloProyecto(proyecto.getTitulo())
         .numPrevision(proyectoFacturacion.getNumeroPrevision())
         .tipoFacturacion(proyectoFacturacion.getTipoFacturacion() == null
-            ? ApplicationContextSupport.getMessage(MSG_SIN_ESPEFICAR)
-            : I18nHelper.getValueForCurrentLanguage(proyectoFacturacion.getTipoFacturacion().getNombre()))
+            ? i18nSinEspecificar
+            : proyectoFacturacion.getTipoFacturacion().getNombre())
         .entidadesFinanciadoras(getNombresEntidadesFinanciadorasByProyectoId(
             proyectoFacturacion.getProyectoId()))
         .apellidosDestinatario(persona.getApellidos())
@@ -279,12 +292,12 @@ public class ProyectoFacturacionComService {
     List<String> codigosSge = getCodigosSge(proyecto.getId());
 
     return CspComCalendarioFacturacionValidarIPData.builder()
-        .tituloProyecto(I18nHelper.getFieldValue(proyecto.getTitulo()))
+        .tituloProyecto(proyecto.getTitulo())
         .numPrevision(proyectoFacturacion.getNumeroPrevision())
         .codigosSge(codigosSge)
         .motivoRechazo(proyectoFacturacion.getEstadoValidacionIP().getEstado() == TipoEstadoValidacion.RECHAZADA
-            ? I18nHelper.getFieldValue(proyectoFacturacion.getEstadoValidacionIP().getComentario())
-            : "")
+            ? proyectoFacturacion.getEstadoValidacionIP().getComentario()
+            : null)
         .nombreApellidosValidador(persona.getNombre() + " " + persona.getApellidos())
         .build();
   }

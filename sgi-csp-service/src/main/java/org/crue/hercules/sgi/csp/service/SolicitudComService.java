@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaTitulo;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -49,7 +50,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoSolicitada(
           CspComSolicitudCambioEstadoSolicitadaData.builder()
-              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
+              .tituloConvocatoria(tituloConvocatoria)
               .nombreApellidosSolicitante(
                   this.solicitanteDataService.getSolicitanteNombreApellidos(solicitudId, solicitanteRef))
               .fechaCambioEstadoSolicitud(fechaCambioEstadoSolicitud)
@@ -72,7 +73,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoAlegaciones(
           CspComSolicitudCambioEstadoAlegacionesData.builder()
-              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
+              .tituloConvocatoria(tituloConvocatoria)
               .nombreApellidosSolicitante(
                   this.solicitanteDataService.getSolicitanteNombreApellidos(solicitudId, solicitanteRef))
               .codigoInternoSolicitud(codigoInterno)
@@ -97,7 +98,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclProv(
           CspComSolicitudCambioEstadoProvisionalData.builder()
-              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
+              .tituloConvocatoria(tituloConvocatoria)
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
               .enlaces(enlaces).build(),
@@ -120,7 +121,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoExclDef(
           CspComSolicitudCambioEstadoDefinitivoData.builder()
-              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
+              .tituloConvocatoria(tituloConvocatoria)
               .fechaConcesionConvocatoria(
                   fechaConcesionConvocatoria)
               .enlaces(enlaces).build(),
@@ -143,7 +144,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoConcProv(
           CspComSolicitudCambioEstadoProvisionalData.builder()
-              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
+              .tituloConvocatoria(tituloConvocatoria)
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
               .enlaces(enlaces).build(),
@@ -166,7 +167,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoDenProv(
           CspComSolicitudCambioEstadoProvisionalData.builder()
-              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
+              .tituloConvocatoria(tituloConvocatoria)
               .fechaProvisionalConvocatoria(
                   fechaProvisionalConvocatoria)
               .enlaces(enlaces).build(),
@@ -189,7 +190,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoConc(
           CspComSolicitudCambioEstadoDefinitivoData.builder()
-              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
+              .tituloConvocatoria(tituloConvocatoria)
               .fechaConcesionConvocatoria(
                   fechaConcesionConvocatoria)
               .enlaces(enlaces).build(),
@@ -213,7 +214,7 @@ public class SolicitudComService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoSolicitudCambioEstadoDen(
           CspComSolicitudCambioEstadoDefinitivoData.builder()
-              .tituloConvocatoria(I18nHelper.getFieldValue(tituloConvocatoria))
+              .tituloConvocatoria(tituloConvocatoria)
               .fechaConcesionConvocatoria(
                   fechaConcesionConvocatoria)
               .enlaces(enlaces).build(),
@@ -245,7 +246,8 @@ public class SolicitudComService {
     log.debug("enviarComunicadoSolicitudAltaPeticionEvaluacionEti() - end");
   }
 
-  public void enviarComunicadoSolicitudUsuarioExterno(Long solicitudId, String tituloConvocatoria, String uuid)
+  public void enviarComunicadoSolicitudUsuarioExterno(Long solicitudId,
+      Collection<? extends I18nFieldValue> tituloConvocatoria, String uuid)
       throws JsonProcessingException {
     log.debug(
         "enviarComunicadoSolicitudUsuarioExterno(Long solicitudId, String tituloConvocatoria, String uuid) - start");
@@ -272,11 +274,11 @@ public class SolicitudComService {
     for (ConvocatoriaEnlace enlace : convocatoriaEnlaces) {
       Enlace nuevoEnlace = Enlace
           .builder()
-          .descripcion(I18nHelper.getValueForCurrentLanguage(enlace.getDescripcion()))
+          .descripcion(enlace.getDescripcion())
           .url(enlace.getUrl())
           .build();
       if (enlace.getTipoEnlace() != null) {
-        nuevoEnlace.setTipoEnlace(I18nHelper.getValueForCurrentLanguage(enlace.getTipoEnlace().getNombre()));
+        nuevoEnlace.setTipoEnlace(enlace.getTipoEnlace().getNombre());
       }
       enlaces.add(nuevoEnlace);
     }

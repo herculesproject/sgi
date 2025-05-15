@@ -23,7 +23,6 @@ import org.crue.hercules.sgi.csp.repository.ProyectoSocioRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgempService;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -121,7 +120,8 @@ public class ProyectoSocioPeriodoJustificacionComService {
         .fechaFin(periodo.getFechaFinPresentacion())
         .nombreEntidad(empresa == null ? "" : empresa.getNombre())
         .numPeriodo(periodo.getNumPeriodo())
-        .titulo(I18nHelper.getFieldValue(proyecto.getTitulo()))
+        .titulo(proyecto.getTitulo())
+        .enlaceAplicacion(sgiConfigProperties.getWebUrl())
         .build();
   }
 

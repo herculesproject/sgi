@@ -14,7 +14,6 @@ import org.crue.hercules.sgi.csp.model.CertificadoAutorizacion;
 import org.crue.hercules.sgi.csp.repository.AutorizacionRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,7 @@ public class CertificadoAutorizacionComService {
           .orElseThrow(() -> new AutorizacionNotFoundException(certificadoAutorizacion.getAutorizacionId()));
 
       CspComAddModCertAutorizacionPartProyectoExtData data = CspComAddModCertAutorizacionPartProyectoExtData.builder()
-          .tituloProyectoExt(I18nHelper.getFieldValue(autorizacion.getTituloProyecto()))
+          .tituloProyectoExt(autorizacion.getTituloProyecto())
           .enlaceAplicacion(sgiConfigProperties.getWebUrl())
           .build();
 

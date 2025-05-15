@@ -19,7 +19,6 @@ import org.crue.hercules.sgi.csp.repository.ProyectoPeriodoJustificacionReposito
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -94,7 +93,7 @@ public class ComunicadosService {
         for (ProyectoPeriodoJustificacion periodo : periodosProyecto) {
           CspComInicioPresentacionGastoData.Proyecto proyectoEmail = CspComInicioPresentacionGastoData.Proyecto
               .builder()
-              .titulo(I18nHelper.getFieldValue(proyecto.getTitulo()))
+              .titulo(proyecto.getTitulo())
               .fechaInicio(periodo.getFechaInicioPresentacion())
               .fechaFin(periodo.getFechaFinPresentacion())
               .build();
@@ -127,7 +126,7 @@ public class ComunicadosService {
     EmailOutput emailOutput = emailService
         .createComunicadoInicioPresentacionJustificacionGastosEmail(
             CspComInicioPresentacionGastoData.builder().fecha(yearMonth.atDay(1)).proyectos(
-                proyectosEmail).build(),
+                proyectosEmail).enlaceAplicacion(sgiConfigProperties.getWebUrl()).build(),
             recipients);
     emailService.sendEmail(emailOutput.getId());
   }

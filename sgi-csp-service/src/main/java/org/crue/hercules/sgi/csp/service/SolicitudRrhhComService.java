@@ -23,7 +23,6 @@ import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.SolicitudRrhhRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -59,7 +58,7 @@ public class SolicitudRrhhComService {
     if (solicitud.getConvocatoriaId() != null) {
       Optional<Convocatoria> convocatoria = this.convocatoriaRepository.findById(solicitud.getConvocatoriaId());
       if (convocatoria.isPresent()) {
-        dataBuilder.tituloConvocatoria(I18nHelper.getFieldValue(convocatoria.get().getTitulo()));
+        dataBuilder.tituloConvocatoria(convocatoria.get().getTitulo());
         dataBuilder.fechaProvisionalConvocatoria(convocatoria.get().getFechaProvisional());
       }
     }
@@ -83,7 +82,7 @@ public class SolicitudRrhhComService {
         .nombreApellidosSolicitante(
             this.solicitanteDataService.getSolicitanteNombreApellidos(solicitud.getId(), solicitud.getSolicitanteRef()))
         .codigoInternoSolicitud(solicitud.getCodigoRegistroInterno())
-        .tituloConvocatoria(I18nHelper.getFieldValue(this.getTituloConvocatoria(solicitud.getConvocatoriaId())))
+        .tituloConvocatoria(this.getTituloConvocatoria(solicitud.getConvocatoriaId()))
         .build();
 
     log.debug(
@@ -105,7 +104,7 @@ public class SolicitudRrhhComService {
         .nombreApellidosSolicitante(
             this.solicitanteDataService.getSolicitanteNombreApellidos(solicitud.getId(), solicitud.getSolicitanteRef()))
         .codigoInternoSolicitud(solicitud.getCodigoRegistroInterno())
-        .tituloConvocatoria(I18nHelper.getFieldValue(this.getTituloConvocatoria(solicitud.getConvocatoriaId())))
+        .tituloConvocatoria(this.getTituloConvocatoria(solicitud.getConvocatoriaId()))
         .build();
 
     log.debug(

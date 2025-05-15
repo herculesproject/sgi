@@ -11,7 +11,6 @@ import org.crue.hercules.sgi.csp.model.NotificacionProyectoExternoCVN;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,7 +33,7 @@ public class NotificacionProyectoExternoCVNComService {
     CspComRecepcionNotificacionesCVNProyectoExtData data = CspComRecepcionNotificacionesCVNProyectoExtData.builder()
         .nombreApellidosCreador(getNombreApellidosSolicitante(notificacion.getSolicitanteRef()))
         .fechaCreacion(notificacion.getCreationDate() == null ? Instant.now() : notificacion.getCreationDate())
-        .tituloProyecto(I18nHelper.getFieldValue(notificacion.getTitulo()))
+        .tituloProyecto(notificacion.getTitulo())
         .build();
 
     try {
