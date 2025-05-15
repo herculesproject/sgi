@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -18,7 +18,7 @@ import { LanguageService } from '@core/services/language.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { merge, Observable, of } from 'rxjs';
 import { delay, map, switchMap, tap } from 'rxjs/operators';
@@ -46,7 +46,7 @@ interface IProyectoData extends IProyecto {
   styleUrls: ['./solicitud-crear-proyecto-modal.component.scss']
 })
 
-export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<IProyecto> implements OnInit {
+export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<IProyecto> implements OnInit, AfterViewInit, OnDestroy {
 
   textSaveOrUpdate: string;
 
@@ -54,8 +54,8 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
   elementosPagina = [5, 10, 25, 100];
   totalElements = 0;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) private sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) private paginator: MatPaginator;
 
   get ESTADO_MAP() {
     return ESTADO_MAP;
@@ -91,6 +91,20 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
         this.formGroup.updateValueAndValidity();
       })
     );
+  }
+
+  ngAfterViewInit(): void {
+    super.ngAfterViewInit();
+    merge(
+      this.paginator?.page,
+      this.sort?.sortChange
+    ).pipe(
+      tap(() => this.proyectos$ = this.getProyectos())
+    ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   private setupI18N(): void {
@@ -212,11 +226,23 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
 
   protected getProyectos(): Observable<IProyectoData[]> {
     const filters = new RSQLSgiRestFilter('solicitudId', SgiRestFilterOperator.EQUALS, this.data.solicitud.id.toString());
-    const filter: SgiRestFindOptions = {
-      filter: filters
+    const options: SgiRestFindOptions = {
+      filter: filters,
+      ...(this.paginator?.pageIndex && this.paginator?.pageSize && {
+        page: {
+          index: this.paginator.pageIndex,
+          size: this.paginator.pageSize,
+        },
+      }),
+      ...(this.sort?.active && this.sort?.direction && {
+        sort: new RSQLSgiRestSort(
+          this.resolveSortProperty(this.sort.active),
+          SgiRestSortDirection.fromSortDirection(this.sort.direction)
+        ),
+      }),
     };
 
-    return this.proyectoService.findTodos(filter).pipe(
+    return this.proyectoService.findTodos(options).pipe(
       map((response) => {
         this.totalElements = response.items.length;
         return response.items as IProyectoData[];
@@ -260,4 +286,11 @@ export class SolicitudCrearProyectoModalComponent extends DialogActionComponent<
     return this.proyectoService.crearProyectoBySolicitud(this.data.solicitud.id, this.getValue());
   }
 
+
+  private resolveSortProperty(column: string): string {
+    if (column === 'titulo') {
+      return 'titulo.value';
+    }
+    return column;
+  }
 }
