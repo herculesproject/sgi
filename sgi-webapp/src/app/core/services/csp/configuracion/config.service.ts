@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConfigValue } from '@core/models/cnf/config-value';
-import { CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeIntegracionesEccMenus } from '@core/models/csp/configuracion';
+import { CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeEjecucionEconomicaFiltros, SgeIntegracionesEccMenus } from '@core/models/csp/configuracion';
 import { environment } from '@env';
 import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
@@ -168,6 +168,12 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
 
   getIntegracionesEccSgeEnabled(): Observable<SgeIntegracionesEccMenus[]> {
     return this.findById(ConfigCsp.CSP_INTEGRACIONES_ECC_SGE_ENABLED).pipe(
+      map(configValue => configValue?.value)
+    );
+  }
+
+  getSgeEjecucionEconomicaFiltros(): Observable<SgeEjecucionEconomicaFiltros[]> {
+    return this.findById(ConfigCsp.CSP_SGE_EJECUCION_ECONOMICA_FILTROS).pipe(
       map(configValue => configValue?.value)
     );
   }

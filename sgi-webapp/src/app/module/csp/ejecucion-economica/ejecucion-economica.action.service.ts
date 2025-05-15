@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IConfiguracion } from '@core/models/csp/configuracion';
+import { IConfiguracion, SgeEjecucionEconomicaFiltros } from '@core/models/csp/configuracion';
 import { IRelacionEjecucionEconomica, TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IPersona } from '@core/models/sgp/persona';
@@ -359,5 +359,9 @@ export class EjecucionEconomicaActionService extends ActionService {
     this.addFragment(this.FRAGMENT.FACTURAS_EMITIDAS, this.facturasEmitidas);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_RESUMEN, this.seguimientoJustificacionResumen);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS, this.seguimientoJustificacionRequerimientos);
+  }
+
+  isSgeEjecucionEconomicaFiltroEnabled(opcion: SgeEjecucionEconomicaFiltros): boolean {
+    return this.data?.configuracion?.sgeEjecucionEconomicaFiltros?.includes(opcion) ?? false;
   }
 }

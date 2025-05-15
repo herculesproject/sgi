@@ -30,4 +30,5 @@ export interface IConfiguracionResponse {
   solicitudesSinConvocatoriaInvestigadorEnabled: boolean;
   validacionClasificacionGastos: string;
   viajesDietasColumnasFijasVisibles: string;
+  sgeEjecucionEconomicaFiltros: string;
 }

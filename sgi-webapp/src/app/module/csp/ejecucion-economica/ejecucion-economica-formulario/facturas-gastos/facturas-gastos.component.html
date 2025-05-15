@@ -36,7 +36,10 @@
         </ng-container>
       </div>
 
-      <sgi-ejecucion-economica-filter-fechas [formGroupFechas]="formPart.formGroupFechas">
+      <sgi-ejecucion-economica-filter-fechas [formGroupFechas]="formPart.formGroupFechas"
+        [isFechaDevengoVisible]="isSgeEjecucionEconomicaFiltroEnabled(SGE_EJECUCION_ECONOMICA_FILTROS.ECC_FILTRO_FACTURAS_GASTOS_FECHA_DEVENGO)"
+        [isFechaContabilizacionVisible]="isSgeEjecucionEconomicaFiltroEnabled(SGE_EJECUCION_ECONOMICA_FILTROS.ECC_FILTRO_FACTURAS_GASTOS_FECHA_CONTABILIZACION)"
+        [isFechaPagoVisible]="isSgeEjecucionEconomicaFiltroEnabled(SGE_EJECUCION_ECONOMICA_FILTROS.ECC_FILTRO_FACTURAS_GASTOS_FECHA_PAGO)">
       </sgi-ejecucion-economica-filter-fechas>
 
       <div class="separation-button">

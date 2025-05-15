@@ -1,4 +1,4 @@
-import { CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeFiltroAnualidades, SgeIntegracionesEccMenus, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
+import { CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeEjecucionEconomicaFiltros, SgeFiltroAnualidades, SgeIntegracionesEccMenus, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IConfiguracionResponse } from './configuracion-response';
 
@@ -39,7 +39,8 @@ class ConfiguracionResponseConverter
       sgeFiltroAnualidades: value.sgeFiltroAnualidades ? SgeFiltroAnualidades[value.sgeFiltroAnualidades] : null,
       solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos ? ValidacionClasificacionGastos[value.validacionClasificacionGastos] : null,
-      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s])
+      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
+      sgeEjecucionEconomicaFiltros: value.sgeEjecucionEconomicaFiltros?.split(',').map(ecc => SgeEjecucionEconomicaFiltros[ecc]),
     };
   }
 
@@ -78,7 +79,8 @@ class ConfiguracionResponseConverter
       sgeFiltroAnualidades: value.sgeFiltroAnualidades,
       solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos,
-      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.join(',')
+      viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.join(','),
+      sgeEjecucionEconomicaFiltros: JSON.stringify(value.integracionesEccSgeEnabled?.join(','))
     };
   }
 }

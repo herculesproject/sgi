@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { MSG_PARAMS } from '@core/i18n';
-import { ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
+import { SgeEjecucionEconomicaFiltros, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-proyecto-service';
@@ -33,6 +33,8 @@ const ANUALIDAD_KEY = marker('csp.proyecto-presupuesto.anualidad');
   styleUrls: ['./personal-contratado.component.scss']
 })
 export class PersonalContratadoComponent extends FragmentComponent implements OnInit, OnDestroy {
+  SGE_EJECUCION_ECONOMICA_FILTROS = SgeEjecucionEconomicaFiltros;
+
   private subscriptions: Subscription[] = [];
   formPart: PersonalContratadoFragment;
 
@@ -59,7 +61,7 @@ export class PersonalContratadoComponent extends FragmentComponent implements On
   }
 
   constructor(
-    actionService: EjecucionEconomicaActionService,
+    private actionService: EjecucionEconomicaActionService,
     private ejecucionEconomicaService: EjecucionEconomicaService,
     private gastoProyectoService: GastoProyectoService,
     private matDialog: MatDialog,
@@ -200,4 +202,7 @@ export class PersonalContratadoComponent extends FragmentComponent implements On
     ).subscribe((value) => this.msgParamAnualidadesEntity = { entity: value, ...MSG_PARAMS.GENDER.FEMALE });
   }
 
+  isSgeEjecucionEconomicaFiltroEnabled(opcion: SgeEjecucionEconomicaFiltros): boolean {
+    return this.actionService.isSgeEjecucionEconomicaFiltroEnabled(opcion);
+  }
 }

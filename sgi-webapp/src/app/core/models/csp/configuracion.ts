@@ -86,6 +86,32 @@ export const SGE_INTEGRACIONES_ECC_MENUS_MAP: Map<SgeIntegracionesEccMenus, stri
   [SgeIntegracionesEccMenus.ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS, marker(`csp.sge-integraciones-ecc-menus.ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS`)]
 ]);
 
+export enum SgeEjecucionEconomicaFiltros {
+  ECC_FILTRO_FACTURAS_GASTOS_FECHA_DEVENGO = 'ECC_FILTRO_FACTURAS_GASTOS_FECHA_DEVENGO',
+  ECC_FILTRO_FACTURAS_GASTOS_FECHA_CONTABILIZACION = 'ECC_FILTRO_FACTURAS_GASTOS_FECHA_CONTABILIZACION',
+  ECC_FILTRO_FACTURAS_GASTOS_FECHA_PAGO = 'ECC_FILTRO_FACTURAS_GASTOS_FECHA_PAGO',
+  ECC_FILTRO_VIAJES_DIETAS_FECHA_DEVENGO = 'ECC_FILTRO_VIAJES_DIETAS_FECHA_DEVENGO',
+  ECC_FILTRO_VIAJES_DIETAS_FECHA_CONTABILIZACION = 'ECC_FILTRO_VIAJES_DIETAS_FECHA_CONTABILIZACION',
+  ECC_FILTRO_VIAJES_DIETAS_FECHA_PAGO = 'ECC_FILTRO_VIAJES_DIETAS_FECHA_PAGO',
+  ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_DEVENGO = 'ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_DEVENGO',
+  ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_CONTABILIZACION = 'ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_CONTABILIZACION',
+  ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_PAGO = 'ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_PAGO',
+  ECC_FILTRO_FACTURAS_EMITIDAS_FECHA_FACTURA = 'ECC_FILTRO_FACTURAS_EMITIDAS_FECHA_FACTURA'
+}
+
+export const SGE_EJECUCION_ECONOMICA_FILTROS_MAP: Map<SgeEjecucionEconomicaFiltros, string> = new Map([
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_FACTURAS_GASTOS_FECHA_DEVENGO, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_FACTURAS_GASTOS_FECHA_DEVENGO`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_FACTURAS_GASTOS_FECHA_CONTABILIZACION, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_FACTURAS_GASTOS_FECHA_CONTABILIZACION`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_FACTURAS_GASTOS_FECHA_PAGO, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_FACTURAS_GASTOS_FECHA_PAGO`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_VIAJES_DIETAS_FECHA_DEVENGO, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_DEVENGO`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_VIAJES_DIETAS_FECHA_CONTABILIZACION, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_CONTABILIZACION`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_VIAJES_DIETAS_FECHA_PAGO, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_PAGO`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_DEVENGO, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_DEVENGO`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_CONTABILIZACION, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_CONTABILIZACION`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_PAGO, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_PAGO`)],
+  [SgeEjecucionEconomicaFiltros.ECC_FILTRO_FACTURAS_EMITIDAS_FECHA_FACTURA, marker(`csp.sge-ejecucion-economica-filtros.ECC_FILTRO_FACTURAS_EMITIDAS_FECHA_FACTURA`)]
+]);
+
 
 export interface IConfiguracion {
   id: number;
@@ -149,4 +175,6 @@ export interface IConfiguracion {
   sgeEjecucionPresupuestariaGastosDetalleEnabled: boolean;
   /** Habilita el modal para el detalle en detalle operaciones - Gastos */
   sgeDetalleOperacionesGastosDetalleEnabled: boolean;
+  /** Habilita los buscadores de las pantallas de Ejecución Económica dependientes del SGE. */
+  sgeEjecucionEconomicaFiltros: SgeEjecucionEconomicaFiltros[];
 }
