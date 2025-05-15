@@ -16,7 +16,6 @@ import { ConfigService } from '@core/services/cnf/config.service';
 import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service';
 import { EmailService } from '@core/services/com/email/email.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
@@ -81,8 +80,7 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
     private emailTplService: EmailTplService,
     private emailService: EmailService,
     private sgiApiTaskService: SgiApiTaskService,
-    private convocatoriaService: ConvocatoriaService,
-    private readonly languageService: LanguageService
+    private convocatoriaService: ConvocatoriaService
   ) {
     super(matDialogRef, !!data?.hito?.tipoHito);
   }
@@ -346,11 +344,11 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
     );
 
     this.emailTplService.processProyectoHitoTemplate(
-      this.languageService.getFieldValue(this.data.tituloProyecto),
-      this.languageService.getFieldValue(tituloConvocatoria),
+      this.data.tituloProyecto,
+      tituloConvocatoria,
       this.formGroup.get('fecha').value ?? DateTime.now(),
-      this.formGroup.get('tipoHito').value?.nombre ? this.languageService.getFieldValue(this.formGroup.get('tipoHito').value?.nombre) : '',
-      this.languageService.getFieldValue(this.formGroup.get('comentario').value),
+      this.formGroup.get('tipoHito').value?.nombre ? this.formGroup.get('tipoHito').value?.nombre : '',
+      this.formGroup.get('comentario').value,
     ).subscribe(
       (template) => {
         this.formGroup.get('aviso.asunto').setValue(template.subject);

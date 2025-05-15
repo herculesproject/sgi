@@ -13,7 +13,6 @@ import { ISendEmailTask } from '@core/models/tp/send-email-task';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service';
 import { EmailService } from '@core/services/com/email/email.service';
-import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
@@ -76,8 +75,7 @@ export class ConvocatoriaHitosModalComponent extends DialogFormComponent<Convoca
     private configService: ConfigService,
     private emailTplService: EmailTplService,
     private emailService: EmailService,
-    private sgiApiTaskService: SgiApiTaskService,
-    private readonly languageService: LanguageService
+    private sgiApiTaskService: SgiApiTaskService
   ) {
     super(matDialogRef, !!data.hito?.id);
   }
@@ -168,10 +166,10 @@ export class ConvocatoriaHitosModalComponent extends DialogFormComponent<Convoca
       }
     );
     this.emailTplService.processConvocatoriaHitoTemplate(
-      this.languageService.getFieldValue(this.data.tituloConvocatoria),
+      this.data.tituloConvocatoria,
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
-      this.formGroup.get('tipoHito').value?.nombre ? this.languageService.getFieldValue(this.formGroup.get('tipoHito').value?.nombre) : '',
-      this.formGroup.get('comentario').value ?? ''
+      this.formGroup.get('tipoHito').value?.nombre,
+      this.formGroup.get('comentario').value
     ).subscribe(
       (template) => {
         this.formGroup.get('aviso.asunto').setValue(template.subject);

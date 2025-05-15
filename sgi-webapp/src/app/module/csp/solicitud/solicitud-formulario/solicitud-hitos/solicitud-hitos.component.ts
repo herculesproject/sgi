@@ -11,6 +11,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { DialogService } from '@core/services/dialog.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TranslateService } from '@ngx-translate/core';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -19,7 +20,6 @@ import { switchMap } from 'rxjs/operators';
 import { SolicitudHitosModalComponent, SolicitudHitosModalComponentData } from '../../modals/solicitud-hitos-modal/solicitud-hitos-modal.component';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SolicitudHitosFragment } from './solicitud-hitos.fragment';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_DELETE = marker('msg.delete.entity');
 const SOLICITUD_HITO_KEY = marker('csp.solicitud-hito');
@@ -121,7 +121,7 @@ export class SolicitudHitosComponent extends FragmentComponent implements OnInit
       readonly: wrapper ? !this.modificable(wrapper) : this.formPart.readonly,
       unidadGestionId: this.actionService.solicitud?.unidadGestion?.id,
       tituloSolicitud: this.actionService.solicitud?.titulo,
-      tituloConvocatoria: this.languageService.getFieldValue(this.actionService.convocatoriaTitulo)
+      tituloConvocatoria: this.actionService.convocatoriaTitulo
     };
     const config = {
       data

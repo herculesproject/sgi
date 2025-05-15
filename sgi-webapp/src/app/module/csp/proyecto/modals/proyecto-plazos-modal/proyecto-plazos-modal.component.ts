@@ -17,7 +17,6 @@ import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service'
 import { EmailService } from '@core/services/com/email/email.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { IProyectoFaseAviso } from '@core/services/csp/proyecto-fase/proyecto-fase-aviso';
-import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { DateValidator } from '@core/validators/date-validator';
 import { I18nValidators } from '@core/validators/i18n-validator';
@@ -92,8 +91,7 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
     private emailTplService: EmailTplService,
     private emailService: EmailService,
     private sgiApiTaskService: SgiApiTaskService,
-    private convocatoriaService: ConvocatoriaService,
-    private languageService: LanguageService
+    private convocatoriaService: ConvocatoriaService
   ) {
     super(matDialogRef, !!data.plazo?.tipoFase);
   }
@@ -344,12 +342,12 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
       }
     );
     this.emailTplService.processProyectoFaseTemplate(
-      this.languageService.getFieldValue(this.data.tituloProyecto),
-      this.languageService.getFieldValue(tituloConvocatoria),
+      this.data.tituloProyecto,
+      tituloConvocatoria,
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),
-      this.languageService.getFieldValue(this.formGroup.get('tipoFase').value?.nombre) ?? '',
-      this.languageService.getFieldValue(this.formGroup.get('observaciones').value),
+      this.formGroup.get('tipoFase').value?.nombre,
+      this.formGroup.get('observaciones').value,
 
     ).subscribe(
       (template) => {

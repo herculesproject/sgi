@@ -13,7 +13,6 @@ import { ISendEmailTask } from '@core/models/tp/send-email-task';
 import { ConfigService } from '@core/services/cnf/config.service';
 import { EmailTplService } from '@core/services/com/email-tpl/email-tpl.service';
 import { EmailService } from '@core/services/com/email/email.service';
-import { LanguageService } from '@core/services/language.service';
 import { SgiApiTaskService } from '@core/services/tp/sgiapitask/sgi-api-task.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
 import { TipoHitoValidator } from '@core/validators/tipo-hito-validator';
@@ -39,7 +38,7 @@ export interface SolicitudHitosModalComponentData {
   idModeloEjecucion: number;
   readonly: boolean;
   unidadGestionId: number;
-  tituloConvocatoria: string;
+  tituloConvocatoria: I18nFieldValue[];
   tituloSolicitud: I18nFieldValue[];
 }
 
@@ -75,8 +74,7 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
     private configService: ConfigService,
     private emailTplService: EmailTplService,
     private emailSErvice: EmailService,
-    private sgiApiTaskService: SgiApiTaskService,
-    private readonly languageService: LanguageService
+    private sgiApiTaskService: SgiApiTaskService
   ) {
     super(matDialogRef, !!data.hito?.id);
   }
@@ -166,11 +164,11 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
       }
     );
     this.emailTplService.processSolicitudHitoTemplate(
-      this.data.tituloSolicitud ? this.languageService.getFieldValue(this.data.tituloSolicitud) : '',
+      this.data.tituloSolicitud,
       this.data.tituloConvocatoria,
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
-      this.formGroup.get('tipoHito').value?.nombre ? this.languageService.getFieldValue(this.formGroup.get('tipoHito').value?.nombre) : '',
-      this.formGroup.get('comentario').value ?? ''
+      this.formGroup.get('tipoHito').value?.nombre,
+      this.formGroup.get('comentario').value
     ).subscribe(
       (template) => {
         this.formGroup.get('aviso.asunto').setValue(template.subject);
