@@ -23,9 +23,9 @@ export class SolicitudProyectoPresupuestoDatosGeneralesFragment extends FormFrag
     );
 
     if (this.financiadora) {
-      form.addControl('fuenteFinanciacion', new FormControl({ value: undefined, disabled: true }));
-      form.addControl('ambito', new FormControl({ value: undefined, disabled: true }));
-      form.addControl('tipoFinanciacion', new FormControl({ value: undefined, disabled: true }));
+      form.addControl('fuenteFinanciacion', new FormControl({ value: [], disabled: true }));
+      form.addControl('ambito', new FormControl({ value: [], disabled: true }));
+      form.addControl('tipoFinanciacion', new FormControl({ value: [], disabled: true }));
       form.addControl('porcentajeFinanciacion', new FormControl({ value: undefined, disabled: true }));
       form.addControl('importeFinanciacion', new FormControl({ value: undefined, disabled: true }));
     }
