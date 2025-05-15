@@ -1535,7 +1535,7 @@ public class ProyectoServiceImpl implements ProyectoService {
             || proyecto.getFechaFin() == null
             || (proyectoSocioPeriodoPago.getFechaPrevistaPago() != null && proyecto.getFechaFin() != null
                 && !proyectoSocioPeriodoPago.getFechaPrevistaPago().isAfter(proyecto.getFechaFin())))
-        .toList();
+        .collect(Collectors.toList());
     this.proyectoSocioPeriodoPagoService.update(proyectoSocioId, proyectoSocioPeriodoPagos);
 
     log.debug(

@@ -224,7 +224,8 @@ public class ConvocatoriaClonerService {
                 .fechaInicioPresentacion(periodo.getFechaInicioPresentacion())
                 .fechaFinPresentacion(periodo.getFechaFinPresentacion()).mesInicial(periodo.getMesInicial())
                 .mesFinal(periodo.getMesFinal()).numPeriodo(periodo.getNumPeriodo())
-                .tipoSeguimiento(periodo.getTipoSeguimiento()).observaciones(periodo.getObservaciones()).build()));
+                .tipoSeguimiento(periodo.getTipoSeguimiento()).observaciones(new HashSet<>(periodo.getObservaciones()))
+                .build()));
   }
 
   /**
