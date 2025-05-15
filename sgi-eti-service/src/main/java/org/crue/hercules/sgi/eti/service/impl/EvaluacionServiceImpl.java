@@ -4,7 +4,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -24,10 +26,12 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion.Tipo;
+import org.crue.hercules.sgi.eti.model.TipoInvestigacionTutelada;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
@@ -41,10 +45,15 @@ import org.crue.hercules.sgi.eti.service.RetrospectivaService;
 import org.crue.hercules.sgi.eti.service.SgdocService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.framework.util.AssertHelper;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -64,6 +73,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class EvaluacionServiceImpl implements EvaluacionService {
+  private static final String MSG_KEY_PATH_SEPARATOR = ".";
   private static final String MSG_FIELD_PERSONA_REF = "personaRef";
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_FIELD = "field";
@@ -118,6 +128,10 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
   private final RetrospectivaService retrospectivaService;
 
+  private final MessageSource messageSource;
+
+  private final I18nConfig i18nConfig;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
@@ -125,7 +139,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       ConvocatoriaReunionRepository convocatoriaReunionRepository, MemoriaRepository memoriaRepository,
       EvaluacionConverter evaluacionConverter, SgiApiRepService reportService, SgdocService sgdocService,
       ComunicadosService comunicadosService, SgiConfigProperties sgiConfigProperties,
-      EvaluadorService evaluadorService, RetrospectivaService retrospectivaService) {
+      EvaluadorService evaluadorService, RetrospectivaService retrospectivaService, MessageSource messageSource,
+      I18nConfig i18nConfig) {
 
     this.evaluacionRepository = evaluacionRepository;
     this.memoriaService = memoriaService;
@@ -139,6 +154,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     this.sgiConfigProperties = sgiConfigProperties;
     this.evaluadorService = evaluadorService;
     this.retrospectivaService = retrospectivaService;
+    this.messageSource = messageSource;
+    this.i18nConfig = i18nConfig;
   }
 
   /**
@@ -846,17 +863,36 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   private void sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) {
     log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - Start");
     try {
-      String tipoActividad;
+      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
       if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
           .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
+        String tipoActividadId = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId().toString();
+
+        String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
+
       } else {
-        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+        String tipoInvestigacionTuteladaId = evaluacion.getMemoria().getPeticionEvaluacion()
+            .getTipoInvestigacionTutelada()
+            .getId().toString();
+
+        String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+            + tipoInvestigacionTuteladaId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
       }
       this.comunicadosService.enviarComunicadoDictamenEvaluacionRevMinima(
           evaluacion.getMemoria().getComite().getNombre(),
+          evaluacion.getMemoria().getComite().getCodigo(),
           evaluacion.getMemoria().getNumReferencia(),
-          tipoActividad,
+          i18nTipoActividad,
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
           evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
       log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - End");
@@ -869,17 +905,35 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   private void sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) {
     log.debug("sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - Start");
     try {
-      String tipoActividad;
+      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
       if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
           .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
+        String tipoActividadId = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId().toString();
+
+        String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
       } else {
-        tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+        String tipoInvestigacionTuteladaId = evaluacion.getMemoria().getPeticionEvaluacion()
+            .getTipoInvestigacionTutelada()
+            .getId().toString();
+
+        String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+            + tipoInvestigacionTuteladaId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
       }
       this.comunicadosService.enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(
           evaluacion.getMemoria().getComite().getNombre(),
+          evaluacion.getMemoria().getComite().getCodigo(),
           evaluacion.getMemoria().getNumReferencia(),
-          tipoActividad,
+          i18nTipoActividad,
           evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
           evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
       log.debug("sendComunicadoDictamenEvaluacionSeguimientoRevMin(Evaluacion evaluacion) - End");
@@ -896,18 +950,35 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación anual pendiente.");
     } else {
       evaluaciones.stream().forEach(evaluacion -> {
-        String tipoActividad;
+        List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
         if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
             .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-          tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre();
+          String tipoActividadId = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId()
+              .toString();
+
+          String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+
+          for (Language language : i18nConfig.getEnabledLanguages()) {
+            i18nTipoActividad.add(new I18nFieldValueDto(language,
+                messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+          }
         } else {
-          tipoActividad = evaluacion.getMemoria().getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+          String tipoInvestigacionTuteladaId = evaluacion.getMemoria().getPeticionEvaluacion()
+              .getTipoInvestigacionTutelada().getId().toString();
+
+          String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+              + tipoInvestigacionTuteladaId;
+
+          for (Language language : i18nConfig.getEnabledLanguages()) {
+            i18nTipoActividad.add(new I18nFieldValueDto(language,
+                messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+          }
         }
         try {
           this.comunicadosService.enviarComunicadoInformeSeguimientoAnual(
               evaluacion.getMemoria().getComite().getNombre(),
               evaluacion.getMemoria().getNumReferencia(),
-              tipoActividad,
+              i18nTipoActividad,
               evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
               evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
         } catch (Exception e) {

@@ -47,6 +47,7 @@ import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.service.impl.EvaluacionServiceImpl;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +57,8 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -107,12 +110,17 @@ class EvaluacionServiceTest extends BaseServiceTest {
   @Mock
   private RetrospectivaService retrospectivaService;
 
+  @Autowired
+  private MessageSource messageSource;
+  @Autowired
+  private I18nConfig i18nConfig;
+
   @BeforeEach
   void setUp() throws Exception {
     evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, memoriaService, comentarioRepository,
         convocatoriaReunionRepository, memoriaRepository,
         evaluacionConverter, reportService, sgdocService, comunicadosService, sgiConfigProperties, evaluadorService,
-        retrospectivaService);
+        retrospectivaService, messageSource, i18nConfig);
   }
 
   @Test

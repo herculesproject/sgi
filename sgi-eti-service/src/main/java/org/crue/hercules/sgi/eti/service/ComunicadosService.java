@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.dto.com.EtiComActaFinalizarActaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComAsignacionEvaluacionData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComAvisoRetrospectivaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionRevMinData;
+import org.crue.hercules.sgi.eti.dto.com.EtiComDictamenEvaluacionSeguimientoRevMinData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComEvaluacionModificadaData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegAnualPendienteData;
 import org.crue.hercules.sgi.eti.dto.com.EtiComInformeSegFinalPendienteData;
@@ -31,6 +32,7 @@ import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiSgpService;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -82,8 +84,9 @@ public class ComunicadosService {
     log.debug("enviarComunicadoConvocatoriaReunionEti(ConvocatoriaReunion convocatoriaReunion) - end");
   }
 
-  public void enviarComunicadoActaEvaluacionFinalizada(Collection<ComiteNombre> comiteNombre,
-      String referenciaMemoria, String tipoActividad, Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+  public void enviarComunicadoActaEvaluacionFinalizada(Collection<ComiteNombre> comiteNombre, String comiteCodigo,
+      String referenciaMemoria, List<I18nFieldValue> tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
       String solicitanteRef)
       throws JsonProcessingException {
     log.debug(
@@ -93,13 +96,14 @@ public class ComunicadosService {
     if (recipients != null) {
       EmailOutput emailOutput = emailService.createComunicadoActaFinalizada(
           EtiComActaFinalizarActaData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(comiteNombre))
+              .nombreInvestigacion(comiteNombre)
               .generoComite(I18nHelper.getFieldValueForCurrentLanguage(comiteNombre)
                   .map(ComiteNombre::getGenero).map(Enum::toString).orElse(
                       null))
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+              .comiteCodigo(comiteCodigo)
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -111,8 +115,8 @@ public class ComunicadosService {
         "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - end");
   }
 
-  public void enviarComunicadoDictamenEvaluacionRevMinima(Collection<ComiteNombre> comiteNombre,
-      String referenciaMemoria, String tipoActividad,
+  public void enviarComunicadoDictamenEvaluacionRevMinima(Collection<ComiteNombre> comiteNombre, String comiteCodigo,
+      String referenciaMemoria, List<I18nFieldValue> tipoActividad,
       Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
       String solicitanteRef)
       throws JsonProcessingException {
@@ -123,15 +127,13 @@ public class ComunicadosService {
     if (recipients != null) {
       EmailOutput emailOutput = emailService.createComunicadoEvaluacionMemoriaRevMin(
           EtiComDictamenEvaluacionRevMinData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+              .nombreInvestigacion(comiteNombre)
               .generoComite(I18nHelper.getFieldValueForCurrentLanguage(comiteNombre)
-                  .map(ComiteNombre::getGenero).map(Enum::toString).orElse(
-                      null))
+                  .map(ComiteNombre::getGenero).map(Enum::toString).orElse(null))
+              .comiteCodigo(comiteCodigo)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -144,26 +146,24 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(Collection<ComiteNombre> comiteNombre,
-      String referenciaMemoria, String tipoActividad,
-      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
-      String solicitanteRef)
+      String comiteCodigo, String referenciaMemoria, List<I18nFieldValue> tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
     log.debug(
         "enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     String enlaceAplicacion = sgiConfigProperties.getWebUrl();
     if (recipients != null) {
-      EmailOutput emailOutput = emailService.createComunicadoEvaluacionMemoriaRevMin(
-          EtiComDictamenEvaluacionRevMinData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+      EmailOutput emailOutput = emailService.createComunicadoEvaluacionSeguimientoMemoriaRevMin(
+          EtiComDictamenEvaluacionSeguimientoRevMinData.builder()
+              .nombreInvestigacion(comiteNombre)
+              .comiteCodigo(comiteCodigo)
               .generoComite(I18nHelper.getFieldValueForCurrentLanguage(comiteNombre)
                   .map(ComiteNombre::getGenero).map(Enum::toString).orElse(
                       null))
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -176,9 +176,8 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoInformeRetrospectivaCeeaPendiente(Collection<ComiteNombre> comiteNombre,
-      String referenciaMemoria, String tipoActividad,
-      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
-      String solicitanteRef)
+      String comiteCodigo, String referenciaMemoria, List<I18nFieldValue> tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - start");
 
@@ -187,15 +186,14 @@ public class ComunicadosService {
     if (recipients != null) {
       EmailOutput emailOutput = emailService.createComunicadoAvisoRetrospectiva(
           EtiComAvisoRetrospectivaData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+              .nombreInvestigacion(comiteNombre)
+              .comiteCodigo(comiteCodigo)
               .generoComite(I18nHelper.getFieldValueForCurrentLanguage(comiteNombre)
                   .map(ComiteNombre::getGenero).map(Enum::toString).orElse(
                       null))
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -229,11 +227,9 @@ public class ComunicadosService {
     if (!recipients.isEmpty()) {
       EmailOutput emailOutput = emailService.createComunicadoCambiosEvaluacion(
           EtiComEvaluacionModificadaData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+              .nombreInvestigacion(comiteNombre)
               .referenciaMemoria(referenciaMemoria)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -244,8 +240,8 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoInformeSeguimientoAnual(Collection<ComiteNombre> comiteNombre, String referenciaMemoria,
-      String tipoActividad,
-      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
+      List<I18nFieldValue> tipoActividad, Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+      String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoInformeSeguimientoAnual() - start");
 
@@ -254,12 +250,10 @@ public class ComunicadosService {
     if (recipients != null) {
       EmailOutput emailOutput = emailService.createComunicadoInformeSeguimientoAnualPendiente(
           EtiComInformeSegAnualPendienteData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+              .nombreInvestigacion(comiteNombre)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -270,9 +264,10 @@ public class ComunicadosService {
     log.debug("enviarComunicadoInformeSeguimientoAnual() - end");
   }
 
-  public void enviarComunicadoInformeSeguimientoFinal(Collection<ComiteNombre> comiteNombre, String referenciaMemoria,
-      String tipoActividad,
-      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
+  public void enviarComunicadoInformeSeguimientoFinal(Collection<ComiteNombre> comiteNombre, String comiteCodigo,
+      String referenciaMemoria,
+      List<I18nFieldValue> tipoActividad, Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+      String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoInformeSeguimientoFinal() - start");
 
@@ -281,12 +276,11 @@ public class ComunicadosService {
     if (recipients != null) {
       EmailOutput emailOutput = emailService.createComunicadoInformeSeguimientoFinalPendiente(
           EtiComInformeSegFinalPendienteData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+              .nombreInvestigacion(comiteNombre)
+              .comiteCodigo(comiteCodigo)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -298,8 +292,7 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoMemoriaRevisionMinimaArchivada(Collection<ComiteNombre> comiteNombre,
-      String referenciaMemoria,
-      String tipoActividad,
+      String comiteCodigo, String referenciaMemoria, List<I18nFieldValue> tipoActividad,
       Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
     log.debug("enviarComunicadoMemoriaRevisionMinimaArchivada() - start");
@@ -308,12 +301,11 @@ public class ComunicadosService {
     if (recipients != null) {
       EmailOutput emailOutput = emailService.createComunicadoMemoriaRevisionMinArchivada(
           EtiComMemoriaRevisionMinArchivadaData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+              .nombreInvestigacion(comiteNombre)
+              .comiteCodigo(comiteCodigo)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -325,8 +317,7 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoMemoriaArchivadaAutomaticamentePorInactividad(Collection<ComiteNombre> comiteNombre,
-      String referenciaMemoria,
-      String tipoActividad,
+      String comiteCodigo, String referenciaMemoria, List<I18nFieldValue> tipoActividad,
       Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
       throws JsonProcessingException {
 
@@ -335,12 +326,11 @@ public class ComunicadosService {
     if (recipients != null) {
       EmailOutput emailOutput = emailService.createComunicadoMemoriaArchivadaPorInactividad(
           EtiComInformeSegFinalPendienteData.builder()
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+              .nombreInvestigacion(comiteNombre)
+              .comiteCodigo(comiteCodigo)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .enlaceAplicacion(enlaceAplicacion).build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -352,8 +342,9 @@ public class ComunicadosService {
   }
 
   public void enviarComunicadoIndicarSubsanacion(Collection<ComiteNombre> comiteNombre,
+      String comiteCodigo,
       Collection<EstadoMemoriaComentario> comentarioEstado,
-      String referenciaMemoria, String tipoActividad,
+      String referenciaMemoria, List<I18nFieldValue> tipoActividad,
       Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
       String solicitanteRef)
       throws JsonProcessingException {
@@ -365,13 +356,12 @@ public class ComunicadosService {
       EmailOutput emailOutput = emailService.createComunicadoMemoriaIndicarSubsanacion(
           EtiComMemoriaIndicarSubsanacionData.builder()
               .enlaceAplicacion(enlaceAplicacion)
-              .comentarioEstado(I18nHelper.getValueForCurrentLanguage(comentarioEstado))
-              .nombreInvestigacion(I18nHelper.getValueForCurrentLanguage(
-                  comiteNombre))
+              .comentarioEstado(comentarioEstado)
+              .nombreInvestigacion(comiteNombre)
+              .comiteCodigo(comiteCodigo)
               .referenciaMemoria(referenciaMemoria)
               .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  tituloSolicitudEvaluacion))
+              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
               .build(),
           recipients);
       emailService.sendEmail(emailOutput.getId());
@@ -408,13 +398,10 @@ public class ComunicadosService {
           EtiComAsignacionEvaluacionData.builder()
               .fechaConvocatoriaReunion(evaluacion.getConvocatoriaReunion().getFechaEvaluacion())
               .referenciaMemoria(evaluacion.getMemoria().getNumReferencia())
-              .tituloSolicitudEvaluacion(I18nHelper.getValueForCurrentLanguage(
-                  evaluacion.getMemoria().getPeticionEvaluacion()
-                      .getTitulo()))
+              .tituloSolicitudEvaluacion(evaluacion.getMemoria().getPeticionEvaluacion().getTitulo())
               .nombreApellidosEvaluador1(evaluador1.getNombre() + " " + evaluador1.getApellidos())
               .nombreApellidosEvaluador2(evaluador2.getNombre() + " " + evaluador2.getApellidos())
-              .nombreInvestigacion(
-                  I18nHelper.getValueForCurrentLanguage(evaluacion.getConvocatoriaReunion().getComite().getNombre()))
+              .nombreInvestigacion(evaluacion.getConvocatoriaReunion().getComite().getNombre())
               .generoComite(I18nHelper.getFieldValueForCurrentLanguage(evaluacion.getMemoria().getComite().getNombre())
                   .map(ComiteNombre::getGenero).map(Enum::toString).orElse(null))
               .fechaEvaluacionAnterior(fechaEvaluacionAnterior)
@@ -446,8 +433,7 @@ public class ComunicadosService {
       EmailOutput emailOutput = emailService.createComunicadoRevisionActa(
           EtiComRevisionActaData.builder()
               .enlaceAplicacion(enlaceAplicacion)
-              .nombreInvestigacion(
-                  I18nHelper.getValueForCurrentLanguage(acta.getConvocatoriaReunion().getComite().getNombre()))
+              .nombreInvestigacion(acta.getConvocatoriaReunion().getComite().getNombre())
               .nombreComite(acta.getConvocatoriaReunion().getComite().getCodigo())
               .fechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion())
               .generoComite(

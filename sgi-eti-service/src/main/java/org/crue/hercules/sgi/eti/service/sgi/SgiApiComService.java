@@ -1,9 +1,10 @@
 package org.crue.hercules.sgi.eti.service.sgi;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
 import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
@@ -26,9 +27,12 @@ import org.crue.hercules.sgi.eti.dto.com.Recipient;
 import org.crue.hercules.sgi.eti.dto.com.Status;
 import org.crue.hercules.sgi.eti.enums.ServiceType;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
+import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.util.AssertHelper;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.MessageSource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class SgiApiComService extends SgiApiBaseService {
+  private static final String MSG_KEY_PATH_SEPARATOR = ".";
+
+  private static final String MSG_KEY_VIDEOCONFERENCIA = "lugar.videoconferencia";
   private static final String MSG_FIELD_ASUNTO = "email.asunto";
   private static final String MSG_FIELD_CONTENIDO = "email.contenido";
   private static final String MSG_FIELD_DESTINATARIOS = "email.destinatarios";
@@ -66,6 +73,7 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_ORDEN_DEL_DIA = "ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA";
   private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_LUGAR = "ETI_CONVOCATORIA_REUNION_LUGAR";
   private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_VIDEOCONFERENCIA = "ETI_CONVOCATORIA_REUNION_VIDEOCONFERENCIA";
+  private static final String TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_TIPO_CONVOCATORIA = "ETI_CONVOCATORIA_REUNION_TIPO_CONVOCATORIA";
 
   private static final String TEMPLATE_ETI_COM_ACTA_SIN_REV_MINIMA = "ETI_COM_ACTA_SIN_REV_MINIMA";
   private static final String TEMPLATE_ETI_COM_ACTA_SIN_REV_MINIMA_PARAM = TEMPLATE_ETI_COM_ACTA_SIN_REV_MINIMA
@@ -117,12 +125,17 @@ public class SgiApiComService extends SgiApiBaseService {
 
   private final SgiConfigProperties sgiConfigProperties;
   private final ObjectMapper mapper;
+  private final MessageSource messageSource;
+  private final I18nConfig i18nConfig;
 
   public SgiApiComService(RestApiProperties restApiProperties, RestTemplate restTemplate,
-      SgiConfigProperties sgiConfigProperties, ObjectMapper mapper) {
+      SgiConfigProperties sgiConfigProperties, ObjectMapper mapper, MessageSource messageSource,
+      I18nConfig i18nConfig) {
     super(restApiProperties, restTemplate);
     this.sgiConfigProperties = sgiConfigProperties;
     this.mapper = mapper;
+    this.messageSource = messageSource;
+    this.i18nConfig = i18nConfig;
   }
 
   /**
@@ -247,10 +260,15 @@ public class SgiApiComService extends SgiApiBaseService {
     String minuto = String.format("%02d", convocatoriaReunion.getMinutoInicio());
     String horaSegunda = String.format("%02d", convocatoriaReunion.getHoraInicioSegunda());
     String minutoSegunda = String.format("%02d", convocatoriaReunion.getMinutoInicioSegunda());
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-        "dd/MM/yyyy")
-        .withZone(sgiConfigProperties.getTimeZone().toZoneId()).withLocale(LocaleContextHolder.getLocale());
-    String fechaEvaluacion = formatter.format(convocatoriaReunion.getFechaEvaluacion());
+
+    String messageKey = convocatoriaReunion.getTipoConvocatoriaReunion().getClass().getName()
+        + MSG_KEY_PATH_SEPARATOR + convocatoriaReunion.getTipoConvocatoriaReunion().getTipo().name();
+
+    List<I18nFieldValue> i18nTipoConvocatoria = new ArrayList<>();
+    for (Language language : i18nConfig.getEnabledLanguages()) {
+      i18nTipoConvocatoria.add(new I18nFieldValueDto(language,
+          messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+    }
 
     EmailInput request = EmailInput.builder().template(
         TEMPLATE_ETI_COM_CONVOCATORIA_REUNION).recipients(recipients)
@@ -258,13 +276,13 @@ public class SgiApiComService extends SgiApiBaseService {
     request.setParams(Arrays.asList(
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_NOMBRE_INVESTIGACION,
-            I18nHelper.getValueForCurrentLanguage(convocatoriaReunion.getComite().getNombre())),
+            convocatoriaReunion.getComite().getNombre()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_COMITE,
             convocatoriaReunion.getComite().getCodigo()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_FECHA_EVALUACION,
-            fechaEvaluacion),
+            convocatoriaReunion.getFechaEvaluacion().toString()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_HORA_INICIO,
             hora),
@@ -279,14 +297,16 @@ public class SgiApiComService extends SgiApiBaseService {
             minutoSegunda),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_ORDEN_DEL_DIA,
-            I18nHelper.getValueForCurrentLanguage(convocatoriaReunion.getOrdenDia())),
+            convocatoriaReunion.getOrdenDia()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_LUGAR,
-            convocatoriaReunion.getLugar().isEmpty() ? EMPTY_LUGAR
-                : I18nHelper.getValueForCurrentLanguage(convocatoriaReunion.getLugar())),
+            convocatoriaReunion.getLugar().isEmpty() ? new HashSet<>() : convocatoriaReunion.getLugar()),
         new EmailParam(
             TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_VIDEOCONFERENCIA,
-            convocatoriaReunion.getVideoconferencia().toString())));
+            convocatoriaReunion.getVideoconferencia().toString()),
+        new EmailParam(
+            TEMPLATE_ETI_COM_CONVOCATORIA_REUNION_PARAM_TIPO_CONVOCATORIA,
+            i18nTipoConvocatoria)));
 
     final EmailOutput response = super.<EmailInput, EmailOutput>callEndpoint(mergedURL,
         httpMethod, request,

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,9 +50,11 @@ import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TareaFormacion;
 import org.crue.hercules.sgi.eti.model.TareaNombre;
 import org.crue.hercules.sgi.eti.model.TareaOrganismo;
+import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria.Tipo;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.model.TipoInvestigacionTutelada;
 import org.crue.hercules.sgi.eti.repository.ApartadoRepository;
 import org.crue.hercules.sgi.eti.repository.BloqueRepository;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
@@ -77,6 +80,7 @@ import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.i18n.I18nConfig;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
@@ -84,6 +88,7 @@ import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
 import org.crue.hercules.sgi.framework.util.AssertHelper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -103,6 +108,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class MemoriaServiceImpl implements MemoriaService {
+  private static final String MSG_KEY_PATH_SEPARATOR = ".";
   private static final String MSG_KEY_ENTITY = "entity";
   private static final String MSG_KEY_FIELD = "field";
   private static final String MSG_KEY_ACTION = "action";
@@ -182,6 +188,10 @@ public class MemoriaServiceImpl implements MemoriaService {
   private final FormularioRepository formularioRepository;
   private final SgiApiCnfService cnfService;
 
+  private final MessageSource messageSource;
+
+  private final I18nConfig i18nConfig;
+
   private static final String TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA = "Investigación tutelada";
 
   public MemoriaServiceImpl(SgiConfigProperties sgiConfigProperties, MemoriaRepository memoriaRepository,
@@ -193,7 +203,8 @@ public class MemoriaServiceImpl implements MemoriaService {
       ConfiguracionService configuracionService, SgiApiRepService reportService, SgdocService sgdocService,
       BloqueRepository bloqueRepository, ApartadoRepository apartadoRepository, ComunicadosService comunicadosService,
       RetrospectivaService retrospectivaService, InformeDocumentoRepository informeDocumentoRepository,
-      FormularioRepository formularioRepository, SgiApiCnfService cnfService) {
+      FormularioRepository formularioRepository, SgiApiCnfService cnfService, MessageSource messageSource,
+      I18nConfig i18nConfig) {
     this.sgiConfigProperties = sgiConfigProperties;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -215,6 +226,8 @@ public class MemoriaServiceImpl implements MemoriaService {
     this.informeDocumentoRepository = informeDocumentoRepository;
     this.formularioRepository = formularioRepository;
     this.cnfService = cnfService;
+    this.messageSource = messageSource;
+    this.i18nConfig = i18nConfig;
   }
 
   /**
@@ -1150,17 +1163,34 @@ public class MemoriaServiceImpl implements MemoriaService {
       log.info("No existen memorias que requieran generar aviso de evaluación de retrospectiva pendiente");
     } else {
       memorias.stream().forEach(memoria -> {
-        String tipoActividad;
+        List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
         if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
             .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-          tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+          String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
+
+          String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+
+          for (Language language : i18nConfig.getEnabledLanguages()) {
+            i18nTipoActividad.add(new I18nFieldValueDto(language,
+                messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+          }
         } else {
-          tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+          String tipoInvestigacionTuteladaId = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()
+              .toString();
+
+          String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+              + tipoInvestigacionTuteladaId;
+
+          for (Language language : i18nConfig.getEnabledLanguages()) {
+            i18nTipoActividad.add(new I18nFieldValueDto(language,
+                messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+          }
         }
         try {
           this.comunicadosService.enviarComunicadoInformeRetrospectivaCeeaPendiente(
               memoria.getComite().getNombre(),
-              memoria.getNumReferencia(), tipoActividad,
+              memoria.getComite().getCodigo(),
+              memoria.getNumReferencia(), i18nTipoActividad,
               memoria.getPeticionEvaluacion().getTitulo(),
               memoria.getPeticionEvaluacion().getPersonaRef());
         } catch (Exception e) {
@@ -1178,18 +1208,35 @@ public class MemoriaServiceImpl implements MemoriaService {
       return;
     }
     memorias.stream().forEach(memoria -> {
-      String tipoActividad;
+      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
       if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
           .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-        tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+        String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
+
+        String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
       } else {
-        tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+        String tipoInvestigacionTuteladaId = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()
+            .toString();
+
+        String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+            + tipoInvestigacionTuteladaId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
       }
       try {
         this.comunicadosService.enviarComunicadoInformeSeguimientoFinal(
             memoria.getComite().getNombre(),
+            memoria.getComite().getCodigo(),
             memoria.getNumReferencia(),
-            tipoActividad,
+            i18nTipoActividad,
             memoria.getPeticionEvaluacion().getTitulo(),
             memoria.getPeticionEvaluacion().getPersonaRef());
       } catch (Exception e) {
@@ -1200,18 +1247,35 @@ public class MemoriaServiceImpl implements MemoriaService {
 
   public void sendComunicadoMemoriaArchivadaAutomaticamentePorInactividad(List<Memoria> memorias) {
     memorias.stream().forEach(memoria -> {
-      String tipoActividad;
+      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
       if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
           .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-        tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+        String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
+
+        String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
       } else {
-        tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+        String tipoInvestigacionTuteladaId = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada()
+            .getId().toString();
+
+        String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+            + tipoInvestigacionTuteladaId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
       }
       try {
         this.comunicadosService.enviarComunicadoMemoriaArchivadaAutomaticamentePorInactividad(
             memoria.getComite().getNombre(),
+            memoria.getComite().getCodigo(),
             memoria.getNumReferencia(),
-            tipoActividad,
+            i18nTipoActividad,
             memoria.getPeticionEvaluacion().getTitulo(),
             memoria.getPeticionEvaluacion().getPersonaRef());
       } catch (Exception e) {
@@ -1452,18 +1516,35 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   public void sendComunicadoMemoriaRevisionMinimaArchivada(Memoria memoria) {
-    String tipoActividad;
+    List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
     if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
         .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-      tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
+      String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
+
+      String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+
+      for (Language language : i18nConfig.getEnabledLanguages()) {
+        i18nTipoActividad.add(new I18nFieldValueDto(language,
+            messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+      }
     } else {
-      tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
+      String tipoInvestigacionTuteladaId = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()
+          .toString();
+
+      String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+          + tipoInvestigacionTuteladaId;
+
+      for (Language language : i18nConfig.getEnabledLanguages()) {
+        i18nTipoActividad.add(new I18nFieldValueDto(language,
+            messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+      }
     }
     try {
       this.comunicadosService.enviarComunicadoMemoriaRevisionMinimaArchivada(
           memoria.getComite().getNombre(),
+          memoria.getComite().getCodigo(),
           memoria.getNumReferencia(),
-          tipoActividad,
+          i18nTipoActividad,
           memoria.getPeticionEvaluacion().getTitulo(),
           memoria.getPeticionEvaluacion().getPersonaRef());
     } catch (Exception e) {
@@ -1538,19 +1619,35 @@ public class MemoriaServiceImpl implements MemoriaService {
     updateEstadoMemoria(memoria, TipoEstadoMemoria.Tipo.SUBSANACION.getId(), comentarioEstado);
 
     try {
-      String tipoActividad;
+      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
       if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
           .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-        tipoActividad = memoria.getPeticionEvaluacion().getTipoActividad().getNombre();
-      } else {
-        tipoActividad = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getNombre();
-      }
+        String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
 
+        String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
+      } else {
+        String tipoInvestigacionTuteladaId = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()
+            .toString();
+
+        String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+            + tipoInvestigacionTuteladaId;
+
+        for (Language language : i18nConfig.getEnabledLanguages()) {
+          i18nTipoActividad.add(new I18nFieldValueDto(language,
+              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
+        }
+      }
       this.comunicadosService.enviarComunicadoIndicarSubsanacion(
           memoria.getComite().getNombre(),
+          memoria.getComite().getCodigo(),
           comentarioEstado,
           memoria.getNumReferencia(),
-          tipoActividad,
+          i18nTipoActividad,
           memoria.getPeticionEvaluacion().getTitulo(),
           memoria.getPeticionEvaluacion().getPersonaRef());
     } catch (Exception e) {

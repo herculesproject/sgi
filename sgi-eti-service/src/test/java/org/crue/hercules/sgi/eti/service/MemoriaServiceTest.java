@@ -62,6 +62,7 @@ import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiRepService;
+import org.crue.hercules.sgi.framework.i18n.I18nConfig;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.framework.i18n.Language;
@@ -75,6 +76,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -153,6 +155,10 @@ class MemoriaServiceTest extends BaseServiceTest {
 
   @Autowired
   private SgiConfigProperties sgiConfigProperties;
+  @Autowired
+  private MessageSource messageSource;
+  @Autowired
+  private I18nConfig i18nConfig;
 
   @BeforeEach
   public void setUp() throws Exception {
@@ -160,7 +166,8 @@ class MemoriaServiceTest extends BaseServiceTest {
         evaluacionRepository, comentarioRepository, informeService,
         peticionEvaluacionRepository, comiteRepository, documentacionMemoriaRepository, respuestaRepository,
         tareaRepository, configuracionService, reportService, sgdocService, bloqueRepository, apartadoRepository,
-        comunicadosService, retrospectivaService, informeDocumentoRepository, formularioRepository, cnfService);
+        comunicadosService, retrospectivaService, informeDocumentoRepository, formularioRepository, cnfService,
+        messageSource, i18nConfig);
   }
 
   @Test
