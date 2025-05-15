@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.pii.config.SgiConfigProperties;
 import org.crue.hercules.sgi.pii.dto.com.EmailOutput;
 import org.crue.hercules.sgi.pii.dto.com.PiiComFechaLimiteProcedimientoData;
@@ -53,9 +52,9 @@ public class ProcedimientoComService {
   private EmailOutput buildComunicadoFechaLimiteProcedimiento(Procedimiento procedimiento) {
 
     PiiComFechaLimiteProcedimientoData data = PiiComFechaLimiteProcedimientoData.builder()
-        .tipoProcedimiento(I18nHelper.getValueForCurrentLanguage(procedimiento.getTipoProcedimiento().getDescripcion()))
+        .tipoProcedimiento(procedimiento.getTipoProcedimiento().getDescripcion())
         .fechaLimite(procedimiento.getFechaLimiteAccion())
-        .accionATomar(I18nHelper.getValueForCurrentLanguage(procedimiento.getAccionATomar()))
+        .accionATomar(procedimiento.getAccionATomar())
         .build();
 
     EmailOutput comunicado = null;

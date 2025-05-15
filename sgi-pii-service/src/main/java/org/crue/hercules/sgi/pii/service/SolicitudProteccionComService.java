@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
 import org.crue.hercules.sgi.pii.config.SgiConfigProperties;
 import org.crue.hercules.sgi.pii.dto.com.EmailOutput;
 import org.crue.hercules.sgi.pii.dto.com.PiiComMesesHastaFinPrioridadSolicitudProteccionData;
@@ -76,7 +75,7 @@ public class SolicitudProteccionComService {
       Integer monthsBeforeFechaFinPrioridad) {
     PiiComMesesHastaFinPrioridadSolicitudProteccionData data = PiiComMesesHastaFinPrioridadSolicitudProteccionData
         .builder()
-        .solicitudTitle(I18nHelper.getValueForCurrentLanguage(solicitud.getTitulo()))
+        .solicitudTitle(solicitud.getTitulo())
         .fechaFinPrioridad(solicitud.getFechaFinPriorPresFasNacRec())
         .monthsBeforeFechaFinPrioridad(monthsBeforeFechaFinPrioridad)
         .build();
@@ -97,7 +96,7 @@ public class SolicitudProteccionComService {
       Integer monthsBeforeFechaFinPresentacion) {
     PiiComMesesHastaFinPrioridadSolicitudProteccionData data = PiiComMesesHastaFinPrioridadSolicitudProteccionData
         .builder()
-        .solicitudTitle(I18nHelper.getValueForCurrentLanguage(solicitud.getTitulo()))
+        .solicitudTitle(solicitud.getTitulo())
         .fechaFinPrioridad(solicitud.getFechaFinPriorPresFasNacRec())
         .monthsBeforeFechaFinPrioridad(monthsBeforeFechaFinPresentacion)
         .build();
