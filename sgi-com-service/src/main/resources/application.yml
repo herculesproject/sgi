@@ -8,6 +8,7 @@ sgi:
   time-zone: "Europe/Madrid"
   rest:
     api:
+      cnf-url: "http://sgi-cnf-service:4288"
       csp-url: "http://sgi-csp-service:4281"
       eti-url: "http://sgi-eti-service:4280"
       pii-url: "http://sgi-pii-service:4283"
