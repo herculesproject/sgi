@@ -3431,4 +3431,10 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.10.0-125">
+    <addColumn tableName="configuracion">
+      <column name="sge_ejecucion_economica_filtros" type="varchar(1000)" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

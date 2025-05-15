@@ -85,6 +85,19 @@ public class Configuracion extends BaseEntity {
     ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS
   }
 
+  public enum SgeEjecucionEconomicaFiltros {
+    ECC_FILTRO_FACTURAS_GASTOS_FECHA_DEVENGO,
+    ECC_FILTRO_FACTURAS_GASTOS_FECHA_CONTABILIZACION,
+    ECC_FILTRO_FACTURAS_GASTOS_FECHA_PAGO,
+    ECC_FILTRO_VIAJES_DIETAS_FECHA_DEVENGO,
+    ECC_FILTRO_VIAJES_DIETAS_FECHA_CONTABILIZACION,
+    ECC_FILTRO_VIAJES_DIETAS_FECHA_PAGO,
+    ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_DEVENGO,
+    ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_CONTABILIZACION,
+    ECC_FILTRO_PERSONAL_CONTRATADO_FECHA_PAGO,
+    ECC_FILTRO_FACTURAS_EMITIDAS_FECHA_FACTURA
+  }
+
   public enum Param {
     /**
      * Formato codigo partida presupuestaria
@@ -221,7 +234,12 @@ public class Configuracion extends BaseEntity {
     /**
      * Habilita el modal para el detalle en detalle operaciones - Gastos
      */
-    SGE_DETALLE_OPERACIONES_GASTOS_DETALLE_ENABLED("sgeDetalleOperacionesGastosDetalleEnabled");
+    SGE_DETALLE_OPERACIONES_GASTOS_DETALLE_ENABLED("sgeDetalleOperacionesGastosDetalleEnabled"),
+    /**
+     * Habilita los buscadores de las pantallas de Ejecución Económica dependientes
+     * del SGE.
+     */
+    SGE_EJECUCION_ECONOMICA_FILTROS("sgeEjecucionEconomicaFiltros");
 
     private final String key;
 
@@ -429,6 +447,13 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_detalleoperaciones_gastos_detalle", columnDefinition = "boolean default false", nullable = false, unique = true)
   private Boolean sgeDetalleOperacionesGastosDetalleEnabled;
 
+  /**
+   * Habilita los buscadores de las pantallas de Ejecución Económica dependientes
+   * del SGE.
+   */
+  @Column(name = "sge_ejecucion_economica_filtros", nullable = true, unique = true)
+  private String sgeEjecucionEconomicaFiltros;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -491,6 +516,8 @@ public class Configuracion extends BaseEntity {
         return this.getSgeEjecucionPresupuestariaGastosDetalleEnabled();
       case SGE_DETALLE_OPERACIONES_GASTOS_DETALLE_ENABLED:
         return this.getSgeDetalleOperacionesGastosDetalleEnabled();
+      case SGE_EJECUCION_ECONOMICA_FILTROS:
+        return this.getSgeEjecucionEconomicaFiltros();
       default:
         return null;
     }
@@ -595,6 +622,11 @@ public class Configuracion extends BaseEntity {
         break;
       case SGE_DETALLE_OPERACIONES_GASTOS_DETALLE_ENABLED:
         this.setSgeDetalleOperacionesGastosDetalleEnabled(Boolean.valueOf(newValue));
+        break;
+      case SGE_EJECUCION_ECONOMICA_FILTROS:
+        if (isValidEnumString(newValue, SgeEjecucionEconomicaFiltros.class, true)) {
+          this.setSgeEjecucionEconomicaFiltros(newValue);
+        }
         break;
     }
   }
