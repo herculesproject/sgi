@@ -6,6 +6,7 @@ server:
       enabled: false
 sgi:
   time-zone: "Europe/Madrid"
+  web-url: "http://sgi.crue.com"
   rest:
     api:
       cnf-url: "http://sgi-cnf-service:4288"

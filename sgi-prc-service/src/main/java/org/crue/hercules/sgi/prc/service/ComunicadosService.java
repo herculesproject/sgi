@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
+import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.dto.com.EmailOutput;
 import org.crue.hercules.sgi.prc.dto.com.PrcComProcesoBaremacionErrorData;
 import org.crue.hercules.sgi.prc.dto.com.PrcComProcesoBaremacionFinData;
@@ -20,6 +19,8 @@ import org.crue.hercules.sgi.prc.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiCspService;
 import org.crue.hercules.sgi.prc.service.sgi.SgiApiSgpService;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class ComunicadosService {
   private final SgiApiComService emailService;
   private final SgiApiCspService cspService;
   private final SgiApiSgpService sgpService;
+  private final SgiConfigProperties sgiConfigProperties;
 
   /**
    * Envia el comunicado de error en el proceso de baremacion en la
@@ -117,6 +119,7 @@ public class ComunicadosService {
     PrcComProcesoBaremacionFinData data = PrcComProcesoBaremacionFinData
         .builder()
         .anio(convocatoriaBaremacion.getAnio().toString())
+        .enlaceAplicacion(sgiConfigProperties.getWebUrl())
         .build();
 
     EmailOutput comunicado = null;
