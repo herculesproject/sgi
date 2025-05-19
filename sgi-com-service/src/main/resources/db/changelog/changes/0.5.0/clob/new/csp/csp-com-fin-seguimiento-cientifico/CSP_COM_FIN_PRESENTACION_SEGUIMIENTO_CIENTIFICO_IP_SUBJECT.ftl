@@ -2,14 +2,14 @@
 <#assign renderLang=languagePriorities?first>
 <#macro renderEs>
 <#setting locale="es">
-Vencimiento cercano de período de presentación de justificación del proyecto: ${sgi.getFieldValue(data.titulo)}
+Vencimiento cercano del período de presentación de la documentación de seguimiento científico del proyecto: ${sgi.getFieldValue(data.titulo)}
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Upcoming expiry of period for submission of justification of project expenditure: ${sgi.getFieldValue(data.titulo)}
+Deadline approaching for the submission of scientific monitoring documentation on the project: ${sgi.getFieldValue(data.titulo)}
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Proiektuaren justifikazioa aurkezteko epea amaitzear: ${sgi.getFieldValue(data.titulo)}
+Proiektuaren jarraipen zientifikoari buruzko dokumentazioa aurkezteko epearen muga egun hurbila: ${sgi.getFieldValue(data.titulo)}
 </#macro>
 <@.vars["render${renderLang?capitalize}"] />

@@ -5,9 +5,9 @@ Estimado/a investigador/a,
 
 Le informamos de que dispone de un nuevo ítem que precisa de su validación para poder realizar su baremación:
 
-- Tipo de ítem: ${data.nombreEpigrafe}
+- Tipo de ítem: ${sgi.getFieldValue(data.nombreEpigrafe)}
 - Título/nombre: ${data.tituloItem}
-- Fecha: ${data.fechaItem?datetime.iso?string("dd/MM/yyyy")}
+- Fecha: ${sgi.formatDate(data.fechaItem, "SHORT")}
 
 Reciba un cordial saludo,
 Dirección de gestión de la investigación
@@ -19,9 +19,9 @@ Dear researcher,
 
 Please be advised that you have a new item that needs to be validated in order to carry out your ranking:
 
-- Type of item: ${data.nombreEpigrafe}
+- Type of item: ${sgi.getFieldValue(data.nombreEpigrafe)}
 - Title/name: ${data.tituloItem}
-- Date: ${data.fechaItem?datetime.iso?string("dd/MM/yyyy")}
+- Date: ${sgi.formatDate(data.fechaItem, "SHORT")}
 
 Yours sincerely,
 Research Management Directorate
@@ -33,9 +33,9 @@ Ikertzaile agurgarria:
 
 Honen bidez jakinarazten dizugu item berri bat dagoela eta balioztatu egin behar duzula, baremazioa egin ahal izateko:
 
-- Item mota: ${data.nombreEpigrafe}
+- Item mota: ${sgi.getFieldValue(data.nombreEpigrafe)}
 - Izenburua/izena: ${data.tituloItem}
-- Data: ${data.fechaItem?datetime.iso?string("dd/MM/yyyy")}
+- Data: ${sgi.formatDate(data.fechaItem, "SHORT")}
 
 Jaso agur bero bat.
 Ikerketa Kudeatzeko Zuzendaritza

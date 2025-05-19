@@ -21,7 +21,16 @@ convocatorias.dgi@ehu.eus
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
+Dear Researcher,
 
+You are informed that the following error in the grading process has occurred:
+
+- Year: ${data.anio}
+- Error occurred: ${data.error}
+
+Yours sincerely,
+Research Management Directorate
+convocatorias.dgi@ehu.eus
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
