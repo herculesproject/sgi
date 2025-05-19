@@ -2,10 +2,12 @@ package org.crue.hercules.sgi.prc.service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
 import org.crue.hercules.sgi.prc.config.SgiConfigProperties;
 import org.crue.hercules.sgi.prc.dto.com.EmailOutput;
 import org.crue.hercules.sgi.prc.dto.com.PrcComProcesoBaremacionErrorData;
@@ -84,7 +86,8 @@ public class ComunicadosService {
    * @param fechaItem   fecha del item
    * @param personaRefs personasRef de los autores del item
    */
-  public void enviarComunicadoValidarItem(String epigrafeCVN, String tituloItem, Instant fechaItem,
+  public void enviarComunicadoValidarItem(Collection<? extends I18nFieldValue> epigrafeCVN, String tituloItem,
+      Instant fechaItem,
       List<String> personaRefs) {
 
     log.debug("enviarComunicadoValidarItem(String epigrafeCVN, String tituloItem, String fechaItem) - start");
@@ -132,7 +135,8 @@ public class ComunicadosService {
     return comunicado != null ? Optional.of(comunicado) : Optional.empty();
   }
 
-  private Optional<EmailOutput> buildComunicadoValidarItem(String epigrafeCVN, String tituloItem, Instant fechaItem,
+  private Optional<EmailOutput> buildComunicadoValidarItem(Collection<? extends I18nFieldValue> epigrafeCVN,
+      String tituloItem, Instant fechaItem,
       List<String> personaRefs) {
     if (personaRefs.isEmpty()) {
       log.debug(

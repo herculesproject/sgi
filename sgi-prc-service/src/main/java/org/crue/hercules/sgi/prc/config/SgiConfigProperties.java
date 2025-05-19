@@ -24,4 +24,10 @@ public class SgiConfigProperties {
    */
   @NotNull
   private String webUrl;
+
+  /**
+   * I18n config refresh interval in seconds. Default 300
+   */
+  @NotNull
+  private Long i18nConfigRefreshInterval = 300L;
 }
