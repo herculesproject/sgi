@@ -1543,6 +1543,8 @@
   "csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_CONTABILIZACION": "Exekuzio ekonomikoa - Fakturak eta frogagiriak - Bidaiak eta dietak: Kontabilizazio data",
   "csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_DEVENGO": "Exekuzio ekonomikoa - Fakturak eta frogagiriak - Bidaiak eta dietak: Sortzapen data",
   "csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_PAGO": "Exekuzio ekonomikoa - Fakturak eta frogagiriak - Bidaiak eta dietak: Ordainketa data",
+  "csp.sge-filtro-anualidades.ANUALIDADES_OBLIGATORIAS": "Derrigorrezko urteko kuotak",
+  "csp.sge-filtro-anualidades.ANUALIDADES_OPCIONALES": "Aukerako urteko kuotak",
   "csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_GASTOS": "Exekuzio ekonomikoa - Eragiketen xehetasuna - Gastuak",
   "csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_INGRESOS": "Exekuzio ekonomikoa - Eragiketen xehetasuna - Sarrerak",
   "csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_MODIFICACIONES": "Exekuzio ekonomikoa - Eragiketen xehetasuna - Aldaketak",

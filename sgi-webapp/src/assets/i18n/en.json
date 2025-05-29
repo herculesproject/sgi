@@ -1543,6 +1543,8 @@
   "csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_CONTABILIZACION": "Financial Implementation - Invoices and supporting documents - Travel and subsistence: Registration date",
   "csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_DEVENGO": "Financial Implementation - Invoices and supporting documents - Travel and subsistence: Accrual date",
   "csp.sge-ejecucion-economica-filtros.ECC_FILTRO_VIAJES_DIETAS_FECHA_PAGO": "Financial Implementation - Invoices and supporting documents - Travel and subsistence: Payment date",
+  "csp.sge-filtro-anualidades.ANUALIDADES_OBLIGATORIAS": "Obligatory annual amounts",
+  "csp.sge-filtro-anualidades.ANUALIDADES_OPCIONALES": "Optional annual amounts",
   "csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_GASTOS": "Financial Implementation - Detail of Operations - Expenditure",
   "csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_INGRESOS": "Financial Implementation - Detail of Operations - Earnings",
   "csp.sge-integraciones-ecc-menus.ECC_DETALLE_OPERACIONES_MODIFICACIONES": "Financial Implementation - Detail of Operations - Modifications",
