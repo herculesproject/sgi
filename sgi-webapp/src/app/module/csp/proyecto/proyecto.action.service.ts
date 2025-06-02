@@ -363,8 +363,7 @@ export class ProyectoActionService extends ActionService {
         facturaPrevistaEmitidaService,
         proyectoProrrogaService,
         configService,
-        this.isInvestigador,
-        this.languageService
+        this.isInvestigador
       );
 
       this.proyectosSge = new ProyectoProyectosSgeFragment(
@@ -519,8 +518,7 @@ export class ProyectoActionService extends ActionService {
           facturaPrevistaEmitidaService,
           proyectoProrrogaService,
           configService,
-          this.isInvestigador,
-          this.languageService
+          this.isInvestigador
         );
 
         this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadoras);

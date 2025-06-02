@@ -134,20 +134,35 @@
       </mat-form-field>
     </div>
 
-    <!-- Identificador SGE -->
-    <div fxLayout="row"
-      *ngIf="data.isCalendarioFacturacionSgeEnabled && (DIALOG_ACTION.VALIDAR_IP === data.action || DIALOG_ACTION.EDIT === data.action) && showIndentificadorSge$ | async">
-      <mat-form-field>
-        <mat-label>{{'csp.proyecto-calendario-facturacion.identificador-sge' | translate}}</mat-label>
-        <sgi-select formControlName="identificadorSge" [options]=" data.proyectosSge" required
-          [displayWith]="displayerIdentificadorSge" [compareWith]="comparerIdentificadorSge"
-          [sortWith]="sorterIdentificadorSge">
-        </sgi-select>
-        <mat-error *ngIf="formGroup.controls.identificadorSge.errors?.required">
-          {{'error.required.entity' | translate:msgParamIdentificadorSge}}
-        </mat-error>
-      </mat-form-field>
-    </div>
+    <ng-container *ngIf="(this.isCalendarioFacturacionSgeWriteIntegrationEnabled || this.isCalendarioFacturacionSgeIntegrationDisabled) 
+      && (DIALOG_ACTION.VALIDAR_IP === data.action || DIALOG_ACTION.EDIT === data.action) 
+      && showIndentificadorSge$ | async">
+      <!-- Identificador SGE -->
+      <div fxLayout="row">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-calendario-facturacion.identificador-sge' | translate}}</mat-label>
+          <sgi-select formControlName="identificadorSge" [options]=" data.proyectosSge" required
+            [displayWith]="displayerIdentificadorSge" [compareWith]="comparerIdentificadorSge"
+            [sortWith]="sorterIdentificadorSge">
+          </sgi-select>
+          <mat-error *ngIf="formGroup.controls.identificadorSge.errors?.required">
+            {{'error.required.entity' | translate:msgParamIdentificadorSge}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Nº factura emitida -->
+      <div fxLayout="row">
+        <mat-form-field>
+          <mat-label>{{'csp.proyecto-calendario-facturacion.numero-factura-emitida' | translate}}</mat-label>
+          <input matInput formControlName="numeroFacturaEmitida" type="text">
+          <mat-error *ngIf="formGroup.get('numeroFacturaEmitida').errors?.maxlength">
+            {{'error.maxlength.entity' | translate:msgParamNumeroFacturaEmitidaEntity}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
   </form>
 </sgi-dialog-content>
 <mat-dialog-actions>

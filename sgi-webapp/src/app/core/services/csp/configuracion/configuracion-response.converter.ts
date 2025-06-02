@@ -1,4 +1,4 @@
-import { CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeEjecucionEconomicaFiltros, SgeFiltroAnualidades, SgeIntegracionesEccMenus, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
+import { CalendarioFacturacionSgeIntegration, CardinalidadRelacionSgiSge, FacturasJustificantesColumnasFijasConfigurables, IConfiguracion, ModoEjecucion, SgeEjecucionEconomicaFiltros, SgeFiltroAnualidades, SgeIntegracionesEccMenus, ValidacionClasificacionGastos } from '@core/models/csp/configuracion';
 import { SgiBaseConverter } from '@sgi/framework/core';
 import { IConfiguracionResponse } from './configuracion-response';
 
@@ -12,7 +12,7 @@ class ConfiguracionResponseConverter
       id: value.id,
       altaBuscadorSgeEnabled: value.altaBuscadorSgeEnabled,
       amortizacionFondosSgeEnabled: value.amortizacionFondosSgeEnabled,
-      calendarioFacturacionSgeEnabled: value.calendarioFacturacionSgeEnabled ? ModoEjecucion[value.calendarioFacturacionSgeEnabled] : null,
+      calendarioFacturacionSgeIntegration: value.calendarioFacturacionSgeIntegration ? CalendarioFacturacionSgeIntegration[value.calendarioFacturacionSgeIntegration] : null,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge ? CardinalidadRelacionSgiSge[value.cardinalidadRelacionSgiSge] : null,
       dedicacionMinimaGrupo: value.dedicacionMinimaGrupo,
       integracionesEccSgeEnabled: value.integracionesEccSgeEnabled?.split(',').map(ecc => SgeIntegracionesEccMenus[ecc]),
@@ -52,7 +52,7 @@ class ConfiguracionResponseConverter
       id: value.id,
       altaBuscadorSgeEnabled: value.altaBuscadorSgeEnabled,
       amortizacionFondosSgeEnabled: value.amortizacionFondosSgeEnabled,
-      calendarioFacturacionSgeEnabled: value.calendarioFacturacionSgeEnabled,
+      calendarioFacturacionSgeIntegration: value.calendarioFacturacionSgeIntegration,
       cardinalidadRelacionSgiSge: value.cardinalidadRelacionSgiSge,
       dedicacionMinimaGrupo: value.dedicacionMinimaGrupo,
       integracionesEccSgeEnabled: JSON.stringify(value.integracionesEccSgeEnabled?.join(',')),

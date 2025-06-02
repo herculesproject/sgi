@@ -7,14 +7,15 @@ import { ITipoFacturacion } from './tipo-facturacion';
 export interface IProyectoFacturacion {
   id: number;
   comentario: I18nFieldValue[];
+  estadoValidacionIP: IEstadoValidacionIP;
   fechaConformidad: DateTime;
   fechaEmision: DateTime;
   importeBase: number;
+  numeroFacturaSge: string;
   numeroPrevision: number;
   porcentajeIVA: number;
   proyectoId: number;
-  tipoFacturacion: ITipoFacturacion;
-  estadoValidacionIP: IEstadoValidacionIP;
   proyectoProrroga: IProyectoProrroga;
   proyectoSgeRef: string
+  tipoFacturacion: ITipoFacturacion;
 }

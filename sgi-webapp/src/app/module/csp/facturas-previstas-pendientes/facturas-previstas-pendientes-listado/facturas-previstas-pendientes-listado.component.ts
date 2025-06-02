@@ -7,6 +7,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { SgiError } from '@core/errors/sgi-error';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { CalendarioFacturacionSgeIntegration } from '@core/models/csp/configuracion';
 import { IEstadoValidacionIP, TIPO_ESTADO_VALIDACION_MAP } from '@core/models/csp/estado-validacion-ip';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
@@ -15,6 +16,7 @@ import { OutputReport } from '@core/models/rep/output-report.enum';
 import { IFacturaPrevistaPendiente } from '@core/models/sge/factura-prevista-pendiente';
 import { ConfigService as ConfigCnfService } from '@core/services/cnf/config.service';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
+import { ProyectoFacturacionService } from '@core/services/csp/proyecto-facturacion/proyecto-facturacion.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { DialogService } from '@core/services/dialog.service';
 import { LanguageService } from '@core/services/language.service';
@@ -72,6 +74,7 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
     private readonly configCnfService: ConfigCnfService,
     private readonly empresaService: EmpresaService,
     private readonly facturaPrevistaPendienteService: FacturaPrevistaPendienteService,
+    private readonly proyectoFacturacionService: ProyectoFacturacionService,
     private readonly proyectoService: ProyectoService,
     private readonly exportService: FacturasPrevistasPendientesListadoExportService,
     private readonly dialogService: DialogService,
@@ -108,12 +111,13 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
     this.clearProblems();
 
     this.subscriptions.push(
-      forkJoin({
-        facturasPrevistasPendientes: this.facturaPrevistaPendienteService.findAll(this.getFindOptions()).pipe(
-          map(response => response.items as IFacturaPrevistaPendienteListadoData[])),
-        isCalendarioFacturacionSgeEnabled: this.configService.isCalendarioFacturacionSgeEnabled()
-      }).pipe(
-        switchMap(({ facturasPrevistasPendientes, isCalendarioFacturacionSgeEnabled }) => {
+      this.configService.getCalendarioFacturacionSgeIntegration().pipe(
+        switchMap(calendarioFacturacionSgeIntegration =>
+          forkJoin({
+            facturasPrevistasPendientes: this.getFacturasPrevistasPendientes(calendarioFacturacionSgeIntegration, this.getFindOptions()),
+            hasProyectoFacturacionProyectoIdSge: of(this.hasProyectoFacturacionProyectoIdSge(calendarioFacturacionSgeIntegration)),
+          })),
+        switchMap(({ facturasPrevistasPendientes, hasProyectoFacturacionProyectoIdSge }) => {
           if (!facturasPrevistasPendientes?.length) {
             return of([]);
           }
@@ -127,7 +131,7 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
                       forkJoin({
                         proyectoFacturacion: this.getProyectoFacturacion(
                           +facturaPrevistaPendiente.proyectoIdSGI,
-                          isCalendarioFacturacionSgeEnabled ? facturaPrevistaPendiente.proyectoIdSGE : null,
+                          hasProyectoFacturacionProyectoIdSge ? facturaPrevistaPendiente.proyectoIdSGE : null,
                           facturaPrevistaPendiente.numeroPrevision
                         ),
                         entidadesFinanciadoras: this.getEntidadesFinanciadoras(+facturaPrevistaPendiente.proyectoIdSGI)
@@ -303,6 +307,32 @@ export class FacturasPrevistasPendientesListadoComponent extends AbstractMenuCon
         toArray()
       ))
     )
+  }
+
+  private getFacturasPrevistasPendientes(
+    calendarioFacturacionSgeIntegration: CalendarioFacturacionSgeIntegration,
+    options: SgiRestFindOptions
+  ): Observable<IFacturaPrevistaPendienteListadoData[]> {
+    if (CalendarioFacturacionSgeIntegration.SIN_INTEGRACION === calendarioFacturacionSgeIntegration) {
+      return this.proyectoFacturacionService.findFacturasPendientesEmitir(options).pipe(
+        map(proyectosFacturacion => proyectosFacturacion.map(proyectoFacturacion => ({
+          proyectoIdSGI: proyectoFacturacion.proyectoId?.toString(),
+          numeroPrevision: proyectoFacturacion.numeroPrevision?.toString(),
+          proyectoIdSGE: proyectoFacturacion.proyectoSgeRef
+        })) as IFacturaPrevistaPendienteListadoData[])
+      );
+    }
+
+    return this.facturaPrevistaPendienteService.findAll(options).pipe(
+      map(response => response.items as IFacturaPrevistaPendienteListadoData[])
+    );
+  }
+
+  private hasProyectoFacturacionProyectoIdSge(calendarioFacturacionSgeIntegration: CalendarioFacturacionSgeIntegration): boolean {
+    return [
+      CalendarioFacturacionSgeIntegration.SIN_INTEGRACION,
+      CalendarioFacturacionSgeIntegration.INTEGRACION_LECTURA_ESCRITURA
+    ].includes(calendarioFacturacionSgeIntegration);
   }
 
 }

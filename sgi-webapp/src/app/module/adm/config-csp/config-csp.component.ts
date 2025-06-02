@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractMenuContentComponent } from '@core/component/abstract-menu-content.component';
 import { ConfigModule, ConfigType, IConfigOptions } from '@core/models/cnf/config-options';
-import { CARDINALIDAD_RELACION_SGI_SGE_MAP, FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP, MODO_EJECUCION_MAP, SGE_EJECUCION_ECONOMICA_FILTROS_MAP, SGE_FILTRO_ANUALIDADES_MAP, SGE_INTEGRACIONES_ECC_MENUS_MAP, VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
+import { CALENDARIO_FACTURACION_SGE_INTEGRATION_MAP, CARDINALIDAD_RELACION_SGI_SGE_MAP, FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP, MODO_EJECUCION_MAP, SGE_EJECUCION_ECONOMICA_FILTROS_MAP, SGE_FILTRO_ANUALIDADES_MAP, SGE_INTEGRACIONES_ECC_MENUS_MAP, VALIDACION_CLASIFICACION_GASTOS_MAP } from '@core/models/csp/configuracion';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { Observable, of } from 'rxjs';
@@ -61,7 +61,7 @@ export enum ConfigCsp {
   // Config CSP service
   CSP_ALTA_BUSCADOR_SGE_ENABLED = "altaBuscadorSgeEnabled",
   CSP_AMORTIZACION_FONDOS_SGE_ENABLED = "amortizacionFondosSgeEnabled",
-  CSP_CALENDARIO_FACTURACION_SGE_ENABLED = "calendarioFacturacionSgeEnabled",
+  CSP_CALENDARIO_FACTURACION_SGE_INTEGRATION = "calendarioFacturacionSgeIntegration",
   CSP_CARDINALIDAD_RELACION_SGI_SGE = 'cardinalidadRelacionSgiSge',
   CSP_DEDICACION_MINIMA_GRUPO = 'dedicacionMinimaGrupo',
   CSP_INTEGRACIONES_ECC_SGE_ENABLED = "integracionesEccSgeEnabled",
@@ -124,7 +124,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_ALTA_BUSCADOR_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_ALTA_BUSCADOR_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_ALTA_BUSCADOR_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_SECTOR_IVA_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SECTOR_IVA_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_AMORTIZACION_FONDOS_SGE_ENABLED.description`) }],
-    [ConfigCsp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_CALENDARIO_FACTURACION_SGE_ENABLED.description`) }],
+    [ConfigCsp.CSP_CALENDARIO_FACTURACION_SGE_INTEGRATION, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_CALENDARIO_FACTURACION_SGE_INTEGRATION`), options: this.getCalendarioFacturacionSgeIntegrationValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_CALENDARIO_FACTURACION_SGE_INTEGRATION.description`) }],
     [ConfigCsp.CSP_INTEGRACIONES_ECC_SGE_ENABLED, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.csp.CSP_INTEGRACIONES_ECC_SGE_ENABLED`), options: this.getSgeIntegracionesEccMenusValues(), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_INTEGRACIONES_ECC_SGE_ENABLED.description`) }],
     [ConfigCsp.CSP_SGE_EJECUCION_ECONOMICA_FILTROS, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.csp.CSP_SGE_EJECUCION_ECONOMICA_FILTROS`), options: this.getSgeEjecucionEconomicaFiltros(), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SGE_EJECUCION_ECONOMICA_FILTROS.description`) }],
     [ConfigCsp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_GASTOS_JUSTIFICADOS_SGE_ENABLED.description`) }],
@@ -218,54 +218,33 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     }
   }
 
-  private getCardinalidadRelacionSgiSgeValues(): Observable<KeyValue<string, string>[]> {
-    const keyValueList: KeyValue<string, string>[] = [];
-
-    for (const [key, value] of CARDINALIDAD_RELACION_SGI_SGE_MAP.entries()) {
-      keyValueList.push({ key, value });
-    }
-
+  private getKeyValueListFromMap(enumLabelMap: Map<string, string>): Observable<KeyValue<string, string>[]> {
+    const keyValueList = Array.from(enumLabelMap.entries(), ([key, value]) => ({ key, value }));
     return of(keyValueList);
+  }
+
+  private getCalendarioFacturacionSgeIntegrationValues(): Observable<KeyValue<string, string>[]> {
+    return this.getKeyValueListFromMap(CALENDARIO_FACTURACION_SGE_INTEGRATION_MAP);
+  }
+
+  private getCardinalidadRelacionSgiSgeValues(): Observable<KeyValue<string, string>[]> {
+    return this.getKeyValueListFromMap(CARDINALIDAD_RELACION_SGI_SGE_MAP);
   }
 
   private getFacturasJustificantesColumnasFijasConfigurablesValues(): Observable<KeyValue<string, string>[]> {
-    const keyValueList: KeyValue<string, string>[] = [];
-
-    for (const [key, value] of FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP.entries()) {
-      keyValueList.push({ key, value });
-    }
-
-    return of(keyValueList);
+    return this.getKeyValueListFromMap(FACTURAS_JUSTIFICANTES_COLUMNAS_FIJAS_CONFIGURABLES_MAP);
   }
 
   private getModosEjecucionValues(): Observable<KeyValue<string, string>[]> {
-    const keyValueList: KeyValue<string, string>[] = [];
-
-    for (const [key, value] of MODO_EJECUCION_MAP.entries()) {
-      keyValueList.push({ key, value });
-    }
-
-    return of(keyValueList);
+    return this.getKeyValueListFromMap(MODO_EJECUCION_MAP);
   }
 
   private getValidacionclasificacionGastoValues(): Observable<KeyValue<string, string>[]> {
-    const keyValueList: KeyValue<string, string>[] = [];
-
-    for (const [key, value] of VALIDACION_CLASIFICACION_GASTOS_MAP.entries()) {
-      keyValueList.push({ key, value });
-    }
-
-    return of(keyValueList);
+    return this.getKeyValueListFromMap(VALIDACION_CLASIFICACION_GASTOS_MAP);
   }
 
   private getSgeFiltroAnualidadesValues(): Observable<KeyValue<string, string>[]> {
-    const keyValueList: KeyValue<string, string>[] = [];
-
-    for (const [key, value] of SGE_FILTRO_ANUALIDADES_MAP.entries()) {
-      keyValueList.push({ key, value });
-    }
-
-    return of(keyValueList);
+    return this.getKeyValueListFromMap(SGE_FILTRO_ANUALIDADES_MAP);
   }
 
   private getBooleanValues(): Observable<KeyValue<string, string>[]> {
@@ -273,24 +252,13 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
   }
 
   private getSgeIntegracionesEccMenusValues(): Observable<KeyValue<string, string>[]> {
-    const keyValueList: KeyValue<string, string>[] = [];
-
-    for (const [key, value] of SGE_INTEGRACIONES_ECC_MENUS_MAP.entries()) {
-      keyValueList.push({ key, value });
-    }
-
-    return of(keyValueList);
+    return this.getKeyValueListFromMap(SGE_INTEGRACIONES_ECC_MENUS_MAP);
   }
 
   private getSgeEjecucionEconomicaFiltros(): Observable<KeyValue<string, string>[]> {
-    const keyValueList: KeyValue<string, string>[] = [];
-
-    for (const [key, value] of SGE_EJECUCION_ECONOMICA_FILTROS_MAP.entries()) {
-      keyValueList.push({ key, value });
-    }
-
-    return of(keyValueList);
+    return this.getKeyValueListFromMap(SGE_EJECUCION_ECONOMICA_FILTROS_MAP);
   }
 
   protected setupI18N(): void { }
+
 }

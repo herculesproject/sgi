@@ -5,14 +5,15 @@ import { ITipoFacturacionResponse } from '../tipo-facturacion/tipo-facturacion-r
 export interface IProyectoFacturacionResponse {
   id: number;
   comentario: I18nFieldValueResponse[];
+  estadoValidacionIP: IEstadoValidacionIP;
   fechaConformidad: string;
   fechaEmision: string;
   importeBase: number;
+  numeroFacturaSge: string;
   numeroPrevision: number;
   porcentajeIVA: number;
   proyectoId: number;
-  tipoFacturacion: ITipoFacturacionResponse;
-  estadoValidacionIP: IEstadoValidacionIP;
   proyectoProrrogaId: number;
   proyectoSgeRef: string;
+  tipoFacturacion: ITipoFacturacionResponse;
 }

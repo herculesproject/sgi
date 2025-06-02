@@ -198,7 +198,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
       porcentajeIVA: proyectoFacturacion.porcentajeIVA || this.formPart.proyectoIVA,
       action,
       proyectosSge: this.formPart.proyectosSGE$.value,
-      isCalendarioFacturacionSgeEnabled: this.formPart.isCalendarioFacturacionSgeEnabled
+      calendarioFacturacionSgeIntegration: this.formPart.calendarioFacturacionSgeIntegration
     };
 
     const config = {
@@ -251,7 +251,7 @@ export class ProyectoCalendarioFacturacionComponent extends FragmentComponent im
   }
 
   public notificarIP(item: StatusWrapper<IProyectoFacturacionData>, rowIndex: number): void {
-    if (this.formPart.isCalendarioFacturacionSgeEnabled && this.formPart.proyectosSGE$.value.length === 0) {
+    if (this.formPart.isCalendarioFacturacionSgeWriteIntegrationEnabled && this.formPart.proyectosSGE$.value.length === 0) {
       this.subscriptions.push(
         this.dialogService.showInfoDialog(this.msgNotAvailableNotificar).subscribe()
       );

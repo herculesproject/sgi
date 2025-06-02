@@ -2,7 +2,7 @@ export interface IConfiguracionResponse {
   id: number;
   altaBuscadorSgeEnabled: boolean;
   amortizacionFondosSgeEnabled: boolean;
-  calendarioFacturacionSgeEnabled: string;
+  calendarioFacturacionSgeIntegration: string;
   cardinalidadRelacionSgiSge: string;
   dedicacionMinimaGrupo: number;
   integracionesEccSgeEnabled: string;

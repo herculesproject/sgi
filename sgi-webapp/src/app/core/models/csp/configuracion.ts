@@ -6,6 +6,12 @@ export enum ValidacionClasificacionGastos {
   ELEGIBILIDAD = 'ELEGIBILIDAD'
 }
 
+export enum CalendarioFacturacionSgeIntegration {
+  INTEGRACION_LECTURA_ESCRITURA = "INTEGRACION_LECTURA_ESCRITURA",
+  INTEGRACION_SOLO_LECTURA = "INTEGRACION_SOLO_LECTURA",
+  SIN_INTEGRACION = "SIN_INTEGRACION"
+}
+
 export enum CardinalidadRelacionSgiSge {
   SGI_1_SGE_1 = 'SGI_1_SGE_1',
   SGI_1_SGE_N = 'SGI_1_SGE_N',
@@ -27,6 +33,12 @@ export enum SgeFiltroAnualidades {
   ANUALIDADES_OPCIONALES = 'ANUALIDADES_OPCIONALES',
   ANUALIDADES_OBLIGATORIAS = 'ANUALIDADES_OBLIGATORIAS'
 }
+
+export const CALENDARIO_FACTURACION_SGE_INTEGRATION_MAP: Map<CalendarioFacturacionSgeIntegration, string> = new Map([
+  [CalendarioFacturacionSgeIntegration.INTEGRACION_LECTURA_ESCRITURA, marker(`csp.calendario-facturacion-sge-integration.INTEGRACION_LECTURA_ESCRITURA`)],
+  [CalendarioFacturacionSgeIntegration.INTEGRACION_SOLO_LECTURA, marker(`csp.calendario-facturacion-sge-integration.INTEGRACION_SOLO_LECTURA`)],
+  [CalendarioFacturacionSgeIntegration.SIN_INTEGRACION, marker(`csp.calendario-facturacion-sge-integration.SIN_INTEGRACION`)]
+]);
 
 export const CARDINALIDAD_RELACION_SGI_SGE_MAP: Map<CardinalidadRelacionSgiSge, string> = new Map([
   [CardinalidadRelacionSgiSge.SGI_1_SGE_1, marker(`csp.cardinalidad-relacion-sgi-sge.SGI_1_SGE_1`)],
@@ -154,7 +166,7 @@ export interface IConfiguracion {
   /** Determina si la modificacion del proyecto económico en el SGE se realiza de forma sincrona o de forma asíncrona */
   proyectoSgeModificacionModoEjecucion: ModoEjecucion;
   /** Determina si hay integración del calendario facturación con el SGE para indicar si se van a notificar las facturas previstas validadas del calendario de facturación al SGE */
-  calendarioFacturacionSgeEnabled: ModoEjecucion;
+  calendarioFacturacionSgeIntegration: CalendarioFacturacionSgeIntegration;
   /** Columnas a mostrar en Facturas y gastos (ejecución económica - facturas y justificantes) *//** Columnas a mostrar en Personal Contratado (ejecución económica - facturas y justificantes) */
   facturasGastosColumnasFijasVisibles: FacturasJustificantesColumnasFijasConfigurables[];
   /** Columnas a mostrar en Viajes y dietas (ejecución económica - facturas y justificantes) */

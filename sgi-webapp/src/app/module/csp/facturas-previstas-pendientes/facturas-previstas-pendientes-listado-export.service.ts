@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { CalendarioFacturacionSgeIntegration } from '@core/models/csp/configuracion';
 import { TIPO_ESTADO_VALIDACION_MAP, TipoEstadoValidacion } from '@core/models/csp/estado-validacion-ip';
 import { IProyectoEntidadFinanciadora } from '@core/models/csp/proyecto-entidad-financiadora';
 import { IProyectoFacturacion } from '@core/models/csp/proyecto-facturacion';
@@ -9,6 +10,7 @@ import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { IFacturaPrevistaPendiente } from '@core/models/sge/factura-prevista-pendiente';
 import { ConfigService } from '@core/services/csp/configuracion/config.service';
+import { ProyectoFacturacionService } from '@core/services/csp/proyecto-facturacion/proyecto-facturacion.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
@@ -17,7 +19,7 @@ import { FacturaPrevistaPendienteService } from '@core/services/sge/factura-prev
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { forkJoin, from, Observable, of } from 'rxjs';
@@ -55,6 +57,7 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
     protected readonly logger: NGXLogger,
     protected readonly translate: TranslateService,
     private readonly empresaService: EmpresaService,
+    private readonly proyectoFacturacionService: ProyectoFacturacionService,
     private readonly proyectoService: ProyectoService,
     protected reportService: ReportService,
     private readonly facturaPrevistaPendienteService: FacturaPrevistaPendienteService,
@@ -97,12 +100,14 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
   protected getDataReport(reportConfig: IReportConfig<IReportOptions>): Observable<IFacturaPrevistaPendienteReportData[]> {
     const findOptions = reportConfig.reportOptions?.findOptions;
 
-    return forkJoin({
-      facturasPrevistasPendientes: this.facturaPrevistaPendienteService.findAll(findOptions).pipe(
-        map(response => response.items as IFacturaPrevistaPendienteReportData[])),
-      isCalendarioFacturacionSgeEnabled: this.configService.isCalendarioFacturacionSgeEnabled()
-    }).pipe(
-      switchMap(({ facturasPrevistasPendientes, isCalendarioFacturacionSgeEnabled }) => {
+    return this.configService.getCalendarioFacturacionSgeIntegration().pipe(
+      switchMap(calendarioFacturacionSgeIntegration =>
+        forkJoin({
+          facturasPrevistasPendientes: this.getFacturasPrevistasPendientes(calendarioFacturacionSgeIntegration, findOptions),
+          hasProyectoFacturacionProyectoIdSge: of(this.hasProyectoFacturacionProyectoIdSge(calendarioFacturacionSgeIntegration)),
+        })
+      ),
+      switchMap(({ facturasPrevistasPendientes, hasProyectoFacturacionProyectoIdSge }) => {
         if (!facturasPrevistasPendientes?.length) {
           return of([]);
         }
@@ -116,7 +121,7 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
                     forkJoin({
                       proyectoFacturacion: this.getProyectoFacturacion(
                         +facturaPrevistaPendiente.proyectoIdSGI,
-                        isCalendarioFacturacionSgeEnabled ? facturaPrevistaPendiente.proyectoIdSGE : null,
+                        hasProyectoFacturacionProyectoIdSge ? facturaPrevistaPendiente.proyectoIdSGE : null,
                         facturaPrevistaPendiente.numeroPrevision
                       ),
                       entidadesFinanciadoras: this.getEntidadesFinanciadoras(+facturaPrevistaPendiente.proyectoIdSGI)
@@ -239,6 +244,32 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
       visible: true
     };
     return groupBy;
+  }
+
+  private getFacturasPrevistasPendientes(
+    calendarioFacturacionSgeIntegration: CalendarioFacturacionSgeIntegration,
+    options: SgiRestFindOptions
+  ): Observable<IFacturaPrevistaPendienteReportData[]> {
+    if (CalendarioFacturacionSgeIntegration.SIN_INTEGRACION === calendarioFacturacionSgeIntegration) {
+      return this.proyectoFacturacionService.findFacturasPendientesEmitir(options).pipe(
+        map(proyectosFacturacion => proyectosFacturacion.map(proyectoFacturacion => ({
+          proyectoIdSGI: proyectoFacturacion.proyectoId?.toString(),
+          numeroPrevision: proyectoFacturacion.numeroPrevision?.toString(),
+          proyectoIdSGE: proyectoFacturacion.proyectoSgeRef
+        })) as IFacturaPrevistaPendienteReportData[])
+      );
+    }
+
+    return this.facturaPrevistaPendienteService.findAll(options).pipe(
+      map(response => response.items as IFacturaPrevistaPendienteReportData[])
+    );
+  }
+
+  private hasProyectoFacturacionProyectoIdSge(calendarioFacturacionSgeIntegration: CalendarioFacturacionSgeIntegration): boolean {
+    return [
+      CalendarioFacturacionSgeIntegration.SIN_INTEGRACION,
+      CalendarioFacturacionSgeIntegration.INTEGRACION_LECTURA_ESCRITURA
+    ].includes(calendarioFacturacionSgeIntegration);
   }
 
   private getProyectoFacturacion(proyectoId: number, proyectoSgeRef: string, numeroPrevision: string): Observable<IProyectoFacturacion> {

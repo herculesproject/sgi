@@ -13,22 +13,23 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
     return !value ? value as unknown as IProyectoFacturacion : {
       id: undefined,
       comentario: value.comentario ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.comentario) : [],
-      fechaConformidad: LuxonUtils.fromBackend(value.fechaConformidad),
-      fechaEmision: LuxonUtils.fromBackend(value.fechaEmision),
-      importeBase: value.importeBase,
-      numeroPrevision: value.numeroPrevision,
-      porcentajeIVA: value.porcentajeIVA,
-      proyectoId: value.proyectoId,
-      tipoFacturacion: { id: value.tipoFacturacionId } as ITipoFacturacion,
       estadoValidacionIP: {
-        id: value.estadoValidacionIP?.id,
         comentario: value.estadoValidacionIP.comentario ? I18N_FIELD_REQUEST_CONVERTER.toTargetArray(value.estadoValidacionIP.comentario) : [],
         estado: value.estadoValidacionIP?.estado,
         fecha: undefined,
+        id: value.estadoValidacionIP?.id,
         proyectoFacturacionId: undefined
       },
+      fechaConformidad: LuxonUtils.fromBackend(value.fechaConformidad),
+      fechaEmision: LuxonUtils.fromBackend(value.fechaEmision),
+      importeBase: value.importeBase,
+      numeroFacturaSge: value.numeroFacturaSge,
+      numeroPrevision: value.numeroPrevision,
+      porcentajeIVA: value.porcentajeIVA,
+      proyectoId: value.proyectoId,
       proyectoProrroga: value.proyectoProrrogaId ? { id: value.proyectoProrrogaId } as IProyectoProrroga : null,
-      proyectoSgeRef: value.proyectoSgeRef
+      proyectoSgeRef: value.proyectoSgeRef,
+      tipoFacturacion: { id: value.tipoFacturacionId } as ITipoFacturacion,
     };
   }
 
@@ -36,20 +37,21 @@ class ProyectoFacturacionRequestConverter extends SgiBaseConverter<IProyectoFact
 
     return !value ? value as unknown as IProyectoFacturacionRequest : {
       comentario: value.comentario ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.comentario) : [],
-      fechaConformidad: LuxonUtils.toBackend(value.fechaConformidad),
-      fechaEmision: LuxonUtils.toBackend(value.fechaEmision),
-      importeBase: value.importeBase,
-      numeroPrevision: value.numeroPrevision,
-      porcentajeIVA: value.porcentajeIVA,
-      proyectoId: value.proyectoId,
-      tipoFacturacionId: value.tipoFacturacion?.id,
       estadoValidacionIP: {
         id: value.estadoValidacionIP.id,
         comentario: value.estadoValidacionIP.comentario ? I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(value.estadoValidacionIP.comentario) : [],
         estado: value.estadoValidacionIP.estado,
       },
+      fechaConformidad: LuxonUtils.toBackend(value.fechaConformidad),
+      fechaEmision: LuxonUtils.toBackend(value.fechaEmision),
+      importeBase: value.importeBase,
+      numeroFacturaSge: value.numeroFacturaSge,
+      numeroPrevision: value.numeroPrevision,
+      porcentajeIVA: value.porcentajeIVA,
+      proyectoId: value.proyectoId,
       proyectoProrrogaId: value.proyectoProrroga?.id,
-      proyectoSgeRef: value.proyectoSgeRef
+      proyectoSgeRef: value.proyectoSgeRef,
+      tipoFacturacionId: value.tipoFacturacion?.id,
     };
   }
 

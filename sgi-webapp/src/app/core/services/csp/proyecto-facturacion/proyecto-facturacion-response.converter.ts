@@ -18,12 +18,13 @@ class ProyectoFacturacionResponseConverter extends
       fechaConformidad: LuxonUtils.fromBackend(value.fechaConformidad),
       fechaEmision: LuxonUtils.fromBackend(value.fechaEmision),
       importeBase: value.importeBase,
+      numeroFacturaSge: value.numeroFacturaSge,
       numeroPrevision: value.numeroPrevision,
       porcentajeIVA: value.porcentajeIVA,
       proyectoId: value.proyectoId,
-      tipoFacturacion: TIPO_FACTURACION_RESPONSE_CONVERTER.toTarget(value.tipoFacturacion),
       proyectoProrroga: value.proyectoProrrogaId ? { id: value.proyectoProrrogaId } as IProyectoProrroga : null,
-      proyectoSgeRef: value.proyectoSgeRef
+      proyectoSgeRef: value.proyectoSgeRef,
+      tipoFacturacion: TIPO_FACTURACION_RESPONSE_CONVERTER.toTarget(value.tipoFacturacion),
     };
   }
 
@@ -35,12 +36,13 @@ class ProyectoFacturacionResponseConverter extends
       fechaConformidad: LuxonUtils.toBackend(value.fechaConformidad),
       fechaEmision: LuxonUtils.toBackend(value.fechaEmision),
       importeBase: value.importeBase,
+      numeroFacturaSge: value.numeroFacturaSge,
       numeroPrevision: value.numeroPrevision,
       porcentajeIVA: value.porcentajeIVA,
       proyectoId: value.proyectoId,
-      tipoFacturacion: TIPO_FACTURACION_RESPONSE_CONVERTER.fromTarget(value.tipoFacturacion),
       proyectoProrrogaId: value.proyectoProrroga?.id,
-      proyectoSgeRef: value.proyectoSgeRef
+      proyectoSgeRef: value.proyectoSgeRef,
+      tipoFacturacion: TIPO_FACTURACION_RESPONSE_CONVERTER.fromTarget(value.tipoFacturacion),
     };
   }
 
