@@ -6,9 +6,7 @@ import java.time.Instant;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.crue.hercules.sgi.csp.model.ProyectoFacturacion;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 
 import lombok.AllArgsConstructor;
@@ -39,6 +37,8 @@ public class ProyectoFacturacionInput implements Serializable {
 
   @NotNull
   private BigDecimal importeBase;
+
+  private String numeroFacturaSge;
 
   @NotNull
   private Integer numeroPrevision;

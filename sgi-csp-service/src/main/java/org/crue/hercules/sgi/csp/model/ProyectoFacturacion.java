@@ -66,6 +66,9 @@ public class ProyectoFacturacion extends BaseEntity {
   @Column(name = "importe_base", nullable = false)
   private BigDecimal importeBase;
 
+  @Column(name = "numero_factura_sge", nullable = true)
+  private String numeroFacturaSge;
+
   @Column(name = "numero_prevision", nullable = false)
   private Integer numeroPrevision;
 

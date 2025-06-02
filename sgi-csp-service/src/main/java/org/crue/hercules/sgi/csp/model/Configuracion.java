@@ -98,6 +98,12 @@ public class Configuracion extends BaseEntity {
     ECC_FILTRO_FACTURAS_EMITIDAS_FECHA_FACTURA
   }
 
+  public enum SgeCalendarioFacturacionIntegration {
+    INTEGRACION_LECTURA_ESCRITURA,
+    INTEGRACION_SOLO_LECTURA,
+    SIN_INTEGRACION;
+  }
+
   public enum Param {
     /**
      * Formato codigo partida presupuestaria
@@ -185,11 +191,11 @@ public class Configuracion extends BaseEntity {
      */
     PROYECTO_SGE_MODIFICACION_MODO_EJECUCION("proyectoSgeModificacionModoEjecucion"),
     /**
-     * Determina si hay integración del calendario facturación con el SGE para
-     * indicar si se van a notificar las facturas previstas validadas del calendario
-     * de facturación al SGE
+     * Determina si hay integración del calendario facturación con el SGE y si la
+     * integración es solo para la lectura número factura o si también se integra la
+     * creación del ítem facturación
      */
-    CALENDARIO_FACTURACION_SGE_ENABLED("calendarioFacturacionSgeEnabled"),
+    CALENDARIO_FACTURACION_SGE_INTEGRATION("calendarioFacturacionSgeIntegration"),
     /**
      * Columnas a mostrar en Facturas y gastos (ejecución económica - facturas y
      * justificantes)
@@ -397,12 +403,13 @@ public class Configuracion extends BaseEntity {
   private String personalContratadoColumnasFijasVisibles;
 
   /**
-   * Determina si hay integración del calendario facturación con el SGE para
-   * indicar si se van a notificar las facturas previstas validadas del calendario
-   * de facturación al SGE
+   * Determina si hay integración del calendario facturación con el SGE y si la
+   * integración es solo para la lectura número factura o si también se integra la
+   * creación del ítem facturación
    */
-  @Column(name = "sge_calendario_facturacion", columnDefinition = "boolean default true", nullable = false, unique = true)
-  private Boolean calendarioFacturacionSgeEnabled;
+  @Column(name = "sge_calendario_facturacion", nullable = false, unique = true)
+  @Enumerated(EnumType.STRING)
+  private SgeCalendarioFacturacionIntegration calendarioFacturacionSgeIntegration;
 
   /**
    * Determina si se esta habilitado el filtro de proyectos con algun socio del
@@ -494,8 +501,8 @@ public class Configuracion extends BaseEntity {
         return this.getProyectoSgeAltaModoEjecucion();
       case PROYECTO_SGE_MODIFICACION_MODO_EJECUCION:
         return this.getProyectoSgeModificacionModoEjecucion();
-      case CALENDARIO_FACTURACION_SGE_ENABLED:
-        return this.getCalendarioFacturacionSgeEnabled();
+      case CALENDARIO_FACTURACION_SGE_INTEGRATION:
+        return this.getCalendarioFacturacionSgeIntegration();
       case FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES:
         return this.getFacturasGastosColumnasFijasVisibles();
       case VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES:
@@ -584,8 +591,8 @@ public class Configuracion extends BaseEntity {
       case PROYECTO_SGE_MODIFICACION_MODO_EJECUCION:
         this.setProyectoSgeModificacionModoEjecucion(ModoEjecucion.valueOf(newValue));
         break;
-      case CALENDARIO_FACTURACION_SGE_ENABLED:
-        this.setCalendarioFacturacionSgeEnabled(Boolean.valueOf(newValue));
+      case CALENDARIO_FACTURACION_SGE_INTEGRATION:
+        this.setCalendarioFacturacionSgeIntegration(SgeCalendarioFacturacionIntegration.valueOf(newValue));
         break;
       case FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES:
         if (isValidEnumString(newValue, SgeFacturasJustificantesColumnasFijas.class, true)) {

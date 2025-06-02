@@ -56,7 +56,7 @@ public class ProyectoFacturacionService {
     Specification<ProyectoFacturacion> specs = ProyectoFacturacionSpecifications.byProyectoId(proyectoId);
 
     if (StringUtils.isNotBlank(query)) {
-      specs = specs.and(SgiRSQLJPASupport.toSpecification(query));
+      specs = specs.and(SgiRSQLJPASupport.toSpecification(query, ProyectoFacturacionPredicateResolver.getInstance()));
     }
 
     return this.proyectoFacturacionRepository.findAll(specs, paging);
@@ -102,13 +102,14 @@ public class ProyectoFacturacionService {
     beforeUpdate.setComentario((toUpdate.getComentario().stream()
         .map(comentario -> new ProyectoFacturacionComentario(comentario.getLang(), comentario.getValue()))
         .collect(Collectors.toSet())));
-    beforeUpdate.setImporteBase(toUpdate.getImporteBase());
-    beforeUpdate.setPorcentajeIVA(toUpdate.getPorcentajeIVA());
-    beforeUpdate.setTipoFacturacion(toUpdate.getTipoFacturacion());
-    beforeUpdate.setFechaEmision(toUpdate.getFechaEmision());
     beforeUpdate.setFechaConformidad(toUpdate.getFechaConformidad());
+    beforeUpdate.setFechaEmision(toUpdate.getFechaEmision());
+    beforeUpdate.setImporteBase(toUpdate.getImporteBase());
+    beforeUpdate.setNumeroFacturaSge(toUpdate.getNumeroFacturaSge());
+    beforeUpdate.setPorcentajeIVA(toUpdate.getPorcentajeIVA());
     beforeUpdate.setProyectoProrrogaId(toUpdate.getProyectoProrrogaId());
     beforeUpdate.setProyectoSgeRef(toUpdate.getProyectoSgeRef());
+    beforeUpdate.setTipoFacturacion(toUpdate.getTipoFacturacion());
 
     if (toUpdate.getEstadoValidacionIP().getEstado() != beforeUpdate.getEstadoValidacionIP().getEstado()) {
       beforeUpdate.setEstadoValidacionIP(persistEstadoValidacionIP(toUpdate.getEstadoValidacionIP(), toUpdate.getId()));
@@ -171,8 +172,7 @@ public class ProyectoFacturacionService {
   private boolean checkIfCanSendComunicado(ProyectoFacturacion proyectoFacturacion) {
     boolean res = false;
     switch (proyectoFacturacion.getEstadoValidacionIP().getEstado()) {
-      case RECHAZADA:
-      case VALIDADA:
+      case RECHAZADA, VALIDADA:
         res = !((!TipoEstadoValidacion.VALIDADA.equals(proyectoFacturacion.getEstadoValidacionIP().getEstado())
             && !TipoEstadoValidacion.RECHAZADA.equals(proyectoFacturacion.getEstadoValidacionIP().getEstado()))
             || ((!authorityHelper.checkIfUserIsInvestigadorPrincipal(proyectoFacturacion.getProyectoId()))
@@ -234,6 +234,26 @@ public class ProyectoFacturacionService {
 
     return proyectoFacturacionRepository.findAll(specs, pageable);
 
+  }
+
+  /**
+   * Busca los {@link ProyectoFacturacion} sin número de factura sge que cumpla
+   * con los criterios de busqueda.
+   * 
+   * @param query  información del filtro.
+   * @param paging Información de paginación
+   * @return la lista de {@link ProyectoFacturacion} que cumple con los criterios
+   *         de busqueda.
+   * 
+   */
+  public Page<ProyectoFacturacion> findFacturasPrevistasPendientesEmitir(String query, Pageable paging) {
+    Specification<ProyectoFacturacion> specs = ProyectoFacturacionSpecifications.byNumeroFacturaSgeNull();
+
+    if (StringUtils.isNotBlank(query)) {
+      specs = specs.and(SgiRSQLJPASupport.toSpecification(query, ProyectoFacturacionPredicateResolver.getInstance()));
+    }
+
+    return this.proyectoFacturacionRepository.findAll(specs, paging);
   }
 
 }

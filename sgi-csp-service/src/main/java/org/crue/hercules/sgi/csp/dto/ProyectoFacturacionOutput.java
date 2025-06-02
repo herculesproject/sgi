@@ -30,6 +30,7 @@ public class ProyectoFacturacionOutput implements Serializable {
   private Instant fechaConformidad;
   private Instant fechaEmision;
   private BigDecimal importeBase;
+  private String numeroFacturaSge;
   private Integer numeroPrevision;
   private Integer porcentajeIVA;
   private Long proyectoId;
@@ -54,8 +55,8 @@ public class ProyectoFacturacionOutput implements Serializable {
   @AllArgsConstructor
   @Builder
   public static class TipoFacturacion implements Serializable {
-    Long id;
-    Collection<TipoFacturacionNombre> nombre;
+    private Long id;
+    private Collection<TipoFacturacionNombre> nombre;
   }
 
 }

@@ -3437,4 +3437,18 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.10.0-126">
+    <dropColumn tableName="configuracion" columnName="sge_calendario_facturacion" />
+
+    <addColumn tableName="configuracion">
+      <column name="sge_calendario_facturacion" type="varchar(50)" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="master" id="0.10.0-127">
+    <addColumn tableName="proyecto_facturacion">
+      <column name="numero_factura_sge" type="varchar(50)" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
