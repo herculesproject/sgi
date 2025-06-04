@@ -153,7 +153,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
 
     const data = this.data?.proyectoFacturacion;
 
-    const identificadorSgeUnico = !!this.data.proyectosSge?.length ? this.data.proyectosSge[0] : null;
+    const identificadorSgeUnico = (this.data.proyectosSge?.length ?? 0) !== 1 ? null : this.data.proyectosSge[0];
 
     const form = new FormGroup({
       numeroPrevision: new FormControl({ value: data?.numeroPrevision, disabled: true }, [Validators.required]),

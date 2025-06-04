@@ -152,7 +152,7 @@
       </div>
 
       <!-- Nº factura emitida -->
-      <div fxLayout="row">
+      <div fxLayout="row" *ngIf="this.isCalendarioFacturacionSgeIntegrationDisabled">
         <mat-form-field>
           <mat-label>{{'csp.proyecto-calendario-facturacion.numero-factura-emitida' | translate}}</mat-label>
           <input matInput formControlName="numeroFacturaEmitida" type="text">
