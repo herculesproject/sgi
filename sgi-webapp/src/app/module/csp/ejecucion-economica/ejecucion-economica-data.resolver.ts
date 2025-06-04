@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { SgiError } from '@core/errors/sgi-error';
 import { sortGrupoEquipoByPersonaNombre, sortGrupoEquipoByRolProyectoOrden } from '@core/models/csp/grupo-equipo';
 import { sortProyectoEquipoByPersonaNombre, sortProyectoEquipoByRolProyectoOrden } from '@core/models/csp/proyecto-equipo';
 import { TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
@@ -15,7 +16,7 @@ import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable, forkJoin, from, of, throwError } from 'rxjs';
+import { EMPTY, Observable, forkJoin, from, throwError } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { EJECUCION_ECONOMICA_ROUTE_PARAMS } from './ejecucion-economica-route-params';
 import { IEjecucionEconomicaData } from './ejecucion-economica.action.service';
@@ -56,22 +57,24 @@ export class EjecucionEconomicaDataResolver extends SgiResolverResolver<IEjecuci
           relaciones
         } as IEjecucionEconomicaData;
       }),
-      switchMap(data => {
-        if (!data.configuracion.sectorIvaSgeEnabled) {
-          return of(data);
-        }
-
-        return this.proyectoSgeService.findById(data.proyectoSge.id).pipe(
-          switchMap(proyectoSge => {
+      switchMap(data =>
+        this.proyectoSgeService.findById(data.proyectoSge.id).pipe(
+          map(proyectoSge => {
             if (!proyectoSge) {
-              return throwError(MSG_PROYECTO_SGE_NOT_FOUND);
+              throw new SgiError(MSG_PROYECTO_SGE_NOT_FOUND);
             }
 
             data.proyectoSge = proyectoSge;
-            return of(data);
+            return data;
+          }),
+          catchError(error => {
+            if (error instanceof SgiError) {
+              this.setErrorMessage(`${error.title}${!!error.message ? ': ' + error.message : ''}`);
+            }
+            return throwError(error);
           })
-        );
-      }),
+        )
+      ),
       switchMap(response =>
         from(response.relaciones).pipe(
           mergeMap(relacion => {
