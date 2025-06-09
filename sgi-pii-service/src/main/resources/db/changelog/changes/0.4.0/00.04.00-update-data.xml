@@ -8,6 +8,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
   <changeSet context="!test" author="master" id="00.04.00-solicitud_proteccion">
+    <validCheckSum>8:db98d107649a6251214d53f16eba76bf</validCheckSum>
     <sql dbms="!h2">
       DELETE FROM ${schemaPrefix}solicitud_proteccion
       WHERE 
