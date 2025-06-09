@@ -12,8 +12,8 @@ Le recordamos que, tal y como se refleja en la autorización de la Diputación F
 - Referencia CEID: ${data.referenciaMemoria}
 
 Reciba un cordial saludo,
-Servicio de Ética
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -28,8 +28,8 @@ We remind you that, as reflected in the authorisation of the relevant Provincial
 - CEID Reference: ${data.referenciaMemoria}
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -44,8 +44,8 @@ Gogoratu behean aipatutako proiektua gauzatzeko dagokion atzera begirako ebaluaz
 - IIEB erreferentzia: ${data.referenciaMemoria}
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

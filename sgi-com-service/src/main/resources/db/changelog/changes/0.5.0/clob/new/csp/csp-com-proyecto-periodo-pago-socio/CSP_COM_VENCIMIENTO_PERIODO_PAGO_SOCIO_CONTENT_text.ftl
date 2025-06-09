@@ -17,8 +17,8 @@ Le informamos de que proximamente se alcanzará la fecha prevista del pago al so
 - Proyecto: ${sgi.getFieldValue(data.titulo)}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -30,8 +30,8 @@ Please be advised that the due date for payment to the below collaborating partn
 - Project: ${sgi.getFieldValue(data.titulo)}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -43,8 +43,8 @@ Honen bidez jakinarazten dizugu laster iritsiko dela behean aipatutako bazkide k
 - Proiektua: ${sgi.getFieldValue(data.titulo)}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

@@ -14,8 +14,8 @@ El orden del día de la reunión será el siguiente:
 ${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA)}
 
 Reciba un cordial saludo,
-Servicio de Ética
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -33,8 +33,8 @@ The agenda of the meeting will be as follows:
 ${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA)}
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -52,8 +52,8 @@ Hau izango da bilerako gai zerrenda:
 ${sgi.getFieldValue(ETI_CONVOCATORIA_REUNION_ORDEN_DEL_DIA)}
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

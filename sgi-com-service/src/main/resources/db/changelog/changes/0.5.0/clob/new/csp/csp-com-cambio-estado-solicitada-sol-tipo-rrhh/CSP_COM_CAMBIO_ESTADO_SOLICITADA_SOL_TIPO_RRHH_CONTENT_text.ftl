@@ -14,8 +14,8 @@ Le informamos que ha sigo registrada una solicitud, indicando que usted particip
 Es necesario que valide la solicitud desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacionMenuValidacionTutor}.
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -32,8 +32,8 @@ Please be advised that an application has been registered, indicating that you w
 You need to validate the application from the application, by following this link: ${data.enlaceAplicacionMenuValidacionTutor}.
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -50,8 +50,8 @@ Honen bidez jakinarazten dizugu eskaera bat erregistratu dela eta bertan adieraz
 Eskaera balioztatu behar duzu aplikaziotik, esteka honen bidez: ${data.enlaceAplicacionMenuValidacionTutor}.
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

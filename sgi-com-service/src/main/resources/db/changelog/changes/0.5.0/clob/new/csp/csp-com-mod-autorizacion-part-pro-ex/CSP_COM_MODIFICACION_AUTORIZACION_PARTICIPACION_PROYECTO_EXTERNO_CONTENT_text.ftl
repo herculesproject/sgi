@@ -12,8 +12,8 @@ Le informamos de que ha sido registrada la solicitud de autorización de partici
 Es necesario que valide la solicitud desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}.
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -28,8 +28,8 @@ Please be advised that your request for authorisation to participate in the belo
 You need to validate the application from the application, by following this link: ${data.enlaceAplicacion}.
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -44,8 +44,8 @@ Honen bidez jakinarazten dizugu behean adierazitako kanpo proiektuan parte hartz
 Eskaera balioztatu behar duzu aplikaziotik, esteka honen bidez: ${data.enlaceAplicacion}.
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

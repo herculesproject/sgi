@@ -18,8 +18,8 @@ Esta memoria obtuvo un dictamen "pendiente de correcciones" en la evaluación re
 </#if>
 
 Reciba un cordial saludo,
-Servicio de Ética
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -40,8 +40,8 @@ This report was given a "subject to correction" opinion in the evaluation carrie
 </#if>
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -62,8 +62,8 @@ Memoria horrek "Zuzenketak egiteke" irizpena jaso zuen data honetan egindako eba
 </#if>
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

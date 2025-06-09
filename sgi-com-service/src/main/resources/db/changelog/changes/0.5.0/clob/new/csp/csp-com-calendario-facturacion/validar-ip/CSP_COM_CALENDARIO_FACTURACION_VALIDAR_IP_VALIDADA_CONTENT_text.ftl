@@ -21,8 +21,8 @@ Le informamos de que tiene el visto bueno para la emisión de la factura abajo r
 - Visto bueno para la emisión de la factura número: ${data.numPrevision}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -36,8 +36,8 @@ Please be advised that you have the approval to issue the invoice below.
 - Approval for the issuance of invoice number: ${data.numPrevision}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -51,8 +51,8 @@ Honen bidez jakinarazten dizugu behean aipatutako faktura jaulkitzeko oniritzia 
 - Jaulkitze oniritzia jaso duen fakturaren zenbakia: ${data.numPrevision}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

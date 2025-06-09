@@ -11,8 +11,8 @@ Una vez firmado el contrato asocado al/los proyecto/s abajo referenciado/s más 
 - N.º de previsión: ${data.numPrevision}
 
 En espera de su respuesta, reciba un cordial saludo,
-Oficina de Transferencia de Resultados de Investigación
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -26,8 +26,8 @@ Having signed the contract associated with the below project(s), you need to con
 - Forecast no.: ${data.numPrevision}
 
 We look forward to hearing from you. Kind regards,
-Office for the Transfer of Research Results
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -41,8 +41,8 @@ Behean aipatutako proiektuekin lotutako kontratua sinatu ostean, adierazita dago
 - Aurreikuspen zk.: ${data.numPrevision}
 
 Zure erantzunaren zain, jaso agur bero bat.
-Ikerketaren Emaitzak Transferitzeko Bulegoa
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

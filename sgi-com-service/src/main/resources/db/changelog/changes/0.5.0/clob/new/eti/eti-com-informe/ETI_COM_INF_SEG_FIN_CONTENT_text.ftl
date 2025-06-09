@@ -10,8 +10,8 @@ Le recordamos que una vez que ha pasado un año desde la fecha de fin de de la a
 - Referencia CEID: ${data.referenciaMemoria}
 
 Reciba un cordial saludo,
-Servicio de Ética
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -24,8 +24,8 @@ We remind you that, once a year has passed since the end date of the below activ
 - CEID Reference: ${data.referenciaMemoria}
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -38,8 +38,8 @@ Gogoratu behean aipatutako jardueraren amaiera datatik urtebete igarotakoan amai
 - IIEB erreferentzia: ${data.referenciaMemoria}
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

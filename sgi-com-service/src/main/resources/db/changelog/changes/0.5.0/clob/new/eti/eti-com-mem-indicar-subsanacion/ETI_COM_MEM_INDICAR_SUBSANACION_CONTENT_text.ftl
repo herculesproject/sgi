@@ -14,8 +14,8 @@ Le informamos que debe realizar la siguiente modificaciones/aclaraciones a trav√
 ${sgi.getFieldValue(data.comentarioEstado)}
 
 Reciba un cordial saludo,
-Servicio de √âtica
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -32,8 +32,8 @@ Please be advised that you need to implement the following modifications/clarifi
 ${sgi.getFieldValue(data.comentarioEstado)}
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -50,8 +50,8 @@ Eta ${data.enlaceAplicacion} aplikazioaren bidez aldaketa/azalpen hau egin behar
 ${sgi.getFieldValue(data.comentarioEstado)}
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

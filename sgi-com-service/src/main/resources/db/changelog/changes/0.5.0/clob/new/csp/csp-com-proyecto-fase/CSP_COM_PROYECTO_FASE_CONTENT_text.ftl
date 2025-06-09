@@ -14,8 +14,8 @@ En esta fase, se han indicado las siguientes observaciones:
 ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -33,8 +33,8 @@ The following remarks were made in this phase:
 ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -52,8 +52,8 @@ Fase horretan ohar hauek adierazi dira:
 ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

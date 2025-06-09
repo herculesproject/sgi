@@ -18,8 +18,8 @@ ${data.nombreApellidosEvaluador2}
 </#if>
 <p>
 Reciba un cordial saludo,<br>
-Servicio de Ética<br>
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEn>
@@ -41,8 +41,8 @@ ${data.nombreApellidosEvaluador2}
 </#if>
 <p>
 Yours sincerely,<br>
-Ethics Service<br>
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -64,8 +64,8 @@ ${data.nombreApellidosEvaluador2}
 </#if>
 <p>
 Jaso agur bero bat.<br>
-Etika Zerbitzua<br>
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

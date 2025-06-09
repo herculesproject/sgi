@@ -22,8 +22,8 @@
 </p>
 <p>
 En espera de su respuesta, reciba un cordial saludo,<br>
-Oficina de Transferencia de Resultados de Investigación<br>
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEn>
@@ -38,8 +38,8 @@ otri@ehu.eus
 </p>
 <p>
 We look forward to hearing from you. Kind regards,<br>
-Office for the Transfer of Research Results<br>
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -54,8 +54,8 @@ otri@ehu.eus
 </p>
 <p>
 Zure erantzunaren zain, jaso agur bero bat.<br>
-Ikerketaren Emaitzak Transferitzeko Bulegoa<br>
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

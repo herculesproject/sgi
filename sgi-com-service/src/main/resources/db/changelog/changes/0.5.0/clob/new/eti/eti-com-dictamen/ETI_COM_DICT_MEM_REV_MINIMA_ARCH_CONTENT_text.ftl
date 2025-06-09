@@ -11,8 +11,8 @@ Ante la ausencia de respuesta a las correcciones solicitadas por el comité abaj
 - Referencia CEID: ${data.referenciaMemoria}
 
 Reciba un cordial saludo,
-Servicio de Ética
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -26,8 +26,8 @@ In the absence of a response to the corrections requested by the below committee
 - CEID Reference: ${data.referenciaMemoria}
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -41,8 +41,8 @@ Behean aipatutako batzordeak eskatutako zuzenketek erantzunik jaso ez dutenez, z
 - IIEB erreferentzia: ${data.referenciaMemoria}
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

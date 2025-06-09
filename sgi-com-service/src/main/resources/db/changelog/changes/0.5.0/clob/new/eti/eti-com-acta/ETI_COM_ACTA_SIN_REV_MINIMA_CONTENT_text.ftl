@@ -10,8 +10,8 @@ Una vez evaluada su solicitud, le informamos que ya puede descargar el informe c
 - Comité: ${data.comiteCodigo}
 
 Reciba un cordial saludo,
-Servicio de Ética
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -24,8 +24,8 @@ Having evaluated your application, please be advised that you can now download t
 - Committee: ${data.comiteCodigo}
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -38,8 +38,8 @@ Honen bidez jakinarazten dizugu zure eskaera ebaluatu dela eta dagokion txostena
 - Batzordea: ${data.comiteCodigo}
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

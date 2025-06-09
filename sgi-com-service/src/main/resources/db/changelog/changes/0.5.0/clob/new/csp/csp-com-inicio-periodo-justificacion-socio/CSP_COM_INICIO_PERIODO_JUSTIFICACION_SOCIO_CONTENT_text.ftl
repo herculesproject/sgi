@@ -22,8 +22,8 @@ Le informamos de que próximamente dara inicio el periodo de presentación de ju
 - Periodo que se debe justificar: ${data.numPeriodo}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -37,8 +37,8 @@ Please be advised that the period for submission of justification for the projec
 - Period to be justified: ${data.numPeriodo}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -52,8 +52,8 @@ Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuare
 - Justifikatu beharreko aldia: ${data.numPeriodo}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

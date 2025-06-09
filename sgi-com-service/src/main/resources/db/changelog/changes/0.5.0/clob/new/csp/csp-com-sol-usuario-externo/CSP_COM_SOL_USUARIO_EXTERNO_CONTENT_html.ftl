@@ -13,8 +13,8 @@
 <p>Le recordamos que debe cambiar el estado de la solicitud de "borrador" a "solicitada", para que pueda ser validada por su tutor/a.</p>
 <p>
 Reciba un cordial saludo,<br>
-Dirección de gestión de la investigación<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEn>
@@ -31,8 +31,8 @@ convocatorias.dgi@ehu.eus
 <p>We remind you to change the status of the application from "draft" to "requested", so that it can be validated by your tutor.</p>
 <p>
 Yours sincerely,<br>
-Research Management Directorate<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -49,8 +49,8 @@ convocatorias.dgi@ehu.eus
 <p>Gogoratu eskaeraren egoeran "Zirriborroa" aukeraren ordez "Eskatua" aukera jarri behar duzula, tutoreak baliozkotu ahal izan dezan.</p>
 <p>
 Jaso agur bero bat.<br>
-Ikerketa Kudeatzeko Zuzendaritza<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

@@ -19,8 +19,8 @@ Le informamos de que próximamente se iniciará el plazo de presentación de la 
 Puede revisar la información a través de la aplicación: ${data.enlaceAplicacion}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -32,8 +32,8 @@ Please be advised that the deadline for the submission of the scientific will so
 You can review the information through the application: ${data.enlaceAplicacion}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -45,8 +45,8 @@ Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuare
 Informazioa berrikus dezakezu aplikazioaren bidez: ${data.enlaceAplicacion}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

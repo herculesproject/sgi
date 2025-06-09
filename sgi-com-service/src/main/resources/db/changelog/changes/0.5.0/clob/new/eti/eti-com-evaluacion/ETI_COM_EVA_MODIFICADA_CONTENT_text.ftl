@@ -9,8 +9,8 @@ Le informamos de que la persona responsable de la memoria ha realizado las modif
 - Referencia CEID: ${data.referenciaMemoria}
 
 Reciba un cordial saludo,
-Servicio de Ética
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -22,8 +22,8 @@ Please be advised that the person responsible for the report has implemented the
 - CEID Reference: ${data.referenciaMemoria}
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -35,8 +35,8 @@ Memoriaren arduradunak eskatutako aldaketak egin dituela jakinarazten dizugu. Be
 - IIEB erreferentzia: ${data.referenciaMemoria}
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

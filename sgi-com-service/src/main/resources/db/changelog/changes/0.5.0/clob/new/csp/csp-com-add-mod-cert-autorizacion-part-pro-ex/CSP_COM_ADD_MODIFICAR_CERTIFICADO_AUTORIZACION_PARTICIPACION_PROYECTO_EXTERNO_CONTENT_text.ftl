@@ -8,8 +8,8 @@ Le informamos de que tiene disponible para su descarga la autorización de parti
 - Proyecto externo: ${sgi.getFieldValue(data.tituloProyectoExt)}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -20,8 +20,8 @@ Please be advised that the authorisation for participating in the below external
 - External project: ${sgi.getFieldValue(data.tituloProyectoExt)}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -32,8 +32,8 @@ Honen bidez jakinarazten dizugu deskargatzeko prest duzula behean aipatzen den k
 - Kanpo proiektua: ${sgi.getFieldValue(data.tituloProyectoExt)}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

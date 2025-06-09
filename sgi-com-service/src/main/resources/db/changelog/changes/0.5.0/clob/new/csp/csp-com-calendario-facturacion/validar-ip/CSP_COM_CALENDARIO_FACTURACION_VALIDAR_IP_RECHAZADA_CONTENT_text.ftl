@@ -22,8 +22,8 @@ Le informamos de que tiene el visto bueno para la emisión de la factura abajo r
 - Motivo: ${sgi.getFieldValue(data.motivoRechazo)}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 
 </#macro>
 <#macro renderEn>
@@ -39,8 +39,8 @@ Please be advised that you have the approval to issue the invoice below.
 - Reason: ${sgi.getFieldValue(data.motivoRechazo)}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -55,8 +55,8 @@ Honen bidez jakinarazten dizugu ez duzula oniritzirik behean aipatutako faktura 
 - Zergatia: ${sgi.getFieldValue(data.motivoRechazo)}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

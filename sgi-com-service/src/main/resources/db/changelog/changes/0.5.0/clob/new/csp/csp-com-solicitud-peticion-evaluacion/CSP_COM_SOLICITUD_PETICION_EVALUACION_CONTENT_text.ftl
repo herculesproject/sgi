@@ -6,8 +6,8 @@ Le informamos de que es necesario someter su investigación a evaluación ante e
 - Código de referencia: ${ETI_PETICION_EVALUACION_CODIGO?esc}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -17,8 +17,8 @@ Please be advised that your research needs to be submitted to the CEID for evalu
 - Reference code: ${ETI_PETICION_EVALUACION_CODIGO?esc}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -28,8 +28,8 @@ Honen bidez jakinarazten dizugu beharrezkoa dela IIEBk zure ikerketa ebaluatzea;
 - Erreferentzia kodea: ${ETI_PETICION_EVALUACION_CODIGO?esc}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

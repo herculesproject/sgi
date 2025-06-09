@@ -10,8 +10,8 @@ Le informamos de que se ha modificado su solicitud de autorización de participa
 - Estado: ${sgi.getFieldValue(data.estadoSolicitudPext)}
 
 Reciba un cordial saludo,
-Dirección de gestión de la investigación
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -24,8 +24,8 @@ Please be advised that your request for authorisation to participate in the proj
 - Status: ${sgi.getFieldValue(data.estadoSolicitudPext)}
 
 Yours sincerely,
-Research Management Directorate
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -38,8 +38,8 @@ Honen bidez jakinarazten dizugu aldatu egin dela adierazitako proiektuan parte h
 - Egoera: ${sgi.getFieldValue(data.estadoSolicitudPext)}
 
 Jaso agur bero bat.
-Ikerketa Kudeatzeko Zuzendaritza
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

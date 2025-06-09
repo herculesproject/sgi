@@ -24,8 +24,8 @@
 <p>En relación a los trabajos que ha realizado en el marco de este contrato, es aconsejable que nos remita copia de los informes finales entregados a la/s empresa/s, objeto del contrato, para conocer del desarrollo, ejecución y cumplimiento de los trabajos.</p>
 <p>
 En espera de su respuesta, reciba un cordial saludo,<br>
-Oficina de Transferencia de Resultados de Investigación<br>
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEn>
@@ -42,8 +42,8 @@ otri@ehu.eus
 <p>In relation to the work you have carried out within the framework of this contract, it is advisable that you send us a copy of the final reports delivered to the company(ies) subject to the contract, in order to know about the development, implementation and fulfilment of the work.</p>
 <p>
 We look forward to hearing from you. Kind regards,<br>
-Office for the Transfer of Research Results<br>
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -60,8 +60,8 @@ otri@ehu.eus
 <p>Kontratu horren baitan egin dituzun lanei dagokienez, komenigarria da guri ere bidaltzea kontratuak xedetzat zituen enpresei aurkeztutako amaierako txostenen kopia bat, lanak nola garatu, gauzatu eta bete diren jakin dezagun.</p>
 <p>
 Zure erantzunaren zain, jaso agur bero bat.<br>
-Ikerketaren Emaitzak Transferitzeko Bulegoa<br>
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

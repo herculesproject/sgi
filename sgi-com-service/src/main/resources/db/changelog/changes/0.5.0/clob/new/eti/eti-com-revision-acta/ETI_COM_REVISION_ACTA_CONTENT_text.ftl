@@ -8,8 +8,8 @@ Le informamos de que tiene a su disposición el acta se la reunión celebrada el
 Puede revisarla a través de la aplicación ${data.enlaceAplicacion}, aportando, si fuese necesario, comentarios pendientes sobre las memorias evaluadas.
 
 Reciba un cordial saludo,
-Servicio de Ética
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -20,8 +20,8 @@ Please be advised that you have at your disposal the minutes of the meeting held
 You can review it through the application ${data.enlaceAplicacion}, providing, if necessary, any pending comments on the evaluated reports.
 
 Yours sincerely,
-Ethics Service
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -32,8 +32,8 @@ Honen bidez jakinarazten dizugu eskuragarri duzula egun honetako bileraren akta:
 ${data. enlaceAplicacion} aplikazioaren bidez berrikus dezakezu, eta ebaluatutako memoriei buruz egin gabeko iruzkinak egin ditzakezu, beharrezkoa izanez gero.
 
 Jaso agur bero bat.
-Etika Zerbitzua
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

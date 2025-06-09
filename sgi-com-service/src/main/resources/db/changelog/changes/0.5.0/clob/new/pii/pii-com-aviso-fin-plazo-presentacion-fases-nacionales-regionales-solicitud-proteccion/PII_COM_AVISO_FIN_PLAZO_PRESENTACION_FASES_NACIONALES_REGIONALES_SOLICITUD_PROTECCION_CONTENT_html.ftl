@@ -18,8 +18,8 @@
 </p>
 <p>
 Reciba un cordial saludo,<br>
-Servicio de Gestión de Patentes<br>
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEn>
@@ -33,8 +33,8 @@ iproperty.otri@ehu.eus
 </p>
 <p>
 Yours sincerely,<br>
-Patent Management Service<br>
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -48,8 +48,8 @@ iproperty.otri@ehu.eus
 </p>
 <p>
 Jaso agur bero bat.<br>
-Patenteak Kudeatzeko Zerbitzua<br>
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

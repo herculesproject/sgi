@@ -22,8 +22,8 @@
 </p>
 <p>
 Reciba un cordial saludo,<br>
-Dirección de gestión de la investigación<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEn>
@@ -39,8 +39,8 @@ convocatorias.dgi@ehu.eus
 </p>
 <p>
 Yours sincerely,<br>
-Research Management Directorate<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -56,8 +56,8 @@ convocatorias.dgi@ehu.eus
 </p>
 <p>
 Jaso agur bero bat.<br>
-Ikerketa Kudeatzeko Zuzendaritza<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

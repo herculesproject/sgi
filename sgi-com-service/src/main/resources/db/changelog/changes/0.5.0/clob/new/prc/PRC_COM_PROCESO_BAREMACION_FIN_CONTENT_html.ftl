@@ -13,8 +13,8 @@
 <p>Puede consultar su resultado en el siguiente enlace, opción de menú "Informes": <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 Reciba un cordial saludo,<br>
-Dirección de gestión de la investigación<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEn>
@@ -25,8 +25,8 @@ convocatorias.dgi@ehu.eus
 <p>You can consult your result in the following link, menu option "Reports": <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 Yours sincerely,<br>
-Research Management Directorate<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -37,8 +37,8 @@ convocatorias.dgi@ehu.eus
 <p>Zure emaitza esteka honetan ikus dezakezu, "Txostenak" menuan: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 Jaso agur bero bat.<br>
-Ikerketa Kudeatzeko Zuzendaritza<br>
-convocatorias.dgi@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

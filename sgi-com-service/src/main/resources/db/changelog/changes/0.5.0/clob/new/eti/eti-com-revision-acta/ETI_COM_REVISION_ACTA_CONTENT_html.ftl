@@ -6,8 +6,8 @@
 <p>Puede revisarla a través de la aplicación <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>, aportando, si fuese necesario, comentarios pendientes sobre las memorias evaluadas.</p>
 <p>
 Reciba un cordial saludo,<br>
-Servicio de Ética<br>
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEn>
@@ -17,8 +17,8 @@ ceid@ehu.eus
 <p>You can review it through the application <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>, providing, if necessary, any pending comments on the evaluated reports.</p>
 <p>
 Yours sincerely,<br>
-Ethics Service<br>
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <#macro renderEu>
@@ -28,8 +28,8 @@ ceid@ehu.eus
 <p><a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a> aplikazioaren bidez berrikus dezakezu, eta ebaluatutako memoriei buruz egin gabeko iruzkinak egin ditzakezu, beharrezkoa izanez gero.</p>
 <p>
 Jaso agur bero bat.<br>
-Etika Zerbitzua<br>
-ceid@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
+Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

@@ -24,8 +24,8 @@ Siguiendo el calendario de facturación del contrato referenciado más abajo, se
 En relación a los trabajos que ha realizado en el marco de este contrato, es aconsejable que nos remita copia de los informes finales entregados a la/s empresa/s objeto del contrato, para conocer del desarrollo, ejecución y cumplimiento de los trabajos.
 
 En espera de su respuesta, reciba un cordial saludo,
-Oficina de Transferencia de Resultados de Investigación
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -41,8 +41,8 @@ In accordance with the below contract invoicing schedule, the LAST invoice of th
 In relation to the work you have carried out within the framework of this contract, it is advisable that you send us a copy of the final reports delivered to the company(ies) subject to the contract, in order to know about the development, implementation and fulfilment of the work.
 
 We look forward to hearing from you. Kind regards,
-Office for the Transfer of Research Results
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -58,8 +58,8 @@ Behean aipatutako kontratuaren fakturazio egutegiari jarraituz, LUZAPENEKO AZKEN
 Kontratu horren baitan egin dituzun lanei dagokienez, komenigarria da guri ere bidaltzea kontratuak xedetzat zituen enpresei aurkeztutako amaierako txostenen kopia bat, lanak nola garatu, gauzatu eta bete diren jakin dezagun. 
 
 Zure erantzunaren zain, jaso agur bero bat.
-Ikerketaren Emaitzak Transferitzeko Bulegoa
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <!DOCTYPE html>
 <html>

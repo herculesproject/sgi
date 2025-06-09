@@ -18,8 +18,8 @@ Le informamos de la proxima finalización del plazo de extensión o entrada en f
 - Título de la Invención: ${sgi.getFieldValue(data.solicitudTitle)}
 
 Reciba un cordial saludo,
-Servicio de Gestión de Patentes
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -32,8 +32,8 @@ Please be advised that the period for extension or entry into national/regional 
 - Invention title: ${sgi.getFieldValue(data.solicitudTitle)}
 
 Yours sincerely,
-Patent Management Service
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -46,8 +46,8 @@ Honen bidez jakinarazten dizugu laster amaituko dela asmakizuna hedatzeko edo na
 - Asmakizunaren izenburua: ${sgi.getFieldValue(data.solicitudTitle)}
 
 Jaso agur bero bat.
-Patenteak Kudeatzeko Zerbitzua
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

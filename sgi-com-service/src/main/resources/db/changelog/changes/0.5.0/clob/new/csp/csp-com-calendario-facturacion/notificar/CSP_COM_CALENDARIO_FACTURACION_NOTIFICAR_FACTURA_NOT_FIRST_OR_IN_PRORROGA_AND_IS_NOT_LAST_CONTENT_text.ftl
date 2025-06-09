@@ -23,8 +23,8 @@ Siguiendo el calendario de facturación del contrato referenciado más abajo, es
 - Tipo facturación: ${sgi.getFieldValue(data.tipoFacturacion)}
 
 En espera de su respuesta, reciba un cordial saludo,
-Oficina de Transferencia de Resultados de Investigación
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -39,8 +39,8 @@ In accordance with the below contract invoicing schedule, the following invoice 
 - Invoicing type: ${sgi.getFieldValue(data.tipoFacturacion)}
 
 We look forward to hearing from you. Kind regards,
-Office for the Transfer of Research Results
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -55,8 +55,8 @@ Behean aipatutako kontratuaren fakturazio egutegiari jarraituz, adierazitako fak
 - Fakturazio mota: ${sgi.getFieldValue(data.tipoFacturacion)}
 
 Zure erantzunaren zain, jaso agur bero bat.
-Ikerketaren Emaitzak Transferitzeko Bulegoa
-otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

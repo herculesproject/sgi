@@ -10,8 +10,8 @@ Le informamos de que proximamente termina el plazo para la realización por su p
 - Fecha de finalización del plazo:  ${sgi.formatDate(data.fechaLimite, "SHORT")}
 
 Reciba un cordial saludo,
-Servicio de Gestión de Patentes
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
@@ -24,8 +24,8 @@ Please be advised that the period in which you can carry out the following actio
 - Date of expiry of the period: ${sgi.formatDate(data.fechaLimite, "SHORT")}
 
 Yours sincerely,
-Patent Management Service
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
@@ -38,8 +38,8 @@ Honen bidez jakinarazten dizugu laster amaituko dela ekintza hauek egiteko duzun
 - Epearen amaiera data: ${sgi.formatDate(data.fechaLimite, "SHORT")}
 
 Jaso agur bero bat.
-Patenteak Kudeatzeko Zerbitzua
-iproperty.otri@ehu.eus
+Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
+Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />
