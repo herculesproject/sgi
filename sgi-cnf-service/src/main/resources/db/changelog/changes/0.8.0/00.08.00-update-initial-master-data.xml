@@ -35,6 +35,132 @@
         <param name="name" value="web-i18n-es" />
       </whereParams>
     </update>
+
+    <!-- web-header-logo-feder -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-feder" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-feder.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-feder.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-feder" />
+      </whereParams>
+    </update>
+
+    <!-- web-header-logo-feder 2x -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-feder2x" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-feder@2x.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-feder@2x.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-feder2x" />
+      </whereParams>
+    </update>
+
+    <!-- web-header-logo-feder 3x -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-feder3x" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-feder@3x.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-feder@3x.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-feder3x" />
+      </whereParams>
+    </update>
+
+    <!-- web-header-logo-ministerio -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-ministerio" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-ministerio.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-ministerio.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-ministerio" />
+      </whereParams>
+    </update>
+
+    <!-- web-header-logo-ministerio 2x -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-ministerio2x" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-ministerio@2x.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-ministerio@2x.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-ministerio2x" />
+      </whereParams>
+    </update>
+
+    <!-- web-header-logo-ministerio 3x -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-ministerio3x" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-ministerio@3x.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-ministerio@3x.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-ministerio3x" />
+      </whereParams>
+    </update>
+
+    <!-- web-header-logo-ue -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-ue" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-ue.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-ue.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-ue" />
+      </whereParams>
+    </update>
+
+    <!-- web-header-logo-ue 2x -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-ue2x" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-ue@2x.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-ue@2x.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-ue2x" />
+      </whereParams>
+    </update>
+
+    <!-- web-header-logo-ue 3x -->
+    <customChange class="org.crue.hercules.sgi.cnf.liquibase.UpdateResourcesValue">
+      <param name="resourceName" value="web-header-logo-ue3x" />
+      <param name="valueBlobFile"
+        value="classpath:db/changelog/changes/0.8.0/blob/web/web-header-logo-ue@3x.png" />
+    </customChange>
+    <update tableName="resources">
+      <column name="default_value" valueBlobFile="blob/web/web-header-logo-ue@3x.png" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="web-header-logo-ue3x" />
+      </whereParams>
+    </update>
   </changeSet>
 
   <changeSet context="!test" author="master" id="00.08.00-config-i18n">
