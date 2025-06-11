@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Si el proceso de experimentación requiere trabajar con agentes biológicos (AB) u organismos modificados genéticamente (OMG) en un laboratorio de nivel de contención 2 o superior, es necesario solicitar la evaluación al Comité de Ética en Investigación con Agentes Biológicos (CEIAB)</p>"
+        "template": "<p>Si el proceso de experimentación requiere trabajar con agentes biológicos (AB) u organismos modificados genéticamente (OMG) en un laboratorio de nivel de contención 2 o superior, es necesario solicitar la evaluación al #nombre_comite_M30_es#.</p>"
       },
       {
         "key": "tipoAgenteBiologico",

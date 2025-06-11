@@ -13,7 +13,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>The description regarding the methodological design will depend on the committee to which the annual report is addressed.<ul><li>For the CEI, describing the current sample (characteristics and size) and the development of the project, indicating whether issues have arisen and how they have been resolved.</li><li>For the CEEA, describing the sample (total number of animals used to date) and the development of the project, indicating whether issues have arisen and how they have been resolved.</li><li>For the CBE, the development of the project, indicating whether issues have arisen and how they have been resolved.</li></ul></p>"
+        "template": "<p>The description regarding the methodological design will depend on the committee to which the annual report is addressed.<ul><li>For the #nombre_comite_M10_en#, describing the current sample (characteristics and size) and the development of the project, indicating whether issues have arisen and how they have been resolved.</li><li>For the #nombre_comite_M20_en#, describing the sample (total number of animals used to date) and the development of the project, indicating whether issues have arisen and how they have been resolved.</li><li>For the #nombre_comite_M30_en#, the development of the project, indicating whether issues have arisen and how they have been resolved.</li></ul></p>"
       },
       {
         "template": "Briefly describe how the project is developing methodologically and point out the problems encountered and their solutions, if any."

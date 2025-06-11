@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Requiere informe del CBE.</p>"
+        "template": "<p>Nota: Requiere informe del #nombre_comite_M30_es#.</p>"
       },
       {
         "template": "¿Implican riesgos para la salud humana, animal o para el medio ambiente?",

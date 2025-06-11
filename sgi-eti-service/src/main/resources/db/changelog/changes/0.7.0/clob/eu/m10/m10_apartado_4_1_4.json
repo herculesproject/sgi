@@ -17,13 +17,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>UPV/EHUko langileek garatzen dituzten eta UPV/EHUko instalazioetan egiten diren ikerketa jardueretarako, unibertsitateak jarduerok estaltzen dituen erantzukizun zibileko aseguru bat du. Aseguru horrek ez ditu estaltzen egoera jakin batzuetan sortutako kalteak, egoera hauetan sortutakoak, besteak beste: ikerketa entsegu kliniko bat denean, proiektuaren arduraduna ez denean UPV/EHUko kidea edo ikerketa jarduerak ez duenean GIEB-UPV/EHUren aldeko txostena.</p>"
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "<p>Oharra: UPV/EHUtik kanpoko langileek garatutako ikerketa jardueratarako, dagokion erantzukizun zibileko aseguru poliza erantsi beharko da ‘5.7 Dokumentazio osagarria’ atalean. </p>"
+        "template": "<p>Si la actividad de investigación a desarrollar requiere de un seguro específico deberá adjuntarse la correspondiente póliza en el apartado 5.7. Documentación adicional. Consulte con la Secretaría Técnica del Comité de Ética las necesidades específicas.</p>"
       }
     ]
   }

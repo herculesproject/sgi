@@ -82,7 +82,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Oharra: gogoratu giza ehunak/odola/jariakinak manipulatzeko EBBren ebaluazioa behar dela. </p><p>Izartxoz (*) markatuta dauden aukerak erabiltzeko, Berme Batzordearen aldeko txostena lortu behar da aldez aurretik.</p>",
+        "template": "<p>Oharra: gogoratu giza ehunak/odola/jariakinak manipulatzeko #nombre_comite_M30_eu#ren ebaluazioa behar dela. </p><p>Izartxoz (*) markatuta dauden aukerak erabiltzeko, Berme Batzordearen aldeko txostena lortu behar da aldez aurretik.</p>",
         "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'"
       }
     ]

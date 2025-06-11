@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Note: Requires CBE report.</p>"
+        "template": "<p>Note: Requires #nombre_comite_M30_en# report.</p>"
       },
       {
         "template": "Do they involve risks to human, animal or environmental health?",

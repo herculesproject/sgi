@@ -15,7 +15,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Prozedurak/esku hartzeak baimendutako zentro erabiltzaileetan egingo dira, organo eskudunak besterik baimendu ezean, aldez aurretik emanda zentro horietatik kanpo egiteko beharraren edo egokitasunaren justifikazio zientifikoa (<a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>53/13 EDren 25-4 art.</a>)</p>"
+        "template": "<p>Prozedurak/esku hartzeak baimendutako zentro erabiltzaileetan egingo dira, organo eskudunak besterik baimendu ezean, aldez aurretik emanda zentro horietatik kanpo egiteko beharraren edo egokitasunaren justifikazio zientifikoa (<a href='https://www.boe.es/diario_boe/txt.php?id=BOE-A-2013-1337' target='_blank'>53/13 EDren 25-4 art.</a>)</p>"
       },
       {
         "key": "centroUsuarioUniversidadCheckPrincipal",
@@ -36,15 +36,15 @@
           "options": [
             {
               "value": "animalarioCampusAlava",
-              "label": "Arabako Campuseko animaliategia"
+              "label": "1 animaliategia"
             },
             {
               "value": "animalarioCampusBizkaia",
-              "label": "Bizkaiko Campuseko animaliategia"
+              "label": "2 animaliategia"
             },
             {
               "value": "animalarioCampusGipuzkoa",
-              "label": "Gipuzkoako Campuseko animaliategia"
+              "label": "3 animaliategia"
             }
           ]
         }
@@ -134,7 +134,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Unibertsitateko zentro erabiltzaileko lekuei buruzko informazio gehiagorako, kontsultatu <a href='https://www.um.es/web/comision-etica-investigacion/comision-etica/ceea' target='_blank'>Unibertsitateko Batzordearen webgunea</a>.</p>"
+        "template": "<p>Para más información de lugares del Centro usuario de la Universidad consultar con la Secretaría Técnica del Comité de Ética</p>"
       }
     ]
   }

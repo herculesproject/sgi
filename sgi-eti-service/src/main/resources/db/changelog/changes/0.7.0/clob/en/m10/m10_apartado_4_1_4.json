@@ -17,13 +17,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>For research activities carried out by UPV/EHU staff and on UPV/EHU premises, the university has civil liability insurance to cover these events. This insurance does not cover damages caused in certain situations, among others when the research is a clinical trial, when the person responsible for the project is not a member of the UPV/EHU or when the research activity does not have a favourable report by the CEISH-UPV/EHU.</p>"
-      },
-      {
-        "wrappers": [
-          "info-div"
-        ],
-        "template": "<p>Note: for research activities carried out by non-UPV/EHU staff, the pertinent civil liability insurance policy must be attached in section 5.7. Additional documentation.</p>"
+        "template": "<p>Si la actividad de investigación a desarrollar requiere de un seguro específico deberá adjuntarse la correspondiente póliza en el apartado 5.7. Documentación adicional. Consulte con la Secretaría Técnica del Comité de Ética las necesidades específicas.</p>"
       }
     ]
   }

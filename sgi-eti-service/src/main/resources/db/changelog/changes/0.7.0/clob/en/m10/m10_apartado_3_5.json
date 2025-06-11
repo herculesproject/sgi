@@ -82,7 +82,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Note: Please note that the handling of human tissues/blood/fluids requires evaluation by the CBE.</p><p>The options marked with an asterisk (*) require a prior favourable report from the Guarantees Commission before use</p>\"",
+        "template": "<p>Note: Please note that the handling of human tissues/blood/fluids requires evaluation by the #nombre_comite_M30_en#.</p><p>The options marked with an asterisk (*) require a prior favourable report from the Guarantees Commission before use</p>\"",
         "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'"
       }
     ]

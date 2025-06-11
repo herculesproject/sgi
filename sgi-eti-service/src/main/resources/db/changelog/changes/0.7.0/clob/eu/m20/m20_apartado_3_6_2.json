@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Oharra: EBBren txostena behar da. </p>"
+        "template": "<p>Oharra: #nombre_comite_M30_eu#ren txostena behar da. </p>"
       },
       {
         "template": "Arriskutsuak dira gizakien eta animalien osasunerako edo ingurumenerako?",

@@ -13,7 +13,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Fill in this item according to the committee to which your report is addressed:<ul><li>For the CEI start date of recruitment.</li><li>For the CEEA start date of use of experimental animals.</li><li>For the CBE start date of handling of biological agents or GMOs, hazardous chemicals, radioactive substances.</li></ul></p>"
+        "template": "<p>Fill in this item according to the committee to which your report is addressed:<ul><li>For the #nombre_comite_M10_en# start date of recruitment.</li><li>For the #nombre_comite_M20_en# start date of use of experimental animals.</li><li>For the #nombre_comite_M30_en# start date of handling of biological agents or GMOs, hazardous chemicals, radioactive substances.</li></ul></p>"
       },
       {
         "key": "fechaInicio",

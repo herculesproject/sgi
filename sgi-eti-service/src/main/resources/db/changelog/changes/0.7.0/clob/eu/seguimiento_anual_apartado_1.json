@@ -13,7 +13,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Bete puntu hau zure txostena zer batzorderentzat den kontuan hartuta:<ul><li>IEB: parte hartzaileak biltzeko prozesuaren hasiera data.</li><li>AEEB: esperimentaziorako animalien erabileraren hasiera data.</li><li>EBB: GEO, SKA, SE edo agente biologikoen manipulazioaren hasiera data.</li></ul></p>"
+        "template": "<p>Bete puntu hau zure txostena zer batzorderentzat den kontuan hartuta:<ul><li>#nombre_comite_M10_eu#: parte hartzaileak biltzeko prozesuaren hasiera data.</li><li>#nombre_comite_M20_eu#: esperimentaziorako animalien erabileraren hasiera data.</li><li>#nombre_comite_M30_eu#: GEO, SKA, SE edo agente biologikoen manipulazioaren hasiera data.</li></ul></p>"
       },
       {
         "key": "fechaInicio",

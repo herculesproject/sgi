@@ -50,7 +50,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>HELP: EU Regulation 679/2016 and the personal data protection and guarantee of digital rights act, Organic Law 3/2018, oblige the UPV/EHU to record data processing. Any request for the record of data processing should be addressed to the data protection officer (dpd@ehu.eus). Full details of data protection can be found on the website: <a href='https://www.ehu.eus/es/web/idazkaritza-nagusia/babestu' target='_blank'>Babestu - Data Protection - General Secretariat - UPV/EHU</a>.</p>"
+        "template": "<p>HELP: EU Regulation 679/2016 and the personal data protection and guarantee of digital rights act, Organic Law 3/2018, oblige to record data processing at university.</p>"
       }
     ]
   }

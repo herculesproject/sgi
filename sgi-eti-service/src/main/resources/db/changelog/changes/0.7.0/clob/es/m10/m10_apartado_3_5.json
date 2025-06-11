@@ -82,7 +82,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>Nota: Recuerde que la manipulación de tejidos/sangre/fluidos humanos requiere de evaluación del CBE.</p><p>Las opciones marcadas con asterisco (*) requieren el informe previo favorable de la Comisión de Garantías antes de su utilización</p>",
+        "template": "<p>Nota: Recuerde que la manipulación de tejidos/sangre/fluidos humanos requiere de evaluación del #nombre_comite_M30_es#.</p><p>Las opciones marcadas con asterisco (*) requieren el informe previo favorable de la Comisión de Garantías antes de su utilización</p>",
         "hideExpression": "!model.muestrasBiologicasRadio || model.muestrasBiologicasRadio === 'no'"
       }
     ]

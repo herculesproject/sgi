@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "<p>If the experimental process requires working with biological agents (BA) or genetically modified organisms (GMO) in a laboratory with containment level 2 or higher, it is necessary to request the evaluation of the Biological Agents Research Ethics Committee (CEIAB)</p>"
+        "template": "<p>If the experimental process requires working with biological agents (BA) or genetically modified organisms (GMO) in a laboratory with containment level 2 or higher, it is necessary to request the evaluation of the #nombre_comite_M30_en#.</p>"
       },
       {
         "key": "tipoAgenteBiologico",

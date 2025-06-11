@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "Bidali mezu elektroniko bat bioseguridad@ehu.eus helbidera, eta eskatu abian jartzeko GEOen lehen erabilera konfinaturako baimena/komunikazioa lortzeko izapideak.",
+        "template": "Se debe de enviar un correo electrónico a la Secretaría Técnica del Comité de Ética  solicitando el inicio de los trámites para la autorización/comunicación de primer uso de la actividad de uso confinado de OMG.",
         "hideExpression": "!model.pregunta2OMGRadio || model.pregunta2OMGRadio === 'si'"
       },
       {
