@@ -181,11 +181,8 @@
     </insert>
 
     <update tableName="config">
-      <column name="value"
-        valueComputed="'[{&quot;lang&quot;:&quot;${defaultLang}&quot;, &quot;value&quot;:&quot;' || value || '&quot;}]'" />
-      <column
-        name="default_value"
-        valueComputed="'[{&quot;lang&quot;:&quot;${defaultLang}&quot;, &quot;value&quot;:&quot;' || default_value || '&quot;}]'" />
+      <column name="value" value="[]" />
+      <column name="default_value" value="[]" />
       <where>:name=:value</where>
       <whereParams>
         <param name="name" value="nombre-sistema-gestion-externo" />
@@ -193,12 +190,9 @@
     </update>
 
     <update tableName="config">
-      <column name="value"
-        valueComputed="'[{&quot;lang&quot;:&quot;${defaultLang}&quot;, &quot;value&quot;:&quot;' || value || '&quot;}]'" />
-      <column
-        name="default_value"
-        valueComputed="'[{&quot;lang&quot;:&quot;${defaultLang}&quot;, &quot;value&quot;:&quot;' || value || '&quot;}]'" />
-     <where>:name=:value</where>
+      <column name="value" value="[]" />
+      <column name="default_value" value="[]" />
+      <where>:name=:value</where>
       <whereParams>
         <param name="name" value="url-sistema-gestion-externo" />
       </whereParams>
