@@ -43,6 +43,7 @@
       <column name="description"
         value="Listado JSON de los códigos de idioma habilitados" />
       <column name="value" value="[&quot;${defaultLang}&quot;]" />
+      <column name="default_value" value="[&quot;${defaultLang}&quot;]" />
     </insert>
 
     <insert tableName="config">
@@ -50,6 +51,7 @@
       <column name="description"
         value="Orden de prioridad de idiomas en formato JSON" />
       <column name="value" value="[&quot;es&quot;, &quot;en&quot;, &quot;eu&quot;]" />
+      <column name="default_value" value="[&quot;es&quot;, &quot;en&quot;, &quot;eu&quot;]" />
     </insert>
 
     <update tableName="config">
@@ -73,6 +75,15 @@
      <where>:name=:value</where>
       <whereParams>
         <param name="name" value="url-sistema-gestion-externo" />
+      </whereParams>
+    </update>
+
+    <update tableName="config">
+      <column name="value" value="00000000" />
+      <column name="default_value" value="00000000" />
+      <where>:name=:value</where>
+      <whereParams>
+        <param name="name" value="id-entidad-sgemp" />
       </whereParams>
     </update>
   </changeSet>
