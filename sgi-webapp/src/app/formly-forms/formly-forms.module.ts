@@ -51,6 +51,9 @@ export function validatorFactory(
 @NgModule({
   declarations: [
     CKEditorTemplate,
+    I18nCkeditorTypeComponent,
+    I18nInputTypeComponent,
+    I18nTextareaTypeComponent,
     InfoDivWrapperComponent,
     PanelWrapperComponent,
     SelectEntityTypeComponent,
@@ -59,9 +62,6 @@ export function validatorFactory(
     TipoValorSocialComponent,
     TitleDivWrapperComponent,
     WarnDivWrapperComponent,
-    I18nTextareaTypeComponent,
-    I18nInputTypeComponent,
-    I18nCkeditorTypeComponent
   ],
   imports: [
     CKEditorModule,
