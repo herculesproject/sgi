@@ -73,7 +73,7 @@ export class SelectObjectTypeComponent extends FieldType implements OnInit {
         value: this.model[this.to.modelKeyValueProp],
         label: this.to.modelKeyLabelPropI18n
           ? this.languageService.getFieldValue(this.model[this.to.modelKeyValueProp]?.[this.to.modelKeyLabelPropI18n])
-          : this.model[this.to.modelKeyValueProp][this.to.modelKeyLabelProp]
+          : this.model[this.to.modelKeyValueProp]?.[this.to.modelKeyLabelProp] ?? ''
       }
     ];
 

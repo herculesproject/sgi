@@ -9,7 +9,7 @@ import { I18nFieldValueResponse } from '@core/i18n/i18n-field-response';
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IGrupo } from '@core/models/csp/grupo';
-import { IProyecto } from '@core/models/csp/proyecto';
+import { CAUSA_EXENCION_MAP, IProyecto } from '@core/models/csp/proyecto';
 import { Orden } from '@core/models/csp/rol-proyecto';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IPersona } from '@core/models/sgp/persona';
@@ -61,6 +61,10 @@ interface IResponsable {
 interface IFormlyDataSGI {
   id: number;
   anio: number;
+  causaExencion: {
+    id: string;
+    descripcion: string;
+  };
   codigoInterno: string;
   convocatoria: IConvocatoriaResponse;
   fechaFin: DateTime;
@@ -204,7 +208,6 @@ export class ProyectoEconomicoFormlyModalComponent
         formlyData.data.formlyDataSGI.tipoEntidadSGI = tipoEntidadSGI;
         this.options.formState.mainModel = formlyData.data;
         this.parseModel();
-        formlyData.fields = this.filterHiddenFields(formlyData.fields, this.options.formState, formlyData.model);
         this.formlyData = formlyData;
       }),
       switchMap(() => of(void 0))
@@ -280,6 +283,13 @@ export class ProyectoEconomicoFormlyModalComponent
       titulo: I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(proyecto.titulo),
       sgeId: proyectoSgeId
     };
+
+    if (this.formlyContainsField(FormlyFields.CAUSA_EXENCION) && !!proyecto.causaExencion) {
+      proyectoModel.causaExencion = {
+        id: proyecto.causaExencion,
+        descripcion: this.translate.instant(CAUSA_EXENCION_MAP.get(proyecto.causaExencion)),
+      };
+    }
 
     if (this.formlyContainsField(FormlyFields.CODIGO_INTERNO)) {
       proyectoModel.codigoInterno = proyecto.codigoInterno;
@@ -525,24 +535,6 @@ export class ProyectoEconomicoFormlyModalComponent
 
   private parseModel() {
     FormlyUtils.convertFormlyToJSON(this.formlyData.model, this.formlyData.fields);
-    this.formlyData.model.causaExencion = this.formlyData.data.causaExencion;
-    if (this.formlyData.model.modeloEjecucion?.id) {
-      this.formlyData.model.modeloEjecucion = {
-        id: this.formlyData.model.modeloEjecucion?.id,
-        nombre: this.formlyData.model.modeloEjecucion?.nombre,
-      };
-    } else {
-      this.formlyData.model.modeloEjecucion = null;
-    }
-
-    if (this.formlyData.model.tipoFinalidad?.id) {
-      this.formlyData.model.tipoFinalidad = {
-        id: this.formlyData.model.tipoFinalidad?.id,
-        nombre: this.formlyData.model.tipoFinalidad?.nombre,
-      };
-    } else {
-      this.formlyData.model.tipoFinalidad = null;
-    }
   }
 
   private getCurrentMiembroEquipoWithRolOrdenPrimario(id: number): Observable<IResponsable> {
@@ -637,38 +629,6 @@ export class ProyectoEconomicoFormlyModalComponent
 
   private formlyContainsAnyField(formlyFields: FormlyFields[]): boolean {
     return this.formlyFieldKeys.some(field => formlyFields.some(formlyField => formlyField == field));
-  }
-
-  /**
-   * Elimina los campos que tienen la expresion hideExpression si el valor de la expresion es true.
-   * 
-   * @param fields campos del fomulario
-   * @param formState  form state
-   * @param model form model
-   * @returns los campos del formulario que no tienen hideExpressiona true
-   */
-  private filterHiddenFields(fields: FormlyFieldConfig[], formState: any, model: any): FormlyFieldConfig[] {
-    return fields
-      .map(field => {
-        if (field.fieldGroup) {
-          field.fieldGroup = this.filterHiddenFields(field.fieldGroup, formState, model);
-        }
-
-        if (typeof field.hideExpression === 'string') {
-          try {
-            const exprFn = new Function('formState', 'model', `return ${field.hideExpression};`);
-            const shouldHide = exprFn(formState, model);
-            if (shouldHide) {
-              return null;
-            }
-          } catch (err) {
-            console.warn('Error evaluating hideExpression', field.hideExpression, err);
-          }
-        }
-
-        return field;
-      })
-      .filter(field => field != null);
   }
 
 }
