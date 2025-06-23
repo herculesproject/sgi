@@ -1139,6 +1139,38 @@
     </faultSequence>
   </resource>
 
+  <!-- proyectos notificar relaciones eliminadas -->
+  <resource methods="POST" uri-template="/proyectos/{id}/notificaciones/relaciones-eliminadas">
+    <inSequence>
+      <call-template target="sgi-auth-sequence-template">
+        <with-param name="requiredAuthorities" value="" />
+      </call-template>
+      <property name="HTTP_SC" scope="axis2" type="STRING" value="501"/>
+      <payloadFactory media-type="json">
+        <format>
+          {
+            "type": "urn:problem-type:unknown",
+            "title": "No implementado",
+            "detail": "La integración para notificar la eliminación de relaciones entre proyectos del SGI y el SGE no está implementada",
+            "instance": "",
+            "status": "501",
+            "errors": []
+          }
+        </format>
+        <args/>
+      </payloadFactory>
+      <property name="ContentType" value="application/problem+json" scope="transport"/>
+      <property name="messageType" value="application/problem+json" scope="axis2" type="STRING"/>
+      <respond/>
+    </inSequence>
+    <outSequence>
+      <respond />
+    </outSequence>
+    <faultSequence>
+      <sequence key="error-handling-sequence" />
+    </faultSequence>
+  </resource>
+
   <!-- facturas -->
   <resource methods="GET" url-mapping="/facturas-emitidas">
     <inSequence>
