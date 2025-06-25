@@ -87,7 +87,7 @@ spring:
             client-name: SGI (service login)
             client-secret: a397c654-5899-469d-8ab4-ccbb4898a104
             provider: keycloak
-            scope: sgi-cnf,sgi-com,sgi-csp,sgi-eti,sgi-pii,sgi-prc,sgi-rel,sgi-rep,sgi-usr,sgi-sge
+            scope: sgi-cnf,sgi-com,sgi-csp,sgi-eti,sgi-pii,sgi-prc,sgi-rel,sgi-rep,sgi-usr
         provider:
           keycloak:
             issuer-uri: http://sgi-auth:8080/auth/realms/sgi
