@@ -1,3 +1,4 @@
+<#ftl output_format="HTML" auto_esc=false>
 <#macro renderEs>
 <#setting locale="es">
 <p>Estimado/a investigador/a,</p>
