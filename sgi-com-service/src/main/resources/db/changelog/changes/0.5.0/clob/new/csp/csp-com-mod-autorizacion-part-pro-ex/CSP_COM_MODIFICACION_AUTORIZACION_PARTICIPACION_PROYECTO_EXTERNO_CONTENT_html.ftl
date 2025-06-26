@@ -1,7 +1,7 @@
+<#ftl output_format="HTML">
 <#assign data = CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_DATA?eval_json />
 <#macro renderEs>
 <#setting locale="es">
-<p>Estimado/a investigador/a,</p>
 <p>Le informamos de que ha sido registrada la solicitud de autorización de participación en el proyecto externo abajo indicado:</p>
 <p>
 - Fecha de la solicitud: ${sgi.formatDate(data.fecha, "SHORT")}<br>
@@ -9,15 +9,9 @@
 - Persona solicitante: ${data.nombreSolicitante}
 </p>
 <p>Es necesario que valide la solicitud desde la aplicación, accediendo mediante el siguiente enlace: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
-<p>
-Reciba un cordial saludo,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>Dear Researcher,</p>
 <p>Please be advised that your request for authorisation to participate in the below external project has been registered:</p>
 <p>
 - Date of application: ${sgi.formatDate(data.fecha, "SHORT")}<br>
@@ -25,15 +19,9 @@ Email unidad responsable
 - Applicant: ${data.nombreSolicitante}
 </p>
 <p>You need to validate the application from the application, by following this link: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
-<p>
-Yours sincerely,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>Ikertzaile agurgarria:</p>
 <p>Honen bidez jakinarazten dizugu behean adierazitako kanpo proiektuan parte hartzeko baimen eskaera erregistratu dela:</p>
 <p>
 - Eskaera data: ${sgi.formatDate(data.fecha, "SHORT")}<br>
@@ -41,11 +29,6 @@ Email unidad responsable
 - Eskatzailea: ${data.nombreSolicitante}
 </p>
 <p>Eskaera balioztatu behar duzu aplikaziotik, esteka honen bidez: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
-<p>
-Jaso agur bero bat.<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <!DOCTYPE html>
 <html>

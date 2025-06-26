@@ -1,8 +1,6 @@
 <#assign data = CSP_COM_MODIFICACION_AUTORIZACION_PARTICIPACION_PROYECTO_EXTERNO_DATA?eval_json />
 <#macro renderEs>
 <#setting locale="es">
-Estimado/a investigador/a,
-
 Le informamos de que ha sido registrada la solicitud de autorización de participación en el proyecto externo abajo indicado:
 
 - Fecha de la solicitud: ${sgi.formatDate(data.fecha, "SHORT")}
@@ -10,15 +8,9 @@ Le informamos de que ha sido registrada la solicitud de autorización de partici
 - Persona solicitante: ${data.nombreSolicitante}
 
 Es necesario que valide la solicitud desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}.
-
-Reciba un cordial saludo,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Dear Researcher,
-
 Please be advised that your request for authorisation to participate in the below external project has been registered:
 
 - Date of application: ${sgi.formatDate(data.fecha, "SHORT")}
@@ -26,15 +18,9 @@ Please be advised that your request for authorisation to participate in the belo
 - Applicant: ${data.nombreSolicitante}
 
 You need to validate the application from the application, by following this link: ${data.enlaceAplicacion}.
-
-Yours sincerely,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Ikertzaile agurgarria:
-
 Honen bidez jakinarazten dizugu behean adierazitako kanpo proiektuan parte hartzeko baimen eskaera erregistratu dela: 
 
 - Eskaera data: ${sgi.formatDate(data.fecha, "SHORT")}
@@ -42,10 +28,6 @@ Honen bidez jakinarazten dizugu behean adierazitako kanpo proiektuan parte hartz
 - Eskatzailea: ${data.nombreSolicitante}
 
 Eskaera balioztatu behar duzu aplikaziotik, esteka honen bidez: ${data.enlaceAplicacion}.
-
-Jaso agur bero bat.
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />
