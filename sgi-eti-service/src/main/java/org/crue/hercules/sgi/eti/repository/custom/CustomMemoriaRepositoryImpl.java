@@ -174,8 +174,10 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
                 .in(Arrays.asList(PeticionEvaluacion.EstadoFinanciacion.CONCEDIDO,
                     PeticionEvaluacion.EstadoFinanciacion.SOLICITADO)),
             cb.and(
-                cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.estadoFinanciacion),
-                    PeticionEvaluacion.EstadoFinanciacion.DENEGADO),
+                cb.or(
+                    cb.isNull(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.estadoFinanciacion)),
+                    cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.estadoFinanciacion),
+                        PeticionEvaluacion.EstadoFinanciacion.DENEGADO)),
                 cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.tieneFondosPropios),
                     Boolean.TRUE))));
 
