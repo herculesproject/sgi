@@ -322,11 +322,11 @@ export class ConvocatoriaPlazosFaseModalComponent
       }
     );
     this.emailTplService.processConvocatoriaFaseTemplate(
-      this.data.tituloConvocatoria,
+      this.data.tituloConvocatoria ?? [],
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),
-      this.formGroup.get('tipoFase').value?.nombre,
-      this.formGroup.get('observaciones').value
+      this.formGroup.get('tipoFase').value?.nombre ?? [],
+      this.formGroup.get('observaciones').value ?? []
     ).subscribe(
       (template) => {
         fgAviso.get('asunto').setValue(template.subject);

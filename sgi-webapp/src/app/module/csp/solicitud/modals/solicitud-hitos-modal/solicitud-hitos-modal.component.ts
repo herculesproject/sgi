@@ -164,11 +164,11 @@ export class SolicitudHitosModalComponent extends DialogFormComponent<SolicitudH
       }
     );
     this.emailTplService.processSolicitudHitoTemplate(
-      this.data.tituloSolicitud,
-      this.data.tituloConvocatoria,
+      this.data.tituloSolicitud ?? [],
+      this.data.tituloConvocatoria ?? [],
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
-      this.formGroup.get('tipoHito').value?.nombre,
-      this.formGroup.get('comentario').value
+      this.formGroup.get('tipoHito').value?.nombre ?? [],
+      this.formGroup.get('comentario').value ?? []
     ).subscribe(
       (template) => {
         this.formGroup.get('aviso.asunto').setValue(template.subject);

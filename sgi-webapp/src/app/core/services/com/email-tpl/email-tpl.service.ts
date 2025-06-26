@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { I18nFieldValue } from '@core/i18n/i18n-field';
+import { I18N_FIELD_REQUEST_CONVERTER, I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { environment } from '@env';
 import { SgiRestBaseService } from '@sgi/framework/http';
@@ -7,8 +9,6 @@ import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { IEmailParam } from './email-param';
 import { IProcessedEmailTpl } from './processed-email-tpl-response';
-import { I18nFieldValue } from '@core/i18n/i18n-field';
-import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 
 @Injectable({
@@ -36,9 +36,9 @@ export class EmailTplService extends SgiRestBaseService {
   ): Observable<IProcessedEmailTpl> {
     const params: IEmailParam[] = [];
     params.push({ name: 'CSP_HITO_FECHA', value: LuxonUtils.toBackend(fechaInicio) });
-    params.push({ name: 'CSP_HITO_TIPO', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(nombreHito)) });
-    params.push({ name: 'CSP_HITO_OBSERVACIONES', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(observaciones)) });
-    params.push({ name: 'CSP_CONVOCATORIA_TITULO', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(tituloConvocatoria)) });
+    params.push({ name: 'CSP_HITO_TIPO', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(nombreHito)) });
+    params.push({ name: 'CSP_HITO_OBSERVACIONES', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(observaciones)) });
+    params.push({ name: 'CSP_CONVOCATORIA_TITULO', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(tituloConvocatoria)) });
 
     return this.processTemplate('CSP_CONVOCATORIA_HITO_EMAIL', params);
   }
@@ -52,10 +52,10 @@ export class EmailTplService extends SgiRestBaseService {
   ): Observable<IProcessedEmailTpl> {
     const params: IEmailParam[] = [];
     params.push({ name: 'CSP_HITO_FECHA', value: LuxonUtils.toBackend(fechaInicio) });
-    params.push({ name: 'CSP_HITO_TIPO', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(nombreHito)) });
-    params.push({ name: 'CSP_HITO_OBSERVACIONES', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(observaciones)) });
-    params.push({ name: 'CSP_CONVOCATORIA_TITULO', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(tituloConvocatoria)) });
-    params.push({ name: 'CSP_SOLICITUD_TITULO', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(tituloSolicitud)) });
+    params.push({ name: 'CSP_HITO_TIPO', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(nombreHito)) });
+    params.push({ name: 'CSP_HITO_OBSERVACIONES', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(observaciones)) });
+    params.push({ name: 'CSP_CONVOCATORIA_TITULO', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(tituloConvocatoria)) });
+    params.push({ name: 'CSP_SOLICITUD_TITULO', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(tituloSolicitud)) });
 
     return this.processTemplate('CSP_SOLICITUD_HITO', params);
   }
@@ -69,10 +69,10 @@ export class EmailTplService extends SgiRestBaseService {
   ): Observable<IProcessedEmailTpl> {
     const params: IEmailParam[] = [];
     params.push({ name: 'CSP_HITO_FECHA', value: LuxonUtils.toBackend(fechaInicio) });
-    params.push({ name: 'CSP_HITO_TIPO', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(nombreHito)) });
-    params.push({ name: 'CSP_HITO_OBSERVACIONES', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(observaciones)) });
-    params.push({ name: 'CSP_CONVOCATORIA_TITULO', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(tituloConvocatoria)) });
-    params.push({ name: 'CSP_PROYECTO_TITULO', value: JSON.stringify(I18N_FIELD_RESPONSE_CONVERTER.fromTargetArray(tituloProyecto)) });
+    params.push({ name: 'CSP_HITO_TIPO', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(nombreHito)) });
+    params.push({ name: 'CSP_HITO_OBSERVACIONES', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(observaciones)) });
+    params.push({ name: 'CSP_CONVOCATORIA_TITULO', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(tituloConvocatoria)) });
+    params.push({ name: 'CSP_PROYECTO_TITULO', value: JSON.stringify(I18N_FIELD_REQUEST_CONVERTER.fromTargetArray(tituloProyecto)) });
 
     return this.processTemplate('CSP_PROYECTO_HITO', params);
   }

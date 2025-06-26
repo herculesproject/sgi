@@ -344,11 +344,11 @@ export class ProyectoHitosModalComponent extends DialogFormComponent<ProyectoHit
     );
 
     this.emailTplService.processProyectoHitoTemplate(
-      this.data.tituloProyecto,
-      tituloConvocatoria,
+      this.data.tituloProyecto ?? [],
+      tituloConvocatoria ?? [],
       this.formGroup.get('fecha').value ?? DateTime.now(),
-      this.formGroup.get('tipoHito').value?.nombre ? this.formGroup.get('tipoHito').value?.nombre : '',
-      this.formGroup.get('comentario').value,
+      this.formGroup.get('tipoHito').value?.nombre ?? [],
+      this.formGroup.get('comentario').value ?? [],
     ).subscribe(
       (template) => {
         this.formGroup.get('aviso.asunto').setValue(template.subject);

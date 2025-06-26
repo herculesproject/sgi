@@ -166,10 +166,10 @@ export class ConvocatoriaHitosModalComponent extends DialogFormComponent<Convoca
       }
     );
     this.emailTplService.processConvocatoriaHitoTemplate(
-      this.data.tituloConvocatoria,
+      this.data.tituloConvocatoria ?? [],
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
-      this.formGroup.get('tipoHito').value?.nombre,
-      this.formGroup.get('comentario').value
+      this.formGroup.get('tipoHito').value?.nombre ?? [],
+      this.formGroup.get('comentario').value ?? []
     ).subscribe(
       (template) => {
         this.formGroup.get('aviso.asunto').setValue(template.subject);

@@ -342,12 +342,12 @@ export class ProyectoPlazosModalComponent extends DialogFormComponent<ProyectoPl
       }
     );
     this.emailTplService.processProyectoFaseTemplate(
-      this.data.tituloProyecto,
-      tituloConvocatoria,
+      this.data.tituloProyecto ?? [],
+      tituloConvocatoria ?? [],
       this.formGroup.get('fechaInicio').value ?? DateTime.now(),
       this.formGroup.get('fechaFin').value ?? DateTime.now(),
-      this.formGroup.get('tipoFase').value?.nombre,
-      this.formGroup.get('observaciones').value,
+      this.formGroup.get('tipoFase').value?.nombre ?? [],
+      this.formGroup.get('observaciones').value ?? [],
 
     ).subscribe(
       (template) => {
