@@ -31,4 +31,5 @@ export interface IConfiguracionResponse {
   validacionClasificacionGastos: string;
   viajesDietasColumnasFijasVisibles: string;
   sgeEjecucionEconomicaFiltros: string;
+  sgeEliminarRelacionProyectoEnabled: boolean;
 }

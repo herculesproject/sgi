@@ -192,6 +192,7 @@ export class ProyectoEconomicoFormlyModalComponent
     switch (action) {
       case ACTION_MODAL_MODE.EDIT:
       case ACTION_MODAL_MODE.VIEW:
+      case ACTION_MODAL_MODE.SELECT_AND_NOTIFY:
         load$ = load$.pipe(
           switchMap((formlyData) => {
             return this.fillProyectoSgeFormlyModelById(proyectoSgeId, proyectoSgiId, formlyData);
@@ -199,7 +200,6 @@ export class ProyectoEconomicoFormlyModalComponent
         );
         break;
       case ACTION_MODAL_MODE.NEW:
-      case ACTION_MODAL_MODE.SELECT_AND_NOTIFY:
         break;
     }
 

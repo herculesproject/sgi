@@ -90,6 +90,7 @@ export enum ConfigCsp {
   CSP_VALIDACION_CLASIFICACION_GASTOS = 'validacionClasificacionGastos',
   CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES = 'viajesDietasColumnasFijasVisibles',
   CSP_SGE_EJECUCION_ECONOMICA_FILTROS = "sgeEjecucionEconomicaFiltros",
+  CSP_SGE_ELIMINAR_RELACION_PROYECTO_ENABLED = 'sgeEliminarRelacionProyectoEnabled',
 }
 
 @Component({
@@ -132,6 +133,7 @@ export class ConfigCspComponent extends AbstractMenuContentComponent {
     [ConfigCsp.CSP_SGE_FILTRO_ANUALIDADES, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_SGE_FILTRO_ANUALIDADES`), options: this.getSgeFiltroAnualidadesValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SGE_FILTRO_ANUALIDADES.description`) }],
     [ConfigCsp.CSP_SGE_EJECUCION_PRESUPUESTARIA_GASTO_DETALLE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_SGE_EJECUCION_PRESUPUESTARIA_GASTO_DETALLE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SGE_EJECUCION_PRESUPUESTARIA_GASTO_DETALLE_ENABLED.description`) }],
     [ConfigCsp.CSP_SGE_DETALLE_OPERACIONES_GASTO_DETALLE_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_SGE_DETALLE_OPERACIONES_GASTO_DETALLE_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SGE_DETALLE_OPERACIONES_GASTO_DETALLE_ENABLED.description`) }],
+    [ConfigCsp.CSP_SGE_ELIMINAR_RELACION_PROYECTO_ENABLED, { type: ConfigType.SELECT, label: marker(`adm.config.csp.CSP_SGE_ELIMINAR_RELACION_PROYECTO_ENABLED`), options: this.getBooleanValues(), required: true, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_SGE_ELIMINAR_RELACION_PROYECTO_ENABLED.description`) }],
     [ConfigCsp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.csp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES`), options: this.getFacturasJustificantesColumnasFijasConfigurablesValues(), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_FACTURAS_GASTOS_COLUMNAS_FIJAS_VISIBLES.description`) }],
     [ConfigCsp.CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.csp.CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES`), options: this.getFacturasJustificantesColumnasFijasConfigurablesValues(), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_VIAJES_DIETAS_COLUMNAS_FIJAS_VISIBLES.description`) }],
     [ConfigCsp.CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES, { type: ConfigType.SELECT_MULTIPLE, label: marker(`adm.config.csp.CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES`), options: this.getFacturasJustificantesColumnasFijasConfigurablesValues(), required: false, module: ConfigModule.CSP, description: marker(`adm.config.csp.CSP_PERSONAL_CONTRATADO_COLUMNAS_FIJAS_VISIBLES.description`) }],

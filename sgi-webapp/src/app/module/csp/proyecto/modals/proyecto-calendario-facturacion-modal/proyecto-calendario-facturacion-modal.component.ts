@@ -155,6 +155,19 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
 
     const identificadorSgeUnico = (this.data.proyectosSge?.length ?? 0) !== 1 ? null : this.data.proyectosSge[0];
 
+
+    let dataIdentificadorSge = null;
+    if (
+      !!data?.proyectoSgeRef
+      || (
+        identificadorSgeUnico
+        && data?.estadoValidacionIP?.estado === TipoEstadoValidacion.VALIDADA
+        && (this.isCalendarioFacturacionSgeWriteIntegrationEnabled || this.isCalendarioFacturacionSgeIntegrationDisabled)
+      )
+    ) {
+      dataIdentificadorSge = data?.proyectoSgeRef ? { id: data.proyectoSgeRef } as IProyectoSge : identificadorSgeUnico;
+    }
+
     const form = new FormGroup({
       numeroPrevision: new FormControl({ value: data?.numeroPrevision, disabled: true }, [Validators.required]),
       validacionIP: new FormControl({ value: data?.estadoValidacionIP?.estado, disabled: true }, [Validators.required]),
@@ -167,7 +180,7 @@ export class ProyectoCalendarioFacturacionModalComponent extends DialogFormCompo
       proyectoProrroga: new FormControl(data?.proyectoProrroga),
       nuevoEstadoValidacionIP: new FormControl(null),
       mensajeMotivoRechazo: new FormControl(''),
-      identificadorSge: new FormControl(data?.proyectoSgeRef ? { id: data.proyectoSgeRef } as IProyectoSge : identificadorSgeUnico),
+      identificadorSge: new FormControl(dataIdentificadorSge),
       numeroFacturaEmitida: new FormControl(data?.numeroFacturaSge, [Validators.maxLength(50)]),
     });
 

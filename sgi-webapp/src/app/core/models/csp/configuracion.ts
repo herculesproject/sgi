@@ -189,4 +189,6 @@ export interface IConfiguracion {
   sgeDetalleOperacionesGastosDetalleEnabled: boolean;
   /** Habilita los buscadores de las pantallas de Ejecución Económica dependientes del SGE. */
   sgeEjecucionEconomicaFiltros: SgeEjecucionEconomicaFiltros[];
+  /** Habilita la acción eliminar relación proyecto SGI - identificador SGE */
+  sgeEliminarRelacionProyectoEnabled: boolean;
 }

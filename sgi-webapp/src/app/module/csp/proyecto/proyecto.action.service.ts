@@ -108,6 +108,7 @@ import { ProyectoRelacionFragment } from './proyecto-formulario/proyecto-relacio
 import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 const MSG_SOLICITUDES = marker('csp.solicitud');
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');
@@ -318,7 +319,8 @@ export class ProyectoActionService extends ActionService {
     private readonly unidadGestionService: UnidadGestionService,
     private readonly viculacionService: VinculacionService,
     private readonly grupoService: GrupoService,
-    private readonly languageService: LanguageService
+    private readonly languageService: LanguageService,
+    private readonly snackBarService: SnackBarService,
   ) {
     super();
     this.data = route.snapshot.data[PROYECTO_DATA_KEY];
@@ -373,6 +375,7 @@ export class ProyectoActionService extends ActionService {
         proyectoSgeService,
         solicitudProyectoSgeService,
         configService,
+        snackBarService,
         this.readonly,
         this.data?.isVisor
       );
@@ -466,6 +469,7 @@ export class ProyectoActionService extends ActionService {
           proyectoSgeService,
           solicitudProyectoSgeService,
           configService,
+          snackBarService,
           this.readonly,
           this.data?.isVisor
         );

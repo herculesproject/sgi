@@ -144,6 +144,10 @@ export class ConfigService extends _ConfigServiceMixinBase implements TimeZoneCo
     return this.getValueByConfigKey(ConfigCsp.CSP_SGE_EJECUCION_ECONOMICA_FILTROS);
   }
 
+  isSgeEliminarRelacionProyectoEnabled(): Observable<boolean> {
+    return this.getValueAsBooleanByConfigKey(ConfigCsp.CSP_SGE_ELIMINAR_RELACION_PROYECTO_ENABLED);
+  }
+
   private getValueByConfigKey<T>(configKey: ConfigCsp): Observable<T> {
     return this.findById(configKey).pipe(
       map(configValue => configValue?.value)

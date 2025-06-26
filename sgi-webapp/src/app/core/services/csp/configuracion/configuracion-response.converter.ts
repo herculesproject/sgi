@@ -41,6 +41,7 @@ class ConfiguracionResponseConverter
       validacionClasificacionGastos: value.validacionClasificacionGastos ? ValidacionClasificacionGastos[value.validacionClasificacionGastos] : null,
       viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.split(',').map(s => FacturasJustificantesColumnasFijasConfigurables[s]),
       sgeEjecucionEconomicaFiltros: value.sgeEjecucionEconomicaFiltros?.split(',').map(ecc => SgeEjecucionEconomicaFiltros[ecc]),
+      sgeEliminarRelacionProyectoEnabled: value.sgeEliminarRelacionProyectoEnabled
     };
   }
 
@@ -80,7 +81,8 @@ class ConfiguracionResponseConverter
       solicitudesSinConvocatoriaInvestigadorEnabled: value.solicitudesSinConvocatoriaInvestigadorEnabled,
       validacionClasificacionGastos: value.validacionClasificacionGastos,
       viajesDietasColumnasFijasVisibles: value.viajesDietasColumnasFijasVisibles?.join(','),
-      sgeEjecucionEconomicaFiltros: JSON.stringify(value.integracionesEccSgeEnabled?.join(','))
+      sgeEjecucionEconomicaFiltros: JSON.stringify(value.integracionesEccSgeEnabled?.join(',')),
+      sgeEliminarRelacionProyectoEnabled: value.sgeEliminarRelacionProyectoEnabled
     };
   }
 }
