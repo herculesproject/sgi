@@ -245,7 +245,11 @@ public class Configuracion extends BaseEntity {
      * Habilita los buscadores de las pantallas de Ejecución Económica dependientes
      * del SGE.
      */
-    SGE_EJECUCION_ECONOMICA_FILTROS("sgeEjecucionEconomicaFiltros");
+    SGE_EJECUCION_ECONOMICA_FILTROS("sgeEjecucionEconomicaFiltros"),
+    /**
+     * Habilita la acción eliminar relación proyecto SGI - identificador SGE
+     */
+    SGE_ELIMINAR_RELACION_PROYECTO_ENABLED("sgeEliminarRelacionProyectoEnabled");
 
     private final String key;
 
@@ -461,6 +465,12 @@ public class Configuracion extends BaseEntity {
   @Column(name = "sge_ejecucion_economica_filtros", nullable = true, unique = true)
   private String sgeEjecucionEconomicaFiltros;
 
+  /**
+   * Habilita la acción eliminar relación proyecto SGI - identificador SGE
+   */
+  @Column(name = "sge_eliminar_relacion_proyecto", columnDefinition = "boolean default false", nullable = false, unique = true)
+  private Boolean sgeEliminarRelacionProyectoEnabled;
+
   public Object getParamValue(Param key) {
     switch (key) {
       case DEDICACION_MINIMA_GRUPO:
@@ -525,6 +535,8 @@ public class Configuracion extends BaseEntity {
         return this.getSgeDetalleOperacionesGastosDetalleEnabled();
       case SGE_EJECUCION_ECONOMICA_FILTROS:
         return this.getSgeEjecucionEconomicaFiltros();
+      case SGE_ELIMINAR_RELACION_PROYECTO_ENABLED:
+        return this.getSgeEliminarRelacionProyectoEnabled();
       default:
         return null;
     }
@@ -634,6 +646,9 @@ public class Configuracion extends BaseEntity {
         if (isValidEnumString(newValue, SgeEjecucionEconomicaFiltros.class, true)) {
           this.setSgeEjecucionEconomicaFiltros(newValue);
         }
+        break;
+      case SGE_ELIMINAR_RELACION_PROYECTO_ENABLED:
+        this.setSgeEliminarRelacionProyectoEnabled(Boolean.valueOf(newValue));
         break;
     }
   }

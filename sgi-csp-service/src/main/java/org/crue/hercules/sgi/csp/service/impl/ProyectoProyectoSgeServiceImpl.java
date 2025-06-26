@@ -7,14 +7,20 @@ import org.crue.hercules.sgi.csp.exceptions.CardinalidadRelacionSgiSgeException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoAnualidadWithProyectoSgeRefEnviadoException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoHasGastosProyectoException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNoDeletableException;
 import org.crue.hercules.sgi.csp.exceptions.ProyectoProyectoSgeNotFoundException;
 import org.crue.hercules.sgi.csp.model.Configuracion;
 import org.crue.hercules.sgi.csp.model.GastoProyecto;
 import org.crue.hercules.sgi.csp.model.Proyecto;
 import org.crue.hercules.sgi.csp.model.ProyectoProyectoSge;
+import org.crue.hercules.sgi.csp.repository.AnualidadGastoRepository;
+import org.crue.hercules.sgi.csp.repository.AnualidadIngresoRepository;
 import org.crue.hercules.sgi.csp.repository.GastoProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoFacturacionRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoProyectoSgeRepository;
 import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
+import org.crue.hercules.sgi.csp.repository.ProyectoSeguimientoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.RequerimientoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.predicate.ProyectoProyectoSgePredicateResolver;
 import org.crue.hercules.sgi.csp.repository.specification.ProyectoProyectoSgeSpecifications;
 import org.crue.hercules.sgi.csp.service.ConfiguracionService;
@@ -52,6 +58,11 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
   private final ConfiguracionService configuracionService;
   private final ProyectoAnualidadService proyectoAnualidadService;
   private final GastoProyectoRepository gastoProyectoRepository;
+  private final AnualidadGastoRepository anualidadGastoRepository;
+  private final AnualidadIngresoRepository anualidadIngresoRepository;
+  private final ProyectoFacturacionRepository proyectoFacturacionRepository;
+  private final ProyectoSeguimientoJustificacionRepository proyectoSeguimientoJustificacionRepository;
+  private final RequerimientoJustificacionRepository requerimientoJustificacionRepository;
 
   /**
    * Guarda la entidad {@link ProyectoProyectoSge}.
@@ -128,8 +139,8 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
 
     AssertHelper.idNotNull(id, ProyectoProyectoSge.class);
 
-    if (!repository.existsById(id)) {
-      throw new ProyectoProyectoSgeNotFoundException(id);
+    if (!isDeletableById(id)) {
+      throw new ProyectoProyectoSgeNoDeletableException();
     }
 
     repository.deleteById(id);
@@ -148,6 +159,42 @@ public class ProyectoProyectoSgeServiceImpl implements ProyectoProyectoSgeServic
     final boolean existe = repository.existsById(id);
     log.debug("existsById(final Long id)  - end", id);
     return existe;
+  }
+
+  /**
+   * Comprueba si el {@link ProyectoProyectoSge} es eliminable
+   *
+   * @param id el id de la entidad {@link ProyectoProyectoSge}.
+   * @return {@code true} si se puede eliminar, {@code false} en caso contrario.
+   */
+  @Override
+  public boolean isDeletableById(final Long id) {
+    log.debug("isDeletableById({})  - start", id);
+    ProyectoProyectoSge proyectoProyectoSge = repository.findById(id)
+        .orElseThrow(() -> new ProyectoProyectoSgeNotFoundException(id));
+
+    if (anualidadGastoRepository.existsByProyectoSgeRef(proyectoProyectoSge.getProyectoSgeRef())) {
+      return false;
+    }
+
+    if (anualidadIngresoRepository.existsByProyectoSgeRef(proyectoProyectoSge.getProyectoSgeRef())) {
+      return false;
+    }
+
+    if (proyectoFacturacionRepository.existsByProyectoSgeRef(proyectoProyectoSge.getProyectoSgeRef())) {
+      return false;
+    }
+
+    if (proyectoSeguimientoJustificacionRepository.existsByProyectoProyectoSgeId(id)) {
+      return false;
+    }
+
+    if (requerimientoJustificacionRepository.existsByProyectoProyectoSgeId(id)) {
+      return false;
+    }
+
+    log.debug("isDeletableById({})  - end", id);
+    return true;
   }
 
   /**

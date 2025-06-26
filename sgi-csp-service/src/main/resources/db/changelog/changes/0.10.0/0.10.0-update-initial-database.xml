@@ -3451,4 +3451,10 @@
     </addColumn>
   </changeSet>
 
+  <changeSet author="master" id="0.10.0-128">
+    <addColumn tableName="configuracion">
+      <column name="sge_eliminar_relacion_proyecto" type="BOOLEAN" defaultValueBoolean="false" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
