@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_DATA?eval />
 <#--
   Formato CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_LAST_DATA:
@@ -5,7 +6,7 @@
     "tituloProyecto": [{"lang":"es", "value":"Proyecto 1"}],
     "codigosSge": ["00001", "000002"],
     "numPrevision": 2,
-    "entidadesFinanciadoras": ["nombre entidad 1, nombre entidad 2"]
+    "entidadesFinanciadoras": ["nombre entidad 1", "nombre entidad 2"],
     "tipoFacturacion": "Sin Requisitos",
     "apellidosDestinatario": "Macias Pajas"
   } 
