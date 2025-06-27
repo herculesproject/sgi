@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -270,14 +271,17 @@ public class ProyectoFacturacionComService {
   }
 
   private List<PersonaOutput> getMiembrosEquiposAndResponsablesEconomicos(Long proyectoId) {
-
-    List<String> members = this.proyectoEquipoRepository
-        .findByProyectoIdAndRolProyectoRolPrincipalTrue(proyectoId).stream()
-        .map(ProyectoEquipo::getPersonaRef).toList();
-
-    members.addAll(
-        this.proyectoResponsableEconomicoRepository.findByProyectoId(proyectoId).stream()
-            .map(ProyectoResponsableEconomico::getPersonaRef).toList());
+    List<String> members = Stream.concat(
+        this.proyectoEquipoRepository
+            .findByProyectoIdAndRolProyectoRolPrincipalTrue(proyectoId)
+            .stream()
+            .map(ProyectoEquipo::getPersonaRef),
+        this.proyectoResponsableEconomicoRepository
+            .findByProyectoId(proyectoId)
+            .stream()
+            .map(ProyectoResponsableEconomico::getPersonaRef))
+        .distinct()
+        .toList();
 
     return this.sgiApiSgpService.findAllByIdIn(members);
   }
@@ -297,7 +301,7 @@ public class ProyectoFacturacionComService {
         .codigosSge(codigosSge)
         .motivoRechazo(proyectoFacturacion.getEstadoValidacionIP().getEstado() == TipoEstadoValidacion.RECHAZADA
             ? proyectoFacturacion.getEstadoValidacionIP().getComentario()
-            : null)
+            : Collections.emptyList())
         .nombreApellidosValidador(persona.getNombre() + " " + persona.getApellidos())
         .build();
   }

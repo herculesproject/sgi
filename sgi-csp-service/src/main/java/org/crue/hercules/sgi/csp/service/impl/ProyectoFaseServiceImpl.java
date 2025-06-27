@@ -25,7 +25,6 @@ import org.crue.hercules.sgi.csp.service.ProyectoFaseAvisoService;
 import org.crue.hercules.sgi.csp.service.ProyectoFaseService;
 import org.crue.hercules.sgi.csp.util.AssertHelper;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
-import org.crue.hercules.sgi.framework.i18n.Language;
 import org.crue.hercules.sgi.framework.problem.message.ProblemMessage;
 import org.crue.hercules.sgi.framework.rsql.SgiRSQLJPASupport;
 import org.crue.hercules.sgi.framework.spring.context.support.ApplicationContextSupport;
@@ -143,10 +142,7 @@ public class ProyectoFaseServiceImpl implements ProyectoFaseService {
       List<I18nFieldValueDto> listaObservaciones = proyectoFaseActualizar.getObservaciones();
 
       Set<ProyectoFaseObservaciones> setObservaciones = listaObservaciones.stream()
-          .map(dto -> {
-            ProyectoFaseObservaciones comentario = new ProyectoFaseObservaciones(dto.getLang(), dto.getValue());
-            return comentario;
-          })
+          .map(dto -> new ProyectoFaseObservaciones(dto.getLang(), dto.getValue()))
           .collect(Collectors.toSet());
 
       proyectoFase.setFechaInicio(proyectoFaseActualizar.getFechaInicio());
