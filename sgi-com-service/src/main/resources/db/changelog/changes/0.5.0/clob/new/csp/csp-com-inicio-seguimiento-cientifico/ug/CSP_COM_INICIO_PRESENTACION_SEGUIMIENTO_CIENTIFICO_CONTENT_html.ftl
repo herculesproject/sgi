@@ -1,7 +1,9 @@
+<#ftl output_format="HTML">
 <#assign data = CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_DATA?eval />
 <#--
   Formato CSP_COM_INICIO_PRESENTACION_SEGUIMIENTO_CIENTIFICO_DATA:
   { 
+    "enlaceAplicacion": "http://sgi.treelogic.com",
     "fecha": "2022-01-01",
     "proyectos" : [
       {
@@ -21,11 +23,13 @@
 <#setting locale="es">
 <p>Estimado/a investigador/a,</p>
 <p>Le informamos de que proximamente se inician los períodos de presentación de la justificación para el seguimiento científico de los proyectos abajo indicados. Los periodos de presentación de la documentación de justificación son los siguientes:</p>
+<#list data.proyectos as proyecto> 
 <p>
-- Proyecto: ${sgi.getFieldValue(data.titulo)}<br>
-- Inicio del periodo de presentación de justificación: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
-- Fin del periodo de presentación de justificación: <#if data.fechaFin??>$${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}<#else>-</#if>
+- Proyecto: ${sgi.getFieldValue(proyecto.titulo)}<br>
+- Inicio del periodo de presentación de justificación: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}<br>
+- Fin del periodo de presentación de justificación: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </p>
+</#list>
 <p>Puede revisar la información a través de la aplicación: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 Reciba un cordial saludo,<br>
@@ -37,11 +41,13 @@ Email unidad responsable
 <#setting locale="en">
 <p>Dear Researcher,</p>
 <p>Please be advised that the submission periods for the justification for the scientific follow-up of the projects listed below will start soon. The periods for submission of justification documents are as follows:</p>
+<#list data.proyectos as proyecto>
 <p>
-- Project: ${sgi.getFieldValue(data.titulo)}<br>
-- Start of period for submission of justification: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
-- End of period for submission of justification: <#if data.fechaFin??>$${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}<#else>-</#if>
+- Project: ${sgi.getFieldValue(proyecto.titulo)}<br>
+- Start of period for submission of justification: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}<br>
+- End of period for submission of justification: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </p>
+</#list>
 <p>You can review the information through the application: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 Best regards,<br>
@@ -53,11 +59,13 @@ Email unidad responsable
 <#setting locale="eu">
 <p>Ikertzaile agurgarria:</p>
 <p>Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuen jarraipen zientifikorako justifikazioa aurkezteko epea. Honako hauek dira justifikazio dokumentuak aurkezteko epeak:</p>
+<#list data.proyectos as proyecto>
 <p>
-- Proiektua: ${sgi.getFieldValue(data.titulo)}<br>
-- Justifikazioa aurkezteko epearen hasiera: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
-- Justifikazioa aurkezteko epearen amaiera: <#if data.fechaFin??>$${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}<#else>-</#if>
+- Proiektua: ${sgi.getFieldValue(proyecto.titulo)}<br>
+- Justifikazioa aurkezteko epearen hasiera: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}<br>
+- Justifikazioa aurkezteko epearen amaiera: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </p>
+</#list>
 <p>Informazioa berrikus dezakezu aplikazioaren bidez: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 Jaso agur bero bat.<br>
