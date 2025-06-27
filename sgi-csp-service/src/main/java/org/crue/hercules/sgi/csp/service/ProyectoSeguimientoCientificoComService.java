@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.config.SgiConfigProperties;
 import org.crue.hercules.sgi.csp.dto.com.CspComInicioPresentacionSeguimientoCientificoData;
@@ -27,7 +28,7 @@ import org.crue.hercules.sgi.csp.repository.ProyectoRepository;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiCnfService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.csp.service.sgi.SgiApiSgpService;
-import org.crue.hercules.sgi.framework.i18n.I18nHelper;
+import org.crue.hercules.sgi.framework.i18n.I18nFieldValueDto;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -110,6 +111,7 @@ public class ProyectoSeguimientoCientificoComService {
         buildAndSendComunicadoInicioPeriodoJustificacionSeguimientoEmailToIps(comunicadosInicioPeriodoSeguimientoIps);
       }
     });
+
     List<EmailOutput> comunicadosFinPeriodoSeguimientoIps = getComunicadoIPEndPeriods();
     if (!CollectionUtils.isEmpty(comunicadosFinPeriodoSeguimientoIps)) {
       buildAndSendComunicadoFinPeriodoJustificacionSeguimientoEmailToIps(comunicadosFinPeriodoSeguimientoIps);
@@ -304,7 +306,9 @@ public class ProyectoSeguimientoCientificoComService {
     return proyectosUnidad.stream().flatMap(proyecto -> periodosByProyecto.get(proyecto.getId()).stream()
         .map(periodo -> CspComInicioPresentacionSeguimientoCientificoData.Proyecto
             .builder()
-            .titulo(I18nHelper.getFieldValue(proyecto.getTitulo()))
+            .titulo(
+                proyecto.getTitulo().stream().map(t -> new I18nFieldValueDto(t.getLang(), t.getValue()))
+                    .collect(Collectors.toSet()))
             .fechaInicio(periodo.getFechaInicioPresentacion())
             .fechaFin(periodo.getFechaFinPresentacion())
             .build()))
@@ -319,8 +323,11 @@ public class ProyectoSeguimientoCientificoComService {
 
     EmailOutput emailOutput = emailService
         .createComunicadoInicioPresentacionSeguimientoCientificoEmail(
-            CspComInicioPresentacionSeguimientoCientificoData.builder().fecha(yearMonth.atDay(1)).proyectos(
-                proyectosEmail).build(),
+            CspComInicioPresentacionSeguimientoCientificoData.builder()
+                .enlaceAplicacion(sgiConfigProperties.getWebUrl())
+                .fecha(yearMonth.atDay(1))
+                .proyectos(proyectosEmail)
+                .build(),
             recipients);
     emailService.sendEmail(emailOutput.getId());
   }
