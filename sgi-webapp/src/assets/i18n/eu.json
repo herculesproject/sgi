@@ -15,7 +15,6 @@
   "adm.config.csp.CSP_COM_INICIO_FIN_PERIODO_JUSTIFICACION_SOCIO_DESTINATARIOS_UO": "CSP konfigurazio: {unidadGestion} kudeaketa unitateak ezarritako bazkideen justifikazio aldiaren hasiera/amaiera jakinarazteko oharren hartzaile lehenetsiak",
   "adm.config.csp.CSP_COM_INICIO_PRESENTACION_GASTO_DESTINATARIOS_UO": "{unidadGestion} kudeaketa unitateak gastuen justifikazioa aurkezteko ezarritako epea hasi dela jakinarazteko oharraren hartzaileak ",
   "adm.config.csp.CSP_COM_INICIO_PRES_SEG_CIENTIFICO_DESTINATARIOS_UO": "{unidadGestion} kudeaketa unitateak jarraipen zientifikorako ezarritako epea hasi dela jakinarazteko oharraren hartzaileak ",
-  "adm.config.csp.CSP_COM_PROYECTO_EXT_MODIFICAR_AUTORIZACION_ESTADO_PARTICIPACION_DESTINATARIOS_UO": "CSP konfigurazioa: Kanpo proiektu baten partaidetza egoeraren baimena aldatzeko jakinarazpenaren hartzaile lehenetsiak",
   "adm.config.csp.CSP_COM_PROYECTO_EXT_RECEP_NOTIFICACION_CVN_DESTINATARIOS": "CSP konfigurazioa: Kanpo proiektu bateko CVNaren jakinarazpena jaso dela jakinarazteko oharraren hartzaile lehenetsiak",
   "adm.config.csp.CSP_COM_PROYECTO_FASES_DESTINATARIOS_UO": "CSP konfigurazioa: {unidadGestion} kudeaketa unitateak proiekturako ezarritako faseen jakinarazpenen hartzaile lehenetsiak",
   "adm.config.csp.CSP_COM_PROYECTO_HITOS_DESTINATARIOS_UO": "CSP konfigurazioa: {unidadGestion} kudeaketa unitateak proiekturako ezarritako mugarriaren jakinarazpenaren hartzaile lehenetsiak",

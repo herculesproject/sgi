@@ -15,7 +15,7 @@
   "adm.config.csp.CSP_COM_INICIO_FIN_PERIODO_JUSTIFICACION_SOCIO_DESTINATARIOS_UO": "Destinatarios defecto CSP Inicio/Fin Periodo Justificación Socio de la unidad de gestión {unidadGestion}",
   "adm.config.csp.CSP_COM_INICIO_PRESENTACION_GASTO_DESTINATARIOS_UO": "Destinatarios de comunicado de inicio de presentación de justificación de gastos de la unidad de gestión {unidadGestion}",
   "adm.config.csp.CSP_COM_INICIO_PRES_SEG_CIENTIFICO_DESTINATARIOS_UO": "Destinatarios de comunicado de inicio de presentación del seguimiento científico de la unidad de gestión {unidadGestion}",
-  "adm.config.csp.CSP_COM_PROYECTO_EXT_MODIFICAR_AUTORIZACION_ESTADO_PARTICIPACION_DESTINATARIOS_UO": "Destinatarios defecto CSP Modificar Autorización del estado de participación de un proyecto externo",
+  "adm.config.csp.CSP_COM_PROYECTO_EXT_MODIFICAR_AUTORIZACION_ESTADO_PARTICIPACION_DESTINATARIOS_UO": "Destinatarios por defecto Presentación de solicitud de autorización de participación en un proyecto externo",
   "adm.config.csp.CSP_COM_PROYECTO_EXT_RECEP_NOTIFICACION_CVN_DESTINATARIOS": "Destinatarios defecto CSP Recepción Notificación CVN proyecto externo",
   "adm.config.csp.CSP_COM_PROYECTO_FASES_DESTINATARIOS_UO": "Destinatarios defecto CSP Proyecto Fases de la unidad de gestión {unidadGestion}",
   "adm.config.csp.CSP_COM_PROYECTO_HITOS_DESTINATARIOS_UO": "Destinatarios defecto CSP Proyecto Hito de la unidad de gestión {unidadGestion}",

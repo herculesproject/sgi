@@ -15,7 +15,6 @@
   "adm.config.csp.CSP_COM_INICIO_FIN_PERIODO_JUSTIFICACION_SOCIO_DESTINATARIOS_UO": "Default recipients of CSP Start/End Partner justification period in {unidadGestion} management unit",
   "adm.config.csp.CSP_COM_INICIO_PRESENTACION_GASTO_DESTINATARIOS_UO": "Recipients of the announcement of initiation of submission of justification of expenditure by {unidadGestion} management unit",
   "adm.config.csp.CSP_COM_INICIO_PRES_SEG_CIENTIFICO_DESTINATARIOS_UO": "Recipients of the announcement from {unidadGestion} management unit about initiation of submission of scientific follow-up",
-  "adm.config.csp.CSP_COM_PROYECTO_EXT_MODIFICAR_AUTORIZACION_ESTADO_PARTICIPACION_DESTINATARIOS_UO": "Default Recipients CSP Modify External Project Participation Status Authorisation",
   "adm.config.csp.CSP_COM_PROYECTO_EXT_RECEP_NOTIFICACION_CVN_DESTINATARIOS": "Default Recipients CSP Receipt Notification CVN external project",
   "adm.config.csp.CSP_COM_PROYECTO_FASES_DESTINATARIOS_UO": "Default recipients of CSP Project Phases by {unidadGestion} management unit",
   "adm.config.csp.CSP_COM_PROYECTO_HITOS_DESTINATARIOS_UO": "Default recipients of CSP Project Milestone by {unidadGestion} management unit",
