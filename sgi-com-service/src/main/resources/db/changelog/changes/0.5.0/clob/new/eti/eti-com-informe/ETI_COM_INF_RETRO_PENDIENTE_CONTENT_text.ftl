@@ -5,7 +5,7 @@ Recordatorio de solicitud de evaluación retrospectiva
 
 Estimado/a investigador/a,
 
-Le recordamos que, tal y como se refleja en la autorización de la Diputación Foral correspondiente, para la realización del proyecto mencionado más abajo, será necesario que realice la correspondiente evaluación retrospectiva, a través del formulario que puede encontrar en la web: ${data.enlaceAplicacion}.
+Le recordamos que, tal y como se refleja en la autorización del órgano autonómico  correspondiente, para la realización del proyecto mencionado más abajo, será necesario que realice la correspondiente evaluación retrospectiva, a través del formulario que puede encontrar en la web: ${data.enlaceAplicacion}.
 
 - Tipo de actividad: ${sgi.getFieldValue(data.tipoActividad)}
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}

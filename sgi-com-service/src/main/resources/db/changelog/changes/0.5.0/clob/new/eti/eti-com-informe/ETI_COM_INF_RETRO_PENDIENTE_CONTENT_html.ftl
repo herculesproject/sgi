@@ -1,9 +1,10 @@
+<#ftl output_format="HTML">
 <#assign data = ETI_COM_INF_RETRO_PENDIENTE_DATA?eval_json />
 <#macro renderEs>
 <#setting locale="es">
 <p>Recordatorio de solicitud de evaluación retrospectiva</p>
 <p>Estimado/a investigador/a,</p>
-<p>Le recordamos que, tal y como se refleja en la autorización de la Diputación Foral correspondiente, para la realización del proyecto mencionado más abajo, será necesario que realice la correspondiente evaluación retrospectiva, a través del formulario que puede encontrar en la web: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
+<p>Le recordamos que, tal y como se refleja en la autorización del órgano autonómico  correspondiente, para la realización del proyecto mencionado más abajo, será necesario que realice la correspondiente evaluación retrospectiva, a través del formulario que puede encontrar en la web: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
 - Tipo de actividad: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
