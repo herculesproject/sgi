@@ -8,42 +8,24 @@
 -->
 <#macro renderEs>
 <#setting locale="es">
-Estimado/a investigador/a,
-
 Le informamos de que se ha producido el siguiente error en el proceso de baremación:
 
 - Año: ${data.anio}
 - Error producido: ${data.error}
-
-Reciba un cordial saludo,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Dear Researcher,
-
 You are informed that the following error in the grading process has occurred:
 
 - Year: ${data.anio}
 - Error occurred: ${data.error}
-
-Yours sincerely,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Ikertzaile agurgarria:
-
 Honen bidez jakinarazten dizugu honako akats hau gertatu dela baremazio prozesuan: 
 
 - Urtea: ${data.anio}
 - Akatsa: ${data.error}
-
-Jaso agur bero bat.
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

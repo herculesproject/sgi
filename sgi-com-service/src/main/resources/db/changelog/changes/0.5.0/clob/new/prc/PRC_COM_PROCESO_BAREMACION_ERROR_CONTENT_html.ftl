@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = PRC_COM_PROCESO_BAREMACION_ERROR_DATA?eval />
 <#--
   Formato PRC_COM_PROCESO_BAREMACION_ERROR_DATA:
@@ -8,44 +9,26 @@
 -->
 <#macro renderEs>
 <#setting locale="es">
-<p>Estimado/a investigador/a,</p>
 <p>Le informamos de que se ha producido el siguiente error en el proceso de baremación:</p>
 <p>
 - Año: ${data.anio}<br>
 - Error producido: ${data.error}
 </p>
-<p>
-Reciba un cordial saludo,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>Dear Researcher,</p>
 <p>You are informed that the following error in the grading process has occurred:</p>
 <p>
 - Year: ${data.anio}<br>
 - Error occurred: ${data.error}
 </p>
-<p>
-Yours sincerely,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>Ikertzaile agurgarria:</p>
 <p>Honen bidez jakinarazten dizugu honako akats hau gertatu dela baremazio prozesuan:</p> 
 <p>
 - Urtea: ${data.anio}<br>
 - Akatsa: ${data.error}
-</p>
-<p>
-Jaso agur bero bat.<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>
