@@ -9,45 +9,27 @@
 -->
 <#macro renderEs>
 <#setting locale="es">
-Estimado/a investigador/a
-
 Le informamos de la proxima finalización del plazo de extensión o entrada en fases nacionales/regionales de la invención:
 
 - Meses restantes: ${data.monthsBeforeFechaFinPrioridad} 
 - Fecha fin del plazo: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}
 - Título de la Invención: ${sgi.getFieldValue(data.solicitudTitle)}
-
-Reciba un cordial saludo,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Dear Researcher
-
 Please be advised that the period for extension or entry into national/regional phases of the following invention is about to expire:
 
 - Remaining months: ${data.monthsBeforeFechaFinPrioridad} 
 - Expiry date: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}
 - Invention title: ${sgi.getFieldValue(data.solicitudTitle)}
-
-Yours sincerely,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Ikertzaile agurgarria:
-
 Honen bidez jakinarazten dizugu laster amaituko dela asmakizuna hedatzeko edo nazio/eskualde mailako faseetan sartzeko epea:
 
 - Epea amaitzeko geratzen diren hilabeteak: ${data.monthsBeforeFechaFinPrioridad} 
 - Epearen amaiera data: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}
 - Asmakizunaren izenburua: ${sgi.getFieldValue(data.solicitudTitle)}
-
-Jaso agur bero bat.
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

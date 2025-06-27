@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_DATA?eval />
 <#--
   Formato PII_COM_AVISO_FIN_PLAZO_PRESENTACION_FASES_NACIONALES_REGIONALES_SOLICITUD_PROTECCION_DATA:
@@ -9,47 +10,29 @@
 -->
 <#macro renderEs>
 <#setting locale="es">
-<p>Estimado/a investigador/a</p>
 <p>Le informamos de la proxima finalización del plazo de extensión o entrada en fases nacionales/regionales de la invención:</p>
 <p>
 - Meses restantes: ${data.monthsBeforeFechaFinPrioridad}<br>
 - Fecha fin del plazo: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Título de la Invención: ${sgi.getFieldValue(data.solicitudTitle)}
 </p>
-<p>
-Reciba un cordial saludo,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>Dear Researcher</p>
 <p>Please be advised that the period for extension or entry into national/regional phases of the following invention is about to expire:</p>
 <p>
 - Remaining months: ${data.monthsBeforeFechaFinPrioridad}<br>
 - Expiry date: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Invention title: ${sgi.getFieldValue(data.solicitudTitle)}
 </p>
-<p>
-Yours sincerely,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>Ikertzaile agurgarria:</p>
 <p>Honen bidez jakinarazten dizugu laster amaituko dela asmakizuna hedatzeko edo nazio/eskualde mailako faseetan sartzeko epea:</p>
 <p>
 - Epea amaitzeko geratzen diren hilabeteak: ${data.monthsBeforeFechaFinPrioridad}<br>
 - Epearen amaiera data: ${sgi.formatDate(data.fechaFinPrioridad, "SHORT")}<br>
 - Asmakizunaren izenburua: ${sgi.getFieldValue(data.solicitudTitle)}
-</p>
-<p>
-Jaso agur bero bat.<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>
