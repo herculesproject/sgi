@@ -62,8 +62,9 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String PROBLEM_MESSAGE_NOTNULL = "notNull";
 
   private static final String DATA = "_DATA";
-  private static final String PATH_EMAILS = "/emails";
-  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_SEPARATOR = "/";
+  private static final String PATH_EMAILS = PATH_SEPARATOR + "emails";
+  private static final String PATH_PARAMETER_ID = PATH_SEPARATOR + "{id}";
 
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_NAME = "GENERIC_EMAIL_TEXT";
   private static final String TEMPLATE_GENERIC_EMAIL_TEXT_PARAM_CONTENT = "GENERIC_CONTENT_TEXT";
