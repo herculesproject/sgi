@@ -7,8 +7,8 @@
     "codigosSge": ["00001", "000002"],
     "numPrevision": 2,
     "entidadesFinanciadoras": ["nombre entidad 1", "nombre entidad 2"],
-    "tipoFacturacion": "Sin Requisitos",
-    "apellidosDestinatario": "Macias Pajas"
+    "apellidosDestinatario": "Matias Palas",
+    "enlaceAplicacion": "http://sgi.treelogic.com"
   } 
 -->
 <#macro renderEs>
@@ -22,8 +22,9 @@
 - N.º de previsión: ${data.numPrevision}
 </p>
 <p>En relación a los trabajos que ha realizado en el marco de este contrato, es aconsejable que nos remita copia de los informes finales entregados a la/s empresa/s objeto del contrato, para conocer del desarrollo, ejecución y cumplimiento de los trabajos.</p>
+<p>Es necesario que valide la factura desde la aplicación, accediendo mediante el siguiente enlace: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
-En espera de su respuesta, reciba un cordial saludo,<br>
+Reciba un cordial saludo,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>
@@ -39,8 +40,9 @@ Email unidad responsable
 - Forecast no.: ${data.numPrevision}
 </p>
 <p>In relation to the work you have carried out within the framework of this contract, it is advisable that you send us a copy of the final reports delivered to the company(ies) subject to the contract, in order to know about the development, implementation and fulfilment of the work.</p>
+<p>You need to confirm whether the relevant invoice can be issued, by following this link: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
-We look forward to hearing from you. Kind regards,<br>
+Yours sincerely,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>
@@ -56,8 +58,9 @@ Email unidad responsable
 - Aurreikuspen zk.: ${data.numPrevision}
 </p>
 <p>Kontratu horren baitan egin dituzun lanei dagokienez, komenigarria da guri ere bidaltzea kontratuak xedetzat zituen enpresei aurkeztutako amaierako txostenen kopia bat, lanak nola garatu, gauzatu eta bete diren jakin dezagun.</p>
+<p>Adierazita dagoen faktura jaulki daitekeela baieztatu behar duzu, esteka honen bidez: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
-Zure erantzunaren zain, jaso agur bero bat.<br>
+Jaso agur bero bat.<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>

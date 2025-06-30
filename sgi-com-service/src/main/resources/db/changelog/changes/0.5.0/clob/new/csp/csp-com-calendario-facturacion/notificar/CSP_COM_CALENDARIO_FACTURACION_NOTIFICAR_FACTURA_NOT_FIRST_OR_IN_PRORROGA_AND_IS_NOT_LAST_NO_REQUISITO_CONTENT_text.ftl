@@ -5,9 +5,9 @@
     "tituloProyecto": [{"lang":"es", "value":"Proyecto 1"}],
     "codigosSge": ["00001", "000002"],
     "numPrevision": 2,
-    "entidadesFinanciadoras": ["nombre entidad 1, nombre entidad 2"]
-    "tipoFacturacion": "Sin Requisitos",
-    "apellidosDestinatario": "Macias Pajas"
+    "entidadesFinanciadoras": ["nombre entidad 1", "nombre entidad 2"],
+    "apellidosDestinatario": "Matias Palas",
+    "enlaceAplicacion": "http://sgi.treelogic.com"
   } 
 -->
 <#macro renderEs>
@@ -21,7 +21,9 @@ Siguiendo el calendario de facturación del contrato referenciado más abajo, es
 - Código/s de proyecto/s asociado/s: ${data.codigosSge?join(", ")}
 - N.º de previsión: ${data.numPrevision}
 
-En espera de su respuesta, reciba un cordial saludo,
+Es necesario que valide la factura desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}
+
+Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -36,7 +38,9 @@ In accordance with the below contract invoicing schedule, the following invoice 
 - Associated project code(s): ${data.codigosSge?join(", ")}
 - Forecast no.: ${data.numPrevision}
 
-We look forward to hearing from you. Kind regards,
+You need to confirm whether the relevant invoice can be issued, by following this link: ${data.enlaceAplicacion}
+
+Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -51,7 +55,9 @@ Behean aipatuta ageri den kontratuaren fakturazio egutegiari jarraituz, adierazi
 - Lotutako proiektuen kodeak: ${data.codigosSge?join(", ")}
 - Aurreikuspen zk.: ${data.numPrevision}
 
-Zure erantzunaren zain, jaso agur bero bat.
+Adierazita dagoen faktura jaulki daitekeela baieztatu behar duzu, esteka honen bidez: ${data.enlaceAplicacion}
+
+Jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

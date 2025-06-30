@@ -3,7 +3,7 @@
 <#setting locale="es">
 Estimado/a investigador/a,
 
-Una vez firmado el contrato asocado al/los proyecto/s abajo referenciado/s más abajo, es necesario que confirme si pueden ser emitida la factura que se indica:
+Una vez firmado el contrato asociado al/los proyecto/s abajo referenciado/s más abajo, es necesario que confirme si puede ser emitida la factura que se indica:
 
 - Empresa/s: ${data.entidadesFinanciadoras?join(", ")}
 - Título del contrato: ${sgi.getFieldValue(data.tituloProyecto)}

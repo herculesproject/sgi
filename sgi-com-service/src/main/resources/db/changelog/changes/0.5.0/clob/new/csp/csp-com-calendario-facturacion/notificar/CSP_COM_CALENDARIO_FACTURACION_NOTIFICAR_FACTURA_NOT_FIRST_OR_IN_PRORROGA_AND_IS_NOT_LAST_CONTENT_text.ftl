@@ -7,7 +7,8 @@
     "numPrevision": 2,
     "entidadesFinanciadoras": ["nombre entidad 1, nombre entidad 2"]
     "tipoFacturacion": "Sin Requisitos",
-    "apellidosDestinatario": "Macias Pajas"
+    "apellidosDestinatario": "Matias Palas",
+    "enlaceAplicacion": "http://sgi.treelogic.com"
   } 
 -->
 <#macro renderEs>
@@ -22,7 +23,9 @@ Siguiendo el calendario de facturación del contrato referenciado más abajo, es
 - N.º de previsión: ${data.numPrevision}
 - Tipo facturación: ${sgi.getFieldValue(data.tipoFacturacion)}
 
-En espera de su respuesta, reciba un cordial saludo,
+Es necesario que valide la factura desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}
+
+Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -38,7 +41,9 @@ In accordance with the below contract invoicing schedule, the following invoice 
 - Forecast no.: ${data.numPrevision}
 - Invoicing type: ${sgi.getFieldValue(data.tipoFacturacion)}
 
-We look forward to hearing from you. Kind regards,
+You need to confirm whether the relevant invoice can be issued, by following this link: ${data.enlaceAplicacion}
+
+Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -54,7 +59,9 @@ Behean aipatutako kontratuaren fakturazio egutegiari jarraituz, adierazitako fak
 - Aurreikuspen zk.: ${data.numPrevision}
 - Fakturazio mota: ${sgi.getFieldValue(data.tipoFacturacion)}
 
-Zure erantzunaren zain, jaso agur bero bat.
+Adierazita dagoen faktura jaulki daitekeela baieztatu behar duzu, esteka honen bidez: ${data.enlaceAplicacion}
+
+Jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

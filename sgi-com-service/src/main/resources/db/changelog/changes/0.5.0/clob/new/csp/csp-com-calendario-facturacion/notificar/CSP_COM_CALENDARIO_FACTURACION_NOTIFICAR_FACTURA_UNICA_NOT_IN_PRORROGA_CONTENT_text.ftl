@@ -5,16 +5,17 @@
     "tituloProyecto": [{"lang":"es", "value":"Proyecto 1"}],
     "codigosSge": ["00001", "000002"],
     "numPrevision": 2,
-    "entidadesFinanciadoras": ["nombre entidad 1, nombre entidad 2"]
+    "entidadesFinanciadoras": ["nombre entidad 1, nombre entidad 2"],
     "tipoFacturacion": "Sin Requisitos",
-    "apellidosDestinatario": "Macias Pajas"
+    "apellidosDestinatario": "Matias Palas",
+    "enlaceAplicacion": "http://sgi.treelogic.com"
   } 
 -->
 <#macro renderEs>
 <#setting locale="es">
 Estimado/a investigador/a,
 
-Una vez firmado el contrato refernciado a continuación, se debe emitir la correspondiente factura. Este proceso está condicionado a la necesaria entrega de resultados. Para ello necesitamos que nos confirme que los trabajos han finalizado.
+Una vez firmado el contrato referenciado a continuación, se debe emitir la correspondiente factura. Este proceso está condicionado a la necesaria entrega de resultados. Para ello necesitamos que nos confirme que los trabajos han finalizado.
 
 - Empresa/s: ${data.entidadesFinanciadoras?join(", ")}
 - Título del contrato: ${sgi.getFieldValue(data.tituloProyecto)}
@@ -24,7 +25,9 @@ Una vez firmado el contrato refernciado a continuación, se debe emitir la corre
 
 En relación a los trabajos que ha realizado en el marco de este contrato, envíenos por favor un correo electrónico o informe de conclusión sobre los servicios que ha prestado a la/s empresa para conocer su opinión, grado de ejecución y cumplimiento de los trabajos finalizados.
 
-En espera de su respuesta, reciba un cordial saludo,
+Es necesario que valide la factura desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}
+
+Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -42,7 +45,9 @@ Once the contract below has been signed, the relevant invoice is to be issued. T
 
 In relation to the work you have performed under this contract, please send us an e-mail or completion report on the services you have provided to the company(ies) in order to get your opinion, degree of implementation and completion of the work completed.
 
-We look forward to hearing from you. Kind regards,
+You need to confirm whether the relevant invoice can be issued, by following this link: ${data.enlaceAplicacion}
+
+Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -60,7 +65,9 @@ Behean aipatutako kontratua sinatu ostean, dagokion faktura jaulki behar da. Pro
 
 Kontratu horren baitan egin dituzun lanei dagokienez, mesedez, bidal iezaguzu enpresei emandako zerbitzuei buruzko mezu elektroniko edo amaiera txosten bat, amaitutako lanen gauzatze eta betetze maila ezagutzeko, baita haien gaineko iritzia ere.
 
-Zure erantzunaren zain, jaso agur bero bat.
+Adierazita dagoen faktura jaulki daitekeela baieztatu behar duzu, esteka honen bidez: ${data.enlaceAplicacion}
+
+Jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

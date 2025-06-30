@@ -5,7 +5,7 @@
     "tituloProyecto": [{"lang":"es", "value":"Proyecto 1"}],
     "codigosSge": ["00001", "000002"],
     "numPrevision": 2,
-    "entidadesFinanciadoras": ["nombre entidad 1, nombre entidad 2"]
+    "entidadesFinanciadoras": ["nombre entidad 1", "nombre entidad 2"],
     "tipoFacturacion": "Sin Requisitos",
     "apellidosDestinatario": "Macias Pajas"
   } 
@@ -24,7 +24,9 @@ Siguiendo el calendario de facturación del contrato referenciado más abajo, se
 
 En relación a los trabajos que ha realizado en el marco de este contrato, es aconsejable que nos remita copia de los informes finales entregados a la/s empresa/s, objeto del contrato, para conocer del desarrollo, ejecución y cumplimiento de los trabajos.
 
-En espera de su respuesta, reciba un cordial saludo,
+Es necesario que valide la factura desde la aplicación, accediendo mediante el siguiente enlace: ${data.enlaceAplicacion}
+
+Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -42,7 +44,9 @@ In accordance with the below contract invoicing schedule, the LAST invoice of th
 
 In relation to the work you have carried out within the framework of this contract, it is advisable that you send us a copy of the final reports delivered to the company(ies) subject to the contract, in order to know about the development, implementation and fulfilment of the work.
 
-We look forward to hearing from you. Kind regards,
+You need to confirm whether the relevant invoice can be issued, by following this link: ${data.enlaceAplicacion}
+
+Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>
@@ -60,7 +64,9 @@ Behean aipatutako kontratuaren fakturazio egutegiari jarraituz, LUZAPENEKO AZKEN
 
 Kontratu horren baitan egin dituzun lanei dagokienez, komenigarria da guri ere bidaltzea kontratuak xedetzat zituen enpresei aurkeztutako amaierako txostenen kopia bat, lanak nola garatu, gauzatu eta bete diren jakin dezagun.
 
-Zure erantzunaren zain, jaso agur bero bat.
+Adierazita dagoen faktura jaulki daitekeela baieztatu behar duzu, esteka honen bidez: ${data.enlaceAplicacion}
+
+Jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
 Email unidad responsable
 </#macro>

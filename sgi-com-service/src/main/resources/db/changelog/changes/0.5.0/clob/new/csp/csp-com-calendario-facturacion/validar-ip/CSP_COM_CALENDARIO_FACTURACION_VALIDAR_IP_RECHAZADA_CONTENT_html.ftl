@@ -11,8 +11,7 @@
 -->
 <#macro renderEs>
 <#setting locale="es">
-<p>Estimado/a investigador/a,</p>
-<p>Le informamos de que tiene el visto bueno para la emisión de la factura abajo referenciada.</p>
+<p>Tras el proceso de validación, no se ha dado el visto bueno para la emisión de la factura abajo referenciada:</p>
 <p>
 - Investigador/a responsable: ${data.nombreApellidosValidador}<br>
 - Título del contrato: ${sgi.getFieldValue(data.tituloProyecto)}<br>
@@ -20,16 +19,10 @@
 - Nº de previsión: ${data.numPrevision}<br>
 - Motivo: ${sgi.getFieldValue(data.motivoRechazo)}
 </p>
-<p>
-Reciba un cordial saludo,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>Dear Researcher,</p>
-<p>Please be advised that you have the approval to issue the invoice below.</p>
+<p>---</p>
 <p>
 - Responsible researcher: ${data.nombreApellidosValidador}<br>
 - Title of the contract: ${sgi.getFieldValue(data.tituloProyecto)}<br>
@@ -37,27 +30,16 @@ Email unidad responsable
 - Forecast no.: ${data.numPrevision}<br>
 - Reason: ${sgi.getFieldValue(data.motivoRechazo)}
 </p>
-<p>
-Yours sincerely,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>Ikertzaile agurgarria:</p>
-<p>Honen bidez jakinarazten dizugu ez duzula oniritzirik behean aipatutako faktura jaulkitzeko.</p>
+<p>---</p>
 <p>
 - Ikertzaile arduraduna: ${data.nombreApellidosValidador}<br>
 - Kontratuaren izenburua: ${sgi.getFieldValue(data.tituloProyecto)}<br>
 - Lotutako proiektuen kodeak: ${data.codigosSge?join(", ")}<br>
 - Aurreikuspen zk.: ${data.numPrevision}<br>
 - Zergatia: ${sgi.getFieldValue(data.motivoRechazo)}
-</p>
-<p>
-Jaso agur bero bat.<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>

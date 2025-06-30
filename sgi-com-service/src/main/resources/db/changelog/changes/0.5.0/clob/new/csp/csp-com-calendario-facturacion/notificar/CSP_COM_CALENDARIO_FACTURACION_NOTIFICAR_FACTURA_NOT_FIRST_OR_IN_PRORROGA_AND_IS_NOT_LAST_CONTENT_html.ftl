@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_DATA?eval />
 <#--
   Formato CSP_COM_CALENDARIO_FACTURACION_NOTIFICAR_FACTURA_NOT_FIRST_OR_IN_PRORROGA_AND_IS_NOT_LAST_DATA:
@@ -5,9 +6,10 @@
     "tituloProyecto": [{"lang":"es", "value":"Proyecto 1"}],
     "codigosSge": ["00001", "000002"],
     "numPrevision": 2,
-    "entidadesFinanciadoras": ["nombre entidad 1, nombre entidad 2"]
+    "entidadesFinanciadoras": ["nombre entidad 1, nombre entidad 2"],
     "tipoFacturacion": "Sin Requisitos",
-    "apellidosDestinatario": "Macias Pajas"
+    "apellidosDestinatario": "Matias Palas",
+    "enlaceAplicacion": "http://sgi.treelogic.com"
   } 
 -->
 <#macro renderEs>
@@ -21,8 +23,9 @@
 - N.º de previsión: ${data.numPrevision}<br>
 - Tipo facturación: ${sgi.getFieldValue(data.tipoFacturacion)}
 </p>
+<p>Es necesario que valide la factura desde la aplicación, accediendo mediante el siguiente enlace: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
-En espera de su respuesta, reciba un cordial saludo,<br>
+Reciba un cordial saludo,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>
@@ -38,8 +41,9 @@ Email unidad responsable
 - Forecast no.: ${data.numPrevision}<br>
 - Invoicing type: ${sgi.getFieldValue(data.tipoFacturacion)}
 </p>
+<p>You need to confirm whether the relevant invoice can be issued, by following this link: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
-We look forward to hearing from you. Kind regards,<br>
+Yours sincerely,<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>
@@ -55,8 +59,9 @@ Email unidad responsable
 - Aurreikuspen zk.: ${data.numPrevision}<br>
 - Fakturazio mota: ${sgi.getFieldValue(data.tipoFacturacion)}
 </p>
+<p>Adierazita dagoen faktura jaulki daitekeela baieztatu behar duzu, esteka honen bidez: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
-Zure erantzunaren zain, jaso agur bero bat.<br>
+Jaso agur bero bat.<br>
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
 Email unidad responsable
 </p>
