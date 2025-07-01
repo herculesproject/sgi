@@ -1,8 +1,7 @@
 <#ftl output_format="HTML">
 <#macro renderEs>
 <#setting locale="es">
-<p>Estimado/a investigador/a,</p>
-<p>Le informamdos de que se ha alcanzado el siguiente hito de la convocatoria referenciada:</p>
+<p>Le informamos de que se ha alcanzado el siguiente hito de la convocatoria referenciada:</p>
 <p>
 - Hito: <#if CSP_HITO_TIPO?has_content && CSP_HITO_TIPO != "[]">${sgi.getFieldValue(CSP_HITO_TIPO)}<#else>-</#if><br>
 - Convocatoria: ${sgi.getFieldValue(CSP_CONVOCATORIA_TITULO)}<br>
@@ -12,15 +11,9 @@
 <p>En el hito se han indicado las siguientes observaciones:</p>
 <p>${sgi.getFieldValue(CSP_HITO_OBSERVACIONES)}</p>
 </#if>
-<p>
-Reciba un cordial saludo,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>Dear Researcher,</p>
 <p>Please be advised that the following milestone of the call in question has been reached:</p>
 <p>
 - Milestone: <#if CSP_HITO_TIPO?has_content && CSP_HITO_TIPO != "[]">${sgi.getFieldValue(CSP_HITO_TIPO)}<#else>-</#if><br>
@@ -31,15 +24,9 @@ Email unidad responsable
 <p>The following remarks have been indicated at the milestone:</p>
 <p>${sgi.getFieldValue(CSP_HITO_OBSERVACIONES)}</p>
 </#if>
-<p>
-Yours sincerely,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>Ikertzaile agurgarria:</p>
 <p>Honen bidez jakinarazten dizugu behean aipatutako deialdia hurrengo mugarrira iritsi dela:</p>
 <p>
 - Mugarria: <#if CSP_HITO_TIPO?has_content && CSP_HITO_TIPO != "[]">${sgi.getFieldValue(CSP_HITO_TIPO)}<#else>-</#if><br>
@@ -50,11 +37,6 @@ Email unidad responsable
 <p>ugarrian ohar hauek adierazi dira:</p>
 <p>${sgi.getFieldValue(CSP_HITO_OBSERVACIONES)}</p>
 </#if>
-<p>
-Jaso agur bero bat.<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <!DOCTYPE html>
 <html>
