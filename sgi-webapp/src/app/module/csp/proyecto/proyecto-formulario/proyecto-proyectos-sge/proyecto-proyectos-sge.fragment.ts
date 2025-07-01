@@ -10,7 +10,6 @@ import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { ProyectoSgeService } from '@core/services/sge/proyecto-sge.service';
 import { SolicitudProyectoSgeService } from '@core/services/sge/solicitud-proyecto-sge/solicitud-proyecto-sge.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { BehaviorSubject, Observable, concat, forkJoin, from, merge, of } from 'rxjs';
 import { map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
@@ -62,7 +61,7 @@ export class ProyectoProyectosSgeFragment extends Fragment {
   }
 
   get isSgeEliminarRelacionProyectoEnabled(): boolean {
-    return this._isSgeEliminarRelacionProyectoEnabled;
+    return !this.readonly && this._isSgeEliminarRelacionProyectoEnabled;
   }
 
   constructor(
@@ -72,9 +71,8 @@ export class ProyectoProyectosSgeFragment extends Fragment {
     private proyectoSgeService: ProyectoSgeService,
     private solicitudProyectoSgeService: SolicitudProyectoSgeService,
     private configService: ConfigService,
-    private snackBarService: SnackBarService,
-    public readonly: boolean,
-    public isVisor: boolean
+    public readonly readonly: boolean,
+    public readonly isVisor: boolean
   ) {
     super(key);
     this.setComplete(true);

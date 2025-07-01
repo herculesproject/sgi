@@ -48,7 +48,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
   }
 
   get isEliminarRelacionProyectoSgeEnabled(): boolean {
-    return this._isEliminarRelacionProyectoSgeEnabled;
+    return !this.readonly && this._isEliminarRelacionProyectoSgeEnabled;
   }
 
   get isModificacionProyectoSgeEnabled(): boolean {
@@ -66,7 +66,7 @@ export class GrupoDatosGeneralesFragment extends FormFragment<IGrupo> {
     private readonly rolProyectoService: RolProyectoService,
     private readonly vinculacionService: VinculacionService,
     private readonly isEjecucionEconomicaGruposEnabled: boolean,
-    private readonly: boolean
+    public readonly readonly: boolean
   ) {
     super(key, true);
     this.setComplete(true);

@@ -375,7 +375,6 @@ export class ProyectoActionService extends ActionService {
         proyectoSgeService,
         solicitudProyectoSgeService,
         configService,
-        snackBarService,
         this.readonly,
         this.data?.isVisor
       );
@@ -469,7 +468,6 @@ export class ProyectoActionService extends ActionService {
           proyectoSgeService,
           solicitudProyectoSgeService,
           configService,
-          snackBarService,
           this.readonly,
           this.data?.isVisor
         );

@@ -198,13 +198,13 @@
                 <ng-container *sgiHasAuthorityForAnyUO="'CSP-GIN-E'">
                   <ng-container *ngIf="this.formPart.isModificacionProyectoSgeEnabled; else btnView">
                     <button color="accent" mat-icon-button matTooltip="{{'btn.sge.solicitar-modificacion' | translate}}"
-                      (click)="openProyectoSgeEditModal(wrapper)">
+                      *ngIf="!formPart.readonly" (click)="openProyectoSgeEditModal(wrapper)">
                       <mat-icon>border_color</mat-icon>
                     </button>
                   </ng-container>
                   <ng-template #btnView>
                     <button color="accent" mat-icon-button matTooltip="{{'btn.sge.ver-detalle-proyecto' | translate}}"
-                      (click)="openProyectoSgeViewModal(wrapper)">
+                      *ngIf="!formPart.readonly" (click)="openProyectoSgeViewModal(wrapper)">
                       <mat-icon>find_in_page</mat-icon>
                     </button>
                   </ng-template>
@@ -221,22 +221,24 @@
             <tr mat-row *matRowDef="let row; columns: proyectosSgeDisplayedColumns;"></tr>
           </table>
         </div>
-        <div class="separation-button">
-          <ng-container *ngIf="isBuscadorSgeEnabled; else btnCreate">
-            <button color="three" mat-button mat-raised-button
-              [disabled]="this.formPart.disableAddIdentificadorSge$ | async" (click)="openProyectoSgeSearchModal()">
-              <mat-icon color="accent">add_circle</mat-icon>
-              {{ 'btn.add.entity' | translate:msgParamIdentificadorSgeEntity }}
-            </button>
-          </ng-container>
-          <ng-template #btnCreate>
-            <button color="three" mat-button mat-raised-button
-              [disabled]="this.formPart.disableAddIdentificadorSge$ | async" (click)="openProyectoSgeCreateModal()">
-              <mat-icon color="accent">add_circle</mat-icon>
-              {{ 'btn.add.entity' | translate:msgParamIdentificadorSgeEntity }}
-            </button>
-          </ng-template>
-        </div>
+        <ng-container *sgiHasAuthorityForAnyUO="'CSP-GIN-E'">
+          <div class="separation-button" *ngIf="!formPart.readonly">
+            <ng-container *ngIf="isBuscadorSgeEnabled; else btnCreate">
+              <button color="three" mat-button mat-raised-button
+                [disabled]="this.formPart.disableAddIdentificadorSge$ | async" (click)="openProyectoSgeSearchModal()">
+                <mat-icon color="accent">add_circle</mat-icon>
+                {{ 'btn.add.entity' | translate:msgParamIdentificadorSgeEntity }}
+              </button>
+            </ng-container>
+            <ng-template #btnCreate>
+              <button color="three" mat-button mat-raised-button
+                [disabled]="this.formPart.disableAddIdentificadorSge$ | async" (click)="openProyectoSgeCreateModal()">
+                <mat-icon color="accent">add_circle</mat-icon>
+                {{ 'btn.add.entity' | translate:msgParamIdentificadorSgeEntity }}
+              </button>
+            </ng-template>
+          </div>
+        </ng-container>
       </div>
     </ng-container>
   </ng-container>
