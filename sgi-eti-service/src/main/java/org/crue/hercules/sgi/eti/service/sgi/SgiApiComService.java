@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.crue.hercules.sgi.eti.config.RestApiProperties;
-import org.crue.hercules.sgi.eti.config.SgiConfigProperties;
 import org.crue.hercules.sgi.eti.dto.com.EmailInput;
 import org.crue.hercules.sgi.eti.dto.com.EmailInput.Deferrable;
 import org.crue.hercules.sgi.eti.dto.com.EmailOutput;
@@ -48,12 +47,10 @@ import lombok.extern.slf4j.Slf4j;
 public class SgiApiComService extends SgiApiBaseService {
   private static final String MSG_KEY_PATH_SEPARATOR = ".";
 
-  private static final String MSG_KEY_VIDEOCONFERENCIA = "lugar.videoconferencia";
   private static final String MSG_FIELD_ASUNTO = "email.asunto";
   private static final String MSG_FIELD_CONTENIDO = "email.contenido";
   private static final String MSG_FIELD_DESTINATARIOS = "email.destinatarios";
 
-  private static final String EMPTY_LUGAR = "videoconferencia";
   private static final String PATH_SEPARATOR = "/";
   private static final String DATA = "_DATA";
   private static final String PATH_EMAILS = PATH_SEPARATOR + "emails";
@@ -123,16 +120,14 @@ public class SgiApiComService extends SgiApiBaseService {
   private static final String TEMPLATE_ETI_COM_REVISION_ACTA_PARAM = TEMPLATE_ETI_COM_REVISION_ACTA
       + DATA;
 
-  private final SgiConfigProperties sgiConfigProperties;
   private final ObjectMapper mapper;
   private final MessageSource messageSource;
   private final I18nConfig i18nConfig;
 
   public SgiApiComService(RestApiProperties restApiProperties, RestTemplate restTemplate,
-      SgiConfigProperties sgiConfigProperties, ObjectMapper mapper, MessageSource messageSource,
+      ObjectMapper mapper, MessageSource messageSource,
       I18nConfig i18nConfig) {
     super(restApiProperties, restTemplate);
-    this.sgiConfigProperties = sgiConfigProperties;
     this.mapper = mapper;
     this.messageSource = messageSource;
     this.i18nConfig = i18nConfig;
@@ -318,6 +313,14 @@ public class SgiApiComService extends SgiApiBaseService {
     return response;
   }
 
+  /**
+   * Crea el comunicado {@code ETI_COM_ACTA_SIN_REV_MINIMA}
+   * 
+   * @param data       Información para rellenar la plantilla del comunicado
+   * @param recipients remitentes del comunicado
+   * @return el email creado
+   * @throws JsonProcessingException
+   */
   public EmailOutput createComunicadoActaFinalizada(
       EtiComActaFinalizarActaData data, List<Recipient> recipients)
       throws JsonProcessingException {
@@ -326,6 +329,14 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_ETI_COM_ACTA_SIN_REV_MINIMA_PARAM);
   }
 
+  /**
+   * Crea el comunicado {@code ETI_COM_DICT_EVA_REV_MINIMA}
+   * 
+   * @param data       Información para rellenar la plantilla del comunicado
+   * @param recipients remitentes del comunicado
+   * @return el email creado
+   * @throws JsonProcessingException
+   */
   public EmailOutput createComunicadoEvaluacionMemoriaRevMin(
       EtiComDictamenEvaluacionRevMinData data, List<Recipient> recipients)
       throws JsonProcessingException {
@@ -404,6 +415,14 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_ETI_COM_ASIGNACION_EVALUACION_PARAM);
   }
 
+  /**
+   * Crea el comunicado {@code ETI_COM_REVISION_ACTA}
+   * 
+   * @param data       Información para rellenar la plantilla del comunicaod
+   * @param recipients remitentes del comunicado
+   * @return el email creado
+   * @throws JsonProcessingException
+   */
   public EmailOutput createComunicadoRevisionActa(
       EtiComRevisionActaData data, List<Recipient> recipients)
       throws JsonProcessingException {

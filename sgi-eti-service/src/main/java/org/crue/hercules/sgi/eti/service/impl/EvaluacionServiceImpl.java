@@ -860,6 +860,12 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     return evaluacionRepository.findFirstFechaEnvioSecretariaByIdEvaluacion(idEvaluacion);
   }
 
+  /**
+   * Se envía comunicado {@code ETI_COM_DICT_EVA_REV_MINIMA} correspondiente a
+   * asignar a la evaluación un dictamen de tipo revision mínima
+   * 
+   * @param evaluacion la {@link Evaluacion}
+   */
   private void sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) {
     log.debug("sendComunicadoDictamenEvaluacionRevMin(Evaluacion evaluacion) - Start");
     try {

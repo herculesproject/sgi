@@ -550,6 +550,12 @@ public class ActaServiceImpl implements ActaService {
     return actaRepository.hasAssignedActasByEvaluador(personaRef);
   }
 
+  /**
+   * Envia el comunicado de {@code ETI_COM_ACTA_SIN_REV_MINIMA} correspondiente a
+   * la {@code evaluacion}
+   * 
+   * @param evaluacion una {@link Evaluacion}
+   */
   private void sendComunicadoActaFinalizada(Evaluacion evaluacion) {
     log.debug("sendComunicadoActaFinalizada(Evaluacion evaluacion) - Start");
     try {

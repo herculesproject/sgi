@@ -29,7 +29,9 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoMemoriaComentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacionTitulo;
+import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiComService;
 import org.crue.hercules.sgi.eti.service.sgi.SgiApiSgpService;
 import org.crue.hercules.sgi.framework.i18n.I18nFieldValue;
@@ -84,39 +86,88 @@ public class ComunicadosService {
     log.debug("enviarComunicadoConvocatoriaReunionEti(ConvocatoriaReunion convocatoriaReunion) - end");
   }
 
-  public void enviarComunicadoActaEvaluacionFinalizada(Collection<ComiteNombre> comiteNombre, String comiteCodigo,
-      String referenciaMemoria, List<I18nFieldValue> tipoActividad,
+  /**
+   * Envia el comunicado {@code ETI_COM_ACTA_SIN_REV_MINIMA} para el {@link Acta}
+   * al {@code solicitanteRef}
+   * 
+   * @param comiteNombre              nombre del comite
+   * @param comiteCodigo              codigo del comite
+   * @param referenciaMemoria         referencia de la memoria
+   * @param tipoActividad             {@link TipoActividad}
+   * @param tituloSolicitudEvaluacion titulo de la {@link PeticionEvaluacion}
+   * @param solicitanteRef            solicitante de la {@link PeticionEvaluacion}
+   * @throws JsonProcessingException
+   */
+  public void enviarComunicadoActaEvaluacionFinalizada(
+      Collection<ComiteNombre> comiteNombre,
+      String comiteCodigo,
+      String referenciaMemoria,
+      List<I18nFieldValue> tipoActividad,
       Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
       String solicitanteRef)
       throws JsonProcessingException {
     log.debug(
-        "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - start");
+        "enviarComunicadoActaEvaluacionFinalizada(comiteNombre: {}, comiteCodigo: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - start",
+        comiteNombre,
+        comiteCodigo,
+        referenciaMemoria,
+        tipoActividad,
+        tituloSolicitudEvaluacion,
+        solicitanteRef);
+
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
     String enlaceAplicacion = sgiConfigProperties.getWebUrl();
-    if (recipients != null) {
-      EmailOutput emailOutput = emailService.createComunicadoActaFinalizada(
-          EtiComActaFinalizarActaData.builder()
-              .nombreInvestigacion(comiteNombre)
-              .generoComite(I18nHelper.getFieldValueForCurrentLanguage(comiteNombre)
-                  .map(ComiteNombre::getGenero).map(Enum::toString).orElse(
-                      null))
-              .referenciaMemoria(referenciaMemoria)
-              .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
-              .comiteCodigo(comiteCodigo)
-              .enlaceAplicacion(enlaceAplicacion).build(),
-          recipients);
-      emailService.sendEmail(emailOutput.getId());
-    } else {
+    if (CollectionUtils.isEmpty(recipients)) {
       log.debug(
-          "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - No se puede enviar el comunicado, no existe ninguna persona asociada");
+          "enviarComunicadoActaEvaluacionFinalizada(comiteNombre: {}, comiteCodigo: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - No se puede enviar el comunicado, no existe ninguna persona asociada",
+          comiteNombre,
+          comiteCodigo,
+          referenciaMemoria,
+          tipoActividad,
+          tituloSolicitudEvaluacion,
+          solicitanteRef);
     }
+
+    EmailOutput emailOutput = emailService.createComunicadoActaFinalizada(
+        EtiComActaFinalizarActaData.builder()
+            .nombreInvestigacion(comiteNombre)
+            .generoComite(I18nHelper.getFieldValueForCurrentLanguage(comiteNombre)
+                .map(ComiteNombre::getGenero).map(Enum::toString).orElse(null))
+            .referenciaMemoria(referenciaMemoria)
+            .tipoActividad(tipoActividad)
+            .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+            .comiteCodigo(comiteCodigo)
+            .enlaceAplicacion(enlaceAplicacion).build(),
+        recipients);
+    emailService.sendEmail(emailOutput.getId());
+
     log.debug(
-        "enviarComunicadoActaEvaluacionFinalizada(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - end");
+        "enviarComunicadoActaEvaluacionFinalizada(comiteNombre: {}, comiteCodigo: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - end",
+        comiteNombre,
+        comiteCodigo,
+        referenciaMemoria,
+        tipoActividad,
+        tituloSolicitudEvaluacion,
+        solicitanteRef);
   }
 
-  public void enviarComunicadoDictamenEvaluacionRevMinima(Collection<ComiteNombre> comiteNombre, String comiteCodigo,
-      String referenciaMemoria, List<I18nFieldValue> tipoActividad,
+  /**
+   * Envia el comunicado {@code ETI_COM_DICT_EVA_REV_MINIMA} para el {@link Acta}
+   * al {@code solicitanteRef}
+   * 
+   * @param comiteNombre              nombre del comite
+   * @param comiteCodigo              codigo del comite
+   * @param referenciaMemoria         referencia de la memoria
+   * @param tipoActividad             {@link TipoActividad}
+   * @param tituloSolicitudEvaluacion titulo de la {@link PeticionEvaluacion}
+   * @param solicitanteRef            solicitante de la {@link PeticionEvaluacion}
+   * @throws JsonProcessingException
+   */
+  public void enviarComunicadoDictamenEvaluacionRevMinima(
+      Collection<ComiteNombre> comiteNombre,
+      String comiteCodigo,
+      String referenciaMemoria,
+      List<I18nFieldValue> tipoActividad,
       Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
       String solicitanteRef)
       throws JsonProcessingException {
@@ -417,39 +468,46 @@ public class ComunicadosService {
         "enviarComunicadoAsignacionEvaluacion(Evaluacion evaluacion, Instant fechaEvaluacionAnterior) - end");
   }
 
+  /**
+   * Envia el comunicado {@code ETI_COM_REVISION_ACTA} para el {@link Acta} a la
+   * lista de {@code asistentes}
+   * 
+   * @param acta       {@link Acta} para la que se envia el comunicado
+   * @param asistentes La lista de {@link Asistentes} a los que se les envia el
+   *                   comunicado
+   * @throws JsonProcessingException
+   */
   public void enviarComunicadoRevisionActa(Acta acta, List<Asistentes> asistentes)
       throws JsonProcessingException {
 
-    log.debug(
-        "enviarComunicadoRevisionActa(Evaluacion evaluacion, List<Evaluador> evaluadores) - start");
-    List<Recipient> recipients = new ArrayList();
+    log.debug("enviarComunicadoRevisionActa(acta: {}, asistentes: {}) - start", acta, asistentes);
+    List<Recipient> recipients = new ArrayList<>();
 
-    asistentes.forEach(asistente -> {
-      recipients.addAll(getRecipientsFromPersonaRef(asistente.getEvaluador().getPersonaRef()));
-    });
+    asistentes
+        .forEach(asistente -> recipients.addAll(getRecipientsFromPersonaRef(asistente.getEvaluador().getPersonaRef())));
 
-    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
     if (!CollectionUtils.isEmpty(recipients)) {
-      EmailOutput emailOutput = emailService.createComunicadoRevisionActa(
-          EtiComRevisionActaData.builder()
-              .enlaceAplicacion(enlaceAplicacion)
-              .nombreInvestigacion(acta.getConvocatoriaReunion().getComite().getNombre())
-              .nombreComite(acta.getConvocatoriaReunion().getComite().getCodigo())
-              .fechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion())
-              .generoComite(
-                  I18nHelper.getFieldValueForCurrentLanguage(acta.getConvocatoriaReunion().getComite().getNombre())
-                      .map(ComiteNombre::getGenero).map(Enum::name).orElse(
-                          null))
-              .build(),
-          recipients);
-      emailService.sendEmail(emailOutput.getId());
-    } else {
       log.debug(
-          "enviarComunicadoRevisionActa(Acta acta, List<Asistentes> asistentes) - No se puede enviar el comunicado, no existe ninguna persona asociada");
+          "enviarComunicadoRevisionActa(acta: {}, asistentes: {}) - No se puede enviar el comunicado, no existe ninguna persona asociada",
+          acta, asistentes);
+      return;
     }
-    log.debug(
-        "enviarComunicadoRevisionActa(Acta acta, List<Asistentes> asistentes) - end");
 
+    EmailOutput emailOutput = emailService.createComunicadoRevisionActa(
+        EtiComRevisionActaData.builder()
+            .enlaceAplicacion(sgiConfigProperties.getWebUrl())
+            .nombreInvestigacion(acta.getConvocatoriaReunion().getComite().getNombre())
+            .nombreComite(acta.getConvocatoriaReunion().getComite().getCodigo())
+            .fechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion())
+            .generoComite(
+                I18nHelper.getFieldValueForCurrentLanguage(acta.getConvocatoriaReunion().getComite().getNombre())
+                    .map(ComiteNombre::getGenero).map(Enum::name).orElse(null))
+            .build(),
+        recipients);
+    emailService.sendEmail(emailOutput.getId());
+
+    log.debug(
+        "enviarComunicadoRevisionActa(acta: {}, asistentes: {}) - end", acta, asistentes);
   }
 
   /**
