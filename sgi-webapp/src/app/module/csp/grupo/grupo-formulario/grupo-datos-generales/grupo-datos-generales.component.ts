@@ -37,7 +37,7 @@ const PROYECTO_SGE_KEY = marker('sge.proyecto');
 
 const MSG_SAVE_SUCCESS = marker('msg.save.request.entity.success');
 const MSG_UPDATE_SUCCESS = marker('msg.update.request.entity.success');
-const MSG_DELETE_RELACION_PROYECTO = marker('msg.proyecto-proyecto-sge.eliminar-relacion');
+const MSG_DELETE_RELACION_PROYECTO = marker('msg.grupo-proyecto-sge.eliminar-relacion');
 
 @Component({
   selector: 'sgi-grupo-datos-generales',
