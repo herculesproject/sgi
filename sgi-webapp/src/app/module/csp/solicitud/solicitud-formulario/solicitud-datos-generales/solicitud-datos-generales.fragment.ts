@@ -481,6 +481,14 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       })
     );
 
+    this.subscriptions.push(
+      form.controls.convocatoria.valueChanges.subscribe(
+        (convocatoria) => {
+          this.convocatoria$.next(convocatoria);
+        }
+      )
+    );
+
     this.initTipoSolicitudGrupoValueChangesSubscription(form);
   }
 
