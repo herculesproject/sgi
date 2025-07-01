@@ -14,7 +14,7 @@
 <#setting locale="es">
 Estimado/a investigador/a,
 
-Le informamos de que próximamente dara inicio el periodo de presentación de justificación del proyecto referenciado más abajo. Puede proceder a realizar la justificación a través del siguiente enlace: ${data.enlaceAplicacion}
+Próximamente dará inicio el periodo de presentación de justificación para el socio de proyecto referenciado más abajo.
 
 - Fecha de inicio de periodo de justificación: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}
 - Entidad socia: ${data.nombreEntidad}

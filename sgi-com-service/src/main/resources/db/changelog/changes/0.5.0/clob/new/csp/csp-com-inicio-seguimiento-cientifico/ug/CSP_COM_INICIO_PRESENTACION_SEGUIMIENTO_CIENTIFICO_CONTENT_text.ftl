@@ -20,7 +20,6 @@
 -->
 <#macro renderEs>
 <#setting locale="es">
-Estimado/a investigador/a,
 Le informamos de que proximamente se inician los períodos de presentación de la justificación para el seguimiento científico de los proyectos abajo indicados. Los periodos de presentación de la documentación de justificación son los siguientes:
 
 <#list data.proyectos as proyecto> 
@@ -30,14 +29,9 @@ Le informamos de que proximamente se inician los períodos de presentación de l
 
 </#list>
 Puede revisar la información a través de la aplicación: ${data.enlaceAplicacion}
-
-Reciba un cordial saludo,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Dear Researcher,
 Please be advised that the submission periods for the justification for the scientific follow-up of the projects listed below will start soon. The periods for submission of justification documents are as follows:
 
 <#list data.proyectos as proyecto> 
@@ -47,14 +41,9 @@ Please be advised that the submission periods for the justification for the scie
 
 </#list>
 You can review the information through the application: ${data.enlaceAplicacion}
-
-Best regards,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Ikertzaile agurgarria:
 Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuen jarraipen zientifikorako justifikazioa aurkezteko epea. Honako hauek dira justifikazio dokumentuak aurkezteko epeak:
 
 <#list data.proyectos as proyecto> 
@@ -64,10 +53,6 @@ Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuen 
 
 </#list>
 Informazioa berrikus dezakezu aplikazioaren bidez: ${data.enlaceAplicacion}
-
-Jaso agur bero bat.
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

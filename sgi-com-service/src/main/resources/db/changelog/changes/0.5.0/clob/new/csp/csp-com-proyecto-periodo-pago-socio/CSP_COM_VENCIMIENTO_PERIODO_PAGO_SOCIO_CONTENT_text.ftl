@@ -9,42 +9,24 @@
 -->
 <#macro renderEs>
 <#setting locale="es">
-Estimado/a investigador/a,
-
 Le informamos de que proximamente se alcanzará la fecha prevista del pago al socio colaborador abajo referenciado y aún no se ha registrado la fecha de realización de dicho pago.
 - Fecha prevista de pago: ${sgi.formatDate(data.fechaPrevistaPago, "SHORT")}, ${sgi.formatTime(data.fechaPrevistaPago, "SHORT")}
 - Socio colaborador: ${data.nombreEntidadColaboradora}
 - Proyecto: ${sgi.getFieldValue(data.titulo)}
-
-Reciba un cordial saludo,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Dear Researcher,
-
 Please be advised that the due date for payment to the below collaborating partner will be reached soon and the date of payment has not yet been recorded.
 - Expected payment date: ${sgi.formatDate(data.fechaPrevistaPago, "SHORT")}, ${sgi.formatTime(data.fechaPrevistaPago, "SHORT")}
 - Collaborating partner: ${data.nombreEntidadColaboradora}
 - Project: ${sgi.getFieldValue(data.titulo)}
-
-Yours sincerely,
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Ikertzaile agurgarria:
-
 Honen bidez jakinarazten dizugu laster iritsiko dela behean aipatutako bazkide kolaboratzaileari ordaintzeko aurreikusita zegoen data, eta oraindik ez da erregistratu ordainketa egiteko eguna. 
 - Ordaintzeko aurreikusitako data: ${sgi.formatDate(data.fechaPrevistaPago, "SHORT")}, ${sgi.formatTime(data.fechaPrevistaPago, "SHORT")}
 - Bazkide kolaboratzailea: ${data.nombreEntidadColaboradora}
 - Proiektua: ${sgi.getFieldValue(data.titulo)}
-
-Jaso agur bero bat.
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
-Email unidad responsable
 </#macro>
 <#list languagePriorities as renderLang>
 <@.vars["render${renderLang?capitalize}"] />

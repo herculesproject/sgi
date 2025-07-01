@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_DATA?eval />
 <#--
   Formato CSP_COM_INICIO_PERIODO_JUSTIFICACION_SOCIO_DATA:
@@ -12,23 +13,16 @@
 -->
 <#macro renderEs>
 <#setting locale="es">
-<p>Estimado/a investigador/a,</p>
-<p>Le informamos de que próximamente dara inicio el periodo de presentación de justificación del proyecto referenciado más abajo. Puede proceder a realizar la justificación a través del siguiente enlace: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
+<p>Próximamente dará inicio el periodo de presentación de justificación para el socio de proyecto referenciado más abajo.</p>
 <p>
 - Fecha de inicio de periodo de justificación: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
 - Entidad socia: ${data.nombreEntidad}<br>
 - Proyecto en el que colabora: ${sgi.getFieldValue(data.titulo)}<br>
 - Periodo que se debe justificar: ${data.numPeriodo}
 </p>
-<p>
-Reciba un cordial saludo,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>Dear researcher,</p>
 <p>Please be advised that the period for submission of justification for the project in question below will start soon. You can proceed with the justification through the following link: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 - Start date of the justification period: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
@@ -36,26 +30,15 @@ Email unidad responsable
 - Collaboration project: ${sgi.getFieldValue(data.titulo)}<br>
 - Period to be justified: ${data.numPeriodo}
 </p>
-<p>
-Yours sincerely,<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
-</p>
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>Ikertzaile agurgarria:</p>
 <p>Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuaren justifikazioa aurkezteko epea. Honako esteka honen bidez egin dezakezu justifikazioa: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 - Justifikazio epearen hasiera data: ${sgi.formatDate(data.fechaInicio, "SHORT")}, ${sgi.formatTime(data.fechaInicio, "SHORT")}<br>
 - Erakunde bazkidea: ${data.nombreEntidad}<br>
 - Zer proiektutan kolaboratzen duen: ${sgi.getFieldValue(data.titulo)}<br>
 - Justifikatu beharreko aldia: ${data.numPeriodo}
-</p>
-<p>
-Jaso agur bero bat.<br>
-Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado<br>
-Email unidad responsable
 </p>
 </#macro>
 <!DOCTYPE html>
