@@ -215,10 +215,10 @@ public interface MemoriaService {
       Pageable pageable);
 
   /**
-   * 
-   * Enviar comunicados de aviso para memorias con evaluación retrospectiva
-   * pendiente
-   * 
+   * Envia el comunicado {@code ETI_COM_INF_RETRO_PENDIENTE} de aquellas memorias
+   * que requieren evaluación retrospectiva y cuya fecha de evaluación
+   * retrospectiva se encuentre entre el día actual y el número de días guardado
+   * como parámetro de configuración
    */
   void sendComunicadoInformeRetrospectivaCeeaPendiente();
 

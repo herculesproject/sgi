@@ -1135,7 +1135,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    * 
    * @return lista de {@link Memoria}
    */
-  public List<Memoria> recuperarMemoriasAvisoFechaRetrospectiva() {
+  private List<Memoria> recuperarMemoriasAvisoFechaRetrospectiva() {
     log.debug("recuperarMemoriasAvisoFechaRetrospectiva() - start");
     Configuracion configuracion = configuracionService.findConfiguracion();
     long diasPreaviso = configuracion.getDiasAvisoRetrospectiva();
@@ -1145,6 +1145,10 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     Instant fechaFin = this.getLastInstantOfDay().plusDays(diasPreaviso)
         .toInstant();
+
+    log.info(
+        "recuperarMemoriasAvisoFechaRetrospectiva() - Recuperando memorias cuya fecha de evaluación retrospectiva se encuentre entre {} y {}",
+        fechaInicio, fechaFin);
 
     Specification<Memoria> specsMemoriasByDiasAvisoRetrospectivaAndRequiereRetrospectiva = MemoriaSpecifications
         .requiereRetrospectiva()
@@ -1157,80 +1161,92 @@ public class MemoriaServiceImpl implements MemoriaService {
     return memoriasPendientesAviso;
   }
 
+  @Override
   public void sendComunicadoInformeRetrospectivaCeeaPendiente() {
+    log.debug("sendComunicadoInformeRetrospectivaCeeaPendiente() - start");
+
     List<Memoria> memorias = recuperarMemoriasAvisoFechaRetrospectiva();
     if (CollectionUtils.isEmpty(memorias)) {
-      log.info("No existen memorias que requieran generar aviso de evaluación de retrospectiva pendiente");
-    } else {
-      memorias.stream().forEach(memoria -> {
-        List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
-        if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
-            .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-          String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
-
-          String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
-
-          for (Language language : i18nConfig.getEnabledLanguages()) {
-            i18nTipoActividad.add(new I18nFieldValueDto(language,
-                messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
-          }
-        } else {
-          String tipoInvestigacionTuteladaId = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()
-              .toString();
-
-          String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
-              + tipoInvestigacionTuteladaId;
-
-          for (Language language : i18nConfig.getEnabledLanguages()) {
-            i18nTipoActividad.add(new I18nFieldValueDto(language,
-                messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
-          }
-        }
-        try {
-          this.comunicadosService.enviarComunicadoInformeRetrospectivaCeeaPendiente(
-              memoria.getComite().getNombre(),
-              memoria.getComite().getCodigo(),
-              memoria.getNumReferencia(), i18nTipoActividad,
-              memoria.getPeticionEvaluacion().getTitulo(),
-              memoria.getPeticionEvaluacion().getPersonaRef());
-        } catch (Exception e) {
-          log.error("enviarComunicadoInformeRetrospectivaCeeaPendiente(memoriaId: {}) - Error al enviar el comunicado",
-              memoria.getId(), e);
-        }
-      });
-    }
-  }
-
-  public void sendComunicadoInformeSeguimientoFinalPendiente() {
-    List<Memoria> memorias = recuperaInformesAvisoSeguimientoFinalPendiente();
-    if (CollectionUtils.isEmpty(memorias)) {
-      log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación final pendiente.");
+      log.info(
+          "sendComunicadoInformeRetrospectivaCeeaPendiente() - No existen memorias que requieran generar aviso de evaluación de retrospectiva pendiente");
       return;
     }
+
     memorias.stream().forEach(memoria -> {
-      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
-      if (!memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
+      log.info("sendComunicadoInformeRetrospectivaCeeaPendiente(memoriaId: {}) - enviando comunicado", memoria.getId());
+
+      String messageKeyTipoActividad = null;
+      if (memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
           .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-        String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
 
-        String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
-
-        for (Language language : i18nConfig.getEnabledLanguages()) {
-          i18nTipoActividad.add(new I18nFieldValueDto(language,
-              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
-        }
-      } else {
         String tipoInvestigacionTuteladaId = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()
             .toString();
-
-        String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+        messageKeyTipoActividad = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
             + tipoInvestigacionTuteladaId;
-
-        for (Language language : i18nConfig.getEnabledLanguages()) {
-          i18nTipoActividad.add(new I18nFieldValueDto(language,
-              messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
-        }
+      } else {
+        String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
+        messageKeyTipoActividad = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
       }
+
+      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
+      for (Language language : i18nConfig.getEnabledLanguages()) {
+        i18nTipoActividad.add(
+            new I18nFieldValueDto(
+                language,
+                messageSource.getMessage(messageKeyTipoActividad, null, Locale.forLanguageTag(language.getCode()))));
+      }
+
+      try {
+        this.comunicadosService.enviarComunicadoInformeRetrospectivaCeeaPendiente(
+            memoria.getComite().getNombre(),
+            memoria.getComite().getCodigo(),
+            memoria.getNumReferencia(), i18nTipoActividad,
+            memoria.getPeticionEvaluacion().getTitulo(),
+            memoria.getPeticionEvaluacion().getPersonaRef());
+      } catch (Exception e) {
+        log.error("sendComunicadoInformeRetrospectivaCeeaPendiente(memoriaId: {}) - Error al enviar el comunicado",
+            memoria.getId(), e);
+      }
+
+    });
+
+    log.debug("sendComunicadoInformeRetrospectivaCeeaPendiente() - end");
+  }
+
+  @Override
+  public void sendComunicadoInformeSeguimientoFinalPendiente() {
+    log.debug("sendComunicadoInformeRetrospectivaCeeaPendiente() - start");
+
+    List<Memoria> memorias = recuperaInformesAvisoSeguimientoFinalPendiente();
+    if (CollectionUtils.isEmpty(memorias)) {
+      log.info(
+          "sendComunicadoInformeSeguimientoFinalPendiente() - No existen evaluaciones que requieran generar aviso de informe de evaluación final pendiente.");
+      return;
+    }
+
+    memorias.stream().forEach(memoria -> {
+      log.info("sendComunicadoInformeSeguimientoFinalPendiente(memoriaId: {}) - enviando comunicado", memoria.getId());
+
+      String messageKeyTipoActividad = null;
+      if (memoria.getPeticionEvaluacion().getTipoActividad().getNombre()
+          .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+
+        String tipoInvestigacionTuteladaId = memoria.getPeticionEvaluacion().getTipoInvestigacionTutelada().getId()
+            .toString();
+        messageKeyTipoActividad = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+            + tipoInvestigacionTuteladaId;
+      } else {
+        String tipoActividadId = memoria.getPeticionEvaluacion().getTipoActividad().getId().toString();
+        messageKeyTipoActividad = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+      }
+
+      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
+      for (Language language : i18nConfig.getEnabledLanguages()) {
+        i18nTipoActividad.add(new I18nFieldValueDto(
+            language,
+            messageSource.getMessage(messageKeyTipoActividad, null, Locale.forLanguageTag(language.getCode()))));
+      }
+
       try {
         this.comunicadosService.enviarComunicadoInformeSeguimientoFinal(
             memoria.getComite().getNombre(),
@@ -1290,7 +1306,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    * 
    * @return lista de {@link Memoria}
    */
-  public List<Memoria> recuperaInformesAvisoSeguimientoFinalPendiente() {
+  private List<Memoria> recuperaInformesAvisoSeguimientoFinalPendiente() {
     log.debug("recuperaInformesAvisoSeguimientoFinalPendiente() - start");
 
     Instant fechaInicio = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
@@ -1299,10 +1315,14 @@ public class MemoriaServiceImpl implements MemoriaService {
     Instant fechaFin = this.getLastInstantOfDay().minusYears(1L)
         .toInstant();
 
+    log.info(
+        "recuperaInformesAvisoSeguimientoFinalPendiente() - Recuperando memorias en las que la fecha de fin  de la peticion de evaluacion se encuentre entre {} y {}",
+        fechaInicio, fechaFin);
+
     // Se buscan memorias con Peticiones de Evaluación activas y cuya fecha fin
     // cumpla un año durante el día de hoy
     Specification<Memoria> specsMemoriasComunicadoInfAnual = MemoriaSpecifications.peticionesActivas()
-        .and(MemoriaSpecifications.byEstado(14L))
+        .and(MemoriaSpecifications.byEstado(TipoEstadoMemoria.Tipo.FIN_EVALUACION_SEGUIMIENTO_ANUAL.getId()))
         .and(MemoriaSpecifications.byPeticionFechaFin(fechaInicio, fechaFin));
 
     List<Memoria> memoriasPendientesAviso = memoriaRepository

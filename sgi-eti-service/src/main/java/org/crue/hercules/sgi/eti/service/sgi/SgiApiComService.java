@@ -345,6 +345,14 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_ETI_COM_DICT_EVA_REV_MINIMA_PARAM);
   }
 
+  /**
+   * Crea el comunicado {@code ETI_COM_INF_RETRO_PENDIENTE}
+   * 
+   * @param data       Información para rellenar la plantilla del comunicado
+   * @param recipients remitentes del comunicado
+   * @return el email creado
+   * @throws JsonProcessingException
+   */
   public EmailOutput createComunicadoAvisoRetrospectiva(EtiComAvisoRetrospectivaData data,
       List<Recipient> recipients) throws JsonProcessingException {
     return this.createComunicado(data, recipients,
@@ -367,6 +375,14 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_ETI_COM_EVA_MODIFICADA_PARAM);
   }
 
+  /**
+   * Crea el comunicado {@code ETI_COM_INF_SEG_ANU}
+   * 
+   * @param data       Información para rellenar la plantilla del comunicado
+   * @param recipients remitentes del comunicado
+   * @return el email creado
+   * @throws JsonProcessingException
+   */
   public EmailOutput createComunicadoInformeSeguimientoAnualPendiente(
       EtiComInformeSegAnualPendienteData data, List<Recipient> recipients)
       throws JsonProcessingException {
@@ -375,6 +391,14 @@ public class SgiApiComService extends SgiApiBaseService {
         TEMPLATE_ETI_COM_INF_SEG_ANU_PARAM);
   }
 
+  /**
+   * Crea el comunicado {@code ETI_COM_INF_SEG_FIN}
+   * 
+   * @param data       Información para rellenar la plantilla del comunicado
+   * @param recipients remitentes del comunicado
+   * @return el email creado
+   * @throws JsonProcessingException
+   */
   public EmailOutput createComunicadoInformeSeguimientoFinalPendiente(
       EtiComInformeSegFinalPendienteData data, List<Recipient> recipients)
       throws JsonProcessingException {
@@ -418,7 +442,7 @@ public class SgiApiComService extends SgiApiBaseService {
   /**
    * Crea el comunicado {@code ETI_COM_REVISION_ACTA}
    * 
-   * @param data       Información para rellenar la plantilla del comunicaod
+   * @param data       Información para rellenar la plantilla del comunicado
    * @param recipients remitentes del comunicado
    * @return el email creado
    * @throws JsonProcessingException

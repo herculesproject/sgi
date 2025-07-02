@@ -116,7 +116,6 @@ public class ComunicadosService {
         solicitanteRef);
 
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
-    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
     if (CollectionUtils.isEmpty(recipients)) {
       log.debug(
           "enviarComunicadoActaEvaluacionFinalizada(comiteNombre: {}, comiteCodigo: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - No se puede enviar el comunicado, no existe ninguna persona asociada",
@@ -126,6 +125,7 @@ public class ComunicadosService {
           tipoActividad,
           tituloSolicitudEvaluacion,
           solicitanteRef);
+      return;
     }
 
     EmailOutput emailOutput = emailService.createComunicadoActaFinalizada(
@@ -137,7 +137,8 @@ public class ComunicadosService {
             .tipoActividad(tipoActividad)
             .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
             .comiteCodigo(comiteCodigo)
-            .enlaceAplicacion(enlaceAplicacion).build(),
+            .enlaceAplicacion(sgiConfigProperties.getWebUrl())
+            .build(),
         recipients);
     emailService.sendEmail(emailOutput.getId());
 
@@ -226,33 +227,70 @@ public class ComunicadosService {
         "enviarComunicadoDictamenEvaluacionSeguimientoRevMinima(String nombreInvestigacion, String generoComite, String referenciaMemoria, String tipoActividad, String tituloSolicitudEvaluacion, String enlaceAplicacion, String solicitanteRef) - end");
   }
 
-  public void enviarComunicadoInformeRetrospectivaCeeaPendiente(Collection<ComiteNombre> comiteNombre,
-      String comiteCodigo, String referenciaMemoria, List<I18nFieldValue> tipoActividad,
-      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion, String solicitanteRef)
+  /**
+   * Envia el comunicado {@code ETI_COM_INF_RETRO_PENDIENTE} correspondiente a la
+   * memoria {@code referenciaMemoria} al {@code solicitanteRef}
+   * 
+   * @param comiteNombre              nombre del comite
+   * @param comiteCodigo              codigo del comite
+   * @param referenciaMemoria         referencia de la memoria
+   * @param tipoActividad             {@link TipoActividad}
+   * @param tituloSolicitudEvaluacion titulo de la {@link PeticionEvaluacion}
+   * @param solicitanteRef            solicitante de la {@link PeticionEvaluacion}
+   * @throws JsonProcessingException
+   */
+  public void enviarComunicadoInformeRetrospectivaCeeaPendiente(
+      Collection<ComiteNombre> comiteNombre,
+      String comiteCodigo,
+      String referenciaMemoria,
+      List<I18nFieldValue> tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+      String solicitanteRef)
       throws JsonProcessingException {
-    log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - start");
+    log.debug(
+        "enviarComunicadoInformeRetrospectivaCeeaPendiente(comiteNombre: {}, comiteCodigo: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - start",
+        comiteNombre,
+        comiteCodigo,
+        referenciaMemoria,
+        tipoActividad,
+        tituloSolicitudEvaluacion,
+        solicitanteRef);
 
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
-    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
-    if (recipients != null) {
-      EmailOutput emailOutput = emailService.createComunicadoAvisoRetrospectiva(
-          EtiComAvisoRetrospectivaData.builder()
-              .nombreInvestigacion(comiteNombre)
-              .comiteCodigo(comiteCodigo)
-              .generoComite(I18nHelper.getFieldValueForCurrentLanguage(comiteNombre)
-                  .map(ComiteNombre::getGenero).map(Enum::toString).orElse(
-                      null))
-              .referenciaMemoria(referenciaMemoria)
-              .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
-              .enlaceAplicacion(enlaceAplicacion).build(),
-          recipients);
-      emailService.sendEmail(emailOutput.getId());
-    } else {
+    if (CollectionUtils.isEmpty(recipients)) {
       log.debug(
-          "enviarComunicadoInformeRetrospectivaCeeaPendiente() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
+          "enviarComunicadoInformeRetrospectivaCeeaPendiente(comiteNombre: {}, comiteCodigo: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - end - No se puede enviar el comunicado, no existe ninguna persona asociada",
+          comiteNombre,
+          comiteCodigo,
+          referenciaMemoria,
+          tipoActividad,
+          tituloSolicitudEvaluacion,
+          solicitanteRef);
+      return;
     }
-    log.debug("enviarComunicadoInformeRetrospectivaCeeaPendiente() - end");
+
+    EmailOutput emailOutput = emailService.createComunicadoAvisoRetrospectiva(
+        EtiComAvisoRetrospectivaData.builder()
+            .nombreInvestigacion(comiteNombre)
+            .comiteCodigo(comiteCodigo)
+            .generoComite(I18nHelper.getFieldValueForCurrentLanguage(comiteNombre)
+                .map(ComiteNombre::getGenero).map(Enum::toString).orElse(null))
+            .referenciaMemoria(referenciaMemoria)
+            .tipoActividad(tipoActividad)
+            .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+            .enlaceAplicacion(sgiConfigProperties.getWebUrl())
+            .build(),
+        recipients);
+    emailService.sendEmail(emailOutput.getId());
+
+    log.debug(
+        "enviarComunicadoInformeRetrospectivaCeeaPendiente(comiteNombre: {}, comiteCodigo: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - end",
+        comiteNombre,
+        comiteCodigo,
+        referenciaMemoria,
+        tipoActividad,
+        tituloSolicitudEvaluacion,
+        solicitanteRef);
   }
 
   public void enviarComunicadoCambiosEvaluacionEti(String evaluador1Ref, String evaluador2Ref,
@@ -290,29 +328,62 @@ public class ComunicadosService {
     }
   }
 
-  public void enviarComunicadoInformeSeguimientoAnual(Collection<ComiteNombre> comiteNombre, String referenciaMemoria,
-      List<I18nFieldValue> tipoActividad, Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
+  /**
+   * Envia el comunicado {@code ETI_COM_INF_SEG_ANU} correspondiente a la
+   * memoria {@code referenciaMemoria} al {@code solicitanteRef}
+   * 
+   * @param comiteNombre              nombre del comite
+   * @param referenciaMemoria         referencia de la memoria
+   * @param tipoActividad             {@link TipoActividad}
+   * @param tituloSolicitudEvaluacion titulo de la {@link PeticionEvaluacion}
+   * @param solicitanteRef            solicitante de la {@link PeticionEvaluacion}
+   * @throws JsonProcessingException
+   */
+  public void enviarComunicadoInformeSeguimientoAnual(
+      Collection<ComiteNombre> comiteNombre,
+      String referenciaMemoria,
+      List<I18nFieldValue> tipoActividad,
+      Collection<PeticionEvaluacionTitulo> tituloSolicitudEvaluacion,
       String solicitanteRef)
       throws JsonProcessingException {
-    log.debug("enviarComunicadoInformeSeguimientoAnual() - start");
+    log.debug(
+        "enviarComunicadoInformeSeguimientoAnual(comiteNombre: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - start",
+        comiteNombre,
+        referenciaMemoria,
+        tipoActividad,
+        tituloSolicitudEvaluacion,
+        solicitanteRef);
 
     List<Recipient> recipients = getRecipientsFromPersonaRef(solicitanteRef);
-    String enlaceAplicacion = sgiConfigProperties.getWebUrl();
-    if (recipients != null) {
-      EmailOutput emailOutput = emailService.createComunicadoInformeSeguimientoAnualPendiente(
-          EtiComInformeSegAnualPendienteData.builder()
-              .nombreInvestigacion(comiteNombre)
-              .referenciaMemoria(referenciaMemoria)
-              .tipoActividad(tipoActividad)
-              .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
-              .enlaceAplicacion(enlaceAplicacion).build(),
-          recipients);
-      emailService.sendEmail(emailOutput.getId());
-    } else {
+    if (CollectionUtils.isEmpty(recipients)) {
       log.debug(
-          "enviarComunicadoInformeSeguimientoAnual() - end - No se puede enviar el comunicado, no existe ninguna persona asociada");
+          "enviarComunicadoInformeSeguimientoAnual(comiteNombre: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - end - No se puede enviar el comunicado, no existe ninguna persona asociada",
+          comiteNombre,
+          referenciaMemoria,
+          tipoActividad,
+          tituloSolicitudEvaluacion,
+          solicitanteRef);
+      return;
     }
-    log.debug("enviarComunicadoInformeSeguimientoAnual() - end");
+
+    EmailOutput emailOutput = emailService.createComunicadoInformeSeguimientoAnualPendiente(
+        EtiComInformeSegAnualPendienteData.builder()
+            .nombreInvestigacion(comiteNombre)
+            .referenciaMemoria(referenciaMemoria)
+            .tipoActividad(tipoActividad)
+            .tituloSolicitudEvaluacion(tituloSolicitudEvaluacion)
+            .enlaceAplicacion(sgiConfigProperties.getWebUrl())
+            .build(),
+        recipients);
+    emailService.sendEmail(emailOutput.getId());
+
+    log.debug(
+        "enviarComunicadoInformeSeguimientoAnual(comiteNombre: {}, referenciaMemoria: {}, tipoActividad: {}, tituloSolicitudEvaluacion: {}, solicitanteRef: {}) - end",
+        comiteNombre,
+        referenciaMemoria,
+        tipoActividad,
+        tituloSolicitudEvaluacion,
+        solicitanteRef);
   }
 
   public void enviarComunicadoInformeSeguimientoFinal(Collection<ComiteNombre> comiteNombre, String comiteCodigo,

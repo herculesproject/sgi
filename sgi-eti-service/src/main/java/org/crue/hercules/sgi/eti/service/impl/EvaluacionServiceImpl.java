@@ -950,50 +950,56 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     }
   }
 
+  @Override
   public void sendComunicadoInformeSeguimientoAnualPendiente() {
+    log.debug("sendComunicadoInformeSeguimientoAnualPendiente() - start");
+
     List<Evaluacion> evaluaciones = recuperaInformesAvisoSeguimientoAnualPendiente();
     if (CollectionUtils.isEmpty(evaluaciones)) {
-      log.info("No existen evaluaciones que requieran generar aviso de informe de evaluación anual pendiente.");
-    } else {
-      evaluaciones.stream().forEach(evaluacion -> {
-        List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
-        if (!evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
-            .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
-          String tipoActividadId = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId()
-              .toString();
-
-          String messageKey = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
-
-          for (Language language : i18nConfig.getEnabledLanguages()) {
-            i18nTipoActividad.add(new I18nFieldValueDto(language,
-                messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
-          }
-        } else {
-          String tipoInvestigacionTuteladaId = evaluacion.getMemoria().getPeticionEvaluacion()
-              .getTipoInvestigacionTutelada().getId().toString();
-
-          String messageKey = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
-              + tipoInvestigacionTuteladaId;
-
-          for (Language language : i18nConfig.getEnabledLanguages()) {
-            i18nTipoActividad.add(new I18nFieldValueDto(language,
-                messageSource.getMessage(messageKey, null, Locale.forLanguageTag(language.getCode()))));
-          }
-        }
-        try {
-          this.comunicadosService.enviarComunicadoInformeSeguimientoAnual(
-              evaluacion.getMemoria().getComite().getNombre(),
-              evaluacion.getMemoria().getNumReferencia(),
-              i18nTipoActividad,
-              evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
-              evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
-        } catch (Exception e) {
-          log.error("sendComunicadoInformeSeguimientoAnualPendiente(evaluacionId: {}) - Error al enviar el comunicado",
-              evaluacion.getId(), e);
-        }
-      });
+      log.info(
+          "sendComunicadoInformeSeguimientoAnualPendiente() - No existen evaluaciones que requieran generar aviso de informe de evaluación anual pendiente.");
+      return;
     }
 
+    evaluaciones.stream().forEach(evaluacion -> {
+      log.info("sendComunicadoInformeSeguimientoAnualPendiente(evaluacionId: {}) - enviando comunicado",
+          evaluacion.getId());
+
+      String messageKeyTipoActividad = null;
+      if (evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getNombre()
+          .equals(TIPO_ACTIVIDAD_INVESTIGACION_TUTELADA)) {
+
+        String tipoInvestigacionTuteladaId = evaluacion.getMemoria().getPeticionEvaluacion()
+            .getTipoInvestigacionTutelada().getId().toString();
+        messageKeyTipoActividad = TipoInvestigacionTutelada.class.getName() + MSG_KEY_PATH_SEPARATOR
+            + tipoInvestigacionTuteladaId;
+      } else {
+        String tipoActividadId = evaluacion.getMemoria().getPeticionEvaluacion().getTipoActividad().getId()
+            .toString();
+        messageKeyTipoActividad = TipoActividad.class.getName() + MSG_KEY_PATH_SEPARATOR + tipoActividadId;
+      }
+
+      List<I18nFieldValue> i18nTipoActividad = new ArrayList<>();
+      for (Language language : i18nConfig.getEnabledLanguages()) {
+        i18nTipoActividad.add(new I18nFieldValueDto(
+            language,
+            messageSource.getMessage(messageKeyTipoActividad, null, Locale.forLanguageTag(language.getCode()))));
+      }
+
+      try {
+        this.comunicadosService.enviarComunicadoInformeSeguimientoAnual(
+            evaluacion.getMemoria().getComite().getNombre(),
+            evaluacion.getMemoria().getNumReferencia(),
+            i18nTipoActividad,
+            evaluacion.getMemoria().getPeticionEvaluacion().getTitulo(),
+            evaluacion.getMemoria().getPeticionEvaluacion().getPersonaRef());
+      } catch (Exception e) {
+        log.error("sendComunicadoInformeSeguimientoAnualPendiente(evaluacionId: {}) - Error al enviar el comunicado",
+            evaluacion.getId(), e);
+      }
+    });
+
+    log.debug("sendComunicadoInformeSeguimientoAnualPendiente() - end");
   }
 
   /**
@@ -1002,7 +1008,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * 
    * @return lista de {@link Evaluacion}
    */
-  public List<Evaluacion> recuperaInformesAvisoSeguimientoAnualPendiente() {
+  private List<Evaluacion> recuperaInformesAvisoSeguimientoAnualPendiente() {
     log.debug("recuperaInformesAvisoSeguimientoAnualPendiente() - start");
 
     Instant fechaInicio = Instant.now().atZone(this.sgiConfigProperties.getTimeZone().toZoneId())
@@ -1011,12 +1017,16 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     Instant fechaFin = this.getLastInstantOfDay().minusYears(1L)
         .toInstant();
 
+    log.info(
+        "recuperaInformesAvisoSeguimientoAnualPendiente() - Recuperando evaluaciones cuya fecha de dictamen se encuentre entre {} y {}",
+        fechaInicio, fechaFin);
+
     // Se buscan evaluaciones activas con Memoria con estado Fin Evaluacion (9) y
     // Dictamen con estado Favorable(1) cuya fecha de dictamen cumpla un año durante
     // el día de hoy
     Specification<Evaluacion> specsEvaluacionByYearAvisoInformeAnualAnd = EvaluacionSpecifications.activos()
-        .and(EvaluacionSpecifications.byMemoriaEstado(9L))
-        .and(EvaluacionSpecifications.byDictamenEstado(1L))
+        .and(EvaluacionSpecifications.byMemoriaEstado(TipoEstadoMemoria.Tipo.FIN_EVALUACION.getId()))
+        .and(EvaluacionSpecifications.byDictamenEstado(Dictamen.Tipo.FAVORABLE.getId()))
         .and(EvaluacionSpecifications.byFechaDictamenBetween(fechaInicio, fechaFin));
 
     List<Evaluacion> evaluacionesPendientesAviso = evaluacionRepository
