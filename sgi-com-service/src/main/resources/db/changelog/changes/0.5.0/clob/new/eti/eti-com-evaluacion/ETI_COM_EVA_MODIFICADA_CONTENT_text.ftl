@@ -6,7 +6,7 @@ Estimado/a miembro del Comité:
 Le informamos de que la persona responsable de la memoria ha realizado las modificaciones solicitadas. Puede proceder a su revisión:
     
 - Título de la memoria: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 
 Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -19,7 +19,7 @@ Dear Committee Member:
 Please be advised that the person responsible for the report has implemented the requested modifications. You may proceed with your review:
     
 - Report title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 
 Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -32,7 +32,7 @@ Batzordekide agurgarria:
 Memoriaren arduradunak eskatutako aldaketak egin dituela jakinarazten dizugu. Berrikusteko prest dituzu:
     
 - Memoriaren izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 
 Jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado

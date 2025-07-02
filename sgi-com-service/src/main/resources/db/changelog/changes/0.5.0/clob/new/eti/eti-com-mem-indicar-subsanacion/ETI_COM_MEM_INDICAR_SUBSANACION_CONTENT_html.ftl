@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = ETI_COM_MEM_INDICAR_SUBSANACION_DATA?eval_json />
 <#macro renderEs>
 <#setting locale="es">
@@ -6,7 +7,7 @@
 <p>
 - Tipo de Solicitud: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 </p>
 <p>Le informamos que debe realizar la siguiente modificaciones/aclaraciones a través de la aplicación <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>${sgi.getFieldValue(data.comentarioEstado)}</p>
@@ -23,7 +24,7 @@ Email unidad responsable
 <p>
 - Request type: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 </p>
 <p>Please be advised that you need to implement the following modifications/clarifications through the application <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>${sgi.getFieldValue(data.comentarioEstado)}</p>
@@ -40,7 +41,7 @@ Email unidad responsable
 <p>
 - Eskaera mota: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 </p>
 <p>Eta <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a> aplikazioaren bidez aldaketa/azalpen hau egin behar duzula jakinarazten dizugu:</p>
 <p>${sgi.getFieldValue(data.comentarioEstado)}</p>

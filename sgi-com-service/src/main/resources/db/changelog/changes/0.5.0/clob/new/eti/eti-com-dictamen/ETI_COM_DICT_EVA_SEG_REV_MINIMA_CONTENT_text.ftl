@@ -7,7 +7,7 @@ Una vez evaluadas las revisiones mínimas solicitadas abajo indicada, le informa
 
 - Tipo de actividad: ${sgi.getFieldValue(data.tipoActividad)}
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)} 
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 - Comité: ${data.comiteCodigo}
 
 Reciba un cordial saludo,
@@ -22,7 +22,7 @@ Having evaluated the minimum revisions requested as set out below, please be adv
 
 - Activity type: ${sgi.getFieldValue(data.tipoActividad)}
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 - Committee: ${data.comiteCodigo}
 
 Yours sincerely,
@@ -37,7 +37,7 @@ Honen bidez jakinarazten dizugu eskatutako gutxieneko berrikuspenak ebaluatu dir
 
 - Jarduera mota: ${sgi.getFieldValue(data.tipoActividad)}
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 - Batzordea: ${data.comiteCodigo}
 
 Jaso agur bero bat.

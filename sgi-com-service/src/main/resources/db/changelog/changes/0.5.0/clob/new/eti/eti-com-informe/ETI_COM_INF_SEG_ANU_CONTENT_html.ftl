@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = ETI_COM_INF_SEG_ANU_DATA?eval_json />
 <#macro renderEs>
 <#setting locale="es">
@@ -6,7 +7,7 @@
 <p>
 - Tipo de Actividad: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 </p>
 <p>
 Reciba un cordial saludo,<br>
@@ -21,7 +22,7 @@ Email unidad responsable
 <p>
 - Activity type: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 </p>
 <p>
 Yours sincerely,<br>
@@ -36,7 +37,7 @@ Email unidad responsable
 <p>
 - Jarduera mota: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 </p>
 <p>
 Jaso agur bero bat.<br>

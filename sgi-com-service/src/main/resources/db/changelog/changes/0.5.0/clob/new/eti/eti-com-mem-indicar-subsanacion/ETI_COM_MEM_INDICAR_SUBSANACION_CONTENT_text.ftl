@@ -7,7 +7,7 @@ Revisada la solicitud abajo indicada,
 
 - Tipo de Solicitud: ${sgi.getFieldValue(data.tipoActividad)} 
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 
 Le informamos que debe realizar la siguiente modificaciones/aclaraciones a través de la aplicación ${data.enlaceAplicacion}.
 
@@ -25,7 +25,7 @@ Having reviewed the below request
 
 - Request type: ${sgi.getFieldValue(data.tipoActividad)}
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 
 Please be advised that you need to implement the following modifications/clarifications through the application ${data.enlaceAplicacion}.
 
@@ -43,7 +43,7 @@ Honako eskaera hau berrikusi dugu:
 
 - Eskaera mota: ${sgi.getFieldValue(data.tipoActividad)}
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 
 Eta ${data.enlaceAplicacion} aplikazioaren bidez aldaketa/azalpen hau egin behar duzula jakinarazten dizugu:
 

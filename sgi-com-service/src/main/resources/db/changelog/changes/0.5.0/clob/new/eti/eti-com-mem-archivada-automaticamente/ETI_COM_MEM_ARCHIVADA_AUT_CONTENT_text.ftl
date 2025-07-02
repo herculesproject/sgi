@@ -8,7 +8,7 @@ Ante la ausencia de respuesta a las correcciones solicitadas por el comité abaj
 - Comité: ${data.comiteCodigo}
 - Tipo de actividad: ${sgi.getFieldValue(data.tipoActividad)}
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 
 Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -23,7 +23,7 @@ In the absence of a response to the corrections requested by the below committee
 - Committee: ${data.comiteCodigo}
 - Activity type:  ${sgi.getFieldValue(data.tipoActividad)}
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 
 Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -38,7 +38,7 @@ Behean aipatutako batzordeak eskatutako zuzenketek erantzunik jaso ez dutenez, z
 - Batzordea: ${data.comiteCodigo}
 - Jarduera mota: ${sgi.getFieldValue(data.tipoActividad)}
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 
 Jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado

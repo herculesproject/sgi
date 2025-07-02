@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = ETI_COM_EVA_MODIFICADA_DATA?eval_json />
 <#macro renderEs>
 <#setting locale="es">
@@ -5,7 +6,7 @@
 <p>Le informamos de que la persona responsable de la memoria ha realizado las modificaciones solicitadas. Puede proceder a su revisión:</p>
 <p>
 - Título de la memoria: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 </p>
 <p>
 Reciba un cordial saludo,<br>
@@ -19,7 +20,7 @@ Email unidad responsable
 <p>Please be advised that the person responsible for the report has implemented the requested modifications. You may proceed with your review:</p>
 <p>
 - Report title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 </p>
 <p>
 Yours sincerely,<br>
@@ -33,7 +34,7 @@ Email unidad responsable
 <p>Memoriaren arduradunak eskatutako aldaketak egin dituela jakinarazten dizugu. Berrikusteko prest dituzu:</p>
 <p>
 - Memoriaren izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 </p>
 <p>
 Jaso agur bero bat.<br>

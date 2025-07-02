@@ -7,7 +7,7 @@ Le recordamos que una vez que ha pasado un año desde la fecha de fin de de la a
 
 - Tipo de Actividad: ${sgi.getFieldValue(data.tipoActividad)}
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 
 Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -21,7 +21,7 @@ We remind you that, once a year has passed since the end date of the below activ
 
 - Activity type: ${sgi.getFieldValue(data.tipoActividad)}
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 
 Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -35,7 +35,7 @@ Gogoratu behean aipatutako jardueraren amaiera datatik urtebete igarotakoan amai
 
 - Jarduera mota: ${sgi.getFieldValue(data.tipoActividad)}
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 
 Jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado

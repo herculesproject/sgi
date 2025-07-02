@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#assign data = ETI_COM_DICT_EVA_REV_MINIMA_DATA?eval_json />
 <#macro renderEs>
 <#setting locale="es">
@@ -6,7 +7,7 @@
 <p>
 - Tipo de actividad: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- Referencia CEID: ${data.referenciaMemoria}<br>
+- Referencia: ${data.referenciaMemoria}<br>
 - Comité: ${data.comiteCodigo}
 </p>
 <p>
@@ -22,7 +23,7 @@ Email unidad responsable
 <p>
 - Activity type: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Title:  ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- CEID Reference: ${data.referenciaMemoria}<br>
+- Reference: ${data.referenciaMemoria}<br>
 - Committee: ${data.comiteCodigo}
 </p>
 <p>
@@ -38,7 +39,7 @@ Email unidad responsable
 <p>
 - Jarduera mota: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
-- IIEB erreferentzia: ${data.referenciaMemoria}<br>
+- Erreferentzia: ${data.referenciaMemoria}<br>
 - Batzordea: ${data.comiteCodigo}
 </p>
 <p>

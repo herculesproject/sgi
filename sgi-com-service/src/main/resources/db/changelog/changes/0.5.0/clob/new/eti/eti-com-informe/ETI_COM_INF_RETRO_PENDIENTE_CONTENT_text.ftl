@@ -9,7 +9,7 @@ Le recordamos que, tal y como se refleja en la autorización del órgano autonó
 
 - Tipo de actividad: ${sgi.getFieldValue(data.tipoActividad)}
 - Título: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- Referencia CEID: ${data.referenciaMemoria}
+- Referencia: ${data.referenciaMemoria}
 
 Reciba un cordial saludo,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -25,7 +25,7 @@ We remind you that, as reflected in the authorisation of the relevant Provincial
 
 - Activity type: ${sgi.getFieldValue(data.tipoActividad)}
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- CEID Reference: ${data.referenciaMemoria}
+- Reference: ${data.referenciaMemoria}
 
 Yours sincerely,
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
@@ -41,7 +41,7 @@ Gogoratu behean aipatutako proiektua gauzatzeko dagokion atzera begirako ebaluaz
 
 - Jarduera mota: ${sgi.getFieldValue(data.tipoActividad)}
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
-- IIEB erreferentzia: ${data.referenciaMemoria}
+- Erreferentzia: ${data.referenciaMemoria}
 
 Jaso agur bero bat.
 Nombre del servicio, cargo o persona responsable de la Universidad que firma el comunicado
