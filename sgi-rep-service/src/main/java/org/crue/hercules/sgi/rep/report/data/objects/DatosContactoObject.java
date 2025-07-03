@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.rep.report.data.objects;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto;
 import org.crue.hercules.sgi.rep.dto.sgp.DatosContactoDto.ComunidadAutonomaDto;
@@ -80,10 +81,14 @@ public class DatosContactoObject implements Serializable {
   }
 
   private String getTelefonoOrMovil(List<String> values) {
-    if (null != values && !values.isEmpty()) {
-      return values.stream().findFirst().orElse(null);
-    } else {
+    if (values == null || values.isEmpty()) {
       return null;
     }
+
+    return values.stream()
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElse(null);
+
   }
 }
