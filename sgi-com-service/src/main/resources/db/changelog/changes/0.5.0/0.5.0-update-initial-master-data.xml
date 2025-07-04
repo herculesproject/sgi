@@ -561,11 +561,6 @@
     </update>
   </changeSet>
 
-  <changeSet author="master" id="0.5.0-defaultConstraints">
-    <addNotNullConstraint tableName="subject_tpl" columnName="default_tpl" />
-    <addNotNullConstraint tableName="content_tpl" columnName="default_tpl_text" />
-  </changeSet>
-
   <changeSet author="master" id="0.5.0-updateTemplatesOracle" dbms="oracle">
     <update tableName="subject_tpl"><column name="tpl" valueClobFile="clob/new//GENERIC_SUBJECT.ftl" /> <where>name='GENERIC_SUBJECT' AND dbms_lob.compare(tpl, default_tpl) = 0</where>
     </update>
@@ -2146,6 +2141,11 @@
     <update tableName="content_tpl"><column name="default_tpl_html"
         valueClobFile="clob/new/prc/PRC_COM_VALIDAR_ITEM_CONTENT_html.ftl" /> <where>name='PRC_COM_VALIDAR_ITEM_CONTENT'</where>
     </update>
+  </changeSet>
+
+  <changeSet author="master" id="0.5.0-defaultConstraints">
+    <addNotNullConstraint tableName="subject_tpl" columnName="default_tpl" columnDataType="CLOB" />
+    <addNotNullConstraint tableName="content_tpl" columnName="default_tpl_text" columnDataType="CLOB" />
   </changeSet>
 
   <changeSet context="!test" author="master" id="0.5.0-param">
