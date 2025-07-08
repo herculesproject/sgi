@@ -41,6 +41,7 @@ jobs:
     - name: SonarQube analysis
       uses: SonarSource/sonarqube-scan-action@v5.2.0
       with:
+        projectBaseDir: sgi-framework-spring
         args: >
           -Dsonar.organization=herculesproject
           -Dsonar.projectKey=herculesproject_sgi-framework-spring
