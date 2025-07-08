@@ -557,7 +557,7 @@ public class ComunicadosService {
     asistentes
         .forEach(asistente -> recipients.addAll(getRecipientsFromPersonaRef(asistente.getEvaluador().getPersonaRef())));
 
-    if (!CollectionUtils.isEmpty(recipients)) {
+    if (CollectionUtils.isEmpty(recipients)) {
       log.debug(
           "enviarComunicadoRevisionActa(acta: {}, asistentes: {}) - No se puede enviar el comunicado, no existe ninguna persona asociada",
           acta, asistentes);
