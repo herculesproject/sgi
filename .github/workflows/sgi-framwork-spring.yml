@@ -34,6 +34,19 @@ jobs:
 
     - name: Integration Test
       run: mvn -B post-integration-test -DskipUnitTests
+
+    - name: Merge coverage
+      run: mvn -B verify -DskipTests
+
+    - name: SonarQube analysis
+      uses: SonarSource/sonarqube-scan-action@v5.2.0
+      with:
+        args: >
+          -Dsonar.organization=herculesproject
+          -Dsonar.projectKey=herculesproject_sgi-framework-spring
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     
     - name: Set up JDK to deploy on Central
       uses: actions/setup-java@v4
