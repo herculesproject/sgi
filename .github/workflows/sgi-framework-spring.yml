@@ -44,7 +44,7 @@ jobs:
         projectBaseDir: sgi-framework-spring
         args: >
           -Dsonar.organization=herculesproject
-          -Dsonar.projectKey=herculesproject_sgi-framework-spring
+          -Dsonar.projectKey=herculesproject_sgi_framework-spring
           -Dsonar.sources=src/main/java
           -Dsonar.tests=src/test/java
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
