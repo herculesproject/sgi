@@ -121,11 +121,9 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
     return cb.and(codigo);
   }
 
-  private static Predicate buildNonFilter(Root<PeticionEvaluacion> root,
-      CriteriaBuilder cb) {
-    // esta comprobación se hace para que la consulta no devuelva resultado
-    Predicate titulo = cb.notEqual(root.get(PeticionEvaluacion_.titulo), root.get(PeticionEvaluacion_.titulo));
-    return cb.and(titulo);
+  private static Predicate buildNonFilter(CriteriaBuilder cb) {
+    // Siempre falso, evita que la consulta devuelva resultados
+    return cb.disjunction();
   }
 
   private static Predicate buildFilterNumReferencia(ComparisonNode node, Root<PeticionEvaluacion> root,
@@ -176,9 +174,9 @@ public class PeticionEvaluacionPredicateResolver implements SgiRSQLPredicateReso
       case CODIGO:
         return buildFilterCodigo(node, root, criteriaBuilder);
       case ESTADO:
-        return buildNonFilter(root, criteriaBuilder);
+        return buildNonFilter(criteriaBuilder);
       case COMITE:
-        return buildNonFilter(root, criteriaBuilder);
+        return buildNonFilter(criteriaBuilder);
       case NUM_REFERENCIA:
         return buildFilterNumReferencia(node, root, query, criteriaBuilder);
       default:
