@@ -44,6 +44,8 @@ jobs:
         args: >
           -Dsonar.organization=herculesproject
           -Dsonar.projectKey=herculesproject_sgi-framework-spring
+          -Dsonar.sources=src/main/java
+          -Dsonar.tests=src/test/java
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
