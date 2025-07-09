@@ -222,7 +222,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
     ).and(
       'estadoActual.id',
       SgiRestFilterOperator.EQUALS,
-      controls.tipoEstadoActa.value?.toString()
+      controls.tipoEstadoActa.value?.id?.toString()
     );
 
     return filter;
