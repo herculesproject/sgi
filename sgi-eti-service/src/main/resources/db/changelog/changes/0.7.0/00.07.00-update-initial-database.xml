@@ -527,6 +527,9 @@
     <addForeignKeyConstraint baseColumnNames="formulario_seguimiento_final_id"
       baseTableName="comite" constraintName="FK_COMITE_FORMULARIOMEMORIASEGUIMIENTOFINAL"
       referencedColumnNames="id" referencedTableName="formulario" />
+    <addForeignKeyConstraint baseColumnNames="formulario_retrospectiva_id"
+      baseTableName="comite" constraintName="FK_COMITE_FORMULARIORETROSPECTIVA"
+      referencedColumnNames="id" referencedTableName="formulario" />
   </changeSet>
 
   <!-- Memoria -->
@@ -631,6 +634,9 @@
       referencedColumnNames="id" referencedTableName="formulario" />
     <addForeignKeyConstraint baseColumnNames="formulario_seguimiento_final_id"
       baseTableName="memoria" constraintName="FK_MEMORIA_FORMULARIOMEMORIASEGUIMIENTOFINAL"
+      referencedColumnNames="id" referencedTableName="formulario" />
+    <addForeignKeyConstraint baseColumnNames="formulario_retrospectiva_id"
+      baseTableName="memoria" constraintName="FK__FORMULARIORETROSPECTIVA"
       referencedColumnNames="id" referencedTableName="formulario" />
     <dropForeignKeyConstraint
       baseTableName="memoria"
