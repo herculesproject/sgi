@@ -33,7 +33,7 @@
         "wrappers": [
           "info-div"
         ],
-        "template": "Se debe de enviar un correo electrónico a la Secretaría Técnica del Comité de Ética  solicitando el inicio de los trámites para la autorización/comunicación de primer uso de la actividad de uso confinado de OMG.",
+        "template": "An email must be sent to the Technical Secretariat of the Ethics Committee requesting initiation of the process for authorisation/reporting of first use of the activity involving the confined use of GMOs.",
         "hideExpression": "!model.pregunta2OMGRadio || model.pregunta2OMGRadio === 'si'"
       },
       {
