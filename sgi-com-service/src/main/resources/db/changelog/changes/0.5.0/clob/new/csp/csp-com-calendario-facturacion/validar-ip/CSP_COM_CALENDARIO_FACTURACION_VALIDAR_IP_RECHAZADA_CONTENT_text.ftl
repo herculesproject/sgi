@@ -21,7 +21,7 @@ Tras el proceso de validación, no se ha dado el visto bueno para la emisión de
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
---
+After the validation process, approval was not given to issue the following invoice:
 
 - Responsible researcher: ${data.nombreApellidosValidador}
 - Title of the contract: ${sgi.getFieldValue(data.tituloProyecto)}
@@ -31,7 +31,7 @@ Tras el proceso de validación, no se ha dado el visto bueno para la emisión de
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
---
+Baliozkotze-prozesuaren ondoren, ez da ontzat eman behean adierazitako faktura egitea:
 
 - Ikertzaile arduraduna: ${data.nombreApellidosValidador}
 - Kontratuaren izenburua: ${sgi.getFieldValue(data.tituloProyecto)}

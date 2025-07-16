@@ -20,7 +20,7 @@ Email unidad responsable
 <#setting locale="en">
 <p>Retrospective Evaluation Request Reminder</p>
 <p>Dear Researcher,</p>
-<p>We remind you that, as reflected in the authorisation of the relevant Provincial Government, in order to carry out the project mentioned below, a retrospective evaluation will be necessary. This you can do using the form that you can find on the website: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
+<p>You are reminded that, as shown in the authorisation by the relevant autonomous body to carry out the project mentioned below, the pertinent retrospective assessment must be conducted, using the form to be found on the website: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
 <p>
 - Activity type: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>
@@ -36,7 +36,7 @@ Email unidad responsable
 <#setting locale="eu">
 <p>Atzera begirako ebaluazioaren eskaeraren gogorarazpena</p>
 <p>Ikertzaile agurgarria:</p>
-<p>Gogoratu behean aipatutako proiektua gauzatzeko dagokion atzera begirako ebaluazioa egin beharko duzula, dagokion foru aldundiaren baimenean jasota dagoenez; webguneko formularioa erabil dezakezu:  <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a>.</p>
+<p>Gogorarazten dizugu, dagokion organo autonomikoaren baimenean islatzen den bezala, beherago aipatutako proiektua egiteko, dagokion atzera begirako ebaluazioa egin beharko duzula, <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a> webgunean dagoen formularioaren bidez.</p>
 <p>
 - Jarduera mota: ${sgi.getFieldValue(data.tipoActividad)}<br>
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}<br>

@@ -5,10 +5,10 @@ Vencimiento cercano de período de presentación de justificación socio de proy
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Upcoming expiry of period for submission of justification
+Deadline approaching for submitting justification for the project partner
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Justifikazioa aurkezteko epea amaitzear
+Proiektuko bazkideak justifikazioa aurkezteko epemuga hurbil.
 </#macro>
 <@.vars["render${renderLang?capitalize}"] />

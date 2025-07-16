@@ -22,7 +22,7 @@
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>---</p>
+<p>After the validation process, approval was not given to issue the following invoice:</p>
 <p>
 - Responsible researcher: ${data.nombreApellidosValidador}<br>
 - Title of the contract: ${sgi.getFieldValue(data.tituloProyecto)}<br>
@@ -33,7 +33,7 @@
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>---</p>
+<p>Baliozkotze-prozesuaren ondoren, ez da ontzat eman behean adierazitako faktura egitea:</p>
 <p>
 - Ikertzaile arduraduna: ${data.nombreApellidosValidador}<br>
 - Kontratuaren izenburua: ${sgi.getFieldValue(data.tituloProyecto)}<br>

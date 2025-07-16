@@ -14,7 +14,7 @@ ${sgi.getFieldValue(CSP_HITO_OBSERVACIONES)}
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Please be advised that a new milestone in the below project will soon be reached:
+Jakinarazten dizugu laster beste mugarri bat lortuko dela behean aipatutako proiektuan:
 
 - Date and time: ${sgi.formatDate(CSP_HITO_FECHA, "SHORT")}, ${sgi.formatTime(CSP_HITO_FECHA, "SHORT")}
 - Milestone to be reached: <#if CSP_HITO_TIPO?has_content && CSP_HITO_TIPO != "[]">${sgi.getFieldValue(CSP_HITO_TIPO)}<#else>-</#if>

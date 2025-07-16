@@ -22,7 +22,7 @@
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>Please be advised that the period for submission of justification of the below project will start soon. You can proceed with the justification through the following link: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
+<p>The period for submitting justification for the project partner referred to below will end soon. You can proceed with the justification through the following link: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 - Expiry of the justification period: ${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}<br>
 - Collaborating entity: ${data.nombreEntidad}<br>
@@ -32,7 +32,7 @@
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>Honen bidez jakinarazten dizugu laster amaituko dela behean aipatutako proiektuaren justifikazioa aurkezteko epea. Honako esteka honen bidez egin dezakezu justifikazioa: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
+<p>Laster amaituko da beherago aipatutako proiektuko bazkidearentzako justifikazioa aurkezteko epea. Honako esteka honen bidez egin dezakezu justifikazioa: <a href="${data.enlaceAplicacion}" target="_blank"><b>${data.enlaceAplicacion}</b></a></p>
 <p>
 - Justifikazio epearen amaiera data: ${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}<br>
 - Erakunde kolaboratzailea: ${data.nombreEntidad}<br>

@@ -15,7 +15,7 @@
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-<p>Please be advised that a new milestone in the below project will soon be reached:</p>
+<p>You are informed that a new milestone in the project referred to below will soon be reached:</p>
 <p>
 - Date and time: ${sgi.formatDate(CSP_HITO_FECHA, "SHORT")}, ${sgi.formatTime(CSP_HITO_FECHA, "SHORT")}<br>
 - Milestone to be reached: <#if CSP_HITO_TIPO?has_content && CSP_HITO_TIPO != "[]">${sgi.getFieldValue(CSP_HITO_TIPO)}<#else>-</#if><br>
@@ -29,7 +29,7 @@
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-<p>Honen bidez jakinarazten dizugu laster mugarri berri batera iritsiko dela aipatuta ageri den deialdiari lotutako eskaera:</p>
+<p>Jakinarazten dizugu laster beste mugarri bat lortuko dela behean aipatutako proiektuan:</p>
 <p>
 - Data eta ordua: ${sgi.formatDate(CSP_HITO_FECHA, "SHORT")}, ${sgi.formatTime(CSP_HITO_FECHA, "SHORT")}<br>
 - Mugarri berria: <#if CSP_HITO_TIPO?has_content && CSP_HITO_TIPO != "[]">${sgi.getFieldValue(CSP_HITO_TIPO)}<#else>-</#if><br>

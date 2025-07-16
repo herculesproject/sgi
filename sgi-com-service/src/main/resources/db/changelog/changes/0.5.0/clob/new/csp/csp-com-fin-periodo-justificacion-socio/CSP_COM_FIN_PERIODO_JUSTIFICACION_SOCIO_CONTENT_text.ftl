@@ -21,7 +21,7 @@ Próximamente finalizará el periodo de presentación de justificación para el 
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Please be advised that the period for submission of justification of the below project will start soon. You can proceed with the justification through the following link: ${data.enlaceAplicacion}
+The period for submitting justification for the project partner referred to below will end soon. You can proceed with the justification through the following link: ${data.enlaceAplicacion}
 
 - Expiry of the justification period: ${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}
 - Collaborating entity: ${data.nombreEntidad}
@@ -30,7 +30,7 @@ Please be advised that the period for submission of justification of the below p
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Honen bidez jakinarazten dizugu laster amaituko dela behean aipatutako proiektuaren justifikazioa aurkezteko epea. Honako esteka honen bidez egin dezakezu justifikazioa: ${data.enlaceAplicacion}
+Laster amaituko da beherago aipatutako proiektuko bazkidearentzako justifikazioa aurkezteko epea. Honako esteka honen bidez egin dezakezu justifikazioa: ${data.enlaceAplicacion}
 
 - Justifikazio epearen amaiera data: ${sgi.formatDate(data.fechaFin, "SHORT")}, ${sgi.formatTime(data.fechaFin, "SHORT")}
 - Erakunde kolaboratzailea: ${data.nombreEntidad}

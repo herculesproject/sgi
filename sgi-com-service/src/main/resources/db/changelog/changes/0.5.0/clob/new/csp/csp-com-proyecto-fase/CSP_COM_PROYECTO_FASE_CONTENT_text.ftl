@@ -15,7 +15,7 @@ ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Please be advised that the next stage of the below project will be launched shortly:
+You are informed that the next phase of the project referred to below will soon begin:
 
 - Call: <#if CSP_PRO_FASE_TITULO_CONVOCATORIA?has_content && CSP_PRO_FASE_TITULO_CONVOCATORIA != "[]">${sgi.getFieldValue(CSP_PRO_FASE_TITULO_CONVOCATORIA)}<#else>-</#if>
 - Phase: <#if CSP_PRO_TIPO_FASE?has_content && CSP_PRO_TIPO_FASE != "[]">${sgi.getFieldValue(CSP_PRO_TIPO_FASE)}<#else>-</#if>
@@ -30,7 +30,7 @@ ${sgi.getFieldValue(CSP_PRO_FASE_OBSERVACIONES)}
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako deialdiaren hurrengo fasea:
+Jakinarazten dizugu laster hasiko dela behean aipatutako proiektuaren hurrengo fasea:
 
 - Deialdia: <#if CSP_PRO_FASE_TITULO_CONVOCATORIA?has_content && CSP_PRO_FASE_TITULO_CONVOCATORIA != "[]">${sgi.getFieldValue(CSP_PRO_FASE_TITULO_CONVOCATORIA)}<#else>-</#if>
 - Fasea: <#if CSP_PRO_TIPO_FASE?has_content && CSP_PRO_TIPO_FASE != "[]">${sgi.getFieldValue(CSP_PRO_TIPO_FASE)}<#else>-</#if>

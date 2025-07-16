@@ -21,7 +21,7 @@ Retrospective Evaluation Request Reminder
 
 Dear Researcher,
 
-We remind you that, as reflected in the authorisation of the relevant Provincial Government, in order to carry out the project mentioned below, a retrospective evaluation will be necessary. This you can do using the form that you can find on the website: ${data.enlaceAplicacion}.
+You are reminded that, as shown in the authorisation by the relevant autonomous body to carry out the project mentioned below, the pertinent retrospective assessment must be conducted, using the form to be found on the website: ${data.enlaceAplicacion}.
 
 - Activity type: ${sgi.getFieldValue(data.tipoActividad)}
 - Title: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
@@ -37,7 +37,7 @@ Atzera begirako ebaluazioaren eskaeraren gogorarazpena
 
 Ikertzaile agurgarria:
 
-Gogoratu behean aipatutako proiektua gauzatzeko dagokion atzera begirako ebaluazioa egin beharko duzula, dagokion foru aldundiaren baimenean jasota dagoenez; webguneko formularioa erabil dezakezu:  ${data.enlaceAplicacion}.
+Gogorarazten dizugu, dagokion organo autonomikoaren baimenean islatzen den bezala, beherago aipatutako proiektua egiteko, dagokion atzera begirako ebaluazioa egin beharko duzula, ${data.enlaceAplicacion} webgunean dagoen formularioaren bidez.
 
 - Jarduera mota: ${sgi.getFieldValue(data.tipoActividad)}
 - Izenburua: ${sgi.getFieldValue(data.tituloSolicitudEvaluacion)}
