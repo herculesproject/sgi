@@ -1,14 +1,14 @@
 <#assign renderLang=languagePriorities?first>
 <#macro renderEs>
 <#setting locale="es">
-Necesidad de solicitud de evaluación ante CEID
+Necesidad de solicitud de evaluación de ética
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-Need to apply to CEID for evaluation
+Need to apply ethics evalutation
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-IIEBk ebaluatzeko eskaera
+Etika ebaluatzeko eskaera
 </#macro>
 <@.vars["render${renderLang?capitalize}"] />

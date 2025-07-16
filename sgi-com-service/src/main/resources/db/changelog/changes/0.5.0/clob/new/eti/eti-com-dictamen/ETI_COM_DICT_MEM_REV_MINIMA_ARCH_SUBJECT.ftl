@@ -2,14 +2,14 @@
 <#assign renderLang=languagePriorities?first>
 <#macro renderEs>
 <#setting locale="es">
-Solicitud CEID archivada ${data.comiteCodigo}
+Solicitud archivada ${data.comiteCodigo}
 </#macro>
 <#macro renderEn>
 <#setting locale="en">
-CEID application filed ${data.comiteCodigo}
+Application filed ${data.comiteCodigo}
 </#macro>
 <#macro renderEu>
 <#setting locale="eu">
-IIEB: eskaera artxibatuta ${data.comiteCodigo}
+Eskaera artxibatuta ${data.comiteCodigo}
 </#macro>
 <@.vars["render${renderLang?capitalize}"] />

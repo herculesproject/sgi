@@ -2,7 +2,7 @@
 <#macro renderEs>
 <#setting locale="es">
 <p>Estimado/a investigador/a,</p>
-<p>Le informamos de que es necesario someter su investigación a evaluación ante el CEID, por lo que se ha creado una solicitud de petición de evaluación asociada a la solicitud:</p>
+<p>Le informamos de que es necesario someter su investigación a evaluación ante el comité de ética, por lo que se ha creado una solicitud de petición de evaluación asociada a la solicitud:</p>
 <p>
 - Solicitud de convocatoria: ${CSP_SOLICITUD_CODIGO?esc}<br>
 - Código de referencia: ${ETI_PETICION_EVALUACION_CODIGO?esc}
@@ -16,7 +16,7 @@ Email unidad responsable
 <#macro renderEn>
 <#setting locale="en">
 <p>Dear researcher,</p>
-<p>Please be advised that your research needs to be submitted to the CEID for evaluation. Therefore, an evaluation request has been created associated to your application:</p>
+<p>Please be advised that your research needs to be submitted to the ethics committee for evaluation. Therefore, an evaluation request has been created associated to your application:</p>
 <p>
 - Call request: ${CSP_SOLICITUD_CODIGO?esc}<br>
 - Reference code: ${ETI_PETICION_EVALUACION_CODIGO?esc}
@@ -30,7 +30,7 @@ Email unidad responsable
 <#macro renderEu>
 <#setting locale="eu">
 <p>Ikertzaile agurgarria:</p>
-<p>Honen bidez jakinarazten dizugu beharrezkoa dela IIEBk zure ikerketa ebaluatzea; horregatik, ebaluazio eskaera bat sortu da eskaera honi lotuta:</p>
+<p>Honen bidez jakinarazten dizugu beharrezkoa dela etika batzordeak zure ikerketa ebaluatzea; horregatik, ebaluazio eskaera bat sortu da eskaera honi lotuta:</p>
 <p>
 - Deialdi eskaera: ${CSP_SOLICITUD_CODIGO?esc}<br>
 - Erreferentzia kodea: ${ETI_PETICION_EVALUACION_CODIGO?esc}
