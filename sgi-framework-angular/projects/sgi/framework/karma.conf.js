@@ -17,6 +17,7 @@ module.exports = function (config) {
     },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../../coverage/sgi/framework'),
+      subdir: '.',
       reporters: [
         { type: 'html' },
         { type: 'lcov' },

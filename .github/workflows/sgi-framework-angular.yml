@@ -1,0 +1,56 @@
+name: SGI Framework Angular
+
+on: 
+  workflow_dispatch: 
+  push:
+    paths: 
+      - 'sgi-framework-angular/**'
+      - '.github/workflows/sgi-framework-angular.yml'
+    branches:
+      - ci
+
+defaults:
+  run:
+    working-directory: sgi-framework-angular
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: '14.x'
+    
+    - name: Install chrome
+      uses: browser-actions/setup-chrome@v2
+
+    - name: Install dependencias
+      run: npm install
+    
+    - name: Run tests
+      run: npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
+    
+    - name: SonarQube analysis
+      uses: SonarSource/sonarqube-scan-action@v5.2.0
+      with:
+        projectBaseDir: sgi-framework-angular
+        args: >
+          -Dsonar.organization=herculesproject
+          -Dsonar.projectKey=herculesproject_sgi_framework-angular
+          -Dsonar.sources=projects/sgi/framework
+          -Dsonar.tests=projects/sgi/framework
+          -Dsonar.inclusions=**/*.ts
+          -Dsonar.exclusions=**/*.spec.ts,test.ts
+          -Dsonar.test.inclusions=**/*.spec.ts,test.ts
+          -Dsonar.javascript.lcov.reportPaths=./coverage/sgi/framework/lcov.info
+          -Dsonar.branch.name=main
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    
+    - name: Build
+      run: npm run build -- --prod
+
+   
