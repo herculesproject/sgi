@@ -188,7 +188,7 @@ export class SolicitudGeneralListadoExportService extends AbstractTableExportFil
     elementsRow.push(solicitud.convocatoriaExterna ?? '');
     elementsRow.push(solicitud.estado?.estado ? this.translate.instant(ESTADO_MAP.get(solicitud.estado?.estado)) : '');
     elementsRow.push(LuxonUtils.toBackend(solicitud.estado?.fechaEstado));
-    elementsRow.push(solicitud.estado?.comentario ?? '');
+    elementsRow.push(this.languageService.getFieldValue(solicitud.estado?.comentario) ?? '');
     return elementsRow;
   }
 }

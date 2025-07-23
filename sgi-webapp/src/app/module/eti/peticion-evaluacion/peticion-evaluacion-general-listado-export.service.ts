@@ -143,7 +143,7 @@ export class PeticionEvaluacionGeneralListadoExportService extends
       this.languageService.getFieldValue(peticionData.titulo) ?? '',
       peticionData.tipoActividad?.id ? this.translate.instant(TIPO_ACTIVIDAD_MAP.get(peticionData.tipoActividad?.id)) : '',
       peticionData.tipoInvestigacionTutelada?.id ? this.translate.instant(TIPO_INVESTIGACION_TUTELADA_MAP.get(peticionData.tipoInvestigacionTutelada?.id)) : '',
-      peticionData.fuenteFinanciacion ?? '',
+      this.languageService.getFieldValue(peticionData.fuenteFinanciacion) ?? '',
       peticionData.importeFinanciacion ?? '',
       LuxonUtils.toBackend(peticionData.fechaInicio) ?? '',
       LuxonUtils.toBackend(peticionData.fechaFin) ?? ''

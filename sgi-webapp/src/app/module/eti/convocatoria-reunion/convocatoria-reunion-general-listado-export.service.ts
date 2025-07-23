@@ -75,7 +75,7 @@ export class ConvocatoriaReunionGeneralListadoExportService extends
       convocatoriaData.comite?.codigo ?? '',
       LuxonUtils.toBackend(convocatoriaData.fechaEvaluacion) ?? '',
       convocatoriaData.codigo ?? '',
-      convocatoriaData.tipoConvocatoriaReunion?.id ? TIPO_CONVOCATORIA_REUNION_MAP.get(convocatoriaData.tipoConvocatoriaReunion?.id) : '',
+      convocatoriaData.tipoConvocatoriaReunion?.id ? this.translate.instant(TIPO_CONVOCATORIA_REUNION_MAP.get(convocatoriaData.tipoConvocatoriaReunion?.id)) : '',
       this.languagueService.getFieldValue(convocatoriaData.ordenDia) ?? '',
     ];
   }
