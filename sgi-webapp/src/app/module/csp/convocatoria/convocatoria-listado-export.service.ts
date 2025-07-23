@@ -27,8 +27,8 @@ import { ReportService } from '@core/services/rep/report.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { concat, Observable, of, zip } from 'rxjs';
-import { catchError, map, switchMap, takeLast, tap } from 'rxjs/operators';
+import { concat, from, Observable, of, zip } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { ConvocatoriaAreaTematicaListadoExportService, IConvocatoriaAreaTematicaListadoExport } from './convocatoria-area-tematica-listado-export.service';
 import { ConvocatoriaCalendarioJustificacionListadoExportService } from './convocatoria-calendario-justificacion-listado-export.service';
 import { ConvocatoriaConceptoGastoListadoExportService, IConvocatoriaConceptoGastoListadoExport } from './convocatoria-concepto-gasto-listado-export.service';
@@ -201,12 +201,18 @@ export class ConvocatoriaListadoExportService extends AbstractTableExportService
         });
       }),
       switchMap((convocatoriasReportData) => {
-        const requestsConvocatoria: Observable<IConvocatoriaReportData>[] = [];
-
-        convocatoriasReportData.forEach(convocatoria => {
-          requestsConvocatoria.push(this.getDataReportInner(convocatoria, reportConfig.reportOptions, reportConfig.outputType));
-        });
-        return zip(...requestsConvocatoria);
+        const requestsConvocatoria: IConvocatoriaReportData[] = [];
+        return from(convocatoriasReportData).pipe(
+          mergeMap((convocatoria) => {
+            return this.getDataReportInner(convocatoria, reportConfig.reportOptions, reportConfig.outputType)
+          }, this.DEFAULT_CONCURRENT)
+        ).pipe(
+          map(r => {
+            requestsConvocatoria.push(r);
+            return requestsConvocatoria;
+          }),
+          takeLast(1)
+        )
       }),
       takeLast(1)
     );

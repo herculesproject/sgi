@@ -153,7 +153,7 @@ export class FacturasPrevistasPendientesListadoExportService extends AbstractTab
                 return of(facturaPrevistaPendiente);
               })
             )
-          }, 10),
+          }, this.DEFAULT_CONCURRENT),
           toArray(),
           map(response => response.sort((a, b) => this.compareFechaEmision(b, a)))
         );

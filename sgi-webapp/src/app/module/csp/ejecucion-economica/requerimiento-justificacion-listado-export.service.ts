@@ -128,7 +128,7 @@ export class RequerimientoJustificacionListadoExportService
                 return relacion;
               }),
             );
-          }),
+          }, this.DEFAULT_CONCURRENT),
           toArray(),
           map(() => {
             return response;

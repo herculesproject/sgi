@@ -28,8 +28,8 @@ import { ReportService } from '@core/services/rep/report.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { concat, Observable, of, zip } from 'rxjs';
-import { catchError, map, switchMap, takeLast, tap } from 'rxjs/operators';
+import { concat, from, Observable, of, zip } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { SolicitudEntidadConvocanteListadoExportService } from './solicitud-entidad-convocante-listado-export.service';
 import { SolicitudDatosGenerales } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
 import { SolicitudProyectoClasificacionListado } from './solicitud-formulario/solicitud-proyecto-clasificaciones/solicitud-proyecto-clasificaciones.fragment';
@@ -181,12 +181,19 @@ export class SolicitudListadoExportService extends AbstractTableExportService<IS
           return of(solicitudesReportData);
         }
 
-        const requestsSolicitud: Observable<ISolicitudReportData>[] = [];
+        const requestsSolicitud: ISolicitudReportData[] = [];
 
-        solicitudesReportData.forEach(solicitud => {
-          requestsSolicitud.push(this.getDataReportInner(solicitud, reportConfig.reportOptions, reportConfig.outputType));
-        });
-        return zip(...requestsSolicitud);
+        return from(solicitudesReportData).pipe(
+          mergeMap((solicitud) => {
+            return this.getDataReportInner(solicitud, reportConfig.reportOptions, reportConfig.outputType)
+          }, this.DEFAULT_CONCURRENT)
+        ).pipe(
+          map(r => {
+            requestsSolicitud.push(r);
+            return requestsSolicitud;
+          }),
+          takeLast(1)
+        )
       }),
       takeLast(1)
     );

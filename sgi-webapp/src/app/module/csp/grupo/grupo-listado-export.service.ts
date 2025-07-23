@@ -17,8 +17,8 @@ import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core
 import { ReportService } from '@core/services/rep/report.service';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { concat, Observable, of, zip } from 'rxjs';
-import { catchError, map, switchMap, takeLast, tap } from 'rxjs/operators';
+import { concat, from, Observable, of, zip } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { GrupoLineaClasificacionListado } from '../grupo-linea-investigacion/grupo-linea-investigacion-formulario/grupo-linea-clasificaciones/grupo-linea-clasificaciones.fragment';
 import { GrupoEnlaceListadoExportService } from './grupo-enlace-listado-export.service';
 import { GrupoEquipoInstrumentalListadoExportService } from './grupo-equipo-instrumental-listado-export.service';
@@ -127,12 +127,19 @@ export class GrupoListadoExportService extends AbstractTableExportService<IGrupo
         return grupos.items.map((pr) => pr as IGrupoReportData);
       }),
       switchMap((gruposReportData) => {
-        const requestsGrupo: Observable<IGrupoReportData>[] = [];
+        const requestsGrupo: IGrupoReportData[] = [];
 
-        gruposReportData.forEach(grupo => {
-          requestsGrupo.push(this.getDataReportInner(grupo, reportConfig.reportOptions, reportConfig.outputType));
-        });
-        return zip(...requestsGrupo);
+        return from(gruposReportData).pipe(
+          mergeMap((grupo) => {
+            return this.getDataReportInner(grupo, reportConfig.reportOptions, reportConfig.outputType)
+          }, this.DEFAULT_CONCURRENT)
+        ).pipe(
+          map(r => {
+            requestsGrupo.push(r);
+            return requestsGrupo;
+          }),
+          takeLast(1)
+        )
       }),
       takeLast(1)
     );

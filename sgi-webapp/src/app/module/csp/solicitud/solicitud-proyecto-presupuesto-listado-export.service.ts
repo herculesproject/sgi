@@ -6,16 +6,16 @@ import { ColumnType, ISgiColumnReport } from '@core/models/rep/sgi-column-report
 import { ISgiGroupReport } from '@core/models/rep/sgi-group.report';
 import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { LanguageService } from '@core/services/language.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, zip } from 'rxjs';
-import { map, switchMap, takeLast } from 'rxjs/operators';
+import { from, Observable, of, zip } from 'rxjs';
+import { map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 import { ISolicitudListadoData } from './solicitud-listado/solicitud-listado.component';
-import { LanguageService } from '@core/services/language.service';
 
 const SOLICITUD_PROYECTO_PRESUPUESTO_KEY = marker('csp.solicitud-proyecto-presupuesto.titulo');
 const SOLICITUD_PROYECTO_PRESUPUESTO_ANUALIDAD_KEY = marker('csp.solicitud-proyecto-presupuesto.anualidad');
@@ -92,12 +92,19 @@ export class SolicitudProyectoPresupuestoListadoExportService extends AbstractTa
           return of(solicitudesPresupuestoReportData);
         }
 
-        const requestsSolicitud: Observable<ISolicitudPrespuestoReportData>[] = [];
+        const requestsSolicitud: ISolicitudPrespuestoReportData[] = [];
 
-        solicitudesPresupuestoReportData.forEach(solicitudPresupuestoData => {
-          requestsSolicitud.push(this.getDataReportListadoGeneral(solicitudPresupuestoData));
-        });
-        return zip(...requestsSolicitud);
+        return from(solicitudesPresupuestoReportData).pipe(
+          mergeMap((solicitudPresupuestoData) => {
+            return this.getDataReportListadoGeneral(solicitudPresupuestoData)
+          }, this.DEFAULT_CONCURRENT)
+        ).pipe(
+          map(r => {
+            requestsSolicitud.push(r);
+            return requestsSolicitud;
+          }),
+          takeLast(1)
+        )
       }),
       takeLast(1)
     );

@@ -17,8 +17,8 @@ import { SeguimientoJustificacionService } from '@core/services/sge/seguimiento-
 import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { concat, Observable, of, zip } from 'rxjs';
-import { catchError, map, switchMap, takeLast, tap } from 'rxjs/operators';
+import { concat, from, Observable, of, zip } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { SeguimientoGastosJustificadosResumenListadoGeneralExportService } from './seguimiento-gastos-justificados-listado-general-export.service';
 
 export interface IRequerimientoJustificacionAlegacion extends IRequerimientoJustificacion {
@@ -138,12 +138,19 @@ export class SeguimientoGastosJustificadosResumenListadoExportService
           return of(gastosJustificadosReportData);
         }
 
-        const requestsGastos: Observable<IGastoJustificadoReportData>[] = [];
+        const requestsGastos: IGastoJustificadoReportData[] = [];
 
-        gastosJustificadosReportData.forEach(gastoJustificado => {
-          requestsGastos.push(this.getDataReportInner(gastoJustificado, reportConfig.reportOptions, reportConfig.outputType));
-        });
-        return zip(...requestsGastos);
+        return from(gastosJustificadosReportData).pipe(
+          mergeMap((gastoJustificado) => {
+            return this.getDataReportInner(gastoJustificado, reportConfig.reportOptions, reportConfig.outputType)
+          }, this.DEFAULT_CONCURRENT)
+        ).pipe(
+          map(r => {
+            requestsGastos.push(r);
+            return requestsGastos;
+          }),
+          takeLast(1)
+        )
       }),
       takeLast(1)
     );
