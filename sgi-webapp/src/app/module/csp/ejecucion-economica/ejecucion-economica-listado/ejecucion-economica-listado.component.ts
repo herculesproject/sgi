@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { SgeIntegracionesEccMenus } from '@core/models/csp/configuracion';
 import { sortGrupoEquipoByPersonaNombre, sortGrupoEquipoByRolProyectoOrden } from '@core/models/csp/grupo-equipo';
 import { sortProyectoEquipoByPersonaNombre, sortProyectoEquipoByRolProyectoOrden } from '@core/models/csp/proyecto-equipo';
 import { IRelacionEjecucionEconomica, TIPO_ENTIDAD_MAP, TipoEntidad } from '@core/models/csp/relacion-ejecucion-economica';
@@ -23,7 +24,6 @@ import { catchError, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operato
 import { EJECUCION_ECONOMICA_ROUTE_NAMES } from '../ejecucion-economica-route-names';
 import { IRelacionEjecucionEconomicaWithResponsables } from '../ejecucion-economica.action.service';
 import { IRequerimientoJustificacionListadoModalData, RequerimientoJustificacionListadoExportModalComponent } from '../modals/requerimiento-justificacion-listado-export-modal/requerimiento-justificacion-listado-export-modal.component';
-
 @Component({
   selector: 'sgi-ejecucion-economica-listado',
   templateUrl: './ejecucion-economica-listado.component.html',
@@ -32,6 +32,7 @@ import { IRequerimientoJustificacionListadoModalData, RequerimientoJustificacion
 export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationComponent<IRelacionEjecucionEconomicaWithResponsables>
   implements OnInit, OnDestroy {
   ROUTE_NAMES = ROUTE_NAMES;
+  SGE_INTEGRACIONES_ECC_MENUS = SgeIntegracionesEccMenus;
 
   dataSource$: Observable<IRelacionEjecucionEconomicaWithResponsables[]>;
 
@@ -47,6 +48,8 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
   private idsProyectoSge: string[];
 
   private limiteRegistrosExportacionExcel: string;
+
+  private integracionesEccSgeEnabled: SgeIntegracionesEccMenus[];
 
   get TIPO_ENTIDAD_MAP() {
     return TIPO_ENTIDAD_MAP;
@@ -69,7 +72,7 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
     private grupoService: GrupoService,
     private readonly matDialog: MatDialog,
     private readonly cnfService: ConfigService,
-    private readonly configCspService: ConfigCspService
+    private readonly configCspService: ConfigCspService,
   ) {
     super();
 
@@ -79,6 +82,10 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
       }
       return column;
     }
+    this.configCspService.getIntegracionesEccSgeEnabled().subscribe(integracionesEccSgeEnabled => {
+      this.integracionesEccSgeEnabled = integracionesEccSgeEnabled;
+    });
+
   }
 
   ngOnInit(): void {
@@ -357,4 +364,8 @@ export class EjecucionEconomicaListadoComponent extends AbstractTablePaginationC
   }
 
   protected setupI18N(): void { }
+
+  isOpcionHabilitadaIntegracionesEcc(opcion: SgeIntegracionesEccMenus): boolean {
+    return this.integracionesEccSgeEnabled?.includes(opcion) ?? false;;
+  }
 }

@@ -257,7 +257,9 @@
       <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
     </table>
 
-    <div [class]="tipoEntidadSelected === TipoEntidad.PROYECTO ? 'paginator-export' : ''">
+    <div
+      *ngIf="isOpcionHabilitadaIntegracionesEcc(SGE_INTEGRACIONES_ECC_MENUS.ECC_SEGUIMIENTO_JUSTIFICACION_REQUERIMIENTOS)"
+      [class]="tipoEntidadSelected === TipoEntidad.PROYECTO ? 'paginator-export' : ''">
       <button mat-button color="primary" matTooltip="{{'btn.export' | translate}}" (click)="openExportModal()"
         [disabled]="totalElementos<=0" *ngIf="tipoEntidadSelected === TipoEntidad.PROYECTO">
         <mat-icon>insert_chart_outlined</mat-icon>
