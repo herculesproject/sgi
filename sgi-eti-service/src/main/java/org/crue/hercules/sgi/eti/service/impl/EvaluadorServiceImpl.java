@@ -43,6 +43,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
 
   private static final Long PRESIDENTE = 1L;
   private static final Long SECRETARIO = 3L;
+
   private final EvaluadorRepository evaluadorRepository;
   private final SgiConfigProperties sgiConfigProperties;
 
@@ -63,12 +64,12 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     log.debug("Petición a create Evaluador : {} - start", evaluador);
     AssertHelper.idIsNull(evaluador.getId(), Evaluador.class);
 
-    // Si el evaluador a crear es presidente se ha de mirar que no coincida el
-    // presidente en el rango de fechas de los presidentes existentes
+    // Si el evaluador a crear es presidente o secretario se ha de mirar que no
+    // coincida el presidente o secretario en el rango de fechas de los cargos
+    // existentes
     if (evaluador.getCargoComite().getId().equals(PRESIDENTE) || evaluador.getCargoComite().getId()
         .equals(SECRETARIO)) {
-      Assert.isTrue(
-          isPresidenteOrSecretarioInFechasOk(evaluador),
+      Assert.isTrue(isPresidenteOrSecretarioInFechasOk(evaluador),
           () -> ProblemMessage.builder()
               .key(MSG_FIELD_EXISTENTE)
               .parameter(MSG_KEY_FIELD, evaluador.getCargoComite().getId().equals(PRESIDENTE)
@@ -76,14 +77,15 @@ public class EvaluadorServiceImpl implements EvaluadorService {
                   : ApplicationContextSupport.getMessage(MSG_FIELD_SECRETARIOS))
               .build());
 
-    } else {
-      // Un evaluador no puede estar en el mismo comité en el mismo rango de fechas
-      Assert.isTrue(isEvaluadorInFechasOk(evaluador),
-          () -> ProblemMessage.builder()
-              .key(MSG_FIELD_EXISTENTE)
-              .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_EVALUADORES))
-              .build());
     }
+
+    // Se comprueba que la misma persona no exista en el mismo rango de fechas con
+    // distinto cargo
+    Assert.isTrue(isEvaluadorInFechasOk(evaluador),
+        () -> ProblemMessage.builder()
+            .key(MSG_FIELD_EXISTENTE)
+            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_EVALUADORES))
+            .build());
 
     return evaluadorRepository.save(evaluador);
   }
@@ -258,28 +260,28 @@ public class EvaluadorServiceImpl implements EvaluadorService {
 
     AssertHelper.idNotNull(evaluadorActualizar.getId(), Evaluador.class);
 
-    // Si el evaluador a crear es presidente se ha de mirar que no coincida el
-    // presidente en el rango de fechas de los presidentes existentes
-    if (evaluadorActualizar.getCargoComite().getId().equals(PRESIDENTE)
-        || evaluadorActualizar.getCargoComite().getId()
-            .equals(SECRETARIO)) {
-      Assert.isTrue(
-          isPresidenteOrSecretarioInFechasOk(
-              evaluadorActualizar),
+    // Si el evaluador a crear es presidente o secretario se ha de mirar que no
+    // coincida el presidente o secretario en el rango de fechas de los cargos
+    // existentes
+    if (evaluadorActualizar.getCargoComite().getId().equals(PRESIDENTE) || evaluadorActualizar.getCargoComite().getId()
+        .equals(SECRETARIO)) {
+      Assert.isTrue(isPresidenteOrSecretarioInFechasOk(evaluadorActualizar),
           () -> ProblemMessage.builder()
               .key(MSG_FIELD_EXISTENTE)
               .parameter(MSG_KEY_FIELD, evaluadorActualizar.getCargoComite().getId().equals(PRESIDENTE)
                   ? ApplicationContextSupport.getMessage(MSG_FIELD_PRESIDENTES)
                   : ApplicationContextSupport.getMessage(MSG_FIELD_SECRETARIOS))
               .build());
-    } else {
-      // Un evaluador no puede estar en el mismo comité en el mismo rango de fechas
-      Assert.isTrue(isEvaluadorInFechasOk(evaluadorActualizar),
-          () -> ProblemMessage.builder()
-              .key(MSG_FIELD_EXISTENTE)
-              .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_EVALUADORES))
-              .build());
+
     }
+
+    // Se comprueba que la misma persona no exista en el mismo rango de fechas con
+    // distinto cargo
+    Assert.isTrue(isEvaluadorInFechasOk(evaluadorActualizar),
+        () -> ProblemMessage.builder()
+            .key(MSG_FIELD_EXISTENTE)
+            .parameter(MSG_KEY_FIELD, ApplicationContextSupport.getMessage(MSG_FIELD_EVALUADORES))
+            .build());
 
     return evaluadorRepository.findById(evaluadorActualizar.getId()).map(evaluador -> {
       evaluador.setCargoComite(evaluadorActualizar.getCargoComite());
