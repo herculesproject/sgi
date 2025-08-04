@@ -51,6 +51,16 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     
     - name: Build
-      run: npm run build -- --prod
+      run: |
+        cd projects/sgi/framework
+        export VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+        npm version --commit-hooks=false --git-tag-version=false $VERSION.$(date +%Y%m%d%H%M%S)
+        cd ../../..
+        npm run build -- --prod
+
+    - name: Publish
+      run: npm publish --provenance --acces public dist/sgi/framework
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
    
