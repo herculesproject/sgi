@@ -84,7 +84,7 @@ spring:
   config:
     activate:
       on-profile:
-      - test-prostges
+      - test-postgres
   datasource:
     # We use PostgreSQL database
     url: "jdbc:postgresql://postgres:5432/db"
