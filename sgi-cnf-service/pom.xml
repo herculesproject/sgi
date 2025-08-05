@@ -5,13 +5,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.crue.hercules.sgi</groupId>
+    <groupId>io.github.herculesproject.sgi</groupId>
     <artifactId>sgi-starter-parent</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.crue.hercules.sgi</groupId>
-  <artifactId>sgi-cnf-service</artifactId>
+  <artifactId>io.github.herculesproject.sgi</artifactId>
   <version>0.9.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>sgi-cnf-service</name>
@@ -35,14 +35,29 @@
   </developers>
 
   <scm>
-    <url>https://github.com/HerculesCRUE/SGI</url>
+    <connection>scm:git:git://github.com/herculesproject/sgi.git</connection>
+    <url>https://github.com/herculesproject/sgi/tree/main/sgi-cnf-service</url>
   </scm>
+
+  <repositories>
+    <repository>
+      <name>Central Portal Snapshots</name>
+      <id>central-portal-snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
   <properties>
     <!-- Manifest data for the Apache Maven JAR Plugin -->
     <manifest.name>org/crue/hercules/sgi/cnf</manifest.name>
     <!-- Versions -->
-    <sgi-framework-spring.version>0.2.0</sgi-framework-spring.version>
+    <sgi-framework-spring.version>0.3.0-SNAPSHOT</sgi-framework-spring.version>
   </properties>
 
   <profiles>
@@ -79,7 +94,7 @@
         https://github.com/HerculesCRUE/SGI/
       -->
       <dependency>
-        <groupId>org.crue.hercules.sgi</groupId>
+        <groupId>io.github.herculesproject.sgi</groupId>
         <artifactId>sgi-framework-spring</artifactId>
         <version>${sgi-framework-spring.version}</version>
       </dependency>
@@ -204,7 +219,7 @@
       https://github.com/HerculesCRUE/SGI/
     -->
     <dependency>
-      <groupId>org.crue.hercules.sgi</groupId>
+      <groupId>io.github.herculesproject.sgi</groupId>
       <artifactId>sgi-framework-spring</artifactId>
     </dependency>
     <!-- 
