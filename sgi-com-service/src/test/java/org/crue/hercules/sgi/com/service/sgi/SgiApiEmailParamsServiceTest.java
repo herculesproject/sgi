@@ -48,14 +48,14 @@ import org.springframework.web.client.RestTemplate;
 @MockBean({ RestTemplate.class, ClientRegistrationRepository.class, OAuth2AuthorizedClientService.class })
 class SgiApiEmailParamsServiceTest {
 
-  private static final String CSP_URL = "http://sgi-csp-service.local.computer:4281";
-  private static final String ETI_URL = "http://sgi-eti-service.local.computer:4280";
-  private static final String PII_URL = "http://sgi-pii-service.local.computer:4283";
-  private static final String REL_URL = "http://sgi-rel-service.local.computer:4284";
-  private static final String REP_URL = "http://sgi-rep-service.local.computer:4287";
-  private static final String SGDOC_URL = "http://sgi.ic.corp.treelogic.com/api/sgdoc";
-  private static final String TP_URL = "http://sgi-tp-service.local.computer:4286";
-  private static final String USR_URL = "http://sgi-usr-service.local.computer:4282";
+  private static final String CSP_URL = "http://sgi-csp-service:4281";
+  private static final String ETI_URL = "http://sgi-eti-service:4280";
+  private static final String PII_URL = "http://sgi-pii-service:4283";
+  private static final String REL_URL = "http://sgi-rel-service:4284";
+  private static final String REP_URL = "http://sgi-rep-service:4287";
+  private static final String SGDOC_URL = "http://sgi-esb:8080/sgdoc";
+  private static final String TP_URL = "http://sgi-tp-service:4286";
+  private static final String USR_URL = "http://sgi-usr-service:4282";
 
   private final SgiApiEmailParamsService sgiApiEmailParamsService;
   private final RestApiProperties restApiProperties;
