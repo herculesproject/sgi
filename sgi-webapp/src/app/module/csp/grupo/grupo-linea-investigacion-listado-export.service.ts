@@ -298,6 +298,16 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
             l.grupoLineaInvestigacion.lineaInvestigacion?.id === g.lineasInvestigacion[i].lineaInvestigacion?.id)) : [];
         return clasificaciones?.length;
       }));
+
+      const maxNumNiveles = Math.max(...grupos.map(g => {
+        const clasificaciones = g.clasificaciones?.filter(l =>
+          g.lineasInvestigacion[i] &&
+          l.grupoLineaInvestigacion.id === g.lineasInvestigacion[i].id &&
+          l.grupoLineaInvestigacion.lineaInvestigacion?.id === g.lineasInvestigacion[i].lineaInvestigacion?.id
+        ) ?? [];
+        return Math.max(...clasificaciones.map(c => c.niveles?.length ?? 0));
+      }));
+
       const maxEquiposInstrumentales = Math.max(...grupos.map(g => {
         const miembros = (g.lineasEquiposInstrumentales && g.lineasEquiposInstrumentales.length > 0) ?
           (g.lineasEquiposInstrumentales.filter(l =>
@@ -343,7 +353,7 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
 
       const titleClasificacion = this.translate.instant(LINEA_INVESTIGACION_CLASIFICACIONES_KEY, MSG_PARAMS.CARDINALIRY.SINGULAR);
       const titleCodigo = this.translate.instant(LINEA_INVESTIGACION_CLASIFICACION_CODIGO_KEY);
-      let maxNumNiveles = 0;
+
       for (let c = 0; c < maxClasificaciones; c++) {
         const idClasificacion: string = String(c + 1);
         const columnClasificacion: ISgiColumnReport = {
@@ -353,8 +363,6 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
         };
         columns.push(columnClasificacion);
 
-        const numNiveles = Math.max(...grupos.map(g => g.clasificaciones && g.clasificaciones.length > 0 ? (g.clasificaciones[c] && g.clasificaciones[c].niveles ? g.clasificaciones[c].niveles?.length : 0) : 0));
-        maxNumNiveles = numNiveles > maxNumLineas ? numNiveles : maxNumNiveles;
         for (let n = 0; n < maxNumNiveles - 1; n++) {
           const idNivel: string = String(n + 1);
           const columnCodigo: ISgiColumnReport = {
@@ -386,7 +394,6 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
     const elementsRow: any[] = [];
     if (this.isExcelOrCsv(reportConfig.outputType)) {
       const maxNumLineas = Math.max(...grupos.map(g => g.lineasInvestigacion?.length));
-      let maxNumNiveles = 0;
       for (let i = 0; i < maxNumLineas; i++) {
 
         const maxNumMiembros = Math.max(...grupos.map(g => {
@@ -403,6 +410,16 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
               l.grupoLineaInvestigacion.lineaInvestigacion?.id === g.lineasInvestigacion[i].lineaInvestigacion?.id)) : [];
           return clasificaciones?.length;
         }));
+
+        const maxNumNiveles = Math.max(...grupos.map(g => {
+          const clasificaciones = g.clasificaciones?.filter(l =>
+            g.lineasInvestigacion[i] &&
+            l.grupoLineaInvestigacion.id === g.lineasInvestigacion[i].id &&
+            l.grupoLineaInvestigacion.lineaInvestigacion?.id === g.lineasInvestigacion[i].lineaInvestigacion?.id
+          ) ?? [];
+          return Math.max(...clasificaciones.map(c => c.niveles?.length ?? 0));
+        }));
+
         const maxNumEquipoInstrumental = Math.max(...grupos.map(g => {
           const miembros = (g.lineasEquiposInstrumentales && g.lineasEquiposInstrumentales.length > 0) ?
             (g.lineasEquiposInstrumentales.filter(l =>
@@ -411,9 +428,6 @@ export class GrupoLineaInvestigacionListadoExportService extends AbstractTableEx
           return miembros?.length;
         }));
 
-        const numNiveles = Math.max(...grupos.map(g => g.clasificaciones && g.clasificaciones.length > 0 ?
-          (g.clasificaciones[i] && g.clasificaciones[i].niveles ? g.clasificaciones[i].niveles.length : 0) : 0));
-        maxNumNiveles = numNiveles > maxNumLineas ? numNiveles : maxNumNiveles;
         const lineaInvestigacion = grupo.lineasInvestigacion[i] ?? null;
         const miembrosAdscritos = lineaInvestigacion ? grupo.lineasInvestigador.filter(lineaInvestigador =>
           lineaInvestigador.grupoLineaInvestigacion.id === lineaInvestigacion.id &&
