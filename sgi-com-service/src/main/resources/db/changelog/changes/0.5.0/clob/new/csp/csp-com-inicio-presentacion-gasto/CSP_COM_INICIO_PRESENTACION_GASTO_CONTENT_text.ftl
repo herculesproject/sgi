@@ -22,7 +22,7 @@
 <#setting locale="es">
 Próximamente se inician los periodos de presentación de la justificación económica de los proyectos abajo indicados. 
 <#list data.proyectos as proyecto>
-- Proyecto: ${sgi.getFieldValue(proyecto.titulo)?html}
+- Proyecto: ${sgi.getFieldValue(proyecto.titulo)}
 - Inicio del periodo de presentación de justificación: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}
 - Fin del periodo de presentación de justificación: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </#list>
@@ -32,7 +32,7 @@ Puede revisar la información a través de la aplicación: ${data.enlaceAplicaci
 <#setting locale="en">
 Please be advised that the periods for the submission of the justification for the scientific follow-up of the projects listed below will start soon. The periods for submission of justification documents are as follows:
 <#list data.proyectos as proyecto>
-- Project: ${sgi.getFieldValue(proyecto.titulo)?html}
+- Project: ${sgi.getFieldValue(proyecto.titulo)}
 - Start of the period for submission of justification: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}
 - End of the period for submission of justification:  <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </#list>
@@ -42,7 +42,7 @@ You can review the information through the application: ${data.enlaceAplicacion}
 <#setting locale="eu">
 Honen bidez jakinarazten dizugu laster hasiko dela behean aipatutako proiektuen jarraipen zientifikorako justifikazioa aurkezteko epea. Honako hauek dira justifikazio dokumentuak aurkezteko epeak:
 <#list data.proyectos as proyecto>
-- Proiektua: ${sgi.getFieldValue(proyecto.titulo)?html}
+- Proiektua: ${sgi.getFieldValue(proyecto.titulo)}
 - Justifikazioa aurkezteko epearen hasiera: ${sgi.formatDate(proyecto.fechaInicio, "SHORT")}, ${sgi.formatTime(proyecto.fechaInicio, "SHORT")}
 - Justifikazioa aurkezteko epearen amaiera: <#if proyecto.fechaFin??>${sgi.formatDate(proyecto.fechaFin, "SHORT")}, ${sgi.formatTime(proyecto.fechaFin, "SHORT")}<#else>-</#if>
 </#list>
