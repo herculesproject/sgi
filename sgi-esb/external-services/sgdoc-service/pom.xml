@@ -9,14 +9,34 @@
     <version>2.3.9.RELEASE</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
-  <groupId>org.crue.hercules.sgi</groupId>
+  <groupId>io.github.herculesproject.sgi</groupId>
   <artifactId>sgi-sgdoc-service</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0-SNAPSHOT</version>
   <name>sgi-sgdoc-service</name>
   <description>Servicios del Sistema de Gestión de Documentos</description>
+  
+  <scm>
+    <connection>scm:git:git://github.com/herculesproject/sgi.git</connection>
+    <url>https://github.com/herculesproject/sgi/tree/main/sgi-esb/external-services/sgdoc-service</url>
+  </scm>
+
+  <repositories>
+    <repository>
+      <name>Central Portal Snapshots</name>
+      <id>central-portal-snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
-      <groupId>org.crue.hercules.sgi</groupId>
+      <groupId>io.github.herculesproject.sgi</groupId>
       <artifactId>sgi-framework-spring</artifactId>
       <version>${sgi-framework-spring.version}</version>
     </dependency>
@@ -135,7 +155,7 @@
 
   <properties>
     <java.version>1.8</java.version>
-    <sgi-framework-spring.version>0.0.5</sgi-framework-spring.version>
+    <sgi-framework-spring.version>0.0.5-SNAPSHOT</sgi-framework-spring.version>
     <wiremock.version>2.27.1</wiremock.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -160,6 +180,8 @@
     <site-maven-plugin.version>0.12</site-maven-plugin.version>
     <heroku-maven-plugin.verion>2.0.16</heroku-maven-plugin.verion>
     <liquibase-maven-plugin.version>3.8.9</liquibase-maven-plugin.version>
+    <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
+    <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 
     <!-- Spring Boot doesn't have this property... so, this is needed -->
     <maven-surefire-report-plugin.version>3.0.0-M4</maven-surefire-report-plugin.version>
@@ -228,6 +250,25 @@
         <skip.unit.tests>true</skip.unit.tests>
         <skip.startlocalpostgres>false</skip.startlocalpostgres>
       </properties>
+    </profile>
+    <profile>
+      <id>deployToCentral</id>
+      <build>
+        <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-gpg-plugin</artifactId>
+          </plugin>
+          <plugin>
+              <groupId>org.sonatype.central</groupId>
+              <artifactId>central-publishing-maven-plugin</artifactId>
+              <configuration>
+                <autoPublish>true</autoPublish>
+                <waitUntil>published</waitUntil>
+          </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
@@ -345,6 +386,35 @@
           <artifactId>docker-maven-plugin</artifactId>
           <version>${docker-maven-plugin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>${central-publishing-maven-plugin.version}</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+          </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${maven-gpg-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
       </plugins>
     </pluginManagement>
 
