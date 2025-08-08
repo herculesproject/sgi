@@ -1,0 +1,131 @@
+name: SGI ESB
+
+on: 
+  workflow_dispatch: 
+  push:
+    paths: 
+      - 'sgi-esb/**'
+      - '!sgi-esb/external-services/**'
+      - '.github/workflows/sgi-esb.yml'
+    branches:
+      - ci
+
+env:
+    ESB_VERSION: 0.9.0-um-SNAPSHOT
+defaults:
+  run:
+    working-directory: sgi-esb
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  
+    
+    - name: Set up JDK 8
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+        cache: maven
+    
+    - name: Build sgi-esb-common
+      id: build-esb-common
+      run: |
+        cd sgi-esb-common
+        mvn -B install -P ci
+        echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+    
+    - name: Build sgi-esb-sgdoc
+      id: build-esb-sgdoc
+      run: |
+        cd sgi-esb-sgdoc
+        mvn -B install -P ci
+        echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+    - name: Build sgi-esb-sge
+      id: build-esb-sge
+      run: |
+        cd sgi-esb-sge
+        mvn -B install -P ci
+        echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+    - name: Build sgi-esb-sgemp
+      id: build-esb-sgemp
+      run: |
+        cd sgi-esb-sgemp
+        mvn -B install -P ci
+        echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+    - name: Build sgi-esb-sgepii
+      id: build-esb-sgepii
+      run: |
+        cd sgi-esb-sgepii
+        mvn -B install -P ci
+        echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+    - name: Build sgi-esb-sgi
+      id: build-esb-sgi
+      run: |
+        cd sgi-esb-sgi
+        mvn -B install -P ci
+        echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+    - name: Build sgi-esb-sgo
+      id: build-esb-sgo
+      run: |
+        cd sgi-esb-sgo
+        mvn -B install -P ci
+        echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+    - name: Build sgi-esb-sgp
+      id: build-esb-sgp
+      run: |
+        cd sgi-esb-sgp
+        mvn -B install -P ci
+        echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: docker-metadata
+      uses: docker/metadata-action@v5
+      with:
+        images: herculesproject/esb-wso2-mi
+        labels: |
+          sgi-esb-common.version=${{ steps.build-esb-common.outputs.VERSION }}
+          sgi-esb-sgdoc.version=${{ steps.build-esb-sgdoc.outputs.VERSION }}
+          sgi-esb-sge.version=${{ steps.build-esb-sge.outputs.VERSION }}
+          sgi-esb-sgemp.version=${{ steps.build-esb-sgemp.outputs.VERSION }}
+          sgi-esb-sgepii.version=${{ steps.build-esb-sgepii.outputs.VERSION }}
+          sgi-esb-sgi.version=${{ steps.build-esb-sgi.outputs.VERSION }}
+          sgi-esb-sgo.version=${{ steps.build-esb-sgo.outputs.VERSION }}
+          sgi-esb-sgp.version=${{ steps.build-esb-sgp.outputs.VERSION }}
+          org.opencontainers.image.title=esb-wso2-mi
+        tags: |
+          type=semver,pattern={{version}},value=${{ env.ESB_VERSION }}
+          type=sha
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: "./sgi-esb"
+        push: true
+        tags: ${{ steps.docker-metadata.outputs.tags }}
+        labels: ${{ steps.docker-metadata.outputs.labels }}
+        build-args: |
+          ESB_COMMON_VERSION=${{ steps.build-esb-common.outputs.VERSION }}
+          ESB_SGDOC_VERSION=${{ steps.build-esb-sgdoc.outputs.VERSION }}
+          ESB_SGE_VERSION=${{ steps.build-esb-sge.outputs.VERSION }}
+          ESB_SGEMP_VERSION=${{ steps.build-esb-sgemp.outputs.VERSION }}
+          ESB_SGEPII_VERSION=${{ steps.build-esb-sgepii.outputs.VERSION }}
+          ESB_SGI_VERSION=${{ steps.build-esb-sgi.outputs.VERSION }}
+          ESB_SGO_VERSION=${{ steps.build-esb-sgo.outputs.VERSION }}
+          ESB_SGP_VERSION=${{ steps.build-esb-sgp.outputs.VERSION }}
+
