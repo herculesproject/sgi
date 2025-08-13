@@ -16,16 +16,16 @@
       "dom"
     ],
     "paths": {
-      "@sgi/framework": [
+      "@herculesproject/framework": [
         "projects/sgi/framework/public-api.ts"
       ],
-      "@sgi/framework/auth": [
+      "@herculesproject/framework/auth": [
         "projects/sgi/framework/auth/public-api.ts"
       ],
-      "@sgi/framework/core": [
+      "@herculesproject/framework/core": [
         "projects/sgi/framework/core/public-api.ts"
       ],
-      "@sgi/framework/http": [
+      "@herculesproject/framework/http": [
         "projects/sgi/framework/http/public-api.ts"
       ]
     }

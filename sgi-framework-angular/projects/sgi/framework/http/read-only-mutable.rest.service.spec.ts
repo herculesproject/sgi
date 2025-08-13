@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { SgiReadOnlyMutableRestService } from './read-only-mutable.rest.service';
 
 const fakeEndpoint = 'http://localhost:8080/fake';

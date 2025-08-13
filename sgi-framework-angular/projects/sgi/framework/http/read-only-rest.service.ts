@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { SgiNoConversionConverter } from '@sgi/framework/core';
+import { SgiNoConversionConverter } from '@herculesproject/framework/core';
 import { SgiReadOnlyMutableRestService } from './read-only-mutable.rest.service';
 
 /**
