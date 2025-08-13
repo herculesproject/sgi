@@ -2,6 +2,11 @@
   "name": "@herculesproject/framework",
   "version": "0.2.0-SNAPSHOT",
   "license":"GPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/herculesproject/sgi.git",
+    "directory": "sgi-framework-angular/projects/sgi/framework"
+  },
   "peerDependencies": {
     "@angular/common": "~11.1.0",
     "@angular/core": "~11.1.0",
