@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { SgiConverter } from '@sgi/framework/core';
+import { SgiConverter } from '@herculesproject/framework/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SgiRestFilter } from './filter';

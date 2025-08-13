@@ -1,5 +1,5 @@
 {
-  "name": "@sgi/framework",
+  "name": "@herculesproject/framework",
   "version": "0.2.0-SNAPSHOT",
   "peerDependencies": {
     "@angular/common": "~11.1.0",

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "@sgi/framework": {
+    "@herculesproject/framework": {
       "projectType": "library",
       "root": "projects/sgi/framework",
       "sourceRoot": "projects/sgi/framework",
@@ -44,5 +44,5 @@
       }
     }
   },
-  "defaultProject": "@sgi/framework"
+  "defaultProject": "@herculesproject/framework"
 }

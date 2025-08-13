@@ -1,4 +1,4 @@
-import { SgiConverter } from '@sgi/framework/core';
+import { SgiConverter } from '@herculesproject/framework/core';
 import { Observable } from 'rxjs';
 import { SgiRestBaseService } from '../rest-base.service';
 import { SgiRestFindOptions, SgiRestListResult } from '../types';

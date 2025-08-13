@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { SgiConverter } from '@sgi/framework/core';
+import { SgiConverter } from '@herculesproject/framework/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SgiReadOnlyMutableRestService } from './read-only-mutable.rest.service';

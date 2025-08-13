@@ -1,4 +1,4 @@
-import { SgiConverter } from '@sgi/framework/core';
+import { SgiConverter } from '@herculesproject/framework/core';
 
 /**
  * Mutable type constructor for Mixings
