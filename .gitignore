@@ -29,6 +29,7 @@ coverage/
 /nbdist/
 /.nb-gradle/
 build/
+!/sgi-webapp/ckeditor5/build/
 
 ### VS Code ###
 #.vscode
