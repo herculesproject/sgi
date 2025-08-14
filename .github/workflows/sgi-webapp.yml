@@ -1,0 +1,92 @@
+name: SGI Webapp
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "sgi-webapp/**"
+      - ".github/workflows/sgi-webapp.yml"
+    branches:
+      - ci
+
+defaults:
+  run:
+    working-directory: sgi-webapp
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Use Node.js 14
+        uses: actions/setup-node@v4
+        with:
+          node-version: "14.x"
+
+      - name: Install chrome
+        uses: browser-actions/setup-chrome@v2
+
+      - name: Install dependencias
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test-ci -- --code-coverage
+
+      - name: SonarQube analysis
+        uses: SonarSource/sonarqube-scan-action@v5.2.0
+        with:
+          projectBaseDir: sgi-webapp
+          args: >
+            -Dsonar.organization=herculesproject
+            -Dsonar.projectKey=herculesproject_sgi_webapp
+            -Dsonar.sources=./
+            -Dsonar.tests=./
+            -Dsonar.inclusions=**/*.ts
+            -Dsonar.exclusions=**/*.spec.ts,test.ts
+            -Dsonar.test.inclusions=**/*.spec.ts,test.ts
+            -Dsonar.javascript.lcov.reportPaths=./coverage/sgi-webapp/lcov.info
+            -Dsonar.branch.name=main
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Build for publish
+        run: npm run build -- --prod
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+      - name: Prepare docker build
+        id: prepare-build
+        run: |
+          echo "VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')" >> $GITHUB_OUTPUT
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: docker-metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: herculesproject/sgi-webapp
+          labels: |
+            org.opencontainers.image.title=sgi-webapp
+          tags: |
+            type=semver,pattern={{version}},value=${{ steps.prepare-build.outputs.VERSION }}
+            type=sha
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: "./sgi-webapp"
+          push: true
+          tags: ${{ steps.docker-metadata.outputs.tags }}
+          labels: ${{ steps.docker-metadata.outputs.labels }}
