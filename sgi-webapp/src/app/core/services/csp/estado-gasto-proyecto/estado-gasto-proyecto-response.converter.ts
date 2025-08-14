@@ -2,7 +2,7 @@ import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IEstadoGastoProyecto } from '@core/models/csp/estado-gasto-proyecto';
 import { IEstadoGastoProyectoResponse } from '@core/services/csp/estado-gasto-proyecto/estado-gasto-proyecto-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class EstadoGastoProyectoResponseConverter extends SgiBaseConverter<IEstadoGastoProyectoResponse, IEstadoGastoProyecto> {
 

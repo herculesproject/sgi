@@ -1,9 +1,9 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ILineaInvestigacion } from '@core/models/csp/linea-investigacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ILineaInvestigacionResponse } from './linea-investigacion-response';
 
-class LineaInvestigacionResponseConverter extends SgiBaseConverter<ILineaInvestigacionResponse, ILineaInvestigacion>{
+class LineaInvestigacionResponseConverter extends SgiBaseConverter<ILineaInvestigacionResponse, ILineaInvestigacion> {
   toTarget(value: ILineaInvestigacionResponse): ILineaInvestigacion {
     if (!value) {
       return value as unknown as ILineaInvestigacion;

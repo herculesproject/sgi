@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoConceptoGastoCodigoEc } from '@core/models/csp/proyecto-concepto-gasto-codigo-ec';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProyectoConceptoGastoCodigoEcResponse } from './proyecto-concepto-gasto-codigo-ec/proyecto-concepto-gasto-codigo-ec-response';

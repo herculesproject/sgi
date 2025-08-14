@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoPersonaAutorizada } from '@core/models/csp/grupo-persona-autorizada';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GRUPO_PERSONA_AUTORIZADA_REQUEST_CONVERTER } from './grupo-persona-autorizada-request.converter';

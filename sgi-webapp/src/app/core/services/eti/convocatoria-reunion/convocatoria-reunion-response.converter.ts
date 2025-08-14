@@ -3,7 +3,7 @@ import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { COMITE_RESPONSE_CONVERTER } from '@core/services/eti/comite/comite-response.converter';
 import { IConvocatoriaReunionResponse } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaReunionResponseConverter extends SgiBaseConverter<IConvocatoriaReunionResponse, IConvocatoriaReunion> {
   toTarget(value: IConvocatoriaReunionResponse): IConvocatoriaReunion {

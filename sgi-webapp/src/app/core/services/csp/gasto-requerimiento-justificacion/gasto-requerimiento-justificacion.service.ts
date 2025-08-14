@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGastoRequerimientoJustificacion } from '@core/models/csp/gasto-requerimiento-justificacion';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { IGastoRequerimientoJustificacionRequest } from './gasto-requerimiento-justificacion-request';

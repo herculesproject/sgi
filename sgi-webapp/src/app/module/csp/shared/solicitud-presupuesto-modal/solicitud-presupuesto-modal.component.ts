@@ -9,7 +9,7 @@ import { SolicitudProyectoEntidadService } from '@core/services/csp/solicitud-pr
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { LanguageService } from '@core/services/language.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ISolicitudProyectoPresupuetoModalData, SolicitudProyectoPresupuestoListadoExportModalComponent } from '../../solicitud/modals/solicitud-proyecto-presupuesto-listado-export-modal/solicitud-proyecto-presupuesto-listado-export-modal.component';

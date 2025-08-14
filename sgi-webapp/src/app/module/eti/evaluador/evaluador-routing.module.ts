@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { EvaluadorCrearComponent } from './evaluador-crear/evaluador-crear.component';
 import { EvaluadorEditarComponent } from './evaluador-editar/evaluador-editar.component';
 import { EvaluadorConflictosInteresListadoComponent } from './evaluador-formulario/evaluador-conflictos-interes/evaluador-conflictos-interes-listado/evaluador-conflictos-interes-listado.component';

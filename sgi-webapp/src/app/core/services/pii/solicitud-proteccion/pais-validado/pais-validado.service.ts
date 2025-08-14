@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPaisValidado } from '@core/models/pii/pais-validado';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IPaisValidadoRequest } from './pais-validado-request';
 import { PAIS_VALIDADO_REQUEST_CONVERTER } from './pais-validado-request.converter';

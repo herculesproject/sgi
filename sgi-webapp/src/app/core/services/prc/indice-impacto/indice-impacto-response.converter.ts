@@ -1,9 +1,9 @@
 import { IIndiceImpacto } from '@core/models/prc/indice-impacto';
 import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IIndiceImpactoResponse } from './indice-impacto-response';
 
-class IndiceImpactoResponseConverter extends SgiBaseConverter<IIndiceImpactoResponse, IIndiceImpacto>{
+class IndiceImpactoResponseConverter extends SgiBaseConverter<IIndiceImpactoResponse, IIndiceImpacto> {
   toTarget(value: IIndiceImpactoResponse): IIndiceImpacto {
     if (!value) {
       return value as unknown as IIndiceImpacto;

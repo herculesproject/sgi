@@ -1,5 +1,5 @@
 import { Language } from '@core/i18n/language';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { I18nFieldValue } from './i18n-field';
 import { I18nFieldValueRequest } from './i18n-field-request';
 import { I18nFieldValueResponse } from './i18n-field-response';

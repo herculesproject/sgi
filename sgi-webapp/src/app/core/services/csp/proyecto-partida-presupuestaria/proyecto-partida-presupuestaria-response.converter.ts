@@ -1,8 +1,8 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { IPartidaPresupuestariaSge } from '@core/models/sge/partida-presupuestaria-sge';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoPartidaPresupuestariaResponse } from './proyecto-partida-presupuestaria-response';
-import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class ProyectoPartidaPresupuestariaResponseConverter
   extends SgiBaseConverter<IProyectoPartidaPresupuestariaResponse, IProyectoPartida> {

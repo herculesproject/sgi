@@ -4,7 +4,7 @@ import { PROYECTO_IVA_CONVERTER } from '@core/converters/csp/proyecto-iva.conver
 import { IProyectoIVABackend } from '@core/models/csp/backend/proyecto-iva-backend';
 import { IProyectoIVA } from '@core/models/csp/proyecto-iva';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 
 @Injectable({

@@ -13,9 +13,9 @@ import { ChecklistService } from '@core/services/eti/checklist/checklist.service
 import { FormlyService } from '@core/services/eti/formly/formly.service';
 import { LanguageService } from '@core/services/language.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PETICION_EVALUACION_ROUTE, PETICION_EVALUACION_ROUTE_NAMES } from '../../peticion-evaluacion/peticion-evaluacion-route-names';

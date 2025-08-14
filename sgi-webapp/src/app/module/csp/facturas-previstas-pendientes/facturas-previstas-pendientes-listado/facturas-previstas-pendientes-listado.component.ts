@@ -24,8 +24,8 @@ import { IReportConfig, IReportOptions } from '@core/services/rep/abstract-table
 import { FacturaPrevistaPendienteService } from '@core/services/sge/factura-prevista-pendiente/factura-prevista-pendiente.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, forkJoin, from, Observable, of, Subscription } from 'rxjs';

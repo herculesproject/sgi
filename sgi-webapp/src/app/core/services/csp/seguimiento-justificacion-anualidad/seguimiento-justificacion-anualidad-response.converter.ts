@@ -1,11 +1,11 @@
 import { IProyectoPeriodoJustificacionSeguimiento } from '@core/models/csp/proyecto-periodo-justificacion-seguimiento';
 import { ISeguimientoJustificacionAnualidad } from '@core/models/csp/seguimiento-justificacion-anualidad';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISeguimientoJustificacionAnualidadResponse } from './seguimiento-justificacion-anualidad-response';
 
 class SeguimientoJustificacionAnualidadResponseConverter
-  extends SgiBaseConverter<ISeguimientoJustificacionAnualidadResponse, ISeguimientoJustificacionAnualidad>{
+  extends SgiBaseConverter<ISeguimientoJustificacionAnualidadResponse, ISeguimientoJustificacionAnualidad> {
   toTarget(value: ISeguimientoJustificacionAnualidadResponse): ISeguimientoJustificacionAnualidad {
     if (!value) {
       return value as unknown as ISeguimientoJustificacionAnualidad;

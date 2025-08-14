@@ -1,8 +1,8 @@
 import { IInforme } from '@core/models/eti/informe';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
+import { INFORME_DOCUMENTO_RESPONSE_CONVERTER } from './informe-documento-response.converter';
 import { IInformeResponse } from './informe-response';
 import { MEMORIA_RESPONSE_CONVERTER } from './memoria-response.converter';
-import { INFORME_DOCUMENTO_RESPONSE_CONVERTER } from './informe-documento-response.converter';
 
 class InformeResponseConverter extends SgiBaseConverter<IInformeResponse, IInforme> {
   toTarget(value: IInformeResponse): IInforme {

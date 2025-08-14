@@ -4,7 +4,7 @@ import { CODIGO_ECONOMICO_GASTO_CONVERTER } from '@core/converters/sge/codigo-ec
 import { ICodigoEconomicoGastoBackend } from '@core/models/sge/backend/codigo-economico-gasto-backend';
 import { ICodigoEconomicoGasto } from '@core/models/sge/codigo-economico-gasto';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 
 // tslint:disable-next-line: variable-name
 const _CodigoEconomicoGastoMixinBase:

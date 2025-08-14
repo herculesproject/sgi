@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoFase } from '@core/models/csp/proyecto-fase';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IProyectoFaseRequest } from './proyecto-fase/proyecto-fase-request';
 import { PROYECTO_FASE_REQUEST_CONVERTER } from './proyecto-fase/proyecto-fase-request.converter';

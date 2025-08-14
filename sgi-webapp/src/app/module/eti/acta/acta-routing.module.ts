@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
 import { ActaEditarComponent } from './acta-editar/acta-editar.component';
 import {

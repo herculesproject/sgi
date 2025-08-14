@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IBloque } from '@core/models/eti/bloque';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { FORMULARIO_RESPONSE_CONVERTER } from '../formulario/formulario-response.converter';
 import { IBloqueResponse } from './bloque-response';
 

@@ -11,9 +11,9 @@ import { EmpresaExplotacionResultadosService } from '@core/services/eer/empresa-
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';

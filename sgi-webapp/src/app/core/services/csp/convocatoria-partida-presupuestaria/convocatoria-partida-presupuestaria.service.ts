@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConvocatoriaPartidaPresupuestaria } from '@core/models/csp/convocatoria-partida-presupuestaria';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, SgiRestBaseService, UpdateCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, SgiRestBaseService, UpdateCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IConvocatoriaPartidaPresupuestariaRequest } from './convocatoria-partida-presupuestaria-request';

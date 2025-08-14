@@ -1,7 +1,7 @@
 import { IInvencion } from '@core/models/pii/invencion';
 import { IInvencionInventor } from '@core/models/pii/invencion-inventor';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IInvencionInventorRequest } from './invencion-inventor-request';
 
 class InvencionInventorRequestConverter extends SgiBaseConverter<IInvencionInventorRequest, IInvencionInventor> {

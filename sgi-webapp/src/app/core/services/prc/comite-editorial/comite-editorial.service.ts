@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IComiteEditorial } from '@core/models/prc/comite-editorial';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IComiteEditorialResponse } from './comite-editorial-response';
 import { COMITE_EDITORIAL_RESPONSE_CONVERTER } from './comite-editorial-response.converter';

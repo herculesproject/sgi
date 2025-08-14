@@ -4,12 +4,12 @@ import { CODIGO_ECONOMICO_INGRESO_CONVERTER } from '@core/converters/sge/codigo-
 import { ICodigoEconomicoIngresoBackend } from '@core/models/sge/backend/codigo-economico-ingreso-backend';
 import { ICodigoEconomicoIngreso } from '@core/models/sge/codigo-economico-ingreso';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CodigoEconomicoIngresoService extends SgiMutableRestService<string, ICodigoEconomicoIngresoBackend, ICodigoEconomicoIngreso>{
+export class CodigoEconomicoIngresoService extends SgiMutableRestService<string, ICodigoEconomicoIngresoBackend, ICodigoEconomicoIngreso> {
   private static readonly MAPPING = '/codigos-economicos-ingresos';
 
   constructor(protected http: HttpClient) {

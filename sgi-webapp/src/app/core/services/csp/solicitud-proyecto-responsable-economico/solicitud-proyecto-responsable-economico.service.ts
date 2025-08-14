@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ISolicitudProyectoResponsableEconomico } from '@core/models/csp/solicitud-proyecto-responsable-economico';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SOLICITUD_PROYECTO_RESPONSABLE_ECONOMICO_REQUEST_CONVERTER } from './solicitud-proyecto-responsable-economico-request.converter';

@@ -2,7 +2,7 @@ import { IChecklist } from '@core/models/eti/checklist';
 import { IFormly } from '@core/models/eti/formly';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IChecklistResponse } from './checklist-response';
 
 class ChecklistResponseConverter extends SgiBaseConverter<IChecklistResponse, IChecklist> {

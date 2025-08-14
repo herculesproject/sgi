@@ -3,7 +3,7 @@ import { IGrupoEquipo } from '@core/models/csp/grupo-equipo';
 import { IRolProyecto } from '@core/models/csp/rol-proyecto';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoEquipoUpdateRequest } from './grupo-equipo-update-request';
 
 class GrupoEquipoUpdateRequestConverter

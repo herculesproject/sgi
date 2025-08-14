@@ -1,6 +1,6 @@
 import { IRespuesta } from '@core/models/eti/respuesta';
 import { IRespuestaResponse } from '@core/services/eti/respuesta/respuesta-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from '../tipo-documento/tipo-documento-response.converter';
 
 

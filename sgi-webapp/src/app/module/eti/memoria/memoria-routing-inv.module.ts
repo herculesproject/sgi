@@ -7,7 +7,7 @@ import { MSG_PARAMS } from '@core/i18n';
 import { Module } from '@core/module';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { MemoriaCrearComponent } from './memoria-crear/memoria-crear.component';
 import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaEditarComponent } from './memoria-editar/memoria-editar.component';

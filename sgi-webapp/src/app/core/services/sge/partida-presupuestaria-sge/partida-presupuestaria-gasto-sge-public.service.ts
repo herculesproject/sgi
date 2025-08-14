@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPartidaPresupuestariaSge } from '@core/models/sge/partida-presupuestaria-sge';
 import { environment } from '@env';
-import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@sgi/framework/http';
+import { FindByIdCtor, SgiRestBaseService, mixinFindById } from '@herculesproject/framework/http';
 import { IPartidaPresupuestariaSgeResponse } from './partida-presupuestaria-sge-response';
 import { PARTIDA_PRESUPUESTARIA_SGE_RESPONSE_CONVERTER } from './partida-presupuestaria-sge-response.converter';
 

@@ -3,7 +3,7 @@ import { IGrupo } from '@core/models/csp/grupo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoRequest } from './grupo-request';
 
 class GrupoRequestConverter

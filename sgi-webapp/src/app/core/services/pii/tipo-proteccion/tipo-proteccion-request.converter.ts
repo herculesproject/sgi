@@ -1,7 +1,7 @@
-import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { ITipoProteccionRequest } from './tipo-proteccion-request';
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
+import { ITipoProteccion } from '@core/models/pii/tipo-proteccion';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
+import { ITipoProteccionRequest } from './tipo-proteccion-request';
 
 class TipoProteccionRequestConverter extends SgiBaseConverter<ITipoProteccionRequest, ITipoProteccion> {
   toTarget(value: ITipoProteccionRequest): ITipoProteccion {

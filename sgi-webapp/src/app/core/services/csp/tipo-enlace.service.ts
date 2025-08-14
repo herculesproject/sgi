@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ITipoEnlaceResponse } from './tipo-enlace/tipo-enlace-response';
 import { TIPO_ENLACE_RESPONSE_CONVERTER } from './tipo-enlace/tipo-enlace-response.converter';

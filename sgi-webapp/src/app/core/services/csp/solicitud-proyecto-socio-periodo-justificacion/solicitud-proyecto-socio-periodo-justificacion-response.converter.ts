@@ -1,8 +1,8 @@
-import { ISolicitudProyectoSocioPeriodoJustificacionResponse } from '@core/services/csp/solicitud-proyecto-socio-periodo-justificacion/solicitud-proyecto-socio-periodo-justificacion-response';
-import { ISolicitudProyectoSocioPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-socio-periodo-justificacion';
-import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
+import { ISolicitudProyectoSocioPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-socio-periodo-justificacion';
+import { ISolicitudProyectoSocioPeriodoJustificacionResponse } from '@core/services/csp/solicitud-proyecto-socio-periodo-justificacion/solicitud-proyecto-socio-periodo-justificacion-response';
+import { LuxonUtils } from '@core/utils/luxon-utils';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class SolicitudProyectoSocioPeriodoJustificacionResponseConverter extends
   SgiBaseConverter<ISolicitudProyectoSocioPeriodoJustificacionResponse, ISolicitudProyectoSocioPeriodoJustificacion> {

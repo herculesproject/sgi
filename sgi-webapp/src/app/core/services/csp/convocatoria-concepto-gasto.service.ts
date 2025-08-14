@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec-response.converter';
-import { IConvocatoriaConceptoGastoCodigoEcResponse } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec-response';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
+import { IConvocatoriaConceptoGastoCodigoEcResponse } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec-response';
+import { CONVOCATORIA_CONCEPTO_GASTO_CODIGO_EC_RESPONSE_CONVERTER } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec-response.converter';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IConvocatoriaConceptoGastoResponse } from './convocatoria-concepto-gasto/convocatoria-concepto-gasto-response';

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
 import { environment } from '@env';
-import { SgiRestBaseService } from '@sgi/framework/http';
+import { SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ISolicitudModalidadResponse } from './solicitud-modalidad/solicitud-modalidad-response';

@@ -2,7 +2,7 @@ import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEstadoAutorizacionResponse } from './estado-autorizacion-response';
 
 class EstadoAutorizacionResponseConverter

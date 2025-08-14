@@ -3,7 +3,7 @@ import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IAutorizacionRequest } from './autorizacion-request';
 
 class AutorizacionRequestConverter

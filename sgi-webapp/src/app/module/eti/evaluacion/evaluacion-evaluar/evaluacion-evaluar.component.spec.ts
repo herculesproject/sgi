@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { EvaluacionEvaluarComponent } from './evaluacion-evaluar.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import TestUtils from '@core/utils/test-utils';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import TestUtils from '@core/utils/test-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { MaterialDesignModule } from '@material/material-design.module';
 import { SharedModule } from '@shared/shared.module';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { EvaluacionEvaluarComponent } from './evaluacion-evaluar.component';
 
 describe('EvaluacionEvaluarComponent', () => {
   let component: EvaluacionEvaluarComponent;

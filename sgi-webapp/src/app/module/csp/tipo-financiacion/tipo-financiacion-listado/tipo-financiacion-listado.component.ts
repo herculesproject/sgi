@@ -11,9 +11,9 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

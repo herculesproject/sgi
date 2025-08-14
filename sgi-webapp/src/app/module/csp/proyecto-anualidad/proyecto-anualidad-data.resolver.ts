@@ -6,7 +6,7 @@ import { ConfigService } from '@core/services/csp/configuracion/config.service';
 import { ProyectoAnualidadService } from '@core/services/csp/proyecto-anualidad/proyecto-anualidad.service';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

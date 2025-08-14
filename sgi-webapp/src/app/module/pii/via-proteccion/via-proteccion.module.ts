@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ViaProteccionListadoComponent } from './via-proteccion-listado/via-proteccion-listado.component';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SgiAuthModule } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { ViaProteccionRoutingModule } from './via-proteccion-routing.module';
+import { ViaProteccionListadoComponent } from './via-proteccion-listado/via-proteccion-listado.component';
 import { ViaProteccionModalComponent } from './via-proteccion-modal/via-proteccion-modal.component';
+import { ViaProteccionRoutingModule } from './via-proteccion-routing.module';
 
 @NgModule({
   declarations: [ViaProteccionListadoComponent, ViaProteccionModalComponent],

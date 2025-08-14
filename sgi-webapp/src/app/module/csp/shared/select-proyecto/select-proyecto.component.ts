@@ -8,7 +8,7 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IPersona } from '@core/models/sgp/persona';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SearchProyectoModalComponent, SearchProyectoModalData } from './dialog/search-proyecto.component';

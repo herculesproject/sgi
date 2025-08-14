@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IAutor } from '@core/models/prc/autor';
 import { IAutorGrupo } from '@core/models/prc/autor-grupo';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IAutorGrupoResponse } from './autor-grupo/autor-grupo-response';
 import { AUTOR_GRUPO_RESPONSE_CONVERTER } from './autor-grupo/autor-grupo-response.converter';

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SgiRoutes } from '@core/route';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { ViaProteccionListadoComponent } from './via-proteccion-listado/via-proteccion-listado.component';
-import { SgiAuthGuard } from '@sgi/framework/auth';
-import { RouterModule } from '@angular/router';
 
 const MSG_LISTADO_TITLE = marker('pii.via-proteccion');
 

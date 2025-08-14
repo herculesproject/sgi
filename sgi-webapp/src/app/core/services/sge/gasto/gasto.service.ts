@@ -6,7 +6,7 @@ import { IColumna } from '@core/models/sge/columna';
 import { IDatoEconomico } from '@core/models/sge/dato-economico';
 import { IDatoEconomicoDetalle } from '@core/models/sge/dato-economico-detalle';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGastoDetalleResponse } from './gasto-detalle-response';

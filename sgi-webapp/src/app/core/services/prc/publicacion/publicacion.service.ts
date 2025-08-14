@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPublicacion } from '@core/models/prc/publicacion';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IPublicacionResponse } from './publicacion-response';
 import { PUBLICACION_RESPONSE_CONVERTER } from './publicacion-response.converter';

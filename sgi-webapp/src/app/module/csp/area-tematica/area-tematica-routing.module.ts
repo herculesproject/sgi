@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { AreaTematicaCrearComponent } from './area-tematica-crear/area-tematica-crear.component';
 import { AreaTematicaEditarComponent } from './area-tematica-editar/area-tematica-editar.component';
 import { AreaTematicaArbolComponent } from './area-tematica-formulario/area-tematica-arbol/area-tematica-arbol.component';

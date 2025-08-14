@@ -1,9 +1,9 @@
 import { ICampoProduccionCientifica } from '@core/models/prc/campo-produccion-cientifica';
 import { IValorCampo } from '@core/models/prc/valor-campo';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IValorCampoResponse } from './valor-campo-response';
 
-class ValorCampoResponseConverter extends SgiBaseConverter<IValorCampoResponse, IValorCampo>{
+class ValorCampoResponseConverter extends SgiBaseConverter<IValorCampoResponse, IValorCampo> {
   toTarget(value: IValorCampoResponse): IValorCampo {
     if (!value) {
       return value as unknown as IValorCampo;

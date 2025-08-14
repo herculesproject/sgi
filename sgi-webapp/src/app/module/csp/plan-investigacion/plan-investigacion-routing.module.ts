@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { PlanInvestigacionCrearComponent } from './plan-investigacion-crear/plan-investigacion-crear.component';
 import { PlanInvestigacionEditarComponent } from './plan-investigacion-editar/plan-investigacion-editar.component';
 import { PlanInvestigacionDatosGeneralesComponent } from './plan-investigacion-formulario/plan-investigacion-datos-generales/plan-investigacion-datos-generales.component';

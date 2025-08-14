@@ -1,5 +1,5 @@
 import { Estado, ISolicitudProyectoSge } from '@core/models/sge/solicitud-proyecto-sge';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudProyectoSgeResponse } from './solicitud-proyecto-sge-response';
 
 class SolicitudProyectoSgeConverter extends SgiBaseConverter<ISolicitudProyectoSgeResponse, ISolicitudProyectoSge> {

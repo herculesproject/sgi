@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IPrograma } from '@core/models/csp/programa';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProgramaResponse, } from './programa-response';
 
 class ProgramaResponseConverter extends SgiBaseConverter<IProgramaResponse, IPrograma> {

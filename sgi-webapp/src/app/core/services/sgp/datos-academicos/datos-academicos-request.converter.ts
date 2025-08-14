@@ -1,6 +1,6 @@
 import { IDatosAcademicos } from '@core/models/sgp/datos-academicos';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IDatosAcademicosRequest } from './datos-academicos-request';
 
 class DatosAcademicosRequestConverter

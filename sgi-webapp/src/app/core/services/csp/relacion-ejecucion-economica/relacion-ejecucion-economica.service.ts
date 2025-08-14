@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IRelacionEjecucionEconomica } from '@core/models/csp/relacion-ejecucion-economica';
 import { environment } from '@env';
-import { RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IRelacionEjecucionEconomicaResponse } from './relacion-ejecucion-economica-response';

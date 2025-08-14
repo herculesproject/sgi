@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IComite, IComiteNombre } from '@core/models/eti/comite';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IComiteNombreResponse, IComiteResponse } from './comite-response';
 
 class ComiteResponseConverter extends SgiBaseConverter<IComiteResponse, IComite> {

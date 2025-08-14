@@ -4,12 +4,12 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
+import { Module } from '@core/module';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
-import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { GrupoCrearComponent } from './grupo-crear/grupo-crear.component';
-import { GrupoDataResolver, GRUPO_DATA_KEY } from './grupo-data.resolver';
+import { GRUPO_DATA_KEY, GrupoDataResolver } from './grupo-data.resolver';
 import { GrupoEditarComponent } from './grupo-editar/grupo-editar.component';
 import { GrupoDatosGeneralesComponent } from './grupo-formulario/grupo-datos-generales/grupo-datos-generales.component';
 import { GrupoEnlaceComponent } from './grupo-formulario/grupo-enlace/grupo-enlace.component';
@@ -20,7 +20,7 @@ import { GrupoPersonaAutorizadaComponent } from './grupo-formulario/grupo-person
 import { GrupoResponsableEconomicoComponent } from './grupo-formulario/grupo-responsable-economico/grupo-responsable-economico.component';
 import { GrupoListadoComponent } from './grupo-listado/grupo-listado.component';
 import { GRUPO_ROUTE_NAMES } from './grupo-route-names';
-import { Module } from '@core/module';
+import { GRUPO_ROUTE_PARAMS } from './grupo-route-params';
 
 const GRUPO_TITLE_KEY = marker('csp.grupo');
 const GRUPO_LINEA_INVESTIGACION_KEY = marker('csp.grupo-linea-investigacion');

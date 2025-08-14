@@ -1,10 +1,10 @@
 import { IInvencion } from '@core/models/pii/invencion';
 import { IReparto } from '@core/models/pii/reparto';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRepartoResponse } from './reparto-response';
 
-class RepartoResponseConverter extends SgiBaseConverter<IRepartoResponse, IReparto>{
+class RepartoResponseConverter extends SgiBaseConverter<IRepartoResponse, IReparto> {
   toTarget(value: IRepartoResponse): IReparto {
     if (!value) {
       return value as unknown as IReparto;

@@ -2,12 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoLineaClasificacion } from '@core/models/csp/grupo-linea-clasificacion';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
-import { GRUPO_LINEA_CLASIFICACION_RESPONSE_CONVERTER } from './grupo-linea-clasificacion-response.converter';
 import { IGrupoLineaClasificacionRequest } from './grupo-linea-clasificacion-request';
 import { GRUPO_LINEA_CLASIFICACION_REQUEST_CONVERTER } from './grupo-linea-clasificacion-request.converter';
 import { IGrupoLineaClasificacionResponse } from './grupo-linea-clasificacion-response';
+import { GRUPO_LINEA_CLASIFICACION_RESPONSE_CONVERTER } from './grupo-linea-clasificacion-response.converter';
 
 // tslint:disable-next-line: variable-name
 const _GrupoLineaClasificacionMixinBase:

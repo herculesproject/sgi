@@ -3,7 +3,7 @@ import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { FUENTE_FINANCIACION_RESPONSE_CONVERTER } from '@core/services/csp/fuente-financiacion/fuente-financiacion-response.converter';
 import { TIPO_FINANCIACION_RESPONSE_CONVERTER } from '@core/services/csp/tipo-financiacion/tipo-financiacion-response.converter';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaEntidadFinanciadoraConverter extends
   SgiBaseConverter<IConvocatoriaEntidadFinanciadoraBackend, IConvocatoriaEntidadFinanciadora> {

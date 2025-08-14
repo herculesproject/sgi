@@ -1,10 +1,10 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEmpresaExplotacionResultadosRequest } from './empresa-explotacion-resultados-request';
-import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class EmpresaExplotacionResultadosRequestConverter
   extends SgiBaseConverter<IEmpresaExplotacionResultadosRequest, IEmpresaExplotacionResultados> {

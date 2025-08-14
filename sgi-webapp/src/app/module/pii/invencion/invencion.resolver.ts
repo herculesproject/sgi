@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import {
-  Router,
-  ActivatedRouteSnapshot
+  ActivatedRouteSnapshot,
+  Router
 } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IInvencion } from '@core/models/pii/invencion';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { INVENCION_ROUTE_PARAMS } from './invencion-route-params';
 import { IInvencionData } from './invencion.action.service';
 

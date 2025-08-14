@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ISolicitanteExterno } from '@core/models/csp/solicitante-externo';
 import { environment } from '@env';
-import { SgiRestBaseService } from '@sgi/framework/http';
+import { SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SOLICITANTE_EXTERNO_REQUEST_CONVERTER } from './solicitante-externo-request.converter';

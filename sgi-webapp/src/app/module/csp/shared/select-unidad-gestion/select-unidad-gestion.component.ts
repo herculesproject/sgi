@@ -8,8 +8,8 @@ import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { from, Observable } from 'rxjs';
 import { filter, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 

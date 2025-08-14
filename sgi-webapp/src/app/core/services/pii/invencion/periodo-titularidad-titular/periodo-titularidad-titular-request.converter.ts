@@ -1,10 +1,10 @@
 import { IPeriodoTitularidad } from '@core/models/pii/periodo-titularidad';
 import { IPeriodoTitularidadTitular } from '@core/models/pii/periodo-titularidad-titular';
 import { IEmpresa } from '@core/models/sgemp/empresa';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IPeriodoTitularidadTitularRequest } from './periodo-titularidad-titular-request';
 
-class PeriodoTitularidadTitularRequestConverter extends SgiBaseConverter<IPeriodoTitularidadTitularRequest, IPeriodoTitularidadTitular>{
+class PeriodoTitularidadTitularRequestConverter extends SgiBaseConverter<IPeriodoTitularidadTitularRequest, IPeriodoTitularidadTitular> {
   toTarget(value: IPeriodoTitularidadTitularRequest): IPeriodoTitularidadTitular {
     if (!value) {
       return value as unknown as IPeriodoTitularidadTitular;

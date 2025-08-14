@@ -9,8 +9,8 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConceptoGastoModalComponent } from '../../concepto-gasto/concepto-gasto-modal/concepto-gasto-modal.component';

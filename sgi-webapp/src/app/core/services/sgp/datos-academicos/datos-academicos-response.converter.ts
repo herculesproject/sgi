@@ -1,10 +1,10 @@
 import { IDatosAcademicos } from '@core/models/sgp/datos-academicos';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IDatosAcademicosResponse } from './datos-academicos-response';
 
 class DatosAcademicosResponseConverter extends
-  SgiBaseConverter<IDatosAcademicosResponse, IDatosAcademicos>{
+  SgiBaseConverter<IDatosAcademicosResponse, IDatosAcademicos> {
   toTarget(value: IDatosAcademicosResponse): IDatosAcademicos {
     if (!value) {
       return value as unknown as IDatosAcademicos;

@@ -1,8 +1,8 @@
 import { IActaWithNumEvaluaciones } from '@core/models/eti/acta-with-num-evaluaciones';
-import { IActaWithNumEvaluacionesResponse } from '@core/services/eti/acta/acta-with-num-evaluaciones-response';
 import { ACTA_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/eti/acta/acta-documento-response.converter';
+import { IActaWithNumEvaluacionesResponse } from '@core/services/eti/acta/acta-with-num-evaluaciones-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ActaWithNumEvaluacionesResponseConverter extends SgiBaseConverter<IActaWithNumEvaluacionesResponse, IActaWithNumEvaluaciones> {
   toTarget(value: IActaWithNumEvaluacionesResponse): IActaWithNumEvaluaciones {

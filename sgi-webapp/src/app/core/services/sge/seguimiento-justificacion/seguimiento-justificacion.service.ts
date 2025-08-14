@@ -4,7 +4,7 @@ import { IColumna } from '@core/models/sge/columna';
 import { IGastoJustificado } from '@core/models/sge/gasto-justificado';
 import { IGastoJustificadoDetalle } from '@core/models/sge/gasto-justificado-detalle';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGastoJustificadoDetalleResponse } from './gasto-justificado-detalle-response';

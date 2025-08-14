@@ -7,8 +7,8 @@ import { SelectServiceComponent } from '@core/component/select-service/select-se
 import { TIPO_CONVOCATORIA_REUNION_MAP, TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { LanguageService } from '@core/services/language.service';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

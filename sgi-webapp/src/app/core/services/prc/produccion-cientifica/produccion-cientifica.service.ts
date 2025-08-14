@@ -11,7 +11,7 @@ import { environment } from '@env';
 import {
   FindByIdCtor, mixinFindById, SgiRestBaseService,
   SgiRestFindOptions, SgiRestListResult
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IAcreditacionResponse } from '../acreditacion/acreditacion-response';

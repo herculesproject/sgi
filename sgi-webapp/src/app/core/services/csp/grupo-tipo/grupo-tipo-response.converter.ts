@@ -1,7 +1,7 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoTipo } from '@core/models/csp/grupo-tipo';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoTipoResponse } from './grupo-tipo-response';
 
 class GrupoTipoResponseConverter

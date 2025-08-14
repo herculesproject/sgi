@@ -1,9 +1,9 @@
 import { IDatosContacto } from '@core/models/sgp/datos-contacto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IDatosContactoResponse } from './datos-contacto-response';
 
 class DatosContactoResponseConverter extends
-  SgiBaseConverter<IDatosContactoResponse, IDatosContacto>{
+  SgiBaseConverter<IDatosContactoResponse, IDatosContacto> {
   toTarget(value: IDatosContactoResponse): IDatosContacto {
     if (!value) {
       return value as unknown as IDatosContacto;

@@ -11,7 +11,7 @@ import { ConfiguracionService } from '@core/services/eti/configuracion.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
-import { SgiAuthService } from '@sgi/framework/auth/public-api';
+import { SgiAuthService } from '@herculesproject/framework/auth/public-api';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 

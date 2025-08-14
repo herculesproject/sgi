@@ -1,7 +1,7 @@
 import { IConvocatoriaEntidadGestoraBackend } from '@core/models/csp/backend/convocatoria-entidad-gestora-backend';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { IEmpresa } from '@core/models/sgemp/empresa';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaEntidadGestoraConverter extends SgiBaseConverter<IConvocatoriaEntidadGestoraBackend, IConvocatoriaEntidadGestora> {
 

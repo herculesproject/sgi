@@ -8,9 +8,9 @@ import { IResultadoInformePatentibilidad } from '@core/models/pii/resultado-info
 import { DialogService } from '@core/services/dialog.service';
 import { ResultadoInformePatentabilidadService } from '@core/services/pii/resultado-informe-patentabilidad/resultado-informe-patentabilidad.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { SgiRestFilter, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

@@ -3,7 +3,7 @@ import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { TIPO_REQUERIMIENTO_RESPONSE_CONVERTER } from '../tipo-requerimiento/tipo-requerimiento-response.converter';
 import { IRequerimientoJustificacionResponse } from './requerimiento-justificacion-response';
 

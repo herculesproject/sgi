@@ -1,7 +1,7 @@
 import { IRequisitoIPCategoriaProfesional } from '@core/models/csp/requisito-ip-categoria-profesional';
 import { ISolicitudRrhhRequisitoCategoria } from '@core/models/csp/solicitud-rrhh-requisito-categoria';
 import { IDocumento } from '@core/models/sgdoc/documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudRrhhRequisitoCategoriaResponse } from './solicitud-rrhh-requisito-categoria-response';
 
 class SolicitudRrhhRequisitoCategoriaResponseConverter

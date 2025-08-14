@@ -10,13 +10,13 @@ import { IProyectoPeriodoAmortizacion } from '@core/models/csp/proyecto-periodo-
 import { IProyectoProyectoSge } from '@core/models/csp/proyecto-proyecto-sge';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
+import { LanguageService } from '@core/services/language.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiRestListResult } from '@sgi/framework/http';
 import { BehaviorSubject, merge } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { IEntidadFinanciadora } from '../../../proyecto-formulario/proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
-import { LanguageService } from '@core/services/language.service';
 
 const MSG_ANADIR = marker('btn.add');
 const MSG_ACEPTAR = marker('btn.ok');

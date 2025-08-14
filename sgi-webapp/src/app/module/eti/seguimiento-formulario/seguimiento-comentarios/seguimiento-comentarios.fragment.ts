@@ -4,7 +4,7 @@ import { Fragment } from '@core/services/action-service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, endWith, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';

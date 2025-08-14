@@ -1,9 +1,9 @@
+import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoHitoRequest } from './proyecto-hito-request';
-import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class ProyectoHitoRequestConverter extends SgiBaseConverter<IProyectoHitoRequest, IProyectoHito> {
 

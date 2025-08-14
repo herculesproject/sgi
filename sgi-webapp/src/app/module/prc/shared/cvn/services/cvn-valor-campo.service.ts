@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ICampoProduccionCientifica } from '@core/models/prc/campo-produccion-cientifica';
 import { IValorCampo } from '@core/models/prc/valor-campo';
 import { ProduccionCientificaService } from '@core/services/prc/produccion-cientifica/produccion-cientifica.service';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

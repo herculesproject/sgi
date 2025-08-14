@@ -2,7 +2,7 @@ import { I18N_FIELD_REQUEST_CONVERTER } from "@core/i18n/i18n-field.converter";
 import { IConvocatoriaFase } from "@core/models/csp/convocatoria-fase";
 import { ITipoFase } from "@core/models/csp/tipos-configuracion";
 import { LuxonUtils } from "@core/utils/luxon-utils";
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IConvocatoriaFaseAviso } from "./convocatoria-fase-aviso";
 import { IConvocatoriaFaseAvisoRequest } from "./convocatoria-fase-aviso-request";
 import { IConvocatoriaFaseRequest } from "./convocatoria-fase-request";

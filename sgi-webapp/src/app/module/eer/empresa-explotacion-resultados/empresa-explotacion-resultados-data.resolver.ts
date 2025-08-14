@@ -5,10 +5,10 @@ import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotac
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { EmpresaExplotacionResultadosService } from '@core/services/eer/empresa-explotacion-resultados/empresa-explotacion-resultados.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, throwError } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { EMPRESA_EXPLOTACION_RESULTADOS_ROUTE_PARAMS } from './empresa-explotacion-resultados-route-params';
 import { IEmpresaExplotacionResultadosData } from './empresa-explotacion-resultados.action.service';
 

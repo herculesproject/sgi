@@ -18,12 +18,12 @@ import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/do
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, forkJoin, from, Observable, of, Subscription } from 'rxjs';
+import { forkJoin, from, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { CSP_ROUTE_NAMES } from '../../csp-route-names';
 

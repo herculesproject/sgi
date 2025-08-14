@@ -1,5 +1,5 @@
 import { IRelacionEliminada } from "@core/models/sge/relacion-eliminada";
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRelacionEliminadaRequest } from "./relacion-eliminada-request";
 
 class RelacionEliminadaRequestConverter extends SgiBaseConverter<IRelacionEliminadaRequest, IRelacionEliminada> {

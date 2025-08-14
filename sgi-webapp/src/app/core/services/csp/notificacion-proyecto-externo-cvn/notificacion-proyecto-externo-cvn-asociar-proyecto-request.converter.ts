@@ -1,6 +1,6 @@
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
 import { IProyecto } from '@core/models/csp/proyecto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { INotificacionProyectoExternoCvnAsociarProyectoRequest } from './notificacion-proyecto-externo-cvn-asociar-proyecto-request';
 import { INotificacionProyectoExternoCVNRequest } from './notificacion-proyecto-externo-cvn-request';
 

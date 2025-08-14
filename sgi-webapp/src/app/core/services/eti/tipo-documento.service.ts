@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IFormulario } from '@core/models/eti/formulario';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@sgi/framework/http/';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http/';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ITipoDocumentoResponse } from './tipo-documento/tipo-documento-response';

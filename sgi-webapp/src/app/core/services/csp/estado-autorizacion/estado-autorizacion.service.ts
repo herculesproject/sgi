@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { IEstadoAutorizacionRequest } from './estado-autorizacion-request';
 import { ESTADO_AUTORIZACION_REQUEST_CONVERTER } from './estado-autorizacion-request.converter';
 import { IEstadoAutorizacionResponse } from './estado-autorizacion-response';

@@ -1,10 +1,10 @@
 import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
 import { INivelAcademico } from '@core/models/sgp/nivel-academico';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRequisitoIPNivelAcademicoResponse } from './requisito-ip-nivel-academico-response';
 
-class RequisitoIPNivelAcademicoResponseConverter extends SgiBaseConverter<IRequisitoIPNivelAcademicoResponse, IRequisitoIPNivelAcademico>{
+class RequisitoIPNivelAcademicoResponseConverter extends SgiBaseConverter<IRequisitoIPNivelAcademicoResponse, IRequisitoIPNivelAcademico> {
   toTarget(value: IRequisitoIPNivelAcademicoResponse): IRequisitoIPNivelAcademico {
     if (!value) {
       return value as unknown as IRequisitoIPNivelAcademico;

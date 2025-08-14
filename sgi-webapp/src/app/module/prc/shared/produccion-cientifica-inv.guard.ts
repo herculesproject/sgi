@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { ProduccionCientificaService } from '@core/services/prc/produccion-cientifica/produccion-cientifica.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { Observable } from 'rxjs';
 import { PRODUCCION_CIENTIFICA_ROUTE_PARAMS } from './produccion-cientifica-route-params';
 

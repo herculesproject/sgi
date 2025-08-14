@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IGrupoEnlaceRequest } from './grupo-enlace-request';
 import { GRUPO_ENLACE_REQUEST_CONVERTER } from './grupo-enlace-request.converter';

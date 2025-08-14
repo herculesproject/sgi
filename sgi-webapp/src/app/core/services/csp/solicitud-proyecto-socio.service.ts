@@ -7,7 +7,7 @@ import { ISolicitudProyectoSocioEquipo } from '@core/models/csp/solicitud-proyec
 import { ISolicitudProyectoSocioPeriodoJustificacion } from '@core/models/csp/solicitud-proyecto-socio-periodo-justificacion';
 import { ISolicitudProyectoSocioPeriodoPago } from '@core/models/csp/solicitud-proyecto-socio-periodo-pago';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';

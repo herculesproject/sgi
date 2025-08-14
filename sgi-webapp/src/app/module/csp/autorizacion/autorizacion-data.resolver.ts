@@ -5,7 +5,7 @@ import { Module } from '@core/module';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { AutorizacionService } from '@core/services/csp/autorizacion/autorizacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

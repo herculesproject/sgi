@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IBloque } from '@core/models/eti/bloque';
 import { FormularioTipo, IFormulario } from '@core/models/eti/formulario';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IBloqueResponse } from './bloque/bloque-response';
 import { BLOQUE_RESPONSE_CONVERTER } from './bloque/bloque-response.converter';

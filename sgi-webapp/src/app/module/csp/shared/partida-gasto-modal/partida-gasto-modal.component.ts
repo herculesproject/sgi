@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -15,8 +15,8 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { LanguageService } from '@core/services/language.service';
 import { CodigoEconomicoGastoService } from '@core/services/sge/codigo-economico-gasto.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { merge, Observable, of } from 'rxjs';
 import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 

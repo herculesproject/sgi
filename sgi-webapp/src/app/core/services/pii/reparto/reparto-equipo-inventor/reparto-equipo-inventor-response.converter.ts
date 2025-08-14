@@ -2,10 +2,10 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IInvencionInventor } from '@core/models/pii/invencion-inventor';
 import { IReparto } from '@core/models/pii/reparto';
 import { IRepartoEquipoInventor } from '@core/models/pii/reparto-equipo-inventor';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRepartoEquipoInventorResponse } from './reparto-equipo-inventor-response';
 
-class RepartoEquipoInventorResponseConverter extends SgiBaseConverter<IRepartoEquipoInventorResponse, IRepartoEquipoInventor>{
+class RepartoEquipoInventorResponseConverter extends SgiBaseConverter<IRepartoEquipoInventorResponse, IRepartoEquipoInventor> {
   toTarget(value: IRepartoEquipoInventorResponse): IRepartoEquipoInventor {
     if (!value) {
       return value as unknown as IRepartoEquipoInventor;

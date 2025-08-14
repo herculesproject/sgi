@@ -2,7 +2,7 @@
 import { IEmpresaEquipoEmprendedor } from '@core/models/eer/empresa-equipo-emprendedor';
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEmpresaEquipoEmprendedorRequest } from './empresa-equipo-emprendedor-request';
 
 class EmpresaEquipoEmprendedorRequestConverter

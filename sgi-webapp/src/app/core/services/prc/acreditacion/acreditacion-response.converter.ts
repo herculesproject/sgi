@@ -1,10 +1,10 @@
 import { IAcreditacion } from '@core/models/prc/acreditacion';
 import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
 import { IDocumento } from '@core/models/sgdoc/documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IAcreditacionResponse } from './acreditacion-response';
 
-class AcreditacionResponseConverter extends SgiBaseConverter<IAcreditacionResponse, IAcreditacion>{
+class AcreditacionResponseConverter extends SgiBaseConverter<IAcreditacionResponse, IAcreditacion> {
   toTarget(value: IAcreditacionResponse): IAcreditacion {
     if (!value) {
       return value as unknown as IAcreditacion;

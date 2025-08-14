@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoPeriodoJustificacionSeguimiento } from '@core/models/csp/proyecto-periodo-justificacion-seguimiento';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { IProyectoPeriodoJustificacionSeguimientoRequest } from './proyecto-periodo-justificacion-seguimiento-request';
 import { PROYECTO_PERIODO_JUSTIFICACION_SEGUIMIENTO_REQUEST_CONVERTER } from './proyecto-periodo-justificacion-seguimiento-request.converter';
 import { IProyectoPeriodoJustificacionSeguimientoResponse } from './proyecto-periodo-justificacion-seguimiento-response';

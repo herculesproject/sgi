@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
@@ -15,8 +15,8 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { TipoProteccionService } from '@core/services/pii/tipo-proteccion/tipo-proteccion.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { merge, Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { PII_ROUTE_NAMES } from '../../../pii-route-names';

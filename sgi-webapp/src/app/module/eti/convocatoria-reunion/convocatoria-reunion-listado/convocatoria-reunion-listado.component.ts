@@ -19,8 +19,8 @@ import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reun
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
 import { Observable, Subscription, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ConvocatoriaReunionListadoExportModalComponent } from '../modals/convocatoria-reunion-listado-export-modal/convocatoria-reunion-listado-export-modal.component';

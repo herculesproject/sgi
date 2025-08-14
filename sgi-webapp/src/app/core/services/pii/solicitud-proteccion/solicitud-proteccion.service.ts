@@ -13,7 +13,7 @@ import {
   mixinFindById,
   mixinUpdate,
   SgiRestBaseService, SgiRestListResult, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IPaisValidadoResponse } from './pais-validado/pais-validado-response';

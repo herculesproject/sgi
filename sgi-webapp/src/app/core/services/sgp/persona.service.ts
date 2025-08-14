@@ -4,10 +4,10 @@ import { PERSONA_CONVERTER } from '@core/converters/sgp/persona.converter';
 import { IPersonaBackend } from '@core/models/sgp/backend/persona-backend';
 import { IPersona } from '@core/models/sgp/persona';
 import { environment } from '@env';
-import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
   RSQLSgiRestFilter, SgiMutableRestService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, reduce, switchMap } from 'rxjs/operators';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';

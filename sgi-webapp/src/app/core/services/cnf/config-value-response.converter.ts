@@ -1,5 +1,5 @@
 import { IConfigValue } from '@core/models/cnf/config-value';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IConfigValueResponse } from './config-value-response';
 
 class ConfigValueResponseConverter extends SgiBaseConverter<IConfigValueResponse, IConfigValue> {

@@ -5,14 +5,14 @@ import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate,
   mixinFindAll, mixinFindById, SgiRestBaseService
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IGrupoEquipoUpdateRequest } from './grupo-equipo-update-request';
+import { GRUPO_EQUIPO_CREATE_REQUEST_CONVERTER } from './grupo-equipo-create-request.converter';
 import { IGrupoEquipoResponse } from './grupo-equipo-response';
 import { GRUPO_EQUIPO_RESPONSE_CONVERTER } from './grupo-equipo-response.converter';
+import { IGrupoEquipoUpdateRequest } from './grupo-equipo-update-request';
 import { GRUPO_EQUIPO_UPDATE_REQUEST_CONVERTER } from './grupo-equipo-update-request.converter';
-import { GRUPO_EQUIPO_CREATE_REQUEST_CONVERTER } from './grupo-equipo-create-request.converter';
 
 // tslint:disable-next-line: variable-name
 const _GrupoEquipoMixinBase:

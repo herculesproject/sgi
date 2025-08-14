@@ -25,9 +25,9 @@ import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.serv
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { SgiAuthService } from '@herculesproject/framework/auth/';
 import { FormlyConfig, FormlyFormBuilder } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth/';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable, of, throwError } from 'rxjs';
 import { concatMap, filter, map, mergeMap, switchMap, take, takeLast, tap } from 'rxjs/operators';

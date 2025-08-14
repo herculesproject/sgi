@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Module } from '@core/module';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { Router } from '@angular/router';
+import { Module } from '@core/module';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 
 @Component({
   selector: 'sgi-home',

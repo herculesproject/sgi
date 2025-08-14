@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoLineaEquipoInstrumental } from '@core/models/csp/grupo-linea-equipo-instrumental';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GRUPO_LINEA_EQUIPO_INSTRUMENTAL_REQUEST_CONVERTER } from './grupo-linea-equipo-instrumental-request.converter';

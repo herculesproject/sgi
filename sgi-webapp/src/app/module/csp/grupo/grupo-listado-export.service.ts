@@ -15,7 +15,7 @@ import { ISgiRowReport } from '@core/models/rep/sgi-row.report';
 import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { concat, from, Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';

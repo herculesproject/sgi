@@ -7,7 +7,7 @@ import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.serv
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeAll, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';

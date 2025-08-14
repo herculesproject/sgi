@@ -1,7 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IActa } from '@core/models/eti/acta';
 import { IActaResponse } from '@core/services/eti/acta/acta-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from '../convocatoria-reunion/convocatoria-reunion-response.converter';
 
 class ActaResponseConverter extends SgiBaseConverter<IActaResponse, IActa> {

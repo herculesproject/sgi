@@ -14,8 +14,8 @@ import { ConvocatoriaBaremacionService } from '@core/services/prc/convocatoria-b
 import { PrcReportService } from '@core/services/prc/report/prc-report.service';
 import { triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
+import { IAuthStatus, SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
-import { IAuthStatus, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';

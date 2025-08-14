@@ -15,7 +15,7 @@ import { RelacionEjecucionEconomicaService } from '@core/services/csp/relacion-e
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { concat, EMPTY, from, Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';

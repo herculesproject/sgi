@@ -6,7 +6,7 @@ import {
   CreateCtor, FindAllCtor, FindByIdCtor,
   mixinCreate, mixinFindAll, mixinFindById,
   mixinUpdate, SgiRestBaseService, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { IRepartoGastoRequest } from './reparto-gasto-request';
 import { REPARTO_GASTO_REQUEST_CONVERTER } from './reparto-gasto-request.converter';
 import { IRepartoGastoResponse } from './reparto-gasto-response';

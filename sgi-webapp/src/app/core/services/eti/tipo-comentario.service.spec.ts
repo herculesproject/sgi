@@ -2,8 +2,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SgiAuthModule } from '@herculesproject/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SgiAuthModule } from '@sgi/framework/auth';
 
 import { TipoComentarioService } from './tipo-comentario.service';
 

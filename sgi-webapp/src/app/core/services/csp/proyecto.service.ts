@@ -63,7 +63,6 @@ import { PROYECTO_ENTIDAD_CONVOCANTE_RESPONSE_CONVERTER } from '@core/services/c
 import { IProyectoResponse } from '@core/services/csp/proyecto/proyecto-response';
 import { PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto/proyecto-response.converter';
 import { environment } from '@env';
-import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
   CreateCtor,
   FindAllCtor,
@@ -78,7 +77,8 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

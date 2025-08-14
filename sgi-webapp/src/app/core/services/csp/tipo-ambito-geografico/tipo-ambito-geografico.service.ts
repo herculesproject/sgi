@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
 import {
   CreateCtor,
@@ -13,13 +14,12 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
-import { ITipoAmbitoGeograficoResponse } from './tipo-ambito-geografico-response';
 import { ITipoAmbitoGeograficoRequest } from './tipo-ambito-geografico-request';
 import { TIPO_AMBITO_GEOGRAFICO_REQUEST_CONVERTER } from './tipo-ambito-geografico-request.converter';
+import { ITipoAmbitoGeograficoResponse } from './tipo-ambito-geografico-response';
 import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from './tipo-ambito-geografico-response.converter';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 
 // tslint:disable-next-line: variable-name
 const _TipoAmbitoGeograficoServiceMixinBase:

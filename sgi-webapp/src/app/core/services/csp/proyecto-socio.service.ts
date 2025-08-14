@@ -7,7 +7,7 @@ import { IProyectoSocioEquipo } from '@core/models/csp/proyecto-socio-equipo';
 import { IProyectoSocioPeriodoJustificacion } from '@core/models/csp/proyecto-socio-periodo-justificacion';
 import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProyectoSocioEquipoResponse } from './proyecto-socio-equipo/proyecto-socio-equipo-response';

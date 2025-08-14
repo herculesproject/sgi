@@ -1,7 +1,7 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { ISolicitud } from '@core/models/csp/solicitud';
 import { ISolicitudGrupo } from '@core/models/csp/solicitud-grupo';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudGrupoResponse } from './solicitud-grupo-response';
 
 class SolicitudGrupoResponseConverter

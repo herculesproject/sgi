@@ -2,11 +2,11 @@ import { CONVOCATORIA_ENTIDAD_FINANCIADORA_CONVERTER } from '@core/converters/cs
 import { CONVOCATORIA_ENTIDAD_GESTORA_CONVERTER } from '@core/converters/csp/convocatoria-entidad-gestora.converter';
 import { SOLICITUD_PROYECTO_ENTIDAD_FINANCIADORA_AJENA_CONVERTER } from '@core/converters/csp/solicitud-proyecto-entidad-financiadora-ajena.converter';
 import { ISolicitudProyectoEntidad } from '@core/models/csp/solicitud-proyecto-entidad';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudProyectoEntidadResponse } from './solicitud-proyecto-entidad-response';
 
 class SolicitudProyectoEntidadResponseConverter
-  extends SgiBaseConverter<ISolicitudProyectoEntidadResponse, ISolicitudProyectoEntidad>{
+  extends SgiBaseConverter<ISolicitudProyectoEntidadResponse, ISolicitudProyectoEntidad> {
   toTarget(value: ISolicitudProyectoEntidadResponse): ISolicitudProyectoEntidad {
     if (!value) {
       return value as unknown as ISolicitudProyectoEntidad;

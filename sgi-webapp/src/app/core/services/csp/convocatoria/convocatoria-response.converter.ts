@@ -7,7 +7,7 @@ import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/ti
 import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
 import { TIPO_REGIMEN_CONCURRENCIA_RESPONSE_CONVERTER } from '@core/services/csp/tipo-regimen-concurrencia/tipo-regimen-concurrencia-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaResponseConverter extends SgiBaseConverter<IConvocatoriaResponse, IConvocatoria> {
 

@@ -16,7 +16,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { IRolProyectoRequest } from './rol-proyecto-request';

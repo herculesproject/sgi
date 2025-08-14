@@ -1,7 +1,7 @@
 import { ISolicitudRrhh } from '@core/models/csp/solicitud-rrhh';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IClasificacion } from '@core/models/sgo/clasificacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudRrhhResponse } from './solicitud-rrhh-response';
 
 class SolicitudRrhhResponseConverter

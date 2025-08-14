@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { environment } from '@env';
-import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
+import { SgiMutableRestService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';

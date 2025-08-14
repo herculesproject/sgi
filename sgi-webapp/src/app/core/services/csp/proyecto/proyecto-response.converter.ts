@@ -7,7 +7,7 @@ import { IProyectoResponse } from '@core/services/csp/proyecto/proyecto-response
 import { TIPO_AMBITO_GEOGRAFICO_RESPONSE_CONVERTER } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico-response.converter';
 import { TIPO_FINALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/tipo-finalidad/tipo-finalidad-response.converter';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { PROYECTO_IVA_CONVERTER } from '../../../converters/csp/proyecto-iva.converter';
 import { ESTADO_PROYECTO_RESPONSE_CONVERTER } from '../estado-proyecto/estado-proyecto-response.converter';
 

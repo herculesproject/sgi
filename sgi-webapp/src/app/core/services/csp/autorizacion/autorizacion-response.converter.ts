@@ -4,7 +4,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IEstadoAutorizacion } from '@core/models/csp/estado-autorizacion';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IAutorizacionResponse } from './autorizacion-response';
 
 class AutorizacionResponseConverter

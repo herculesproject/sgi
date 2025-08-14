@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ISolicitudRrhhRequisitoCategoria } from '@core/models/csp/solicitud-rrhh-requisito-categoria';
 import { environment } from '@env';
-import { SgiRestBaseService } from '@sgi/framework/http';
+import { SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SOLICITUD_RRHH_REQUISITO_CATEGORIA_REQUEST_CONVERTER } from './solicitud-rrhh-requisito-categoria-request.converter';

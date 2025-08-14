@@ -1,10 +1,10 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { IAutor } from '@core/models/prc/autor';
 import { IAutorGrupo } from '@core/models/prc/autor-grupo';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IAutorGrupoResponse } from './autor-grupo-response';
 
-class AutorGrupoResponseConverter extends SgiBaseConverter<IAutorGrupoResponse, IAutorGrupo>{
+class AutorGrupoResponseConverter extends SgiBaseConverter<IAutorGrupoResponse, IAutorGrupo> {
   toTarget(value: IAutorGrupoResponse): IAutorGrupo {
     if (!value) {
       return value as unknown as IAutorGrupo;

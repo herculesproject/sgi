@@ -13,7 +13,7 @@ import {
   mixinUpdate, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ITipoProteccionRequest } from './tipo-proteccion-request';
 import { TIPO_PROTECCION_REQUEST_CONVERTER } from './tipo-proteccion-request.converter';

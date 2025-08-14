@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGrupoLineaInvestigador } from '@core/models/csp/grupo-linea-investigador';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { from, Observable } from 'rxjs';
 import { map, mergeMap, reduce } from 'rxjs/operators';
 import { GRUPO_LINEA_INVESTIGADOR_REQUEST_CONVERTER } from './grupo-linea-investigador-request.converter';

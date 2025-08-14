@@ -2,7 +2,7 @@ import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProcedimiento } from '@core/models/pii/procedimiento';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { TIPO_PROCEDIMIENTO_RESPONSE_CONVERTER } from '../../tipo-procedimiento/tipo-procedimiento-response.converter';
 import { IProcedimientoResponse } from './solicitud-proteccion-procedimiento-response';
 

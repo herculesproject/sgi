@@ -2,14 +2,14 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
+import { IPersona } from '@core/models/sgp/persona';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ACTION_MODAL_MODE } from 'src/app/esb/shared/formly-forms/core/base-formly-modal.component';
 import { IPersonaFormlyData, PersonaFormlyModalComponent } from '../../formly-forms/persona-formly-modal/persona-formly-modal.component';
-import { IPersona } from '@core/models/sgp/persona';
 
 const PERSONA_KEY = marker('sgp.persona');
 const MSG_UPDATE_SUCCESS = marker('msg.update.request.entity.success');

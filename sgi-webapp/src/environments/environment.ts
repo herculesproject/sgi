@@ -2,8 +2,8 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { NgxLoggerLevel, LoggerConfig } from 'ngx-logger';
-import { SgiAuthMode, SgiAuthConfig } from '@sgi/framework/auth';
+import { SgiAuthConfig, SgiAuthMode } from '@herculesproject/framework/auth';
+import { LoggerConfig, NgxLoggerLevel } from 'ngx-logger';
 import { version } from '../../package.json';
 
 export const environment = {

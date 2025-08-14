@@ -1,6 +1,6 @@
 import { IProyectoPeriodoSeguimiento } from '@core/models/csp/proyecto-periodo-seguimiento';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoPeriodoSeguimientoPresentacionDocumentacionRequest } from './proyecto-periodo-seguimiento-presentacion-documentacion-request';
 
 class ProyectoPeriodoSeguimientoPresentacionDocumentacionRequestConverter

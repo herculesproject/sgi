@@ -7,7 +7,7 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { ITipoDocumento } from '@core/models/eer/tipo-documento';
 import { TipoDocumentoService } from '@core/services/eer/tipo-documento/tipo-documento.service';
 import { LanguageService } from '@core/services/language.service';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 

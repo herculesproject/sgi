@@ -9,8 +9,8 @@ import { AbstractTableExportFillService } from '@core/services/rep/abstract-tabl
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { FacturaPrevistaEmitidaService } from '@core/services/sge/factura-prevista-emitida/factura-prevista-emitida.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, from, of } from 'rxjs';
 import { map, mergeMap, switchMap, takeLast } from 'rxjs/operators';

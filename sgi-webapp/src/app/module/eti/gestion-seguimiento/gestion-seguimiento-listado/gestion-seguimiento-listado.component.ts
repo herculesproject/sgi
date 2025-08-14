@@ -14,7 +14,7 @@ import { ConfigService } from '@core/services/cnf/config.service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';

@@ -2,7 +2,7 @@ import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
 import { ILineaInvestigacion } from '@core/models/csp/linea-investigacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoLineaInvestigacionRequest } from './grupo-linea-investigacion-request';
 
 class GrupoLineaInvestigacionRequestConverter

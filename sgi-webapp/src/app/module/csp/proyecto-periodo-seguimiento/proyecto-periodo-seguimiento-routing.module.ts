@@ -6,13 +6,13 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import {
   ProyectoPeriodoSeguimientoCrearComponent
 } from './proyecto-periodo-seguimiento-crear/proyecto-periodo-seguimiento-crear.component';
 import {
-  ProyectoPeriodoSeguimientoDataResolver,
-  PROYECTO_PERIODO_SEGUIMIENTO_DATA_KEY
+  PROYECTO_PERIODO_SEGUIMIENTO_DATA_KEY,
+  ProyectoPeriodoSeguimientoDataResolver
 } from './proyecto-periodo-seguimiento-data.resolver';
 import { ProyectoPeriodoSeguimientoEditarComponent } from './proyecto-periodo-seguimiento-editar/proyecto-periodo-seguimiento-editar.component';
 import { ProyectoPeriodoSeguimientoDatosGeneralesComponent } from './proyecto-periodo-seguimiento-formulario/proyecto-periodo-seguimiento-datos-generales/proyecto-periodo-seguimiento-datos-generales.component';

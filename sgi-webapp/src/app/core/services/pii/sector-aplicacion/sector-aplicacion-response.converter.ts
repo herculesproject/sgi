@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ISectorAplicacion } from '@core/models/pii/sector-aplicacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISectorAplicacionResponse } from './sector-aplicacion-response';
 
 class SectorAplicacionResponseConverter extends SgiBaseConverter<ISectorAplicacionResponse, ISectorAplicacion> {

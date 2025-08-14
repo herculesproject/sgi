@@ -1,6 +1,6 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoPalabraClave } from '@core/models/csp/grupo-palabra-clave';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoPalabraClaveRequest } from './grupo-palabra-clave-request';
 
 class IGrupoPalabraClaveRequestConverter extends SgiBaseConverter<IGrupoPalabraClaveRequest, IGrupoPalabraClave> {

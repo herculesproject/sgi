@@ -6,8 +6,8 @@ import { IProyectoAnualidadPartida } from '@core/models/sge/proyecto-anualidad-p
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { IRelacionEliminada } from '@core/models/sge/relacion-eliminada';
 import { environment } from '@env';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { SgiMutableRestService } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { PROYECTO_ANUALIDAD_PARTIDA_REQUEST_CONVERTER } from './proyecto-anualidad-partida/proyecto-anualidad-partida-request.converter';
 import { RELACION_ELIMINADA_REQUEST_CONVERTER } from './relacion-eliminada/relacion-eliminada-request.converter';

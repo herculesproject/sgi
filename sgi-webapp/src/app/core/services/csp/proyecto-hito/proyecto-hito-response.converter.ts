@@ -1,12 +1,12 @@
+import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IGenericEmailText } from '@core/models/com/generic-email-text';
 import { IProyectoHito } from '@core/models/csp/proyecto-hito';
 import { ISendEmailTask } from '@core/models/tp/send-email-task';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ITipoHitoResponse } from '../tipo-hito/tipo-hito-response';
 import { TIPO_HITO_RESPONSE_CONVERTER } from '../tipo-hito/tipo-hito-response.converter';
 import { IProyectoHitoResponse } from './proyecto-hito-response';
-import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 
 class ProyectoHitoResponseConverter extends SgiBaseConverter<IProyectoHitoResponse, IProyectoHito> {
 

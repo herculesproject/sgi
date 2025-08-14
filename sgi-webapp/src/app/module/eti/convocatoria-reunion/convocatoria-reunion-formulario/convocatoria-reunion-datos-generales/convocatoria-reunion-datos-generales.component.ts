@@ -13,13 +13,13 @@ import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reun
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { CKEDITOR_CONFIG, CkEditorConfig } from '@shared/sgi-ckeditor-config';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
 import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-datos-generales.fragment';
 

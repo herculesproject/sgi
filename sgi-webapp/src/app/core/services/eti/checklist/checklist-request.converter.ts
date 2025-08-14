@@ -1,9 +1,9 @@
 import { IChecklist } from '@core/models/eti/checklist';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IChecklistRequest } from './checklist-request';
 
-class ChecklistRequestConverter extends SgiBaseConverter<IChecklistRequest, IChecklist>{
+class ChecklistRequestConverter extends SgiBaseConverter<IChecklistRequest, IChecklist> {
   toTarget(value: IChecklistRequest): IChecklist {
     if (!value) {
       return value as unknown as IChecklist;

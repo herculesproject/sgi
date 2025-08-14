@@ -1,9 +1,9 @@
 import { IObraArtistica } from '@core/models/prc/obra-artistica';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IObraArtisticaResponse } from './obra-artistica-response';
 
-class ObraArtisticaResponseConverter extends SgiBaseConverter<IObraArtisticaResponse, IObraArtistica>{
+class ObraArtisticaResponseConverter extends SgiBaseConverter<IObraArtisticaResponse, IObraArtistica> {
   toTarget(value: IObraArtisticaResponse): IObraArtistica {
     if (!value) {
       return value as unknown as IObraArtistica;

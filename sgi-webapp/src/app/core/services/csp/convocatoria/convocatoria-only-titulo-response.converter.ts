@@ -1,7 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaOnlyTituloResponse } from '@core/services/csp/convocatoria/convocatoria-only-titulo-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaOnlyTituloResponseConverter
   extends SgiBaseConverter<IConvocatoriaOnlyTituloResponse, IConvocatoria> {

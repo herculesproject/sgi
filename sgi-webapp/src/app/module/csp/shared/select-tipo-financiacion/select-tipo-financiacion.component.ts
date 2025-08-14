@@ -9,7 +9,7 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { ITipoFinanciacion } from '@core/models/csp/tipos-configuracion';
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoFinanciacionModalComponent } from '../../tipo-financiacion/tipo-financiacion-modal/tipo-financiacion-modal.component';

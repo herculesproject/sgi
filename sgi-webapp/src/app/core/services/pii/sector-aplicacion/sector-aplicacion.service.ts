@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ISectorAplicacion } from '@core/models/pii/sector-aplicacion';
 import { IFuenteFinanciacionRequest } from '@core/services/csp/fuente-financiacion/fuente-financiacion-request';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { SECTOR_APLICACION_REQUEST_CONVERTER } from './sector-aplicacion-request.converter';
 import { ISectorAplicacionResponse } from './sector-aplicacion-response';

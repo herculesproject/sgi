@@ -1,5 +1,5 @@
 import { IApartado } from '@core/models/eti/apartado';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { BLOQUE_RESPONSE_CONVERTER } from '../bloque/bloque-response.converter';
 import { APARTADO_DEFINICION_RESPONSE_CONVERTER } from './apartado-definicion-response.converter';
 import { IApartadoResponse } from './apartado-response';

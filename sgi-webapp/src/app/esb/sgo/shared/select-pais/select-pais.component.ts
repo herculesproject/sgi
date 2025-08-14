@@ -6,7 +6,7 @@ import { SelectServiceComponent } from '@core/component/select-service/select-se
 import { IPais } from '@core/models/sgo/pais';
 import { LanguageService } from '@core/services/language.service';
 import { PaisService } from '@core/services/sgo/pais/pais.service';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

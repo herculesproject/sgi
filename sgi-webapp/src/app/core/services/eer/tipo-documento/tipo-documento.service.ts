@@ -5,7 +5,7 @@ import { environment } from '@env';
 import {
   FindAllCtor, mixinFindAll, SgiRestBaseService,
   SgiRestFindOptions, SgiRestListResult
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ITipoDocumentoResponse } from './tipo-documento-response';
 import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from './tipo-documento-response.converter';

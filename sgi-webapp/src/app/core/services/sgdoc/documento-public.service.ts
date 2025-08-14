@@ -4,7 +4,7 @@ import { DOCUMENTO_CONVERTER } from '@core/converters/sgdoc/documento.converter'
 import { IDocumentoBackend } from '@core/models/sgdoc/backend/documento-backend';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http/';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http/';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, takeLast } from 'rxjs/operators';
 

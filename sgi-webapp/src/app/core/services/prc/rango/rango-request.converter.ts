@@ -1,9 +1,9 @@
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
 import { IRango } from '@core/models/prc/rango';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRangoRequest } from './rango-request';
 
-class RangoRequestConverter extends SgiBaseConverter<IRangoRequest, IRango>{
+class RangoRequestConverter extends SgiBaseConverter<IRangoRequest, IRango> {
   toTarget(value: IRangoRequest): IRango {
     if (!value) {
       return value as unknown as IRango;

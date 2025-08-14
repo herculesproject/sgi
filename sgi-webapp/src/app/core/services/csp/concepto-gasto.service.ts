@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor, mixinCreate, mixinFindAll, mixinUpdate } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor, mixinCreate, mixinFindAll, mixinUpdate } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IConceptoGastoResponse } from './concepto-gasto/concepto-gasto-response';
 import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from './concepto-gasto/concepto-gasto-response.converter';

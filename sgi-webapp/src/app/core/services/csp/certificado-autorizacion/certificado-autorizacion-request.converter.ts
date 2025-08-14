@@ -1,7 +1,7 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IAutorizacion } from '@core/models/csp/autorizacion';
 import { ICertificadoAutorizacion } from '@core/models/csp/certificado-autorizacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ICertificadoAutorizacionRequest } from './certificado-autorizacion-request';
 
 class CertificadoAutorizacionRequestConverter

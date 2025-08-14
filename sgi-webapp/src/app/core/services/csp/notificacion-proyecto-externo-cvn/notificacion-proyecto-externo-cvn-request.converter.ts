@@ -6,7 +6,7 @@ import { IDocumento } from '@core/models/sgdoc/documento';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { INotificacionProyectoExternoCVNRequest } from './notificacion-proyecto-externo-cvn-request';
 
 class INotificacionProyectoExternoCVNRequestConverter

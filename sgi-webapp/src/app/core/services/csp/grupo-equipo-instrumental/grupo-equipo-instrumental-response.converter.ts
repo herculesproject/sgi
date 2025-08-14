@@ -1,7 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoEquipoInstrumentalResponse } from './grupo-equipo-instrumental-response';
 
 class GrupoEquipoInstrumentalResponseConverter

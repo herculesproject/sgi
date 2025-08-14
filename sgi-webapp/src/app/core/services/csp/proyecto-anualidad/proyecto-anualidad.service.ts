@@ -20,7 +20,7 @@ import {
   SgiRestFilterOperator,
   SgiRestFindOptions, SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { IAnualidadGastoResponse } from '../anualidad-gasto/anualidad-gasto-response';

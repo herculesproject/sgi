@@ -20,7 +20,7 @@ import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { anioValidator } from '@core/validators/anio-validator';
 import { I18nValidators } from '@core/validators/i18n-validator';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, Observable, Subject, from, merge, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, pairwise, startWith, switchMap, takeLast, tap } from 'rxjs/operators';

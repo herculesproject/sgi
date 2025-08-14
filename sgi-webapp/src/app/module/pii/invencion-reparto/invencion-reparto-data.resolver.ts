@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import {
-  Router,
-  ActivatedRouteSnapshot
+  ActivatedRouteSnapshot,
+  Router
 } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { RepartoService } from '@core/services/pii/reparto/reparto.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';

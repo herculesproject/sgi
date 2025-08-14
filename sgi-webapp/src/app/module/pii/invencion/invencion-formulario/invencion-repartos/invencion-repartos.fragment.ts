@@ -1,7 +1,7 @@
 import { IReparto } from '@core/models/pii/reparto';
 import { Fragment } from '@core/services/action-service';
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
-import { SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 
 export class InvencionRepartosFragment extends Fragment {

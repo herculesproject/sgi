@@ -1,9 +1,9 @@
 import { ICampoProduccionCientifica } from '@core/models/prc/campo-produccion-cientifica';
 import { IProduccionCientifica } from '@core/models/prc/produccion-cientifica';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ICampoProduccionCientificaResponse } from './campo-produccion-cientifica-response';
 
-class CampoProduccionCientificaResponseConverter extends SgiBaseConverter<ICampoProduccionCientificaResponse, ICampoProduccionCientifica>{
+class CampoProduccionCientificaResponseConverter extends SgiBaseConverter<ICampoProduccionCientificaResponse, ICampoProduccionCientifica> {
   toTarget(value: ICampoProduccionCientificaResponse): ICampoProduccionCientifica {
     if (!value) {
       return value as unknown as ICampoProduccionCientifica;

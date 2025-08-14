@@ -1,7 +1,7 @@
 import { ICodigoEconomicoIngresoBackend } from '@core/models/sge/backend/codigo-economico-ingreso-backend';
 import { ICodigoEconomicoIngreso } from '@core/models/sge/codigo-economico-ingreso';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class CodigoEconomicoIngresoConverter extends SgiBaseConverter<ICodigoEconomicoIngresoBackend, ICodigoEconomicoIngreso> {
   toTarget(value: ICodigoEconomicoIngresoBackend): ICodigoEconomicoIngreso {

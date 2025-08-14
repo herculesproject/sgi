@@ -1,8 +1,8 @@
 
-import { EQUIPO_MAP, IRolProyecto } from '@core/models/csp/rol-proyecto';
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { IRolProyectoResponse } from './rol-proyecto-response';
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
+import { IRolProyecto } from '@core/models/csp/rol-proyecto';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
+import { IRolProyectoResponse } from './rol-proyecto-response';
 
 
 class RolProyectoResponseConverter extends SgiBaseConverter<IRolProyectoResponse, IRolProyecto> {

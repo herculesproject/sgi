@@ -9,8 +9,8 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { ITipoAmbitoGeografico } from '@core/models/csp/tipos-configuracion';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico/tipo-ambito-geografico.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { SgiRestFindOptions } from '@sgi/framework/http';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { SgiRestFindOptions } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TipoAmbitoGeograficoModalComponent } from '../../tipo-ambito-geografico/tipo-ambito-geografico-modal/tipo-ambito-geografico-modal.component';

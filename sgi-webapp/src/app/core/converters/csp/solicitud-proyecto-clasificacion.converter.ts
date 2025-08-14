@@ -1,7 +1,7 @@
 import { ISolicitudProyectoClasificacionBackend } from '@core/models/csp/backend/solicitud-proyecto-clasificacion-backend';
 import { ISolicitudProyectoClasificacion } from '@core/models/csp/solicitud-proyecto-clasificacion';
 import { IClasificacion } from '@core/models/sgo/clasificacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class SolicitudProyectoClasificacionConverter
   extends SgiBaseConverter<ISolicitudProyectoClasificacionBackend, ISolicitudProyectoClasificacion> {

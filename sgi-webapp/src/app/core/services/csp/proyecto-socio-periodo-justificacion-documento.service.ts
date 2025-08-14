@@ -4,7 +4,7 @@ import { IProyectoSocioPeriodoJustificacionDocumento } from '@core/models/csp/pr
 import { IProyectoSocioPeriodoJustificacionDocumentoResponse } from '@core/services/csp/proyecto-socio-periodo-justificacion-documento/proyecto-socio-periodo-justificacion-documento-response';
 import { PROYECTO_SOCIO_PERIODO_JUSTIFICACION_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-socio-periodo-justificacion-documento/proyecto-socio-periodo-justificacion-documento-response.converter';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProyectoPeriodoAmortizacion } from '@core/models/csp/proyecto-periodo-amortizacion';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { IPeriodoAmortizacionRequest } from './periodo-amortizacion-request';
 import { PERIODO_AMORTIZACION_REQUEST_CONVERTER } from './periodo-amortizacion-request.converter';
 

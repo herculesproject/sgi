@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IInformePatentabilidad } from '@core/models/pii/informe-patentabilidad';
 import { environment } from '@env';
-import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindByIdCtor, mixinCreate, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IInformePatentabilidadRequest } from './informe-patentabilidad-request';
 import { INFORME_PATENTABILIDAD_REQUEST_CONVERTER } from './informe-patentabilidad-request.converter';

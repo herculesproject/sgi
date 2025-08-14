@@ -3,7 +3,7 @@ import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IDocumentacionConvocatoriaReunion } from '@core/models/eti/documentacion-convocatoria-reunion';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { IDocumentacionConvocatoriaReunionResponse } from '@core/services/eti/documentacion-convocatoria-reunion/documentacion-convocatoria-reunion-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class DocumentacionConvocatoriaReunionResponseConverter extends SgiBaseConverter<IDocumentacionConvocatoriaReunionResponse, IDocumentacionConvocatoriaReunion> {
   toTarget(value: IDocumentacionConvocatoriaReunionResponse): IDocumentacionConvocatoriaReunion {

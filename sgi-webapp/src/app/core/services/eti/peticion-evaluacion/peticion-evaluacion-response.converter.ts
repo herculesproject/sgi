@@ -3,7 +3,7 @@ import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { IPeticionEvaluacionResponse } from '@core/services/eti/peticion-evaluacion/peticion-evaluacion-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class PeticionEvaluacionResponseConverter extends SgiBaseConverter<IPeticionEvaluacionResponse, IPeticionEvaluacion> {
   toTarget(value: IPeticionEvaluacionResponse): IPeticionEvaluacion {

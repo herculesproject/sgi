@@ -25,12 +25,12 @@ import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { NumberUtils } from '@core/utils/number.utils';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, combineLatest, forkJoin, from, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, concatMap, distinctUntilChanged, filter, map, mergeMap, skip, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IColumnDefinition } from 'src/app/module/csp/ejecucion-economica/ejecucion-economica-formulario/desglose-economico.fragment';
 import { InvencionRepartoDataResolverService } from '../../services/invencion-reparto-data-resolver.service';
-import { NGXLogger } from 'ngx-logger';
 
 export interface IRepartoEquipoInventorTableData {
   repartoEquipoInventor: IRepartoEquipoInventor;

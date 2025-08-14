@@ -1,10 +1,10 @@
 import { IProyectoAnualidadNotificacionSge } from '@core/models/csp/proyecto-anualidad-notificacion-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoAnualidadNotificacionSgeRequest } from './proyecto-anualidad-notificacion-sge-request';
 
 class ProyectoAnualidadNotificacionSgeRequestConverter extends
-  SgiBaseConverter<IProyectoAnualidadNotificacionSgeRequest, IProyectoAnualidadNotificacionSge>{
+  SgiBaseConverter<IProyectoAnualidadNotificacionSgeRequest, IProyectoAnualidadNotificacionSge> {
   toTarget(value: IProyectoAnualidadNotificacionSgeRequest): IProyectoAnualidadNotificacionSge {
     if (!value) {
       return value as unknown as IProyectoAnualidadNotificacionSge;

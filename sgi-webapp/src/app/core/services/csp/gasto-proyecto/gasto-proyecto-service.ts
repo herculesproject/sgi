@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ESTADO_GASTO_PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/estado-gasto-proyecto/estado-gasto-proyecto-response.converter';
-import { IEstadoGastoProyectoResponse } from '@core/services/csp/estado-gasto-proyecto/estado-gasto-proyecto-response';
 import { IEstadoGastoProyecto } from '@core/models/csp/estado-gasto-proyecto';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
+import { IEstadoGastoProyectoResponse } from '@core/services/csp/estado-gasto-proyecto/estado-gasto-proyecto-response';
+import { ESTADO_GASTO_PROYECTO_RESPONSE_CONVERTER } from '@core/services/csp/estado-gasto-proyecto/estado-gasto-proyecto-response.converter';
 import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, mixinCreate, mixinFindAll, mixinUpdate, RSQLSgiRestFilter, SgiRestBaseService,
   SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IGastoProyectoRequest } from './gasto-proyecto-request';

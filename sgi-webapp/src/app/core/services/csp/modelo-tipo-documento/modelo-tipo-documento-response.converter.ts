@@ -1,9 +1,9 @@
 import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from '../modelo-tipo-fase/modelo-tipo-fase-response.converter';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '../modelo-ejecucion/modelo-ejecucion-response.converter';
-import { IModeloTipoDocumentoResponse } from './modelo-tipo-documento-response';
+import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from '../modelo-tipo-fase/modelo-tipo-fase-response.converter';
 import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from '../tipo-documento/tipo-documento-response.converter';
+import { IModeloTipoDocumentoResponse } from './modelo-tipo-documento-response';
 
 class ModeloTipoDocumentoResponseConverter extends SgiBaseConverter<IModeloTipoDocumentoResponse, IModeloTipoDocumento> {
   toTarget(value: IModeloTipoDocumentoResponse): IModeloTipoDocumento {

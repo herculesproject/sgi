@@ -1,7 +1,7 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { IPartidaPresupuestariaSge } from '@core/models/sge/partida-presupuestaria-sge';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoPartidaPresupuestariaRequest } from './proyecto-partida-presupuestaria-request';
 
 class ProyectoPartidaPresupuestariaRequestConverter

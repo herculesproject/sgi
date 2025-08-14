@@ -1,6 +1,6 @@
 import { Language } from '@core/i18n/language';
 import { IInformeDocumento } from '@core/models/eti/informe-documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IInformeDocumentoResponse } from './informe-documento-response';
 
 class InformeDocumentoResponseConverter extends SgiBaseConverter<IInformeDocumentoResponse, IInformeDocumento> {

@@ -1,6 +1,6 @@
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaPalabraClave } from '@core/models/csp/convocatoria-palabra-clave';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IConvocatoriaPalabraClaveRequest } from './convocatoria-palabra-clave-request';
 
 class IConvocatoriaPalabraClaveRequestConverter extends SgiBaseConverter<IConvocatoriaPalabraClaveRequest, IConvocatoriaPalabraClave> {

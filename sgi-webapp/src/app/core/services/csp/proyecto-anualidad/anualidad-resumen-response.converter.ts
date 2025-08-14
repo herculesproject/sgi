@@ -1,8 +1,8 @@
 import { IAnualidadResumen } from '@core/models/csp/anualidad-resumen';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IAnualidadResumenResponse } from './anualidad-resumen-response';
 
-class AnualidadResumenResponseConverter extends SgiBaseConverter<IAnualidadResumenResponse, IAnualidadResumen>{
+class AnualidadResumenResponseConverter extends SgiBaseConverter<IAnualidadResumenResponse, IAnualidadResumen> {
   toTarget(value: IAnualidadResumenResponse): IAnualidadResumen {
     if (!value) {
       return value as unknown as IAnualidadResumen;

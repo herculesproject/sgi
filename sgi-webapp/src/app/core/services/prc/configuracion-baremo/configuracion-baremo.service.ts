@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConfiguracionBaremo } from '@core/models/prc/configuracion-baremo';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@herculesproject/framework/http';
 import { IConfiguracionBaremoResponse } from './configuracion-baremo-response';
 import { CONFIGURACION_BAREMO_RESPONSE_CONVERTER } from './configuracion-baremo-response.converter';
 

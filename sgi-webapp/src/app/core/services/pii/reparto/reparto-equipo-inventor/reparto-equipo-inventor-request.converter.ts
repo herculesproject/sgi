@@ -2,7 +2,7 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IInvencionInventor } from '@core/models/pii/invencion-inventor';
 import { IReparto } from '@core/models/pii/reparto';
 import { IRepartoEquipoInventor } from '@core/models/pii/reparto-equipo-inventor';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRepartoEquipoInventorRequest } from './reparto-equipo-inventor-request';
 
 class RepartoEquipoInventorRequestConverter extends SgiBaseConverter<IRepartoEquipoInventorRequest, IRepartoEquipoInventor> {

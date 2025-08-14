@@ -1,9 +1,9 @@
 import { IDireccionTesis } from '@core/models/prc/direccion-tesis';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IDireccionTesisResponse } from './direccion-tesis-response';
 
-class DireccionTesisResponseConverter extends SgiBaseConverter<IDireccionTesisResponse, IDireccionTesis>{
+class DireccionTesisResponseConverter extends SgiBaseConverter<IDireccionTesisResponse, IDireccionTesis> {
   toTarget(value: IDireccionTesisResponse): IDireccionTesis {
     if (!value) {
       return value as unknown as IDireccionTesis;

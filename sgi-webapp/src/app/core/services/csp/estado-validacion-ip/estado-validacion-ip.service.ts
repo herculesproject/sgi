@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IEstadoValidacionIP } from '@core/models/csp/estado-validacion-ip';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { ESTADO_VALIDACION_IP_RESPONSE_CONVERTER } from './estado-validacion-ip-response.converter';
 import { IEstadoValidacionIPResponse } from './estado-validacion-ip.response';
 

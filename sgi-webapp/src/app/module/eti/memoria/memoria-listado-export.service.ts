@@ -8,7 +8,7 @@ import { IPersona } from '@core/models/sgp/persona';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { concat, from, Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';

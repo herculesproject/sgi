@@ -1,6 +1,6 @@
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoPalabraClave } from '@core/models/csp/proyecto-palabra-clave';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoPalabraClaveResponse } from './proyecto-palabra-clave-response';
 
 class IProyectoPalabraClaveResponseConverter extends SgiBaseConverter<IProyectoPalabraClaveResponse, IProyectoPalabraClave> {

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { IEquipoTrabajoResponse } from './equipo-trabajo/equipo-trabajo-response';
 import { EQUIPO_TRABAJO_RESPONSE_CONVERTER } from './equipo-trabajo/equipo-trabajo-response.converter';
 

@@ -17,7 +17,7 @@ import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate,
   RSQLSgiRestFilter,
   SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { DateTime } from 'luxon';
 import { from, Observable } from 'rxjs';
 import { map, mergeMap, reduce } from 'rxjs/operators';

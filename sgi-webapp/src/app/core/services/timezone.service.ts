@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { environment } from '@env';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { Settings } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, merge, Observable, Subject } from 'rxjs';

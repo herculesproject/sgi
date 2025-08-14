@@ -1,6 +1,6 @@
 import { IComiteEditorial } from '@core/models/prc/comite-editorial';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IComiteEditorialResponse } from './comite-editorial-response';
 
 class ComiteEditorialResponseConverter extends SgiBaseConverter<IComiteEditorialResponse, IComiteEditorial> {

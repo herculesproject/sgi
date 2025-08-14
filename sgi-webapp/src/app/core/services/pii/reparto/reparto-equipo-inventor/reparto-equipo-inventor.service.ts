@@ -5,7 +5,7 @@ import { environment } from '@env';
 import {
   CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll,
   mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { IRepartoEquipoInventorRequest } from './reparto-equipo-inventor-request';
 import { REPARTO_EQUIPO_INVENTOR_REQUEST_CONVERTER } from './reparto-equipo-inventor-request.converter';
 import { IRepartoEquipoInventorResponse } from './reparto-equipo-inventor-response';

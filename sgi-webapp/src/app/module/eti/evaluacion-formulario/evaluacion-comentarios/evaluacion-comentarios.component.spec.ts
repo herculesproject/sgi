@@ -7,10 +7,10 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { EvaluacionComentariosComponent } from './evaluacion-comentarios.component';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { EvaluacionComentariosComponent } from './evaluacion-comentarios.component';
 
 describe('EvaluacionComentariosComponent', () => {
   let component: EvaluacionComentariosComponent;

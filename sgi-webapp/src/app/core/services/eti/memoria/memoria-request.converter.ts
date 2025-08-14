@@ -3,7 +3,7 @@ import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IMemoriaRequest } from './memoria-request';
 
 class MemoriaRequestConverter extends SgiBaseConverter<IMemoriaRequest, IMemoria> {

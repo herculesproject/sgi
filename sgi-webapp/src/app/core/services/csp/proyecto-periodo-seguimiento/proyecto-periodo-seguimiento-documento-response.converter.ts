@@ -1,7 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IProyectoPeriodoSeguimientoDocumento } from '@core/models/csp/proyecto-periodo-seguimiento-documento';
 import { IProyectoPeriodoSeguimientoDocumentoResponse } from '@core/services/csp/proyecto-periodo-seguimiento/proyecto-periodo-seguimiento-documento-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from '../tipo-documento/tipo-documento-response.converter';
 
 class ProyectoPeriodoSeguimientoDocumentoResponseConverter extends

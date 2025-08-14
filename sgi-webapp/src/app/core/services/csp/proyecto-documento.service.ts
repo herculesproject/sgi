@@ -4,7 +4,7 @@ import { IProyectoDocumento } from '@core/models/csp/proyecto-documento';
 import { IProyectoDocumentoResponse } from '@core/services/csp/proyecto-documento/proyecto-documento-response';
 import { PROYECTO_DOCUMENTO_RESPONSE_CONVERTER } from '@core/services/csp/proyecto-documento/proyecto-documento-response.converter';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 
 const _ProyectoDocumentoServiceMixinBase:

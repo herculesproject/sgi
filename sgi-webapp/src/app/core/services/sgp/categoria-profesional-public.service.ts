@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ICategoriaProfesional } from '@core/models/sgp/categoria-profesional';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 
 // tslint:disable-next-line: variable-name
 const _CategoriaProfesionalMixinBase:

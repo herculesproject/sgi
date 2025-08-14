@@ -12,7 +12,7 @@ import { SolicitudProyectoService } from '@core/services/csp/solicitud-proyecto.
 import { SolicitudRrhhService } from '@core/services/csp/solicitud-rrhh/solicitud-rrhh.service';
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

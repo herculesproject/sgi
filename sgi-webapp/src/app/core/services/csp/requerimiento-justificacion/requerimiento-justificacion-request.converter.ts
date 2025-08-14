@@ -1,7 +1,7 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRequerimientoJustificacionRequest } from './requerimiento-justificacion-request';
 
 class RequerimientoJustificacionRequestConverter extends SgiBaseConverter<IRequerimientoJustificacionRequest, IRequerimientoJustificacion> {

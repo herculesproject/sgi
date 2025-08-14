@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ISolicitudProyectoSge } from '@core/models/sge/solicitud-proyecto-sge';
 import { environment } from '@env';
-import { SgiRestBaseService } from '@sgi/framework/http';
+import { SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ISolicitudProyectoSgeResponse } from './solicitud-proyecto-sge-response';

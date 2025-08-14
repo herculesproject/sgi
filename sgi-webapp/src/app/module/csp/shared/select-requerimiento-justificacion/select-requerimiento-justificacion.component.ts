@@ -6,7 +6,7 @@ import { SelectServiceComponent } from '@core/component/select-service/select-se
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { formatRequerimientoJustificacionNombre } from '../../ejecucion-economica/pipes/requerimiento-justificacion-nombre.pipe';

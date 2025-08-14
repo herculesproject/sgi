@@ -6,7 +6,7 @@ import { SelectServiceComponent } from '@core/component/select-service/select-se
 import { IProyectoPeriodoJustificacion } from '@core/models/csp/proyecto-periodo-justificacion';
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 

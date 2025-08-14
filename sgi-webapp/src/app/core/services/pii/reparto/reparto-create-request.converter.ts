@@ -3,7 +3,7 @@ import { IInvencionIngreso } from '@core/models/pii/invencion-ingreso';
 import { IRepartoCreate } from '@core/models/pii/reparto';
 import { IRepartoGasto } from '@core/models/pii/reparto-gasto';
 import { IRepartoIngreso } from '@core/models/pii/reparto-ingreso';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import {
   IInvencionGastoCreateRequest, IInvencionIngresoCreateRequest, IRepartoCreateRequest,
   IRepartoGastoCreateRequest, IRepartoIngresoCreateRequest

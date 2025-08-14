@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IProyecto } from '@core/models/csp/proyecto';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ProyectoSocioPeriodoJustificacionService } from '@core/services/csp/proyecto-socio-periodo-justificacion.service';
 import { ProyectoSocioService } from '@core/services/csp/proyecto-socio.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

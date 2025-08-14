@@ -1,10 +1,10 @@
-import { NgxMatDatetimePickerModule } from '@angular-material-components/datetime-picker';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { I18nComponentsModule } from '@components/i18n/i18n-components.module';
 import { requiredRowTable } from '@formly-forms/validators/utils.validator';
+import { NgxMatDatetimePickerModule } from '@herculesproject/datetime-picker';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FORMLY_CONFIG, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';

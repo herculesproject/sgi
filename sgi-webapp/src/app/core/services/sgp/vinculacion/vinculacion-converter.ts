@@ -1,7 +1,7 @@
 import { IVinculacionBackend } from '@core/models/sgp/backend/vinculacion-backend';
 import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class VinculacionConverter extends SgiBaseConverter<IVinculacionBackend, IVinculacion> {
   toTarget(value: IVinculacionBackend): IVinculacion {

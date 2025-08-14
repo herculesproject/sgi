@@ -4,7 +4,7 @@ import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requeri
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { IDocumentoRequeridoSolicitudResponse } from '@core/services/csp/documento-requerido-solicitud/documento-requerido-solicitud-response';
 import { environment } from '@env';
-import { SgiRestBaseService, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestBaseService, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { DOCUMENTO_REQUERIDO_SOLICITUD_RESPONSE_CONVERTER } from './documento-requerido-solicitud/documento-requerido-solicitud-response.converter';
 

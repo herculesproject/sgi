@@ -1,6 +1,6 @@
 import { ISolicitudProyectoSocio } from '@core/models/csp/solicitud-proyecto-socio';
 import { IEmpresa } from '@core/models/sgemp/empresa';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ROL_SOCIO_RESPONSE_CONVERTER } from '../rol-socio/rol-socio-response.converter';
 import { ISolicitudProyectoSocioResponse } from './solicitud-proyecto-socio-response';
 

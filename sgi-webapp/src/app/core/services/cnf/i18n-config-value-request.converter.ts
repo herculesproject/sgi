@@ -1,6 +1,6 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { II18nConfigValue } from '@core/models/cnf/i18n-config-value';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { II18nConfigValueRequest } from './i18n-config-value-request';
 
 class I18nConfigValueRequestConverter extends SgiBaseConverter<II18nConfigValueRequest, II18nConfigValue> {

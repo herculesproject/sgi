@@ -15,7 +15,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IAgrupacionGastoConceptoResponse } from '../agrupacio-gasto-concepto/agrupacion-gasto-concepto-response';

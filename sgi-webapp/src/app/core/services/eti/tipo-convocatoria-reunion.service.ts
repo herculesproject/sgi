@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { environment } from '@env';
-import { SgiRestService } from '@sgi/framework/http';
+import { SgiRestService } from '@herculesproject/framework/http';
 
 @Injectable({
   providedIn: 'root',

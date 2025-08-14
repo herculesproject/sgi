@@ -6,10 +6,10 @@ import { InvencionService } from '@core/services/pii/invencion/invencion.service
 import { SolicitudProteccionService } from '@core/services/pii/solicitud-proteccion/solicitud-proteccion.service';
 import { PaisService } from '@core/services/sgo/pais/pais.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
 export class SolicitudProteccionFragment extends Fragment {
 

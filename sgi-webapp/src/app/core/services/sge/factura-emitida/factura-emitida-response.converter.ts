@@ -1,5 +1,5 @@
 import { IFacturaEmitida } from '@core/models/sge/factura-emitida';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IFacturaEmitidaResponse } from './factura-emitida-response';
 
 class FacturaEmitidaResponseConverter extends SgiBaseConverter<IFacturaEmitidaResponse, IFacturaEmitida> {

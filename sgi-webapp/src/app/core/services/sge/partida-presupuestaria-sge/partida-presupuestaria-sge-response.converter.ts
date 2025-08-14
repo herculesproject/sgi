@@ -1,9 +1,9 @@
 import { IPartidaPresupuestariaSge } from '@core/models/sge/partida-presupuestaria-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IPartidaPresupuestariaSgeResponse } from './partida-presupuestaria-sge-response';
 
-class PartidaPresupuestariaSgeResponseConverter extends SgiBaseConverter<IPartidaPresupuestariaSgeResponse, IPartidaPresupuestariaSge>{
+class PartidaPresupuestariaSgeResponseConverter extends SgiBaseConverter<IPartidaPresupuestariaSgeResponse, IPartidaPresupuestariaSge> {
 
   toTarget(value: IPartidaPresupuestariaSgeResponse): IPartidaPresupuestariaSge {
     return value ? {

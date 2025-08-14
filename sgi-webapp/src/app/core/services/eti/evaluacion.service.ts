@@ -8,7 +8,7 @@ import { IEvaluacionWithIsEliminable } from '@core/models/eti/evaluacion-with-is
 import { IDocumentoBackend } from '@core/models/sgdoc/backend/documento-backend';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IComentarioResponse } from './comentario/comentario-response';

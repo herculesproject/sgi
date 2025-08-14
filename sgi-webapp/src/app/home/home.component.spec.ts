@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SgiAuthModule, SgiAuthService } from '@herculesproject/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 
-import { HomeComponent } from './home.component';
 import TestUtils from '@core/utils/test-utils';
+import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;

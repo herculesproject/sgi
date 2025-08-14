@@ -1,6 +1,6 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ITipoDocumento } from '@core/models/eer/tipo-documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ITipoDocumentoResponse } from './tipo-documento-response';
 
 class TipoDocumentoResponseConverter

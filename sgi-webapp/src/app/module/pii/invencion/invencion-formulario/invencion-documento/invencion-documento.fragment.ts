@@ -4,7 +4,7 @@ import { InvencionDocumentoService } from '@core/services/pii/invencion/invencio
 import { InvencionService } from '@core/services/pii/invencion/invencion.service';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { finalize, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 

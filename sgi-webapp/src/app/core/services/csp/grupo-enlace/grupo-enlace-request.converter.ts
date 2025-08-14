@@ -1,6 +1,6 @@
 import { IGrupo } from '@core/models/csp/grupo';
 import { IGrupoEnlace } from '@core/models/csp/grupo-enlace';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoEnlaceRequest } from './grupo-enlace-request';
 
 class GrupoEnlaceRequestConverter

@@ -1,7 +1,7 @@
-import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { ITipoCaducidadResponse } from './tipo-caducidad-response';
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
+import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
+import { ITipoCaducidadResponse } from './tipo-caducidad-response';
 
 export class TipoCaducidadResponseConverter extends SgiBaseConverter<ITipoCaducidadResponse, ITipoCaducidad> {
 

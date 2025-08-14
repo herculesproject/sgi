@@ -1,6 +1,6 @@
 import { IEquipoTrabajoWithIsEliminable } from '@core/models/eti/equipo-trabajo-with-is-eliminable';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEquipoTrabajoWithIsEliminableResponse } from './equipo-trabajo-with-is-eliminable-response';
 
 class EquipoTrabajoWithIsEliminableResponseConverter

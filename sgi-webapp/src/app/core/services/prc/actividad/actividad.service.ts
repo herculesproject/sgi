@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IActividad } from '@core/models/prc/actividad';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IActividadResponse } from './actividad-response';
 import { ACTIVIDAD_RESPONSE_CONVERTER } from './actividad-response.converter';

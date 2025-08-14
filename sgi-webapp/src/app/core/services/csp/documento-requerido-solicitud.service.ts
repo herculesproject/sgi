@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IDocumentoRequeridoSolicitud } from '@core/models/csp/documento-requerido-solicitud';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { IDocumentoRequeridoSolicitudResponse } from './documento-requerido-solicitud/documento-requerido-solicitud-response';
 import { DOCUMENTO_REQUERIDO_SOLICITUD_RESPONSE_CONVERTER } from './documento-requerido-solicitud/documento-requerido-solicitud-response.converter';

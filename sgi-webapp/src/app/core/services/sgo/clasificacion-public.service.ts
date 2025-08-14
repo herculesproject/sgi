@@ -4,7 +4,7 @@ import { IClasificacion } from '@core/models/sgo/clasificacion';
 import { environment } from '@env';
 import {
   FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { TipoClasificacionPublic } from 'src/app/esb/sgo/shared/clasificacion-public-modal/clasificacion-public-modal.component';
 

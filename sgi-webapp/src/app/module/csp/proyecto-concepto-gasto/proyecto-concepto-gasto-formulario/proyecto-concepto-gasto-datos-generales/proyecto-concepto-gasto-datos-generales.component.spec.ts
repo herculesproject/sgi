@@ -7,13 +7,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { CspSharedModule } from '../../../shared/csp-shared.module';
 import { PROYECTO_CONCEPTO_GASTO_DATA_KEY } from '../../proyecto-concepto-gasto-data.resolver';
-import { ProyectoConceptoGastoActionService, IProyectoConceptoGastoData } from '../../proyecto-concepto-gasto.action.service';
+import { IProyectoConceptoGastoData, ProyectoConceptoGastoActionService } from '../../proyecto-concepto-gasto.action.service';
 import { ProyectoConceptoGastoDatosGeneralesComponent } from './proyecto-concepto-gasto-datos-generales.component';
 
 describe('ProyectoConceptoGastoDatosGeneralesComponent', () => {

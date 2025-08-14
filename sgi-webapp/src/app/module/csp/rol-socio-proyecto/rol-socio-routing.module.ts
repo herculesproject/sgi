@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { RolSocioListadoComponent } from './rol-socio-listado/rol-socio-listado.component';
 
 const ROL_SOCIO_PROYECTO_KEY = marker('menu.csp.rol-socio');

@@ -2,7 +2,7 @@ import { IModeloUnidadBackend } from '@core/models/csp/backend/modelo-unidad-bac
 import { IModeloUnidad } from '@core/models/csp/modelo-unidad';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { MODELO_EJECUCION_RESPONSE_CONVERTER } from '@core/services/csp/modelo-ejecucion/modelo-ejecucion-response.converter';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ModeloUnidadConverter extends SgiBaseConverter<IModeloUnidadBackend, IModeloUnidad> {
 

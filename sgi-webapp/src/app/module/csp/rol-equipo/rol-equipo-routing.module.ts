@@ -6,7 +6,7 @@ import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { RolEquipoCrearComponent } from './rol-equipo-crear/rol-equipo-crear.component';
 import { RolEquipoEditarComponent } from './rol-equipo-editar/rol-equipo-editar.component';
 import { RolEquipoColectivosComponent } from './rol-equipo-formulario/rol-equipo-colectivos/rol-equipo-colectivos.component';

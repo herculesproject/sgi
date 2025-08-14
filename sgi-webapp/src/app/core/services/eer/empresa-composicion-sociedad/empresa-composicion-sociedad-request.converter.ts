@@ -5,7 +5,7 @@ import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotac
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPersona } from '@core/models/sgp/persona';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IEmpresaComposicionSociedadRequest } from './empresa-composicion-sociedad-request';
 
 class EmpresaComposicionSociedadRequestConverter

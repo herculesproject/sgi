@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConfiguracion } from '@core/models/eti/configuracion';
 import { environment } from '@env';
-import { SgiRestService } from '@sgi/framework/http';
+import { SgiRestService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConfiguracionService extends SgiRestService<number, IConfiguracion>{
+export class ConfiguracionService extends SgiRestService<number, IConfiguracion> {
 
   private static readonly MAPPING = '/configuraciones';
 

@@ -5,7 +5,7 @@ import { ISolicitudProyectoEntidadFinanciadoraAjenaBackend } from '@core/models/
 import { ISolicitudProyectoEntidad } from '@core/models/csp/solicitud-proyecto-entidad';
 import { ISolicitudProyectoEntidadFinanciadoraAjena } from '@core/models/csp/solicitud-proyecto-entidad-financiadora-ajena';
 import { environment } from '@env';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ISolicitudProyectoEntidadResponse } from './solicitud-proyecto-entidad/solicitud-proyecto-entidad-response';

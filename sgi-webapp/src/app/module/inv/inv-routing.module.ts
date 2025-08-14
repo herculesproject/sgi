@@ -4,7 +4,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { Module } from '@core/module';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { InvInicioComponent } from './inv-inicio/inv-inicio.component';
 import { InvRootComponent } from './inv-root/inv-root.component';
 import { INV_ROUTE_NAMES } from './inv-route-names';

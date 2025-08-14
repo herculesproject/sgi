@@ -16,8 +16,8 @@ import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service'
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { getPersonaEmailListConcatenated } from 'src/app/esb/sgp/shared/pipes/persona-email.pipe';

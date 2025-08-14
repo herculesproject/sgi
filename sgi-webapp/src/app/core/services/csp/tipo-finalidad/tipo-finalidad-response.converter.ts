@@ -1,7 +1,7 @@
-import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
-import { SgiBaseConverter } from '@sgi/framework/core';
-import { ITipoFinalidadResponse } from './tipo-finalidad-response';
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
+import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
+import { ITipoFinalidadResponse } from './tipo-finalidad-response';
 
 class TipoFinalidadResponseConverter extends SgiBaseConverter<ITipoFinalidadResponse, ITipoFinalidad> {
   toTarget(value: ITipoFinalidadResponse): ITipoFinalidad {

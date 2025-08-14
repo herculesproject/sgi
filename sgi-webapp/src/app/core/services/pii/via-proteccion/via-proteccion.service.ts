@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TipoPropiedad } from '@core/enums/tipo-propiedad';
 import { IViaProteccion } from '@core/models/pii/via-proteccion';
 import { environment } from '@env';
 import {
@@ -15,7 +14,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IViaProteccionRequest } from './via-proteccion-request';
 import { VIA_PROTECCION_REQUEST_CONVERTER } from './via-proteccion-request.converter';

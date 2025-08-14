@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Module } from '@core/module';
-import { IAuthStatus, SgiAuthService } from '@sgi/framework/auth';
+import { IAuthStatus, SgiAuthService } from '@herculesproject/framework/auth';
 import { SelectorModuloComponent } from '../selector-modulo/selector-modulo.component';
 
 @Component({

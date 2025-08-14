@@ -4,9 +4,9 @@ import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
 import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { ProyectoConceptoGastoCrearComponent } from './proyecto-concepto-gasto-crear/proyecto-concepto-gasto-crear.component';
-import { ProyectoConceptoGastoDataResolver, PROYECTO_CONCEPTO_GASTO_DATA_KEY } from './proyecto-concepto-gasto-data.resolver';
+import { PROYECTO_CONCEPTO_GASTO_DATA_KEY, ProyectoConceptoGastoDataResolver } from './proyecto-concepto-gasto-data.resolver';
 import {
   ProyectoConceptoGastoEditarComponent
 } from './proyecto-concepto-gasto-editar/proyecto-concepto-gasto-editar.component';

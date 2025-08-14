@@ -1,15 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { AbstractTableWithoutPaginationComponent } from '@core/component/abstract-table-without-pagination.component';
+import { DICTAMEN_MAP } from '@core/models/eti/dictamen';
 import { IEvaluacionWithNumComentario } from '@core/models/eti/evaluacion-with-num-comentario';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
-import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Rol } from '../seguimiento-formulario.action.service';
-import { DICTAMEN_MAP } from '@core/models/eti/dictamen';
 
 @Component({
   selector: 'sgi-seguimiento-listado-anterior-memoria',

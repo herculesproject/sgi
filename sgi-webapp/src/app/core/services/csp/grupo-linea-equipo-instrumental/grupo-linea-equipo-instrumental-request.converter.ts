@@ -1,9 +1,7 @@
 import { IGrupoEquipoInstrumental } from '@core/models/csp/grupo-equipo-instrumental';
 import { IGrupoLineaEquipoInstrumental } from '@core/models/csp/grupo-linea-equipo-instrumental';
 import { IGrupoLineaInvestigacion } from '@core/models/csp/grupo-linea-investigacion';
-import { IPersona } from '@core/models/sgp/persona';
-import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IGrupoLineaEquipoInstrumentalRequest } from './grupo-linea-equipo-instrumental-request';
 
 class GrupoLineaEquipoInstrumentalRequestConverter

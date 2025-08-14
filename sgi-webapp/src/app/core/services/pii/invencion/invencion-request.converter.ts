@@ -3,7 +3,7 @@ import { IProyecto } from "@core/models/csp/proyecto";
 import { IInvencion } from "@core/models/pii/invencion";
 import { ITipoProteccion } from "@core/models/pii/tipo-proteccion";
 import { LuxonUtils } from "@core/utils/luxon-utils";
-import { SgiBaseConverter } from "@sgi/framework/core";
+import { SgiBaseConverter } from "@herculesproject/framework/core";
 import { TIPO_PROTECCION_REQUEST_CONVERTER } from "../tipo-proteccion/tipo-proteccion-request.converter";
 import { IInvencionRequest } from "./invencion-request";
 

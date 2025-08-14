@@ -1,8 +1,8 @@
 import { IConfiguracionBaremo } from '@core/models/prc/configuracion-baremo';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IConfiguracionBaremoResponse } from './configuracion-baremo-response';
 
-class ConfiguracionBaremoResponseConverter extends SgiBaseConverter<IConfiguracionBaremoResponse, IConfiguracionBaremo>{
+class ConfiguracionBaremoResponseConverter extends SgiBaseConverter<IConfiguracionBaremoResponse, IConfiguracionBaremo> {
   toTarget(value: IConfiguracionBaremoResponse): IConfiguracionBaremo {
     if (!value) {
       return value as unknown as IConfiguracionBaremo;

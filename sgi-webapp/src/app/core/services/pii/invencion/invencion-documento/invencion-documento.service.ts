@@ -11,10 +11,8 @@ import {
   mixinFindById,
   mixinUpdate,
   SgiRestBaseService,
-  SgiRestFindOptions,
-  SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IInvencionDocumentoRequest } from './invencion-documento-request';
 import { INVENCION_DOCUMENTO_REQUEST_CONVERTER } from './invencion-documento-request.converter';

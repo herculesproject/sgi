@@ -19,7 +19,7 @@ import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { PalabraClaveService } from '@core/services/sgo/palabra-clave.service';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, startWith, switchMap } from 'rxjs/operators';
 

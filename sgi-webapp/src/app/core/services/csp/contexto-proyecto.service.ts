@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IProyectoContexto } from '@core/models/csp/proyecto-contexto';
 import { IProyectoContextoResponse } from '@core/services/csp/proyecto-contexto/proyecto-contexto-response';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { PROYECTO_CONTEXTO_RESPONSE_CONVERTER } from './proyecto-contexto/proyecto-contexto-response.converter';
 
 const _ContextoProyectoServiceMixinBase:

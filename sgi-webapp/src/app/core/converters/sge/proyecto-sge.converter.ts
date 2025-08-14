@@ -1,7 +1,7 @@
 import { IProyectoSgeBackend } from '@core/models/sge/backend/proyecto-sge-backend';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ProyectoSgeConverter extends SgiBaseConverter<IProyectoSgeBackend, IProyectoSge> {
   toTarget(value: IProyectoSgeBackend): IProyectoSge {

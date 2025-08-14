@@ -3,7 +3,7 @@ import { IProyectoConceptoGasto } from '@core/models/csp/proyecto-concepto-gasto
 import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '@core/services/csp/concepto-gasto/concepto-gasto-response.converter';
 import { IProyectoConceptoGastoResponse } from '@core/services/csp/proyecto-concepto-gasto/proyecto-concepto-gasto-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ProyectoConceptoGastoResponseConverter extends SgiBaseConverter<IProyectoConceptoGastoResponse, IProyectoConceptoGasto> {
 

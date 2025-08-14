@@ -3,15 +3,15 @@ import { Injectable } from '@angular/core';
 import { IConfigValue } from '@core/models/cnf/config-value';
 import { IRecipient } from '@core/models/com/recipient';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { ConfigGlobal } from 'src/app/module/adm/config-global/config-global.component';
 import { TimeZoneConfigService } from '../timezone.service';
 import { IConfigValueRequest } from './config-value-request';
 import { CONFIG_VALUE_REQUEST_CONVERTER } from './config-value-request.converter';
 import { IConfigValueResponse } from './config-value-response';
 import { CONFIG_VALUE_RESPONSE_CONVERTER } from './config-value-response.converter';
-import { ConfigGlobal } from 'src/app/module/adm/config-global/config-global.component';
 
 // tslint:disable-next-line: variable-name
 const _ConfigServiceMixinBase:

@@ -1,7 +1,7 @@
 import { IConvocatoriaAreaTematicaBackend } from '@core/models/csp/backend/convocatoria-area-tematica-backend';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { AREA_TEMATICA_RESPONSE_CONVERTER } from '@core/services/csp/area-tematica/area-tematica-response.converter';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaAreaTematicaConverter extends SgiBaseConverter<IConvocatoriaAreaTematicaBackend, IConvocatoriaAreaTematica> {
 

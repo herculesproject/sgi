@@ -1,6 +1,6 @@
 import { Language } from '@core/i18n/language';
 import { IActaDocumento } from '@core/models/eti/acta-documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IActaDocumentoResponse } from './acta-documento-response';
 
 class ActaDocumentoResponseConverter

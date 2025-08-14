@@ -1,6 +1,6 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IRolSocio } from '@core/models/csp/rol-socio';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRolSocioRequest } from './rol-socio-request';
 
 class RolSocioRequestConverter extends SgiBaseConverter<IRolSocioRequest, IRolSocio> {

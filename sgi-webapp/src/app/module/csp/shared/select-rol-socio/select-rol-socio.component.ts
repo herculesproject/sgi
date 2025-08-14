@@ -9,7 +9,7 @@ import { SelectServiceExtendedComponent } from '@core/component/select-service-e
 import { IRolSocio } from '@core/models/csp/rol-socio';
 import { RolSocioService } from '@core/services/csp/rol-socio/rol-socio.service';
 import { LanguageService } from '@core/services/language.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RolSocioModalComponent } from '../../rol-socio-proyecto/rol-socio-modal/rol-socio-modal.component';

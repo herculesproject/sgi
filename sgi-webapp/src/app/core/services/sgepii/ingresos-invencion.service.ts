@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IColumna } from '@core/models/sgepii/columna';
 import { IDatoEconomico } from '@core/models/sgepii/dato-economico';
 import { environment } from '@env';
-import { RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestBaseService, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IColumnDefinition } from 'src/app/module/csp/ejecucion-economica/ejecucion-economica-formulario/desglose-economico.fragment';

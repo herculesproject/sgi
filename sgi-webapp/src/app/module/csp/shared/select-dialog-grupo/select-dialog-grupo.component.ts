@@ -10,7 +10,7 @@ import { GrupoService } from '@core/services/csp/grupo/grupo.service';
 import { LanguageService } from '@core/services/language.service';
 import { LayoutService } from '@core/services/layout.service';
 import { toString } from '@core/utils/string-utils';
-import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, RSQLSgiRestSort, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SearchGrupoModalComponent } from './dialog/search-grupo.component';

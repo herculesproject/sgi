@@ -3,7 +3,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IProyecto } from '@core/models/csp/proyecto';
 import { IInvencion } from '@core/models/pii/invencion';
 import { IRelacion } from '@core/models/rel/relacion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRelacionResponse } from './relacion-response';
 
 class RelacionResponseConverter extends SgiBaseConverter<IRelacionResponse, IRelacion> {

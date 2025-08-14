@@ -1,7 +1,7 @@
 import { IVinculacionCategoriaProfesionalBackend } from '@core/models/sgp/backend/vinculacion-categoria-profesional-backend';
 import { IVinculacionCategoriaProfesional } from '@core/models/sgp/vinculacion-categoria-profesional';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class VinculacionCategoriaProfesionalConverter extends SgiBaseConverter<IVinculacionCategoriaProfesionalBackend, IVinculacionCategoriaProfesional> {
   toTarget(value: IVinculacionCategoriaProfesionalBackend): IVinculacionCategoriaProfesional {

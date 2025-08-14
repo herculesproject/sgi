@@ -8,7 +8,7 @@ import { ISolicitudRrhhTutor } from '@core/models/csp/solicitud-rrhh-tutor';
 import { environment } from '@env';
 import {
   SgiRestBaseService, SgiRestFindOptions, SgiRestListResult
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {

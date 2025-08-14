@@ -1,6 +1,6 @@
 import { I18N_FIELD_REQUEST_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IViaProteccion } from '@core/models/pii/via-proteccion';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IViaProteccionRequest } from './via-proteccion-request';
 
 class ViaProteccionRequestConverter extends SgiBaseConverter<IViaProteccionRequest, IViaProteccion> {

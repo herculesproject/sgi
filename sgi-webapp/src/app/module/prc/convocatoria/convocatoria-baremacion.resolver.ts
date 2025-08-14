@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Router, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IConvocatoriaBaremacion } from '@core/models/prc/convocatoria-baremacion';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { ConvocatoriaBaremacionService } from '@core/services/prc/convocatoria-baremacion/convocatoria-baremacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CONVOCATORIA_BAREMACION_ROUTE_PARAMS } from './convocatoria-baremacion-params';
 import { IConvocatoriaBaremacionData } from './convocatoria-baremacion.action.service';

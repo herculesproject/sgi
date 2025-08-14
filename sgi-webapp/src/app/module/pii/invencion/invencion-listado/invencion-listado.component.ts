@@ -24,8 +24,8 @@ import { ViaProteccionService } from '@core/services/pii/via-proteccion/via-prot
 import { PaisService } from '@core/services/sgo/pais/pais.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';

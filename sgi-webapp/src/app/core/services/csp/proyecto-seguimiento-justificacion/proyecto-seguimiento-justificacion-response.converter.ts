@@ -2,11 +2,11 @@ import { IProyecto } from '@core/models/csp/proyecto';
 import { IProyectoSeguimientoJustificacion } from '@core/models/csp/proyecto-seguimiento-justificacion';
 import { IProyectoSge } from '@core/models/sge/proyecto-sge';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectoSeguimientoJustificacionResponse } from './proyecto-seguimiento-justificacion-response';
 
 class ProyectoSeguimientoJustificacionResponseConverter
-  extends SgiBaseConverter<IProyectoSeguimientoJustificacionResponse, IProyectoSeguimientoJustificacion>{
+  extends SgiBaseConverter<IProyectoSeguimientoJustificacionResponse, IProyectoSeguimientoJustificacion> {
   toTarget(value: IProyectoSeguimientoJustificacionResponse): IProyectoSeguimientoJustificacion {
     if (!value) {
       return value as unknown as IProyectoSeguimientoJustificacion;

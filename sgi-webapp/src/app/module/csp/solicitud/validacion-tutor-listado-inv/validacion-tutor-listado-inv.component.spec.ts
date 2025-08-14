@@ -6,14 +6,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 import { CspSharedModule } from '../../shared/csp-shared.module';
 import { SolicitudActionService } from '../solicitud.action.service';
 import { ValidacionTutorListadoInvComponent } from './validacion-tutor-listado-inv.component';
-import { SgpSharedModule } from 'src/app/esb/sgp/shared/sgp-shared.module';
 
 describe('ValidacionTutorListadoInvComponent', () => {
   let component: ValidacionTutorListadoInvComponent;

@@ -5,7 +5,7 @@ import { IMemoria } from '@core/models/eti/memoria';
 import { IMemoriaResponse } from '@core/services/eti/memoria/memoria-response';
 import { MEMORIA_RESPONSE_CONVERTER } from '@core/services/eti/memoria/memoria-response.converter';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { COMITE_RESPONSE_CONVERTER } from './comite/comite-response.converter';
 

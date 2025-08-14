@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IModeloTipoEnlaceResponse } from './modelo-tipo-enlace/modelo-tipo-enlace-response';
 import { MODELO_TIPO_ENLACE_RESPONSE_CONVERTER } from './modelo-tipo-enlace/modelo-tipo-enlace-response.converter';

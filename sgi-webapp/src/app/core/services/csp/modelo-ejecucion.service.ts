@@ -10,7 +10,7 @@ import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { IModeloUnidad } from '@core/models/csp/modelo-unidad';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate } from '@sgi/framework/http/';
+import { CreateCtor, FindAllCtor, FindByIdCtor, RSQLSgiRestFilter, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate } from '@herculesproject/framework/http/';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IModeloEjecucionResponse } from './modelo-ejecucion/modelo-ejecucion-response';

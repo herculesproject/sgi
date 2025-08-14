@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ISendEmailTask } from '@core/models/tp/send-email-task';
 import { LuxonUtils } from '@core/utils/luxon-utils';
 import { environment } from '@env';
-import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@sgi/framework/http';
+import { FindByIdCtor, mixinFindById, SgiRestBaseService } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ISgiApiCronTaskResponse } from './sgi-api-cron-task-response';

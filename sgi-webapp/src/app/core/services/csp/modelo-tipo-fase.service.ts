@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IModeloTipoFaseResponse } from './modelo-tipo-fase/modelo-tipo-fase-response';
 import { MODELO_TIPO_FASE_RESPONSE_CONVERTER } from './modelo-tipo-fase/modelo-tipo-fase-response.converter';

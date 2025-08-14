@@ -8,7 +8,7 @@ import { IVinculacion } from '@core/models/sgp/vinculacion';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { AbstractTableExportService, IReportConfig, IReportOptions } from '@core/services/rep/abstract-table-export.service';
 import { ReportService } from '@core/services/rep/report.service';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { concat, from, Observable, of, zip } from 'rxjs';

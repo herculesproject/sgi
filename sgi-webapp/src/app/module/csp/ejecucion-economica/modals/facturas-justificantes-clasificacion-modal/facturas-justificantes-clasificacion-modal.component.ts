@@ -13,8 +13,8 @@ import { ConceptoGastoService } from '@core/services/csp/concepto-gasto.service'
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
 import { I18nValidators } from '@core/validators/i18n-validator';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { BehaviorSubject, Observable, from, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, tap, toArray } from 'rxjs/operators';
 

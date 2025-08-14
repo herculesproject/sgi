@@ -3,10 +3,10 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
-import { EER_ROUTE_NAMES } from './eer-route-names';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { EerInicioComponent } from './eer-inicio/eer-inicio.component';
 import { EerRootComponent } from './eer-root/eer-root.component';
+import { EER_ROUTE_NAMES } from './eer-route-names';
 
 const MSG_ROOT_TITLE = marker('eer.root.title');
 const MSG_EMPRESA_EXPLOTACION_RESULTADOS_TITLE = marker('eer.empresa-explotacion-resultados');

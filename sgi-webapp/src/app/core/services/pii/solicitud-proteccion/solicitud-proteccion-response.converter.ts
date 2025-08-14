@@ -1,14 +1,13 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { ISolicitudProteccion } from '@core/models/pii/solicitud-proteccion';
-import { ITipoCaducidad } from '@core/models/pii/tipo-caducidad';
 import { IEmpresa } from '@core/models/sgemp/empresa';
 import { IPais } from '@core/models/sgo/pais';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { INVENCION_RESPONSE_CONVERTER } from '../invencion/invencion-response.converter';
+import { TIPO_CADUCIDAD_RESPONSE_CONVERTER } from '../tipo-caducidad/tipo-caducidad-response.converter';
 import { VIA_PROTECCION_RESPONSE_CONVERTER } from '../via-proteccion/via-proteccion-response.converter';
 import { ISolicitudProteccionResponse } from './solicitud-proteccion-response';
-import { TIPO_CADUCIDAD_RESPONSE_CONVERTER } from '../tipo-caducidad/tipo-caducidad-response.converter';
 
 export class SolicitudProteccionResponseConverter extends SgiBaseConverter<ISolicitudProteccionResponse, ISolicitudProteccion> {
 

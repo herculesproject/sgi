@@ -11,7 +11,7 @@ import { CONVOCATORIA_REUNION_DATOS_GENERALES_RESPONSE_CONVERTER } from '@core/s
 import { IConvocatoriaReunionResponse } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-response';
 import { CONVOCATORIA_REUNION_RESPONSE_CONVERTER } from '@core/services/eti/convocatoria-reunion/convocatoria-reunion-response.converter';
 import { environment } from '@env';
-import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, FindAllCtor, FindByIdCtor, mixinCreate, mixinFindAll, mixinFindById, mixinUpdate, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IActaResponse } from './acta/acta-response';

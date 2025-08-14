@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { SOLICITUD_MODALIDAD_RESPONSE_CONVERTER } from '@core/services/csp/solicitud-modalidad/solicitud-modalidad-response.converter';
 import { environment } from '@env';
-import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@sgi/framework/http';
+import { CreateCtor, mixinCreate, mixinUpdate, SgiRestBaseService, UpdateCtor } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { ISolicitudModalidadResponse } from './solicitud-modalidad/solicitud-modalidad-response';
 

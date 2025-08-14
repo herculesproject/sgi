@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { TipoAmbitoGeograficoListadoComponent } from './tipo-ambito-geografico-listado/tipo-ambito-geografico-listado.component';
 
 const TIPO_AMBITO_GEOGRAFICO_KEY = marker('csp.tipo-ambito-geografico');

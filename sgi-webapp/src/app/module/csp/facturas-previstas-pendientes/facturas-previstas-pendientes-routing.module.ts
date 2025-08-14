@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
+import { SgiAuthGuard, SgiAuthRoutes } from '@herculesproject/framework/auth';
 import { FacturasPrevistasPendientesListadoComponent } from './facturas-previstas-pendientes-listado/facturas-previstas-pendientes-listado.component';
 
 const MSG_LISTADO_TITLE = marker('csp.facturas-previstas-pendientes.listado');

@@ -1,7 +1,7 @@
 import { IProyectoSocioPeriodoPagoBackend } from '@core/models/csp/backend/proyecto-socio-periodo-pago-backend';
 import { IProyectoSocioPeriodoPago } from '@core/models/csp/proyecto-socio-periodo-pago';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ProyectoSocioPeriodoPagoConverter extends SgiBaseConverter<IProyectoSocioPeriodoPagoBackend, IProyectoSocioPeriodoPago> {
 

@@ -1,7 +1,7 @@
 import { IInvencion } from '@core/models/pii/invencion';
 import { IReparto } from '@core/models/pii/reparto';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IRepartoRequest } from './reparto-request';
 
 class RepartoRequestConverter extends SgiBaseConverter<IRepartoRequest, IReparto> {

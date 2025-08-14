@@ -14,7 +14,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { IRolSocioRequest } from './rol-socio-request';
 import { ROL_SOCIO_REQUEST_CONVERTER } from './rol-socio-request.converter';

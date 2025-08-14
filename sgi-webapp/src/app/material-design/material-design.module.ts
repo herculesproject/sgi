@@ -1,4 +1,3 @@
-import { NgxMatDateAdapter, NgxMatDatetimePickerModule, NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -6,7 +5,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule, MAT_CHECKBOX_DEFAULT_OPTIONS } from '@angular/material/checkbox';
+import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -20,7 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio';
+import { MAT_RADIO_DEFAULT_OPTIONS, MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -33,10 +32,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { TIME_ZONE } from '@core/time-zone';
+import { NGX_MAT_DATE_FORMATS, NgxMatDateAdapter, NgxMatDatetimePickerModule } from '@herculesproject/datetime-picker';
 import { MatTimepickerModule } from 'mat-timepicker';
 import { EndDateDirective } from './end-date.directive';
-import { LuxonDateAdapter, LUXON_DATE_ADAPTER_OPTIONS, LUXON_DATE_FORMATS } from './luxon-date-adapter';
-import { LuxonDateTimeAdapter, LUXON_DATETIME_FORMATS } from './luxon-datetime-adapter';
+import { LUXON_DATE_ADAPTER_OPTIONS, LUXON_DATE_FORMATS, LuxonDateAdapter } from './luxon-date-adapter';
+import { LUXON_DATETIME_FORMATS, LuxonDateTimeAdapter } from './luxon-datetime-adapter';
 
 @NgModule({
   declarations: [

@@ -7,7 +7,7 @@ import { IProyectoSeguimientoJustificacion } from '@core/models/csp/proyecto-seg
 import { IRequerimientoJustificacion } from '@core/models/csp/requerimiento-justificacion';
 import { ISeguimientoJustificacionAnualidad } from '@core/models/csp/seguimiento-justificacion-anualidad';
 import { environment } from '@env';
-import { SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IProyectoPeriodoJustificacionResponse } from '../proyecto-periodo-justificacion/proyecto-periodo-justificacion-response';

@@ -8,7 +8,7 @@ import { ProyectoPeriodoJustificacionService } from '@core/services/csp/proyecto
 import { ProyectoProyectoSgeService } from '@core/services/csp/proyecto-proyecto-sge.service';
 import { RequerimientoJustificacionService } from '@core/services/csp/requerimiento-justificacion/requerimiento-justificacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

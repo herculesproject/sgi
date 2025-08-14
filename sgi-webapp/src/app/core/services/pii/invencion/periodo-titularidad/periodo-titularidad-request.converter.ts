@@ -1,10 +1,10 @@
 import { IInvencion } from '@core/models/pii/invencion';
 import { IPeriodoTitularidad } from '@core/models/pii/periodo-titularidad';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IPeriodoTitularidadRequest } from './periodo-titularidad-request';
 
-class PeriodoTitularidadRequestConverter extends SgiBaseConverter<IPeriodoTitularidadRequest, IPeriodoTitularidad>{
+class PeriodoTitularidadRequestConverter extends SgiBaseConverter<IPeriodoTitularidadRequest, IPeriodoTitularidad> {
   toTarget(value: IPeriodoTitularidadRequest): IPeriodoTitularidad {
     if (!value) {
       return value as unknown as IPeriodoTitularidad;

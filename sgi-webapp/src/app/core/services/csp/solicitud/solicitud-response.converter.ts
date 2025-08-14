@@ -4,7 +4,7 @@ import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configu
 import { IPersona } from '@core/models/sgp/persona';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ISolicitudResponse } from '@core/services/csp/solicitud/solicitud-response';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ESTADO_SOLICITUD_RESPONSE_CONVERTER } from '../estado-solicitud/estado-solicitud-response.converter';
 
 class SolicitudResponseConverter extends SgiBaseConverter<ISolicitudResponse, ISolicitud> {

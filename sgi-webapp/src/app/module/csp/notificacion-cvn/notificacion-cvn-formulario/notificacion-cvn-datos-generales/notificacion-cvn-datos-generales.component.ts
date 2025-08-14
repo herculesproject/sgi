@@ -5,11 +5,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { INotificacionCVNEntidadFinanciadora } from '@core/models/csp/notificacion-cvn-entidad-financiadora';
 import { INotificacionProyectoExternoCVN } from '@core/models/csp/notificacion-proyecto-externo-cvn';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthService } from '@herculesproject/framework/auth';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { NotificacionCvnActionService } from '../../notificacion-cvn.action.service';
 import { NotificacionCvnDatosGeneralesFragment } from './notificacion-cvn-datos-generales.fragment';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'sgi-notificacion-cvn-datos-generales',

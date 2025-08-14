@@ -5,7 +5,7 @@ import { IResultadoInformePatentibilidad } from "@core/models/pii/resultado-info
 import { IDocumento } from "@core/models/sgdoc/documento";
 import { IEmpresa } from "@core/models/sgemp/empresa";
 import { LuxonUtils } from "@core/utils/luxon-utils";
-import { SgiBaseConverter } from "@sgi/framework/core";
+import { SgiBaseConverter } from "@herculesproject/framework/core";
 import { IInformePatentabilidadRequest } from "./informe-patentabilidad-request";
 
 class InformePatentabilidadRequestConverter extends SgiBaseConverter<IInformePatentabilidadRequest, IInformePatentabilidad> {

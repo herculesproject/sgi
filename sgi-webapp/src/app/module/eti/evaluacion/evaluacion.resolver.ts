@@ -5,10 +5,8 @@ import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, throwError } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 const MSG_NOT_FOUND = marker('error.load');
 

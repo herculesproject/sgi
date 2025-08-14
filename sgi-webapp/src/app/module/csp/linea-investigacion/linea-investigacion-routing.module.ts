@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
-import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
+import { SgiAuthGuard, SgiAuthRoutes } from '@herculesproject/framework/auth';
 import { LineaInvestigacionListadoComponent } from './linea-investigacion-listado/linea-investigacion-listado.component';
 
 const MSG_LISTADO_TITLE = marker('csp.linea-investigacion');

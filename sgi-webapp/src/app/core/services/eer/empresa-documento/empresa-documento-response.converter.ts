@@ -2,7 +2,7 @@ import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IEmpresaDocumento } from '@core/models/eer/empresa-documento';
 import { IEmpresaExplotacionResultados } from '@core/models/eer/empresa-explotacion-resultados';
 import { IDocumento } from '@core/models/sgdoc/documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { TIPO_DOCUMENTO_RESPONSE_CONVERTER } from '../tipo-documento/tipo-documento-response.converter';
 import { IEmpresaDocumentoResponse } from './empresa-documento-response';
 

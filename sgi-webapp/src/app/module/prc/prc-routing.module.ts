@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { PrcInicioComponent } from './prc-inicio/prc-inicio.component';
 import { PrcRootComponent } from './prc-root/prc-root.component';
 import { PRC_ROUTE_NAMES } from './prc-route-names';

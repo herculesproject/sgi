@@ -1,7 +1,7 @@
 import { IRequisitoIPNivelAcademico } from '@core/models/csp/requisito-ip-nivel-academico';
 import { ISolicitudRrhhRequisitoNivelAcademico } from '@core/models/csp/solicitud-rrhh-requisito-nivel-academico';
 import { IDocumento } from '@core/models/sgdoc/documento';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudRrhhRequisitoNivelAcademicoResponse } from './solicitud-rrhh-requisito-nivel-academico-response';
 
 class SolicitudRrhhRequisitoNivelAcademicoResponseConverter

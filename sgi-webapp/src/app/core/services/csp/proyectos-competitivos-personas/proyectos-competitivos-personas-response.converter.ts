@@ -1,5 +1,5 @@
 import { IProyectosCompetitivosPersonas } from '@core/models/csp/proyectos-competitivos-personas';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IProyectosCompetitivosPersonasResponse } from './proyectos-competitivos-personas-response';
 
 class ProyectosCompetitivosPersonasResponseConverter

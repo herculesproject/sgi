@@ -3,7 +3,7 @@ import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisit
 import { ISexo } from '@core/models/sgp/sexo';
 import { IConvocatoriaRequisitoIPResponse } from '@core/services/csp/convocatoria-requisito-ip/convocatoria-requisito-ip-response';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 
 class ConvocatoriaRequisitoIPResponseConverter
   extends SgiBaseConverter<IConvocatoriaRequisitoIPResponse, IConvocatoriaRequisitoIP> {

@@ -12,8 +12,8 @@ import { AbstractTableExportFillService } from '@core/services/rep/abstract-tabl
 import { IReportConfig } from '@core/services/rep/abstract-table-export.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { from, Observable } from 'rxjs';
 import { map, mergeMap, switchMap, toArray } from 'rxjs/operators';

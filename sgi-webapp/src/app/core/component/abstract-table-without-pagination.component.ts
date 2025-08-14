@@ -8,7 +8,7 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   SgiRestSortDirection
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { EMPTY, merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 

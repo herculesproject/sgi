@@ -9,11 +9,11 @@ import {
   SgiRestFindOptions,
   SgiRestListResult,
   SgiRestSortDirection
-} from '@sgi/framework/http';
-import { EMPTY, merge, Observable, of, Subscription } from 'rxjs';
+} from '@herculesproject/framework/http';
+import { TranslateService } from '@ngx-translate/core';
+import { EMPTY, merge, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AbstractMenuContentComponent } from './abstract-menu-content.component';
-import { TranslateService } from '@ngx-translate/core';
 
 @Directive()
 // tslint:disable-next-line: directive-class-suffix

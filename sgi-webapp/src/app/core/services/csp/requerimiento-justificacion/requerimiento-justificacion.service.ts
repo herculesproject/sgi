@@ -9,7 +9,7 @@ import {
   CreateCtor, FindByIdCtor, mixinCreate, mixinFindById,
   mixinUpdate, SgiRestBaseService, SgiRestFindOptions,
   SgiRestListResult, UpdateCtor
-} from '@sgi/framework/http';
+} from '@herculesproject/framework/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { IAlegacionRequerimientoResponse } from '../alegacion-requerimiento/alegacion-requerimiento-response';

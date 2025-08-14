@@ -55,8 +55,8 @@ import { NivelAcademicosService } from '@core/services/sgp/nivel-academico.servi
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, NEVER, Observable, Subject, of, throwError } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';

@@ -1,6 +1,6 @@
 import { ISolicitudRrhhTutor } from '@core/models/csp/solicitud-rrhh-tutor';
 import { IPersona } from '@core/models/sgp/persona';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ISolicitudRrhhTutorResponse } from './solicitud-rrhh-tutor-response';
 
 class SolicitudRrhhTutorResponseConverter

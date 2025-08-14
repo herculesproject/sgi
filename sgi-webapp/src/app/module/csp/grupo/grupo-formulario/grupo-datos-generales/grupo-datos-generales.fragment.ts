@@ -19,7 +19,7 @@ import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.s
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { DateValidator } from '@core/validators/date-validator';
 import { I18nValidators } from '@core/validators/i18n-validator';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';

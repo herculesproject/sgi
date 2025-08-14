@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ITipoRequerimiento } from '@core/models/csp/tipo-requerimiento';
 import { environment } from '@env';
-import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@sgi/framework/http';
+import { FindAllCtor, mixinFindAll, SgiRestBaseService } from '@herculesproject/framework/http';
 import { ITipoRequerimientoResponse } from './tipo-requerimiento-response';
 import { TIPO_REQUERIMIENTO_RESPONSE_CONVERTER } from './tipo-requerimiento-response.converter';
 

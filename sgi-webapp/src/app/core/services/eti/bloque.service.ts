@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IApartado } from '@core/models/eti/apartado';
 import { IBloque } from '@core/models/eti/bloque';
 import { environment } from '@env';
-import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { FindAllCtor, FindByIdCtor, mixinFindAll, mixinFindById, SgiRestBaseService, SgiRestFindOptions, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IApartadoResponse } from './apartado/apartado-response';

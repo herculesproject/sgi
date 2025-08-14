@@ -7,8 +7,8 @@ import { SelectServiceComponent } from '@core/component/select-service/select-se
 import { ESTADO_MEMORIA_MAP, TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { LanguageService } from '@core/services/language.service';
+import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@herculesproject/framework/http';
 import { TranslateService } from '@ngx-translate/core';
-import { RSQLSgiRestSort, SgiRestFindOptions, SgiRestSortDirection } from '@sgi/framework/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

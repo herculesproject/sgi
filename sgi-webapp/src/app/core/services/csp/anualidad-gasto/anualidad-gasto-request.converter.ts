@@ -3,10 +3,10 @@ import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { IProyectoAnualidad } from '@core/models/csp/proyecto-anualidad';
 import { IProyectoPartida } from '@core/models/csp/proyecto-partida';
 import { ICodigoEconomicoGasto } from '@core/models/sge/codigo-economico-gasto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { IAnualidadGastoRequest } from './anualidad-gasto-request';
 
-class AnualidadGastoRequestConverter extends SgiBaseConverter<IAnualidadGastoRequest, IAnualidadGasto>{
+class AnualidadGastoRequestConverter extends SgiBaseConverter<IAnualidadGastoRequest, IAnualidadGasto> {
   toTarget(value: IAnualidadGastoRequest): IAnualidadGasto {
     if (!value) {
       return value as unknown as IAnualidadGasto;

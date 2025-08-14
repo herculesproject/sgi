@@ -1,7 +1,7 @@
 import { I18N_FIELD_RESPONSE_CONVERTER } from '@core/i18n/i18n-field.converter';
 import { IGastoProyecto } from '@core/models/csp/gasto-proyecto';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { CONCEPTO_GASTO_RESPONSE_CONVERTER } from '../concepto-gasto/concepto-gasto-response.converter';
 import { ESTADO_GASTO_PROYECTO_RESPONSE_CONVERTER } from '../estado-gasto-proyecto/estado-gasto-proyecto-response.converter';
 import { IGastoProyectoResponse } from './gasto-proyecto-response';

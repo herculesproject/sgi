@@ -5,7 +5,7 @@ import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
 import { MSG_PARAMS } from '@core/i18n';
 import { SgiRoutes } from '@core/route';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@herculesproject/framework/auth';
 import { ProduccionCientificaInvGuard } from '../shared/produccion-cientifica-inv.guard';
 import { ProduccionCientificaInvResolver } from '../shared/produccion-cientifica-inv.resolver';
 import { PRODUCCION_CIENTIFICA_DATA_KEY, PRODUCCION_CIENTIFICA_ROUTE_PARAMS } from '../shared/produccion-cientifica-route-params';

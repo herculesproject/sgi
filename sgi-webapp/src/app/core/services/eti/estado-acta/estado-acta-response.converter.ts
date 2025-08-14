@@ -1,6 +1,6 @@
 import { IEstadoActa } from '@core/models/eti/estado-acta';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ACTA_RESPONSE_CONVERTER } from '../acta/acta-response.converter';
 import { IEstadoActaResponse } from './estado-acta-response';
 

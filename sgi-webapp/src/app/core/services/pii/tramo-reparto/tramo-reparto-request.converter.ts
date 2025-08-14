@@ -1,8 +1,8 @@
 import { ITramoReparto } from '@core/models/pii/tramo-reparto';
-import { SgiBaseConverter } from '@sgi/framework/core';
+import { SgiBaseConverter } from '@herculesproject/framework/core';
 import { ITramoRepartoRequest } from './tramo-reparto-request';
 
-class TramoRepartoRequestConverter extends SgiBaseConverter<ITramoRepartoRequest, ITramoReparto>{
+class TramoRepartoRequestConverter extends SgiBaseConverter<ITramoRepartoRequest, ITramoReparto> {
   toTarget(value: ITramoRepartoRequest): ITramoReparto {
     if (!value) {
       return value as unknown as ITramoReparto;

@@ -11,7 +11,7 @@ import { GastoProyectoService } from '@core/services/csp/gasto-proyecto/gasto-pr
 import { ProyectoService } from '@core/services/csp/proyecto.service';
 import { LanguageService } from '@core/services/language.service';
 import { GastoService } from '@core/services/sge/gasto/gasto.service';
-import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@sgi/framework/http';
+import { RSQLSgiRestFilter, SgiRestFilterOperator, SgiRestFindOptions } from '@herculesproject/framework/http';
 import { BehaviorSubject, Observable, forkJoin, from, of } from 'rxjs';
 import { concatAll, concatMap, map, switchMap, tap } from 'rxjs/operators';
 import { IColumnDefinition } from '../desglose-economico.fragment';

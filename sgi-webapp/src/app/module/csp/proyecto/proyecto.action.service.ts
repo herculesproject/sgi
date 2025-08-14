@@ -69,9 +69,10 @@ import { DatosAcademicosService } from '@core/services/sgp/datos-academicos.serv
 import { DatosPersonalesService } from '@core/services/sgp/datos-personales.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { VinculacionService } from '@core/services/sgp/vinculacion/vinculacion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { SgiAuthService } from '@herculesproject/framework/auth';
 import { TranslateService } from '@ngx-translate/core';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { DateTime } from 'luxon';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, forkJoin, merge, Observable, of, Subject, throwError } from 'rxjs';
@@ -108,7 +109,6 @@ import { ProyectoRelacionFragment } from './proyecto-formulario/proyecto-relacio
 import { ProyectoResponsableEconomicoFragment } from './proyecto-formulario/proyecto-responsable-economico/proyecto-responsable-economico.fragment';
 import { ProyectoSociosFragment } from './proyecto-formulario/proyecto-socios/proyecto-socios.fragment';
 import { PROYECTO_ROUTE_PARAMS } from './proyecto-route-params';
-import { SnackBarService } from '@core/services/snack-bar.service';
 
 const MSG_SOLICITUDES = marker('csp.solicitud');
 const MSG_CONVOCATORIAS = marker('csp.convocatoria');

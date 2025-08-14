@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { IDireccionTesis, TIPO_PROYECTO_MAP } from '@core/models/prc/direccion-tesis';
-import { TipoEstadoProduccion, TIPO_ESTADO_PRODUCCION_MAP } from '@core/models/prc/estado-produccion-cientifica';
+import { TIPO_ESTADO_PRODUCCION_MAP, TipoEstadoProduccion } from '@core/models/prc/estado-produccion-cientifica';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Module } from '@core/module';
 import { LayoutService } from '@core/services/layout.service';
 import { DireccionTesisService } from '@core/services/prc/direccion-tesis/direccion-tesis.service';
 import { LuxonUtils } from '@core/utils/luxon-utils';
-import { IAuthStatus, SgiAuthService } from '@sgi/framework/auth';
-import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@sgi/framework/http';
+import { IAuthStatus, SgiAuthService } from '@herculesproject/framework/auth';
+import { RSQLSgiRestFilter, SgiRestFilter, SgiRestFilterOperator, SgiRestListResult } from '@herculesproject/framework/http';
 import { Observable } from 'rxjs';
 import { TipoColectivo } from 'src/app/esb/sgp/shared/select-persona/select-persona.component';
 

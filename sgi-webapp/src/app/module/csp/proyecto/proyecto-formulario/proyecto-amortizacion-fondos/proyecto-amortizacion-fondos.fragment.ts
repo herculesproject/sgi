@@ -9,11 +9,11 @@ import { ProyectoPeriodoAmortizacionService } from '@core/services/csp/proyecto-
 import { PeriodoAmortizacionService } from '@core/services/sge/periodo-amortizacion/periodo-amortizacion.service';
 import { EmpresaService } from '@core/services/sgemp/empresa.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@herculesproject/framework/http';
+import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, EMPTY, from, merge, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, takeLast, tap, toArray } from 'rxjs/operators';
 import { IEntidadFinanciadora } from '../proyecto-entidades-financiadoras/proyecto-entidades-financiadoras.fragment';
-import { NGXLogger } from 'ngx-logger';
 
 export interface IProyectoPeriodoAmortizacionListado extends IProyectoPeriodoAmortizacion {
   periodo: number;
